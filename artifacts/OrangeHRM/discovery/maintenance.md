@@ -1,0 +1,24 @@
+- generic [ref=f15e3]:
+  - generic [ref=f15e5]:
+    - heading "Administrator Access" [level=6] [ref=f15e6]
+    - generic [ref=f15e8]: You have requested to access a critical Administrator function in OrangeHRM and are required to validate your credentials below
+    - generic [ref=f15e10]:
+      - generic [ref=f15e11]:
+        - generic [ref=f15e12]: 
+        - generic [ref=f15e13]: Username
+      - textbox [disabled] [ref=f15e15]: Admin
+    - generic [ref=f15e17]:
+      - generic [ref=f15e18]:
+        - generic [ref=f15e19]: 
+        - generic [ref=f15e20]: Password
+      - textbox [active] [ref=f15e22]
+    - generic [ref=f15e23]:
+      - button "Cancel" [ref=f15e24] [cursor=pointer]
+      - button "Confirm" [ref=f15e25] [cursor=pointer]
+  - generic [ref=f15e26]:
+    - paragraph [ref=f15e27]: OrangeHRM OS 5.8
+    - paragraph [ref=f15e28]:
+      - text: © 2005 - 2026
+      - link "OrangeHRM, Inc" [ref=f15e29] [cursor=pointer]:
+        - /url: http://www.orangehrm.com
+      - text: . All rights reserved.

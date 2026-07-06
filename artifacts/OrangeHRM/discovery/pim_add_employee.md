@@ -1,0 +1,129 @@
+- generic [ref=f5e3]:
+  - generic:
+    - complementary [ref=f5e4]:
+      - navigation "Sidepanel" [ref=f5e5]:
+        - generic [ref=f5e6]:
+          - link "client brand banner" [ref=f5e7] [cursor=pointer]:
+            - /url: https://www.orangehrm.com/
+            - img "client brand banner" [ref=f5e9]
+          - text: 
+        - generic [ref=f5e10]:
+          - generic [ref=f5e11]:
+            - generic [ref=f5e12]:
+              - textbox "Search" [ref=f5e15]
+              - button "" [ref=f5e16] [cursor=pointer]:
+                - generic [ref=f5e17]: 
+            - separator [ref=f5e18]
+          - list [ref=f5e19]:
+            - listitem [ref=f5e20]:
+              - link "Admin" [ref=f5e21] [cursor=pointer]:
+                - /url: /web/index.php/admin/viewAdminModule
+                - generic [ref=f5e24]: Admin
+            - listitem [ref=f5e25]:
+              - link "PIM" [ref=f5e26] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewPimModule
+                - generic [ref=f5e40]: PIM
+            - listitem [ref=f5e41]:
+              - link "Leave" [ref=f5e42] [cursor=pointer]:
+                - /url: /web/index.php/leave/viewLeaveModule
+                - generic [ref=f5e45]: Leave
+            - listitem [ref=f5e46]:
+              - link "Time" [ref=f5e47] [cursor=pointer]:
+                - /url: /web/index.php/time/viewTimeModule
+                - generic [ref=f5e53]: Time
+            - listitem [ref=f5e54]:
+              - link "Recruitment" [ref=f5e55] [cursor=pointer]:
+                - /url: /web/index.php/recruitment/viewRecruitmentModule
+                - generic [ref=f5e61]: Recruitment
+            - listitem [ref=f5e62]:
+              - link "My Info" [ref=f5e63] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewMyDetails
+                - generic [ref=f5e69]: My Info
+            - listitem [ref=f5e70]:
+              - link "Performance" [ref=f5e71] [cursor=pointer]:
+                - /url: /web/index.php/performance/viewPerformanceModule
+                - generic [ref=f5e79]: Performance
+            - listitem [ref=f5e80]:
+              - link "Dashboard" [ref=f5e81] [cursor=pointer]:
+                - /url: /web/index.php/dashboard/index
+                - generic [ref=f5e84]: Dashboard
+            - listitem [ref=f5e85]:
+              - link "Directory" [ref=f5e86] [cursor=pointer]:
+                - /url: /web/index.php/directory/viewDirectory
+                - generic [ref=f5e89]: Directory
+            - listitem [ref=f5e90]:
+              - link "Maintenance" [ref=f5e91] [cursor=pointer]:
+                - /url: /web/index.php/maintenance/viewMaintenanceModule
+                - generic [ref=f5e95]: Maintenance
+    - banner [ref=f5e96]:
+      - generic [ref=f5e97]:
+        - generic [ref=f5e98]:
+          - text: 
+          - heading "PIM" [level=6] [ref=f5e100]
+        - link "Upgrade" [ref=f5e102]:
+          - /url: https://orangehrm.com/open-source/upgrade-to-advanced
+          - button "Upgrade" [ref=f5e103] [cursor=pointer]: Upgrade
+        - list [ref=f5e109]:
+          - listitem [ref=f5e110]:
+            - generic [ref=f5e111] [cursor=pointer]:
+              - img "profile picture" [ref=f5e112]
+              - paragraph [ref=f5e113]: Partha s birlaa
+              - generic [ref=f5e114]: 
+      - navigation "Topbar Menu" [ref=f5e116]:
+        - list [ref=f5e117]:
+          - listitem [ref=f5e118] [cursor=pointer]:
+            - generic [ref=f5e119]:
+              - text: Configuration
+              - generic [ref=f5e120]: 
+          - listitem [ref=f5e121] [cursor=pointer]:
+            - link "Employee List" [ref=f5e122]:
+              - /url: "#"
+          - listitem [ref=f5e123] [cursor=pointer]:
+            - link "Add Employee" [ref=f5e124]:
+              - /url: "#"
+          - listitem [ref=f5e125] [cursor=pointer]:
+            - link "Reports" [ref=f5e126]:
+              - /url: "#"
+          - button "" [ref=f5e128] [cursor=pointer]:
+            - generic [ref=f5e129]: 
+  - generic [ref=f5e130]:
+    - generic [ref=f5e133]:
+      - heading "Add Employee" [level=6] [ref=f5e134]
+      - separator [ref=f5e135]
+      - generic [ref=f5e136]:
+        - generic [ref=f5e137]:
+          - generic [ref=f5e138]:
+            - generic [ref=f5e140]:
+              - button "Choose File"
+              - generic [ref=f5e141]:
+                - img "profile picture" [ref=f5e143]
+                - button "" [ref=f5e144] [cursor=pointer]:
+                  - generic [ref=f5e145]: 
+            - paragraph [ref=f5e146]: "Accepts jpg, .png, .gif up to 1MB. Recommended dimensions: 200px X 200px"
+          - generic [ref=f5e147]:
+            - generic [ref=f5e148]:
+              - generic [ref=f5e151]:
+                - generic [ref=f5e153]: Employee Full Name*
+                - generic [ref=f5e154]:
+                  - textbox "First Name" [ref=f5e157]
+                  - textbox "Middle Name" [ref=f5e160]
+                  - textbox "Last Name" [ref=f5e163]
+              - generic [ref=f5e166]:
+                - generic [ref=f5e168]: Employee Id
+                - textbox [ref=f5e170]: "0491"
+            - separator [ref=f5e171]
+            - generic [ref=f5e172]:
+              - paragraph [ref=f5e173]: Create Login Details
+              - checkbox [ref=f5e176]
+        - separator [ref=f5e178]
+        - generic [ref=f5e179]:
+          - paragraph [ref=f5e180]: "* Required"
+          - button "Cancel" [ref=f5e181] [cursor=pointer]
+          - button "Save" [ref=f5e182] [cursor=pointer]
+    - generic [ref=f5e183]:
+      - paragraph [ref=f5e184]: OrangeHRM OS 5.8
+      - paragraph [ref=f5e185]:
+        - text: © 2005 - 2026
+        - link "OrangeHRM, Inc" [ref=f5e186] [cursor=pointer]:
+          - /url: http://www.orangehrm.com
+        - text: . All rights reserved.

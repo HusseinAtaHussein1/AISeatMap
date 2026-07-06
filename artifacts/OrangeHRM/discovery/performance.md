@@ -1,0 +1,184 @@
+- generic [ref=f13e2]:
+  - generic [ref=f13e3]:
+    - generic:
+      - complementary [ref=f13e4]:
+        - navigation "Sidepanel" [ref=f13e5]:
+          - generic [ref=f13e6]:
+            - link "client brand banner" [ref=f13e7] [cursor=pointer]:
+              - /url: https://www.orangehrm.com/
+              - img "client brand banner" [ref=f13e9]
+            - text: 
+          - generic [ref=f13e10]:
+            - generic [ref=f13e11]:
+              - generic [ref=f13e12]:
+                - textbox "Search" [ref=f13e15]
+                - button "" [ref=f13e16] [cursor=pointer]:
+                  - generic [ref=f13e17]: 
+              - separator [ref=f13e18]
+            - list [ref=f13e19]:
+              - listitem [ref=f13e20]:
+                - link "Admin" [ref=f13e21] [cursor=pointer]:
+                  - /url: /web/index.php/admin/viewAdminModule
+                  - generic [ref=f13e24]: Admin
+              - listitem [ref=f13e25]:
+                - link "PIM" [ref=f13e26] [cursor=pointer]:
+                  - /url: /web/index.php/pim/viewPimModule
+                  - generic [ref=f13e40]: PIM
+              - listitem [ref=f13e41]:
+                - link "Leave" [ref=f13e42] [cursor=pointer]:
+                  - /url: /web/index.php/leave/viewLeaveModule
+                  - generic [ref=f13e45]: Leave
+              - listitem [ref=f13e46]:
+                - link "Time" [ref=f13e47] [cursor=pointer]:
+                  - /url: /web/index.php/time/viewTimeModule
+                  - generic [ref=f13e53]: Time
+              - listitem [ref=f13e54]:
+                - link "Recruitment" [ref=f13e55] [cursor=pointer]:
+                  - /url: /web/index.php/recruitment/viewRecruitmentModule
+                  - generic [ref=f13e61]: Recruitment
+              - listitem [ref=f13e62]:
+                - link "My Info" [ref=f13e63] [cursor=pointer]:
+                  - /url: /web/index.php/pim/viewMyDetails
+                  - generic [ref=f13e69]: My Info
+              - listitem [ref=f13e70]:
+                - link "Performance" [ref=f13e71] [cursor=pointer]:
+                  - /url: /web/index.php/performance/viewPerformanceModule
+                  - generic [ref=f13e79]: Performance
+              - listitem [ref=f13e80]:
+                - link "Dashboard" [ref=f13e81] [cursor=pointer]:
+                  - /url: /web/index.php/dashboard/index
+                  - generic [ref=f13e84]: Dashboard
+              - listitem [ref=f13e85]:
+                - link "Directory" [ref=f13e86] [cursor=pointer]:
+                  - /url: /web/index.php/directory/viewDirectory
+                  - generic [ref=f13e89]: Directory
+              - listitem [ref=f13e90]:
+                - link "Maintenance" [ref=f13e91] [cursor=pointer]:
+                  - /url: /web/index.php/maintenance/viewMaintenanceModule
+                  - generic [ref=f13e95]: Maintenance
+      - banner [ref=f13e96]:
+        - generic [ref=f13e97]:
+          - generic [ref=f13e98]:
+            - text: 
+            - generic [ref=f13e99]:
+              - heading "Performance" [level=6] [ref=f13e100]
+              - heading "/ Manage Reviews" [level=6] [ref=f13e101]
+          - link "Upgrade" [ref=f13e103]:
+            - /url: https://orangehrm.com/open-source/upgrade-to-advanced
+            - button "Upgrade" [ref=f13e104] [cursor=pointer]: Upgrade
+          - list [ref=f13e110]:
+            - listitem [ref=f13e111]:
+              - generic [ref=f13e112] [cursor=pointer]:
+                - img "profile picture" [ref=f13e113]
+                - paragraph [ref=f13e114]: Partha s birlaa
+                - generic [ref=f13e115]: 
+        - navigation "Topbar Menu" [ref=f13e117]:
+          - list [ref=f13e118]:
+            - listitem [ref=f13e119] [cursor=pointer]:
+              - generic [ref=f13e120]:
+                - text: Configure
+                - generic [ref=f13e121]: 
+            - listitem [ref=f13e122] [cursor=pointer]:
+              - generic [ref=f13e123]:
+                - text: Manage Reviews
+                - generic [ref=f13e124]: 
+            - listitem [ref=f13e125] [cursor=pointer]:
+              - link "My Trackers" [ref=f13e126]:
+                - /url: "#"
+            - listitem [ref=f13e127] [cursor=pointer]:
+              - link "Employee Trackers" [ref=f13e128]:
+                - /url: "#"
+            - button "" [ref=f13e130] [cursor=pointer]:
+              - generic [ref=f13e131]: 
+    - generic [ref=f13e132]:
+      - generic [ref=f13e134]:
+        - generic [ref=f13e135]:
+          - generic [ref=f13e136]:
+            - heading "Employee Reviews" [level=5] [ref=f13e138]
+            - button "" [ref=f13e141] [cursor=pointer]:
+              - generic [ref=f13e142]: 
+          - separator [ref=f13e143]
+          - generic [ref=f13e145]:
+            - generic [ref=f13e146]:
+              - generic [ref=f13e148]:
+                - generic [ref=f13e150]: Employee Name
+                - textbox "Type for hints..." [ref=f13e154]
+              - generic [ref=f13e156]:
+                - generic [ref=f13e158]: Job Title
+                - generic [ref=f13e161] [cursor=pointer]:
+                  - generic [ref=f13e162]: "-- Select --"
+                  - generic [ref=f13e164]: 
+              - generic [ref=f13e166]:
+                - generic [ref=f13e168]: Sub Unit
+                - generic [ref=f13e171] [cursor=pointer]:
+                  - generic [ref=f13e172]: "-- Select --"
+                  - generic [ref=f13e174]: 
+              - generic [ref=f13e176]:
+                - generic [ref=f13e178]: Include
+                - generic [ref=f13e181] [cursor=pointer]:
+                  - generic [ref=f13e182]: Current Employees Only
+                  - generic [ref=f13e184]: 
+              - generic [ref=f13e186]:
+                - generic [ref=f13e188]: Review Status
+                - generic [ref=f13e191] [cursor=pointer]:
+                  - generic [ref=f13e192]: "-- Select --"
+                  - generic [ref=f13e194]: 
+              - generic [ref=f13e196]:
+                - generic [ref=f13e198]: From Date
+                - generic [ref=f13e201]:
+                  - textbox "yyyy-dd-mm" [ref=f13e202]: 2026-01-01
+                  - generic [ref=f13e203] [cursor=pointer]: 
+              - generic [ref=f13e205]:
+                - generic [ref=f13e207]: To Date
+                - generic [ref=f13e210]:
+                  - textbox "yyyy-dd-mm" [ref=f13e211]: 2026-31-12
+                  - generic [ref=f13e212] [cursor=pointer]: 
+            - separator [ref=f13e213]
+            - generic [ref=f13e214]:
+              - button "Reset" [ref=f13e215] [cursor=pointer]
+              - button "Search" [ref=f13e216] [cursor=pointer]
+        - generic [ref=f13e217]:
+          - generic [ref=f13e218]:
+            - separator [ref=f13e219]
+            - generic [ref=f13e221]: No Records Found
+          - table [ref=f13e223]:
+            - rowgroup [ref=f13e224]:
+              - row "Employee  Job Title Sub Unit Review Period  Due Date  Review Status  Actions" [ref=f13e225]:
+                - columnheader "Employee " [ref=f13e226]:
+                  - text: Employee
+                  - generic [ref=f13e227]:
+                    - generic [ref=f13e228] [cursor=pointer]: 
+                    - text:  
+                - columnheader "Job Title" [ref=f13e229]
+                - columnheader "Sub Unit" [ref=f13e230]
+                - columnheader "Review Period " [ref=f13e231]:
+                  - text: Review Period
+                  - generic [ref=f13e232]:
+                    - generic [ref=f13e233] [cursor=pointer]: 
+                    - text:  
+                - columnheader "Due Date " [ref=f13e234]:
+                  - text: Due Date
+                  - generic [ref=f13e235]:
+                    - generic [ref=f13e236] [cursor=pointer]: 
+                    - text:  
+                - columnheader "Review Status " [ref=f13e237]:
+                  - text: Review Status
+                  - generic [ref=f13e238]:
+                    - generic [ref=f13e239] [cursor=pointer]: 
+                    - text:  
+                - columnheader "Actions" [ref=f13e240]
+            - rowgroup
+      - generic [ref=f13e242]:
+        - paragraph [ref=f13e243]: OrangeHRM OS 5.8
+        - paragraph [ref=f13e244]:
+          - text: © 2005 - 2026
+          - link "OrangeHRM, Inc" [ref=f13e245] [cursor=pointer]:
+            - /url: http://www.orangehrm.com
+          - text: . All rights reserved.
+  - generic [ref=f13e247] [cursor=pointer]:
+    - generic [ref=f13e248]:
+      - generic [ref=f13e251]: 
+      - generic [ref=f13e252]:
+        - paragraph [ref=f13e253]: Info
+        - paragraph [ref=f13e254]: No Records Found
+    - button "×" [ref=f13e256]

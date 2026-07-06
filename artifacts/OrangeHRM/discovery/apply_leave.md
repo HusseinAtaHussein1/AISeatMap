@@ -1,0 +1,111 @@
+- generic [ref=f9e3]:
+  - generic:
+    - complementary [ref=f9e4]:
+      - navigation "Sidepanel" [ref=f9e5]:
+        - generic [ref=f9e6]:
+          - link "client brand banner" [ref=f9e7] [cursor=pointer]:
+            - /url: https://www.orangehrm.com/
+            - img "client brand banner" [ref=f9e9]
+          - text: 
+        - generic [ref=f9e10]:
+          - generic [ref=f9e11]:
+            - generic [ref=f9e12]:
+              - textbox "Search" [ref=f9e15]
+              - button "" [ref=f9e16] [cursor=pointer]:
+                - generic [ref=f9e17]: 
+            - separator [ref=f9e18]
+          - list [ref=f9e19]:
+            - listitem [ref=f9e20]:
+              - link "Admin" [ref=f9e21] [cursor=pointer]:
+                - /url: /web/index.php/admin/viewAdminModule
+                - generic [ref=f9e24]: Admin
+            - listitem [ref=f9e25]:
+              - link "PIM" [ref=f9e26] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewPimModule
+                - generic [ref=f9e40]: PIM
+            - listitem [ref=f9e41]:
+              - link "Leave" [ref=f9e42] [cursor=pointer]:
+                - /url: /web/index.php/leave/viewLeaveModule
+                - generic [ref=f9e45]: Leave
+            - listitem [ref=f9e46]:
+              - link "Time" [ref=f9e47] [cursor=pointer]:
+                - /url: /web/index.php/time/viewTimeModule
+                - generic [ref=f9e53]: Time
+            - listitem [ref=f9e54]:
+              - link "Recruitment" [ref=f9e55] [cursor=pointer]:
+                - /url: /web/index.php/recruitment/viewRecruitmentModule
+                - generic [ref=f9e61]: Recruitment
+            - listitem [ref=f9e62]:
+              - link "My Info" [ref=f9e63] [cursor=pointer]:
+                - /url: /web/index.php/pim/viewMyDetails
+                - generic [ref=f9e69]: My Info
+            - listitem [ref=f9e70]:
+              - link "Performance" [ref=f9e71] [cursor=pointer]:
+                - /url: /web/index.php/performance/viewPerformanceModule
+                - generic [ref=f9e79]: Performance
+            - listitem [ref=f9e80]:
+              - link "Dashboard" [ref=f9e81] [cursor=pointer]:
+                - /url: /web/index.php/dashboard/index
+                - generic [ref=f9e84]: Dashboard
+            - listitem [ref=f9e85]:
+              - link "Directory" [ref=f9e86] [cursor=pointer]:
+                - /url: /web/index.php/directory/viewDirectory
+                - generic [ref=f9e89]: Directory
+            - listitem [ref=f9e90]:
+              - link "Maintenance" [ref=f9e91] [cursor=pointer]:
+                - /url: /web/index.php/maintenance/viewMaintenanceModule
+                - generic [ref=f9e95]: Maintenance
+    - banner [ref=f9e96]:
+      - generic [ref=f9e97]:
+        - generic [ref=f9e98]:
+          - text: 
+          - heading "Leave" [level=6] [ref=f9e100]
+        - link "Upgrade" [ref=f9e102]:
+          - /url: https://orangehrm.com/open-source/upgrade-to-advanced
+          - button "Upgrade" [ref=f9e103] [cursor=pointer]: Upgrade
+        - list [ref=f9e109]:
+          - listitem [ref=f9e110]:
+            - generic [ref=f9e111] [cursor=pointer]:
+              - img "profile picture" [ref=f9e112]
+              - paragraph [ref=f9e113]: Partha s birlaa
+              - generic [ref=f9e114]: 
+      - navigation "Topbar Menu" [ref=f9e116]:
+        - list [ref=f9e117]:
+          - listitem [ref=f9e118] [cursor=pointer]:
+            - link "Apply" [ref=f9e119]:
+              - /url: "#"
+          - listitem [ref=f9e120] [cursor=pointer]:
+            - link "My Leave" [ref=f9e121]:
+              - /url: "#"
+          - listitem [ref=f9e122] [cursor=pointer]:
+            - generic [ref=f9e123]:
+              - text: Entitlements
+              - generic [ref=f9e124]: 
+          - listitem [ref=f9e125] [cursor=pointer]:
+            - generic [ref=f9e126]:
+              - text: Reports
+              - generic [ref=f9e127]: 
+          - listitem [ref=f9e128] [cursor=pointer]:
+            - generic [ref=f9e129]:
+              - text: Configure
+              - generic [ref=f9e130]: 
+          - listitem [ref=f9e131] [cursor=pointer]:
+            - link "Leave List" [ref=f9e132]:
+              - /url: "#"
+          - listitem [ref=f9e133] [cursor=pointer]:
+            - link "Assign Leave" [ref=f9e134]:
+              - /url: "#"
+          - button "" [ref=f9e136] [cursor=pointer]:
+            - generic [ref=f9e137]: 
+  - generic [ref=f9e138]:
+    - generic [ref=f9e141]:
+      - heading "Apply Leave" [level=6] [ref=f9e142]
+      - separator [ref=f9e143]
+      - paragraph [ref=f9e144]: No Leave Types with Leave Balance
+    - generic [ref=f9e145]:
+      - paragraph [ref=f9e146]: OrangeHRM OS 5.8
+      - paragraph [ref=f9e147]:
+        - text: © 2005 - 2026
+        - link "OrangeHRM, Inc" [ref=f9e148] [cursor=pointer]:
+          - /url: http://www.orangehrm.com
+        - text: . All rights reserved.

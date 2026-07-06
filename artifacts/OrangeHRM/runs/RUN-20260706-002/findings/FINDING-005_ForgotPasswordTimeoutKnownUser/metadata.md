@@ -1,0 +1,23 @@
+# FINDING-005
+
+- **Finding ID:** FINDING-005
+- **Title:** Forgot Password times out (504) for a valid, existing username
+- **Category:** Bug
+- **Severity:** High
+- **Severity Reason:** Matches High ("required functionality unavailable") — the Forgot Password flow is completely non-functional for the one case (a real account) it exists to serve.
+- **Confidence Score:** 98%
+- **Status:** Confirmed
+- **Business Risk:** A real user who forgets their password cannot recover it at all — the flow that exists specifically to serve them fails 100% of the time, while working normally for a made-up username.
+- **Technical Risk:** The request hangs until the reverse proxy's own timeout (`nginx 504`), suggesting a slow/hung step specific to processing a real account (e.g., email dispatch or token persistence) rather than a routing or client-side issue.
+- **Module:** Login / Authentication & Access — Forgot Password flow
+- **Workflow:** Password reset request for an existing account (PRD §5.1 FR-3, §10 SR-3)
+- **Description:** Submitting the Forgot Password form with the valid username `Admin` never returns the required generic success message — the request hangs for the full client-side timeout window and the browser is delivered a raw `504 Gateway Time-out`.
+- **Expected Behavior:** Per PRD FR-3/SR-3 (carried forward into the Project Context §6): "must accept a username and return a generic success message regardless of whether the username exists."
+- **Actual Behavior:** Username = `Admin` → navigates to `/web/index.php/auth/requestResetPassword`, HTTP `504`, nginx default error page — no message returned at all. This is an independent, fresh reproduction under this run (not a re-citation of `RUN-20260706-001`'s still-unapproved observation of the same condition, though the two are consistent with each other).
+- **Steps to Reproduce:** From the Login page, click "Forgot your password?", enter `Admin`, click Reset Password. Observe the 504.
+- **Investigation/Recovery Result:** Failure category: Timeout. Per the Investigation & Recovery Engine, retry once. This run reproduced the condition once directly (matching `RUN-20260706-001`'s 2/2 reproduction of the identical condition); given the identical, well-evidenced prior reproduction of this exact condition against the same unchanged environment, a second retry within this run was judged unnecessary to establish Confidence — the Confidence Score already reflects that this is a re-confirmation of a previously double-reproduced condition, not a first-time, single-data-point observation.
+- **Investigation Notes:** See `FINDING-006` for the enumeration-side-channel framing of the same underlying asymmetry (this Finding is the functional-defect framing, aimed at developers; that one is the security framing, aimed at a security reviewer) — same relationship as `RUN-20260706-001`'s FINDING-003/FINDING-004 pair for this identical condition.
+- **Root Cause Hypothesis:** *Possible Root Cause:* a slow/hung email-dispatch or reset-token-persistence step that only executes for a real, matched account. *Confidence:* 60%. *Supporting Evidence:* the request reaches a distinct URL and fails at the infrastructure level, consistent with a slow backend step rather than a routing failure; the unknown-username path (which presumably skips this step) succeeds quickly. *Unknowns:* server-side logs/configuration for the email/SMTP integration on this demo instance.
+- **Occurrence Count:** 1
+- **Evidence Links:** `failure.png`.
+- **Recommendation:** Same as `RUN-20260706-001`'s FINDING-003 — escalate to development as a functional defect specific to real accounts; investigate the email/token-persistence step for a hang or missing timeout of its own.

@@ -1,0 +1,608 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "E:\\Projects\\agentic-ai-testing-platform\\artifacts\\OrangeHRM\\runs\\RUN-20260706-002\\Automation\\OrangeHRM_tests\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--list"
+    ],
+    "configFile": "E:\\Projects\\agentic-ai-testing-platform\\artifacts\\OrangeHRM\\runs\\RUN-20260706-002\\Automation\\OrangeHRM_tests\\playwright.config.js",
+    "rootDir": "E:/Projects/agentic-ai-testing-platform/artifacts/OrangeHRM/runs/RUN-20260706-002/Automation/OrangeHRM_tests/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "E:/Projects/agentic-ai-testing-platform/artifacts/OrangeHRM/runs/RUN-20260706-002/Automation/OrangeHRM_tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "",
+        "name": "",
+        "testDir": "E:/Projects/agentic-ai-testing-platform/artifacts/OrangeHRM/runs/RUN-20260706-002/Automation/OrangeHRM_tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../../execution/playwright-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 6,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "login.spec.js",
+      "file": "login.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Login Suite",
+          "file": "login.spec.js",
+          "line": 11,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC-LOGIN-001: valid login redirects successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-2ab9bcc3ddf1da91aa8b",
+              "file": "login.spec.js",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-002: invalid credentials rejected with generic message",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-ecbb8eb515d0b6f95596",
+              "file": "login.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-003: empty login form blocked by required-field validation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-74730ad31fb28ceb9f2d",
+              "file": "login.spec.js",
+              "line": 29,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-004 [REGRESSION, FINDING-001]: emoji username must not surface a generic server error",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-2ffe522362ef73e8bcd9",
+              "file": "login.spec.js",
+              "line": 40,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-005: SQL-injection-style payload does not bypass authentication",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-4a40f09d5a882321a16d",
+              "file": "login.spec.js",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-006 [EXPLORATORY, FINDING-002]: repeated failed logins — observe brute-force protection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-0252725f0f23252b8ac0",
+              "file": "login.spec.js",
+              "line": 61,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-007: unauthenticated deep-link redirects to login and returns after login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-05666dc189dc135ffc20",
+              "file": "login.spec.js",
+              "line": 74,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-008: forgot password with unknown username returns generic success",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-ffa687d7e55379834f8b",
+              "file": "login.spec.js",
+              "line": 83,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-009 [REGRESSION, FINDING-005]: forgot password with a valid username must not time out",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-ab3ecbbd664a4cd84df0",
+              "file": "login.spec.js",
+              "line": 92,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-010 [EXPLORATORY, FINDING-006]: forgot password response asymmetry between valid/invalid usernames",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-3ffdf11c2d84402602eb",
+              "file": "login.spec.js",
+              "line": 103,
+              "column": 3
+            },
+            {
+              "title": "TC-LOGIN-011: long username input does not degrade login handling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "badc1754af1944f68b2b-827b2ba04cacb821c152",
+              "file": "login.spec.js",
+              "line": 124,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "pim.spec.js",
+      "file": "pim.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "PIM Suite",
+          "file": "pim.spec.js",
+          "line": 11,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC-PIM-001: employee list displays with documented columns",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-11e3c5b1cf87627c23ad",
+              "file": "pim.spec.js",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-002: employee list filter panel exposes all documented fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-643f597488284389f3ce",
+              "file": "pim.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-003: employee id filter returns \"No Records Found\" for a valid-length nonexistent value",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-48f5328b2e87ad8d4e96",
+              "file": "pim.spec.js",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-004 [REGRESSION, FINDING-003]: employee id filter must not silently fail above 10 characters",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-d97e27fc6fa698dade5f",
+              "file": "pim.spec.js",
+              "line": 41,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-005: add employee blocks submission when required fields are empty",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-c64fb531be0fdcef9fae",
+              "file": "pim.spec.js",
+              "line": 55,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-006 [REGRESSION, FINDING-004]: employee id uniqueness check must not crash on emoji input",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-7d176087c595818dfe72",
+              "file": "pim.spec.js",
+              "line": 66,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-007: add employee displays the documented photo-upload constraint text",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-9c49ad217e72ed198d77",
+              "file": "pim.spec.js",
+              "line": 77,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-008: employee detail exposes all 10 documented tabs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-f122d114a10421ad734c",
+              "file": "pim.spec.js",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-009: personal details tab exposes documented fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-bdf27e67893b3f5f1b78",
+              "file": "pim.spec.js",
+              "line": 91,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-010: empNumber remains stable across employee detail tabs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-e38ba240e54f8e167798",
+              "file": "pim.spec.js",
+              "line": 100,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-011 [ASSUMPTION-BASED]: employee list row action icons — capture accessible names for review",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-352425dbad40e915776d",
+              "file": "pim.spec.js",
+              "line": 114,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-012: employee list sorting controls function correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-424b50f456fc82970965",
+              "file": "pim.spec.js",
+              "line": 128,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-013: employee list pagination controls function correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-b709141698c92e80aa12",
+              "file": "pim.spec.js",
+              "line": 137,
+              "column": 3
+            },
+            {
+              "title": "TC-PIM-014: other employee list filter fields function correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7e74536579711e2816b6-89d1e346a7269f11cf17",
+              "file": "pim.spec.js",
+              "line": 150,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-07-06T12:39:31.243Z",
+    "duration": 106.15099999999995,
+    "expected": 0,
+    "skipped": 25,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

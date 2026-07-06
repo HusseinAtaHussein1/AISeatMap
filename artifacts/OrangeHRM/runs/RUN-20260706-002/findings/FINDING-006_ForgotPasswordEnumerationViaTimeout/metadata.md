@@ -1,0 +1,23 @@
+# FINDING-006
+
+- **Finding ID:** FINDING-006
+- **Title:** Forgot Password outcome differs by username validity — a timing/availability side channel for enumeration
+- **Category:** Security Concern
+- **Severity:** Medium
+- **Severity Reason:** Matches Medium ("business rule inconsistency") — the anti-enumeration business rule is functionally undermined by an outcome/timing asymmetry, though no core workflow is blocked for an attacker's own purposes and no breach occurred in-session.
+- **Confidence Score:** 92%
+- **Status:** Needs Human Review
+- **Business Risk:** An outside observer can reliably distinguish a valid username from an invalid one purely by which of two very different outcomes occurs (slow 504 vs. fast success) — a more practical enumeration vector than comparing message text, and one that undermines the anti-enumeration intent even though message text itself was never observed to differ (it never gets the chance to, for the valid-username case).
+- **Technical Risk:** Same underlying condition as `FINDING-005`; the security framing is that the *asymmetry itself*, not just the functional failure, is the exposure.
+- **Module:** Login / Authentication & Access — Forgot Password flow
+- **Workflow:** Password reset request — username enumeration via response behavior (PRD §10 SR-3)
+- **Description:** `Admin` (valid) → 504 timeout, no message, ever. `nonexistent_user_run002` (invalid) → fast, normal `"Reset Password link sent successfully"`. This binary, easily observed difference lets an attacker distinguish valid from invalid usernames.
+- **Expected Behavior:** The PRD's anti-enumeration requirement's clear intent is that username validity cannot be inferred from this flow's behavior; it is silent on whether response-timing/availability, as opposed to message-text, falls within that intent.
+- **Actual Behavior:** See table under `FINDING-005`'s sibling reproduction; independently reproduced once more this run (`nonexistent_user_run002` → fast success, confirming the pattern holds for a different fake username than either prior run used).
+- **Steps to Reproduce:** Submit Forgot Password with a known-valid username → 504. Submit with any made-up username → fast success message.
+- **Investigation/Recovery Result:** Not applicable in the Retry sense (see `FINDING-005`) — this Finding's own validation is the differential-pattern comparison itself, which held again on this run's independent attempt.
+- **Investigation Notes:** Third independent confirmation of this exact asymmetry across this project's two runs (RUN-20260706-001's FINDING-004, and now this run) — the pattern is highly consistent, not a fluke.
+- **Root Cause Hypothesis:** *(see `FINDING-005` — shared root cause)*
+- **Occurrence Count:** 1
+- **Evidence Links:** `known_user_timeout.png`, `unknown_user_success.png`.
+- **Recommendation:** Same as `RUN-20260706-001`'s FINDING-004 — ask the Product Owner/Security stakeholder whether timing/availability parity is in-scope for the anti-enumeration requirement; resolving `FINDING-005` will likely resolve this as a side effect, but verify both independently once a fix lands.

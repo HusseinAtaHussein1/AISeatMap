@@ -71,3 +71,55 @@ Architectural lessons discovered while redesigning the legacy 4-stage `prompts/`
 **Lesson:** Multiple agent specs independently state "Project Context is the Single Source of Truth" and "no downstream agent may read the PRD directly" — but the actual enforcement mechanism is the **Allowed Tools** table in each agent spec (e.g., the Explorer Agent's tool list has no PRD-reading path at all; only Project-Context-reading is wired in). Repeating the principle in prose is not what makes it hold — restricting *what a stage is even capable of reading* is what makes it hold.
 
 **Architectural improvement for future projects:** Whenever adding a new agent or stage, treat the Inputs/Allowed-Tools table as the actual enforcement surface, and treat the prose principle as documentation of *why* the table looks the way it does — not the other way around.
+
+---
+
+## 7. The flat-path/legacy-collision problem predicted in Lesson 5 was not hypothetical — it recurred on the platform's own new artifacts, not just the legacy ones
+
+_Added 2026-07-06, after RUN-20260706-001 and RUN-20260706-002 (the platform's first two real pipeline executions, culminating in the first full Stage 1→6 run)._
+
+**What happened:** Lesson 5 above worried about *legacy* artifacts colliding with the new architecture's contracts. In practice, the collision that actually bit was narrower and sharper: `artifacts/OrangeHRM/Reports/QA_Assessment_Report.md` — a legacy-pipeline artifact — sits at the **exact same flat path** every agent spec's own "Expected Artifacts" table says the new Explorer Agent must write to. The first time a new-pipeline run actually tried to produce that file, it would have silently overwritten a pre-existing, unrelated artifact.
+
+**Resolution used (twice, across two runs):** Generate every one of that run's artifacts inside a Run-Workspace-scoped path (`artifacts/{{PROJECT_NAME}}/runs/RUN-*/...`) instead of the flat per-project paths the specs literally name — never touching, renaming, or overwriting anything that predates the run. This worked cleanly both times, but it is a **workaround applied ad hoc by the operator each time**, not a rule written into `pipeline/pipeline.md` or any agent spec. Nothing currently tells a future run, or a future person, that this is the expected behavior versus the documented flat-path behavior.
+
+**Lesson for future projects:** A conflict predicted in the abstract (Lesson 5) will recur concretely, and the concrete recurrence will not wait for the abstract question to be resolved first. **Decide, in the specification itself, whether new-pipeline artifacts default to the flat per-project paths or the Run Workspace paths** — and if the answer is "it depends" (e.g., flat paths for a project's first-ever new-pipeline run, Run-Workspace paths whenever a same-named legacy or prior-run artifact already exists), write that decision rule down, rather than leaving each future operator to reinvent the same workaround and hope it's consistent with whatever the last person did.
+
+---
+
+## 8. A component's own worked example silently caps what it actually supports
+
+**What happened:** `pipeline/run_manager.md` §6 defines the Run Workspace's subfolder structure (`context/`, `discovery/`, `findings/`, `evidence/`, `screenshots/`, `videos/`, `logs/`, `network/`, `reports/`, `metadata/`) — but its own only worked example (`workflows/first_run.md`) exercises Stages 1–3. Nothing in that subfolder list covers Stage 3's `testcases/`, Stage 4's `Automation/`, or Stage 5's `execution/`. This was invisible for exactly as long as no run tried to go past Stage 3 — the first run that did (RUN-20260706-002, all the way to Stage 6) had to invent those three subfolders on the spot, undocumented.
+
+**Lesson for future projects:** A spec's own example run is doing double duty as informal documentation of "what this actually supports" — and if that example doesn't exercise the full range the spec claims to cover (here: all 6 stages), the untested range should be assumed under-specified until proven otherwise, not assumed to "obviously" extend the same way. When a component's worked example is narrower than its own stated scope, treat that gap itself as a tracked item, not just a thing to patch silently the first time someone runs past it.
+
+---
+
+## 9. Self Review's pre-flagged risk turned into the actual, dominant failure at first execution — treat that as validation of the step, not a coincidence
+
+**What happened:** The Automation Agent's Self Review step (`agents/automation_agent.md` §15) flagged, before any test ever ran, that several selectors — most prominently the Employee List filter-panel-expand locator — were "written from accessibility-tree/discovery notes rather than live interaction" and were "higher-risk... to validate at first execution." At first execution, 8 of 12 test failures traced to exactly that locator (or a closely related one). The Self Review didn't just turn out to be *right* in hindsight — it named the specific, narrow cause in advance.
+
+**Lesson for future projects:** This is evidence the Self Review step has real, non-ceremonial predictive value when the agent honestly flags "I generated this without live verification" rather than asserting confidence it doesn't have. The improvement isn't to Self Review's existence — it's to what happens *next* time: a flagged higher-risk selector should probably trigger an actual live-verification pass (e.g., a quick interactive check via browser automation before committing to the generated code) rather than only a textual caveat carried forward into a report three stages later. The caveat correctly warned; it didn't yet prevent.
+
+---
+
+## 10. A regression test's failure mode matters as much as its verdict — "it failed" is not the same claim as "the bug is confirmed"
+
+**What happened:** Of 4 regression tests generated specifically to re-assert a Confirmed Finding's corrected behavior, all 4 failed at execution. A shallow read ("4/4 regression tests failed → 4/4 bugs still present") would have been right for exactly half of them by coincidence. Two failures (`TC-LOGIN-004`, `TC-LOGIN-009`) reproduced their target defect's actual symptom. The other two (`TC-PIM-004`, `TC-PIM-006`) failed on an unrelated automation-layer timeout *before ever reaching* the assertion that would have exercised the underlying Finding — their failure carries no evidence about whether the application defect is still present.
+
+**Lesson for future projects:** Reporting on regression-test results must check *why* each one failed against the raw evidence, not just tally pass/fail counts against Finding IDs. This is cheap to do (the raw error message is already sitting in the Execution Results) and expensive to skip (it's the difference between "confirmed" and "inconclusive" for half the regression suite in this run). Bake this distinction into `agents/reporting_agent.md` as an explicit required check for any run that includes Finding-derived regression tests, rather than relying on each report's author to think of it independently.
+
+---
+
+## 11. A stage's own summary table and its own detail table can silently disagree — nothing currently cross-checks a stage against itself
+
+**What happened:** The Automation Agent's `AutomationCoverageReport.md` stated "21 Generate New Automation" decisions; its sibling `AutomationDecisionReport.md`, listing all 25 decisions individually, actually contains 22. Both artifacts were produced by the same agent invocation, approved at the same checkpoint, by the same reviewer — and disagreed with each other from the moment they were written. Nothing in the pipeline checks a stage's own summary arithmetic against its own detail data before the checkpoint approves it.
+
+**Lesson for future projects:** Wherever an agent produces both a per-item detail table and a rolled-up summary derived from it, the summary should be computed *from* the detail table programmatically (or at minimum cross-checked against it before the artifact is finalized), never hand-tallied separately — hand-tallying two views of the same 25 rows is exactly the kind of arithmetic a human reviewer is unlikely to re-verify at a document-review checkpoint, since the checkpoint is reviewing *decisions*, not *arithmetic*.
+
+---
+
+## 12. A "0 Flaky" figure is not a stability claim when retries are disabled — it's an absence of measurement
+
+**What happened:** The Execution Agent's raw stats reported `flaky: 0` for a 25-test run. Playwright can only classify a result as flaky if a retried attempt later succeeds; this run's config set `retries: 0` deliberately, so flaky detection was structurally impossible — "0 Flaky" meant "not measured," not "confirmed stable," and a report that repeated the figure without that context would have implied a guarantee the run never actually tested for.
+
+**Lesson for future projects:** Any report that surfaces a flakiness/retry-derived statistic should state the retry configuration alongside it, every time — the number is not self-interpreting, and the failure mode (silently implying stability that wasn't measured) is exactly the kind of "outcomes look better than they were" distortion `agents/reporting_agent.md` §3's last bullet already warns against for other cases. Add this as a named example there.

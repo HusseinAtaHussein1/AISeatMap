@@ -1,0 +1,12 @@
+{
+  "name": "orangehrm-automation-run-20260706-002",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Generated automation package — Test Design v2 -> Automation Agent v2, RUN-20260706-002. Not intended to be published or committed as a standalone package; lives inside the Run Workspace.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}

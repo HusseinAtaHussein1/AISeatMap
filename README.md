@@ -1,124 +1,231 @@
-# 🚀 Agentic AI Testing Platform
+# 🤖 Agentic AI Testing Platform
 
-An extensible AI-powered Software Testing Platform that transforms project documentation into autonomous testing workflows using modular AI Agents.
+> Build an **AI QA Engineer**, not just an AI Testing Tool.
+
+An extensible Agentic AI Platform that orchestrates specialized AI agents to understand applications, explore systems, design manual tests, generate automation, execute validation, and produce professional QA reports.
 
 ---
 
 # Vision
 
-Build a reusable platform where AI Agents collaborate to:
+The platform is designed to replicate how an experienced QA Engineer works.
 
-- Understand software projects
-- Explore applications
-- Generate manual test cases
-- Generate automation scripts
-- Execute regression testing
-- Produce professional QA reports
+Instead of prompting an AI for isolated tasks, the platform follows a structured software testing lifecycle where each agent has a single responsibility and communicates only through documented artifacts.
 
-The platform is designed to be reusable across any software project.
+The long-term vision is to build an autonomous AI QA Engineer capable of understanding any software project while keeping humans in control through explicit approval gates.
 
 ---
 
-# Architecture
+# Platform Workflow
 
 ```text
-                 PRD
-                  │
-                  ▼
-      Project Context Agent
-                  │
-                  ▼
-          Project Context
-                  │
-      ┌───────────┴───────────┐
-      ▼                       ▼
-Explorer Agent         Test Design Agent
-      │                       │
-      ▼                       ▼
-Discovery Artifacts   Manual Test Suites
-      │                       │
-      └───────────┬───────────┘
-                  ▼
-          Automation Agent
-                  │
-                  ▼
-           Execution Agent
-                  │
-                  ▼
-           Reporting Agent
+                Project Context
+                       │
+                       ▼
+        ┌─────────────────────────┐
+        │ Project Context Agent   │
+        └─────────────────────────┘
+                       │
+               Human Approval
+                       │
+                       ▼
+        ┌─────────────────────────┐
+        │ Explorer Agent          │
+        └─────────────────────────┘
+                       │
+               Human Approval
+                       │
+                       ▼
+        ┌─────────────────────────┐
+        │ Test Design Agent       │
+        └─────────────────────────┘
+                       │
+               Human Approval
+                       │
+                       ▼
+        ┌─────────────────────────┐
+        │ Automation Agent        │
+        └─────────────────────────┘
+                       │
+           Automation Approval
+                       │
+                       ▼
+        ┌─────────────────────────┐
+        │ Execution Agent         │
+        └─────────────────────────┘
+                       │
+                       ▼
+        ┌─────────────────────────┐
+        │ Reporting Agent         │
+        └─────────────────────────┘
 ```
 
 ---
 
-# AI Agents
+# Core Principles
 
-| Agent | Responsibility |
-|--------|----------------|
-| Project Context Agent | Build the project context from project documentation |
-| Explorer Agent | Explore the application and discover UI behavior |
-| Test Design Agent | Generate structured manual test cases |
-| Automation Agent | Generate automation scripts |
-| Execution Agent | Execute automation suites |
-| Reporting Agent | Generate QA reports |
-
----
-
-# Pipeline
-
-```
-PRD
-↓
-
-Project Context
-
-↓
-
-Exploration
-
-↓
-
-Test Design
-
-↓
-
-Automation
-
-↓
-
-Execution
-
-↓
-
-Reporting
-```
+- Single Responsibility per Agent
+- Human Approval Gates
+- Evidence-Driven Testing
+- Complete Traceability
+- Reusable Architecture
+- Framework Agnostic
+- Platform Independent
+- Reuse Before Generation
+- Never Invent Business Rules
+- Never Skip Validation
 
 ---
 
-# Project Structure
+# Repository Structure
 
-```
+```text
 agentic-ai-testing-platform/
 
 ├── agents/
-├── pipeline/
 ├── artifacts/
+├── pipeline/
 ├── prompts/
-├── docs/
-├── config/
-├── SESSION_HANDOFF.md
+├── workflows/
+
 ├── LESSONS_LEARNED.md
+├── PLATFORM_VALIDATION_REPORT.md
+├── SESSION_HANDOFF.md
+├── VISION.md
+
+├── package.json
 └── README.md
 ```
 
 ---
 
-# Architecture Principles
+# Agents
 
-- Project Context is the Single Source of Truth.
-- AI Agents communicate only through artifacts.
-- Each Agent has one responsibility.
-- Every generated artifact becomes the input of another Agent.
-- Human approval gates exist before automation.
+## Project Context Agent
+
+Responsibilities
+
+- Understand project scope
+- Build project knowledge
+- Define business context
+- Prepare downstream agents
+
+Outputs
+
+- Project Context
+
+---
+
+## Explorer Agent
+
+Responsibilities
+
+- Explore the application
+- Discover behaviors
+- Collect evidence
+- Produce Findings
+
+Outputs
+
+- Discovery Artifacts
+- Findings
+- Evidence Packages
+
+---
+
+## Test Design Agent
+
+Responsibilities
+
+- Generate Manual Test Suites
+- Build Requirement Traceability
+- Produce Coverage Reports
+
+Outputs
+
+- Markdown Test Suite
+- Excel Test Suite
+- Traceability Matrix
+- Coverage Report
+
+---
+
+## Automation Agent
+
+Responsibilities
+
+- Analyze reusable automation
+- Select framework
+- Generate maintainable automation
+- Produce automation reports
+
+Outputs
+
+- Automation Package
+- Automation Manifest
+- Automation Coverage
+- Decision Report
+
+---
+
+## Execution Agent
+
+Responsibilities
+
+- Execute approved automation
+- Collect execution evidence
+- Produce execution metadata
+
+Supports
+
+- Headless
+- Headed
+- Debug
+
+Outputs
+
+- Execution Results
+- Screenshots
+- Videos
+- Traces
+- Logs
+
+---
+
+## Reporting Agent
+
+Responsibilities
+
+- Analyze execution
+- Summarize findings
+- Produce executive reports
+
+Outputs
+
+- Final QA Report
+- Platform Validation Report
+- Recommendations
+- Lessons Learned
+
+---
+
+# Platform Features
+
+- Multi-Agent Architecture
+- Human Approval Workflow
+- Modular Pipeline
+- Evidence Driven Testing
+- Screenshot Collection
+- Video Recording
+- Playwright Support
+- SHAFT Engine Support
+- Selenium Support
+- Cypress Support
+- Appium Support
+- REST Assured Support
+- Traceability
+- Automation Planning
+- Coverage Analysis
 
 ---
 
@@ -126,52 +233,115 @@ agentic-ai-testing-platform/
 
 ## Completed
 
-- Agent Framework
-- Pipeline Specification
-- OrangeHRM Proof of Concept
-- Session Handoff
-- Lessons Learned
+- Project Context Agent v2
+- Explorer Agent v2
+- Test Design Agent v2
+- Automation Agent v2
+- Execution Agent v2
+- Reporting Agent
+- Run Manager
+- First Run Workflow
+- End-to-End Validation
 
-## In Progress
+---
 
+# Validation
+
+The platform has successfully completed its first full validation using OrangeHRM.
+
+Validation included:
+
+- Project Context
+- Application Exploration
+- Manual Test Design
 - Automation Generation
-- Execution Engine
-- Reporting Engine
+- Automation Execution
+- QA Reporting
+
+Result
+
+✅ End-to-End validation completed successfully.
 
 ---
 
 # Roadmap
 
-### Phase 1
+Version 1.0
 
-- Project Context
-- Exploration
-- Test Design
+- End-to-End Platform
+- Modular Agents
+- Human Approval Gates
 
-### Phase 2
+Version 1.1
 
-- Automation Generation
-- Test Execution
+- Multi Browser Execution
+- Workspace Intelligence
+- Better Retry Engine
 
-### Phase 3
+Version 1.2
 
-- Reporting
-- Azure DevOps Integration
-- Multi-Agent Orchestration
+- Smart Exploration
+- AI Learning
+- Better Selector Recovery
+
+Version 2.0
+
+- Enterprise Project Support
+- Distributed Execution
+- Dashboard
+- HTML Reports
+- PDF Reports
+
+Version 3.0
+
+- Autonomous AI QA Engineer
 
 ---
 
-# Technologies
+# Technology
+
+Current stack
 
 - Claude Code
-- Anthropic API
-- Playwright MCP
+- Playwright
+- Node.js
+- JavaScript
 - Markdown
-- Git
-- GitHub
+- Excel
+
+Supported Automation Frameworks
+
+- SHAFT Engine
+- Playwright
+- Selenium
+- Cypress
+- Appium
+- REST Assured
 
 ---
 
-# Goal
+# Contributing
 
-Build a production-ready Agentic AI Testing Platform capable of assisting QA Engineers throughout the entire software testing lifecycle.
+Every architectural change should preserve:
+
+- Agent Independence
+- Pipeline Stability
+- Traceability
+- Human Approval Gates
+- Backward Compatibility
+
+---
+
+# License
+
+Private Repository
+
+---
+
+# Author
+
+Ahmed Ayman
+
+Software Quality Control Engineer
+
+Building the next generation of Agentic AI Testing.

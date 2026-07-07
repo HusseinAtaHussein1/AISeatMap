@@ -549,6 +549,5 @@ Please follow these guidelines:
 - Never bypass approval gates.
 - Update documentation when introducing architectural changes.
 - Prefer reuse over duplication.
-
 ---
 

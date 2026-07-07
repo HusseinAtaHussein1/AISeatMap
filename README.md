@@ -1,339 +1,133 @@
-# 🤖 Agentic AI Testing Platform
+# 🚀 Agentic AI Testing Platform
 
-> Build an **AI QA Engineer**, not just an AI Testing Tool.
+> Enterprise-ready AI-powered software testing platform built around specialized AI agents.
 
-An extensible Agentic AI Platform that orchestrates specialized AI agents to understand applications, explore systems, design manual tests, generate automation, execute validation, and produce professional QA reports.
+## Overview
 
----
+The Agentic AI Testing Platform orchestrates specialized AI agents to perform the complete software testing lifecycle while keeping humans in control through approval gates.
 
-# Vision
+## 🏗 Platform Architecture
 
-The platform is designed to replicate how an experienced QA Engineer works.
-
-Instead of prompting an AI for isolated tasks, the platform follows a structured software testing lifecycle where each agent has a single responsibility and communicates only through documented artifacts.
-
-The long-term vision is to build an autonomous AI QA Engineer capable of understanding any software project while keeping humans in control through explicit approval gates.
-
----
-
-# Platform Workflow
-
-```text
-                Project Context
-                       │
-                       ▼
-        ┌─────────────────────────┐
-        │ Project Context Agent   │
-        └─────────────────────────┘
-                       │
-               Human Approval
-                       │
-                       ▼
-        ┌─────────────────────────┐
-        │ Explorer Agent          │
-        └─────────────────────────┘
-                       │
-               Human Approval
-                       │
-                       ▼
-        ┌─────────────────────────┐
-        │ Test Design Agent       │
-        └─────────────────────────┘
-                       │
-               Human Approval
-                       │
-                       ▼
-        ┌─────────────────────────┐
-        │ Automation Agent        │
-        └─────────────────────────┘
-                       │
-           Automation Approval
-                       │
-                       ▼
-        ┌─────────────────────────┐
-        │ Execution Agent         │
-        └─────────────────────────┘
-                       │
-                       ▼
-        ┌─────────────────────────┐
-        │ Reporting Agent         │
-        └─────────────────────────┘
+```mermaid
+flowchart TD
+PK[Project Knowledge] --> PCA[Project Context Agent]
+RS[Run Scope] --> PCA
+PCA --> PC[Approved Project Context]
+PC --> EXP[Explorer]
+EXP --> TD[Test Design]
+TD --> AUTO[Automation]
+AUTO --> EXEC[Execution]
+EXEC --> REP[Reporting]
+REP --> QA[Final QA Report]
 ```
 
----
+## 🔄 Workflow
 
-# Core Principles
+```mermaid
+flowchart LR
+A[Project] --> B[Run Scope] --> C[Project Context] --> D[Explorer] --> E[Test Design] --> F[Automation] --> G[Execution] --> H[Reporting]
+```
 
-- Single Responsibility per Agent
-- Human Approval Gates
-- Evidence-Driven Testing
-- Complete Traceability
-- Reusable Architecture
-- Framework Agnostic
-- Platform Independent
-- Reuse Before Generation
-- Never Invent Business Rules
-- Never Skip Validation
+## 🤖 AI Agents
 
----
+| Agent | Responsibility |
+|---|---|
+| Project Context | Builds the operational project context |
+| Explorer | Explores the application |
+| Test Design | Generates manual test suites |
+| Automation | Generates automation assets |
+| Execution | Executes automation |
+| Reporting | Produces QA reports |
 
-# Repository Structure
+## 📂 Repository Structure
 
 ```text
 agentic-ai-testing-platform/
-
 ├── agents/
-├── artifacts/
 ├── pipeline/
-├── prompts/
+├── projects/
+├── artifacts/
 ├── workflows/
-
-├── LESSONS_LEARNED.md
-├── PLATFORM_VALIDATION_REPORT.md
-├── SESSION_HANDOFF.md
-├── VISION.md
-
-├── package.json
+├── prompts/
+├── docs/
 └── README.md
 ```
 
----
+## 📁 Projects
 
-# Agents
+`projects/` contains canonical project knowledge.
 
-## Project Context Agent
+## 📦 Artifacts
 
-Responsibilities
+`artifacts/` contains generated outputs for each run.
 
-- Understand project scope
-- Build project knowledge
-- Define business context
-- Prepare downstream agents
+## 🎯 Run Scope
 
-Outputs
+Supported:
+- Entire Project
+- Epic
+- Feature
+- User Story
+- Bug
+- Requirement
+- Custom
 
-- Project Context
+Future:
+- Azure DevOps
+- Jira
+- Xray
+- TestRail
 
----
+## 🔗 Traceability
 
-## Explorer Agent
+```mermaid
+flowchart LR
+R[Requirement] --> S[Run Scope] --> P[Project Context] --> D[Discovery] --> F[Finding] --> T[Test Case] --> A[Automation] --> E[Execution] --> Q[QA Report]
+```
 
-Responsibilities
+## 🧪 Frameworks
 
-- Explore the application
-- Discover behaviors
-- Collect evidence
-- Produce Findings
-
-Outputs
-
-- Discovery Artifacts
-- Findings
-- Evidence Packages
-
----
-
-## Test Design Agent
-
-Responsibilities
-
-- Generate Manual Test Suites
-- Build Requirement Traceability
-- Produce Coverage Reports
-
-Outputs
-
-- Markdown Test Suite
-- Excel Test Suite
-- Traceability Matrix
-- Coverage Report
-
----
-
-## Automation Agent
-
-Responsibilities
-
-- Analyze reusable automation
-- Select framework
-- Generate maintainable automation
-- Produce automation reports
-
-Outputs
-
-- Automation Package
-- Automation Manifest
-- Automation Coverage
-- Decision Report
-
----
-
-## Execution Agent
-
-Responsibilities
-
-- Execute approved automation
-- Collect execution evidence
-- Produce execution metadata
-
-Supports
-
-- Headless
-- Headed
-- Debug
-
-Outputs
-
-- Execution Results
-- Screenshots
-- Videos
-- Traces
-- Logs
-
----
-
-## Reporting Agent
-
-Responsibilities
-
-- Analyze execution
-- Summarize findings
-- Produce executive reports
-
-Outputs
-
-- Final QA Report
-- Platform Validation Report
-- Recommendations
-- Lessons Learned
-
----
-
-# Platform Features
-
-- Multi-Agent Architecture
-- Human Approval Workflow
-- Modular Pipeline
-- Evidence Driven Testing
-- Screenshot Collection
-- Video Recording
-- Playwright Support
-- SHAFT Engine Support
-- Selenium Support
-- Cypress Support
-- Appium Support
-- REST Assured Support
-- Traceability
-- Automation Planning
-- Coverage Analysis
-
----
-
-# Current Status
-
-## Completed
-
-- Project Context Agent v2
-- Explorer Agent v2
-- Test Design Agent v2
-- Automation Agent v2
-- Execution Agent v2
-- Reporting Agent
-- Run Manager
-- First Run Workflow
-- End-to-End Validation
-
----
-
-# Validation
-
-The platform has successfully completed its first full validation using OrangeHRM.
-
-Validation included:
-
-- Project Context
-- Application Exploration
-- Manual Test Design
-- Automation Generation
-- Automation Execution
-- QA Reporting
-
-Result
-
-✅ End-to-End validation completed successfully.
-
----
-
-# Roadmap
-
-Version 1.0
-
-- End-to-End Platform
-- Modular Agents
-- Human Approval Gates
-
-Version 1.1
-
-- Multi Browser Execution
-- Workspace Intelligence
-- Better Retry Engine
-
-Version 1.2
-
-- Smart Exploration
-- AI Learning
-- Better Selector Recovery
-
-Version 2.0
-
-- Enterprise Project Support
-- Distributed Execution
-- Dashboard
-- HTML Reports
-- PDF Reports
-
-Version 3.0
-
-- Autonomous AI QA Engineer
-
----
-
-# Technology
-
-Current stack
-
-- Claude Code
+Current:
 - Playwright
-- Node.js
-- JavaScript
-- Markdown
-- Excel
-
-Supported Automation Frameworks
-
 - SHAFT Engine
-- Playwright
+
+Planned:
 - Selenium
 - Cypress
-- Appium
-- REST Assured
 
----
+## 🚀 Quick Start
 
-# Contributing
+```bash
+git clone <repository>
+cd agentic-ai-testing-platform
+```
 
-Every architectural change should preserve:
+1. Create a project under `projects/`
+2. Define the Run Scope
+3. Generate the Project Context
+4. Review and approve
+5. Execute the pipeline
 
-- Agent Independence
-- Pipeline Stability
-- Traceability
-- Human Approval Gates
-- Backward Compatibility
+## 🗺 Roadmap
 
----
+### v1.0
+- Multi-Agent Platform
+- Multi-Project Support
+- Run Scope
 
-# License
+### v1.1
+- Project Bootstrap Wizard
+- Azure DevOps
+- Jira
 
-Private Repository
+### v2.0
+- AI QA Engineer
+- Self-Healing Automation
 
----
+## 📄 License
+
+MIT
+
+## 👨‍💻 Author
+
+Ahmed Ayman

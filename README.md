@@ -123,11 +123,3 @@ cd agentic-ai-testing-platform
 ### v2.0
 - AI QA Engineer
 - Self-Healing Automation
-
-## 📄 License
-
-MIT
-
-## 👨‍💻 Author
-
-Ahmed Ayman

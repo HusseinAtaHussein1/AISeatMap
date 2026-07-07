@@ -337,11 +337,3 @@ Every architectural change should preserve:
 Private Repository
 
 ---
-
-# Author
-
-Ahmed Ayman
-
-Software Quality Control Engineer
-
-Building the next generation of Agentic AI Testing.

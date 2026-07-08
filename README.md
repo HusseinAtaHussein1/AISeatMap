@@ -458,7 +458,7 @@ This ensures engineers remain in full control of the testing lifecycle.
 Clone the repository.
 
 ```bash
-git clone https://github.com/<your-account>/agentic-ai-testing-platform.git
+git clone https://github.com/ayman2911/agentic-ai-testing-platform.git
 
 cd agentic-ai-testing-platform
 ```

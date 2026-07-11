@@ -15,15 +15,15 @@ NDC Admin Portal is a web-based travel distribution system (Java 17 / Spring Boo
 1. [`run_configuration.md`](run_configuration.md) — what's in scope right now, credentials, environment constraints
 2. [`architecture.md`](architecture.md) — how the application itself is structured
 3. [`glossary.md`](glossary.md) — domain terms you'll hit in the PRD and discovery artifacts
-4. `artifacts/NDC/knowledge/NDC_PRD.md` — the full Product Requirements Document
-5. `artifacts/NDC/context/NDC_ProjectContext.md` — the current approved Project Context (single source of truth for every pipeline agent downstream of Stage 1)
+4. `projects/NDC/PRD.md` — the full Product Requirements Document
+5. `projects/NDC/artifacts/context/NDC_ProjectContext.md` — the current approved Project Context (single source of truth for every pipeline agent downstream of Stage 1)
 
 ## Where things stand
 
 Don't hardcode pipeline status in this file — it will go stale. Instead check:
 
-- `artifacts/NDC/pipeline/NDC_RunManifest.md` — per-stage version/checkpoint status
-- `artifacts/NDC/runs/` — individual run workspaces
+- `projects/NDC/artifacts/pipeline/NDC_RunManifest.md` — per-stage version/checkpoint status
+- `projects/NDC/artifacts/runs/` — individual run workspaces
 
 ## Key things to know before touching this project
 

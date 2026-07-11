@@ -29,7 +29,7 @@ This is the durable, versioned home for the "run configuration" that `agents/pro
 
 ## Modules
 
-See [`architecture.md`](architecture.md) for the full module list. Which modules are **in scope for a given run** is decided per run and recorded in that run's Project Context (`artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md`) — this file only records what modules and credentials *exist to be chosen from*, not what any specific run covers.
+See [`architecture.md`](architecture.md) for the full module list. Which modules are **in scope for a given run** is decided per run and recorded in that run's Project Context (`projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md`) — this file only records what modules and credentials *exist to be chosen from*, not what any specific run covers.
 
 ## Run Scope Sources Available
 
@@ -41,7 +41,7 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 | Pasted text | Yes | Used to date — both existing runs' scope narrowing (see below) was expressed as prose in the run's Project Context, not a separate structured file. |
 | Markdown file (`resources/requirements/`, `resources/notes/`) | Not yet used | `resources/requirements/` (renamed from `resources/docs/`, 2026-07-10) and `resources/notes/` exist but are currently empty. |
 | Uploaded document | Not yet used | — |
-| Requirement document reference | Yes | The PRD itself (`artifacts/OrangeHRM/knowledge/OrangeHRM_PRD.md`) is the standing requirement document every run's scope is drawn from. |
+| Requirement document reference | Yes | The PRD itself (`projects/OrangeHRM/PRD.md`) is the standing requirement document every run's scope is drawn from. |
 | Custom scope description | Yes | Used to date — see below; neither prior run mapped cleanly to a single Epic/Feature/Story/Bug. |
 | Azure DevOps ID (future) | Not yet integrated | See `pipeline/run_scope.md` §4.2 |
 | Jira ID (future) | Not yet integrated | See `pipeline/run_scope.md` §4.2 |
@@ -56,4 +56,4 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 | RUN-20260706-002 | Custom | Custom Scope / Pasted text | Login / Authentication + PIM (read/search/validate only) | v2 (approved, superseded as current pointer) |
 | RUN-20260707-001 | Full Regression | Entire Project / Entire Project | All 10 PRD Core Modules | v3 (**current approved**) |
 
-For the authoritative detail behind any row, read the corresponding Project Context version file directly — this table is a pointer, not a substitute. The flat `artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md` pointer now mirrors v3.
+For the authoritative detail behind any row, read the corresponding Project Context version file directly — this table is a pointer, not a substitute. The flat `projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md` pointer now mirrors v3.

@@ -59,7 +59,7 @@ This workflow runs exactly three Agent stages, orchestrated by the Run Manager, 
 
 Per `pipeline/run_manager.md`, before any Agent runs:
 
-1. **Prepare Workspace** — create the Run Workspace (`pipeline/run_manager.md` §6) at `artifacts/{{PROJECT_NAME}}/runs/RUN-YYYYMMDD-XXX/`.
+1. **Prepare Workspace** — create the Run Workspace (`pipeline/run_manager.md` §6) at `projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX/`.
 2. **Generate Run Metadata** — write the initial `run.json` (`pipeline/run_manager.md` §7) with Status `Preparing`.
 3. **Create Run Manifest** — initialize the pipeline's Run Manifest (`pipeline/pipeline.md` §7), which will track version, checkpoint status, and reviewer for each of the three stages this workflow runs.
 4. **Launch Stage 1** — hand off to the Project Context Agent, having set run Status to `Running`.
@@ -73,7 +73,7 @@ The Run Manager takes no further action of its own until a stage signals complet
 | | |
 |---|---|
 | **Input** | PRD · Supporting Documents · Run Configuration (declaring Login as the sole In Scope module, per §3 above) |
-| **Output** | Project Context — `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| **Output** | Project Context — `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
 | **Checkpoint** | **Human Review Required** (Business Analyst / Product Owner, per `pipeline/pipeline.md` §5.1) |
 
 The workflow does not proceed to Step 3 until this checkpoint is explicitly approved.
@@ -85,10 +85,10 @@ The workflow does not proceed to Step 3 until this checkpoint is explicitly appr
 | | |
 |---|---|
 | **Input** | Project Context · Running Application |
-| **Output** | Discovery Report (`artifacts/{{PROJECT_NAME}}/Reports/QA_Assessment_Report.md`) · Findings Summary (`artifacts/{{PROJECT_NAME}}/findings/Findings_Summary.md`) · Evidence Packages (`artifacts/{{PROJECT_NAME}}/findings/FINDING-{ID}_{ShortName}/`) |
+| **Output** | Discovery Report (`projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md`) · Findings Summary (`projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md`) · Evidence Packages (`projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/`) |
 | **Checkpoint** | **Human Review Required** (QA Lead, per `pipeline/pipeline.md` §5.1) |
 
-Note: `agents/explorer_agent.md` also always produces per-screen discovery snapshots (`artifacts/{{PROJECT_NAME}}/discovery/*.md`) as a standing, non-optional part of its output (its own §9 Execution Rule 4) — that continues to happen as part of this step even though this workflow's artifact list in §6 groups them together with the Discovery Report rather than naming them separately.
+Note: `agents/explorer_agent.md` also always produces per-screen discovery snapshots (`projects/{{PROJECT_NAME}}/artifacts/discovery/*.md`) as a standing, non-optional part of its output (its own §9 Execution Rule 4) — that continues to happen as part of this step even though this workflow's artifact list in §6 groups them together with the Discovery Report rather than naming them separately.
 
 The workflow does not proceed to Step 4 until this checkpoint is explicitly approved.
 
@@ -131,14 +131,14 @@ This workflow does not loosen, tighten, or otherwise alter any Explorer Agent ru
 
 | Artifact | Path | Produced By |
 |---|---|---|
-| Project Context | `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md` | Project Context Agent |
-| Discovery Report | `artifacts/{{PROJECT_NAME}}/Reports/QA_Assessment_Report.md` | Explorer Agent |
-| Findings Summary | `artifacts/{{PROJECT_NAME}}/findings/Findings_Summary.md` | Explorer Agent |
-| Evidence Packages | `artifacts/{{PROJECT_NAME}}/findings/FINDING-{ID}_{ShortName}/` | Explorer Agent |
-| Manual Test Suites (Markdown) | `artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TestCases_Login.md` | Test Design Agent |
-| Manual Test Suites (Excel) | `artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TestCases_Login.xlsx` | Test Design Agent |
-| Requirement Traceability Matrix | `artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TraceabilityMatrix.md` | Test Design Agent |
-| Run Summary | `artifacts/{{PROJECT_NAME}}/runs/RUN-YYYYMMDD-XXX/metadata/run_summary.md` | Run Manager |
+| Project Context | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` | Project Context Agent |
+| Discovery Report | `projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md` | Explorer Agent |
+| Findings Summary | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md` | Explorer Agent |
+| Evidence Packages | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/` | Explorer Agent |
+| Manual Test Suites (Markdown) | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_Login.md` | Test Design Agent |
+| Manual Test Suites (Excel) | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_Login.xlsx` | Test Design Agent |
+| Requirement Traceability Matrix | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` | Test Design Agent |
+| Run Summary | `projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX/metadata/run_summary.md` | Run Manager |
 
 # 7. Success Criteria
 
@@ -186,4 +186,4 @@ Application: OrangeHRM
 Module: Login
 ```
 
-Hypothetical result: Run Manager allocates `RUN-20260706-001` and creates its workspace under `artifacts/OrangeHRM/runs/RUN-20260706-001/`; the Project Context Agent produces `OrangeHRM_ProjectContext.md` scoped to Login only (In Scope: Login; Out of Scope: everything else) and it clears Human Review; the Explorer Agent explores only the Login screen and its immediate boundary conditions (invalid credentials, empty fields, session expiration, direct URL access while unauthenticated), producing `QA_Assessment_Report.md`, a `Findings_Summary.md` with, say, two Findings (e.g., a `Security Concern` around missing lockout behavior, status `Needs Human Review`, and a `UX Issue` around an unclear error message, status `Needs Human Review`), each with a complete evidence package, and clears its own Human Review checkpoint; the Test Design Agent produces `OrangeHRM_TestCases_Login.md` / `.xlsx` and `OrangeHRM_TraceabilityMatrix.md` and clears its checkpoint; the workflow then stops, Automation/Execution/Reporting are never invoked, and the Run Manager publishes `run_summary.md` with Overall Status `Completed`.
+Hypothetical result: Run Manager allocates `RUN-20260706-001` and creates its workspace under `projects/OrangeHRM/artifacts/runs/RUN-20260706-001/`; the Project Context Agent produces `OrangeHRM_ProjectContext.md` scoped to Login only (In Scope: Login; Out of Scope: everything else) and it clears Human Review; the Explorer Agent explores only the Login screen and its immediate boundary conditions (invalid credentials, empty fields, session expiration, direct URL access while unauthenticated), producing `QA_Assessment_Report.md`, a `Findings_Summary.md` with, say, two Findings (e.g., a `Security Concern` around missing lockout behavior, status `Needs Human Review`, and a `UX Issue` around an unclear error message, status `Needs Human Review`), each with a complete evidence package, and clears its own Human Review checkpoint; the Test Design Agent produces `OrangeHRM_TestCases_Login.md` / `.xlsx` and `OrangeHRM_TraceabilityMatrix.md` and clears its checkpoint; the workflow then stops, Automation/Execution/Reporting are never invoked, and the Run Manager publishes `run_summary.md` with Overall Status `Completed`.

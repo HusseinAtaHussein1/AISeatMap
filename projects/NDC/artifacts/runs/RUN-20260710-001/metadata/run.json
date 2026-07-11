@@ -3,7 +3,7 @@
   "Project Name": "NDC",
   "Pipeline Version": "unversioned",
   "Project Context Version": "v1",
-  "Explorer Version": "unversioned",
+  "Explorer Version": "v4",
   "Test Design Version": "unversioned",
   "Automation Version": "unversioned",
   "Execution Version": "unversioned",
@@ -14,5 +14,5 @@
   "Started Time": "2026-07-10T00:00:00Z",
   "Finished Time": null,
   "Duration": null,
-  "Status": "Waiting For Approval"
+  "Status": "Running"
 }

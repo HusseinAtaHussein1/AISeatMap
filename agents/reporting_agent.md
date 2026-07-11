@@ -27,10 +27,10 @@ The Reporting Agent is the final stage of the pipeline. It synthesizes the raw E
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Execution Results | Primary | Required | `artifacts/{{PROJECT_NAME}}/execution/{{PROJECT_NAME}}_ExecutionResults.md` |
-| Manual Test Suites | Required | Required | `artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TestCases_*.md` (Markdown and/or Excel) |
-| Traceability Matrix | Required | Required | `artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TraceabilityMatrix.md` |
-| Project Context | Required | Required | `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| Execution Results | Primary | Required | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md` |
+| Manual Test Suites | Required | Required | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.md` (Markdown and/or Excel) |
+| Traceability Matrix | Required | Required | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` |
+| Project Context | Required | Required | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
 
 # 5. Outputs
 
@@ -57,7 +57,7 @@ The Reporting Agent is the final stage of the pipeline. It synthesizes the raw E
 
 | Artifact | Path |
 |---|---|
-| Final QA Report | `artifacts/{{PROJECT_NAME}}/Reports/{{PROJECT_NAME}}_Final_QA_Report.md` |
+| Final QA Report | `projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md` |
 
 Document structure:
 1. Executive Summary
@@ -84,12 +84,12 @@ Context.
 ## Input
 
 Read:
-artifacts/{{PROJECT_NAME}}/execution/{{PROJECT_NAME}}_ExecutionResults.md
+projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md
 
 Also read:
-artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TestCases_*.md
-artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TraceabilityMatrix.md
-artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md
+projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.md
+projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md
+projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
 
 ## Instructions
 
@@ -127,7 +127,7 @@ refuted, or remains unverified based on the execution outcome.
 ## Output
 
 Save the report as:
-artifacts/{{PROJECT_NAME}}/Reports/{{PROJECT_NAME}}_Final_QA_Report.md
+projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md
 
 Do not re-run tests. Do not modify execution results, test cases, or the
 Project Context.
@@ -139,15 +139,15 @@ Project Context.
 
 ```text
 Input:
-  artifacts/OrangeHRM/execution/OrangeHRM_ExecutionResults.md
-  artifacts/OrangeHRM/testcases/OrangeHRM_TestCases_Admin.md
-  artifacts/OrangeHRM/testcases/OrangeHRM_TestCases_PIM.md
-  artifacts/OrangeHRM/testcases/OrangeHRM_TestCases_Leave.md
-  artifacts/OrangeHRM/testcases/OrangeHRM_TraceabilityMatrix.md
-  artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md
+  projects/OrangeHRM/artifacts/execution/OrangeHRM_ExecutionResults.md
+  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TestCases_Admin.md
+  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TestCases_PIM.md
+  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TestCases_Leave.md
+  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TraceabilityMatrix.md
+  projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md
 ```
 
-Hypothetical result: `artifacts/OrangeHRM/Reports/OrangeHRM_Final_QA_Report.md` stating, e.g., an Executive Summary of overall run health; a Detailed Execution Report listing each of the 36 executed tests with its Test Case ID and Automation Script ID; Passed/Failed Statistics showing 31 passed / 3 failed / 2 skipped; a Defect Summary describing TC-PIM-013, TC-PIM-014, and TC-LEA-013; Requirement Coverage showing, e.g., 47 of 52 traced Project Context requirements have an executed test; Automation Coverage showing 36 of 56 manual test cases were automated; and a Risks section noting that SR-5 (brute-force protection) remains unverified because the corresponding test was never authorized to run against the shared demo environment.
+Hypothetical result: `projects/OrangeHRM/artifacts/reporting/OrangeHRM_Final_QA_Report.md` stating, e.g., an Executive Summary of overall run health; a Detailed Execution Report listing each of the 36 executed tests with its Test Case ID and Automation Script ID; Passed/Failed Statistics showing 31 passed / 3 failed / 2 skipped; a Defect Summary describing TC-PIM-013, TC-PIM-014, and TC-LEA-013; Requirement Coverage showing, e.g., 47 of 52 traced Project Context requirements have an executed test; Automation Coverage showing 36 of 56 manual test cases were automated; and a Risks section noting that SR-5 (brute-force protection) remains unverified because the corresponding test was never authorized to run against the shared demo environment.
 
 # 11. Architecture Principle
 

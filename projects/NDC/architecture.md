@@ -6,7 +6,7 @@ This describes the architecture of **NDC itself, the application under test** �
 
 NDC Admin Portal ("National Distribution Channel") is a web-based system for travel agencies and administrators to manage configurations, business rules, bookings, reports, and system operations. It is used by three broad user classes: **Admins**, **Agencies**, and **Agents**.
 
-Source: architecture overview infographic provided 2026-07-10 (see `resources/diagrams/`), plus live screenshots of the running Admin Portal (`http://192.168.1.70`, logged in as `E.Saady`) captured the same day. The infographic-derived sections below (Business Flow, System Architecture, Cross-Module Data Model, Access Control, Technology Stack) are still provisional until cross-checked with `artifacts/NDC/knowledge/NDC_PRD.md`. The Navigation Model, by contrast, is now based on direct observation of the live portal, not the infographic — see the note at the end of that section.
+Source: architecture overview infographic provided 2026-07-10 (see `resources/diagrams/`), plus live screenshots of the running Admin Portal (`http://192.168.1.70`, logged in as `E.Saady`) captured the same day. The infographic-derived sections below (Business Flow, System Architecture, Cross-Module Data Model, Access Control, Technology Stack) are still provisional until cross-checked with `projects/NDC/PRD.md`. The Navigation Model, by contrast, is now based on direct observation of the live portal, not the infographic — see the note at the end of that section.
 
 ## Business Flow (end-to-end)
 

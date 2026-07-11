@@ -58,44 +58,43 @@ RUN-20260706-002
 
 # 6. Workspace Structure
 
+**Revision note (repository v1.0 architecture):** every project is now fully self-contained under `projects/{{PROJECT_NAME}}/` — there is no root-level `artifacts/` directory. Project Artifacts (the current-approved state) and Run Artifacts (immutable per-run snapshots) both live under `projects/{{PROJECT_NAME}}/artifacts/`, as two siblings: the stage-named folders directly under `artifacts/` hold the current approved state, and `artifacts/runs/RUN-XXXX/` holds each run's own snapshot. This also consolidates the previous cross-cutting `evidence/`, `screenshots/`, `videos/`, `logs/`, `network/` folders into the owning stage's own folder (`discovery/` for Explorer-produced evidence, `execution/` for Execution-produced evidence) rather than keeping them as separate top-level run folders — no evidence type is dropped, only regrouped by which stage produces it.
+
 For every run, the Run Manager creates the following directory tree before any Agent starts:
 
 ```
-artifacts/
+projects/
   {{PROJECT_NAME}}/
-    runs/
-      RUN-YYYYMMDD-XXX/
-        context/
-        discovery/
-        findings/
-        evidence/
-        screenshots/
-        videos/
-        logs/
-        network/
-        reports/
-        metadata/
+    artifacts/
+      runs/
+        RUN-YYYYMMDD-XXX/
+          metadata/
+          context/
+          discovery/
+            findings/
+          test_design/
+          automation/
+          execution/
+          reporting/
 ```
 
-- `context/` — the Project Context version(s) used by this run.
-- `discovery/` — Explorer Agent discovery snapshots produced during this run.
-- `findings/` — Explorer Agent Finding evidence packages produced during this run (see `agents/explorer_agent.md` §5.11).
-- `evidence/` — general evidence artifacts that don't fall under the more specific subdirectories below.
-- `screenshots/` — screenshot evidence, run-wide.
-- `videos/` — video/session recordings, run-wide.
-- `logs/` — console and application logs, run-wide.
-- `network/` — network captures (e.g., HAR files), run-wide.
-- `reports/` — QA Assessment Report, Final QA Report, and any other stage report generated during this run.
 - `metadata/` — `run.json` (§7) and `run_summary.md` (§9), plus any other run-bookkeeping file.
+- `context/` — the Project Context version(s) used by this run.
+- `discovery/` — Explorer Agent discovery snapshots, QA Assessment Report, and evidence (screenshots/videos/logs/network captures) produced during this run.
+- `discovery/findings/` — Explorer Agent Finding evidence packages produced during this run (see `agents/explorer_agent.md` §5.11).
+- `test_design/` — Test Design Agent's Manual Test Suite, Traceability Matrix, and Coverage Report for this run.
+- `automation/` — Automation Agent's Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Summary for this run.
+- `execution/` — Execution Agent's Execution Results and captured evidence (screenshots, traces, logs, HAR, framework reports) for this run.
+- `reporting/` — Reporting Agent's Final QA Report for this run.
 
-This Run Workspace is **additive** to, not a replacement for, the flat per-project artifact paths already documented in `pipeline/pipeline.md` and each Agent's own specification (e.g., `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md`, `artifacts/{{PROJECT_NAME}}/discovery/*.md`). Those remain the authoritative "current approved" locations per `pipeline/pipeline.md` §7. The Run Workspace is where the Run Manager organizes a run-scoped view — for monitoring, history, and archival — of the artifacts produced while that run was active.
+This Run Workspace is **additive** to, not a replacement for, the current-approved per-project artifact paths already documented in `pipeline/pipeline.md` and each Agent's own specification (e.g., `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md`, `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md`) — those remain the authoritative "current approved" locations per `pipeline/pipeline.md` §7, now living as siblings of `runs/` rather than at the repository root. The Run Workspace is where the Run Manager organizes a run-scoped view — for monitoring, history, and archival — of the artifacts produced while that run was active.
 
 # 7. Run Metadata
 
 The Run Manager generates and maintains a single metadata file per run:
 
 ```
-artifacts/{{PROJECT_NAME}}/runs/RUN-YYYYMMDD-XXX/metadata/run.json
+projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX/metadata/run.json
 ```
 
 `run.json` must contain the following fields:
@@ -144,7 +143,7 @@ The Run Manager transitions a run's status based on mechanical signals (an Agent
 Once a run reaches a terminal status (`Completed`, `Failed`, or `Cancelled`), the Run Manager publishes:
 
 ```
-artifacts/{{PROJECT_NAME}}/runs/RUN-YYYYMMDD-XXX/metadata/run_summary.md
+projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX/metadata/run_summary.md
 ```
 
 `run_summary.md` must include:
@@ -156,11 +155,11 @@ artifacts/{{PROJECT_NAME}}/runs/RUN-YYYYMMDD-XXX/metadata/run_summary.md
 | Visited Screens | Count of distinct screens/states captured in this run's `discovery/` (a mechanical count of Explorer Agent discovery snapshots, not a judgment of exploration completeness) |
 | Executed Agents | Which of the six Agents ran during this run, and in what order |
 | Generated Artifacts | A count/list of artifacts produced across all Run Workspace subdirectories (§6) |
-| Findings Count | Count of Finding evidence packages under this run's `findings/` |
-| Evidence Count | Count of evidence items across `evidence/`, `screenshots/`, `videos/`, `logs/`, and `network/` |
-| Screenshots Count | Count of screenshot files under `screenshots/` (and any embedded within `findings/` evidence packages) |
-| Videos Count | Count of video recordings under `videos/` (and any embedded within `findings/` evidence packages) |
-| Logs Count | Count of log files under `logs/` |
+| Findings Count | Count of Finding evidence packages under this run's `discovery/findings/` |
+| Evidence Count | Count of evidence items across `discovery/` (screenshots/videos/logs/network captures) and `execution/` (screenshots/traces/logs/HAR/framework reports) |
+| Screenshots Count | Count of screenshot files under `discovery/` and `execution/` (including any embedded within `discovery/findings/` evidence packages) |
+| Videos Count | Count of video recordings under `discovery/` and `execution/` (including any embedded within `discovery/findings/` evidence packages) |
+| Logs Count | Count of log files under `discovery/` and `execution/` |
 | Coverage | The mechanical ratio of in-scope modules/screens actually visited (per Discovery Artifacts) against the Project Context's declared in-scope list — a count, not an assessment of whether that coverage was sufficient |
 | Overall Status | The run's final value from the Execution Status enum (§8) |
 
@@ -225,19 +224,17 @@ Allocated Run ID: RUN-20260706-001
 Hypothetical resulting workspace:
 
 ```
-artifacts/OrangeHRM/runs/RUN-20260706-001/
-  context/
-  discovery/
-  findings/
-  evidence/
-  screenshots/
-  videos/
-  logs/
-  network/
-  reports/
+projects/OrangeHRM/artifacts/runs/RUN-20260706-001/
   metadata/
     run.json
     run_summary.md
+  context/
+  discovery/
+    findings/
+  test_design/
+  automation/
+  execution/
+  reporting/
 ```
 
 Hypothetical `run.json` (abbreviated):

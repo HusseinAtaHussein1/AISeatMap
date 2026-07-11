@@ -17,6 +17,6 @@ Domain and product terminology specific to the OrangeHRM project. For platform t
 | **Leave List** | The Leave module's approver-facing screen for reviewing/filtering submitted leave requests by status, date, employee, etc. |
 | **Directory** | The org-wide employee search/lookup module, independent of PIM's administrative Employee List |
 | **Hiring Manager** | A column/filter value on Recruitment candidate records — unconfirmed whether this is a distinct login role or just a data attribute |
-| **Reconstructed PRD** | The PRD status label (`OrangeHRM_PRD.md`) indicating it was derived from observed UI behavior rather than an original specification — see the `> Assumption` tags throughout it |
+| **Reconstructed PRD** | The PRD status label (`PRD.md`) indicating it was derived from observed UI behavior rather than an original specification — see the `> Assumption` tags throughout it |
 
 New terms encountered while working on this project should be added here as they come up, rather than left implicit in discovery notes or test cases.

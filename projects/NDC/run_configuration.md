@@ -53,5 +53,5 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 
 | Run | Run Type | Run Scope (Type / Source) | In-scope modules (summary) | Project Context version |
 |---|---|---|---|---|
-| RUN-20260710-001 | User Story | User Story / Pasted text (Q2-CORE-WT1-T3002-066 + T3087, jointly scoped) | Credential Routes Filter, Airport BlackList/WhiteList, Supplier Credentials (Restricted Airlines), Airline (GDS/LCC type), Booking-Mid Office + Portal Booking Module | v1 — Pending Review |
+| RUN-20260710-001 | User Story | User Story / Pasted text (Q2-CORE-WT1-T3002-066 + T3087, jointly scoped) | Credential Routes Filter, Airport BlackList/WhiteList, Supplier Credentials (Restricted Airlines), Airline (GDS/LCC type), Booking-Mid Office + Portal Booking Module | v1 — Approved |
 | <!-- RUN-YYYYMMDD-XXX --> | <!-- Full Regression / Smoke / Feature / User Story / Bug / Epic / Custom --> | <!-- e.g. User Story / Pasted text --> | <!-- summary --> | <!-- vN --> |

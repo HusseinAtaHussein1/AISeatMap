@@ -1,0 +1,22 @@
+{
+  "Run ID": "RUN-20260707-001",
+  "Project Name": "OrangeHRM",
+  "Pipeline Version": "unversioned",
+  "Run Scope Type": "Entire Project",
+  "Run Scope Source": "Entire Project (no narrowing)",
+  "Run Type": "Full Regression",
+  "Project Context Version": "v3",
+  "Explorer Version": "unversioned",
+  "Test Design Version": "unversioned",
+  "Automation Version": "unversioned",
+  "Execution Version": "unversioned",
+  "Reporting Version": "unversioned",
+  "Browser": "n/a — no browser-driven stage has run yet",
+  "Environment": "Shared public demo (https://opensource-demo.orangehrmlive.com/)",
+  "Resolution": "n/a — no browser-driven stage has run yet",
+  "Started Time": "2026-07-07",
+  "Finished Time": null,
+  "Duration": null,
+  "Status": "Paused",
+  "Status Note": "Stage 1 checkpoint approved 2026-07-07 (Aymoon, Business Analyst / Product Owner role). Deliberately paused here by operator instruction rather than proceeding automatically to Stage 2 — not an open checkpoint."
+}

@@ -212,6 +212,7 @@ This gate is named distinctly from "Human Review Required" because approving it 
 6. **Human approval gates must stop the pipeline until approval is granted.** See §5.3 — no silent timeouts, no auto-approval, no proceeding on an assumed "looks fine."
 7. **All artifacts must be versionable.** See §7 — every artifact carries a version identifier and prior versions are retained, never overwritten in place.
 8. **Every output must maintain traceability.** See §8 — every artifact from Stage 3 onward can be traced back, ID for ID, to the Project Context requirement (and, transitively, the PRD) that generated it.
+9. **Project Isolation.** When onboarding or executing a project, agents must load knowledge exclusively from that project's own directory (`projects/{{PROJECT_NAME}}/`) and its corresponding artifacts (`artifacts/{{PROJECT_NAME}}/`). Other projects under `projects/` may be consulted only as structural examples or templates (e.g., to see how a sibling project's `resources/` folder is laid out) — they must never contribute functional requirements, business rules, test cases, or domain knowledge to the project currently being worked on.
 
 ## 7. Artifact & Versioning Conventions
 

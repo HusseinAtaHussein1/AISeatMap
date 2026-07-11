@@ -36,9 +36,9 @@ A Run Scope Source is **how the content of a given Type is actually delivered** 
 |---|---|---|
 | **Entire Project** | No specific item supplied; the Project Context Agent scopes to the full approved Project Knowledge. | Entire Project |
 | **Pasted text** | The Epic/Feature/Story/Bug description is pasted directly into the run configuration or the prompt given to the Project Context Agent. | Epic, Feature, User Story, Bug, Custom Scope |
-| **Markdown file** | A `.md` file — e.g. under `projects/<Project>/resources/docs/` or `resources/notes/` — is referenced as the scope definition. | Feature, User Story, Bug, Requirement Document, Custom Scope |
+| **Markdown file** | A `.md` file — e.g. under `projects/<Project>/resources/requirements/` (in the Type-specific subfolder: `epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/` — see that folder's own README) or `resources/notes/` — is referenced as the scope definition. The file's own `Source:` metadata line (not its folder) records that its Source was Markdown file — see §4.3 below. | Feature, User Story, Bug, Requirement Document, Custom Scope |
 | **Uploaded document** | A non-Markdown file (Word, PDF, etc.) is supplied out of band and referenced by path or attachment. | Requirement Document, Feature, Epic |
-| **Requirement document reference** | A pointer to an existing document already in the project's knowledge (e.g., a specific section of the PRD, or a file under `resources/docs/`), rather than a newly pasted/uploaded one. | Requirement Document |
+| **Requirement document reference** | A pointer to an existing document already in the project's knowledge (e.g., a specific section of the PRD, or a file under `resources/requirements/specifications/`), rather than a newly pasted/uploaded one. | Requirement Document |
 | **Custom scope description** | A free-form scope statement that doesn't reference any tracked item or document at all. | Custom Scope |
 
 ## 4.2 Future (integration-dependent — not implemented)
@@ -51,6 +51,14 @@ A Run Scope Source is **how the content of a given Type is actually delivered** 
 | **Jira Epic / Bug ID** | Future. Same integration, other issue types. |
 
 These are documented as supported future input sources only. No Azure DevOps or Jira connectivity exists in this platform today, and none is implemented by this document.
+
+## 4.3 Source Is Recorded as Metadata, Not Folder Structure
+
+`projects/<Project>/resources/requirements/` is organized by **Type only** (`epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/`), mirroring the Types in §3. **Source** is deliberately not a subfolder — a User Story delivered via pasted text, a Markdown file, or (once integrated) Azure DevOps all live in the same `user_stories/` folder. Each requirement file instead carries its own Source as a metadata line near its top, e.g. `**Type:** User Story · **Source:** Plain Text (pasted)`.
+
+This is because Type is stable (the five subfolders above are not expected to grow often) while Source keeps expanding as new integrations are added (Azure DevOps, Jira, Confluence, GitHub, PDF, Word, Markdown, Plain Text, Figma, Email, TestRail, Xray, and others) — encoding Source into the directory tree would mean creating a new subfolder every time a new intake channel is supported. Recording it as in-file metadata instead keeps the folder layout stable regardless of where a requirement came from.
+
+An earlier version of this layout nested `user_stories/` by Source (`pasted/`, `markdown/`, `azure_devops/`); that was flattened back to Type-only on 2026-07-10 in favor of the metadata approach described here.
 
 # 5. Run Types
 

@@ -36,7 +36,7 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 |---|---|---|
 | Entire Project | <!-- yes/no --> | <!-- notes --> |
 | Pasted text | <!-- yes/no --> | <!-- notes --> |
-| Markdown file (`resources/docs/`, `resources/notes/`) | <!-- yes/no --> | <!-- notes --> |
+| Markdown file (`resources/requirements/`, `resources/notes/`) | <!-- yes/no --> | <!-- notes --> |
 | Uploaded document | <!-- yes/no --> | <!-- notes --> |
 | Requirement document reference | <!-- yes/no --> | <!-- notes --> |
 | Custom scope description | <!-- yes/no --> | <!-- notes --> |

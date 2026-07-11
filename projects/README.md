@@ -34,7 +34,12 @@ projects/
     architecture.md             # architecture of the application under test (not the platform)
     glossary.md                 # domain/product terminology specific to this project
     resources/                  # supplementary material — standardized layout, see below
-      docs/
+      requirements/              # requirement material, organized by Type only (renamed from docs/, 2026-07-10)
+        epics/
+        features/
+        user_stories/            # Source (Pasted text/Markdown/Azure DevOps/...) is a metadata field inside
+        bugs/                    #   each file, not a subfolder — see resources/README.md and pipeline/run_scope.md §4
+        specifications/
       api/
         swagger/
         postman/

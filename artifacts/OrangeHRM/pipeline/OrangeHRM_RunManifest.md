@@ -47,4 +47,32 @@ The `QA_Assessment_Report.md` for this run was written directly to `artifacts/Or
 | RUN-20260706-002 | Stage 6 — Reporting Agent | v1 | 2026-07-06 | *(no gate — terminal stage, per pipeline.md §4 Stage 6)* | *(n/a — consumed by stakeholders, not another agent)* | `artifacts/OrangeHRM/runs/RUN-20260706-002/reports/OrangeHRM_Final_QA_Report.md` |
 | RUN-20260706-002 | Stage 5 — Execution Agent (v2 spec, re-execution) | EXEC-20260706-002-002 | 2026-07-06T13:21:52Z–13:26:34Z | *(no gate — mechanical run)* | *(n/a)* | `artifacts/OrangeHRM/runs/RUN-20260706-002/execution/OrangeHRM_ExecutionResults_EXEC-20260706-002-002.md` — 13 Passed, 11 Failed, 1 Skipped, 0 Flaky. Execution Mode: **Headed** (Run Configuration did not define one; agent halted and asked the user directly, per `agents/execution_agent.md` v2 §5.1). First execution under the v2 spec's mode requirement. |
 
+---
+
+## RUN-20260707-001 — Full Regression, Entire Project Run Scope
+
+**Purpose:** first pipeline run authored under the Run Scope architecture (`pipeline/run_scope.md`) — Run Scope Type "Entire Project," Run Type "Full Regression," covering all ten PRD Core Modules rather than the narrower Login (`v1`) or Login + PIM (`v2`) scopes of the prior two runs.
+
+**Artifact Location Policy (this run):** following the precedent set by `RUN-20260706-002`, this run's artifacts are generated inside `artifacts/OrangeHRM/runs/RUN-20260707-001/` only. The flat `artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md` "current approved" pointer has been updated to mirror this run's Stage 1 output, now that it is approved (below).
+
+| Run ID | Stage | Version | Timestamp (UTC) | Checkpoint Status | Reviewer | Artifact Link |
+|---|---|---|---|---|---|---|
+| RUN-20260707-001 | Stage 1 — Project Context Agent | v3 | 2026-07-07 | **Approved** | Aymoon (Business Analyst / Product Owner role) | `artifacts/OrangeHRM/runs/RUN-20260707-001/context/OrangeHRM_ProjectContext.v3.md` (current approved pointer promoted: `artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md`) |
+
+Stage 1's checkpoint is now cleared. Per `pipeline/pipeline.md` §5.3 rule 5, Stage 2 (Explorer Agent) may now be invoked for this run whenever requested — no stage has been invoked yet beyond Stage 1.
+
+---
+
+## RUN-20260707-002 — Claim Module, Custom Scope (Pasted Text)
+
+**Purpose:** validate the Claim (expense claims) module, which is undocumented in the project PRD and therefore absent from `v1`–`v3`'s scope. Sourced as a Custom Scope / Pasted Text Run Scope (`pipeline/run_scope.md` §4.1) — the user supplied a reverse-engineered description of typical OrangeHRM Claims behavior directly in conversation, explicitly caveated as inferred, not the application's actual internal PRD.
+
+**Artifact Location Policy (this run):** following the precedent set by `RUN-20260706-002`/`RUN-20260707-001`, this run's artifacts are generated inside `artifacts/OrangeHRM/runs/RUN-20260707-002/` only. The flat `artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md` "current approved" pointer is **not** updated until/unless this run's Stage 1 output clears its checkpoint below.
+
+| Run ID | Stage | Version | Timestamp (UTC) | Checkpoint Status | Reviewer | Artifact Link |
+|---|---|---|---|---|---|---|
+| RUN-20260707-002 | Stage 1 — Project Context Agent | v4 | 2026-07-07 | **Pending Review** | *(awaiting — Business Analyst / Product Owner role)* | `artifacts/OrangeHRM/runs/RUN-20260707-002/context/OrangeHRM_ProjectContext.v4.md` |
+
+Per `pipeline/pipeline.md` §5.3 rule 5, Stage 2 (Explorer Agent) must **not** be invoked for this run until the Stage 1 checkpoint above is explicitly approved.
+
 *This manifest is updated by the Run Manager as each stage completes within a run. No entry is added for a stage until that stage actually produces its output artifact — this file is not pre-populated speculatively.*

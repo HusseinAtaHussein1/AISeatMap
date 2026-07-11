@@ -39,7 +39,7 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 |---|---|---|
 | Entire Project | Yes | The PRD covers all 10 sidebar modules; any run may scope to all of them. |
 | Pasted text | Yes | Used to date — both existing runs' scope narrowing (see below) was expressed as prose in the run's Project Context, not a separate structured file. |
-| Markdown file (`resources/docs/`, `resources/notes/`) | Not yet used | `resources/docs/` and `resources/notes/` exist but are currently empty. |
+| Markdown file (`resources/requirements/`, `resources/notes/`) | Not yet used | `resources/requirements/` (renamed from `resources/docs/`, 2026-07-10) and `resources/notes/` exist but are currently empty. |
 | Uploaded document | Not yet used | — |
 | Requirement document reference | Yes | The PRD itself (`artifacts/OrangeHRM/knowledge/OrangeHRM_PRD.md`) is the standing requirement document every run's scope is drawn from. |
 | Custom scope description | Yes | Used to date — see below; neither prior run mapped cleanly to a single Epic/Feature/Story/Bug. |
@@ -52,7 +52,8 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 
 | Run | Run Type | Run Scope (Type / Source) | In-scope modules (summary) | Project Context version |
 |---|---|---|---|---|
-| RUN-20260706-001 | User Story *(closest retrospective fit)* | Custom Scope / Pasted text | Login / Authentication only | v1 |
-| RUN-20260706-002 | Custom | Custom Scope / Pasted text | Login / Authentication + PIM (read/search/validate only) | v2 (current approved) |
+| RUN-20260706-001 | User Story *(closest retrospective fit)* | Custom Scope / Pasted text | Login / Authentication only | v1 (approved) |
+| RUN-20260706-002 | Custom | Custom Scope / Pasted text | Login / Authentication + PIM (read/search/validate only) | v2 (approved, superseded as current pointer) |
+| RUN-20260707-001 | Full Regression | Entire Project / Entire Project | All 10 PRD Core Modules | v3 (**current approved**) |
 
-For the authoritative detail behind either row, read the corresponding Project Context version file directly — this table is a pointer, not a substitute.
+For the authoritative detail behind any row, read the corresponding Project Context version file directly — this table is a pointer, not a substitute. The flat `artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md` pointer now mirrors v3.

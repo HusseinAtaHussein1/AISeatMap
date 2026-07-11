@@ -2,7 +2,7 @@
 
 This describes the architecture of **OrangeHRM itself, the application under test** — not the Agentic AI Testing Platform's own architecture (for that, see the repo root `agents/`, `pipeline/pipeline.md`, and `pipeline/run_manager.md`).
 
-Everything below is drawn from `artifacts/OrangeHRM/knowledge/OrangeHRM_PRD.md` §1 and §4, itself a **reconstructed** description derived from observed UI behavior rather than an original design document. Treat unconfirmed structural claims accordingly.
+Everything below is drawn from `projects/OrangeHRM/PRD.md` §1 and §4, itself a **reconstructed** description derived from observed UI behavior rather than an original design document. Treat unconfirmed structural claims accordingly.
 
 ## Navigation Model
 

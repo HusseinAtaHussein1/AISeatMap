@@ -15,15 +15,15 @@ Read this first if you're picking up work on the {{PROJECT_NAME}} project for th
 1. [`run_configuration.md`](run_configuration.md) — what's in scope right now, credentials, environment constraints
 2. [`architecture.md`](architecture.md) — how the application itself is structured
 3. [`glossary.md`](glossary.md) — domain terms you'll hit in the PRD and discovery artifacts
-4. `artifacts/{{PROJECT_NAME}}/knowledge/{{PROJECT_NAME}}_PRD.md` — the full Product Requirements Document
-5. `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md` — the current approved Project Context (single source of truth for every pipeline agent downstream of Stage 1)
+4. [`PRD.md`](PRD.md) — the full Product Requirements Document (Project Knowledge — see its own header note on why it lives here, not under `artifacts/`)
+5. `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` — the current approved Project Context (single source of truth for every pipeline agent downstream of Stage 1)
 
 ## Where things stand
 
 Don't hardcode pipeline status in this file — it will go stale. Instead check:
 
-- `artifacts/{{PROJECT_NAME}}/pipeline/{{PROJECT_NAME}}_RunManifest.md` — per-stage version/checkpoint status
-- `artifacts/{{PROJECT_NAME}}/runs/` — individual run workspaces
+- `projects/{{PROJECT_NAME}}/artifacts/pipeline/{{PROJECT_NAME}}_RunManifest.md` — per-stage version/checkpoint status
+- `projects/{{PROJECT_NAME}}/artifacts/runs/` — individual run workspaces
 
 ## Key things to know before touching this project
 

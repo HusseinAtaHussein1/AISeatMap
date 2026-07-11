@@ -92,7 +92,7 @@ The pipeline exists to enforce this principle mechanically: no stage may reach i
 | **Input** | PRD · Supporting Documents · Run Configuration |
 | **Output** | Project Context |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
 
 Notes:
 - "Supporting Documents" (optional) covers any material that informs scope but is not itself the PRD — e.g., prior audit/QA reports, compliance policies, org-specific testing standards. These are folded into the Project Context alongside the PRD; they are never treated as a substitute source of requirements.
@@ -107,7 +107,7 @@ Notes:
 | **Input** | Project Context · Running Application |
 | **Output** | Discovery Artifacts |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `artifacts/{{PROJECT_NAME}}/discovery/*.md`, `artifacts/{{PROJECT_NAME}}/Reports/QA_Assessment_Report.md` |
+| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md`, `projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md` |
 
 Notes:
 - "Running Application" is the live target system, reached through browser automation — it is data to be observed, not a source of requirements.
@@ -122,7 +122,7 @@ Notes:
 | **Input** | Project Context (primary) · Discovery Artifacts (secondary) |
 | **Output** | Manual Test Suites (Markdown) · Manual Test Suites (Excel) · Requirement Traceability Matrix |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TestCases_{Module}.md`, `...{Module}.xlsx`, `artifacts/{{PROJECT_NAME}}/testcases/{{PROJECT_NAME}}_TraceabilityMatrix.md` |
+| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.md`, `...{Module}.xlsx`, `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` |
 
 Notes:
 - Project Context governs *what* is tested; Discovery Artifacts only validate, enrich, and surface gaps — per the reversed primary/secondary relationship established in the Agent Framework.
@@ -137,7 +137,7 @@ Notes:
 | **Input** | Approved Manual Test Suites · Project Context |
 | **Output** | Automation Scripts |
 | **Checkpoint** | **Automation Approval Required** |
-| **Artifact path** | `artifacts/{{PROJECT_NAME}}/Automation/{{PROJECT_NAME}}_tests/`, `artifacts/{{PROJECT_NAME}}/Automation/{{PROJECT_NAME}}_AutomationSummary.md` |
+| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests/`, `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSummary.md` |
 
 Notes:
 - The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 3 artifacts *after* they have cleared the Stage 3 checkpoint, never a draft or in-progress test suite.
@@ -152,7 +152,7 @@ Notes:
 | **Input** | Automation Scripts |
 | **Output** | Execution Results · Screenshots · Logs · Execution Metadata |
 | **Checkpoint** | *None — mechanical run, gated only by the Stage 4 Automation Approval that already occurred* |
-| **Artifact path** | `artifacts/{{PROJECT_NAME}}/execution/{{PROJECT_NAME}}_ExecutionResults.md`, `artifacts/{{PROJECT_NAME}}/execution/artifacts/` |
+| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md`, `projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/` |
 
 Notes:
 - Project Context remains a standing reference for this stage (target environment, credentials, safety constraints) even though it is not re-listed as a primary artifact input here — see §6, Rule 5. The Execution Agent's own specification requires it to confirm the target environment against the Project Context before running anything.
@@ -168,7 +168,7 @@ Notes:
 | **Input** | Execution Results · Traceability Matrix · Project Context |
 | **Output** | Final QA Report |
 | **Checkpoint** | *None — terminal stage, delivered to human stakeholders outside the pipeline* |
-| **Artifact path** | `artifacts/{{PROJECT_NAME}}/Reports/{{PROJECT_NAME}}_Final_QA_Report.md` |
+| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md` |
 
 Notes:
 - The Traceability Matrix is consulted here specifically to compute Requirement Coverage and Automation Coverage, and to carry forward every Manual Test Suite "Assumption-based test" tag into a resolved (confirmed/refuted/unverified) status.
@@ -212,16 +212,17 @@ This gate is named distinctly from "Human Review Required" because approving it 
 6. **Human approval gates must stop the pipeline until approval is granted.** See §5.3 — no silent timeouts, no auto-approval, no proceeding on an assumed "looks fine."
 7. **All artifacts must be versionable.** See §7 — every artifact carries a version identifier and prior versions are retained, never overwritten in place.
 8. **Every output must maintain traceability.** See §8 — every artifact from Stage 3 onward can be traced back, ID for ID, to the Project Context requirement (and, transitively, the PRD) that generated it.
+9. **Project Isolation.** When onboarding or executing a project, agents must load knowledge exclusively from that project's own directory (`projects/{{PROJECT_NAME}}/`) and its corresponding artifacts (`projects/{{PROJECT_NAME}}/artifacts/`). Other projects under `projects/` may be consulted only as structural examples or templates (e.g., to see how a sibling project's `resources/` folder is laid out) — they must never contribute functional requirements, business rules, test cases, or domain knowledge to the project currently being worked on.
 
 ## 7. Artifact & Versioning Conventions
 
-Every artifact produced by this pipeline lives under `artifacts/{{PROJECT_NAME}}/` in the subdirectory conventions established in the Agent Framework (`context/`, `discovery/`, `Reports/`, `testcases/`, `Automation/`, `execution/`).
+Every artifact produced by this pipeline lives under `projects/{{PROJECT_NAME}}/artifacts/` in the subdirectory conventions established in the Agent Framework (`context/`, `discovery/`, `Reports/`, `testcases/`, `Automation/`, `execution/`).
 
 To satisfy Rule 7 (versionable artifacts) and Rule 6 (gates that truly stop the pipeline), each stage's artifact is versioned as follows:
 
 - **Version-suffixed files:** each artifact is written with a version suffix, e.g. `{{PROJECT_NAME}}_ProjectContext.v1.md`, `.v2.md`, etc. A rejected-and-revised artifact is a new version, never an in-place edit of the rejected one — the rejected version remains on record.
 - **A "current approved" pointer:** the unsuffixed filename referenced throughout the Agent Framework (e.g., `{{PROJECT_NAME}}_ProjectContext.md`) always refers to the **latest approved** version. It is only updated at the moment a reviewer approves a version — never before.
-- **Run Manifest:** a single tracking artifact, `artifacts/{{PROJECT_NAME}}/pipeline/{{PROJECT_NAME}}_RunManifest.md`, records for every stage: version number produced, timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, and a direct link to that version's artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
+- **Run Manifest:** a single tracking artifact, `projects/{{PROJECT_NAME}}/artifacts/pipeline/{{PROJECT_NAME}}_RunManifest.md`, records for every stage: version number produced, timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, and a direct link to that version's artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
 
 ## 8. Traceability Chain
 

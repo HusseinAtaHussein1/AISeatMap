@@ -25,12 +25,12 @@ This document is the continuity anchor for the Agentic AI Testing Platform proje
 
 **Pre-existing, unrelated to this session's edits (still present in the repo, produced earlier under the legacy `prompts/` pipeline):**
 - `prompts/knowledge/knowledge_agent.md`, `prompts/exploration/explorer_agent.md`, `prompts/testing/test_design_agent.md`, `prompts/automation/automation_agent.md` — the **old** 4-stage pipeline (Explorer → Knowledge → Test Design → Automation), where the PRD was *generated from* discovery rather than consumed as an input.
-- `artifacts/OrangeHRM/**` — a full OrangeHRM run produced under that legacy pipeline: `knowledge/OrangeHRM_PRD.md`, 10 discovery snapshots, `Reports/QA_Assessment_Report.md`, three module test-case files + traceability matrix under `testcases/`. **No Excel (`.xlsx`) test suites exist yet** despite the Test Design Agent spec requiring them. `artifacts/OrangeHRM/Automation/` exists as an empty directory — no automation scripts have been generated.
-- No `artifacts/OrangeHRM/context/` directory exists at all — i.e., the new Stage 1 (Project Context Agent) has never been run for OrangeHRM or any project.
+- `projects/OrangeHRM/artifacts/**` — a full OrangeHRM run produced under that legacy pipeline: `knowledge/PRD.md`, 10 discovery snapshots, `Reports/QA_Assessment_Report.md`, three module test-case files + traceability matrix under `testcases/`. **No Excel (`.xlsx`) test suites exist yet** despite the Test Design Agent spec requiring them. `projects/OrangeHRM/artifacts/Automation/` exists as an empty directory — no automation scripts have been generated.
+- No `projects/OrangeHRM/artifacts/context/` directory exists at all — i.e., the new Stage 1 (Project Context Agent) has never been run for OrangeHRM or any project.
 - `package.json` / `node_modules` — Playwright (`^1.61.1`) installed as a dev dependency, used for browser-driven exploration.
 - `.claude/settings.local.json` — local Claude Code permission settings.
 
-**Repo/version-control state:** nothing in this repository has been committed yet — `git log` shows no commits, and every file (`agents/`, `pipeline/`, `prompts/`, `artifacts/`, `package.json`, `.claude/`) is untracked (`??` in `git status`).
+**Repo/version-control state:** nothing in this repository has been committed yet — `git log` shows no commits, and every file (`agents/`, `pipeline/`, `prompts/`, `projects/{{PROJECT_NAME}}/artifacts/`, `package.json`, `.claude/`) is untracked (`??` in `git status`).
 
 ---
 
@@ -61,10 +61,10 @@ PRD ─▶ [1 Project Context] ─▶ ⛔Review▶ [2 Explorer] ─▶ ⛔Review
 
 ## Artifact Flow
 
-All artifacts live under `artifacts/{{PROJECT_NAME}}/`:
+All artifacts live under `projects/{{PROJECT_NAME}}/artifacts/`:
 
 ```
-artifacts/{{PROJECT_NAME}}/
+projects/{{PROJECT_NAME}}/artifacts/
   context/       {{PROJECT_NAME}}_ProjectContext.md            (Stage 1 output)
   discovery/      *.md                                          (Stage 2 output)
   Reports/        QA_Assessment_Report.md                       (Stage 2 output)
@@ -93,11 +93,11 @@ artifacts/{{PROJECT_NAME}}/
 
 | Stage | Status | Notes |
 |---|---|---|
-| Project Context Agent | **Pending** | Spec written; never invoked. No `artifacts/*/context/` directory exists for any project. |
-| Explorer Agent | **Completed** (for OrangeHRM, but under the **legacy** `prompts/exploration/explorer_agent.md` pipeline, not the new architecture) | 10 discovery snapshots + `QA_Assessment_Report.md` exist under `artifacts/OrangeHRM/`. Has not been re-run against a Project Context artifact. |
+| Project Context Agent | **Pending** | Spec written; never invoked. No `projects/{{PROJECT_NAME}}/artifacts/*/context/` directory exists for any project. |
+| Explorer Agent | **Completed** (for OrangeHRM, but under the **legacy** `prompts/exploration/explorer_agent.md` pipeline, not the new architecture) | 10 discovery snapshots + `QA_Assessment_Report.md` exist under `projects/OrangeHRM/artifacts/`. Has not been re-run against a Project Context artifact. |
 | Test Design Agent | **Completed** (for OrangeHRM, legacy pipeline; **partial** even there) | Markdown test suites + traceability matrix exist for Admin/PIM/Leave only (Time, Recruitment, Performance, Directory, Maintenance not covered). **Excel (`.xlsx`) test suites are missing**, though the current spec (§7 Execution Rule 6) requires them. |
-| Automation Agent | **Pending** | `artifacts/OrangeHRM/Automation/` directory exists but is empty. No scripts generated under either pipeline. |
-| Execution Agent | **Pending** | No `artifacts/*/execution/` directory exists for any project. New agent — did not exist in the legacy pipeline at all. |
+| Automation Agent | **Pending** | `projects/OrangeHRM/artifacts/Automation/` directory exists but is empty. No scripts generated under either pipeline. |
+| Execution Agent | **Pending** | No `projects/{{PROJECT_NAME}}/artifacts/*/execution/` directory exists for any project. New agent — did not exist in the legacy pipeline at all. |
 | Reporting Agent | **Pending** | No `{{PROJECT_NAME}}_Final_QA_Report.md` exists for any project (the existing `QA_Assessment_Report.md` is the Stage 2 Explorer output, a different artifact). New agent — did not exist in the legacy pipeline at all. |
 | Pipeline (orchestration) | **In Progress** | Specification complete (`pipeline/pipeline.md`). No orchestrator tooling exists to actually invoke stages in order, enforce gates, or maintain a Run Manifest — that is still manual/conceptual. |
 
@@ -137,7 +137,7 @@ E:\Projects\Agentic AI Projects\
 │   └── automation\automation_agent.md
 ├── artifacts\
 │   └── OrangeHRM\                        # Produced under the LEGACY pipeline
-│       ├── knowledge\OrangeHRM_PRD.md
+│       ├── knowledge\PRD.md
 │       ├── discovery\ (10 screen snapshots)
 │       ├── Reports\QA_Assessment_Report.md
 │       ├── testcases\ (Admin/PIM/Leave .md + TraceabilityMatrix.md — no .xlsx yet)
@@ -155,7 +155,7 @@ E:\Projects\Agentic AI Projects\
 
 In priority order:
 
-1. **Reconcile OrangeHRM with the new architecture.** Decide whether to (a) retroactively author a Project Context artifact for OrangeHRM from the existing PRD and treat the existing discovery/test-case artifacts as legacy references only, or (b) re-run the full new pipeline from Stage 1 for OrangeHRM from scratch. The existing `artifacts/OrangeHRM/**` content was produced under the old Explorer→Knowledge→TestDesign→Automation direction and has never passed through a Project Context Agent.
+1. **Reconcile OrangeHRM with the new architecture.** Decide whether to (a) retroactively author a Project Context artifact for OrangeHRM from the existing PRD and treat the existing discovery/test-case artifacts as legacy references only, or (b) re-run the full new pipeline from Stage 1 for OrangeHRM from scratch. The existing `projects/OrangeHRM/artifacts/**` content was produced under the old Explorer→Knowledge→TestDesign→Automation direction and has never passed through a Project Context Agent.
 2. **Generate the missing Excel (`.xlsx`) test suites** for the Admin/PIM/Leave modules already covered in Markdown — required by the Test Design Agent spec, currently absent.
 3. **Run Stage 1 (Project Context Agent)** for whichever project is chosen — produces the first `context/` artifact and unblocks everything downstream in the new pipeline.
 4. **Extend Test Design coverage** to the modules the legacy pipeline never reached (Time, Recruitment, Performance, Directory, Maintenance-as-a-standalone-module).
@@ -166,7 +166,7 @@ In priority order:
 
 # Recommended Next Step
 
-Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `OrangeHRM_PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`agents/project_context_agent.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/{{PROJECT_NAME}}_ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
+Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`agents/project_context_agent.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/{{PROJECT_NAME}}_ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
 
 ---
 
@@ -182,4 +182,4 @@ Get an explicit decision from the user on Pending Task #1 before writing any mor
 
 # Resume Instructions
 
-Read `SESSION_HANDOFF.md`, then read every file in `agents/` and `pipeline/pipeline.md` in full to understand the current 6-stage architecture. Cross-check against `artifacts/OrangeHRM/` to see what legacy-pipeline artifacts already exist. Do not assume any new-pipeline stage has been executed — verify by checking for the presence of `artifacts/{{PROJECT_NAME}}/context/*_ProjectContext.md` (Stage 1) before treating any downstream artifact as authoritative under the new architecture. Resolve the Open Questions above (at least the OrangeHRM reconciliation question) with the user before generating any new artifacts, then proceed with the task in **Recommended Next Step**.
+Read `SESSION_HANDOFF.md`, then read every file in `agents/` and `pipeline/pipeline.md` in full to understand the current 6-stage architecture. Cross-check against `projects/OrangeHRM/artifacts/` to see what legacy-pipeline artifacts already exist. Do not assume any new-pipeline stage has been executed — verify by checking for the presence of `projects/{{PROJECT_NAME}}/artifacts/context/*_ProjectContext.md` (Stage 1) before treating any downstream artifact as authoritative under the new architecture. Resolve the Open Questions above (at least the OrangeHRM reconciliation question) with the user before generating any new artifacts, then proceed with the task in **Recommended Next Step**.

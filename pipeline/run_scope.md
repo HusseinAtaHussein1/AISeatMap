@@ -10,7 +10,7 @@
 
 Run Scope defines **exactly what a given pipeline run is allowed to validate** — the boundary the Project Context Agent narrows the approved Project Knowledge down to when producing that run's Project Context.
 
-Without a named Run Scope concept, "what does this run cover" is answered ad hoc, differently, every time (as it already is today in each Project Context's free-text "Scope Summary" section — see `artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md` §1 for an example of this being worked out in prose per run). Run Scope exists so that the platform can support running against something narrower than "the entire project" — a single Epic, Feature, User Story, Bug, or an ad hoc requirement document — **without changing the pipeline, without adding an agent, and without changing how many stages exist.** The 6-stage pipeline already treats "what's in scope" as data it consumes (via the Project Context); Run Scope simply gives that data a name, a fixed set of Types, and a documented set of Sources.
+Without a named Run Scope concept, "what does this run cover" is answered ad hoc, differently, every time (as it already is today in each Project Context's free-text "Scope Summary" section — see `projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md` §1 for an example of this being worked out in prose per run). Run Scope exists so that the platform can support running against something narrower than "the entire project" — a single Epic, Feature, User Story, Bug, or an ad hoc requirement document — **without changing the pipeline, without adding an agent, and without changing how many stages exist.** The 6-stage pipeline already treats "what's in scope" as data it consumes (via the Project Context); Run Scope simply gives that data a name, a fixed set of Types, and a documented set of Sources.
 
 # 3. Run Scope Types
 
@@ -36,9 +36,9 @@ A Run Scope Source is **how the content of a given Type is actually delivered** 
 |---|---|---|
 | **Entire Project** | No specific item supplied; the Project Context Agent scopes to the full approved Project Knowledge. | Entire Project |
 | **Pasted text** | The Epic/Feature/Story/Bug description is pasted directly into the run configuration or the prompt given to the Project Context Agent. | Epic, Feature, User Story, Bug, Custom Scope |
-| **Markdown file** | A `.md` file — e.g. under `projects/<Project>/resources/docs/` or `resources/notes/` — is referenced as the scope definition. | Feature, User Story, Bug, Requirement Document, Custom Scope |
+| **Markdown file** | A `.md` file — e.g. under `projects/<Project>/resources/requirements/` (in the Type-specific subfolder: `epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/` — see that folder's own README) or `resources/notes/` — is referenced as the scope definition. The file's own `Source:` metadata line (not its folder) records that its Source was Markdown file — see §4.3 below. | Feature, User Story, Bug, Requirement Document, Custom Scope |
 | **Uploaded document** | A non-Markdown file (Word, PDF, etc.) is supplied out of band and referenced by path or attachment. | Requirement Document, Feature, Epic |
-| **Requirement document reference** | A pointer to an existing document already in the project's knowledge (e.g., a specific section of the PRD, or a file under `resources/docs/`), rather than a newly pasted/uploaded one. | Requirement Document |
+| **Requirement document reference** | A pointer to an existing document already in the project's knowledge (e.g., a specific section of the PRD, or a file under `resources/requirements/specifications/`), rather than a newly pasted/uploaded one. | Requirement Document |
 | **Custom scope description** | A free-form scope statement that doesn't reference any tracked item or document at all. | Custom Scope |
 
 ## 4.2 Future (integration-dependent — not implemented)
@@ -51,6 +51,14 @@ A Run Scope Source is **how the content of a given Type is actually delivered** 
 | **Jira Epic / Bug ID** | Future. Same integration, other issue types. |
 
 These are documented as supported future input sources only. No Azure DevOps or Jira connectivity exists in this platform today, and none is implemented by this document.
+
+## 4.3 Source Is Recorded as Metadata, Not Folder Structure
+
+`projects/<Project>/resources/requirements/` is organized by **Type only** (`epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/`), mirroring the Types in §3. **Source** is deliberately not a subfolder — a User Story delivered via pasted text, a Markdown file, or (once integrated) Azure DevOps all live in the same `user_stories/` folder. Each requirement file instead carries its own Source as a metadata line near its top, e.g. `**Type:** User Story · **Source:** Plain Text (pasted)`.
+
+This is because Type is stable (the five subfolders above are not expected to grow often) while Source keeps expanding as new integrations are added (Azure DevOps, Jira, Confluence, GitHub, PDF, Word, Markdown, Plain Text, Figma, Email, TestRail, Xray, and others) — encoding Source into the directory tree would mean creating a new subfolder every time a new intake channel is supported. Recording it as in-file metadata instead keeps the folder layout stable regardless of where a requirement came from.
+
+An earlier version of this layout nested `user_stories/` by Source (`pasted/`, `markdown/`, `azure_devops/`); that was flattened back to Type-only on 2026-07-10 in favor of the metadata approach described here.
 
 # 5. Run Types
 
@@ -72,7 +80,7 @@ Example: a **Smoke** run type can still be paired with an **Entire Project** Run
 
 Per `projects/README.md`, `projects/<Project>/` is the **canonical, standing knowledge base** for a project — `onboarding.md`, `architecture.md`, `glossary.md`, `run_configuration.md`, and `resources/`. This does not change: Project Knowledge remains the durable source of what the project *is*, independent of any single run.
 
-What changes conceptually is how the **Project Context** — the artifact `agents/project_context_agent.md` produces at `artifacts/<Project>/context/<Project>_ProjectContext.md` — is described:
+What changes conceptually is how the **Project Context** — the artifact `agents/project_context_agent.md` produces at `projects/<Project>/artifacts/context/<Project>_ProjectContext.md` — is described:
 
 ```
 Project Context  =  Project Knowledge  +  Run Scope
@@ -80,7 +88,7 @@ Project Context  =  Project Knowledge  +  Run Scope
 
 - **Project Knowledge** (`projects/<Project>/`) supplies the durable facts: what the application is, its architecture, its glossary, its available credentials/environments, and — via `run_configuration.md` — which Run Scope Sources are set up for this project at all.
 - **Run Scope** (this document) supplies the narrowing: *which* Epic/Feature/Story/Bug/Requirement Document/Custom Scope, or the Entire Project, this particular run is validating.
-- **Project Context** (`artifacts/<Project>/context/`) is what the Project Context Agent produces by applying a specific Run Scope to the standing Project Knowledge for one run, exactly as it already does today — its existing "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `agents/project_context_agent.md` §8) are precisely where a resolved Run Scope materializes. No change to that document structure is introduced by this concept.
+- **Project Context** (`projects/<Project>/artifacts/context/`) is what the Project Context Agent produces by applying a specific Run Scope to the standing Project Knowledge for one run, exactly as it already does today — its existing "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `agents/project_context_agent.md` §8) are precisely where a resolved Run Scope materializes. No change to that document structure is introduced by this concept.
 
 This reframing does not change the Project Context Agent's Inputs table (§4 of its spec already names "Run configuration" as required) — it clarifies that the scope portion of that input is now a structured Run Scope (Type + Source) rather than free text, and that Project Knowledge is the other half of what the agent reconciles.
 
@@ -91,7 +99,7 @@ This reframing does not change the Project Context Agent's Inputs table (§4 of 
 | What | Where | Persists across runs? |
 |---|---|---|
 | Which Run Scope Sources are available/set up for this project (e.g., "ADO not yet integrated," "requirement docs are pasted-text based") | `projects/<Project>/run_configuration.md` | Yes — durable, project-wide |
-| Which specific Run Scope (Type + Source + resolved content) a given run actually used | That run's approved Project Context, `artifacts/<Project>/context/<Project>_ProjectContext.md` (its existing Scope Summary / Modules In Scope sections) | No — scoped to that run/version, per `pipeline/pipeline.md` §7 versioning rules |
+| Which specific Run Scope (Type + Source + resolved content) a given run actually used | That run's approved Project Context, `projects/<Project>/artifacts/context/<Project>_ProjectContext.md` (its existing Scope Summary / Modules In Scope sections) | No — scoped to that run/version, per `pipeline/pipeline.md` §7 versioning rules |
 | A quick-reference history of past runs' scope choices | `projects/<Project>/run_configuration.md` → "History of scope choices" table | Yes — an append-only log |
 
 # 8. Extended Traceability Model

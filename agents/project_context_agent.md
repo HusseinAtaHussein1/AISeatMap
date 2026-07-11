@@ -31,7 +31,7 @@ Without this agent, each downstream agent would need to re-derive scope, credent
 
 | Input | Required? | Description |
 |---|---|---|
-| Product Requirements Document | Required | `artifacts/{{PROJECT_NAME}}/knowledge/{{PROJECT_NAME}}_PRD.md` |
+| Product Requirements Document | Required | `projects/{{PROJECT_NAME}}/PRD.md` |
 | Run configuration | Required | Modules in scope for this run, target environment URL, environment constraints, available credentials/roles |
 
 # 5. Outputs
@@ -60,7 +60,7 @@ A single **Project Context** document that becomes the sole source of truth for 
 
 | Artifact | Path |
 |---|---|
-| Project Context document | `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| Project Context document | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
 
 Document structure:
 1. Scope Summary
@@ -85,7 +85,7 @@ in this pipeline will use as its scope-of-truth.
 ## Input
 
 Read:
-artifacts/{{PROJECT_NAME}}/knowledge/{{PROJECT_NAME}}_PRD.md
+projects/{{PROJECT_NAME}}/PRD.md
 
 Run configuration (provided alongside this prompt):
 - Modules in scope for this run: {{MODULES_IN_SCOPE}}
@@ -117,7 +117,7 @@ it, halt and report the discrepancy instead of guessing.
 ## Output
 
 Save the document as:
-artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md
+projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
 
 Do not perform exploration. Do not generate test cases or automation.
 Generate only the Project Context.
@@ -137,7 +137,7 @@ Run configuration:
   ROLE/USERNAME/PW   = Admin / Admin / admin123
 ```
 
-Hypothetical result: `artifacts/OrangeHRM/context/OrangeHRM_ProjectContext.md`, listing Admin/PIM/Leave as In Scope; Time, Recruitment, Performance, Directory, Maintenance-as-a-standalone-module as Out of Scope for this run; carrying forward the PRD's SR-4 (unverified RBAC), SR-5 (no visible brute-force protection), and BR-4 (Employee Id uniqueness unconfirmed) as assumptions the Explorer Agent should specifically probe.
+Hypothetical result: `projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md`, listing Admin/PIM/Leave as In Scope; Time, Recruitment, Performance, Directory, Maintenance-as-a-standalone-module as Out of Scope for this run; carrying forward the PRD's SR-4 (unverified RBAC), SR-5 (no visible brute-force protection), and BR-4 (Employee Id uniqueness unconfirmed) as assumptions the Explorer Agent should specifically probe.
 
 # 11. Architecture Principle
 

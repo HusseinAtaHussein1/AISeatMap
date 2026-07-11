@@ -2,7 +2,7 @@
 
 This folder contains **all project-specific knowledge for {{PROJECT_NAME}} only** — onboarding notes, run configuration, the architecture of the application under test, and domain terminology. It does not contain any pipeline output.
 
-**Generated outputs remain under [`artifacts/{{PROJECT_NAME}}/`](../../artifacts/{{PROJECT_NAME}}/)** — Project Context, Discovery Artifacts, Manual Test Suites, Automation Scripts, Execution Results, Reports, and Run Workspaces, per `pipeline/pipeline.md` and `pipeline/run_manager.md`. Nothing in this folder is read or written by the pipeline agents themselves; it exists for the humans (and future agent sessions) who need to get oriented on this project before or between pipeline runs.
+**Generated outputs remain under [`projects/{{PROJECT_NAME}}/artifacts/`](../../projects/{{PROJECT_NAME}}/artifacts/)** — Project Context, Discovery Artifacts, Manual Test Suites, Automation Scripts, Execution Results, Reports, and Run Workspaces, per `pipeline/pipeline.md` and `pipeline/run_manager.md`. Nothing in this folder is read or written by the pipeline agents themselves; it exists for the humans (and future agent sessions) who need to get oriented on this project before or between pipeline runs.
 
 ## Files in this folder
 
@@ -18,11 +18,11 @@ This folder contains **all project-specific knowledge for {{PROJECT_NAME}} only*
 
 | Artifact | Path |
 |---|---|
-| Product Requirements Document | `artifacts/{{PROJECT_NAME}}/knowledge/{{PROJECT_NAME}}_PRD.md` |
-| Project Context (current approved) | `artifacts/{{PROJECT_NAME}}/context/{{PROJECT_NAME}}_ProjectContext.md` |
-| Discovery Artifacts | `artifacts/{{PROJECT_NAME}}/discovery/*.md` |
-| Manual Test Suites & Traceability Matrix | `artifacts/{{PROJECT_NAME}}/testcases/` |
-| Automation Scripts | `artifacts/{{PROJECT_NAME}}/Automation/` |
-| Run Workspaces | `artifacts/{{PROJECT_NAME}}/runs/RUN-YYYYMMDD-XXX/` |
-| Run Manifest | `artifacts/{{PROJECT_NAME}}/pipeline/{{PROJECT_NAME}}_RunManifest.md` |
-| Reports | `artifacts/{{PROJECT_NAME}}/Reports/` |
+| Product Requirements Document | `projects/{{PROJECT_NAME}}/PRD.md` |
+| Project Context (current approved) | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| Discovery Artifacts | `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md` |
+| Manual Test Suites & Traceability Matrix | `projects/{{PROJECT_NAME}}/artifacts/test_design/` |
+| Automation Scripts | `projects/{{PROJECT_NAME}}/artifacts/automation/` |
+| Run Workspaces | `projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX/` |
+| Run Manifest | `projects/{{PROJECT_NAME}}/artifacts/pipeline/{{PROJECT_NAME}}_RunManifest.md` |
+| Reports | `projects/{{PROJECT_NAME}}/artifacts/Reports/` |

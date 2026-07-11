@@ -604,7 +604,3 @@ Please follow these guidelines:
 - Prefer reuse over duplication.
 <<<<<<< HEAD
 
-=======
->>>>>>> main
----
-

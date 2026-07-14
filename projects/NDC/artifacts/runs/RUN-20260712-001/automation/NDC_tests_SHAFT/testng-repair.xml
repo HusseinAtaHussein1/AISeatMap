@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Login Repair Rerun 2" verbose="1">
+  <test name="RepairedLoginTests2">
+    <classes>
+      <class name="AdminPages.Login.LogIn_TC">
+        <methods>
+          <include name="invalidCredentialsShowGenericMessage"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

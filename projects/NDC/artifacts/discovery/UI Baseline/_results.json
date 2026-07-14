@@ -1,0 +1,707 @@
+[
+  {
+    "screen": "Dashboard",
+    "navPath": "Dashboard",
+    "clicks": [
+      "Dashboard"
+    ],
+    "status": "captured",
+    "title": "NDC - Dashboard",
+    "url": "http://192.168.1.70/dashboard",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Dashboard\\Dashboard.png"
+  },
+  {
+    "screen": "Operating Country",
+    "navPath": "Admin → Company → Operating Country",
+    "clicks": [
+      "Admin",
+      "Company",
+      "Operating Country"
+    ],
+    "status": "captured",
+    "title": "NDC - Operating Country",
+    "url": "http://192.168.1.70/admin/operating-country",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Company\\OperatingCountry.png"
+  },
+  {
+    "screen": "Branch",
+    "navPath": "Admin → Company → Branch",
+    "clicks": [
+      "Admin",
+      "Company",
+      "Branch"
+    ],
+    "status": "captured",
+    "title": "NDC - Branch",
+    "url": "http://192.168.1.70/admin/branch",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Company\\Branch.png"
+  },
+  {
+    "screen": "Agency",
+    "navPath": "Admin → Agency → Agency",
+    "clicks": [
+      "Admin",
+      "Agency",
+      "Agency"
+    ],
+    "status": "captured",
+    "title": "NDC - Agency",
+    "url": "http://192.168.1.70/admin/agency",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Agency\\Agency.png"
+  },
+  {
+    "screen": "Search Login Details",
+    "navPath": "Admin → Agency → Search Login Details",
+    "clicks": [
+      "Admin",
+      "Agency",
+      "Search Login Details"
+    ],
+    "status": "captured",
+    "title": "NDC - Login Details",
+    "url": "http://192.168.1.70/admin/login-details",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Agency\\SearchLoginDetails.png"
+  },
+  {
+    "screen": "Registration Requests",
+    "navPath": "Admin → Agency → Registration Requests",
+    "clicks": [
+      "Admin",
+      "Agency",
+      "Registration Requests"
+    ],
+    "status": "captured",
+    "title": "NDC - Registration Requests",
+    "url": "http://192.168.1.70/admin/registration-requests",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Agency\\RegistrationRequests.png"
+  },
+  {
+    "screen": "Category Management",
+    "navPath": "Admin → Agency → Category Management",
+    "clicks": [
+      "Admin",
+      "Agency",
+      "Category Management"
+    ],
+    "status": "captured",
+    "title": "NDC - Category Management",
+    "url": "http://192.168.1.70/admin/category-management",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Agency\\CategoryManagement.png"
+  },
+  {
+    "screen": "Agency Assignation",
+    "navPath": "Admin → Agency → Agency Assignation",
+    "clicks": [
+      "Admin",
+      "Agency",
+      "Agency Assignation"
+    ],
+    "status": "captured",
+    "title": "NDC - Agency Assignation",
+    "url": "http://192.168.1.70/admin/agency-categorization",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Agency\\AgencyAssignation.png"
+  },
+  {
+    "screen": "Staff",
+    "navPath": "Admin → Staff",
+    "clicks": [
+      "Admin",
+      "Staff"
+    ],
+    "status": "captured",
+    "title": "NDC - Staff",
+    "url": "http://192.168.1.70/admin/staff",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Admin\\Staff.png"
+  },
+  {
+    "screen": "Airline",
+    "navPath": "Master → Flight → Airline",
+    "clicks": [
+      "Master",
+      "Flight",
+      "Airline"
+    ],
+    "status": "captured",
+    "title": "NDC - Flight",
+    "url": "http://192.168.1.70/master/flight/airline",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Flight\\Airline.png"
+  },
+  {
+    "screen": "Airport",
+    "navPath": "Master → Flight → Airport",
+    "clicks": [
+      "Master",
+      "Flight",
+      "Airport"
+    ],
+    "status": "captured",
+    "title": "NDC - Flight",
+    "url": "http://192.168.1.70/master/flight/airport",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Flight\\Airport.png"
+  },
+  {
+    "screen": "Prefer Airline",
+    "navPath": "Master → Flight → Prefer Airline",
+    "clicks": [
+      "Master",
+      "Flight",
+      "Prefer Airline"
+    ],
+    "status": "captured",
+    "title": "NDC - Flight",
+    "url": "http://192.168.1.70/master/flight/preferAirline",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Flight\\PreferAirline.png"
+  },
+  {
+    "screen": "BSP Commission",
+    "navPath": "Master → Flight → BSP Commission",
+    "clicks": [
+      "Master",
+      "Flight",
+      "BSP Commission"
+    ],
+    "status": "captured",
+    "title": "NDC - Flight",
+    "url": "http://192.168.1.70/master/flight/bsp",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Flight\\BSPCommission.png"
+  },
+  {
+    "screen": "Deal Code",
+    "navPath": "Master → Flight → Deal Code",
+    "clicks": [
+      "Master",
+      "Flight",
+      "Deal Code"
+    ],
+    "status": "captured",
+    "title": "NDC - Flight",
+    "url": "http://192.168.1.70/master/flight/deal-code",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Flight\\DealCode.png"
+  },
+  {
+    "screen": "Supplier",
+    "navPath": "Master → Supplier → Supplier",
+    "clicks": [
+      "Master",
+      "Supplier",
+      "Supplier"
+    ],
+    "status": "captured",
+    "title": "NDC - Supplier",
+    "url": "http://192.168.1.70/master/supplier/supplier",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Supplier\\Supplier.png"
+  },
+  {
+    "screen": "Credential Field",
+    "navPath": "Master → Supplier → Credential Field",
+    "clicks": [
+      "Master",
+      "Supplier",
+      "Credential Field"
+    ],
+    "status": "captured",
+    "title": "NDC - Supplier",
+    "url": "http://192.168.1.70/master/supplier/credentials",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Supplier\\CredentialField.png"
+  },
+  {
+    "screen": "Supplier Credentials",
+    "navPath": "Master → Supplier → Supplier Credentials",
+    "clicks": [
+      "Master",
+      "Supplier",
+      "Supplier Credentials"
+    ],
+    "status": "captured",
+    "title": "NDC - Supplier",
+    "url": "http://192.168.1.70/master/supplier/supplier-credentials",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Supplier\\SupplierCredentials.png"
+  },
+  {
+    "screen": "Credential Routes Filter",
+    "navPath": "Master → Supplier → Credential Routes Filter",
+    "clicks": [
+      "Master",
+      "Supplier",
+      "Credential Routes Filter"
+    ],
+    "status": "captured",
+    "title": "NDC - Supplier",
+    "url": "http://192.168.1.70/master/supplier/credential-routes-filter",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Supplier\\CredentialRoutesFilter.png"
+  },
+  {
+    "screen": "Flight Search Limitation",
+    "navPath": "Master → Supplier → Flight Search Limitation",
+    "clicks": [
+      "Master",
+      "Supplier",
+      "Flight Search Limitation"
+    ],
+    "status": "captured",
+    "title": "NDC - Supplier",
+    "url": "http://192.168.1.70/master/supplier/flight-search-limitation",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Supplier\\FlightSearchLimitation.png"
+  },
+  {
+    "screen": "Region",
+    "navPath": "Master → Miscellaneous → Region",
+    "clicks": [
+      "Master",
+      "Miscellaneous",
+      "Region"
+    ],
+    "status": "captured",
+    "title": "NDC - Region",
+    "url": "http://192.168.1.70/master/miscellaneous/region/region",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Miscellaneous\\Region.png"
+  },
+  {
+    "screen": "Currency",
+    "navPath": "Master → Miscellaneous → Currency",
+    "clicks": [
+      "Master",
+      "Miscellaneous",
+      "Currency"
+    ],
+    "status": "captured",
+    "title": "NDC - Miscellaneous",
+    "url": "http://192.168.1.70/master/miscellaneous/currency",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Miscellaneous\\Currency.png"
+  },
+  {
+    "screen": "Rate of Exchange",
+    "navPath": "Master → Miscellaneous → Rate of Exchange",
+    "clicks": [
+      "Master",
+      "Miscellaneous",
+      "Rate of Exchange"
+    ],
+    "status": "captured",
+    "title": "NDC - Miscellaneous",
+    "url": "http://192.168.1.70/master/miscellaneous/rate",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Miscellaneous\\RateOfExchange.png"
+  },
+  {
+    "screen": "Credential Rate of Exchange",
+    "navPath": "Master → Miscellaneous → Credential Rate of Exchange",
+    "clicks": [
+      "Master",
+      "Miscellaneous",
+      "Credential Rate of Exchange"
+    ],
+    "status": "captured",
+    "title": "NDC - Miscellaneous",
+    "url": "http://192.168.1.70/master/miscellaneous/roe-per-cred",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Miscellaneous\\CredentialRateOfExchange.png"
+  },
+  {
+    "screen": "Payment Method",
+    "navPath": "Master → Payment Gateway → Payment Method",
+    "clicks": [
+      "Master",
+      "Payment Gateway",
+      "Payment Method"
+    ],
+    "status": "captured",
+    "title": "NDC - Payment Gateway",
+    "url": "http://192.168.1.70/master/gateway/gateway-method",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Master\\Payment Gateway\\PaymentMethod.png"
+  },
+  {
+    "screen": "Markup",
+    "navPath": "Rule Engine → Markup",
+    "clicks": [
+      "Rule Engine",
+      "Markup"
+    ],
+    "status": "captured",
+    "title": "NDC - Markup",
+    "url": "http://192.168.1.70/rule-engine/markup",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Rule Engine\\Markup.png"
+  },
+  {
+    "screen": "Discount",
+    "navPath": "Rule Engine → Discount",
+    "clicks": [
+      "Rule Engine",
+      "Discount"
+    ],
+    "status": "captured",
+    "title": "NDC - Discount",
+    "url": "http://192.168.1.70/rule-engine/discount",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Rule Engine\\Discount.png"
+  },
+  {
+    "screen": "Service Charge",
+    "navPath": "Rule Engine → Service Charge",
+    "clicks": [
+      "Rule Engine",
+      "Service Charge"
+    ],
+    "status": "captured",
+    "title": "NDC - Service Charge",
+    "url": "http://192.168.1.70/rule-engine/service-charge",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Rule Engine\\ServiceCharge.png"
+  },
+  {
+    "screen": "Cancellation Charge",
+    "navPath": "Rule Engine → Cancellation Charge",
+    "clicks": [
+      "Rule Engine",
+      "Cancellation Charge"
+    ],
+    "status": "captured",
+    "title": "NDC - Cancellation Charge",
+    "url": "http://192.168.1.70/rule-engine/cancellation-charge",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Rule Engine\\CancellationCharge.png"
+  },
+  {
+    "screen": "Fare Rule Master",
+    "navPath": "Rule Engine → Fare Rule Master",
+    "clicks": [
+      "Rule Engine",
+      "Fare Rule Master"
+    ],
+    "status": "captured",
+    "title": "NDC - Rule Master",
+    "url": "http://192.168.1.70/rule-engine/rule-master",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Rule Engine\\FareRuleMaster.png"
+  },
+  {
+    "screen": "Offer Pricing",
+    "navPath": "Rule Engine → Offer Pricing",
+    "clicks": [
+      "Rule Engine",
+      "Offer Pricing"
+    ],
+    "status": "captured",
+    "title": "NDC - Pricing",
+    "url": "http://192.168.1.70/rule-engine/pricing",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Rule Engine\\OfferPricing.png"
+  },
+  {
+    "screen": "Terms And Conditions",
+    "navPath": "Rule Engine → Terms And Conditions",
+    "clicks": [
+      "Rule Engine",
+      "Terms And Conditions"
+    ],
+    "status": "captured",
+    "title": "NDC - Terms",
+    "url": "http://192.168.1.70/rule-engine/terms",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Rule Engine\\TermsAndConditions.png"
+  },
+  {
+    "screen": "Suppliers",
+    "navPath": "Settings → Suppliers",
+    "clicks": [
+      "Settings",
+      "Suppliers"
+    ],
+    "status": "captured",
+    "title": "NDC - Suppliers Settings",
+    "url": "http://192.168.1.70/settings/suppliers",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Settings\\Suppliers.png"
+  },
+  {
+    "screen": "Admin Settings",
+    "navPath": "Settings → Admin Settings",
+    "clicks": [
+      "Settings",
+      "Admin Settings"
+    ],
+    "status": "captured",
+    "title": "NDC - Admin Settings",
+    "url": "http://192.168.1.70/settings/admin-settings",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Settings\\AdminSettings.png"
+  },
+  {
+    "screen": "Agency User Information",
+    "navPath": "User Management → Agency User Information",
+    "status": "not-a-distinct-screen",
+    "note": "Not a landing page of its own — it is an accordion category label. Clicking it auto-navigates to its default child, Agent Information. Original duplicate screenshot removed; see the Agent Information entry below for the real captured content.",
+    "url": "http://192.168.1.70/management/agency/agency-info"
+  },
+  {
+    "screen": "Agent Information",
+    "navPath": "User Management → Agency User Information (category) → Agent Information",
+    "clicks": [
+      "User Management",
+      "Agency User Information",
+      "Agent Information"
+    ],
+    "status": "captured",
+    "title": "NDC - Agency Info",
+    "url": "http://192.168.1.70/management/agency/agency-info",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\User Management\\AgentInformation.png"
+  },
+  {
+    "screen": "Travellers Details",
+    "navPath": "User Management → Agency User Information (category) → Travellers Details",
+    "clicks": [
+      "User Management",
+      "Agency User Information",
+      "Travellers Details"
+    ],
+    "status": "captured",
+    "note": "Corrected after diagnostic pass — architecture.md's flat listing under User Management was misleading; this is nested one level under the Agency User Information accordion, not a top-level sibling.",
+    "title": "NDC - Travellers Details",
+    "url": "http://192.168.1.70/management/agency/travellers-details",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\User Management\\TravellersDetails.png"
+  },
+  {
+    "screen": "Booking",
+    "navPath": "Booking-Mid Office → Booking",
+    "clicks": [
+      "Booking-Mid Office",
+      "Booking"
+    ],
+    "status": "captured",
+    "title": "NDC - Search Booking",
+    "url": "http://192.168.1.70/booking/search-booking",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Booking-Mid Office\\Booking.png"
+  },
+  {
+    "screen": "Search Booking",
+    "navPath": "Booking-Mid Office → Search Booking",
+    "status": "not-a-distinct-screen",
+    "note": "Not a separate menu item — 'Search Booking' is the page heading of the same screen reached via 'Booking'. Click matched the static heading text, not a nav link (confirmed: screenshot was byte-identical to Booking.png). Duplicate file removed.",
+    "url": "http://192.168.1.70/booking/search-booking"
+  },
+  {
+    "screen": "My Quotes",
+    "navPath": "Booking-Mid Office → My Quotes",
+    "status": "confirmed-absent",
+    "note": "Diagnostic DOM dump of the Booking-Mid Office sidebar for this session (odeysysadmin / Super Admin) shows exactly one entry, 'Booking' (routes to /booking/search-booking). No 'My Quotes' link is rendered — not a selector-matching failure. Consistent with FINDING-004 (Super Admin cannot complete the Booking Cycle).",
+    "url": "http://192.168.1.70/booking/search-booking"
+  },
+  {
+    "screen": "Manual Booking Invoice",
+    "navPath": "Booking-Mid Office → Manual Booking Invoice",
+    "status": "confirmed-absent",
+    "note": "Same diagnostic as My Quotes — not rendered in this role's sidebar.",
+    "url": "http://192.168.1.70/booking/search-booking"
+  },
+  {
+    "screen": "Blue Command Screen",
+    "navPath": "Booking-Mid Office → Blue Command Screen",
+    "status": "confirmed-absent",
+    "note": "Same diagnostic as My Quotes — not rendered in this role's sidebar.",
+    "url": "http://192.168.1.70/booking/search-booking"
+  },
+  {
+    "screen": "Traveller",
+    "navPath": "Profile → Traveller",
+    "clicks": [
+      "Profile",
+      "Traveller"
+    ],
+    "status": "captured",
+    "title": "NDC - Traveller",
+    "url": "http://192.168.1.70/profile/traveller",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Profile\\Traveller.png"
+  },
+  {
+    "screen": "Total Due Report",
+    "navPath": "Reports → Total Due Report",
+    "clicks": [
+      "Reports",
+      "Total Due Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Total Due Report",
+    "url": "http://192.168.1.70/reports/total-ndc",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\TotalDueReport.png"
+  },
+  {
+    "screen": "Agency Wallet Report",
+    "navPath": "Reports → Agency Wallet Report",
+    "clicks": [
+      "Reports",
+      "Agency Wallet Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Agency Wallet Report",
+    "url": "http://192.168.1.70/reports/agency-wallet",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\AgencyWalletReport.png"
+  },
+  {
+    "screen": "Sales Report",
+    "navPath": "Reports → Sales Report",
+    "clicks": [
+      "Reports",
+      "Sales Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Sales Report",
+    "url": "http://192.168.1.70/reports/sales",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\SalesReport.png"
+  },
+  {
+    "screen": "Sync. PNR Report",
+    "navPath": "Reports → Sync. PNR Report",
+    "clicks": [
+      "Reports",
+      "Sync. PNR Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Sync PNR Report",
+    "url": "http://192.168.1.70/reports/sync",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\SyncPnrReport.png"
+  },
+  {
+    "screen": "Booking Report",
+    "navPath": "Reports → Booking Report",
+    "clicks": [
+      "Reports",
+      "Booking Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Booking Report",
+    "url": "http://192.168.1.70/reports/booking",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\BookingReport.png"
+  },
+  {
+    "screen": "Quotation Report",
+    "navPath": "Reports → Quotation Report",
+    "clicks": [
+      "Reports",
+      "Quotation Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Quotation Report",
+    "url": "http://192.168.1.70/reports/quotation",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\QuotationReport.png"
+  },
+  {
+    "screen": "Finance Report",
+    "navPath": "Reports → Finance Report",
+    "clicks": [
+      "Reports",
+      "Finance Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Financial Report",
+    "url": "http://192.168.1.70/reports/financial",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\FinanceReport.png"
+  },
+  {
+    "screen": "Statement Report",
+    "navPath": "Reports → Statement Report",
+    "clicks": [
+      "Reports",
+      "Statement Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Statement Report",
+    "url": "http://192.168.1.70/reports/statement",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\StatementReport.png"
+  },
+  {
+    "screen": "Released PNR Report",
+    "navPath": "Reports → Released PNR Report",
+    "clicks": [
+      "Reports",
+      "Released PNR Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Released Pnr Report",
+    "url": "http://192.168.1.70/reports/release",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\ReleasedPnrReport.png"
+  },
+  {
+    "screen": "AR Ledger Report",
+    "navPath": "Reports → AR Ledger Report",
+    "clicks": [
+      "Reports",
+      "AR Ledger Report"
+    ],
+    "status": "captured",
+    "title": "NDC - AR Ledger Report",
+    "url": "http://192.168.1.70/reports/ar-ledger",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\ArLedgerReport.png"
+  },
+  {
+    "screen": "Wallet History Report",
+    "navPath": "Reports → Wallet History Report",
+    "clicks": [
+      "Reports",
+      "Wallet History Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Wallet History Report",
+    "url": "http://192.168.1.70/reports/wallet-history",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\WalletHistoryReport.png"
+  },
+  {
+    "screen": "Daily Sales Report",
+    "navPath": "Reports → Daily Sales Report",
+    "clicks": [
+      "Reports",
+      "Daily Sales Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Daily Sales Report",
+    "url": "http://192.168.1.70/reports/daily-sales",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\DailySalesReport.png"
+  },
+  {
+    "screen": "Import PNR Report",
+    "navPath": "Reports → Import PNR Report",
+    "clicks": [
+      "Reports",
+      "Import PNR Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Import PNR Report",
+    "url": "http://192.168.1.70/reports/pnr",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\ImportPnrReport.png"
+  },
+  {
+    "screen": "Transfer PNR Report",
+    "navPath": "Reports → Transfer PNR Report",
+    "clicks": [
+      "Reports",
+      "Transfer PNR Report"
+    ],
+    "status": "captured",
+    "title": "NDC - Transfer PNR Report",
+    "url": "http://192.168.1.70/reports/transfer-pnr",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Reports\\TransferPnrReport.png"
+  },
+  {
+    "screen": "PNR Query",
+    "navPath": "PNR Query",
+    "clicks": [
+      "PNR Query"
+    ],
+    "status": "captured",
+    "title": "NDC - Pnr Query",
+    "url": "http://192.168.1.70/pnr-query",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\PNR Query\\PNR Query.png"
+  },
+  {
+    "screen": "Transfer PNR",
+    "navPath": "Transfer PNR",
+    "clicks": [
+      "Transfer PNR"
+    ],
+    "status": "captured",
+    "title": "NDC - Transfer PNR",
+    "url": "http://192.168.1.70/transferPnr",
+    "screenshotPath": "e:\\Projects\\agentic-ai-testing-platform\\projects\\NDC\\artifacts\\discovery\\UI Baseline\\Transfer PNR\\Transfer PNR.png"
+  },
+  {
+    "screen": "Import PNR",
+    "navPath": "Import PNR",
+    "status": "confirmed-absent",
+    "note": "Not present in the top nav bar for this session (odeysysadmin / Super Admin) — consistent with FINDING-001 (nav bar has 11 items here vs. architecture.md's 13; Import PNR / Import Booked PNR are the two missing items, explained by role difference)."
+  },
+  {
+    "screen": "Import Booked PNR",
+    "navPath": "Import Booked PNR",
+    "status": "confirmed-absent",
+    "note": "Same as Import PNR — not present in the top nav bar for this role. See FINDING-001."
+  }
+]

@@ -1,0 +1,41 @@
+# NDC — Discovery Timeline
+
+**Run:** RUN-20260710-001 · **Stage:** 2 — Explorer Agent · **Discovery Mode:** User-guided exploration (no browser automation tool available this run; per `agents/explorer_agent.md` §8.1 priority list, and confirmed no existing screenshots/recordings on file beyond `architecture.md`'s narrative descriptions)
+
+> **Note (2026-07-11):** The entries below (T0–T3) are RUN-20260710-001's own Stage 2 timeline. That run was paused to run a separate, standalone **UI Baseline Discovery mission** — see the dedicated section further down this file, timestamped independently (B0–B5) and not part of RUN-20260710-001's scope/numbering.
+
+Chronological, factual log only — no classification/severity/conclusions (those live in Finding metadata).
+
+| Time (session-relative) | Event |
+|---|---|
+| T0 | Stage 2 (Explorer) started. Discovery Mode selected: User-guided exploration. Human operator will navigate `http://192.168.1.70` as NDC Admin and report back screenshots/observations per-screen. |
+| T1 | Operator provided 3 screenshots directly from live session (2026-07-11 12:46, per on-screen clock), covering Master → Supplier → Credential Routes Filter: Add screen (`/master/supplier/credential-routes-filter/add`), List screen (`/master/supplier/credential-routes-filter`), Edit screen for record 287 (`/master/supplier/credential-routes-filter/edit/287`). |
+| T1 | Observed: logged-in user reads `odeysysadmin`, not `E.Saady` as recorded in `run_configuration.md` → FINDING-002 created. |
+| T1 | Observed: top nav bar shows 11 items, missing "Import PNR"/"Import Booked PNR" vs. `architecture.md`'s documented 13-item bar → FINDING-001 created. |
+| T1 | Observed: Add and Edit screens both show a `{count} / 50` counter under the Routes list — undocumented numeric cap → FINDING-003 created. |
+| T1 | Observed: Add/Edit screen Configuration section shows Supplier + Supplier Credentials dropdowns and a single Whitelist/Blacklist radio-button mode toggle, with one shared Routes list below — resolves Carried-Forward Assumption #3 (Project Context §6) as **Confirmed**: this UI shape already exists live, matching T3002-066's described target. |
+| T1 | Observed: List screen shows exactly 1 existing Credential Routes Filter rule — Supplier `Galileo`, Credential `Galileo Live UAE`. |
+| T1 | Observed: Edit screen for that rule shows Mode = Whitelist, 1 route (`SSH → AMM`). No Airlines multi-select field present with Galileo already selected as Supplier — relevant to T3087/Assumption #5, but not yet conclusive (Galileo's own Supplier/Airline-type classification not yet observed). |
+| T1 | Open Question raised (not yet a Finding): T3087's wording ("the rule's supplier type is GDS") vs. Project Context §2's wording ("Master → Flight → Airline ... Airline Type field: GDS/LCC/Both") may refer to two different fields (Supplier-level vs. Airline-level classification) — flagged for Product Owner clarification. |
+| T1 | Discovery snapshots written: `CredentialRoutesFilter_AddScreen.md`, `CredentialRoutesFilter_ListScreen.md`, `CredentialRoutesFilter_EditScreen.md`. Coverage Summary and Findings Summary updated. |
+| T2 | Stakeholder clarification received (Aymoon, Business Analyst/Product Owner role): NDC has multiple distinct Admin-tier roles — Super Admin (`odeysysadmin`) and Admin (`e.saady`) — with different feature access; example given: Super Admin cannot complete the Booking Cycle (cannot book a ticket). → FINDING-004 created; FINDING-001 and FINDING-002's Root Cause Hypotheses updated from open hypothesis to confirmed explanation. |
+| T3 | Discovery Mode upgraded to **Browser Automation** (§8.1 #1) via `tools/browser_driver/` — authenticated live as `odeysysadmin` through `BrowserDriver`, landed on Dashboard. |
+| T3 | Navigated to Add Routes Filter (fresh form). Selected Supplier = Galileo, Supplier Credentials = Galileo Live UAE. No dialog fired (checked after each step). |
+| T3 | Observed (Direct Observation): no Airlines multi-select field appears with Galileo selected — confirms T3087's Airlines filter does not exist live yet, on stronger evidence than the earlier Human Observation pass. Screenshot + network capture (38 events) recorded. `CredentialRoutesFilter_AddScreen_SupplierSelected.md` written. |
+
+---
+
+## UI Baseline Discovery mission (standalone — not part of RUN-20260710-001)
+
+**Purpose:** Documentation, not testing. Build the initial visual knowledge base for the NDC Admin Portal — one clean full-page baseline screenshot per reachable Admin screen, read-only, no scope narrowing to any particular User Story. Project Context, Test Cases, and Automation were explicitly out of scope for this mission.
+
+| Time | Event |
+|---|---|
+| B0 | Mission started. RUN-20260710-001's Stage 2 exploration paused (not abandoned) for the duration of this mission. Discovery Mode: Browser Automation via `tools/browser_driver/`, authenticated as `odeysysadmin` (Super Admin — same session identity as FINDING-002/004). |
+| B1 | Wrote a one-off driving script (scratchpad-only, not committed) walking the full module tree from `architecture.md`'s Navigation Model table: Dashboard, Admin (Company/Agency/Staff), Master (Flight/Supplier/Miscellaneous/Payment Gateway), Rule Engine, Settings, User Management, Booking-Mid Office, Profile, Reports, PNR Query, Transfer PNR, Import PNR, Import Booked PNR — 60 planned screens. Script resets to the app root before each screen (stateless per-entry) and never clicks any Add/Edit/Save/Delete/Submit/Approve/Issue/Cancel/Book/Confirm control. |
+| B2 | First pass: 53 screens captured, 1 unreachable (Travellers Details — wrong click path), 4 unreachable due to labels not present in the rendered DOM (My Quotes, Manual Booking Invoice, Blue Command Screen, Import PNR, Import Booked PNR), plus 2 false "captures" that turned out to be duplicates of a sibling screen (Search Booking = Booking; an earlier "Agency User Information" capture = Agent Information). |
+| B3 | Diagnostic pass: dumped the live DOM text under User Management and Booking-Mid Office to get ground truth instead of guessing from `architecture.md`'s wording. Found: (a) "Agency User Information" is an accordion **category**, not a screen — its real children are Agent Information (default) and Travellers Details, nested one level deeper than `architecture.md`'s flat listing implied; (b) Booking-Mid Office's sidebar renders exactly one entry ("Booking") for this role — My Quotes / Manual Booking Invoice / Blue Command Screen are genuinely not rendered, not a selector-matching failure. |
+| B4 | Re-captured Travellers Details with the corrected nested click path (`User Management → Agency User Information → Travellers Details`). Verified via file hash that "Search Booking"'s screenshot was byte-identical to "Booking"'s (confirmed duplicate, not a distinct screen); verified via visual diff that the old "Agency User Information" screenshot showed the same Agent Information content as the corrected capture. Deleted both duplicate/mislabeled files; corrected `_results.json` and the screen inventory accordingly. |
+| B5 | Spot-checked screenshot content across modules (Dashboard, Admin, Master, Rule Engine, Settings, Reports, Transfer PNR) — all render real landing pages, not error/blank states. **Unexpected observation:** the Dashboard screen for this Super Admin session shows a booking-search form (Country POS/Branch/date range/Booking Reference/Supplier/Airline), not KPI/summary widgets — flagged in the inventory as worth a product-owner check, not raised as a formal Finding this mission (Findings are out of scope per mission instructions; documented as an observation instead). Final tally: **53 screens captured**, **5 confirmed absent** from this role's navigation (2 already explained by FINDING-001, 3 reinforcing FINDING-004's Booking-Cycle restriction theme), **2 menu labels corrected as not being distinct screens**. Deliverable: [`UI_Baseline_Screen_Inventory.md`](../UI_Baseline_Screen_Inventory.md) + `UI Baseline/` screenshot tree + `UI Baseline/_results.json` (machine-readable log). |
+
+RUN-20260710-001's Stage 2 User Story discovery resumes from where it left off (T3) — this mission did not touch Project Context, Test Cases, or Automation.

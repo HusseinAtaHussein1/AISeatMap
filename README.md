@@ -768,3 +768,12 @@ Everything above this section is implemented or fully specified today (see [§4 
 - **Enterprise Dashboard** — a single operational view across all projects' run health, automation package registries, and knowledge base growth.
 
 None of these change the six-stage pipeline, the agent boundaries, or the human-approval model described above — every future capability is designed to slot into the existing architecture, not replace it.
+Please follow these guidelines:
+
+- Preserve the platform architecture.
+- Keep agents single-responsibility.
+- Maintain end-to-end traceability.
+- Never bypass approval gates.
+- Update documentation when introducing architectural changes.
+- Prefer reuse over duplication.
+

@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Branch TC-007 Only (env .70)" verbose="1">
+  <test name="Branch007">
+    <classes>
+      <class name="AdminPages.Admin.Branch.Branch_TC">
+        <methods>
+          <include name="addBranchHappyPathEntersApprovalQueue"/>
+          <include name="rejectRequiresNonEmptyRemark"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

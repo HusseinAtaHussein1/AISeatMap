@@ -13,11 +13,22 @@ Supplementary reference material for the NDC project that doesn't fit `onboardin
 | `api/swagger/` | OpenAPI/Swagger specification files for the application under test. | When the application exposes an API and you have (or produce) its OpenAPI/Swagger definition. |
 | `api/postman/` | Postman collections and environment files. | When API exploration/testing uses Postman collections worth keeping alongside the project's knowledge. |
 | `diagrams/` | Architecture, flow, or sequence diagrams (image exports or source files, e.g. draw.io, Mermaid, PlantUML). | When a diagram would clarify something `architecture.md` describes only in prose. |
-| `screenshots/` | Reference screenshots of the application under test — baseline UI captures for human orientation. | For onboarding/context screenshots only. This is **not** where pipeline-generated evidence goes — that belongs under `projects/NDC/artifacts/runs/RUN-YYYYMMDD-XXX/screenshots/` per `pipeline/run_manager.md`. |
+| `screenshots/` | General onboarding/context screenshots — currently empty, reserved for ad-hoc reference captures that don't belong to any of the three locations below. | For quick, informal screenshots only. Not where pipeline-generated evidence goes — see "Where screenshots actually live" below for the other three locations. |
 | `sample_data/` | Sample or fixture data for understanding the domain. | Anonymized/synthetic data only — **never** real production or personally identifiable data. |
 | `credentials/` | Documentation *about* credentials — e.g., which vault/secrets manager holds them, which roles exist, rotation policy. | Never for the actual secret values. See the warning above. This folder ships with a `.gitignore` that blocks anything except `README.md`/`.gitkeep` from being committed, as a safety net — it is not a substitute for care. |
 | `notes/` | Free-form working notes, meeting notes, scratch thoughts related to the project. | Anything too informal or in-progress for the structured project files. |
 | `external_links/` | Links to external resources — ticket trackers, dashboards, wikis, vendor portals. | Keep as a simple Markdown list of `[Label](URL) — why it matters`; don't duplicate content that belongs in `requirements/`. |
+
+### Where screenshots actually live
+
+NDC has four screenshot locations, each with a different owner and purpose — none of them overlap:
+
+| Location | Owner | Purpose |
+|---|---|---|
+| `projects/NDC/resources/screenshots/` | Human-maintained | General onboarding/context captures — currently empty. Use for anything informal that doesn't fit the other three. |
+| `projects/NDC/ui/screenshots/` | Browser Driver Layer | One reference baseline image per screen defined in `projects/NDC/browser/screens/*.json` — paired 1:1 by screen name (e.g. `Dashboard.json` ↔ `Dashboard.png`). |
+| `projects/NDC/workspace/discovery/UI Baseline/` | Explorer Agent, current state | The full, latest-approved UI baseline capture set across every in-scope module, organized by module/category — see `UI_Baseline_Screen_Inventory.md` in the same folder. |
+| `projects/NDC/runs/RUN-YYYYMMDD-XXX/discovery/*.png` | Explorer Agent, per run | Run-scoped discovery/evidence screenshots captured during that specific run (e.g. login flow states, Finding evidence). Immutable once the run completes. |
 
 ### `requirements/` breakdown
 

@@ -1,0 +1,7 @@
+target/
+*.class
+allure-results/
+execution-summary/
+generatedReport*.zip
+generate_allure_report.bat
+

@@ -1,0 +1,24 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Login Suite" verbose="1">
+  <test name="Login">
+    <classes>
+      <class name="AdminPages.Login.LogIn_TC"/>
+    </classes>
+  </test>
+  <!-- Added RUN-20260712-002 (Stage 4) — Admin Branch/Agency/Staff Spike -->
+  <test name="Branch">
+    <classes>
+      <class name="AdminPages.Admin.Branch.Branch_TC"/>
+    </classes>
+  </test>
+  <test name="Agency">
+    <classes>
+      <class name="AdminPages.Admin.Agency.Agency_TC"/>
+    </classes>
+  </test>
+  <test name="Staff">
+    <classes>
+      <class name="AdminPages.Admin.Staff.Staff_TC"/>
+    </classes>
+  </test>
+</suite>

@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Branch Payment Method Diagnostic" verbose="1">
+  <test name="BranchPaymentMethod">
+    <classes>
+      <class name="AdminPages.Admin.Branch.Branch_TC">
+        <methods>
+          <include name="branchPaymentOptionReflectsMasterPaymentMethodStatus"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

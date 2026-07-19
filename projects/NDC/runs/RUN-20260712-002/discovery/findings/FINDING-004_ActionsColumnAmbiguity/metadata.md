@@ -1,0 +1,22 @@
+- **Finding ID:** FINDING-004
+- **Title:** Branch List's Actions column ordering makes a naive "click the first/last action icon" automation approach land on Reject/Deactivate instead of Edit — near-miss on a real shared-environment record
+- **Category:** Recommendation
+- **Severity:** N/A (Recommendation category default)
+- **Severity Reason:** N/A category default — no defect occurred (no Submit was clicked), but the near-miss risk to shared data is real.
+- **Confidence Score:** 90% — directly observed: the Actions-column click opened a modal titled with the row's Branch name ("Test") and a required "Remark" field, consistent with a Reject/Deactivate confirmation rather than an Edit form.
+- **Evidence Category:** Direct Observation
+- **Status:** Needs Human Review
+- **Business Risk:** If an automation script had proceeded to fill the Remark field and click Submit, it would have **rejected/deactivated a real, pre-existing Branch record (BRN2 "Test") on the shared staging environment** — not a QA_SPIKE_-prefixed test record, since the near-miss occurred on existing data, before any test record had been created this run.
+- **Technical Risk:** The Actions column's DOM ordering is not obviously "Edit first, Reject second" from a generic locator strategy (e.g., "last child of the Actions cell," or "first icon") — a specific, verified locator (e.g., by icon class/title/aria-label, not position) is required before Stage 4 Automation writes any Edit-flow step against this column.
+- **Module:** Admin → Branch (List screen Actions column); likely applies to Agency's List screen too (same visual pattern), unconfirmed.
+- **Workflow:** Branch List → Edit action
+- **Description:** A generic "click the row's Actions-column action" locator opened a Reject/Deactivate confirmation dialog (title "Test," a required "Remark" textarea, Submit/Cancel) instead of the Edit form, when targeting Branch BRN2's Actions cell.
+- **Expected Behavior:** Not defined in the Project Context; reasonable expectation is that an "Edit" click opens an editable form pre-filled with the record's data, not a destructive-action confirmation.
+- **Actual Behavior:** The click landed on what appears to be the Reject/Deactivate icon (thumbs-down, per the List screenshot) rather than the Edit pencil.
+- **Steps to Reproduce:** On Admin → Branch's List screen, inspect the Actions column's two icons (pencil = Edit, thumbs-down = Reject/Deactivate) and confirm which DOM position/selector each occupies before scripting either action.
+- **Investigation/Recovery Result:** No recovery attempted — the run stopped short of Submit deliberately once the modal's true purpose (Remark-gated, destructive-looking) became apparent. **No mutation occurred; Branch BRN2 remains Approved/unchanged** (confirmed via the same screenshot's background table).
+- **Investigation Notes:** Did not attempt Cancel-vs-close comparison, or re-attempt with a corrected selector, given the shared-environment risk — deferred to Stage 4, where the Automation Agent can verify selectors deliberately (per `agents/automation_agent.md` §17) rather than during ad hoc Discovery.
+- **Root Cause Hypothesis:** N/A (automation-approach risk, not an application defect).
+- **Occurrence Count:** 1
+- **Evidence Links:** `branch_edit.png` (shows the unsubmitted Reject/Deactivate modal for "Test," with the background List table still showing BRN2 = Approved, confirming no mutation happened).
+- **Recommendation:** Before Stage 4 Automation scripts any Edit or Reject/Deactivate flow for Branch/Agency, verify each action icon's selector individually (e.g., via `title`/`aria-label`/icon class) rather than positional selectors, and never chain straight to Submit on a Remark-gated confirmation without an explicit, deliberate test-case intent.

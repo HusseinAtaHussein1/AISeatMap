@@ -1,0 +1,22 @@
+- **Finding ID:** FINDING-007
+- **Title:** Agency records in Pending approval status are not returned by the Agency List/Search screen under any Status filter (Inactive/Active/Both)
+- **Category:** UX Issue / Requirement Gap (related to FINDING-002's approval workflow)
+- **Severity:** Medium
+- **Severity Reason:** No apparent way for an Admin to locate their own just-submitted, not-yet-approved Agency record via the primary List/Search screen — a real usability gap if staff need to track a submission's status, distinct from FINDING-002 (which only established that submission itself lands in Pending, not what happens next).
+- **Confidence Score:** 90% — reproduced twice against two different environments/datasets (first against `.70`'s `QA_SPIKE_Agency01`, misdiagnosed as an environment mismatch; then correctly against `.80`'s own freshly-created `QA_SPIKE_Agency01`, same result), each time contrasted against a working baseline search on the same session.
+- **Evidence Category:** Direct Observation (live re-test against STG `.80`, 2026-07-13, via `tools/browser_driver`)
+- **Status:** Needs Human Review
+- **Business Risk:** Medium — if this is not intentional, Admin staff have no clear self-service way to check on a Pending Agency's status by name.
+- **Technical Risk:** N/A — search/filter behavior only, no data integrity concern.
+- **Module:** Admin / Agency (List/Search screen)
+- **Workflow:** Add Agency → approval tracking
+- **Description:** Two independent, real Agency records — `QA_SPIKE_Agency01` created on `.70` (2026-07-13, before FINDING-001's resolution) and a second `QA_SPIKE_Agency01` created on `.80` (same day, after the login URL was corrected) — were both searched for on their own respective environment's Agency List/Search screen immediately after creation, using both an exact-name filter and a broader partial-name filter, with Status=Both selected. Both searches, on both environments, returned **"No data has been found!"**. A baseline search (same session, blank name filter, default Status) confirmed the search mechanism itself works normally and returns real `Approved` records.
+- **Expected Behavior:** Not defined in the Project Context or any approved requirement — whether Pending records should be visible via this screen (perhaps under a currently-missing "Pending" status filter option) is an open question.
+- **Actual Behavior:** A Pending-approval Agency record is invisible to this screen's search under Inactive, Active, or Both — as if it does not exist yet from this screen's perspective.
+- **Steps to Reproduce:** Submit a new Agency via Add Agency (any valid data) → immediately search the Agency List for that exact name, Status=Both → observe "No data has been found!".
+- **Investigation/Recovery Result:** Not applicable — a configuration/behavior observation, not a runtime failure to recover from.
+- **Investigation Notes:** Where such a Pending record *can* actually be viewed/tracked (a distinct Approval Status filter not present in this screen's UI, a separate Approvals/Pending-review screen, or a role-permission gap for the test Admin account) was not located — this platform deliberately did not navigate outside the Agency module's own screens to keep searching, per explicit user instruction mid-investigation.
+- **Root Cause Hypothesis:** The List/Search screen's Status filter (Inactive/Active/Both) likely queries a `Status` field that is only meaningfully set once an Agency is Approved; Pending records may have a null/different value entirely, causing them to fall outside all three filter options. Confidence: 50% — plausible given the UI's exact filter options, not confirmed against backend/API behavior.
+- **Occurrence Count:** 2 (one per environment, `.70` and `.80`)
+- **Evidence Links:** `runs/RUN-20260713-001/discovery/Agency_Activate.md` (full investigation narrative, including the environment-mismatch correction); `agency-search-qa-spike-partial.png` (scratchpad, not retained per Debug Mode Off convention — reproducible via Steps to Reproduce above).
+- **Recommendation:** Ask a human where Agency approval-status tracking/activation actually happens in the live application, since it is evidently not this List/Search screen. This also directly blocks scoping an "Activate Agency" automated test case until that screen/action is identified.

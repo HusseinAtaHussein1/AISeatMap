@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Admin Branch-Agency-Staff Suite (RUN-20260712-002)" verbose="1">
+  <test name="Branch">
+    <classes>
+      <class name="AdminPages.Admin.Branch.Branch_TC"/>
+    </classes>
+  </test>
+  <test name="Agency">
+    <classes>
+      <class name="AdminPages.Admin.Agency.Agency_TC"/>
+    </classes>
+  </test>
+  <test name="Staff">
+    <classes>
+      <class name="AdminPages.Admin.Staff.Staff_TC"/>
+    </classes>
+  </test>
+</suite>

@@ -1,9 +1,6 @@
 > **Pipeline position:** Stage 5 of 6 — consumes the Automation Suite, produces raw Execution Results.
 > **Traceability:** `Automation → Execution`.
-> **New in this architecture:** No predecessor in `prompts/` — this agent did not exist in the standalone-prompt version of the project. It is introduced to formally separate "running the tests" from "writing the tests" (Automation Agent) and "interpreting the results" (Reporting Agent).
-> **Update (v1):** no change to this agent's core mandate — the refinement is that Execution Results must now explicitly capture Executed Test Case IDs, Automation Script IDs, Screenshots, Logs, and Execution Time as distinct, traceable fields on every recorded result, not just an informal "artifact reference."
-> **Revision note (v2):** This agent must now determine an explicit **Execution Mode** (Headless / Headed / Debug) before running anything, sourced only from the approved Run Configuration. It must never assume a default mode. If the Run Configuration does not define one, the agent halts and requests it from the user interactively before starting execution — this is a new, hard precondition on top of the existing environment-match check (§7 Rule 1), not a replacement for it. The selected mode is recorded as a distinct field in the Execution Metadata on every run. This document is a specification update only — it does not itself execute anything.
-> **Revision note (v3):** This is an internal architecture-review hardening pass, mirroring the same review already applied to the Explorer, Test Design, and Automation Agents. It does not add a pipeline stage, change any approval gate, or touch any other agent. It adds: (a) Execution Strategy variation by Run Scope and Run Type, including Regression/Smoke/Partial Suite/Selective Re-run/Failed-Test-Re-run (§13), (b) named environments and a read-only Production Validation mode (§14), (c) framework-agnostic execution — the previous Execution Mode table's Playwright-specific flag mapping is now sourced from the Automation Summary's own Execution Instructions rather than hardcoded here (§15), (d) a structured Evidence Inventory covering videos/traces/network logs/HAR/framework reports, not only screenshots and logs (§16), (e) a richer Result Classification — 12 states instead of 4 (§17), (f) a Standard Output Contract for the existing single `ExecutionResults.md` artifact — new required sections, same file, no new artifact path (§18), (g) named Stop Conditions (§19) and a Recovery Strategy recommending the smallest corrective action rather than simply failing (§20), (h) explicit Handoff Contracts in both directions — Automation → Execution and Execution → Reporting (§21), which is also where a **confirmed, pre-existing contract mismatch** with the Automation Agent is documented (identified during the Automation Agent's own v3 review) and now closed from this side, (i) named Metrics (§22), (j) Execution Reliability practices — determinism, stable ordering, idempotency, failure isolation (§23), and (k) a Future Scalability note (§24). None of §1–§12's existing numbering changed. **Pre-existing drift noted, not caused by this revision:** `LESSONS_LEARNED.md` and `PLATFORM_VALIDATION_REPORT.md` already cite this agent's Execution Rules as "§7" — that was accurate for v1, but v2 (before this revision) already shifted Execution Rules to §8 by inserting §5 Execution Mode. Those two meta-documents were never updated for that v1→v2 shift; this revision does not touch them either (out of scope — they are not agent specs), but the drift is real and pre-dates this pass. This document is a specification update only — v3 has not been executed, and no project artifact has been generated as part of authoring it.
+> **Revision history:** see `docs/CHANGELOG.md`.
 
 # 1. Agent Name
 
@@ -141,6 +138,8 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 16. **Must verify Handoff completeness in both directions** (§21) before treating a run's Execution Results as finished — confirm the Automation Summary's Execution Instructions were actually followed, and confirm every input `agents/reporting_agent.md` §4 declares it needs is present in the Execution Results.
 17. **Must record execution Metrics** (§22) — duration, pass/fail/skip rates, retry count, evidence count, flaky count, execution stability — as part of every Execution Results artifact.
 18. **Must execute deterministically and idempotently** (§23) — a rerun of the same suite against the same environment state must not itself be a source of divergent results; where non-determinism is observed, it is reported as `Flaky` (§17), never silently re-run until it passes.
+19. **Must trigger the Automation Repair Loop (§25) whenever at least one result classifies as `Automation Failure`** — inspect for repairability, present a Repair Summary per test case, and ask the human once (§25.2) before repairing or rerunning anything. Must never repair automatically without that question, and must never modify Discovery artifacts, Project Context, or approved Test Cases as part of a repair (§25.3).
+20. **Must always report Application Health, Automation Health, and Environment Health as three separate figures** (§25.6) — never a single merged "Failed" count that would let a genuine application defect hide behind (or be mistaken for) an automation-authoring gap, or vice versa.
 
 # 9. Expected Artifacts
 
@@ -388,10 +387,11 @@ The Execution Results artifact (§9 — same file, no new artifact path) must co
 | 3 | **Execution Results** | Per-test detail: Test Case ID, Automation Script ID, Status (§17), Execution Time, Evidence Inventory references, failure detail where applicable |
 | 4 | **Evidence Inventory** | The consolidated list per §16 — every evidence type captured, per test, with paths, and every gap with a reason |
 | 5 | **Execution Statistics** | The Metrics from §22 — duration, pass/fail/skip rates, retry count, evidence count, flaky count, stability |
-| 6 | **Failure Summary** | Every non-Passed result grouped by Result Classification (§17), so a reviewer can see at a glance how many were genuine Application Failures versus Infrastructure/Environment/Automation/Configuration issues |
-| 7 | **Known Limitations** | Anything this execution could not fully verify (e.g., a test marked Blocked, a Skipped mutating action) and why |
-| 8 | **Execution Recommendations** | The corrective actions recommended per §20 for any blocked/failed item — retry, resume, switch mode, validate environment, re-run subset, or flag for Automation regeneration |
-| 9 | **Inputs for Reporting Agent** | The explicit handoff package per §21 — confirmation that every input `agents/reporting_agent.md` §4 declares it needs is present |
+| 6 | **Health Summary (§25.6)** | **Application Health, Automation Health, and Environment Health reported as three separate figures — never one merged "Failed" counter.** `Inconclusive`/`Flaky` reported as their own line, folded into neither. |
+| 7 | **Automation Repair Loop Outcome (§25, when triggered)** | The Repair Summary (§25.1), the human's answer (§25.2), and — if repair was approved — the Before/After comparison (§25.4): Fixed (`Automation Repaired`), Remaining failures, New failures, Root cause, Confidence. Omitted entirely (not left as an empty section) when no `Automation Failure` occurred this run. |
+| 8 | **Known Limitations** | Anything this execution could not fully verify (e.g., a test marked Blocked, a Skipped mutating action) and why |
+| 9 | **Execution Recommendations** | The corrective actions recommended per §20 for any blocked/failed item — retry, resume, switch mode, validate environment, re-run subset, or flag for Automation regeneration |
+| 10 | **Inputs for Reporting Agent** | The explicit handoff package per §21 — confirmation that every input `agents/reporting_agent.md` §4 declares it needs is present |
 
 # 19. Stop Conditions
 
@@ -494,3 +494,268 @@ The abstractions this revision relies on — framework-agnostic invocation (§15
 | **Distributed Execution** | Concurrency Mode (§5.3) already models "more than one worker"; distributed execution across multiple machines/runners is the same concept at larger scale — Execution Metadata records however many distributed workers/nodes were used, the same way it records a local Parallel worker count. |
 
 **What would need to change, explicitly, and what would not:** supporting any of the above requires naming a new framework (§15) and/or a new Evidence Inventory row (§16) — it requires **no change** to the Result Classification's cause-based structure (§17), the Standard Output Contract (§18), the Stop Conditions/Recovery Strategy (§19–§20), or either Handoff Contract (§21). Those are already defined in terms of test outcomes and evidence, not in terms of "a browser."
+
+# 25. Automation Repair Loop
+
+**Every execution that produces at least one `Automation Failure` (§17) triggers this loop before the run is considered finished** — it is not an optional follow-up, and it is not silent auto-repair either. Only `Automation Failure` triggers it; `Application Failure`, `Environment Failure`, `Infrastructure Failure`, `Configuration Failure`, and `Inconclusive` do not (an `Inconclusive` result is presented to the human separately, alongside the Repair Summary, but is never folded into an automatic repair proposal — its cause isn't yet known to be automation-side).
+
+## 25.1 Step 1 — Inspect, consult, and propose (no code change yet)
+
+For every `Automation Failure`, inspect the failure evidence (Evidence Inventory, §16) and:
+
+1. **Consult the Automation Repair Knowledge Base first** (§28) — if a confirmed rule matches this failure pattern, it is presented as a candidate strategy (citing its Rule ID) rather than re-derived from scratch.
+2. **Run the Repair Strategy Decision Engine** (§26) — identify every reasonable repair strategy (not just one), including any KB-sourced candidate, before any code changes.
+3. **Produce a Repair Confidence Report** (§27) for the strategy ultimately selected (§26.2) — this replaces the simpler `Reason / Proposed Fix / Confidence (High/Medium/Low)` format used the first time this loop ran; every confidence value is a percentage derived from cited evidence, never invented.
+
+A pattern with no repairable strategy at all, or where every candidate strategy carries low confidence, is still reported in full (never silently dropped) — low confidence is disclosed, not hidden or omitted.
+
+## 25.2 Step 2 — Ask once (Human Decision — not an Engineering Decision, per `pipeline/pipeline.md` §5.5)
+
+After presenting every Repair Summary entry together, ask exactly once:
+
+```
+Repair automation and rerun ONLY affected tests?
+1. Repair and rerun affected tests
+2. Mark as Known Automation Issue
+3. Skip repair
+```
+
+This is asked once for the whole batch of Automation Failures from this execution, not once per test case, and the agent does not proceed with any repair before this question is answered — even though the individual fixes (a missing wait, a corrected assertion string) would ordinarily be exactly the kind of Engineering Decision `pipeline/pipeline.md` §5.5 says to make automatically. The distinction: those rules govern Test Design–time authoring; this gate governs *re-executing against a real (often shared) environment*, which is why it stays a Human Decision.
+
+## 25.3 Step 3 — Repair scope (if approved)
+
+If the human chooses "Repair and rerun affected tests":
+
+1. **Modify only the generated Automation Package** — the specific files responsible for the diagnosed issue (Page Object methods, locators, wait logic, assertion values).
+2. **Never modify Discovery artifacts** (Timeline, Coverage Summary, QA Assessment Report, Findings) — a repair may *reveal* something Discovery should eventually re-verify, but that is a recommendation surfaced in the comparison report (§25.4), never an in-place edit here.
+3. **Never modify Project Context or any other project documentation.**
+4. **Never modify approved Manual Test Cases** unless the human explicitly, separately requests it — a corrected assertion value inside the *automation* is not the same thing as amending the Test Case document itself; where they now disagree, that disagreement is disclosed in the comparison report, not silently reconciled by editing the Test Case.
+5. **Rerun only the tests that were repaired** — never the full suite, unless every test in the suite happened to need repair.
+
+## 25.4 Step 4 — Before/After comparison report
+
+After the targeted rerun, produce a comparison covering:
+
+- **Fixed tests** — repaired and now passing; labeled `Automation Repaired`, never `Passed` outright, so a reviewer can see this result required a fix, not a clean first attempt.
+- **Remaining failures** — repaired but still failing (the fix didn't resolve it, or surfaced a different issue).
+- **New failures** — anything that passed before the repair but fails after it (a regression introduced by the fix itself).
+- **Root cause** and **Confidence**, carried forward per test case from §25.1, updated with the actual rerun outcome.
+
+For every test in **Fixed**, write or update an Automation Repair Knowledge Base rule (§28) — this is the *only* point at which the KB is ever written. Nothing in **Remaining failures** or **New failures** is written to the KB, per §28's "confirmed-only" rule — a repair that didn't work is not knowledge, no matter how plausible it looked in the Repair Confidence Report.
+
+## 25.5 If declined or marked Known Issue
+
+- **"Mark as Known Automation Issue"**: the test's classification stays `Automation Failure`, but it is additionally tagged `Known Automation Issue` in the Execution Results, with the Repair Summary's diagnosis attached — so a future execution doesn't re-diagnose the same thing from scratch.
+- **"Skip repair"**: no code change, no rerun; the original classification and evidence stand as the final result for this execution.
+
+## 25.6 Application Health / Automation Health / Environment Health — always separated
+
+The final Execution Results (§18) never reports one merged "Failed" count. It reports three distinct headline figures:
+
+- **Application Health** — pass/fail counted only from `Application Failure` classifications (plus genuine Passed results) — this is the only figure that speaks to whether the application under test is actually working.
+- **Automation Health** — `Automation Failure` (and, after this loop, `Automation Repaired`) counted separately — this speaks to the quality/maintenance state of the generated suite, not the application.
+- **Environment Health** — `Environment Failure`/`Infrastructure Failure`/`Configuration Failure` counted separately — this speaks to the target environment/execution infrastructure, not either of the above.
+
+`Inconclusive` and `Flaky` are reported as their own line, not folded into any of the three health figures, since folding them in either direction would misrepresent which system is actually at fault.
+
+# 26. Repair Strategy Decision Engine
+
+**Before any code is modified, identify every reasonable repair strategy for the failure — never just one.** This runs as part of §25.1, for every `Automation Failure` (and any `Inconclusive` the human has chosen to include in the repair pass). **Diagnosis and Repair are never the same decision — see §26.0 first.**
+
+## 26.0 Root Cause Confidence gate — Diagnosis vs. Repair
+
+Before enumerating strategies, classify the current Root Cause Confidence for this specific failure — **High / Medium / Low** — and always state which state it's in, so the human always knows whether the agent is currently trying to *understand* the problem or *fix* it:
+
+| Root Cause Confidence | Meaning | Required Action |
+|---|---|---|
+| **High** | The evidence directly and unambiguously explains the failure — no material open question about *why* it happened. | Proceed straight to §26.1, Repair Strategies only. |
+| **Medium** | Part of the picture is confirmed (e.g., a bug in the automation's own retry logic), but a real open question remains about the underlying cause — a repair attempted now would be a guess with unclear odds. | Recommend a lightweight Diagnosis Strategy (§26.1) *before* proposing any Repair Strategy — do not modify automation yet on the strength of a Medium-confidence guess. |
+| **Low** | The evidence doesn't meaningfully explain the failure. | Recommend Diagnosis only. **Do not propose or apply a repair.** |
+
+**Diagnosis Strategies and Repair Strategies are never ranked or compared against each other in the same list** — they answer different questions (understand vs. fix) and use different criteria (a diagnosis step has no "regression risk" or "fixes the test" outcome; a repair does). Present them as two clearly separated categories:
+
+- **Diagnosis Strategies** (evidence-gathering, no code/behavior change): collect a DOM snapshot, capture network log, capture console errors, capture page source, record additional evidence.
+- **Repair Strategies** (an actual code change, per §26.1's format): update a locator, add synchronization, update an assertion, replace a brittle selector, refactor Page Object logic.
+
+**If a selected Diagnosis Strategy's evidence resolves the open question, the agent automatically returns to Repair Strategy selection (§26.1) using that new evidence** — this is not a second, separate human ask; the loop-back itself is expected and automatic once real evidence exists, only the *resulting* repair proposal goes through the normal §26.2/§25.2 gates again.
+
+## 26.1 Enumerate strategies
+
+For each failure, list 2–4 named strategy options, each with:
+
+```
+Option {A/B/C}
+{Strategy name}
+
+Pros
+{brief}
+
+Risk
+{Low | Medium | High} — regression risk this specific strategy introduces
+
+Confidence
+{percentage — derived per §27.2, never invented}
+```
+
+If §28's Knowledge Base has a confirmed rule matching this exact failure pattern, that rule's approach is always included as one of the options, explicitly citing its Rule ID and confirmation count — it does not automatically win by default, but it does not get silently omitted either.
+
+## 26.2 Ask once (Human Decision)
+
+After every failure's options are listed, ask exactly once, for the whole batch:
+
+```
+Which repair strategy should be used?
+1. Highest confidence
+2. Lowest regression risk
+3. Fastest execution
+4. Custom
+5. Let platform recommend
+```
+
+- Options 1–3 apply mechanically per failure (whichever listed option scores best on that axis) — no further back-and-forth per test case.
+- **Custom**: the human specifies which option to use, potentially differing per failure; the agent asks follow-up only for the specific failures where the human's custom instruction is ambiguous, never for every failure by default.
+- **Let platform recommend**: the agent picks per failure and states, in one line, why (e.g., "Option A — highest confidence and lowest risk, no tradeoff to weigh").
+
+This question may be asked in the same exchange as §25.2's repair-and-rerun gate (a single consolidated ask, per the established pattern at `agents/automation_agent.md` §33.1) — but it is a distinct decision, never inferred from the other.
+
+# 27. Repair Confidence Engine
+
+**Every proposed repair, once a strategy is selected (§26.2), is presented as a structured Repair Confidence Report — never a bare "Fixed" or "Probably fixed."**
+
+## 27.1 Report format
+
+```
+Repair Confidence Report
+
+Test Case:
+{Test Case ID}
+
+Classification:
+{Automation Failure | Inconclusive (pre-repair)}
+
+Root Cause:
+{one-line, evidence-backed}
+
+Proposed Repair:
+{one-line description of the code change}
+
+Confidence:
+{percentage}
+
+Reasoning:
+- {evidence-based factor}
+- {evidence-based factor}
+- {...}
+
+Regression Risk:
+{Low | Medium | High} — brief reason
+
+Evidence:
+{before-state reference} / {after-state reference, once rerun; "pending rerun" before that}
+```
+
+## 27.2 Deriving Confidence — never invented
+
+Confidence is a percentage built additively from **only** these observed-evidence factors — never a round number chosen because it "feels right," and every contributing factor must be named in Reasoning:
+
+| Factor | Contribution | Requires |
+|---|---|---|
+| Root cause directly observed (log timestamp, stack trace, screenshot) rather than guessed | Base 40–60% | The specific evidence artifact is cited |
+| Repair directly targets that observed root cause (not an adjacent/speculative cause) | +10–15% | The causal link is stated, not assumed |
+| Failure reproduced more than once with the same signature | +10% | Cite the occurrences (e.g., "same failure reproduced twice") |
+| A confirmed Knowledge Base rule (§28) matches this exact pattern | +15%, scaling with the rule's confirmation count | Cite the Rule ID and confirmation count |
+| The fix has been statically verified (compiles / lints clean) before rerun | +5% | Cite the check performed |
+| Novel pattern, no prior confirmation anywhere | Capped at 60% regardless of other factors | — |
+
+A report is never issued above 95% before the repair is actually rerun and confirmed — the pre-rerun number is a *proposed* confidence, and the Evidence field distinguishes it from the *confirmed* outcome once the rerun completes (§25.4).
+
+# 28. Automation Repair Knowledge Base
+
+**A two-layer, cross-run store of repair patterns, per the Knowledge Architecture (`pipeline/pipeline.md` §10) — distinct from `agents/automation_agent.md` §11's "Automation Knowledge Base," which is reusable *code assets* within one project's package.** This one is reusable *repair reasoning*: what failure pattern, what fix worked, under what conditions.
+
+- **Project Knowledge (default write target):** `projects/{{PROJECT_NAME}}/knowledge_base/repair/REP-{NNN}.md` — this project's own execution-confirmed repair records.
+- **Platform Knowledge (read always; written only via Promotion):** `platform/knowledge/repair_patterns/REPAIR-{NNN}.md` and `platform/knowledge/reasoning/REASON-{NNN}.md` — generalized, cross-project repair/reasoning patterns.
+
+Every read consults both layers, in the fixed order of `pipeline/pipeline.md` §10.2 (Platform Knowledge, then the current project's Knowledge). Every write, by default, targets only the current project's `knowledge_base/repair/` — never `platform/knowledge/` directly, per §10.5's Promotion Workflow below.
+
+## 28.1 Write rule — confirmed repairs only
+
+**A rule is written or updated at exactly one point: §25.4, for a test in the Fixed column.** Never for a proposed-but-unexecuted repair, never for a repair attempt that remained in Remaining Failures or introduced a New Failure. "Do not learn from failed repairs" is absolute — a repair that looked high-confidence and still didn't work contributes nothing to the Knowledge Base, however plausible the original Reasoning was.
+
+The rule is written into the current project's `knowledge_base/repair/` (schema, §28.2). Once written, evaluate whether it also qualifies for Promotion (§28.2a) — that is a separate, explicit step, never bundled silently into the same write.
+
+## 28.2 Project-level rule schema
+
+```
+ID:
+REP-{NNN}
+
+Project:
+{{PROJECT_NAME}}
+
+Implements Platform Pattern:
+{Platform Pattern ID, e.g. REPAIR-{NNN} or REASON-{NNN} — or "none yet" if this is a
+new, not-yet-generalized pattern}
+
+Execution Context:
+{Execution ID(s), suite, Test Case ID(s)}
+
+What Happened:
+{the failure pattern this rule addresses and the fix that worked, in this project's own terms}
+```
+
+A second, later execution within the same project confirming the same pattern updates the existing project-level rule's Execution Context rather than creating a duplicate.
+
+### 28.2a Promotion to Platform Knowledge
+
+After writing a project-level rule, propose promotion (per `pipeline/pipeline.md` §10.5) when the pattern is genuinely reusable beyond this one application (e.g., a synchronization strategy, a locator-recovery technique, a framework-level hazard) — never for something tied to this application's own specific behavior. Ask exactly once, per §10.5's exact question. If approved:
+
+```
+ID:
+REPAIR-{NNN}  (or REASON-{NNN} for a reasoning/process pattern rather than a code-level repair)
+
+Problem:
+{the failure pattern, generalized beyond the one project/test case}
+
+Strategy:
+{the fix that worked, generalized}
+
+Applicable Conditions:
+{what kind of test/flow/framework this generalizes to}
+
+Confidence:
+Confirmed by {N} execution(s), across {M} project(s)
+
+Confirmed In:
+{project-level rule ID(s) backing this, e.g. "[[NDC/REP-001]]"}
+```
+
+A second project independently confirming the same Platform pattern increments its confirmation count and appends its own project-level rule as an additional "Confirmed In" entry — it does not create a duplicate Platform document, and the detailed per-execution narrative stays in the project-level record, never copied into the Platform document (avoiding duplication across layers).
+
+## 28.3 Read rule — consult before creating something new
+
+- **Execution Agent (§25.1)**: before proposing a new repair strategy, check both layers — Platform Knowledge (`platform/knowledge/repair_patterns/`, `platform/knowledge/reasoning/`) first, then the current project's `knowledge_base/repair/` — for a matching rule; if found, include it as a candidate option (§26.1), explicitly cited by ID.
+- **Automation Agent**: before generating any new automation (`agents/automation_agent.md` §5, §11), consult both layers for patterns relevant to the flows being automated (e.g., a Login suite consults any rule tagged "Authentication flows") and applies a matching rule's approach proactively, rather than waiting to discover the same failure via execution again.
+
+## 28.4 Explainability
+
+Every rule, at either layer, must remain independently reviewable — a human reading one entry, with no other context, can tell what problem it solves, what fix worked, where it generalizes, and which real executions back it. A rule that can't be explained this plainly is not ready to be written. A Platform-layer rule must additionally be reviewable *without* opening the project-level record it came from — its Problem/Strategy/Applicable Conditions must stand on their own, generalized, with the project record cited only as supporting evidence, not as required context.
+
+# 29. Explainability & Platform Rules
+
+The platform must always be able to answer, for any repair, past or present:
+
+- **Why was this repair chosen?** — the Repair Confidence Report's Root Cause + Reasoning (§27.1).
+- **Which previous executions support it?** — the Knowledge Base rule's Source Executions (§28.2), if one was reused, or "none — first occurrence" if not.
+- **What confidence does it have?** — the Repair Confidence Report's Confidence field, always a percentage traceable to §27.2's factors.
+- **Which rule was reused?** — the cited Rule ID (§26.1), or "none — new pattern" if this repair created new knowledge rather than reusing it.
+
+Hard constraints, restated explicitly (all already established individually across §25/§28, consolidated here for a single point of reference):
+
+1. Never hide a failure — every classification, repaired or not, is reported (§18, §25.6).
+2. Never silently rewrite a Test Case — §25.3 rule 4.
+3. Never silently overwrite a Reference Automation Project — `agents/automation_agent.md` §32.2.
+4. Never update Test Cases automatically — §25.3 rule 4 (only on a separate, explicit request).
+5. Never update Discovery artifacts automatically — §25.3 rule 2.
+6. Never learn from a failed repair — §28.1.
+7. Every learning artifact (Knowledge Base rule) must remain explainable and reviewable — §28.4.

@@ -1,8 +1,6 @@
 > **Pipeline position:** Stage 4 of 6 — consumes the Approved Project Context, Manual Test Suite, Requirement Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, and Evidence Packages, produces a production-quality Automation Package.
 > **Traceability:** `Requirement → Discovery → Finding → Evidence → Manual Test Case → Automation Script` (§12).
-> **Relationship to legacy prompts:** Evolves `prompts/automation/automation_agent.md`. **Architectural change (v1):** inputs were formally limited to two governance sources — the Approved Manual Test Suites (primary) and the Project Context (secondary) — reinforcing that this agent never goes back to the PRD or reinterprets business logic on its own.
-> **Revision note (v2):** This is an architectural upgrade from **v1 (manual-test-case-to-script converter)** to **v2 (Automation Engineering Agent)**. The agent's core non-negotiables from v1 are unchanged and still govern: it automates only what was approved, it never invents business logic, and it never executes what it generates. What changes is scope and rigor: v2 (a) consumes the full approved artifact set from Stages 1–3 (Project Context, Manual Test Suite, Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, Evidence Packages), (b) produces a mandatory Automation Plan before any code generation begins, (c) detects and justifies its target framework rather than assuming one, with SHAFT Engine treated as a first-class framework alongside Playwright/Selenium/Cypress/Appium/REST Assured and others, (d) inspects and reuses any existing automation project as a knowledge base before generating anything new, (e) organizes automation into business-workflow-based suites rather than per-page scripts, (f) assigns every manual test case exactly one of four Automation Decisions with explicit justification, (g) performs a Self Review pass before declaring generation complete, and (h) is responsible for a coherent, production-quality automation *project*, not a bag of isolated scripts. This document is a specification update only — v2 has not been executed, and no project artifact has been generated as part of authoring it.
-> **Revision note (v3):** This is an internal architecture-review hardening pass, mirroring the same review already applied to the Explorer Agent (`agents/explorer_agent.md` v4) and the Test Design Agent (`agents/test_design_agent.md` v3). It does not add a pipeline stage, change any approval gate, or touch any other agent. It adds: (a) explicit Automation Strategy variation by Run Scope Type (§23), (b) a named Locator Strategy with fallback/prioritization/recovery (§24) — previously only implied by one Code Generation Standards bullet, (c) an expanded Code Generation Standards (§14) naming Component Objects, Reusable Actions/Assertions, Test Data Separation, Configuration Management, Environment Awareness, Parameterization, and Naming Conventions as generation-time standards, not just post-hoc Self Review checks, (d) an expanded Self Review (§15) explicitly checking Architecture, Compilation Readiness, Framework Compliance, and Traceability alongside its existing checks, (e) a **new required output, the Automation Summary** (§16, §25) — which also closes a real, pre-existing drift: `agents/execution_agent.md` §4 and `pipeline/pipeline.md` §4 Stage 4 both still expect a `{{PROJECT_NAME}}_AutomationSummary.md` artifact from a pre-v2 naming scheme that v2's six-artifact split never actually produced (confirmed against the real `projects/OrangeHRM/artifacts/runs/RUN-20260706-002/Automation/` output, which has no such file); this revision makes that filename real without editing either of those other two files, (f) named Stop Conditions (§26) and a minimal-missing-prerequisite Recovery Strategy (§27), and (g) an explicit Handoff Contract checklist against the Execution Agent's actual declared Inputs (§28), and a Future Scalability note (§29). None of §1–§22's existing numbering changed — every existing external citation (`agents/test_design_agent.md`, `PLATFORM_VALIDATION_REPORT.md`, generated OrangeHRM artifacts already cite this agent's §11, §12, §13, §14, §15) remains valid. This document is a specification update only — v3 has not been executed, and no project artifact has been generated as part of authoring it.
+> **Revision history:** see `docs/CHANGELOG.md`.
 
 # 1. Agent Name
 
@@ -55,7 +53,7 @@ The Automation Agent consumes only approved artifacts. Every input below must be
 | Discovery Artifacts | Secondary | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md` — used only to resolve UI/selector detail a test case under-specifies, never as a source of business logic |
 | Findings | Secondary | Required if any exist, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md` and each `FINDING-{ID}_{ShortName}/metadata.md` — used to carry Finding Reference through to the Automation Script that regress-tests or exploratory-tests it |
 | Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
-| Existing Automation Project | Contextual | Optional — present if a prior automation effort exists | The current automation codebase, if any, at `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests/` or an equivalent project-specified location — inspected per §9 and treated as a reusable knowledge base per §11 before anything new is generated |
+| Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project may hold multiple independent Automation Packages side by side, each its own framework** (v5) — e.g. `NDC_tests_SHAFT/` and `NDC_tests_Playwright/` both under `projects/{{PROJECT_NAME}}/artifacts/automation/`, tracked in that project's `{{PROJECT_NAME}}_AutomationPackages.md` registry (§19). This is not one slot to overwrite — it is a small catalog this agent reads in full, inspects per §9, and treats as a reusable knowledge base per §11 *per package*, before the Framework Decision Gate (§31) asks which package to continue or what new one to create. |
 
 **This agent must never read the PRD directly** (`projects/{{PROJECT_NAME}}/PRD.md` or equivalent) — only Stage 1 is permitted to, per `pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
 
@@ -101,6 +99,8 @@ This list is explicitly extensible and must never be treated as exhaustive — a
 
 If the Project Context does not specify a framework and no existing automation project exists to infer one from, the agent halts and reports the gap rather than picking a framework unilaterally.
 
+**Discovery technology is never Automation technology (v4).** Which tool Stage 2 (Explorer Agent) happened to use for Browser Automation — Playwright, a Playwright MCP server, or anything else — is Discovery tooling, scoped entirely to §8.1 of `agents/explorer_agent.md`. It carries **zero weight** in this agent's framework choice and must never be cited as a reason, partial reason, or tiebreaker for selecting an automation framework. A project whose Framework Configuration names SHAFT (or any other framework) uses that framework's real toolchain (for SHAFT: Java, TestNG, Allure — §8) regardless of which browser-automation tool Discovery happened to use. Conflating the two — e.g., generating Playwright automation because Playwright was already open for Discovery — is a specification violation under this revision, not a harmless convenience. See §31 (Framework Decision Gate).
+
 # 7. Framework Selection
 
 Where a specific framework is not already dictated (see below), the Automation Agent selects the most appropriate automation framework based on the approved Project Context, using these criteria:
@@ -115,11 +115,11 @@ Where a specific framework is not already dictated (see below), the Automation A
 
 Rules, in order of precedence:
 
-1. **If the Project Context explicitly specifies a framework, the agent must use it.** No selection process overrides an explicit instruction.
-2. **If an automation framework already exists in the project, the agent must reuse it instead of generating a new one** — introducing a second, competing framework is never an acceptable outcome without an explicit human decision to migrate, which is outside this agent's authority to initiate on its own.
-3. Only when neither of the above applies does the agent select a framework using the criteria list, and it must do so transparently.
+1. **If the Project Context explicitly specifies a framework, the agent must use it.** No selection process overrides an explicit instruction. This still requires running the Framework Decision Gate (§31) before generating anything — an explicit Project Context statement tells the agent *which answer to expect*, it does not license skipping the question. If the human confirms the stated framework, proceed; if the human asks for something else, that supersedes the Project Context statement (the human's live decision governs over a possibly-stale document, but the disagreement is itself surfaced, never silently resolved either way).
+2. **A project may hold multiple independent Automation Packages side by side, each its own framework (v5)** — the repository stores Automation Packages; it does not bind a project to one single framework. "Reuse before generating new" (§9/§11) applies *within* a chosen package, never as a rule forcing every framework choice for a project into whatever package happened to exist first. Per §31, the agent enumerates every existing package, asks whether to continue one of them (which one) or create a new package (which framework) — it never decides this itself, and never treats introducing an additional, independent package as "a second, competing framework" requiring special justification the way overwriting/merging frameworks within one package would.
+3. Only when neither of the above applies does the agent select a framework — but never autonomously. The criteria list above informs a **recommendation** the agent presents to a human via the Framework Decision Gate (§31); it is never used to silently pick a framework and proceed, no matter how clear-cut the criteria look.
 
-**The selected framework must always be justified in the Automation Plan (§5)** — a framework choice with no stated justification is incomplete.
+**The selected framework must always be justified in the Automation Plan (§5)** — a framework choice with no stated justification is incomplete. The justification records both the criteria that informed any recommendation *and* the human's actual decision at the Framework Decision Gate (§31) — never a recommendation alone, presented as if it were the decision.
 
 # 8. SHAFT Engine Support
 
@@ -140,7 +140,7 @@ When SHAFT Engine is selected (per §6–§7), the agent must generate automatio
 
 # 9. Existing Framework Analysis
 
-Before generating any new automation, the agent inspects the existing automation project (if one exists, per §4's "Existing Automation Project" input). It detects:
+Before generating any new automation, the agent inspects **every** existing Automation Package for this project (per §4's "Existing Automation Package(s)" input and the project's `{{PROJECT_NAME}}_AutomationPackages.md` registry, §19/§31) — not just one assumed package. For each package found, it detects:
 
 - Existing Test Scripts
 - Existing Page Objects
@@ -183,6 +183,8 @@ Each suite should contain:
 The resulting suite structure is recorded in the Automation Plan (§5, "Planned Automation Suites") and, after generation, in the Automation Suite Manifest (§16).
 
 # 11. Automation Knowledge Base
+
+**Distinct from the Automation Repair Knowledge Base (`agents/execution_agent.md` §28)** — that one stores execution-confirmed *repair patterns*, per the two-layer Knowledge Architecture (`pipeline/pipeline.md` §10): project-scoped by default at `projects/{{PROJECT_NAME}}/knowledge_base/repair/`, generalized into `platform/knowledge/repair_patterns/`/`platform/knowledge/reasoning/` only via explicit Promotion (§10.5); this section is about reusable *code assets* within one project's own package. Before writing any new automation, also consult both Repair Knowledge Base layers — Platform first, then this project's own — for rules relevant to the flows being automated (e.g., a Login suite checks for any rule tagged "Authentication flows") and apply a matching rule's approach proactively — this closes the loop so a pattern the platform already learned the hard way, via a prior execution's repair, doesn't have to be rediscovered by failing again first.
 
 The agent treats the existing automation project (§9) as a reusable knowledge base, not merely a folder to avoid clobbering. Before creating anything new, it searches for reusable:
 
@@ -345,18 +347,30 @@ No other artifact is produced by this agent. It does not execute the Automation 
 25. **Must produce the Automation Summary** (§16, §25) as a required output, structured per the Standard Output Contract — never omit it as redundant with the other five artifacts.
 26. **Must recognize the named Stop Conditions** (§26) and, for any Local condition, continue generating automation for every other unblocked test case rather than halting the run — and must state the smallest missing prerequisite for every blocked item (§27), never a bare "cannot proceed."
 27. **Must verify Handoff completeness** (§28) before treating a run's Automation outputs as finished — every input `agents/execution_agent.md` §4 declares it needs must be present and unambiguous.
+28. **Must never begin this stage until the Automation Start Decision Gate (§30, `pipeline/pipeline.md` §5.4) has been explicitly answered by a human** — a request for "automation" is never, by itself, authorization to also silently run, resume, or skip Stages 1–3.
+29. **Must complete the Framework Decision Gate (§31) before writing the Automation Plan or any code** — must read the project's full Automation Package registry and summarize every existing package (never assume at most one), then ask (never infer) whether to continue one of them or create a new package, and which framework for a new one. Criteria-based analysis (§7) may only be offered as a labeled recommendation inside that question, never substituted for asking it. Must ask this every Stage 4 run, never treat a prior run's answer as a standing default.
+30. **Must never treat the tool used for Stage 2 Browser Automation as evidence for the Stage 4 framework choice** (§6, §31.3) — discovery technology and automation technology are independent decisions, even when the same tool (e.g., Playwright) is technically capable of both roles.
+31. **Must update `{{PROJECT_NAME}}_AutomationPackages.md` (§19) at the end of every run** that adds or continues a package — new package added, or existing package's "last touched" run updated — so the next run's registry summary (§31.1) is accurate.
+32. **Must detect a registered Reference Automation Project (§32) at the start of every run** and ask the Automation Target Decision Gate (§32.3) — never silently assume "inside the platform" just because a Reference Project wasn't mentioned in the current request.
+33. **Must never modify a Reference Automation Project's files** unless the human explicitly chose "Update the Reference Project directly" for *this* run (§32.2) — a prior run's choice is never carried forward as a default.
+34. **Must ask the Automation Strategy Decision Gate (§33) every run**, independently of the Target (§32.3) and Framework (§31) answers — never infer "continue" or "new" from either of those.
 
 # 19. Expected Artifacts
 
+**(v5) Every path below is per-package, not project-singular** — `{Framework}` is the human's Framework Decision Gate (§31) answer for that package (e.g. `SHAFT`, `Playwright`), so a project can accumulate several complete, independent artifact sets over time without one overwriting another:
+
 | Artifact | Path |
 |---|---|
-| Automation Plan | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationPlan.md` |
-| Automation Package | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests/` |
-| Automation Manifest | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationManifest.md` |
-| Automation Decision Report | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationDecisionReport.md` |
-| Automation Coverage Report | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationCoverageReport.md` |
-| Automation Suite Manifest | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSuiteManifest.md` |
-| Automation Summary | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSummary.md` |
+| Automation Package Registry | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, and which run/checkpoint last touched it. This agent reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. |
+| Automation Plan | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationPlan_{Framework}.md` |
+| Automation Package | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests_{Framework}/` |
+| Automation Manifest | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationManifest_{Framework}.md` |
+| Automation Decision Report | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationDecisionReport_{Framework}.md` |
+| Automation Coverage Report | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationCoverageReport_{Framework}.md` |
+| Automation Suite Manifest | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSuiteManifest_{Framework}.md` |
+| Automation Summary | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSummary_{Framework}.md` |
+
+A run-scoped workspace (e.g. `artifacts/runs/RUN-{ID}/automation/`) mirrors the same `{Framework}`-qualified naming when a run's artifacts are kept per-run rather than promoted straight to the flat project-level path.
 
 # 20. Operational Prompt
 
@@ -697,3 +711,100 @@ The abstractions this revision relies on — Framework Detection/Selection (§6�
 | **Cloud Resources** | Framework Detection (§6) extends to a cloud-provider SDK/CLI as the "framework"; Configuration Management (§14.1) already covers environment-specific credentials/resource identifiers. |
 
 **What would need to change, explicitly, and what would not:** supporting any of the above requires naming the new framework (§6) and its locator-equivalent priority order (§24) for that system shape — it requires **no change** to the Traceability Model (§12), the Automation Decision Engine (§13), the Suite Planning organizing principle (§10), the Standard Output Contract (§25), or the Handoff Contract (§28). Those are already defined in terms of test cases and evidence, not in terms of "a browser."
+
+# 30. Automation Start Decision Gate
+
+**This is orchestration-level, not this agent's own internal step — it governs whether/how this agent gets invoked at all.** Full specification lives at `pipeline/pipeline.md` §5.4; restated here because it directly bounds this agent's authority.
+
+Whenever a human requests automation (or any single downstream stage) for a project, whoever/whatever is orchestrating the pipeline — a human, a script, or an agent acting in that capacity — must never unilaterally decide whether to: resume from the latest approved stage, run the full pipeline from Stage 1, or skip straight to generating automation. It must first inspect the Run Manifest for that project/run, present the actual current state (which stages are Approved/Pending/absent), and ask. See `pipeline/pipeline.md` §5.4 for the required interaction format and options. This agent must never begin generating an Automation Plan or any code until that upstream decision has been made explicitly by a human — "the user asked for automation" is not, by itself, authorization to also silently run or skip Stages 1–3.
+
+# 31. Framework Decision Gate
+
+**Framework selection (§6–§8) is never a decision this agent makes and silently proceeds on — it is always a question put to a human, even when the answer looks obvious.** This section is the mandatory interaction that must complete before any Automation Plan (§5) is written or any code is generated.
+
+## 31.1 Step 1 — Inspect and summarize every existing package (v5: registry, not a single slot)
+
+Before asking anything, the agent reads `{{PROJECT_NAME}}_AutomationPackages.md` (§19) — the project's registry of every Automation Package that exists for it — and, for each entry, inspects the actual code (§9), not just the registry's own claim about it. **A project is never assumed to have at most one automation framework.** The agent then summarizes plainly, e.g.:
+
+```
+Existing automation packages for NDC:
+1. NDC_tests_Playwright — Playwright + JavaScript, 3 tests (Login), last touched RUN-20260712-001
+2. NDC_tests_SHAFT — none yet
+```
+
+or, if the registry is empty/absent, "No previous automation packages exist for this project."
+
+## 31.2 Step 2 — Ask, never infer
+
+- Ask the human, given that summary: **continue an existing package (which one?), or create a new package?**
+- **If creating a new package:** ask which framework to use. Present at minimum the frameworks the Project Context or run configuration has ever mentioned, plus the standard list (§6) — e.g. "SHAFT / Playwright / Selenium / Cypress / Other" — and let the human pick, or name one outright if the Project Context already states one explicitly (§7 Rule 1) — but *confirm* it via this same question rather than silently assuming the stated framework is still what's wanted (§7 Rule 1's own updated text). A new package never overwrites or replaces an existing one by default — both coexist in the registry unless the human explicitly says to retire one.
+- **The agent's own criteria-based analysis (§7) is offered as a labeled recommendation inside this question, never substituted for it.** "Based on X/Y/Z, SHAFT/Playwright/etc. looks like the best fit — proceed with that, or choose differently?" is acceptable framing; silently proceeding with the recommended framework is not.
+- **This question is asked before every Stage 4 run**, not only the first one for a project — a prior run's answer is never treated as a standing default for the next run.
+
+## 31.3 Step 3 — Never infer the framework from Discovery tooling
+
+Per §6's hardened language: which tool Stage 2 used for Browser Automation must never appear as a factor in this question or its recommendation. If Discovery used Playwright and the project's actual Automation Framework is SHAFT (or anything else), the question in §31.2 is asked exactly the same way — Discovery's tool choice is invisible to this decision.
+
+## 31.4 Recording the outcome
+
+The human's actual answer — not the agent's recommendation — is what gets recorded in the Automation Plan's Target Framework/Target Language fields (§5), with the recommendation (if one was offered) noted alongside it for traceability. A Framework Decision Gate that was asked but whose answer wasn't recorded verbatim is treated as incomplete, per the same standard as any other missing Automation Plan field (§5). The agent also updates `{{PROJECT_NAME}}_AutomationPackages.md` (§19) with the outcome — new package added, or existing package's "last touched" run updated — so the next Stage 4 run's Step 1 summary is accurate without re-deriving it from scratch.
+
+## 31.5 Platform Principle (v5)
+
+**Discovery technology != Automation technology. The repository stores Automation Packages; it does not have a single project-wide framework.** Playwright may be the tool that inspected the application in Stage 2. SHAFT, Playwright, Selenium, or Cypress may each independently generate a final automation package for that same project — none of these facts constrain any other. A framework choice made for one package, one run, one Stage 4 invocation, binds only that package — never the project, never the repository, and never a future run by default.
+
+# 32. Reference Automation Project
+
+**A project may designate an external, real, human-owned automation codebase as its Reference Automation Project** — e.g. a company's production SHAFT repository living outside this platform's own repository entirely (`E:\...` on local disk, or any path outside `projects/{{PROJECT_NAME}}/artifacts/automation/`). This is distinct from the platform's own generated Automation Packages (§19, §31): it is not generated by this agent, is not one of the `{{PROJECT_NAME}}_tests_{Framework}/` packages in the registry, and is never assumed to be the same thing as "an existing automation package" in the §9/§31.1 sense — it gets its own handling.
+
+## 32.1 Registration
+
+Once a human designates a Reference Automation Project (path + a brief description of what it is), the agent persists it as durable project knowledge — e.g. `projects/{{PROJECT_NAME}}/reference_automation_project.md` — recording: the path, a one-time Architecture Summary (§32.4), and the standing read-only default (§32.2). This registration is a one-time analysis, not repeated every run — subsequent runs read the persisted file rather than re-inspecting the reference project's entire codebase from scratch, unless the human explicitly asks for a re-analysis.
+
+## 32.2 Read-Only by Default
+
+**A registered Reference Automation Project is never modified unless the human explicitly selects "Update the Reference Project directly"** via the Automation Target Decision Gate (§32.3). Default handling is always: inspect, learn from, generate code *compatible with* its architecture — never edit its files in place without that explicit choice, every time it's chosen (a prior run's "yes, update it" is never treated as a standing default for the next run either).
+
+## 32.3 Automation Target Decision Gate
+
+**Distinct from, and asked alongside, the Framework Decision Gate (§31) and the Automation Strategy Decision Gate (§33) — never assumed, never defaulted.** Whenever a project has a registered Reference Automation Project, the agent asks, before generating anything:
+
+```
+Automation Target
+1. Generate inside the platform (a platform-tracked Automation Package, §19/§31).
+2. Export a package compatible with the Reference Project (generated within the platform's
+   own workspace, but structured to drop into the Reference Project's conventions with
+   minimal rework).
+3. Update the Reference Project directly (writes into the Reference Project's own repository —
+   requires the read-only default in §32.2 to be explicitly overridden for this run).
+```
+
+If no Reference Automation Project is registered for this project, this gate is skipped (there is nothing to target) — the agent proceeds directly to the Framework Decision Gate (§31) and Automation Strategy Decision Gate (§33) as already specified.
+
+## 32.4 Architecture Summary
+
+The one-time registration analysis (§32.1) must produce and persist a plain-language Architecture Summary covering, at minimum: detected framework + version, language + version, build system, project/module structure, Page Object (or equivalent) pattern, base/shared classes, driver initialization pattern, test data strategy, configuration management, reporting solution, naming conventions, and reusable utilities/helpers/wrappers/assertions this agent should always prefer reusing over authoring new equivalents. Any pre-existing inconsistency, duplication, or drift discovered during this analysis (e.g., a locator that no longer matches the live application, two competing driver-init patterns) is recorded plainly, not silently smoothed over — it is knowledge for a human to act on, not this agent's to fix unilaterally.
+
+## 32.5 Generation Rules When a Reference Project Governs (Target = Export or Update)
+
+- **Never recreate SHAFT (or whichever framework's) infrastructure or framework boilerplate that already exists in the Reference Project** (driver factory, base test classes, reporting wiring) — generate only the business/page-specific automation code that fits its existing architecture.
+- **Reuse existing utilities and patterns whenever possible** (per the persisted Architecture Summary, §32.4) rather than authoring parallel equivalents.
+- Extend an existing Page Object for a screen already covered there (e.g. a Login page class) rather than authoring a competing one from scratch — this is the Reference Project's own version of §11's Automation Knowledge Base rule.
+
+# 33. Automation Strategy Decision Gate
+
+**Distinct from §32.3's Target question and §31's Framework question — all three may be asked together in one exchange, but are conceptually separate answers, none inferred from the others.** Before generating anything, ask:
+
+```
+Automation Strategy
+1. Continue an existing automation package.
+2. Generate a completely new package.
+```
+
+This is the same question already specified at §31.2's first bullet — restated here as its own named gate per explicit user instruction, so it is never accidentally treated as a sub-clause of the Framework question alone. It applies whether the Automation Target (§32.3) is "inside the platform" or "compatible with/updating the Reference Project" — continuing vs. starting fresh is a live question in either case.
+
+## 33.1 Presentation — one consolidated gate, asked once per stage
+
+**§30/§32.3/§31.2/§33 are presented to the human together, as one Decision Gate, not as separate questions across turns:** (1) proceed with Stage 4 now, or stop after Test Design; (2) Automation Target (§32.3); (3) Framework (§31.2); (4) Automation Strategy (§33). Every option is shown at once so the human answers all four in a single exchange, and no sub-question is silently skipped (e.g. never omit Framework just because Target implies an obvious answer — ask it, even if the expected answer is predictable from context). **Once this consolidated gate is answered, the agent does not ask again during that Stage 4 run** — it proceeds straight through Automation Plan → generation → the full Standard Output Contract (§25) without further confirmation dialogs, reserving any further pause exclusively for a genuine technical blocker encountered during generation (§26 Stop Conditions), never for a repeat or refinement of a decision already made.
+
+> **Revision note (v6):** User-mandated addition, 2026-07-12, after registering NDC's real production SHAFT codebase (`E:\Automation2\NDC-Uplift-Automation`) as a Reference Automation Project. Adds §32 (Reference Automation Project — registration, read-only default, the Automation Target Decision Gate, its Architecture Summary requirement, and generation rules when it governs) and §33 (Automation Strategy Decision Gate, named explicitly and separately from §31's Framework question, though the same underlying "continue vs. new" choice §31.2 already specified). No prior section's numbering changed.

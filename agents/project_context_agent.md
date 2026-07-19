@@ -1,6 +1,6 @@
 > **Pipeline position:** Stage 1 of 6 — first agent in the pipeline, consumes the PRD.
 > **Traceability:** `PRD → Project Context`. This is the only agent in the pipeline permitted to read the PRD directly.
-> **Relationship to legacy prompts:** Replaces the data-flow direction of `prompts/knowledge/knowledge_agent.md`. The old Knowledge Agent *produced* a PRD from discovery. In this architecture the PRD is an upstream input (already approved/provided), and the Project Context Agent *consumes* it to produce the operating brief for every agent downstream.
+> **Revision history:** see `docs/CHANGELOG.md`.
 
 # 1. Agent Name
 

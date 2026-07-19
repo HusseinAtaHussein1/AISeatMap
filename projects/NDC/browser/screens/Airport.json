@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "screenName": "Airport",
+    "navigationPath": "Master → Flight → Airport",
+    "lastVerified": "2026-07-11",
+    "screenshot": "Airport.png",
+    "accessRoles": [
+      "Super Admin"
+    ],
+    "pageTitle": "NDC - Flight"
+  },
+  "locators": {}
+}

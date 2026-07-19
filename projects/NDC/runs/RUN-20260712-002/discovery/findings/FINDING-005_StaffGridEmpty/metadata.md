@@ -1,0 +1,22 @@
+- **Finding ID:** FINDING-005
+- **Title:** Staff List grid returned zero rows even after Status=Both + explicit "Search in grid" — inconclusive whether zero real records exist or this run's automation had a click/selection issue
+- **Category:** Test Gap
+- **Severity:** N/A (Test Gap category default)
+- **Severity Reason:** N/A category default.
+- **Confidence Score:** 45% (Needs Investigation, weak band) — observed once, not independently corroborated by a second method (e.g., a direct API check or a different filter combination), and this run's own automation had at least one confirmed selector mistake elsewhere this session (FINDING-004), raising reasonable doubt about whether the Both-status radio/Search click genuinely registered.
+- **Evidence Category:** Direct Observation (of the empty result), but with acknowledged doubt about action correctness
+- **Status:** Needs Human Review
+- **Business Risk:** If Staff truly has zero records in this environment, Test Design must design its Staff test cases against created (QA_SPIKE_) data only, with no existing-data assertions possible. If records do exist and this was a tooling miss, Test Design would be working from an incomplete picture.
+- **Technical Risk:** Automation targeting the Staff List's "Both" radio button and "Search in grid" button should be verified independently (e.g., screenshot immediately after each click, not just at the end) before this is treated as reliable.
+- **Module:** Admin → Staff (List screen)
+- **Workflow:** Staff List → Both-status search
+- **Description:** Both an initial page-load view and an explicit Status=Both + "Search in grid" click returned a header-only grid with no data rows and no "Showing X results" text (contrast with Agency's identical query pattern, which correctly surfaced "Showing 10 results of 9,537 results").
+- **Expected Behavior:** Not defined in the Project Context.
+- **Actual Behavior:** No rows, no result-count text, under both filter states tried.
+- **Steps to Reproduce:** Admin → Staff → set Status to Both → click "Search in grid"; observe whether any rows appear.
+- **Investigation/Recovery Result:** Suspected transient/environment-state category — a single re-open of the page was not attempted this run (Coverage Gap); per §5.7 this should be retried before treating the result as final.
+- **Investigation Notes:** Did not verify the "Both" radio button was actually selected before the Search click (no interstitial screenshot taken) — this is the specific gap that keeps Confidence in the "Needs Investigation (weak)" band rather than higher.
+- **Root Cause Hypothesis:** Either (a) this STG environment genuinely has zero Staff records yet, since Staff may be a newer/less-used module than Branch/Agency, or (b) the automated radio-button click for "Both" didn't register before "Search in grid" fired, silently searching under the default Active filter twice. Confidence: 40%, split roughly evenly between the two explanations.
+- **Occurrence Count:** 1
+- **Evidence Links:** `staff_list.png` (initial), `staff_list_both.png` (post Both+Search).
+- **Recommendation:** Before finalizing Staff test cases in Stage 3, re-run this specific check with an interstitial screenshot confirming the Both radio is visibly selected before Search is clicked — or ask whoever owns the STG environment whether Staff records currently exist at all.

@@ -60,7 +60,7 @@ RUN-20260706-002
 
 **Revision note (repository v1.0 architecture):** every project is now fully self-contained under `projects/{{PROJECT_NAME}}/` — there is no root-level `artifacts/` directory. Project Artifacts (the current-approved state) and Run Artifacts (immutable per-run snapshots) both live under `projects/{{PROJECT_NAME}}/artifacts/`, as two siblings: the stage-named folders directly under `artifacts/` hold the current approved state, and `artifacts/runs/RUN-XXXX/` holds each run's own snapshot. This also consolidates the previous cross-cutting `evidence/`, `screenshots/`, `videos/`, `logs/`, `network/` folders into the owning stage's own folder (`discovery/` for Explorer-produced evidence, `execution/` for Execution-produced evidence) rather than keeping them as separate top-level run folders — no evidence type is dropped, only regrouped by which stage produces it.
 
-For every run, the Run Manager creates the following directory tree before any Agent starts:
+**On-demand folder creation (revised):** the Run Manager creates only `metadata/` before any Agent starts — every run has one, regardless of which stages it reaches. Every other subfolder is created **only at the moment the corresponding Agent actually produces its first output**, never upfront as an empty placeholder:
 
 ```
 projects/
@@ -68,17 +68,19 @@ projects/
     artifacts/
       runs/
         RUN-YYYYMMDD-XXX/
-          metadata/
-          context/
-          discovery/
-            findings/
-          test_design/
-          automation/
-          execution/
-          reporting/
+          metadata/              <- always created immediately
+          context/                <- created only when Stage 1 writes to it
+          discovery/               <- created only when Stage 2 writes to it
+            findings/               <- created only when a Finding is actually raised
+          test_design/            <- created only when Stage 3 writes to it
+          automation/              <- created only when Stage 4 writes to it
+          execution/               <- created only when Stage 5 writes to it
+          reporting/               <- created only when Stage 6 writes to it
 ```
 
-- `metadata/` — `run.json` (§7) and `run_summary.md` (§9), plus any other run-bookkeeping file.
+A run that only ever reaches Stage 2 (Explorer) has exactly `metadata/` and `discovery/` on disk — `context/`, `test_design/`, `automation/`, `execution/`, and `reporting/` are never created for that run. This applies for the life of the run: if it's later resumed and reaches further stages, each newly-reached stage's folder is created at that point, not before.
+
+- `metadata/` — `run.json` (§7) and `run_summary.md` (§9), plus any other run-bookkeeping file. The one folder every run has, always.
 - `context/` — the Project Context version(s) used by this run.
 - `discovery/` — Explorer Agent discovery snapshots, QA Assessment Report, and evidence (screenshots/videos/logs/network captures) produced during this run.
 - `discovery/findings/` — Explorer Agent Finding evidence packages produced during this run (see `agents/explorer_agent.md` §5.11).
@@ -86,6 +88,8 @@ projects/
 - `automation/` — Automation Agent's Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Summary for this run.
 - `execution/` — Execution Agent's Execution Results and captured evidence (screenshots, traces, logs, HAR, framework reports) for this run.
 - `reporting/` — Reporting Agent's Final QA Report for this run.
+
+**Retroactive note (2026-07-17):** this replaces an earlier version of this section that had the Run Manager create the full seven-folder skeleton upfront, before any Agent ran. Existing runs created under that earlier behavior had empty subfolders for stages they never reached; those empty folders have been removed from NDC's existing runs to match this corrected behavior (no run content was touched — only folders with zero files were removed).
 
 This Run Workspace is **additive** to, not a replacement for, the current-approved per-project artifact paths already documented in `pipeline/pipeline.md` and each Agent's own specification (e.g., `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md`, `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md`) — those remain the authoritative "current approved" locations per `pipeline/pipeline.md` §7, now living as siblings of `runs/` rather than at the repository root. The Run Workspace is where the Run Manager organizes a run-scoped view — for monitoring, history, and archival — of the artifacts produced while that run was active.
 

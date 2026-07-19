@@ -1,0 +1,23 @@
+# FINDING-002
+
+- **Title:** Live session's logged-in Admin identity (`odeysysadmin`) differs from the account recorded as "confirmed working" in `run_configuration.md` (`E.Saady`) — **now confirmed as two distinct roles: Super Admin vs. Admin**
+- **Category:** Observation
+- **Severity:** N/A
+- **Severity Reason:** Not applicable — Observation category carries no impact-if-defect rating; both accounts reach a full Admin-nav-bar session, so no access is blocked.
+- **Confidence Score:** 90%
+- **Evidence Category:** Human Observation (§17) — capped below `Confirmed` regardless of clarity, per §18.
+- **Status:** Needs Human Review
+- **Business Risk:** Now confirmed material: `odeysysadmin` (Super Admin) and `e.saady` (Admin) are different roles with different feature access (e.g., only Admin can complete the Booking Cycle/book a ticket, per stakeholder clarification 2026-07-11). Test Design must select the correct role per test case rather than assuming either account is interchangeable — see FINDING-004.
+- **Technical Risk:** None identified as an application defect — this is a documentation-completeness gap in `run_configuration.md`/Project Context, not a bug.
+- **Module:** Global session/identity (observed via top-right user menu across all 3 Credential Routes Filter screens)
+- **Workflow:** Login / session identity
+- **Description:** `run_configuration.md`'s Credentials table records the Admin account as "confirmed working" with a displayed name of `E.Saady` (captured 2026-07-10). All three screenshots in this session show the top-right user menu reading `odeysysadmin` instead.
+- **Expected Behavior:** Per `projects/NDC/run_configuration.md` §"Credentials Available": Admin role displays as `E.Saady`.
+- **Actual Behavior:** Top-right user menu reads `odeysysadmin` in all three screenshots (Add/List/Edit Routes Filter).
+- **Steps to Reproduce:** Log in to `http://192.168.1.70` with the Admin credential used this session → observe top-right user menu.
+- **Investigation/Recovery Result:** Not applicable — static identity observation, not a failure condition.
+- **Investigation Notes:** Not a Validation/Navigation/Authorization boundary-probe candidate per §5.8 in the sense of testing access control — this is a documentation-reconciliation note, not a suspected authorization defect. No probing performed.
+- **Root Cause Hypothesis:** **Confirmed via stakeholder clarification, 2026-07-11** (Aymoon, Business Analyst/Product Owner role): `odeysysadmin` = **Super Admin**, `e.saady` = **Admin** — two distinct, intentional roles, not a stale record or account mix-up. Confidence: 90% (direct stakeholder statement; still Human Observation Evidence Category per §17, so this Finding's own Status remains capped below `Confirmed` per §18 regardless). Supporting Evidence: user's in-session statement 2026-07-11. Unknowns: full permission matrix between the two roles beyond the Booking Cycle example given — see FINDING-004.
+- **Occurrence Count:** 1 (same underlying condition across all 3 screenshots)
+- **Evidence Links:** Full-page screenshots (Add/List/Edit Routes Filter, all showing `odeysysadmin` top-right) — transcribed in the three `CredentialRoutesFilter_*.md` discovery snapshots. Raw image files not independently persisted (see FINDING-001's Evidence Links note for why).
+- **Recommendation:** Update `run_configuration.md`'s Credentials table to record `odeysysadmin` as a second, distinct confirmed-working role (Super Admin) alongside `e.saady` (Admin), rather than treating one as stale — this is a durable project-knowledge update, appropriate for a human to make directly (Explorer Agent does not edit `run_configuration.md`). See FINDING-004 for the Test Design-relevant follow-up.

@@ -1,0 +1,1 @@
+This is a plain text file used to confirm non-PDF/non-image uploads are rejected by the Agency Add form's Upload Document/Agency Logo controls.

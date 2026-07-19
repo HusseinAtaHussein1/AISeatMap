@@ -27,4 +27,4 @@ This folder contains **all project-specific knowledge for OrangeHRM only** — o
 | Run Manifest | `projects/OrangeHRM/artifacts/pipeline/OrangeHRM_RunManifest.md` |
 | Reports | `projects/OrangeHRM/artifacts/discovery/` |
 
-This README is a map, not a duplicate — see [`SESSION_HANDOFF.md`](../../SESSION_HANDOFF.md) and [`LESSONS_LEARNED.md`](../../LESSONS_LEARNED.md) at the repo root for the platform's own history and open questions, which are platform-wide, not OrangeHRM-specific.
+This README is a map, not a duplicate — see [`SESSION_HANDOFF.md`](../../docs/SESSION_HANDOFF.md) and [`LESSONS_LEARNED.md`](../../docs/LESSONS_LEARNED.md) under `docs/` for the platform's own history and open questions, which are platform-wide, not OrangeHRM-specific.

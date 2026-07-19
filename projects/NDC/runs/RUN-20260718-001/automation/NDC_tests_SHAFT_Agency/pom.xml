@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- New, independent SHAFT package (RUN-20260718-001, Stage 4 Decision Gate: Target=Inside the
+       platform, Framework=SHAFT, Strategy=Start a new package — not an extension of the existing
+       NDC_tests_SHAFT from RUN-20260712-001/002). Scaffold (pom/config/base classes) copied fresh
+       from that package per agents/automation_agent.md §9/§11 (reuse before generating new) — see
+       NDC_AutomationPlan_SHAFT_Agency.md "Existing Assets." -->
+  <groupId>io.github.shafthq</groupId>
+  <artifactId>NDC_Agency_Automation</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <properties>
+    <shaft_engine.version>7.4.20231015</shaft_engine.version>
+    <aspectjweaver.version>1.9.19</aspectjweaver.version>
+    <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+    <surefire-testng.version>3.1.2</surefire-testng.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>io.github.shafthq</groupId>
+      <artifactId>SHAFT_ENGINE</artifactId>
+      <version>${shaft_engine.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-testng</artifactId>
+            <version>${surefire-testng.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+          <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+          <failIfNoTests>false</failIfNoTests>
+          <useFile>false</useFile>
+          <properties>
+            <property>
+              <name>usedefaultlisteners</name>
+              <value>false</value>
+            </property>
+            <property>
+              <name>listener</name>
+              <value>com.shaft.listeners.TestNGListener</value>
+            </property>
+          </properties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

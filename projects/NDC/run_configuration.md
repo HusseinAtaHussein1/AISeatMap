@@ -47,7 +47,7 @@ Available for this project — engine is shared platform infrastructure (`tools/
 
 ## Automation Packages (per-package, not project-wide — updated 2026-07-12, `agents/automation_agent.md` v5)
 
-NDC does **not** bind every automation effort to one project-wide framework — the platform stores independent Automation Packages, and which one (and which framework) a given Stage 4 run targets is decided by that run's Framework Decision Gate (`agents/automation_agent.md` §31), asked fresh every run. See `projects/NDC/artifacts/automation/NDC_AutomationPackages.md` for the current registry of packages that exist.
+NDC does **not** bind every automation effort to one project-wide framework — the platform stores independent Automation Packages, and which one (and which framework) a given Stage 4 run targets is decided by that run's Framework Decision Gate (`agents/automation_agent.md` §31), asked fresh every run. See `projects/NDC/workspace/automation/NDC_AutomationPackages.md` for the current registry of packages that exist.
 
 [`automation_framework.md`](automation_framework.md) documents the **SHAFT package's** own internal structure (Pages / Locators / Tests / Data layers, naming conventions, core rules) — binding whenever a run's Framework Decision Gate selects SHAFT, not a project-wide mandate. Not to be redesigned; only extended per that document's Gap Resolution Rule when a SHAFT-package run discovers a real implementation gap.
 
@@ -80,9 +80,11 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 
 ## History of scope choices
 
-| Run | Run Type | Run Scope (Type / Source) | In-scope modules (summary) | Project Context version |
+| Run | Run Type | Run Scope (Type / Source) | In-scope modules (summary) | Project Context document |
 |---|---|---|---|---|
-| RUN-20260710-001 | User Story | User Story / Pasted text (Q2-CORE-WT1-T3002-066 + T3087, jointly scoped) | Credential Routes Filter, Airport BlackList/WhiteList, Supplier Credentials (Restricted Airlines), Airline (GDS/LCC type), Booking-Mid Office + Portal Booking Module | v1 — Approved |
-| RUN-20260712-001 | Feature (Observation-based Spike) | Feature / Custom scope description | Login/Authentication | v2 — Approved |
-| RUN-20260712-002 | Feature (Observation-based Spike) | Feature / Custom scope description | Administration — Branch, Agency, Staff (Company → Branch → Agency → Staff) | v3 — in progress |
+| RUN-20260710-001 | User Story | User Story / Pasted text (Q2-CORE-WT1-T3002-066 + T3087, jointly scoped) | Credential Routes Filter, Airport BlackList/WhiteList, Supplier Credentials (Restricted Airlines), Airline (GDS/LCC type), Booking-Mid Office + Portal Booking Module | `NDC_ProjectContext_CredentialRoutesFilter.md` — Approved |
+| RUN-20260712-001 | Feature (Observation-based Spike) | Feature / Custom scope description | Login/Authentication | `NDC_ProjectContext_LoginAuthentication.md` — Approved |
+| RUN-20260712-002 | Feature (Observation-based Spike) | Feature / Custom scope description | Administration — Branch, Agency, Staff (Company → Branch → Agency → Staff) | `NDC_ProjectContext_BranchAgencyStaff.md` — in progress (Agency portion since superseded by `NDC_ProjectContext_Agency.md`) |
+| RUN-20260713-001 | Feature (Observation-based Spike) | Feature / Custom scope description | Admin/Agency — Search Agency automation, Activate Agency spike (Blocked), FINDING-006 resolution, Branch full re-verification | Continuing `NDC_ProjectContext_BranchAgencyStaff.md` |
+| RUN-20260718-001 | User Story | User Story / Pasted text | Admin → Agency full CRUD lifecycle (Track A: Create, Search, Update, Actions/Approve-Reject) — see `context/NDC_ProjectContext_Agency.md`; Track B (WT1-T2919 E-Ticket Agency Branding) tracked separately, non-Agency-CRUD scope | Non-versioned (per 2026-07-18 process change) — Pending |
 | <!-- RUN-YYYYMMDD-XXX --> | <!-- Full Regression / Smoke / Feature / User Story / Bug / Epic / Custom --> | <!-- e.g. User Story / Pasted text --> | <!-- summary --> | <!-- vN --> |

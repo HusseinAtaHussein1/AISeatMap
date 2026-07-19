@@ -1,0 +1,28 @@
+{
+  "happyPath": {
+    "operatingCountry": "EgyptLive",
+    "name": "QA_SPIKE_Branch01",
+    "phone": "1001234567",
+    "supplierName": "EgyptAirEgy",
+    "credentialName": "EgyptAir Stg",
+    "address1": "QA SPIKE test address 1 Test Street",
+    "state": "Cairo",
+    "city": "Cairo",
+    "postOfficeBox": "12345678",
+    "emailId": "qa.spike.branch01@example.com",
+    "emailPassword": "QA_SPIKE_pass1",
+    "contactName": "QA_SPIKE Contact",
+    "contactEmail": "qa.spike.branch01.contact@example.com",
+    "contactPhone": "1009876543",
+    "creditLimit": "100000",
+    "topUpLimit": "50000",
+    "creditTermsDays": "30"
+  },
+  "boundaryLongName": "QA_SPIKE_",
+  "boundaryLongNameFillerRepeatCount": 40,
+  "securityProbeName": "QA_SPIKE_' OR '1'='1",
+  "rejectRemark": "QA_SPIKE test reject — automated TC-BRANCH-007",
+  "paymentMethodBranchId": "BRN2",
+  "paymentMethodTestEntry": "Isaiah",
+  "note": "operatingCountry value ('EgyptLive') observed directly in this run's own Branch List Discovery (149 records sampled) — a real, existing Operating Country value, not invented. Exact max-length limit for Name is NOT confirmed (Project Context v3 Open Question Q4) — TC-BRANCH-003's assertion is Partially Automatable until execution observes real behavior. paymentMethodTestEntry ('Isaiah', env .70) is one of the Master Payment Method entries the user explicitly authorized 2026-07-18 as safe to toggle (TC-BRANCH-008) — never Cash/Wallet/Credit Card/BANQUE MISR/Fawry, which are real payment methods and must never be toggled by automation. ('vyujNmZrQH' was this field's original value from an earlier .80-targeted pass, before the user redirected this work to .70 — .70's Payment Method list does not contain that entry at all, since .70/.80 are confirmed-separate datasets per FINDING-001.) supplierName/credentialName ('EgyptAirEgy'/'EgyptAir Stg') added 2026-07-18, user-specified — discovered live that Supplier Routing is a required section on Add Branch ('Please Select at least one supplier.'), meaning every prior addBranchHappyPathEntersApprovalQueue 'Pass' this session never actually created a real record (no assertion existed to catch it, same false-positive shape as Agency's REP-006-009). Full required-field set added 2026-07-18 after a live 'Required'-error sweep found 13 more required fields than previously filled (Address 1, State, City, Post Office Box, Email ID, Email Password, a second Name/Email/Phone contact block, Credit Limit, Top Up Limit, Credit Terms(Days), Payment Option). phone/contactPhone are plain national digits, no '+20' prefix (REP-007: ngx-intl-tel-input already defaults its country flag to Egypt). state/city ('Cairo'/'Cairo') per user instruction 2026-07-18 — a real, specific value rather than 'pick whatever renders first' (the first-option approach hit a separate timing bug: the option panel wasn't reliably open yet when clicked, now fixed with a poll in Branch_Page.waitForOptionPanel()). address1 has no special characters (user feedback: the field doesn't accept them — an earlier comma/underscore value was silently mangled). postOfficeBox is digits-only (user feedback), kept to 8 characters per agencyTestData.json's note on this field silently truncating longer input. emailId/contactEmail use the same non-real example.com placeholder pattern already established for Agency, per the same mutation-scope reasoning (Branch/Agency/Staff records only, not email delivery infrastructure)."
+}

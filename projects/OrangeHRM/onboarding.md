@@ -23,7 +23,7 @@ For the current state of the pipeline (which stages have run, which artifacts ex
 
 - `projects/OrangeHRM/artifacts/pipeline/OrangeHRM_RunManifest.md` — per-stage version/checkpoint status
 - `projects/OrangeHRM/artifacts/runs/` — individual run workspaces (each `RUN-YYYYMMDD-XXX` directory)
-- [`SESSION_HANDOFF.md`](../../SESSION_HANDOFF.md) at the repo root — platform-wide continuity notes, includes an OrangeHRM status table as of its last update
+- [`SESSION_HANDOFF.md`](../../docs/SESSION_HANDOFF.md) under `docs/` — platform-wide continuity notes, includes an OrangeHRM status table as of its last update
 
 ## Key things to know before touching this project
 

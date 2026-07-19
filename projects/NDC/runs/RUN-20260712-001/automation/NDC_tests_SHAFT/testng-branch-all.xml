@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Branch Full Suite (env .70)" verbose="1">
+  <test name="BranchAll">
+    <classes>
+      <class name="AdminPages.Admin.Branch.Branch_TC"/>
+    </classes>
+  </test>
+</suite>

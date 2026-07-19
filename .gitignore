@@ -36,41 +36,7 @@ lerna-debug.log*
 # Playwright Outputs
 playwright-report/
 test-results/
-blob-report/Good catch.
-
-Let's standardize this behavior.
-
-Instead of using environment variables, Browser Automation should use a local credentials file stored only inside the session scratchpad (never inside the repository and never committed).
-
-Requirements:
-
-- The credentials file must stay outside the Git repository.
-- Never print or log any credential.
-- Never copy credentials into any artifact.
-- Load the credentials only at runtime.
-- Keep them in memory only.
-- Delete any temporary copies if created.
-- Support multiple environments in the future (STG / PREPROD / PROD).
-- The Browser Driver Layer should be responsible for authentication so future agents don't need to know how login works.
-
-This should become the standard authentication mechanism for Browser Automation sessions.Good catch.
-
-Let's standardize this behavior.
-
-Instead of using environment variables, Browser Automation should use a local credentials file stored only inside the session scratchpad (never inside the repository and never committed).
-
-Requirements:
-
-- The credentials file must stay outside the Git repository.
-- Never print or log any credential.
-- Never copy credentials into any artifact.
-- Load the credentials only at runtime.
-- Keep them in memory only.
-- Delete any temporary copies if created.
-- Support multiple environments in the future (STG / PREPROD / PROD).
-- The Browser Driver Layer should be responsible for authentication so future agents don't need to know how login works.
-
-This should become the standard authentication mechanism for Browser Automation sessions.
+blob-report/
 
 # Coverage
 coverage/

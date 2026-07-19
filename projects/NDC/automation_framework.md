@@ -1,6 +1,6 @@
 # NDC — SHAFT Automation Package Structure
 
-> **Reframed 2026-07-12 (`agents/automation_agent.md` v5):** This document specifies the structure for NDC's **SHAFT** Automation Package specifically — it is **not** a project-wide mandate binding every NDC automation effort to SHAFT. Per the platform's multi-package model, NDC may hold several independent Automation Packages (e.g. `NDC_tests_SHAFT/`, `NDC_tests_Playwright/`), each tracked in `projects/NDC/artifacts/automation/NDC_AutomationPackages.md`. Which package (and therefore which framework) a given Stage 4 run targets is decided by the Framework Decision Gate (`agents/automation_agent.md` §31) at the start of that run — this document is authoritative only for whichever run's answer is "SHAFT."
+> **Reframed 2026-07-12 (`agents/automation_agent.md` v5):** This document specifies the structure for NDC's **SHAFT** Automation Package specifically — it is **not** a project-wide mandate binding every NDC automation effort to SHAFT. Per the platform's multi-package model, NDC may hold several independent Automation Packages (e.g. `NDC_tests_SHAFT/`, `NDC_tests_Playwright/`), each tracked in `projects/NDC/workspace/automation/NDC_AutomationPackages.md`. Which package (and therefore which framework) a given Stage 4 run targets is decided by the Framework Decision Gate (`agents/automation_agent.md` §31) at the start of that run — this document is authoritative only for whichever run's answer is "SHAFT."
 
 This is the durable, versioned specification for the SHAFT package's own internal structure, referenced whenever a Stage 4 run's Framework Decision Gate answer is SHAFT.
 
@@ -75,7 +75,7 @@ This is the durable, versioned specification for the SHAFT package's own interna
 | §14.1 Naming Conventions | = this framework's **Locators Layer prefix table** (§2 above) — must be followed exactly (`Btn_`, `Txt_`, `Lst_`, `Icn_`, `Rbtn_`, `Cbox_`, `Dpick_`), not a new convention invented per suite. |
 | §14.1 Test Data Separation | = this framework's **Data Layer (JSON Driven)** (§4 above) — no hardcoded test data in code, ever. |
 | §24 Locator Strategy | Locators still follow §24.1's accessibility-first priority order *within* the Locators Layer's own classes — this framework governs *where* locators live and how they're named, not a replacement for the priority order itself. |
-| §9 Existing Framework Analysis / §11 Automation Knowledge Base | When Stage 4 runs, it must inspect `projects/NDC/artifacts/automation/NDC_tests/` (once one exists) against this structure before generating anything new — reuse existing Page/Locator/Test/Data classes before authoring new ones. |
+| §9 Existing Framework Analysis / §11 Automation Knowledge Base | When Stage 4 runs, it must inspect `projects/NDC/workspace/automation/NDC_tests/` (once one exists) against this structure before generating anything new — reuse existing Page/Locator/Test/Data classes before authoring new ones. |
 
 ## Gap Resolution Rule
 

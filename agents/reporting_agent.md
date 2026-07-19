@@ -1,7 +1,6 @@
 > **Pipeline position:** Stage 6 of 6 — final agent, consumes Execution Results, produces the Final QA Report.
 > **Traceability:** `Execution → Reports`.
-> **New in this architecture:** No predecessor in `prompts/` — this agent did not exist in the standalone-prompt version of the project. It closes the loop by turning raw execution data into a stakeholder-facing report, distinct from the exploration-stage `QA_Assessment_Report.md` produced by the Explorer Agent.
-> **Update:** the report structure is now explicitly: Executive Summary, Detailed Execution Report, Passed/Failed Statistics, Defect Summary, Requirement Coverage, Automation Coverage, Risks, and Recommendations — splitting the previous combined "Coverage Analysis" into distinct Requirement Coverage and Automation Coverage sections, and elevating execution detail and pass/fail statistics into their own sections.
+> **Revision history:** see `docs/CHANGELOG.md`.
 
 # 1. Agent Name
 

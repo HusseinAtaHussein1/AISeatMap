@@ -23,7 +23,7 @@ This folder contains **all project-specific knowledge for OrangeHRM only** — o
 | Discovery Artifacts | `projects/OrangeHRM/artifacts/discovery/*.md` |
 | Manual Test Suites & Traceability Matrix | `projects/OrangeHRM/artifacts/test_design/` |
 | Automation Scripts | `projects/OrangeHRM/artifacts/automation/` |
-| Run Workspaces | `projects/OrangeHRM/artifacts/runs/RUN-YYYYMMDD-XXX/` |
+| Run Workspaces | `projects/OrangeHRM/artifacts/runs/RUN-YYYYMMDD-XXX-{slug}/` (new runs); pre-existing runs keep their original `RUN-YYYYMMDD-XXX/` name |
 | Run Manifest | `projects/OrangeHRM/artifacts/pipeline/OrangeHRM_RunManifest.md` |
 | Reports | `projects/OrangeHRM/artifacts/discovery/` |
 

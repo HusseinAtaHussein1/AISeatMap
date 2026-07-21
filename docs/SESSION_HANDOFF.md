@@ -10,18 +10,18 @@ This document is the continuity anchor for the Agentic AI Testing Platform proje
 
 **What was completed:**
 - Designed and wrote the formal **6-agent pipeline architecture** under `agents/` — one spec file per agent (Project Context, Explorer, Test Design, Automation, Execution, Reporting).
-- Wrote the **Pipeline Specification** (`pipeline/pipeline.md`) that wires the six agents together: stage order, artifact contracts, human checkpoints, versioning rules, and the end-to-end traceability chain.
+- Wrote the **Pipeline Specification** (`workflows_and_pipelines/pipeline/pipeline.md`) that wires the six agents together: stage order, artifact contracts, human checkpoints, versioning rules, and the end-to-end traceability chain.
 - This is an **architectural redesign**, not a rewrite of existing OrangeHRM artifacts. The new pipeline reverses the data-flow direction of the legacy `prompts/` pipeline (see below) — the PRD is now an upstream input consumed once by a new Project Context Agent, rather than a document synthesized *after* exploration.
-- No agent has been invoked under the new architecture yet. `pipeline/pipeline.md` explicitly states it is "specification only — no stage, agent, or checkpoint in this document has been executed."
+- No agent has been invoked under the new architecture yet. `workflows_and_pipelines/pipeline/pipeline.md` explicitly states it is "specification only — no stage, agent, or checkpoint in this document has been executed."
 
 **Files created/modified this session:**
-- `agents/project_context_agent.md` (new — Stage 1 spec)
-- `agents/explorer_agent.md` (new — Stage 2 spec)
-- `agents/test_design_agent.md` (new — Stage 3 spec)
-- `agents/automation_agent.md` (new — Stage 4 spec)
-- `agents/execution_agent.md` (new — Stage 5 spec)
-- `agents/reporting_agent.md` (new — Stage 6 spec)
-- `pipeline/pipeline.md` (new — orchestration spec covering all 6 stages)
+- `.claude/skills/project-context-agent/SKILL.md` (new — Stage 1 spec)
+- `.claude/skills/explorer-agent/SKILL.md` (new — Stage 2 spec)
+- `.claude/skills/test-design-agent/SKILL.md` (new — Stage 3 spec)
+- `.claude/skills/automation-agent/SKILL.md` (new — Stage 4 spec)
+- `.claude/skills/execution-agent/SKILL.md` (new — Stage 5 spec)
+- `.claude/skills/reporting-agent/SKILL.md` (new — Stage 6 spec)
+- `workflows_and_pipelines/pipeline/pipeline.md` (new — orchestration spec covering all 6 stages)
 
 **Pre-existing, unrelated to this session's edits (still present in the repo, produced earlier under the legacy `prompts/` pipeline):**
 - `prompts/knowledge/knowledge_agent.md`, `prompts/exploration/explorer_agent.md`, `prompts/testing/test_design_agent.md`, `prompts/automation/automation_agent.md` — the **old** 4-stage pipeline (Explorer → Knowledge → Test Design → Automation), where the PRD was *generated from* discovery rather than consumed as an input.
@@ -47,7 +47,7 @@ This document is the continuity anchor for the Agentic AI Testing Platform proje
 | 5 | **Execution Agent** | Runs the automation suite mechanically; records raw pass/fail/skip/error, screenshots, logs, execution time. No interpretation. |
 | 6 | **Reporting Agent** | Synthesizes Execution Results + Traceability Matrix + Project Context into the stakeholder-facing Final QA Report: coverage figures, defects, resolved risk/assumption status, recommendations. |
 
-## Pipeline (`pipeline/pipeline.md`)
+## Pipeline (`workflows_and_pipelines/pipeline/pipeline.md`)
 
 Fixed, sequential 6-stage flow:
 
@@ -99,7 +99,7 @@ projects/{{PROJECT_NAME}}/artifacts/
 | Automation Agent | **Pending** | `projects/OrangeHRM/artifacts/Automation/` directory exists but is empty. No scripts generated under either pipeline. |
 | Execution Agent | **Pending** | No `projects/{{PROJECT_NAME}}/artifacts/*/execution/` directory exists for any project. New agent — did not exist in the legacy pipeline at all. |
 | Reporting Agent | **Pending** | No `{{PROJECT_NAME}}_Final_QA_Report.md` exists for any project (the existing `QA_Assessment_Report.md` is the Stage 2 Explorer output, a different artifact). New agent — did not exist in the legacy pipeline at all. |
-| Pipeline (orchestration) | **In Progress** | Specification complete (`pipeline/pipeline.md`). No orchestrator tooling exists to actually invoke stages in order, enforce gates, or maintain a Run Manifest — that is still manual/conceptual. |
+| Pipeline (orchestration) | **In Progress** | Specification complete (`workflows_and_pipelines/pipeline/pipeline.md`). No orchestrator tooling exists to actually invoke stages in order, enforce gates, or maintain a Run Manifest — that is still manual/conceptual. |
 
 ---
 
@@ -159,14 +159,14 @@ In priority order:
 2. **Generate the missing Excel (`.xlsx`) test suites** for the Admin/PIM/Leave modules already covered in Markdown — required by the Test Design Agent spec, currently absent.
 3. **Run Stage 1 (Project Context Agent)** for whichever project is chosen — produces the first `context/` artifact and unblocks everything downstream in the new pipeline.
 4. **Extend Test Design coverage** to the modules the legacy pipeline never reached (Time, Recruitment, Performance, Directory, Maintenance-as-a-standalone-module).
-5. **Build (or decide not to build) actual orchestrator tooling** — the Run Manifest, version-suffixed file convention, and "gate blocks next stage" enforcement in §5.3/§7 of `pipeline/pipeline.md` are currently specification only, with no code enforcing them.
+5. **Build (or decide not to build) actual orchestrator tooling** — the Run Manifest, version-suffixed file convention, and "gate blocks next stage" enforcement in §5.3/§7 of `workflows_and_pipelines/pipeline/pipeline.md` are currently specification only, with no code enforcing them.
 6. **Run Stages 4–6** (Automation, Execution, Reporting) once Stage 3 is approved for a project — none of these have ever been exercised, even under the legacy pipeline.
 
 ---
 
 # Recommended Next Step
 
-Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`agents/project_context_agent.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/{{PROJECT_NAME}}_ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
+Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`.claude/skills/project-context-agent/SKILL.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/{{PROJECT_NAME}}_ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
 
 ---
 
@@ -174,12 +174,12 @@ Get an explicit decision from the user on Pending Task #1 before writing any mor
 
 - Should the legacy `prompts/` pipeline be deleted/archived now that `agents/` + `pipeline/` supersede it, or kept as historical reference? (Currently both exist side by side with no deprecation notice.)
 - Is OrangeHRM the project this pipeline will keep targeting, or was it only a proof-of-concept for designing the agent specs — is a different/real target project expected next?
-- Who are the actual named human reviewers for the four checkpoints (§5 of `pipeline/pipeline.md` only lists suggested *roles*, not people)? Needed before any checkpoint can be exercised for real.
-- Will the "orchestrator" referenced throughout `pipeline/pipeline.md` (Run Manifest maintenance, gate enforcement) be built as actual tooling/code, or will it remain a manual, human-followed process for the foreseeable future?
-- What automation framework should Stage 4 target — `pipeline/pipeline.md`'s example uses Playwright + TypeScript (consistent with the `playwright` devDependency already installed), but this has not been explicitly confirmed as the chosen framework going forward.
+- Who are the actual named human reviewers for the four checkpoints (§5 of `workflows_and_pipelines/pipeline/pipeline.md` only lists suggested *roles*, not people)? Needed before any checkpoint can be exercised for real.
+- Will the "orchestrator" referenced throughout `workflows_and_pipelines/pipeline/pipeline.md` (Run Manifest maintenance, gate enforcement) be built as actual tooling/code, or will it remain a manual, human-followed process for the foreseeable future?
+- What automation framework should Stage 4 target — `workflows_and_pipelines/pipeline/pipeline.md`'s example uses Playwright + TypeScript (consistent with the `playwright` devDependency already installed), but this has not been explicitly confirmed as the chosen framework going forward.
 
 ---
 
 # Resume Instructions
 
-Read `SESSION_HANDOFF.md`, then read every file in `agents/` and `pipeline/pipeline.md` in full to understand the current 6-stage architecture. Cross-check against `projects/OrangeHRM/artifacts/` to see what legacy-pipeline artifacts already exist. Do not assume any new-pipeline stage has been executed — verify by checking for the presence of `projects/{{PROJECT_NAME}}/artifacts/context/*_ProjectContext.md` (Stage 1) before treating any downstream artifact as authoritative under the new architecture. Resolve the Open Questions above (at least the OrangeHRM reconciliation question) with the user before generating any new artifacts, then proceed with the task in **Recommended Next Step**.
+Read `SESSION_HANDOFF.md`, then read every file in `agents/` and `workflows_and_pipelines/pipeline/pipeline.md` in full to understand the current 6-stage architecture. Cross-check against `projects/OrangeHRM/artifacts/` to see what legacy-pipeline artifacts already exist. Do not assume any new-pipeline stage has been executed — verify by checking for the presence of `projects/{{PROJECT_NAME}}/artifacts/context/*_ProjectContext.md` (Stage 1) before treating any downstream artifact as authoritative under the new architecture. Resolve the Open Questions above (at least the OrangeHRM reconciliation question) with the user before generating any new artifacts, then proceed with the task in **Recommended Next Step**.

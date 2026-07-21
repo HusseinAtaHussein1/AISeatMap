@@ -27,8 +27,12 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# Claude
-.claude/
+# Claude - local settings/state stay untracked; skills (incl. the architecture-review
+# skill + its shared engine) and this folder's own README are meant to travel with the
+# repo, so they're excepted below.
+.claude/*
+!.claude/skills/
+!.claude/README.md
 
 # Playwright MCP
 .playwright-mcp/

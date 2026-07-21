@@ -50,7 +50,7 @@ All 6 `agents/*.md` files had their embedded revision-history blockquotes (`Revi
 
 ## 7. NDC `workspace/` vs. platform `artifacts/` — scope decision
 
-Per your explicit answer: this is an **NDC-only override**, not a platform-wide rename. The `{{PROJECT_NAME}}/artifacts/` convention hardcoded 151 times across 17 platform files (all `agents/*.md`, `pipeline/*.md`, `workflows/first_run.md`, `projects/templates/project_template/`) is **untouched** and remains correct for OrangeHRM, the template, and any future project. NDC's own docs (`onboarding.md`, `README.md`) now explicitly document the exception so nobody assumes it's the default.
+Per your explicit answer: this is an **NDC-only override**, not a platform-wide rename. The `{{PROJECT_NAME}}/artifacts/` convention hardcoded 151 times across 17 platform files (all `agents/*.md`, `pipeline/*.md`, `workflows_and_pipelines/workflows/first_run.md`, `projects/templates/project_template/`) is **untouched** and remains correct for OrangeHRM, the template, and any future project. NDC's own docs (`onboarding.md`, `README.md`) now explicitly document the exception so nobody assumes it's the default.
 
 ## 8. `workspace/test_design/` — module reorganization
 

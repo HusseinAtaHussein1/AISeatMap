@@ -1,0 +1,27 @@
+# FINDING-002
+
+- **Finding ID:** FINDING-002
+- **Title:** Role Name and Authorization validation messages are real and functionally correct, but none match the AC's quoted wording — and the AC's single quoted message actually maps to three distinct live messages
+- **Category:** Bug
+- **Severity:** Medium
+- **Severity Reason:** Matches "Validation issues · Business rule inconsistencies" — the validation logic itself works correctly (invalid/duplicate/empty/no-authorization submissions are all correctly blocked), but the exact message text the AC treats as a quotable, testable string does not appear anywhere in the live application.
+- **Confidence Score:** 96%
+- **Evidence Category:** Direct Observation (live browser automation; each case independently reproduced with a distinct triggering input)
+- **Status:** Needs Human Review
+- **Business Risk:** If Test Design or a future automated suite asserts the AC's literal quoted strings ("Role Name already exists, Please Enter another Role Name." / "One authorization at least must be selected."), every such assertion will fail against the real application even though the underlying validation behavior is correct — a false negative that could be mistaken for a real regression.
+- **Technical Risk:** None identified in the validation logic itself; this is purely a documentation/copy mismatch between the AC and the implemented message strings.
+- **Module:** Admin → Role Management → Create Role (`/admin/role/add`)
+- **Workflow:** Add Role — Role Name field validation and Authorization-selection validation
+- **Description:** The AC (`NDC_ProjectContext_Role.md` §2.1/§2.2) states one message for "invalid or duplicated" Role Name ("Role Name already exists, Please Enter another Role Name.") and one message for the no-authorization-selected case ("One authorization at least must be selected."). Live testing of all four validation paths these two AC items cover found the validation behavior itself works in every case, but the exact message text differs in all four:
+  1. Empty Role Name, valid authorization selected → live shows **"Required"** (a generic empty-field message, not the AC's quoted string).
+  2. Role Name with numbers/special characters (`QA123!@#`), valid authorization selected → live shows **"Only alphabetic characters are allowed, with spaces permitted between words"** — a real, distinct message for the invalid-format case that the AC does not separately name.
+  3. Role Name matching an existing role exactly (`Admin Role`, confirmed pre-existing in the 115-row Role list) → live shows **"Name already exists"** — close in meaning to the AC's quoted string but not a literal match.
+  4. Valid, unique-looking Role Name, zero permission checkboxes selected → live shows **"Please Select at least one Privilege."** — not the AC's quoted "One authorization at least must be selected."
+- **Expected Behavior:** Per `NDC_ProjectContext_Role.md` §2.1 (`FR-ROLECRT-NAME-02`): exact message "Role Name already exists, Please Enter another Role Name." for invalid-or-duplicate Role Name. Per §2.2 (`FR-ROLECRT-AUTH-01`): exact message "One authorization at least must be selected." when no authorization checkbox is selected.
+- **Actual Behavior:** Four distinct, real, functioning validation messages observed, none textually matching either AC-quoted string (see Description for each case's exact live text).
+- **Steps to Reproduce:** All via `/admin/role/add`, logged in as `odeysysadmin`: (1) leave Role Name blank, select any one permission, submit; (2) enter `QA123!@#` as Role Name, select any one permission, submit; (3) enter `Admin Role` (an existing role name, confirmed via the Role list's own grid) as Role Name, submit; (4) enter a plausible unique Role Name, select zero permissions, submit. Each is independently reproducible.
+- **Investigation/Recovery Result:** Not applicable — Validation-failure category, deterministic, no retry warranted; each of the 4 cases was triggered once and produced a stable, repeatable message.
+- **Investigation Notes:** Per Investigation Mode boundary conditions for Validation candidates: empty value (case 1) and special-characters/numeric value (case 2) were both explicitly probed as part of this same investigation, alongside the duplicate-value (case 3) and the Authorization-specific zero-selection case (case 4). Unicode/emoji/long-input/SQL-injection-payload probes were not additionally run this session — this run's scope (User Story strategy, narrowest) targeted verifying the AC's own stated cases rather than an exhaustive input-fuzzing pass; flagged as a Test Gap for Test Design to consider if broader input-validation coverage is wanted.
+- **Occurrence Count:** 4 (one per case above — grouped as one Finding since all four share the same underlying condition: AC-quoted message text vs. actual live message text)
+- **Evidence Links:** `case1-empty-name-Required.png`, `case2-no-authorization-PleaseSelectPrivilege.png` (also shows the invalid-format message from a separate submit in the same session), `case3-invalid-format-OnlyAlphabetic.png`, `case4-duplicate-name-NameAlreadyExists.png`.
+- **Recommendation:** Update the Project Context/AC to record the four real message strings in place of the single quoted placeholder, or ask the Product Owner whether the application's message copy should be changed to match the AC. Either way, Test Design should assert the messages actually observed here, not the AC's original quoted text, until this is resolved.

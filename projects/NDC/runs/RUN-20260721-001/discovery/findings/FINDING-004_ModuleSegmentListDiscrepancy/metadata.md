@@ -1,0 +1,23 @@
+# FINDING-004
+
+- **Finding ID:** FINDING-004
+- **Title:** The Add Role screen's module-segment list includes PNR Query and Transfer PNR, which the AC's own module list omits — and, for this Super Admin session, excludes Import PNR/Import Booked PNR, consistent with the project's existing multi-tier-role Finding
+- **Category:** Requirement Gap
+- **Severity:** N/A
+- **Severity Reason:** Requirement Gap categories carry no impact-if-defect rating per the Severity Matrix — this documents a gap in the AC's own coverage, not an application defect.
+- **Confidence Score:** 92%
+- **Evidence Category:** Direct Observation
+- **Status:** Needs Human Review
+- **Business Risk:** If a role is meant to govern access to PNR Query/Transfer PNR but the AC never mentioned them, reviewers approving roles against the AC alone could overlook these two segments entirely.
+- **Technical Risk:** None identified — this is a documentation-completeness gap, not a functional defect.
+- **Module:** Admin → Role Management → Create Role (`/admin/role/add`); cross-references the existing project-wide **FINDING-004** (`MultipleAdminRolesNotInProjectContext`, `workspace/discovery/findings/FINDING-004_MultipleAdminRolesNotInProjectContext/metadata.md`) from RUN-20260710-001 — same underlying multi-tier-role phenomenon, different run/scope, kept as this run's own numbered Finding rather than merged, since it's a distinct observation (the Role-grid's segment list, not the top nav bar).
+- **Workflow:** Add Role — module/segment tab bar
+- **Description:** The User Story's own Modules-and-Sub-Modules list names 9 segments: Dashboard, Admin, Master, Rule Engine, Settings, User Management, Booking Mid Office, Profile, Reports. Live observation of the Add Role screen's segment tab bar (logged in as `odeysysadmin`) shows 11 segments: the same 9 plus **PNR Query** and **Transfer PNR** — both absent from the AC's list. Separately, this session's top nav bar (also 11 items, same list) does **not** show Import PNR or Import Booked PNR at all — consistent with the existing FINDING-004's observation that Super Admin (`odeysysadmin`) has a reduced, 11-item nav compared to Admin's (`e.saady`) fuller 13-item nav. Since the Admin-tier credential isn't populated in `credentials.json` for this project, whether the Role-grid's segment list differs for that tier (e.g., includes Import PNR/Import Booked PNR) could not be tested this session.
+- **Expected Behavior:** Per `NDC_ProjectContext_Role.md` §2.3 (`FR-ROLECRT-MOD-01`): segment list = Dashboard, Admin, Master, Rule Engine, Settings, User Management, Booking Mid Office, Profile, Reports (9 items, per the User Story verbatim).
+- **Actual Behavior:** 11 segments live (the 9 above plus PNR Query, Transfer PNR), for the `odeysysadmin` (Super Admin) session; Import PNR/Import Booked PNR not present for this tier, untested for the Admin tier.
+- **Steps to Reproduce:** Log in as `odeysysadmin`; navigate to `/admin/role/add`; observe the full scrollable segment tab bar (scroll/click the `›` arrow to see all 11).
+- **Investigation/Recovery Result:** Not applicable — static enumeration, no retry warranted.
+- **Investigation Notes:** Cross-checked against `architecture.md`'s Navigation Model (13 top-nav items including Import PNR/Import Booked PNR, captured under a different, unspecified-tier session in 2026-07-10) and against this run's own Dashboard-page nav bar capture (11 items, same as the Role grid's segment list) — the two are internally consistent with each other for this session, just not with the AC's shorter list. Did not attempt to test with the Admin-tier credential (not available in `credentials.json` for this project).
+- **Occurrence Count:** 1
+- **Evidence Links:** `full-segment-tab-bar.png` (Add Role screen), `super-admin-11item-navbar.png` (Dashboard top nav, same session, for cross-reference).
+- **Recommendation:** Update the Project Context/AC to record the full, tier-observed segment list rather than the User Story's shorter one, and explicitly test the Admin-tier credential's own Role-grid segment list once that credential is available — this is the same open recommendation the existing FINDING-004 already made for the nav bar generally, now reinforced for this specific screen.

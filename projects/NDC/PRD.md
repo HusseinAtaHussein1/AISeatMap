@@ -1,11 +1,12 @@
 # NDC — Requirement Source (pasted User Stories)
 
-**This is not a comprehensive application PRD.** No full PRD exists yet for NDC (see `projects/NDC/onboarding.md`). This file exists solely to satisfy `agents/project_context_agent.md` §4's Required PRD input, per a **User Story** Run Scope with **Pasted text** Source (`pipeline/run_scope.md` §4.1). Its content is exactly the pasted user stories supplied across runs — nothing has been added, reworded, or "completed" beyond what was pasted. Originally created to serve RUN-20260710-001 (User Stories 1–2 below); extended 2026-07-18 to also serve RUN-20260718-001 (User Story 3 below, Create Agency).
+**This is not a comprehensive application PRD.** No full PRD exists yet for NDC (see `projects/NDC/onboarding.md`). This file exists solely to satisfy `agents/project_context_agent.md` §4's Required PRD input, per a **User Story** Run Scope with **Pasted text** Source (`pipeline/run_scope.md` §4.1). Its content is exactly the pasted user stories supplied across runs — nothing has been added, reworded, or "completed" beyond what was pasted. Originally created to serve RUN-20260710-001 (User Stories 1–2 below); extended 2026-07-18 to also serve RUN-20260718-001 (User Story 3 below, Create Agency); extended 2026-07-21 to also serve RUN-20260721-001 (User Story 4 below, Create Role).
 
 Full originals, with cross-reference notes, live at:
 - `projects/NDC/resources/docs/NDC US/Q2-CORE-WT1-T3002-066_White-Black-list-route-based.md`
 - `projects/NDC/resources/docs/NDC US/T3087_Add-Airline-Whitelist-Blacklist-Credential-Route-Filter-Phase1.md`
 - `projects/NDC/resources/requirements/user_stories/Create-Agency.md`
+- `projects/NDC/resources/requirements/user_stories/Create-Role.md`
 
 ---
 
@@ -244,3 +245,47 @@ The user must be able to submit the agency information for approval or save it a
 - Search & Booking Module
 - NDC Portal Screens
 - Reports Module (Agency Wallet, Total Due to NDC)
+
+---
+
+## User Story 4 — Create Role (Admin — Role Management)
+
+**Full original:** `projects/NDC/resources/requirements/user_stories/Create-Role.md`
+
+### Description
+
+As an OdesysesAdmin & Admin, I want to Create and manage roles with granular permissions for each module, sub-module, and their respective functionalities, So that I can ensure users have appropriate access levels while maintaining system security and usability.
+
+### Acceptance Criteria
+
+**Role Name:**
+- Must be a text field.
+- Allows only normal characters (no special characters or numbers).
+- Must be unique; duplication of names is not allowed.
+- Validation Message: If the role name is invalid or duplicated, a friendly message should appear: "Role Name already exists, Please Enter another Role Name."
+- At least one segment or authority check box has to be selected. Validation message: "One authorization at least must be selected."
+
+**Modules and Sub-Modules:**
+- The system must display all primary modules as segments, including: Dashboard, Admin, Master, Rule Engine, Settings, User Management, Booking Mid Office, Profile, Reports.
+- Each module must have smaller segments for sub-modules with an option to "Select All" checkbox. Behavior: Select all checkboxes (View, Edit, Approval) for all Rows "Sub-Tabs".
+- Example — Admin: Company, Branch, Agency, Staff.
+
+**Tab Management within Sub-Modules:**
+- Each sub-module (e.g., Company) must have a grid listing its specific tabs, such as: Operating Countries, Role, Department, Advanced Pop-Up.
+
+**Permissions Using Checkboxes:**
+- Each row in the tab grid must include the following permission checkboxes: View, Edit, Approval.
+- Checkbox Behavior: The "View" checkbox can be selected independently. If the "Edit" checkbox is ticked, the "View" checkbox is automatically selected. If the "Approval" checkbox is ticked, the "View" checkbox is automatically selected.
+
+**Action Buttons:**
+- Two buttons must be displayed at the bottom of the screen: "Submit for Approval" (Initiates the process to save and submit the role for approval) and "Cancel" (Clears the inputs or exits the role creation process without saving & navigates to the Search Role Screen).
+
+### Dependency
+
+N/A
+
+### Reflection
+
+- Search Role
+- Update Role
+- STAFF CRUD

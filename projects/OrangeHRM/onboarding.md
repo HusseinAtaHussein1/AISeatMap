@@ -22,7 +22,7 @@ OrangeHRM is a web-based Human Resource Management System (HRMS) — the **appli
 For the current state of the pipeline (which stages have run, which artifacts exist, what's pending), don't rely on this file — it will go stale. Instead check:
 
 - `projects/OrangeHRM/artifacts/pipeline/OrangeHRM_RunManifest.md` — per-stage version/checkpoint status
-- `projects/OrangeHRM/artifacts/runs/` — individual run workspaces (each `RUN-YYYYMMDD-XXX` directory)
+- `projects/OrangeHRM/artifacts/runs/` — individual run workspaces (each `RUN-YYYYMMDD-XXX-{slug}` directory for new runs; pre-existing runs keep their original `RUN-YYYYMMDD-XXX` name)
 - [`SESSION_HANDOFF.md`](../../docs/SESSION_HANDOFF.md) under `docs/` — platform-wide continuity notes, includes an OrangeHRM status table as of its last update
 
 ## Key things to know before touching this project

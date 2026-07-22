@@ -24,6 +24,6 @@ This folder contains **all project-specific knowledge for NDC only** — onboard
 | Discovery Artifacts | `projects/NDC/workspace/discovery/*.md` |
 | Manual Test Suites & Traceability Matrix | `projects/NDC/workspace/test_design/` |
 | Automation Scripts | `projects/NDC/workspace/automation/` |
-| Run Workspaces (immutable history) | `projects/NDC/runs/RUN-YYYYMMDD-XXX/` |
+| Run Workspaces (immutable history) | `projects/NDC/runs/RUN-YYYYMMDD-XXX-{slug}/` (new runs); pre-existing runs keep their original `RUN-YYYYMMDD-XXX/` name |
 | Run Manifest | `projects/NDC/workspace/pipeline/NDC_RunManifest.md` |
 | Reports | `projects/NDC/workspace/reporting/` |

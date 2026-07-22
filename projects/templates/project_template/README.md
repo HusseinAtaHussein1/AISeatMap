@@ -23,6 +23,6 @@ This folder contains **all project-specific knowledge for {{PROJECT_NAME}} only*
 | Discovery Artifacts | `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md` |
 | Manual Test Suites & Traceability Matrix | `projects/{{PROJECT_NAME}}/artifacts/test_design/` |
 | Automation Scripts | `projects/{{PROJECT_NAME}}/artifacts/automation/` |
-| Run Workspaces | `projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX/` |
+| Run Workspaces | `projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX-{slug}/` |
 | Run Manifest | `projects/{{PROJECT_NAME}}/artifacts/pipeline/{{PROJECT_NAME}}_RunManifest.md` |
 | Reports | `projects/{{PROJECT_NAME}}/artifacts/Reports/` |

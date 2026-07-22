@@ -199,18 +199,22 @@ The platform is organized to clearly separate reusable platform components, proj
 ```text
 agentic-ai-testing-platform/
 
-├── agents/
-│   ├── project_context_agent.md
-│   ├── explorer_agent.md
-│   ├── test_design_agent.md
-│   ├── automation_agent.md
-│   ├── execution_agent.md
-│   └── reporting_agent.md
+├── .claude/
+│   └── skills/
+│       ├── project-context-agent/SKILL.md
+│       ├── explorer-agent/SKILL.md
+│       ├── test-design-agent/SKILL.md
+│       ├── automation-agent/SKILL.md
+│       ├── execution-agent/SKILL.md
+│       └── reporting-agent/SKILL.md
 │
-├── pipeline/
-│   ├── pipeline.md
-│   ├── run_manager.md
-│   └── run_scope.md
+├── workflows_and_pipelines/
+│   ├── pipeline/
+│   │   ├── pipeline.md
+│   │   ├── run_manager.md
+│   │   └── run_scope.md
+│   └── workflows/
+│       └── first_run.md
 │
 ├── projects/
 │   ├── README.md
@@ -220,9 +224,7 @@ agentic-ai-testing-platform/
 │   │   └── workspace/          (generated outputs — this project uses workspace/ instead of artifacts/, see projects/NDC/onboarding.md)
 │   └── templates/
 │       └── project_template/
-│           └── artifacts/      (empty skeleton, per pipeline/run_manager.md §6)
-│
-├── workflows/
+│           └── artifacts/      (empty skeleton, per workflows_and_pipelines/pipeline/run_manager.md §6)
 │
 ├── docs/
 │   ├── README.md
@@ -505,10 +507,10 @@ Review the generated QA Report.
 | docs/CHANGELOG.md | Agent specification revision history |
 | docs/LESSONS_LEARNED.md | Architecture Decisions |
 | docs/PLATFORM_VALIDATION_REPORT.md | End-to-End Validation |
-| agents/ | Agent Specifications |
-| pipeline/ | Pipeline Architecture |
+| .claude/skills/ | Agent Specifications (as Skills) |
+| workflows_and_pipelines/pipeline/ | Pipeline Architecture |
 | projects/ | Project Knowledge |
-| workflows/ | Execution Workflows |
+| workflows_and_pipelines/workflows/ | Execution Workflows |
 
 ---
 

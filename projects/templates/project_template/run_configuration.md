@@ -55,4 +55,4 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 
 | Run | Run Type | Run Scope (Type / Source) | In-scope modules (summary) | Project Context version |
 |---|---|---|---|---|
-| <!-- RUN-YYYYMMDD-XXX --> | <!-- Full Regression / Smoke / Feature / User Story / Bug / Epic / Custom --> | <!-- e.g. User Story / Pasted text --> | <!-- summary --> | <!-- vN --> |
+| <!-- RUN-YYYYMMDD-XXX-{slug} --> | <!-- Full Regression / Smoke / Feature / User Story / Bug / Epic / Custom --> | <!-- e.g. User Story / Pasted text --> | <!-- summary --> | <!-- vN --> |

@@ -1,0 +1,24 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Agency Automation Suite" verbose="1">
+  <!-- RUN-20260718-001, Stage 4 — new NDC_tests_SHAFT_Agency package. -->
+  <test name="Agency Create">
+    <classes>
+      <class name="AdminPages.Admin.Agency.Agency_Create_TC"/>
+    </classes>
+  </test>
+  <test name="Agency Search">
+    <classes>
+      <class name="AdminPages.Admin.Agency.Agency_Search_TC"/>
+    </classes>
+  </test>
+  <test name="Agency Actions">
+    <classes>
+      <class name="AdminPages.Admin.Agency.Agency_Actions_TC"/>
+    </classes>
+  </test>
+  <test name="Agency Update">
+    <classes>
+      <class name="AdminPages.Admin.Agency.Agency_Update_TC"/>
+    </classes>
+  </test>
+</suite>

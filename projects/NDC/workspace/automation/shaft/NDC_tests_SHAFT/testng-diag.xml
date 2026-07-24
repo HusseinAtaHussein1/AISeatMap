@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Diag" verbose="1">
+  <test name="Diag">
+    <classes>
+      <class name="AdminPages.Admin.Branch.Branch_TC">
+        <methods>
+          <include name="diagStateOptions"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

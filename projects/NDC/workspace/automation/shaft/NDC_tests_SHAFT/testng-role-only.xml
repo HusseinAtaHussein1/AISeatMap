@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Role Suite" verbose="1">
+  <test name="Role">
+    <classes>
+      <class name="AdminPages.Admin.Company.Role.Role_TC"/>
+    </classes>
+  </test>
+</suite>

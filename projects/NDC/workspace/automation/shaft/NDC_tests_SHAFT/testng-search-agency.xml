@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="NDC Agency Search (RUN-20260713-001)" verbose="1">
+  <test name="AgencySearch">
+    <classes>
+      <class name="AdminPages.Admin.Agency.Agency_TC">
+        <methods>
+          <include name="searchAgencyByNameReturnsMatchingRecord"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

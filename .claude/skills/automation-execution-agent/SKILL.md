@@ -5,7 +5,7 @@ inputs:
   - name: automation_suite
     type: file_path
     required: true
-    description: Approved Automation Package at `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests_{Framework}/`.
+    description: Approved Automation Package at `platform_core_data/workspace/automation/tests_{Framework}/`.
   - name: automation_summary
     type: file_path
     required: true
@@ -25,11 +25,11 @@ inputs:
 outputs:
   - name: execution_results
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md"
-    description: "Structured per-test results, Evidence Inventory, Metrics, and separated Application/Automation/Environment Health figures. NDC uses a `workspace/execution/` variant of this path — see `projects/NDC/onboarding.md`."
+    location: "platform_core_data/workspace/execution/ExecutionResults.md"
+    description: "Structured per-test results, Evidence Inventory, Metrics, and separated Application/Automation/Environment Health figures. NDC uses a `workspace/execution/` variant of this path — see `platform_core_data/onboarding.md`."
   - name: execution_artifacts
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/"
+    location: "platform_core_data/workspace/execution/artifacts/"
     description: Captured screenshots, traces, logs, HAR files, framework reports.
 dependencies:
   - automation-agent (upstream skill)
@@ -84,17 +84,17 @@ The Automation Execution Agent runs the automated test suite produced by the Aut
 
 | Input | Required? | Description |
 |---|---|---|
-| Automation Suite | Required | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests/` — the generated/reused project itself |
-| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-agent/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this agent — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this agent assuming a framework itself |
+| Automation Suite | Required | `platform_core_data/workspace/automation/tests/` — the generated/reused project itself |
+| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `platform_core_data/workspace/automation/AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-agent/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this agent — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this agent assuming a framework itself |
 | Run Scope | Required (embedded) | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4), plus the Run Type (Full Regression/Smoke/etc., §5 there). Drives §13's strategy selection. |
-| Project Context | Required | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` — environment, credentials, safety constraints |
+| Project Context | Required | `platform_core_data/workspace/context/ProjectContext.md` — environment, credentials, safety constraints |
 | Execution Configuration | Required, composite | Not a single file — the set of run-time execution parameters this agent must resolve before running anything: Execution Mode (§5.1), Concurrency Mode (§5.3), Retry Policy (§5.4), and Resume state (§5.5). Named explicitly here so none of these is a silent default — each has its own determination rule below. |
 | Execution Mode | Required, but not necessarily pre-supplied — see §5.1 | Sourced from the approved Run Configuration if it defines one; otherwise obtained by pausing and asking the user before execution begins. One of: `Headless`, `Headed`, `Debug` — no other value is valid. |
 | Framework Configuration | Required, not assumed | Not this agent's decision — sourced from the Automation Summary's Framework Used / Execution Instructions sections (§15). This agent never independently selects or assumes a framework; it only reads what Stage 5 already decided and justified. |
 | Environment Configuration | Required (embedded) | The named environment (§14) this run targets, drawn from the Project Context's Environment Constraints — not a hidden default, and never inferred from where the agent itself happens to be running. |
 | Execution scope / Execution Parameters | Optional | Which subset of the suite to run (defaults to the full suite); for a Selective Re-run or Failed Test Re-run (§13), this is the specific test case ID list or "previously Failed" filter. |
-| Evidence Locations | Required (fixed convention) | `projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/` — not configurable per run; named explicitly here so it's a stated input/convention rather than an implicit assumption. |
-| Execution History | Optional — required only for Resume/Selective Re-run/Failed Test Re-run (§5.5, §13) | Prior Execution Results artifact(s) for this run (`{{PROJECT_NAME}}_ExecutionResults_{Execution ID}.md`), consulted only to determine what to resume or re-run — never edited, never treated as this run's own result. |
+| Evidence Locations | Required (fixed convention) | `platform_core_data/workspace/execution/artifacts/` — not configurable per run; named explicitly here so it's a stated input/convention rather than an implicit assumption. |
+| Execution History | Optional — required only for Resume/Selective Re-run/Failed Test Re-run (§5.5, §13) | Prior Execution Results artifact(s) for this run (`ExecutionResults_{Execution ID}.md`), consulted only to determine what to resume or re-run — never edited, never treated as this run's own result. |
 
 # 5. Execution Mode
 
@@ -184,14 +184,14 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 
 | Artifact | Path |
 |---|---|
-| Execution Results | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md` |
-| Captured screenshots / traces / logs / HAR / framework reports | `projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/` |
+| Execution Results | `platform_core_data/workspace/execution/ExecutionResults.md` |
+| Captured screenshots / traces / logs / HAR / framework reports | `platform_core_data/workspace/execution/artifacts/` |
 
 No new artifact paths are introduced by this revision — the Standard Output Contract (§18) defines required sections *within* the existing `ExecutionResults.md` file, preserving the Reporting Agent's existing single-file input expectation (`.claude/skills/reporting-agent/SKILL.md` §4) without requiring any change on that agent's side.
 
 The Execution Results document's run-identity header must include the Execution Mode, Concurrency Mode, and Retry Policy used, alongside the existing run-identity fields (Execution ID, environment, timestamps).
 
-**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12, added 2026-07-24):** the Automation Suite this agent executes (§4) is always this run's own **working copy** (`artifacts/runs/{{RUN_FOLDER}}/automation/{{PROJECT_NAME}}_tests_{Framework}/`), never the Workspace Automation Baseline directly — this agent never reads from or writes to the baseline location. Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this agent produces — Execution Results, evidence, and any Automation Repair Loop output (§25) — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
+**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12, added 2026-07-24):** the Automation Suite this agent executes (§4) is always this run's own **working copy** (`artifacts/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`), never the Workspace Automation Baseline directly — this agent never reads from or writes to the baseline location. Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this agent produces — Execution Results, evidence, and any Automation Repair Loop output (§25) — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
 
 # 10. Operational Prompt
 
@@ -207,11 +207,11 @@ record of the results.
 ## Input
 
 Automation suite:
-projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests/
-projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSummary.md
+platform_core_data/workspace/automation/tests/
+platform_core_data/workspace/automation/AutomationSummary.md
 
 Project Context (environment, credentials, safety constraints):
-projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
+platform_core_data/workspace/context/ProjectContext.md
 
 Target environment URL: {{APP_URL}}
 Execution scope: {{TEST_SCOPE}} (e.g., "all", or a specific module/tag)
@@ -280,10 +280,10 @@ never has to parse free-form prose.
 ## Output
 
 Save the execution results as:
-projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md
+platform_core_data/workspace/execution/ExecutionResults.md
 
 Save any captured screenshots/traces/logs under:
-projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/
+platform_core_data/workspace/execution/artifacts/
 
 Do not modify the automation scripts, test cases, Project Context, or PRD.
 ```
@@ -294,14 +294,14 @@ Do not modify the automation scripts, test cases, Project Context, or PRD.
 
 ```text
 Input:
-  projects/OrangeHRM/artifacts/automation/OrangeHRM_tests/
-  projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md
+  platform_core_data/workspace/automation/tests/
+  platform_core_data/workspace/context/ProjectContext.md
   APP_URL          = https://opensource-demo.orangehrmlive.com/
   TEST_SCOPE       = all
   EXECUTION_MODE   = (not defined in Run Configuration)
 ```
 
-Hypothetical result: the agent confirms the target environment matches the Project Context, then checks the Run Configuration for an Execution Mode — finds none defined — and halts, asking: *"No Execution Mode is defined in the Run Configuration. Please choose one: Headless, Headed, or Debug."* Only after the user answers, say, "Headed," does the agent proceed to run `npx playwright test --headed`, and the resulting `projects/OrangeHRM/artifacts/execution/OrangeHRM_ExecutionResults.md` records `"Execution Mode": "Headed"` in its run-identity header alongside the usual per-test outcomes — e.g., "36 tests executed — 31 Passed, 3 Failed (TC-PIM-013 → `pim.spec.ts::AddEmployee_MissingName`, TC-PIM-014, TC-LEA-013 — validation messages not shown as expected), 2 Skipped (destructive Maintenance actions not authorized against the shared demo)," with each row showing its Test Case ID, Automation Script ID, Execution Time, and linked Screenshots/Logs under `projects/OrangeHRM/artifacts/execution/artifacts/`.
+Hypothetical result: the agent confirms the target environment matches the Project Context, then checks the Run Configuration for an Execution Mode — finds none defined — and halts, asking: *"No Execution Mode is defined in the Run Configuration. Please choose one: Headless, Headed, or Debug."* Only after the user answers, say, "Headed," does the agent proceed to run `npx playwright test --headed`, and the resulting `platform_core_data/workspace/execution/ExecutionResults.md` records `"Execution Mode": "Headed"` in its run-identity header alongside the usual per-test outcomes — e.g., "36 tests executed — 31 Passed, 3 Failed (TC-PIM-013 → `pim.spec.ts::AddEmployee_MissingName`, TC-PIM-014, TC-LEA-013 — validation messages not shown as expected), 2 Skipped (destructive Maintenance actions not authorized against the shared demo)," with each row showing its Test Case ID, Automation Script ID, Execution Time, and linked Screenshots/Logs under `platform_core_data/workspace/execution/artifacts/`.
 
 # 12. Architecture Principle
 
@@ -391,7 +391,7 @@ This table is illustrative, not authoritative — the authoritative source is al
 | Attachments | Any other framework-specific artifact (e.g., a downloaded file a test verified) |
 | Failure Artifacts | Anything captured specifically because a test failed — stack trace, failure screenshot, failure-state DOM/response |
 
-**Evidence Inventory as a required Execution Results section** (§18) lists, per test, exactly which of the above were captured, their file paths under `projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/`, and — for anything not captured — the reason (e.g., "Videos: not supported by REST Assured for this API-only suite," not silently absent).
+**Evidence Inventory as a required Execution Results section** (§18) lists, per test, exactly which of the above were captured, their file paths under `platform_core_data/workspace/execution/artifacts/`, and — for anything not captured — the reason (e.g., "Videos: not supported by REST Assured for this API-only suite," not silently absent).
 
 # 17. Result Classification
 
@@ -473,13 +473,13 @@ Like the Test Design and Automation Agents (`.claude/skills/test-design-agent/SK
 | Automation Summary (Framework Used, Execution Instructions, Coverage, Known Limitations) | Automation Summary (§16 #7, §25) |
 | Project Context | Unchanged pass-through from Stage 1 |
 
-**Confirmed Contract Mismatch (identified during the Automation Agent's own v3 review, closed from this side):** this agent's §4 previously named the required input "Automation Coverage Summary" at path `{{PROJECT_NAME}}_AutomationSummary.md` — a filename that Automation Agent v2's actual six-artifact split never produced (verified against the real `projects/OrangeHRM/artifacts/runs/RUN-20260706-002/Automation/` output). Automation Agent v3 closed this by adding an actual `AutomationSummary` artifact at exactly that path (`.claude/skills/automation-agent/SKILL.md` §16 #7, §25). This agent's §4 row is now renamed "Automation Summary" and its description corrected to match what that artifact actually contains — the mismatch is resolved on both ends as of this pair of revisions. `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 5's artifact path list still references the same pre-v2 filename in its own prose; that file is out of scope for both this revision and the Automation Agent's ("do not modify the pipeline"), so it remains a known, harmless label lag (the actual filename it names now happens to be correct again, by coincidence of the v3 fix, even though the document itself was never updated).
+**Confirmed Contract Mismatch (identified during the Automation Agent's own v3 review, closed from this side):** this agent's §4 previously named the required input "Automation Coverage Summary" at path `AutomationSummary.md` — a filename that Automation Agent v2's actual six-artifact split never produced (verified against the real `platform_core_data/runs/RUN-20260706-002/Automation/` output). Automation Agent v3 closed this by adding an actual `AutomationSummary` artifact at exactly that path (`.claude/skills/automation-agent/SKILL.md` §16 #7, §25). This agent's §4 row is now renamed "Automation Summary" and its description corrected to match what that artifact actually contains — the mismatch is resolved on both ends as of this pair of revisions. `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 5's artifact path list still references the same pre-v2 filename in its own prose; that file is out of scope for both this revision and the Automation Agent's ("do not modify the pipeline"), so it remains a known, harmless label lag (the actual filename it names now happens to be correct again, by coincidence of the v3 fix, even though the document itself was never updated).
 
 ## 21.2 Automation Execution Agent → Reporting Agent
 
 | Reporting Agent needs (`.claude/skills/reporting-agent/SKILL.md` §4) | Satisfied by (this agent's output) |
 |---|---|
-| Execution Results (`{{PROJECT_NAME}}_ExecutionResults.md`) | §9 — unchanged path, now internally structured per the Standard Output Contract (§18) |
+| Execution Results (`ExecutionResults.md`) | §9 — unchanged path, now internally structured per the Standard Output Contract (§18) |
 | Manual Test Suites | Not produced by this agent — unchanged pass-through from Stage 3 |
 | Traceability Matrix | Not produced by this agent — unchanged pass-through from Stage 3 |
 | Project Context | Unchanged pass-through from Stage 1 |
@@ -714,7 +714,7 @@ A report is never issued above 95% before the repair is actually rerun and confi
 
 **A two-layer, cross-run store of repair patterns, per the Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10) — distinct from `.claude/skills/automation-agent/SKILL.md` §11's "Automation Knowledge Base," which is reusable *code assets* within one project's package.** This one is reusable *repair reasoning*: what failure pattern, what fix worked, under what conditions.
 
-- **Project Knowledge (default write target):** `projects/{{PROJECT_NAME}}/knowledge_base/repair/REP-{NNN}.md` — this project's own execution-confirmed repair records.
+- **Project Knowledge (default write target):** `platform_core_data/knowledge_base/repair/REP-{NNN}.md` — this project's own execution-confirmed repair records.
 - **Platform Knowledge (read always; written only via Promotion):** `platform_core/knowledge/repair_patterns/REPAIR-{NNN}.md` and `platform_core/knowledge/reasoning/REASON-{NNN}.md` — generalized, cross-project repair/reasoning patterns.
 
 Every read consults both layers, in the fixed order of `workflows_and_pipelines/pipeline/pipeline.md` §10.2 (Platform Knowledge, then the current project's Knowledge). Every write, by default, targets only the current project's `knowledge_base/repair/` — never `platform_core/knowledge/` directly, per §10.5's Promotion Workflow below.
@@ -730,9 +730,6 @@ The rule is written into the current project's `knowledge_base/repair/` (schema,
 ```
 ID:
 REP-{NNN}
-
-Project:
-{{PROJECT_NAME}}
 
 Implements Platform Pattern:
 {Platform Pattern ID, e.g. REPAIR-{NNN} or REASON-{NNN} — or "none yet" if this is a

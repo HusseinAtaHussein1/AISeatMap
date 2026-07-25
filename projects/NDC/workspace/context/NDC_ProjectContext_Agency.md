@@ -3,11 +3,11 @@
 **Run:** RUN-20260718-001 · **Status:** `Pending` (checkpoint open per `pipeline/pipeline.md` §5.3 — awaiting Human Review) · **Produced by:** Project Context Agent (Stage 1) · **Date:** 2026-07-18
 **Run Scope:** Type = User Story · Source = Pasted text — four jointly-scoped User Stories: **Create Agency**, **Search Agency**, **Agency Actions** (Edit/Approve/Reject/Status), **Update Agency**.
 
-> **Single living document, not a version sequence.** Per explicit user instruction (2026-07-18), this project no longer mints a new numbered version (`v4`, `v5`, …) for every incremental addition to the same scope — this file **is** the current Project Context for the Agency entity's CRUD lifecycle, and gets extended/edited in place as more Agency-related User Stories arrive. It replaces what would otherwise have been separately-numbered `NDC_ProjectContext.v4.md` (Create Agency) and `.v5.md` (Search/Actions/Update) drafts — both folded into this one file instead.
+> **Single living document, not a version sequence.** Per explicit user instruction (2026-07-18), this project no longer mints a new numbered version (`v4`, `v5`, …) for every incremental addition to the same scope — this file **is** the current Project Context for the Agency entity's CRUD lifecycle, and gets extended/edited in place as more Agency-related User Stories arrive. It replaces what would otherwise have been separately-numbered `ProjectContext.v4.md` (Create Agency) and `.v5.md` (Search/Actions/Update) drafts — both folded into this one file instead.
 >
-> **Approval workflow:** this file lives under `runs/RUN-20260718-001/context/` while still `Pending`. Per explicit user instruction, once approved it moves to `projects/NDC/workspace/context/NDC_ProjectContext_Agency.md` — the project's canonical "current approved" location (consistent with `v1`/`v2`/`v3`'s existing home there) — not to be confused with this run-scoped draft copy.
+> **Approval workflow:** this file lives under `runs/RUN-20260718-001/context/` while still `Pending`. Per explicit user instruction, once approved it moves to `platform_core_data/workspace/context/ProjectContext_Agency.md` — the project's canonical "current approved" location (consistent with `v1`/`v2`/`v3`'s existing home there) — not to be confused with this run-scoped draft copy.
 >
-> **Relationship to other Project Context documents:** `v1` (Credential Routes Filter/Airport/Supplier Credentials/Airline), `v2` (Login/Authentication), and `v3`'s **Branch** and **Staff** sections are untouched, unrelated, and remain fully authoritative under their own existing files. Only `v3`'s **Agency List/Search** portion (Observation-derived, no User Story at the time) is superseded — by this document's §2.2 Search Agency section, now AC-backed. A fifth, unrelated User Story (WT1-T2919, E-Ticket Agency Branding) is **out of scope here** — it touches the E-Ticket/Booking Confirmation screens, not Agency CRUD, and gets its own separately-named document, `NDC_ProjectContext_ETicketBranding.md` ("Track B"), per the user-confirmed track split.
+> **Relationship to other Project Context documents:** `v1` (Credential Routes Filter/Airport/Supplier Credentials/Airline), `v2` (Login/Authentication), and `v3`'s **Branch** and **Staff** sections are untouched, unrelated, and remain fully authoritative under their own existing files. Only `v3`'s **Agency List/Search** portion (Observation-derived, no User Story at the time) is superseded — by this document's §2.2 Search Agency section, now AC-backed. A fifth, unrelated User Story (WT1-T2919, E-Ticket Agency Branding) is **out of scope here** — it touches the E-Ticket/Booking Confirmation screens, not Agency CRUD, and gets its own separately-named document, `ProjectContext_ETicketBranding.md` ("Track B"), per the user-confirmed track split.
 
 ---
 
@@ -207,7 +207,7 @@ Filters: Amadeus PCC, Galileo PCC, Sabre PCC.
 
 ## 3. Modules Out of Scope
 
-- **WT1-T2919 (E-Ticket Agency Branding)** — its own document, `NDC_ProjectContext_ETicketBranding.md` ("Track B"), per the user-confirmed track split 2026-07-18.
+- **WT1-T2919 (E-Ticket Agency Branding)** — its own document, `ProjectContext_ETicketBranding.md` ("Track B"), per the user-confirmed track split 2026-07-18.
 - **Agency's own sub-items** — Registration Requests, Category Management, Agency Assignation.
 - **Rule Engine Module, Search & Booking Module, NDC Portal Screens, Reports Module, Import PNR (as a portal-side feature), Region Module's own CRUD** — named as downstream-impacted/dependency-only, not in-scope test targets.
 - Branch and Staff CRUD (still governed by `v3`); Login/Authentication (`v2`); Credential Routes Filter et al. (`v1`).
@@ -246,4 +246,4 @@ This document governs Stage 1 (Project Context) and Stage 3 (Test Design) only; 
 
 ---
 
-*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review before Stage 3 formally clears its own checkpoint. Once approved, this file moves to `projects/NDC/workspace/context/NDC_ProjectContext_Agency.md` per explicit user instruction — this run-scoped copy is the pre-approval draft.*
+*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review before Stage 3 formally clears its own checkpoint. Once approved, this file moves to `platform_core_data/workspace/context/ProjectContext_Agency.md` per explicit user instruction — this run-scoped copy is the pre-approval draft.*

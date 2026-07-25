@@ -7,9 +7,9 @@
 // This module (like driver.js) is shared platform infrastructure ONLY — it contains no
 // project-specific data itself. Locator knowledge is deliberately kept OUT of the Browser
 // Profile (which stays small and stable — auth/browser-init only, see driver.js) and lives
-// instead inside each project's own folder, loaded on demand:
-//   projects/{PROJECT}/browser/screens/{ScreenName}.json      — one screen's locators
-//   projects/{PROJECT}/browser/components/{ComponentName}.json — shared/reusable locators
+// instead under the single project root, loaded on demand:
+//   platform_core_data/browser/screens/{ScreenName}.json      — one screen's locators
+//   platform_core_data/browser/components/{ComponentName}.json — shared/reusable locators
 // Call `useScreen('ScreenName')` / `useComponent('ComponentName')` to load one into the active
 // locator set; `click()`/`type()`/etc. then accept either a dotted key into that set (e.g.
 // "nav.master", "addButton") or a literal Playwright selector as a fallback.
@@ -24,17 +24,17 @@ const fs = require('fs');
 const path = require('path');
 const { launchAuthenticated, projectBrowserDir, projectUiScreenshotsDir } = require('./driver');
 
-function knowledgeFilePath(project, kind, name) {
-  return path.join(projectBrowserDir(project), kind, `${name}.json`);
+function knowledgeFilePath(kind, name) {
+  return path.join(projectBrowserDir(), kind, `${name}.json`);
 }
 
-function readKnowledgeFile(project, kind, name) {
+function readKnowledgeFile(kind, name) {
   // kind: 'screens' | 'components'
-  const filePath = knowledgeFilePath(project, kind, name);
+  const filePath = knowledgeFilePath(kind, name);
   if (!fs.existsSync(filePath)) {
     throw new Error(
-      `No ${kind.slice(0, -1)} definition "${name}" for project "${project}". Expected: ${filePath}\n` +
-      `Add it under projects/${project}/browser/${kind}/ — see tools/browser_driver/README.md.`
+      `No ${kind.slice(0, -1)} definition "${name}". Expected: ${filePath}\n` +
+      `Add it under platform_core_data/browser/${kind}/ — see platform_core/tools/browser_driver/README.md.`
     );
   }
   const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -59,12 +59,11 @@ function resolveLocator(locators, keyOrSelector) {
 }
 
 class BrowserDriver {
-  constructor({ browser, context, page, profile, project, env }) {
+  constructor({ browser, context, page, profile, env }) {
     this.browser = browser;
     this.context = context;
     this.page = page;
     this.profile = profile;
-    this.project = project;
     this.env = env;
     this._locators = {}; // populated only via useScreen()/useComponent() — never from profile.json
     this._networkLog = [];
@@ -73,11 +72,11 @@ class BrowserDriver {
   }
 
   /** The only way to obtain a session. Never construct BrowserDriver directly. */
-  static async authenticate({ project, env, credentialsPath, headless }) {
+  static async authenticate({ env, credentialsPath, headless } = {}) {
     const { browser, context, page, profile, env: resolvedEnv } = await launchAuthenticated({
-      project, env, credentialsPath, headless,
+      env, credentialsPath, headless,
     });
-    return new BrowserDriver({ browser, context, page, profile, project, env: resolvedEnv });
+    return new BrowserDriver({ browser, context, page, profile, env: resolvedEnv });
   }
 
   _wireGuardrails() {
@@ -103,13 +102,13 @@ class BrowserDriver {
 
   /** Loads a screen's locator definitions into the active set (merged, screen/component wins last-loaded). */
   useScreen(screenName) {
-    this._locators = { ...this._locators, ...readKnowledgeFile(this.project, 'screens', screenName) };
+    this._locators = { ...this._locators, ...readKnowledgeFile('screens', screenName) };
     return this;
   }
 
   /** Loads a shared component's locator definitions into the active set. */
   useComponent(componentName) {
-    this._locators = { ...this._locators, ...readKnowledgeFile(this.project, 'components', componentName) };
+    this._locators = { ...this._locators, ...readKnowledgeFile('components', componentName) };
     return this;
   }
 
@@ -173,11 +172,11 @@ class BrowserDriver {
    * UI Knowledge Base baseline capture — ONE canonical, versioned screenshot per screen, distinct
    * from Discovery run evidence (which stays under artifacts/discovery/, per-run/temporary).
    *
-   * Idempotent: if projects/{PROJECT}/ui/screenshots/{screenName}.png already exists, this is a
+   * Idempotent: if platform_core_data/ui/screenshots/{screenName}.png already exists, this is a
    * no-op (never overwrites) unless `opts.refresh` is explicitly true — refreshing is a deliberate,
    * human-approved action, never automatic.
    *
-   * Also creates/updates projects/{PROJECT}/browser/screens/{screenName}.json's `meta` block
+   * Also creates/updates platform_core_data/browser/screens/{screenName}.json's `meta` block
    * (screenName, navigationPath, lastVerified, screenshot, accessRoles, pageTitle) without
    * touching any existing `locators` in that file.
    *
@@ -189,7 +188,7 @@ class BrowserDriver {
    * @returns {{ screenshotPath: string, created: boolean, meta: object }}
    */
   async captureBaseline(screenName, opts = {}) {
-    const uiDir = projectUiScreenshotsDir(this.project);
+    const uiDir = projectUiScreenshotsDir();
     if (!fs.existsSync(uiDir)) fs.mkdirSync(uiDir, { recursive: true });
     const screenshotFile = `${screenName}.png`;
     const screenshotPath = path.join(uiDir, screenshotFile);
@@ -204,7 +203,7 @@ class BrowserDriver {
     const pageTitle = await this.page.title().catch(() => undefined);
     const today = new Date().toISOString().slice(0, 10);
 
-    const screenFilePath = knowledgeFilePath(this.project, 'screens', screenName);
+    const screenFilePath = knowledgeFilePath('screens', screenName);
     let existing = { locators: {} };
     if (fs.existsSync(screenFilePath)) {
       const parsed = JSON.parse(fs.readFileSync(screenFilePath, 'utf8'));

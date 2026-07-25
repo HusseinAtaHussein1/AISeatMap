@@ -1,8 +1,8 @@
 # NDC — Automation Manifest (Agency, SHAFT, new package) — RUN-20260718-001
 
-Package: `NDC_tests_SHAFT_Agency` (this run's folder, `runs/RUN-20260718-001/automation/NDC_tests_SHAFT_Agency/`).
+Package: `tests_SHAFT_Agency` (this run's folder, `runs/RUN-20260718-001/automation/tests_SHAFT_Agency/`).
 
-## Scaffold — Reused verbatim (copied from `NDC_tests_SHAFT`, RUN-20260712-001/002)
+## Scaffold — Reused verbatim (copied from `tests_SHAFT`, RUN-20260712-001/002)
 
 | File | Origin |
 |---|---|
@@ -19,8 +19,8 @@ Package: `NDC_tests_SHAFT_Agency` (this run's folder, `runs/RUN-20260718-001/aut
 
 | File | Origin | Extension this run |
 |---|---|---|
-| `Agency_Page.java` | `NDC_tests_SHAFT` (RUN-20260712-002) | + Company URL, Fax No, IATA radio, Payment Settings (Credit Limit/Top-Up Limit/Credit Terms/Reaching %/Warning Prompt/Credit Agency/full Payment Option set), Product Access (Select Product), Agency Features (Import PNR/Transfer PNR/Blue Command Screen), Cancel button, first-Invoice-option helper |
-| `SearchAgency_Page.java` | `NDC_tests_SHAFT` (RUN-20260713-001) | + Agency Code, Country/State/City multiselects, Active/Inactive radios, Add-agency button |
+| `Agency_Page.java` | `tests_SHAFT` (RUN-20260712-002) | + Company URL, Fax No, IATA radio, Payment Settings (Credit Limit/Top-Up Limit/Credit Terms/Reaching %/Warning Prompt/Credit Agency/full Payment Option set), Product Access (Select Product), Agency Features (Import PNR/Transfer PNR/Blue Command Screen), Cancel button, first-Invoice-option helper |
+| `SearchAgency_Page.java` | `tests_SHAFT` (RUN-20260713-001) | + Agency Code, Country/State/City multiselects, Active/Inactive radios, Add-agency button |
 
 ## Generated (new this run)
 

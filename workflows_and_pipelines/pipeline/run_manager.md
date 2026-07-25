@@ -101,7 +101,7 @@ No agent, skill, or script may hand-format a run folder name inline — doing so
 Every run folder that existed before this revision keeps its original `RUN-YYYYMMDD-XXX[-slug]` name and content **exactly as-is** — none are renamed by this revision. This is not a blanket policy exception; it is the outcome of a real, general safety check (`runFolderIndex.js`'s `isRenameSafe()`), which physically renames a legacy folder (via `git mv`, never copy+delete) only when zero other files in the project reference that folder's name. Applying that check to every run folder that exists as of this revision found real, live references (cross-run path dependencies where one run's automation package was extended in place by a later run, generated code paths, and manifest/history-table citations) — so every one of them stays on its legacy name, and is represented instead in a per-project compatibility index:
 
 ```
-projects/{{PROJECT_NAME}}/artifacts/runs/.run_folder_index.json   (or projects/{{PROJECT_NAME}}/runs/.run_folder_index.json)
+platform_core_data/runs/.run_folder_index.json   (or platform_core_data/runs/.run_folder_index.json)
 ```
 
 Each entry records `{ legacyName, inferredNewName, confidence, source }` — `source` names exactly which document the Scope/Target were inferred from (`metadata/run.json`, that project's `run_configuration.md` history table, or its `*_RunManifest.md`), and `confidence` is `low` whenever no metadata could be found at all (in which case `inferredNewName` uses `Unknown` segments rather than a guess). `runFolderIndex.js`'s `resolveRunFolder(runsDir, identifier)` looks up either a legacy Run ID/folder name or a new-convention name and returns the real on-disk folder — this is what keeps history lookups, dashboards, and manifests working under either naming style without rewriting any of them.
@@ -110,25 +110,23 @@ Running the migration (`node platform_core/tools/run_manager/migrate.js --projec
 
 # 6. Workspace Structure
 
-**Revision note (repository v1.0 architecture):** every project is now fully self-contained under `projects/{{PROJECT_NAME}}/` — there is no root-level `artifacts/` directory. Project Artifacts (the current-approved state) and Run Artifacts (immutable per-run snapshots) both live under `projects/{{PROJECT_NAME}}/artifacts/`, as two siblings: the stage-named folders directly under `artifacts/` hold the current approved state, and `artifacts/runs/RUN-XXXX/` holds each run's own snapshot. This also consolidates the previous cross-cutting `evidence/`, `screenshots/`, `videos/`, `logs/`, `network/` folders into the owning stage's own folder (`discovery/` for Explorer-produced evidence, `execution/` for Execution-produced evidence) rather than keeping them as separate top-level run folders — no evidence type is dropped, only regrouped by which stage produces it.
+**Revision note (updated 2026-07-25, single-project restructure):** the project is fully self-contained under `platform_core_data/`, with no project-name path segment. Project Artifacts (the current-approved state) and Run Artifacts (immutable per-run snapshots) are two siblings under that root: stage-named folders under `platform_core_data/workspace/` hold the current approved state, and `platform_core_data/runs/{{RUN_FOLDER}}/` holds each run's own snapshot. This also consolidates the previous cross-cutting `evidence/`, `screenshots/`, `videos/`, `logs/`, `network/` folders into the owning stage's own folder (`discovery/` for Explorer-produced evidence, `execution/` for Execution-produced evidence) rather than keeping them as separate top-level run folders — no evidence type is dropped, only regrouped by which stage produces it.
 
 **On-demand folder creation (revised):** the Run Manager creates only `metadata/` before any Agent starts — every run has one, regardless of which stages it reaches. Every other subfolder is created **only at the moment the corresponding Agent actually produces its first output**, never upfront as an empty placeholder:
 
 ```
-projects/
-  {{PROJECT_NAME}}/
-    artifacts/
-      runs/
-        {{RUN_FOLDER}}/            <- e.g. 2026-07-23_10-35-18__FullRun__FlightSearch (§5)
-          metadata/              <- always created immediately
-          context/                <- created only when Stage 1 writes to it
-          discovery/               <- created only when Stage 2 writes to it
-            findings/               <- created only when a Finding is actually raised
-          test_design/            <- created only when Stage 3 writes to it
-          manual_execution/        <- created only when Stage 4 writes to it
-          automation/              <- created only when Stage 5 writes to it
-          execution/               <- created only when Stage 6 writes to it
-          reporting/               <- created only when Stage 7 writes to it
+platform_core_data/
+  runs/
+    {{RUN_FOLDER}}/          <- e.g. 2026-07-23_10-35-18__FullRun__FlightSearch (§5)
+      metadata/              <- always created immediately
+      context/               <- created only when Stage 1 writes to it
+      discovery/             <- created only when Stage 2 writes to it
+        findings/            <- created only when a Finding is actually raised
+      test_design/           <- created only when Stage 3 writes to it
+      manual_execution/      <- created only when Stage 4 writes to it
+      automation/            <- created only when Stage 5 writes to it
+      execution/             <- created only when Stage 6 writes to it
+      reporting/             <- created only when Stage 7 writes to it
 ```
 
 **Naming note:** every reference to a run's workspace path elsewhere in this document uses the placeholder `{{RUN_FOLDER}}` for brevity. For a run created under this document's current naming convention, that placeholder resolves to the full `YYYY-MM-DD_HH-mm-ss__Scope__Target` folder name (§5); for a pre-existing run, it resolves to that run's original `RUN-YYYYMMDD-XXX[-slug]` folder name, which is never renamed (§5.6).
@@ -147,19 +145,19 @@ A run that only ever reaches Stage 2 (Explorer) has exactly `metadata/` and `dis
 
 **Retroactive note (2026-07-17):** this replaces an earlier version of this section that had the Run Manager create the full seven-folder skeleton upfront, before any Agent ran. Existing runs created under that earlier behavior had empty subfolders for stages they never reached; those empty folders have been removed from NDC's existing runs to match this corrected behavior (no run content was touched — only folders with zero files were removed). The skeleton now has eight possible subfolders (`manual_execution/` added alongside `context/`, `discovery/`, `test_design/`, `automation/`, `execution/`, `reporting/`, and the always-present `metadata/`), created on the same on-demand basis.
 
-This Run Workspace is **additive** to, not a replacement for, the current-approved per-project artifact paths already documented in `workflows_and_pipelines/pipeline/pipeline.md` and each Agent's own specification (e.g., `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md`, `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md`) — those remain the authoritative "current approved" locations per `workflows_and_pipelines/pipeline/pipeline.md` §7, now living as siblings of `runs/` rather than at the repository root. The Run Workspace is where the Run Manager organizes a run-scoped view — for monitoring, history, and archival — of the artifacts produced while that run was active.
+This Run Workspace is **additive** to, not a replacement for, the current-approved per-project artifact paths already documented in `workflows_and_pipelines/pipeline/pipeline.md` and each Agent's own specification (e.g., `platform_core_data/workspace/context/ProjectContext.md`, `platform_core_data/workspace/discovery/*.md`) — those remain the authoritative "current approved" locations per `workflows_and_pipelines/pipeline/pipeline.md` §7, now living as siblings of `runs/` rather than at the repository root. The Run Workspace is where the Run Manager organizes a run-scoped view — for monitoring, history, and archival — of the artifacts produced while that run was active.
 
 # 7. Run Metadata
 
 The Run Manager generates and maintains a single metadata file per run:
 
 ```
-projects/{{PROJECT_NAME}}/artifacts/runs/{{RUN_FOLDER}}/metadata/run.json
+platform_core_data/runs/{{RUN_FOLDER}}/metadata/run.json
 ```
 
 **Schema revision (2026-07-23):** `run.json` for runs created under §5's current naming convention uses the schema below — `folderName`, `scope`, and `target` replace the retired `runId`/`displayName` fields (the folder name itself is now the stable, self-descriptive reference; see §5.4 item 3). Title/Description/Objective/Workflow are unchanged from the 2026-07-21 revision. Pre-existing runs' `run.json` files keep their original field names and shape unchanged; they are not migrated to this schema (§5.6).
 
-`run.json` must contain the following fields:
+`run.json` must contain the following fields. There is deliberately no `project` key (removed 2026-07-25): the platform hosts one project, so recording which one a run belonged to would be a constant, and a constant that looks like a selector invites code to branch on it. Existing run folders that still carry the key are left as-is — they are immutable run history (§5.6).
 
 | JSON key | Description |
 |---|---|
@@ -170,7 +168,6 @@ projects/{{PROJECT_NAME}}/artifacts/runs/{{RUN_FOLDER}}/metadata/run.json
 | `description` | A one-paragraph, human-readable description of what this run does and why, generated from the same context |
 | `objective` | A one-sentence statement of this run's specific validation objective |
 | `workflow` | The workflow this run executes, if invoked via a named workflow in `workflows_and_pipelines/workflows/` (e.g. `first_run`, `user_story_run`, `bug_fix_run`); `unversioned` if run ad hoc, outside any named workflow |
-| `project` | `{{PROJECT_NAME}}` |
 | `pipelineVersion` | The version identifier of `workflows_and_pipelines/pipeline/pipeline.md` in effect for this run |
 | `projectContextVersion` | The version suffix of the Project Context artifact this run used (e.g., `v1`), per `workflows_and_pipelines/pipeline/pipeline.md` §7 |
 | `explorerVersion` | The version identifier of `.claude/skills/explorer-agent/SKILL.md` in effect for this run |
@@ -214,7 +211,7 @@ The Run Manager transitions a run's status based on mechanical signals (an Agent
 Once a run reaches a terminal status (`Completed`, `Failed`, or `Cancelled`), the Run Manager publishes:
 
 ```
-projects/{{PROJECT_NAME}}/artifacts/runs/{{RUN_FOLDER}}/metadata/run_summary.md
+platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md
 ```
 
 **Header revision (2026-07-21, fields updated 2026-07-23):** for runs created under §5's current naming convention, `run_summary.md` opens with a `# Run Summary` heading followed by the run's descriptive identity fields (sourced verbatim from `run.json`, §7), before the pre-existing factual roll-up. Pre-existing runs' `run_summary.md` files are unchanged (§5.6).
@@ -316,7 +313,7 @@ Generated folder name (via platform_core/tools/run_manager):
 Hypothetical resulting workspace:
 
 ```
-projects/NDC/artifacts/runs/2026-07-21_09-00-00__UserStory__LoginModule/
+platform_core_data/runs/2026-07-21_09-00-00__UserStory__LoginModule/
   metadata/
     run.json
     run_summary.md

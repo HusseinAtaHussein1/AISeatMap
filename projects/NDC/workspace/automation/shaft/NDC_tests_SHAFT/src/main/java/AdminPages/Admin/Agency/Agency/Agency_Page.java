@@ -19,13 +19,13 @@ import java.util.List;
  *     "id-Branch"/"id-Agency"/"id-Country" etc.) — a Reference Project staleness gap, not something
  *     to reuse or silently "fix" in place (agents/automation_agent.md §32.2/§32.4).
  *   - AddAgency_Page.java is an empty stub (constructor only, no locators/methods at all).
- * This gap is recorded in NDC_AutomationPlan_SHAFT.md's Known Limitations / Assumptions.
+ * This gap is recorded in AutomationPlan_SHAFT.md's Known Limitations / Assumptions.
  *
  * SearchAgency_Page.java (List/Search), by contrast, WAS current and reusable — but this run's
  * automated test cases don't need it (TC-AGENCY-003, the List auto-load question, is an
  * Exploratory/manual charter per Test Design, not automated this run), so it is not duplicated here.
  *
- * EXTENDED 2026-07-18 (RUN-20260718-001, Stage 4 — new NDC_tests_SHAFT_Agency package): this same
+ * EXTENDED 2026-07-18 (RUN-20260718-001, Stage 4 — new tests_SHAFT_Agency package): this same
  * class now doubles as the Update Agency page object too — live discovery
  * (runs/RUN-20260718-001/discovery/Agency_Update.md) confirmed /admin/agency/edit/{id} renders the
  * identical field ids as /admin/agency/add, just pre-populated. Every locator/method added below is
@@ -33,7 +33,7 @@ import java.util.List;
  * screenshot's field inventory — never fabricated. Fields the discovery pass could NOT confirm a
  * real id for (Bank Account Details, Sales Contact "Designation", document remove/replace, "Enable
  * Search Limit"'s own checkbox, the entire PCC/Airline Supplier Credential section, "Save as Draft")
- * are deliberately NOT given locators here — see FINDING-008 and NDC_AutomationPlan_SHAFT_Agency.md
+ * are deliberately NOT given locators here — see FINDING-008 and AutomationPlan_SHAFT_Agency.md
  * "Blocked"/"Deferred" tables.
  */
 public class Agency_Page {
@@ -65,7 +65,7 @@ public class Agency_Page {
     // Discovered live via tools/browser_driver that TC-AGENCY-001/004's original scope (Core +
     // BusinessType + Owner Details only) never actually submitted: clicking "Send For Approval"
     // with these fields still empty left the form ng-invalid and blocked (silently, since the
-    // original test asserted nothing after .submit() — see NDC_ExecutionResults.md's Repair Round 2
+    // original test asserted nothing after .submit() — see ExecutionResults.md's Repair Round 2
     // correction). Every locator/interaction below was individually confirmed live before porting.
     By Lst_State = By.xpath("//p-dropdown[.//input[@id=\"id-State\"]]");
     By Lst_City = By.xpath("//p-dropdown[.//input[@id=\"id-City\"]]");
@@ -152,6 +152,26 @@ public class Agency_Page {
         return this;
     }
 
+    /** TC-AGENCY-CREATE-007: types directly into Phone No without the rest of the required
+     *  fields, to probe non-numeric input handling in isolation. */
+    public Agency_Page typePhoneOnly(String value) {
+        driver.element().type(Txt_PhoneNo, value);
+        return this;
+    }
+
+    public String getPhoneNoValue() {
+        return driver.element().getAttribute(Txt_PhoneNo, "value");
+    }
+
+    /** TC-AGENCY-CREATE-008: Country auto-fills (disabled) once a Branch is selected. */
+    public String getCountryValue() {
+        return driver.element().getAttribute(Txt_Country, "value");
+    }
+
+    public String getCountryDisabledAttribute() {
+        return driver.element().getAttribute(Txt_Country, "disabled");
+    }
+
     /**
      * TC-AGENCY-005: types Unicode input into Contact person specifically.
      * Repair (2026-07-12, Automation Repair Loop — EXEC-20260712-002-001): native sendKeys
@@ -203,12 +223,40 @@ public class Agency_Page {
         return this;
     }
 
+    /** TC-AGENCY-UPDATE-004: clears Agency Name (a mandatory field) to probe validation on Update. */
+    public Agency_Page clearAgencyName() {
+        driver.element().type(Txt_Agency, "");
+        return this;
+    }
+
     /** Sends the file path directly to the (visually hidden) native file input -- standard
      *  Selenium/SHAFT technique, bypasses the OS-native file picker dialog entirely. */
     public Agency_Page uploadDocument(String absoluteFilePath) throws InterruptedException {
         driver.getDriver().findElement(File_UploadDocument).sendKeys(absoluteFilePath);
         Thread.sleep(500);
         return this;
+    }
+
+    /** TC-AGENCY-CREATE-015: scoped to the form container that wraps the Document file input
+     *  (an Angular reactive form, confirmed structurally by File_UploadDocument's own presence),
+     *  not a full-page body-text scan — checks whether the uploaded file's name is shown anywhere
+     *  within that container. */
+    private By documentFormContainer() {
+        return By.xpath("//form[.//input[@type=\"file\"]]");
+    }
+
+    public boolean isDocumentNameDisplayed(String fileNameFragment) {
+        List<WebElement> containers = driver.getDriver().findElements(documentFormContainer());
+        return !containers.isEmpty() && containers.get(0).getText().contains(fileNameFragment);
+    }
+
+    /** Confirmed live (Add-form screenshot): an "Upload logo Preview" box exists next to the
+     *  Upload logo button — scoped by proximity to that same button, mirroring File_UploadLogo's
+     *  own following::-based convention, instead of a page-wide //img query. */
+    private By Img_LogoPreview = By.xpath("(//button[contains(normalize-space(.),\"Upload logo\")]/following::img)[1]");
+
+    public boolean isLogoPreviewDisplayed() {
+        return !driver.getDriver().findElements(Img_LogoPreview).isEmpty();
     }
 
     /**
@@ -250,6 +298,22 @@ public class Agency_Page {
         driver.element().type(Txt_SalesContactPhone, phone);
         Thread.sleep(300);
         return this;
+    }
+
+    /** TC-AGENCY-CREATE-019: reads the Sales Contact Name field as-is (e.g. to observe whether it
+     *  was pre-populated from the Branch Contact, without asserting a specific inherited value). */
+    public String getSalesContactNameValue() {
+        return driver.element().getAttribute(Txt_SalesContactName, "value");
+    }
+
+    /** TC-AGENCY-CREATE-020: the "Add" control for another Sales Contact row, scoped by proximity
+     *  to the Sales Contact section's own heading where present, falling back to any "Add" button
+     *  on the form — mirrors the same section-relative scoping already used for File_UploadLogo. */
+    private By Btn_AddSalesContact = By.xpath(
+            "//h5[contains(.,'Sales Contact')]/following::button[normalize-space()='Add'][1] | //button[normalize-space()='Add']");
+
+    public boolean isAddSalesContactButtonPresent() {
+        return !driver.getDriver().findElements(Btn_AddSalesContact).isEmpty();
     }
 
     public Agency_Page selectInvoiceGeneration(String option) throws InterruptedException {
@@ -302,6 +366,18 @@ public class Agency_Page {
     public String getValidationSummaryTextIfPresent() {
         List<WebElement> els = driver.getDriver().findElements(Txt_ValidationSummary);
         return els.isEmpty() ? null : els.get(0).getText();
+    }
+
+    /** TC-AGENCY-CREATE-038: scoped to the Add Agency form itself (anchored on the confirmed
+     *  id-Agency field), not a full-page body-text scan — a script-tag payload reflected unescaped
+     *  would render as literal text within this container. */
+    private By addAgencyFormContainer() {
+        return By.xpath("//form[.//input[@id=\"id-Agency\"]]");
+    }
+
+    public boolean formContentContainsRawScriptTag() {
+        List<WebElement> forms = driver.getDriver().findElements(addAgencyFormContainer());
+        return !forms.isEmpty() && forms.get(0).getText().contains("<script>");
     }
 
     public String getContactPersonValue() {
@@ -383,9 +459,17 @@ public class Agency_Page {
         return this;
     }
 
+    public String getCreditLimitValue() {
+        return driver.element().getAttribute(Txt_CreditLimit, "value");
+    }
+
     public Agency_Page fillReachingPercentage(String value) {
         driver.element().type(Txt_ReachingPercentage, value);
         return this;
+    }
+
+    public String getReachingPercentageValue() {
+        return driver.element().getAttribute(Txt_ReachingPercentage, "value");
     }
 
     public Agency_Page fillWarningPromptDays(String value) {

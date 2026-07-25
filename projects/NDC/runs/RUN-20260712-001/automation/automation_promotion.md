@@ -7,7 +7,7 @@ permanent run history and is never deleted by Cleanup.
 - **Merge Date:** 2026-07-24T12:51:20.850Z
 - **Approved By:** N/A — Bootstrap Migration
 - **Source Run:** RUN-20260712-001
-- **Workspace Destination:** projects/NDC/workspace/automation/shaft/NDC_tests_SHAFT/
+- **Workspace Destination:** platform_core_data/workspace/automation/shaft/tests_SHAFT/
 - **Merge Result:** Success
 
 ## Files Added
@@ -302,4 +302,4 @@ permanent run history and is never deleted by Cleanup.
 
 ## Notes
 
-Bootstrap Migration Acknowledgment — pre-existing content relocated from this run into the new Workspace Automation Baseline (workflows_and_pipelines/pipeline/pipeline.md §12), not yet reviewed against pipeline.md §5.2 Automation Approval criteria. This package remains Pending Automation Approval exactly as it was before migration — only its storage location changed. This package was also extended, in the pre-lifecycle model, by RUN-20260712-002 and RUN-20260721-001 (see NDC_AutomationPackages.md history) before this migration; all of that combined content is what was migrated here.
+Bootstrap Migration Acknowledgment — pre-existing content relocated from this run into the new Workspace Automation Baseline (workflows_and_pipelines/pipeline/pipeline.md §12), not yet reviewed against pipeline.md §5.2 Automation Approval criteria. This package remains Pending Automation Approval exactly as it was before migration — only its storage location changed. This package was also extended, in the pre-lifecycle model, by RUN-20260712-002 and RUN-20260721-001 (see AutomationPackages.md history) before this migration; all of that combined content is what was migrated here.

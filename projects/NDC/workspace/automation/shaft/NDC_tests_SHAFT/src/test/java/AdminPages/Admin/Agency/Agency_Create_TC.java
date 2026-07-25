@@ -2,9 +2,10 @@ package AdminPages.Admin.Agency;
 import AdminPages.Admin.AdminMenu;
 import AdminPages.Admin.AdminTestBase;
 import AdminPages.Admin.Agency.Agency.Agency_Page;
+import AdminPages.Admin.Agency.Agency.SearchAgency_Page;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.openqa.selenium.By;
+import com.shaft.tools.io.ReportManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.io.FileReader;
@@ -12,10 +13,10 @@ import java.nio.file.Path;
 
 /**
  * NDC Admin / Agency — Create suite. Originated RUN-20260718-001, Stage 4; consolidated into this
- * project (the single authoritative NDC_tests_SHAFT project for the SHAFT framework) 2026-07-24 —
- * see NDC_AutomationPackages.md Notes. Every test case traces to
- * runs/RUN-20260718-001/test_design/NDC_TestCases_Agency.md (v3, approved 2026-07-18). Dispositions
- * (Reuse/Generate/Partially Automatable) match NDC_AutomationPlan_SHAFT_Agency.md's Estimated
+ * project (the single authoritative tests_SHAFT project for the SHAFT framework) 2026-07-24 —
+ * see AutomationPackages.md Notes. Every test case traces to
+ * runs/RUN-20260718-001/test_design/TestCases_Agency.md (v3, approved 2026-07-18). Dispositions
+ * (Reuse/Generate/Partially Automatable) match AutomationPlan_SHAFT_Agency.md's Estimated
  * Automation Coverage table exactly.
  */
 public class Agency_Create_TC extends AdminTestBase {
@@ -33,9 +34,8 @@ public class Agency_Create_TC extends AdminTestBase {
     }
 
     private void openAgencyAdd() {
-        new AdminMenu(driver).openAgency();
-        driver.element().click(By.xpath("//a[@href=\"/admin/agency\"]"));
-        driver.element().click(By.xpath("//button[normalize-space()=\"Add agency\"]"));
+        new AdminMenu(driver).openAgency().openAgencyList();
+        new SearchAgency_Page(driver).clickAddAgency();
     }
 
     private String uniqueAgencyName(String prefix) {
@@ -70,7 +70,7 @@ public class Agency_Create_TC extends AdminTestBase {
         return Path.of("src/test/resources/testAssets/qa_spike_invalid_upload.txt").toAbsolutePath().toString();
     }
 
-    // ---- TC-AGENCY-CREATE-001 (Reuse — ported forward from NDC_tests_SHAFT's proven test) ----
+    // ---- TC-AGENCY-CREATE-001 (Reuse — ported forward from tests_SHAFT's proven test) ----
     @Test(priority = 1)
     public void createAgency001_HappyPathEntersApprovalQueue() throws Exception {
         String name = uniqueAgencyName("QASPIKE_C001_");
@@ -84,10 +84,10 @@ public class Agency_Create_TC extends AdminTestBase {
 
     // ---- TC-AGENCY-CREATE-002 ----
     @Test(priority = 2)
-    public void createAgency002_EmptySubmissionBlockedByRequiredFieldValidation() {
+    public void createAgency002_EmptySubmissionBlockedByRequiredFieldValidation() throws Exception {
         openAgencyAdd();
         Agency_Page agency = new Agency_Page(driver);
-        driver.element().click(By.xpath("//button[normalize-space()=\"Send For Approval\"]"));
+        agency.submit();
         Assert.assertTrue(agency.getCurrentUrl().contains("/add"), "Empty submission must not navigate away from the Add form.");
         String invalid = agency.getInvalidFieldsDiagnostic();
         Assert.assertFalse(invalid == null || invalid.isBlank(), "Expected at least one ng-invalid required field on an empty submission attempt.");
@@ -116,7 +116,7 @@ public class Agency_Create_TC extends AdminTestBase {
         // No documented length limit exists (per Test Design) — this records the observed
         // behavior (truncated vs accepted in full) rather than asserting a specific expectation.
         Assert.assertNotNull(actualStoredValue, "Agency Name field should retain some value after typing a long probe string.");
-        System.out.println("[TC-AGENCY-CREATE-004] Typed length=" + longName.length() + ", stored length=" + actualStoredValue.length());
+        ReportManager.log("[TC-AGENCY-CREATE-004] Typed length=" + longName.length() + ", stored length=" + actualStoredValue.length());
     }
 
     // ---- TC-AGENCY-CREATE-005 ----
@@ -151,9 +151,8 @@ public class Agency_Create_TC extends AdminTestBase {
         agency.selectBranch(data().getAsJsonObject("happyPath").get("branch").getAsString());
         // Attempt to type a non-numeric phone value — SHAFT's type() sends real keystrokes, so a
         // masked/numeric-only input either drops the letters or rejects the keystrokes entirely.
-        String before = "";
-        driver.element().type(By.xpath("(//input[@id=\"Phone No\"])[1]"), d.get("invalidPhone").getAsString());
-        String after = driver.element().getAttribute(By.xpath("(//input[@id=\"Phone No\"])[1]"), "value");
+        agency.typePhoneOnly(d.get("invalidPhone").getAsString());
+        String after = agency.getPhoneNoValue();
         Assert.assertFalse(after != null && after.equals(d.get("invalidPhone").getAsString()),
                 "Phone No field should not accept the raw non-numeric string unmodified.");
     }
@@ -164,8 +163,7 @@ public class Agency_Create_TC extends AdminTestBase {
         openAgencyAdd();
         Agency_Page agency = new Agency_Page(driver);
         agency.selectBranch(data().getAsJsonObject("happyPath").get("branch").getAsString());
-        String countryValue = driver.element().getAttribute(By.xpath("//input[@id=\"id-Country\"]"), "value");
-        String readOnlyAttr = driver.element().getAttribute(By.xpath("//input[@id=\"id-Country\"]"), "disabled");
+        String countryValue = agency.getCountryValue();
         Assert.assertNotNull(countryValue, "Country should auto-fill once a Branch is selected.");
         Assert.assertFalse(countryValue.isBlank(), "Country should not be blank after Branch selection.");
     }
@@ -194,8 +192,8 @@ public class Agency_Create_TC extends AdminTestBase {
     }
 
     // ---- TC-AGENCY-CREATE-011 ----
-    // Ported forward 2026-07-24 during the NDC_tests_SHAFT / NDC_tests_SHAFT_Agency consolidation
-    // (see NDC_AutomationPackages.md Notes): the pre-consolidation version of this test only
+    // Ported forward 2026-07-24 during the tests_SHAFT / tests_SHAFT_Agency consolidation
+    // (see AutomationPackages.md Notes): the pre-consolidation version of this test only
     // asserted the field was non-null, silently weaker than the original TC-AGENCY-005 assertion
     // pair it was meant to carry forward. Restored here, tied to the confirmed business rule
     // BR-001 (knowledge_base/business_rules/BR-001.md) — the Arabic-script segment must be
@@ -207,7 +205,7 @@ public class Agency_Create_TC extends AdminTestBase {
         Agency_Page agency = fillHappyPathCore(uniqueAgencyName("QASPIKE_C011_"));
         agency.typeContactPersonOnly(d.get("unicodeContactPerson").getAsString());
         String stored = agency.getContactPersonValue();
-        System.out.println("[TC-AGENCY-CREATE-011] Unicode Contact Person stored as: " + stored);
+        ReportManager.log("[TC-AGENCY-CREATE-011] Unicode Contact Person stored as: " + stored);
         Assert.assertNotNull(stored, "Expected some value to be stored after Unicode input, even if the Arabic segment is stripped per BR-001.");
         Assert.assertFalse(stored.contains("القاهرة"),
                 "Arabic-script segment must be stripped by the application (confirmed by design, BR-001).");
@@ -237,7 +235,7 @@ public class Agency_Create_TC extends AdminTestBase {
         // Conservative structural assertion: after attempting to upload a non-PDF file, the
         // document section must not report the same success state a valid PDF/asset would.
         String diagnostics = agency.getInvalidFieldsDiagnostic();
-        System.out.println("[TC-AGENCY-CREATE-013] Diagnostics after non-PDF upload attempt: " + diagnostics);
+        ReportManager.log("[TC-AGENCY-CREATE-013] Diagnostics after non-PDF upload attempt: " + diagnostics);
     }
 
     // ---- TC-AGENCY-CREATE-014 ----
@@ -275,8 +273,7 @@ public class Agency_Create_TC extends AdminTestBase {
         // Only the "one document uploaded, its name displays" half is asserted — the "Add for
         // multiple documents" half is known (per Agency_Page.java's own comment) to append an
         // extra, empty, required row that blocks submission, so it is not exercised here.
-        String pageText = driver.getDriver().findElement(By.tagName("body")).getText();
-        Assert.assertTrue(pageText.contains("qa_spike_agency_asset"),
+        Assert.assertTrue(agency.isDocumentNameDisplayed("qa_spike_agency_asset"),
                 "Expected the uploaded document's file name to display somewhere on the form.");
     }
 
@@ -288,7 +285,7 @@ public class Agency_Create_TC extends AdminTestBase {
         agency.selectBranch(data().getAsJsonObject("happyPath").get("branch").getAsString());
         agency.uploadLogo(invalidUploadAssetPath());
         String diagnostics = agency.getInvalidFieldsDiagnostic();
-        System.out.println("[TC-AGENCY-CREATE-017] Diagnostics after non-image logo upload attempt: " + diagnostics);
+        ReportManager.log("[TC-AGENCY-CREATE-017] Diagnostics after non-image logo upload attempt: " + diagnostics);
     }
 
     // ---- TC-AGENCY-CREATE-018 ----
@@ -300,8 +297,7 @@ public class Agency_Create_TC extends AdminTestBase {
         agency.uploadLogo(documentAssetPath());
         // Confirmed live (Add-form screenshot): an "Upload logo Preview" box exists next to the
         // Upload logo button — asserts a preview image element appears after upload.
-        boolean previewPresent = !driver.getDriver().findElements(By.xpath("//img")).isEmpty();
-        Assert.assertTrue(previewPresent, "Expected a logo preview image to render after upload.");
+        Assert.assertTrue(agency.isLogoPreviewDisplayed(), "Expected a logo preview image to render after upload.");
     }
 
     // ---- TC-AGENCY-CREATE-019 (Partially Automatable) ----
@@ -313,18 +309,16 @@ public class Agency_Create_TC extends AdminTestBase {
         // Only asserts the Sales Contact Name field is non-blank immediately after Branch
         // selection (i.e., something inherited) — does not assert the exact inherited value
         // matches a specific Branch Contact Person, which was not independently confirmed live.
-        String salesContactName = driver.element().getAttribute(By.xpath("//input[@id=\"id-Name\"]"), "value");
-        System.out.println("[TC-AGENCY-CREATE-019] Sales Contact Name after Branch selection: " + salesContactName);
+        String salesContactName = agency.getSalesContactNameValue();
+        ReportManager.log("[TC-AGENCY-CREATE-019] Sales Contact Name after Branch selection: " + salesContactName);
     }
 
     // ---- TC-AGENCY-CREATE-020 (Partially Automatable — known Add-button-appends-row quirk) ----
     @Test(priority = 20)
     public void createAgency020_MultipleSalesPersonnelAddButtonPresent() {
         openAgencyAdd();
-        boolean addButtonPresent = !driver.getDriver().findElements(
-                By.xpath("//h5[contains(.,'Sales Contact')]/following::button[normalize-space()='Add'][1]")).isEmpty()
-                || !driver.getDriver().findElements(By.xpath("//button[normalize-space()='Add']")).isEmpty();
-        Assert.assertTrue(addButtonPresent, "Expected an 'Add' control for adding another Sales Contact row.");
+        Agency_Page agency = new Agency_Page(driver);
+        Assert.assertTrue(agency.isAddSalesContactButtonPresent(), "Expected an 'Add' control for adding another Sales Contact row.");
         // Not exercised further — Agency_Page.java documents that clicking "Add" appends an
         // extra, empty, required row that then blocks submission; asserting the full add-and-
         // resubmit flow needs that quirk resolved first (see Automation Plan Risks).
@@ -341,7 +335,7 @@ public class Agency_Create_TC extends AdminTestBase {
                 invalid.get("creditLimit").getAsString(),
                 invalid.get("topUpLimit").getAsString(),
                 invalid.get("creditTermsDays").getAsString());
-        String creditLimitValue = driver.element().getAttribute(By.xpath("//input[@id=\"id-Creditlimit\"]"), "value");
+        String creditLimitValue = agency.getCreditLimitValue();
         Assert.assertFalse("not-a-number".equals(creditLimitValue),
                 "Credit Limit should not accept a non-numeric raw string unmodified.");
     }
@@ -354,8 +348,8 @@ public class Agency_Create_TC extends AdminTestBase {
         agency.selectBranch(data().getAsJsonObject("happyPath").get("branch").getAsString());
         for (String value : new String[]{"-1", "0", "100", "101"}) {
             agency.fillReachingPercentage(value);
-            String stored = driver.element().getAttribute(By.xpath("//input[@id=\"id-ReachingPercentage\"]"), "value");
-            System.out.println("[TC-AGENCY-CREATE-026] Typed=" + value + ", stored=" + stored);
+            String stored = agency.getReachingPercentageValue();
+            ReportManager.log("[TC-AGENCY-CREATE-026] Typed=" + value + ", stored=" + stored);
         }
     }
 
@@ -425,8 +419,7 @@ public class Agency_Create_TC extends AdminTestBase {
         openAgencyAdd();
         Agency_Page agency = fillHappyPathCore(name);
         agency.submit();
-        String pageText = driver.getDriver().findElement(By.tagName("body")).getText();
-        Assert.assertFalse(pageText.contains("<script>"),
+        Assert.assertFalse(agency.formContentContainsRawScriptTag(),
                 "A script-tag payload in Agency Name must never render as executable/raw markup.");
     }
 
@@ -439,7 +432,7 @@ public class Agency_Create_TC extends AdminTestBase {
         openAgencyAdd();
         Agency_Page agency = fillHappyPathCore(unicodeName);
         String storedName = agency.getAgencyNameValue();
-        System.out.println("[TC-AGENCY-CREATE-039] Unicode Agency Name stored as: " + storedName);
+        ReportManager.log("[TC-AGENCY-CREATE-039] Unicode Agency Name stored as: " + storedName);
         Assert.assertNotNull(storedName, "Expected some value to remain after Unicode Agency Name input.");
     }
 }

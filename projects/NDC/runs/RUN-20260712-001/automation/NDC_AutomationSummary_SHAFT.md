@@ -5,23 +5,23 @@
 
 ## 1. Automation Summary
 
-This package automates all 8 approved Login test cases (TC-LOGIN-001–008, finalized after the Login Test Case Validation Pass, `../test_design/NDC_LoginGapAnalysis.md`) using **SHAFT Engine 7.4.20231015 / Java 17 / Maven / TestNG**, structured to match NDC's real production automation codebase (`E:\Automation2\NDC-Uplift-Automation`, registered as this project's Reference Automation Project) closely enough to merge with minimal rework. The Reference Project itself was **not modified** — this is a standalone export, per the Automation Target answer. **Compilation verified** via `mvn test-compile` (exit 0, all 5 classes built) — this package has not been executed against the live environment; that is exclusively Stage 5's responsibility.
+This package automates all 8 approved Login test cases (TC-LOGIN-001–008, finalized after the Login Test Case Validation Pass, `../test_design/LoginGapAnalysis.md`) using **SHAFT Engine 7.4.20231015 / Java 17 / Maven / TestNG**, structured to match NDC's real production automation codebase (`E:\Automation2\NDC-Uplift-Automation`, registered as this project's Reference Automation Project) closely enough to merge with minimal rework. The Reference Project itself was **not modified** — this is a standalone export, per the Automation Target answer. **Compilation verified** via `mvn test-compile` (exit 0, all 5 classes built) — this package has not been executed against the live environment; that is exclusively Stage 5's responsibility.
 
 ## 2. Generated Files
 
-See `NDC_AutomationManifest_SHAFT.md` for the full inventory — 9 files across Config/Page Object/Utility/Tests/Data layers, all newly generated except `Drive_Factory/CommonMethod.java` (a disclosed export-copy of the Reference Project's own file).
+See `AutomationManifest_SHAFT.md` for the full inventory — 9 files across Config/Page Object/Utility/Tests/Data layers, all newly generated except `Drive_Factory/CommonMethod.java` (a disclosed export-copy of the Reference Project's own file).
 
 ## 3. Framework Used
 
-SHAFT Engine `7.4.20231015` (pinned to match the Reference Project exactly), Java 17, Maven, TestNG. Justification: the Automation Target answer required compatibility with the real Reference Project, which already uses this exact framework/version/toolchain — reused rather than a fresh SHAFT version or a different framework entirely. Full justification: `NDC_AutomationPlan_SHAFT.md`.
+SHAFT Engine `7.4.20231015` (pinned to match the Reference Project exactly), Java 17, Maven, TestNG. Justification: the Automation Target answer required compatibility with the real Reference Project, which already uses this exact framework/version/toolchain — reused rather than a fresh SHAFT version or a different framework entirely. Full justification: `AutomationPlan_SHAFT.md`.
 
 ## 4. Coverage
 
-8/8 test cases (100%) — Generate New Automation: 8, Reuse: 0, Partially Automatable: 0, Manual Only: 0. Full breakdown: `NDC_AutomationCoverageReport_SHAFT.md`.
+8/8 test cases (100%) — Generate New Automation: 8, Reuse: 0, Partially Automatable: 0, Manual Only: 0. Full breakdown: `AutomationCoverageReport_SHAFT.md`.
 
 ## 5. Automation Decisions
 
-8 Generate New Automation (TC-LOGIN-001 through 008). Full per-case justification: `NDC_AutomationDecisionReport_SHAFT.md`.
+8 Generate New Automation (TC-LOGIN-001 through 008). Full per-case justification: `AutomationDecisionReport_SHAFT.md`.
 
 ## 6. Known Limitations
 
@@ -35,22 +35,22 @@ SHAFT Engine `7.4.20231015` (pinned to match the Reference Project exactly), Jav
 ## 7. Execution Instructions
 
 ```bash
-cd projects/NDC/artifacts/runs/RUN-20260712-001/automation/NDC_tests_SHAFT
+cd platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT
 mvn test    # runs all 8 Login tests via TestNG/Surefire, headed Chrome, against http://192.168.1.70
 ```
 
-Prerequisites: `projects/NDC/credentials/credentials.json` must exist locally with a valid STG credential — this suite reads it at execution time only, via `utilities.CredentialsLoader`, never at generation time.
+Prerequisites: `platform_core_data/credentials/credentials.json` must exist locally with a valid STG credential — this suite reads it at execution time only, via `utilities.CredentialsLoader`, never at generation time.
 
 ## 8. Inputs for Execution Agent
 
 | Execution Agent needs | Satisfied by |
 |---|---|
-| Automation Suite | `NDC_tests_SHAFT/` (this folder) |
+| Automation Suite | `tests_SHAFT/` (this folder) |
 | Automation Coverage Summary | This document |
-| Project Context (environment, credentials, safety constraints) | `../context/NDC_ProjectContext_LoginAuthentication.md` (unchanged pass-through) |
+| Project Context (environment, credentials, safety constraints) | `../context/ProjectContext_LoginAuthentication.md` (unchanged pass-through) |
 | Execution Mode | Not set by this agent — Execution Agent must source it from Run Configuration or ask the user directly |
 | Execution scope | Not set by this agent — an Execution-time parameter |
 
 ## Note on the Earlier Playwright Package
 
-`NDC_tests/` (Playwright + JavaScript, generated earlier this run) still exists on disk and is now recorded in `../../automation/NDC_AutomationPackages.md` as covering only the original 3-test-case suite, predating both the Login Test Case Validation Pass and the Reference Automation Project registration. Per the platform's multi-package model, it is not deleted or superseded — it simply is not the package this Automation Approval gate covers.
+`tests/` (Playwright + JavaScript, generated earlier this run) still exists on disk and is now recorded in `../../automation/AutomationPackages.md` as covering only the original 3-test-case suite, predating both the Login Test Case Validation Pass and the Reference Automation Project registration. Per the platform's multi-package model, it is not deleted or superseded — it simply is not the package this Automation Approval gate covers.

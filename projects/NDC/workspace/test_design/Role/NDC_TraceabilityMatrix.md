@@ -1,6 +1,6 @@
 # NDC — Requirement Traceability Matrix — Role (Create Role) — RUN-20260721-001
 
-**Status:** Approved (2026-07-21) — moved to `workspace/test_design/Role/` · Run Scope: User Story / Pasted text (`Create-Role.md`) · Governing Project Context: `workspace/context/NDC_ProjectContext_Role.md` (Approved 2026-07-21)
+**Status:** Approved (2026-07-21) — moved to `workspace/test_design/Role/` · Run Scope: User Story / Pasted text (`Create-Role.md`) · Governing Project Context: `workspace/context/ProjectContext_Role.md` (Approved 2026-07-21)
 
 | Requirement ID | Requirement | Test Case(s) | Discovery Reference | Finding Reference | Coverage Status |
 |---|---|---|---|---|---|

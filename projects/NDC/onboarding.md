@@ -15,17 +15,17 @@ NDC Admin Portal is a web-based travel distribution system (Java 17 / Spring Boo
 1. [`run_configuration.md`](run_configuration.md) — what's in scope right now, credentials, environment constraints
 2. [`architecture.md`](architecture.md) — how the application itself is structured
 3. [`glossary.md`](glossary.md) — domain terms you'll hit in the PRD and discovery artifacts
-4. `projects/NDC/PRD.md` — the full Product Requirements Document
-5. `projects/NDC/workspace/context/NDC_ProjectContext_CredentialRoutesFilter.md` — the current approved Project Context (single source of truth for every pipeline agent downstream of Stage 1)
+4. `platform_core_data/PRD.md` — the full Product Requirements Document
+5. `platform_core_data/workspace/context/ProjectContext_CredentialRoutesFilter.md` — the current approved Project Context (single source of truth for every pipeline agent downstream of Stage 1)
 
-**Folder naming note:** unlike other projects on this platform, which use `projects/{{PROJECT_NAME}}/artifacts/`, NDC uses `projects/NDC/workspace/` for the latest approved state and a sibling `projects/NDC/runs/` for immutable per-run history. This is an NDC-specific override, not a platform-wide rename — see `docs/CHANGELOG.md` for why.
+**Folder naming note:** unlike other projects on this platform, which use `platform_core_data/workspace/`, NDC uses `platform_core_data/workspace/` for the latest approved state and a sibling `platform_core_data/runs/` for immutable per-run history. This is an NDC-specific override, not a platform-wide rename — see `docs/CHANGELOG.md` for why.
 
 ## Where things stand
 
 Don't hardcode pipeline status in this file — it will go stale. Instead check:
 
-- `projects/NDC/workspace/pipeline/NDC_RunManifest.md` — per-stage version/checkpoint status
-- `projects/NDC/runs/` — individual run workspaces
+- `platform_core_data/workspace/pipeline/RunManifest.md` — per-stage version/checkpoint status
+- `platform_core_data/runs/` — individual run workspaces
 
 ## Key things to know before touching this project
 

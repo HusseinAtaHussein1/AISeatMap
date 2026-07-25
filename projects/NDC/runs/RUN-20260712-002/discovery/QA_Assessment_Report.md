@@ -4,7 +4,7 @@
 
 ## Scope
 
-Admin → Branch, Agency, Staff (list/add/edit), per `NDC_ProjectContext_BranchAgencyStaff.md`. Observation-based Spike — no PRD backing.
+Admin → Branch, Agency, Staff (list/add/edit), per `ProjectContext_BranchAgencyStaff.md`. Observation-based Spike — no PRD backing.
 
 ## Objectives
 

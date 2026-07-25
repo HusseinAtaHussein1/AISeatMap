@@ -30,7 +30,7 @@ This document is the continuity anchor for the Agentic AI Testing Platform proje
 - `package.json` / `node_modules` — Playwright (`^1.61.1`) installed as a dev dependency, used for browser-driven exploration.
 - `.claude/settings.local.json` — local Claude Code permission settings.
 
-**Repo/version-control state:** nothing in this repository has been committed yet — `git log` shows no commits, and every file (`agents/`, `pipeline/`, `prompts/`, `projects/{{PROJECT_NAME}}/artifacts/`, `package.json`, `.claude/`) is untracked (`??` in `git status`).
+**Repo/version-control state:** nothing in this repository has been committed yet — `git log` shows no commits, and every file (`agents/`, `pipeline/`, `prompts/`, `platform_core_data/workspace/`, `package.json`, `.claude/`) is untracked (`??` in `git status`).
 
 ---
 
@@ -61,21 +61,21 @@ PRD ─▶ [1 Project Context] ─▶ ⛔Review▶ [2 Explorer] ─▶ ⛔Review
 
 ## Artifact Flow
 
-All artifacts live under `projects/{{PROJECT_NAME}}/artifacts/`:
+All artifacts live under `platform_core_data/workspace/`:
 
 ```
-projects/{{PROJECT_NAME}}/artifacts/
-  context/       {{PROJECT_NAME}}_ProjectContext.md            (Stage 1 output)
+platform_core_data/workspace/
+  context/       ProjectContext.md            (Stage 1 output)
   discovery/      *.md                                          (Stage 2 output)
   Reports/        QA_Assessment_Report.md                       (Stage 2 output)
-                  {{PROJECT_NAME}}_Final_QA_Report.md           (Stage 6 output)
-  testcases/      {{PROJECT_NAME}}_TestCases_{Module}.md/.xlsx  (Stage 3 output)
-                  {{PROJECT_NAME}}_TraceabilityMatrix.md        (Stage 3 output)
-  Automation/     {{PROJECT_NAME}}_tests/                       (Stage 4 output)
-                  {{PROJECT_NAME}}_AutomationSummary.md         (Stage 4 output)
-  execution/      {{PROJECT_NAME}}_ExecutionResults.md          (Stage 5 output)
+                  Final_QA_Report.md           (Stage 6 output)
+  testcases/      TestCases_{Module}.md/.xlsx  (Stage 3 output)
+                  TraceabilityMatrix.md        (Stage 3 output)
+  Automation/     tests/                       (Stage 4 output)
+                  AutomationSummary.md         (Stage 4 output)
+  execution/      ExecutionResults.md          (Stage 5 output)
                   artifacts/ (screenshots, logs)                (Stage 5 output)
-  pipeline/       {{PROJECT_NAME}}_RunManifest.md               (orchestrator tracking — not yet created)
+  pipeline/       RunManifest.md               (orchestrator tracking — not yet created)
 ```
 
 ## Architecture Principles
@@ -93,12 +93,12 @@ projects/{{PROJECT_NAME}}/artifacts/
 
 | Stage | Status | Notes |
 |---|---|---|
-| Project Context Agent | **Pending** | Spec written; never invoked. No `projects/{{PROJECT_NAME}}/artifacts/*/context/` directory exists for any project. |
+| Project Context Agent | **Pending** | Spec written; never invoked. No `platform_core_data/workspace/*/context/` directory exists for any project. |
 | Explorer Agent | **Completed** (for OrangeHRM, but under the **legacy** `prompts/exploration/explorer_agent.md` pipeline, not the new architecture) | 10 discovery snapshots + `QA_Assessment_Report.md` exist under `projects/OrangeHRM/artifacts/`. Has not been re-run against a Project Context artifact. |
 | Test Design Agent | **Completed** (for OrangeHRM, legacy pipeline; **partial** even there) | Markdown test suites + traceability matrix exist for Admin/PIM/Leave only (Time, Recruitment, Performance, Directory, Maintenance not covered). **Excel (`.xlsx`) test suites are missing**, though the current spec (§7 Execution Rule 6) requires them. |
 | Automation Agent | **Pending** | `projects/OrangeHRM/artifacts/Automation/` directory exists but is empty. No scripts generated under either pipeline. |
-| Execution Agent | **Pending** | No `projects/{{PROJECT_NAME}}/artifacts/*/execution/` directory exists for any project. New agent — did not exist in the legacy pipeline at all. |
-| Reporting Agent | **Pending** | No `{{PROJECT_NAME}}_Final_QA_Report.md` exists for any project (the existing `QA_Assessment_Report.md` is the Stage 2 Explorer output, a different artifact). New agent — did not exist in the legacy pipeline at all. |
+| Execution Agent | **Pending** | No `platform_core_data/workspace/*/execution/` directory exists for any project. New agent — did not exist in the legacy pipeline at all. |
+| Reporting Agent | **Pending** | No `Final_QA_Report.md` exists for any project (the existing `QA_Assessment_Report.md` is the Stage 2 Explorer output, a different artifact). New agent — did not exist in the legacy pipeline at all. |
 | Pipeline (orchestration) | **In Progress** | Specification complete (`workflows_and_pipelines/pipeline/pipeline.md`). No orchestrator tooling exists to actually invoke stages in order, enforce gates, or maintain a Run Manifest — that is still manual/conceptual. |
 
 ---
@@ -166,7 +166,7 @@ In priority order:
 
 # Recommended Next Step
 
-Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`.claude/skills/project-context-agent/SKILL.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/{{PROJECT_NAME}}_ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
+Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`.claude/skills/project-context-agent/SKILL.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
 
 ---
 
@@ -182,4 +182,4 @@ Get an explicit decision from the user on Pending Task #1 before writing any mor
 
 # Resume Instructions
 
-Read `SESSION_HANDOFF.md`, then read every file in `agents/` and `workflows_and_pipelines/pipeline/pipeline.md` in full to understand the current 6-stage architecture. Cross-check against `projects/OrangeHRM/artifacts/` to see what legacy-pipeline artifacts already exist. Do not assume any new-pipeline stage has been executed — verify by checking for the presence of `projects/{{PROJECT_NAME}}/artifacts/context/*_ProjectContext.md` (Stage 1) before treating any downstream artifact as authoritative under the new architecture. Resolve the Open Questions above (at least the OrangeHRM reconciliation question) with the user before generating any new artifacts, then proceed with the task in **Recommended Next Step**.
+Read `SESSION_HANDOFF.md`, then read every file in `agents/` and `workflows_and_pipelines/pipeline/pipeline.md` in full to understand the current 6-stage architecture. Cross-check against `projects/OrangeHRM/artifacts/` to see what legacy-pipeline artifacts already exist. Do not assume any new-pipeline stage has been executed — verify by checking for the presence of `platform_core_data/workspace/context/*_ProjectContext.md` (Stage 1) before treating any downstream artifact as authoritative under the new architecture. Resolve the Open Questions above (at least the OrangeHRM reconciliation question) with the user before generating any new artifacts, then proceed with the task in **Recommended Next Step**.

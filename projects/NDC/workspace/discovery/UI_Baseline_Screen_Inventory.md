@@ -2,9 +2,9 @@
 
 **Mission:** UI Baseline Discovery (read-only visual knowledge base) · **Not tied to RUN-20260710-001** — this is a standalone documentation pass across the whole reachable Admin Portal, run in parallel with (not part of) that run's Stage 2 User Story discovery.
 
-**Session used:** Browser Automation via `tools/browser_driver/` (`BrowserDriver.authenticate({project:'NDC', env:'STG'})`), logged in as `odeysysadmin` — **Super Admin** tier (per `FINDING-002`/`FINDING-004`, this is a distinct, more restricted role than the `E.Saady` "Admin" tier `run_configuration.md` was originally written against). Every "Required role" note below describes what this one Super Admin session could/couldn't see — role differences for Admin/Agency/Agent tiers are **not** covered by this mission and remain untested.
+**Session used:** Browser Automation via `tools/browser_driver/` (`BrowserDriver.authenticate({ env: 'STG' })`), logged in as `odeysysadmin` — **Super Admin** tier (per `FINDING-002`/`FINDING-004`, this is a distinct, more restricted role than the `E.Saady` "Admin" tier `run_configuration.md` was originally written against). Every "Required role" note below describes what this one Super Admin session could/couldn't see — role differences for Admin/Agency/Agent tiers are **not** covered by this mission and remain untested.
 
-**Screenshots live under:** `projects/NDC/workspace/discovery/UI Baseline/<Module>/[<Category>/]<Screen>.png` — one clean full-page screenshot per reachable landing screen. Raw machine-readable log: [`UI Baseline/_results.json`](UI%20Baseline/_results.json).
+**Screenshots live under:** `platform_core_data/workspace/discovery/UI Baseline/<Module>/[<Category>/]<Screen>.png` — one clean full-page screenshot per reachable landing screen. Raw machine-readable log: [`UI Baseline/_results.json`](UI%20Baseline/_results.json).
 
 **Totals:** 53 screens captured · 5 confirmed absent from this role's navigation (not bugs in this pass — documented observations) · 2 menu labels turned out not to be distinct screens (corrected after diagnostic verification, see notes).
 
@@ -34,7 +34,7 @@
 | Screen | Nav Path | Screenshot | Page Title | Notes |
 |---|---|---|---|---|
 | Airline | Master → Flight → Airline | `Master/Flight/Airline.png` | NDC - Flight | |
-| Airport | Master → Flight → Airport | `Master/Flight/Airport.png` | NDC - Flight | Also has a canonical copy at `projects/NDC/ui/screenshots/Airport.png` (separate UI Knowledge Base convention, distinct from this Discovery artifact). |
+| Airport | Master → Flight → Airport | `Master/Flight/Airport.png` | NDC - Flight | Also has a canonical copy at `platform_core_data/ui/screenshots/Airport.png` (separate UI Knowledge Base convention, distinct from this Discovery artifact). |
 | Prefer Airline | Master → Flight → Prefer Airline | `Master/Flight/PreferAirline.png` | NDC - Flight | |
 | BSP Commission | Master → Flight → BSP Commission | `Master/Flight/BSPCommission.png` | NDC - Flight | |
 | Deal Code | Master → Flight → Deal Code | `Master/Flight/DealCode.png` | NDC - Flight | |

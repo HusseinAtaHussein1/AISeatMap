@@ -11,7 +11,7 @@
   "Reporting Version": "unversioned",
   "Browser": "Chromium (channel: chrome), headed, via tools/browser_driver/ and a supplementary raw Playwright discovery script",
   "Environment": "Shared staging (http://192.168.1.70) — read-only; per user instruction 2026-07-12, negative/security testing capped to one safe invalid-login attempt using a non-existent username (see platform memory: shared-env negative testing default)",
-  "Resolution": "1440x900 (per projects/NDC/browser/profile.json)",
+  "Resolution": "1440x900 (per platform_core_data/browser/profile.json)",
   "Started Time": "2026-07-12T00:00:00Z",
   "Finished Time": null,
   "Duration": null,

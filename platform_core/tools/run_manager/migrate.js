@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Run Folder Migration — computes each project's compatibility index (.run_folder_index.json)
+// Run Folder Migration — computes the run-folder compatibility index (.run_folder_index.json)
 // and, only when provably safe, physically renames a legacy run folder to the new convention.
 //
 // Usage:
-//   node platform_core/tools/run_manager/migrate.js --project <Name> [--apply] [--json]
+//   node platform_core/tools/run_manager/migrate.js [--apply] [--json]
 //
-// Dry-run (default): prints the proposed legacy -> new-name mapping and writes/updates the
-// project's .run_folder_index.json. Nothing under projects/<Name>/**/runs is renamed.
+// Dry-run (default): prints the proposed legacy -> new-name mapping and writes/updates
+// platform_core_data/runs/.run_folder_index.json. Nothing under that directory is renamed.
 //
 // --apply: additionally performs a `git mv` rename for any folder where isRenameSafe() found zero
 // outside references — every other folder is left untouched and stays represented only in the
@@ -21,14 +21,15 @@ const { normalizeScope, sanitizeSegment, buildRunFolderName, formatTimestampUTC 
 const { isRenameSafe, buildIndexEntry, saveIndex, loadIndex } = require('./runFolderIndex');
 
 const REPO_ROOT = path.join(__dirname, '..', '..', '..');
+// The platform hosts one project, rooted here — no project-name path segment anywhere
+// (workflows_and_pipelines/pipeline/pipeline.md §1 and §6 Rule 9).
+const DATA_ROOT = path.join(REPO_ROOT, 'platform_core_data');
 const LEGACY_DIR_RE = /^RUN-(\d{8})-(\d{3})(?:-([a-z0-9-]+))?$/i;
 
-function findRunsDirs(project) {
-  const candidates = [
-    path.join(REPO_ROOT, 'projects', project, 'runs'),
-    path.join(REPO_ROOT, 'projects', project, 'artifacts', 'runs'),
-  ];
-  return candidates.filter((p) => fs.existsSync(p));
+// Exactly one runs directory exists. Still returned as a list so a fixture tree with none, or a
+// future second location, needs no call-site change.
+function findRunsDirs() {
+  return [path.join(DATA_ROOT, 'runs')].filter((p) => fs.existsSync(p));
 }
 
 function findFile(startDir, predicate) {
@@ -133,9 +134,9 @@ function stripMarkdown(text) {
     .trim();
 }
 
-/** Looks up a run's row in a project's run_configuration.md "History of scope choices" table. */
-function fromRunConfiguration(project, runId) {
-  const p = path.join(REPO_ROOT, 'projects', project, 'run_configuration.md');
+/** Looks up a run's row in run_configuration.md's "History of scope choices" table. */
+function fromRunConfiguration(runId) {
+  const p = path.join(DATA_ROOT, 'run_configuration.md');
   if (!fs.existsSync(p)) return null;
   const content = fs.readFileSync(p, 'utf8');
   const tables = parseMarkdownTables(content);
@@ -166,9 +167,9 @@ function fromRunConfiguration(project, runId) {
   return null;
 }
 
-/** Looks up a run's section in a project's *_RunManifest.md file. */
-function fromRunManifest(project, runId) {
-  const manifestPath = findAllFiles(path.join(REPO_ROOT, 'projects', project), (name) => /RunManifest\.md$/.test(name))[0];
+/** Looks up a run's section in the RunManifest.md file. */
+function fromRunManifest(runId) {
+  const manifestPath = findAllFiles(DATA_ROOT, (name) => /RunManifest\.md$/.test(name))[0];
   if (!manifestPath) return null;
   const content = fs.readFileSync(manifestPath, 'utf8');
   const lines = content.split(/\r?\n/);
@@ -224,7 +225,7 @@ function inferStartedDate(runJson, runId) {
  * (in order) metadata/run.json, run_configuration.md's history table, and *_RunManifest.md —
  * filling only the fields still missing after each source, never overwriting an earlier hit.
  */
-function inferRunMetadata(project, runId, runFolderAbs) {
+function inferRunMetadata(runId, runFolderAbs) {
   const runJson = readRunJson(runFolderAbs);
   // Note: the documented camelCase run.json schema (run_manager.md §7) uses the JSON key `scope`
   // for a *target* description (e.g. "Login Module"), not a scope category — so it's only ever
@@ -237,7 +238,7 @@ function inferRunMetadata(project, runId, runFolderAbs) {
   if (scopeRaw !== undefined || target !== undefined) sources.push('metadata/run.json');
 
   if (scopeRaw === undefined || target === undefined) {
-    const fromConfig = fromRunConfiguration(project, runId);
+    const fromConfig = fromRunConfiguration(runId);
     if (fromConfig) {
       if (scopeRaw === undefined && fromConfig.scopeRaw) scopeRaw = fromConfig.scopeRaw;
       if (target === undefined && fromConfig.target) target = fromConfig.target;
@@ -246,7 +247,7 @@ function inferRunMetadata(project, runId, runFolderAbs) {
   }
 
   if (scopeRaw === undefined || target === undefined) {
-    const fromManifest = fromRunManifest(project, runId);
+    const fromManifest = fromRunManifest(runId);
     if (fromManifest) {
       if (scopeRaw === undefined && fromManifest.scopeRaw) scopeRaw = fromManifest.scopeRaw;
       if (target === undefined && fromManifest.target) target = fromManifest.target;
@@ -276,8 +277,8 @@ function computeInferredName(meta, runId) {
   });
 }
 
-function migrateProject(project, { apply = false } = {}) {
-  const runsDirs = findRunsDirs(project);
+function migrateRuns({ apply = false } = {}) {
+  const runsDirs = findRunsDirs();
   const report = [];
 
   for (const runsDir of runsDirs) {
@@ -296,7 +297,7 @@ function migrateProject(project, { apply = false } = {}) {
       const legacyMatch = folderName.match(LEGACY_DIR_RE);
       const runId = `RUN-${legacyMatch[1]}-${legacyMatch[2]}`;
 
-      const meta = inferRunMetadata(project, runId, folderAbs);
+      const meta = inferRunMetadata(runId, folderAbs);
       let inferredNewName = computeInferredName(meta, runId);
 
       // Deduplicate against names already assigned to a *different* legacy folder this run.
@@ -322,7 +323,7 @@ function migrateProject(project, { apply = false } = {}) {
         renamed = true;
       }
 
-      report.push({ project, runsDir: path.relative(REPO_ROOT, runsDir), ...entry, renamed });
+      report.push({ runsDir: path.relative(REPO_ROOT, runsDir), ...entry, renamed });
     }
 
     saveIndex(runsDir, newIndex);
@@ -333,18 +334,19 @@ function migrateProject(project, { apply = false } = {}) {
 
 function main() {
   const args = process.argv.slice(2);
-  const projectIdx = args.indexOf('--project');
-  const project = projectIdx >= 0 ? args[projectIdx + 1] : null;
   const apply = args.includes('--apply');
   const asJson = args.includes('--json');
 
-  if (!project) {
-    console.error('Usage: node migrate.js --project <Name> [--apply] [--json]');
+  if (args.includes('--project')) {
+    console.error(
+      '--project is no longer accepted: the platform hosts one project, rooted at ' +
+      'platform_core_data/ (pipeline.md §1). Usage: node migrate.js [--apply] [--json]'
+    );
     process.exitCode = 1;
     return;
   }
 
-  const report = migrateProject(project, { apply });
+  const report = migrateRuns({ apply });
 
   if (asJson) {
     console.log(JSON.stringify(report, null, 2));
@@ -361,7 +363,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  migrateProject,
+  migrateRuns,
   inferRunMetadata,
   computeInferredName,
   fromRunConfiguration,

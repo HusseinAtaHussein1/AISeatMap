@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="NDC Agency Search (RUN-20260713-001)" verbose="1">
   <!-- Updated 2026-07-24: retargeted to the consolidated Agency_Search_TC (see
-       ../NDC_AutomationPackages.md Notes) -- the old Agency_TC.searchAgencyByNameReturnsMatchingRecord
+       ../AutomationPackages.md Notes) -- the old Agency_TC.searchAgencyByNameReturnsMatchingRecord
        this suite originally targeted no longer exists; search002 is its direct successor (now using
        the .70-environment fixture data instead of the old .80-specific EXEBA/AGN9741 record). -->
   <test name="AgencySearch">

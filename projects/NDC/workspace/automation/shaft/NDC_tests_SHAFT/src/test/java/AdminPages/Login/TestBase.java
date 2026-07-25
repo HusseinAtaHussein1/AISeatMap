@@ -7,7 +7,7 @@ import org.testng.annotations.BeforeMethod;
 
 /**
  * Export package's Login test base. On merge into the Reference Project, prefer reusing its own
- * base class(es) instead of this one — see NDC_AutomationPlan_SHAFT.md "Existing Assets."
+ * base class(es) instead of this one — see AutomationPlan_SHAFT.md "Existing Assets."
  * Per-method (not per-test-class) setup/teardown so each of the 8 Login test cases starts from a
  * clean, logged-out browser state — required since several are structural/no-submission checks
  * that must not inherit session state from a prior test.

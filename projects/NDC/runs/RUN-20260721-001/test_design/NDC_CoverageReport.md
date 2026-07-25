@@ -4,7 +4,7 @@
 
 ## 1. Run Scope
 
-Run Scope Type: **User Story** (narrowest strategy — one case per acceptance-criterion statement, no wandering into adjacent coverage). Source: Pasted text (`resources/requirements/user_stories/Create-Role.md`; `PRD.md` User Story 4). Designed against: `workspace/context/NDC_ProjectContext_Role.md` (Approved 2026-07-21), informed by `runs/RUN-20260721-001/discovery/` (Approved via this run's own Stage 2 completion — QA_Assessment_Report.md, Timeline.md, Coverage_Summary.md, Findings_Summary.md + FINDING-001..004, all produced this same run).
+Run Scope Type: **User Story** (narrowest strategy — one case per acceptance-criterion statement, no wandering into adjacent coverage). Source: Pasted text (`resources/requirements/user_stories/Create-Role.md`; `PRD.md` User Story 4). Designed against: `workspace/context/ProjectContext_Role.md` (Approved 2026-07-21), informed by `runs/RUN-20260721-001/discovery/` (Approved via this run's own Stage 2 completion — QA_Assessment_Report.md, Timeline.md, Coverage_Summary.md, Findings_Summary.md + FINDING-001..004, all produced this same run).
 
 ## 2. Requirements Covered
 
@@ -12,7 +12,7 @@ Run Scope Type: **User Story** (narrowest strategy — one case per acceptance-c
 
 ## 3. Coverage Matrix
 
-See `NDC_TraceabilityMatrix.md` (Requirement ID × Test Case ID, with Discovery/Finding References) — full cross-reference lives there, not restated here.
+See `TraceabilityMatrix.md` (Requirement ID × Test Case ID, with Discovery/Finding References) — full cross-reference lives there, not restated here.
 
 ## 4. Business Rules
 
@@ -34,7 +34,7 @@ By module: all 22 cases are within Admin → Role Management → Create Role (th
 
 ## 6. Manual Test Cases
 
-See `NDC_TestCases_Role.md` and `NDC_TestCases_Role.xlsx` — full test case content (Objective, Preconditions, Test Data, Steps, Expected Result, all traceability fields) lives there, not restated here.
+See `TestCases_Role.md` and `TestCases_Role.xlsx` — full test case content (Objective, Preconditions, Test Data, Steps, Expected Result, all traceability fields) lives there, not restated here.
 
 ## 7. Assumptions
 
@@ -84,9 +84,9 @@ Advisory only — the binding Automation Decision remains the Automation Agent's
 
 ## 12. Inputs for Automation Agent
 
-- **Project Context (Governing):** `workspace/context/NDC_ProjectContext_Role.md` (Approved) — unchanged pass-through.
-- **Manual Test Suite (Primary):** `NDC_TestCases_Role.md` / `.xlsx` (this folder).
-- **Requirement Traceability Matrix (Primary):** `NDC_TraceabilityMatrix.md` (this folder).
+- **Project Context (Governing):** `workspace/context/ProjectContext_Role.md` (Approved) — unchanged pass-through.
+- **Manual Test Suite (Primary):** `TestCases_Role.md` / `.xlsx` (this folder).
+- **Requirement Traceability Matrix (Primary):** `TraceabilityMatrix.md` (this folder).
 - **Coverage Report (Secondary):** this document — see §8 (Coverage Gaps) and §11 (Automation Candidates) so Automation doesn't attempt what Stage 3 already excluded (e.g., TC-ROLE-021/022's charters).
 - **Discovery Artifacts (Secondary):** `runs/RUN-20260721-001/discovery/` — every Discovery Reference above cites a specific screenshot/Timeline entry, never a bare "see Discovery."
 - **Findings (Secondary):** `runs/RUN-20260721-001/discovery/findings/` — every Finding Reference above is unambiguous about its disposition (regression vs. exploratory), so Automation knows whether a script is expected.

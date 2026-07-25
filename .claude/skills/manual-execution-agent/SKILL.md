@@ -21,19 +21,19 @@ inputs:
 outputs:
   - name: manual_execution_results
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionResults.md"
+    location: "platform_core_data/workspace/manual_execution/ManualExecutionResults.md"
     description: Structured per-test-case results, Evidence Inventory, and full Result Classification.
   - name: manual_execution_summary
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionSummary.md"
+    location: "platform_core_data/workspace/manual_execution/ManualExecutionSummary.md"
     description: Consolidated run-level summary — what was executed, headline outcome figures, Known Limitations.
   - name: automation_candidate_package
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_AutomationCandidatePackage.md"
+    location: "platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md"
     description: The specific, execution-confirmed test case IDs judged successful and stable enough to hand to the Automation Agent, each cited back to its Manual Test Suite/Traceability Matrix entry.
   - name: manual_execution_artifacts
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/manual_execution/artifacts/"
+    location: "platform_core_data/workspace/manual_execution/artifacts/"
     description: Captured screenshots, videos, notes, and logs.
 dependencies:
   - test-design-agent (upstream skill)
@@ -80,10 +80,10 @@ The Manual Execution Agent runs the approved Manual Test Suite — exactly as th
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Manual Test Suite | **Primary** | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.md` and `.xlsx` — the exact test cases to execute; this agent never adds, removes, or reinterprets a case |
-| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` — carried through unmodified onto every Manual Execution Result and the Automation Candidate Package |
-| Coverage Report | Secondary | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-agent/SKILL.md`) and advisory Automation Candidates (§18 #11 there), which this agent treats only as a starting hint to prioritize, never as a substitute for this agent's own execution-based confirmation |
-| Project Context | Governing | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
+| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this agent never adds, removes, or reinterprets a case |
+| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` — carried through unmodified onto every Manual Execution Result and the Automation Candidate Package |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-agent/SKILL.md`) and advisory Automation Candidates (§18 #11 there), which this agent treats only as a starting hint to prioritize, never as a substitute for this agent's own execution-based confirmation |
+| Project Context | Governing | Required, must be `Approved` | `platform_core_data/workspace/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Drives §17's strategy selection. |
 
 **Every input above must be in an `Approved` checkpoint state before this agent consumes it.** If any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, the agent halts and reports the blocking artifact rather than executing against a draft.
@@ -112,7 +112,7 @@ For every executed test case, the agent captures, wherever applicable, and names
 | Notes | Free-text observations a screenshot alone doesn't capture — e.g., a subjective UI judgment, timing behavior, or an ambiguity worth flagging to Test Design |
 | Logs | Console/network logs, where the target application and tooling expose them |
 
-Evidence is stored under `projects/{{PROJECT_NAME}}/artifacts/manual_execution/artifacts/` and referenced by path from the Manual Execution Results' Evidence Inventory (§10).
+Evidence is stored under `platform_core_data/workspace/manual_execution/artifacts/` and referenced by path from the Manual Execution Results' Evidence Inventory (§10).
 
 # 8. Result Classification
 
@@ -212,7 +212,7 @@ Good:
 | **Suspected Component** | Free text, or "N/A" | Name the specific screen/form/control/service suspected, when inferable from what was observed (e.g., "Add/Update Agency form's Product Access FormArray validator"). Use "N/A" when no component can be responsibly named — never invent a component name to fill the field. |
 | **Confidence** | High / Medium / Low | Confidence in the *defect's existence* as observed (not in the Root Cause guess, which is separately hedged) — `High` when multiple independent observations agree and the observed behavior itself is unambiguous; `Low` when the finding rests on a single observation, an inference from a different test case, or a test-execution limitation muddied the result (as with an Inconclusive case). |
 
-For an **Inconclusive** case where no defect was actually confirmed, most Classification fields should honestly read "Not applicable" / "Unable to confirm" / "Unknown" / "N/A" rather than being framed as if a defect were confirmed — see `TC-AGENCY-CREATE-032` in `runs/RUN-20260725-001/manual_execution/NDC_ManualExecutionResults_Agency.md` §2.2 for a worked example.
+For an **Inconclusive** case where no defect was actually confirmed, most Classification fields should honestly read "Not applicable" / "Unable to confirm" / "Unknown" / "N/A" rather than being framed as if a defect were confirmed — see `TC-AGENCY-CREATE-032` in `runs/RUN-20260725-001/manual_execution/ManualExecutionResults_Agency.md` §2.2 for a worked example.
 
 **Root Cause Analysis — infer the likely implementation issue whenever possible, but never present an assumption as a fact.** Use hedging language explicitly: *Likely*, *Appears to*, *Based on the observed behavior*. Example: "Likely validation is executed only after a Product Access row is created, while no validation exists for an entirely empty Product Access collection."
 
@@ -256,10 +256,10 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 
 | Artifact | Path |
 |---|---|
-| Manual Execution Results | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionResults.md` |
-| Manual Execution Summary | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionSummary.md` |
-| Automation Candidate Package | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_AutomationCandidatePackage.md` |
-| Captured screenshots / videos / notes / logs | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/artifacts/` |
+| Manual Execution Results | `platform_core_data/workspace/manual_execution/ManualExecutionResults.md` |
+| Manual Execution Summary | `platform_core_data/workspace/manual_execution/ManualExecutionSummary.md` |
+| Automation Candidate Package | `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md` |
+| Captured screenshots / videos / notes / logs | `platform_core_data/workspace/manual_execution/artifacts/` |
 
 # 14. Operational Prompt
 
@@ -277,15 +277,15 @@ stably executed test cases are worth handing to the Automation Agent.
 ## Input
 
 Manual Test Suite (primary — the exact test cases to execute):
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.md
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.xlsx
+platform_core_data/workspace/test_design/TestCases_*.md
+platform_core_data/workspace/test_design/TestCases_*.xlsx
 
 Requirement Traceability Matrix and Coverage Report (secondary):
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_CoverageReport.md
+platform_core_data/workspace/test_design/TraceabilityMatrix.md
+platform_core_data/workspace/test_design/CoverageReport.md
 
 Project Context (environment, credentials, safety constraints):
-projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
+platform_core_data/workspace/context/ProjectContext.md
 
 ## Instructions
 
@@ -326,16 +326,16 @@ in the Manual Execution Summary.
 ## Output
 
 Save the results as:
-projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionResults.md
+platform_core_data/workspace/manual_execution/ManualExecutionResults.md
 
 Save the summary as:
-projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionSummary.md
+platform_core_data/workspace/manual_execution/ManualExecutionSummary.md
 
 Save the Automation Candidate Package as:
-projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_AutomationCandidatePackage.md
+platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md
 
 Save any captured screenshots/videos/notes/logs under:
-projects/{{PROJECT_NAME}}/artifacts/manual_execution/artifacts/
+platform_core_data/workspace/manual_execution/artifacts/
 
 Do not write automation code. Do not execute any automated test suite. Do
 not modify the Manual Test Suite, Traceability Matrix, Coverage Report,
@@ -348,13 +348,13 @@ Project Context, or PRD.
 
 ```text
 Input:
-  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TestCases_Login.md / .xlsx
-  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TraceabilityMatrix.md
-  projects/OrangeHRM/artifacts/test_design/OrangeHRM_CoverageReport.md
-  projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md
+  platform_core_data/workspace/test_design/TestCases_Login.md / .xlsx
+  platform_core_data/workspace/test_design/TraceabilityMatrix.md
+  platform_core_data/workspace/test_design/CoverageReport.md
+  platform_core_data/workspace/context/ProjectContext.md
 ```
 
-Hypothetical result: the agent confirms the target environment matches the Project Context, then executes all 12 Login test cases. `TC-LOGIN-001` (valid login) and `TC-LOGIN-002` (invalid password) both Pass with deterministic, objectively verifiable outcomes and are included in the Automation Candidate Package. `TC-LOGIN-004` (the Forgot Password regression case tied to `FINDING-003`) Fails — the observed response still times out — and is excluded, with the failure detail and screenshot cited in the Manual Execution Results. `TC-LOGIN-007` (an exploratory test case dispositioned against `FINDING-004`, the anti-enumeration concern) Passes but is excluded from the Automation Candidate Package per §9.1 rule 4, since its resolution still depends on a pending human policy call. The resulting `OrangeHRM_AutomationCandidatePackage.md` lists 9 of the 12 test cases, and the Summary states the 3 exclusions and their reasons.
+Hypothetical result: the agent confirms the target environment matches the Project Context, then executes all 12 Login test cases. `TC-LOGIN-001` (valid login) and `TC-LOGIN-002` (invalid password) both Pass with deterministic, objectively verifiable outcomes and are included in the Automation Candidate Package. `TC-LOGIN-004` (the Forgot Password regression case tied to `FINDING-003`) Fails — the observed response still times out — and is excluded, with the failure detail and screenshot cited in the Manual Execution Results. `TC-LOGIN-007` (an exploratory test case dispositioned against `FINDING-004`, the anti-enumeration concern) Passes but is excluded from the Automation Candidate Package per §9.1 rule 4, since its resolution still depends on a pending human policy call. The resulting `AutomationCandidatePackage.md` lists 9 of the 12 test cases, and the Summary states the 3 exclusions and their reasons.
 
 # 16. Architecture Principle
 

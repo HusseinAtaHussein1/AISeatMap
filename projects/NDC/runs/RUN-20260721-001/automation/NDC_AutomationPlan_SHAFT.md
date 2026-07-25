@@ -7,11 +7,11 @@
 - **Proceed to Stage 4:** Yes (explicit user instruction, 2026-07-21).
 - **Automation Target:** Export, Reference-Project-compatible — `E:\Automation2\NDC-Uplift-Automation` stays read-only; nothing written there directly.
 - **Framework:** SHAFT Engine (Java 17 / Maven / TestNG / Allure).
-- **Automation Strategy:** Continue the existing `NDC_tests_SHAFT` package (`projects/NDC/runs/RUN-20260712-001/automation/NDC_tests_SHAFT/`).
+- **Automation Strategy:** Continue the existing `tests_SHAFT` package (`platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT/`).
 
 ## Target Framework
 
-SHAFT Engine 7.4.20231015 (matches the existing `NDC_tests_SHAFT` package's own `pom.xml`) — per explicit user answer, not independently selected by this agent.
+SHAFT Engine 7.4.20231015 (matches the existing `tests_SHAFT` package's own `pom.xml`) — per explicit user answer, not independently selected by this agent.
 
 ## Target Language
 
@@ -29,7 +29,7 @@ Page Object Model, extending `AdminTestBase` (shared per-method login + Admin-ta
 
 Inspected before generating anything new, per §9/§11:
 
-**Inside this platform's own package (`NDC_tests_SHAFT`):**
+**Inside this platform's own package (`tests_SHAFT`):**
 - `AdminMenu.java` — reused and **extended** (not overwritten): added `openCompany()`/`openRole()` alongside the existing `openSubAdmin()`/`openBranch()`/`openStaff()`/`openAgency()`, none of which were touched.
 - `AdminTestBase.java` — reused verbatim (per-method login + Admin-tab-open convention already fits this scope exactly).
 - `Branch_Page.java`'s `Txt_ValidationSummary` pattern (`contains(@class,'p-error') or contains(@class,'invalid-feedback')`) — reused verbatim as `Role_Page.Txt_ValidationMessages`.
@@ -54,7 +54,7 @@ Inspected before generating anything new, per §9/§11:
 
 ## Estimated Automation Coverage
 
-13/22 (59%) Generate New Automation, 1/22 (4.5%) Partially Automatable, 8/22 (36.4%) Manual Only (6 assumption-based cases Test Design left for future execution + 2 Exploratory charters) — see `NDC_AutomationCoverageReport_SHAFT.md` for the confirmed figures.
+13/22 (59%) Generate New Automation, 1/22 (4.5%) Partially Automatable, 8/22 (36.4%) Manual Only (6 assumption-based cases Test Design left for future execution + 2 Exploratory charters) — see `AutomationCoverageReport_SHAFT.md` for the confirmed figures.
 
 ## Known Manual Tests
 
@@ -72,5 +72,5 @@ None. Every one of the 22 approved test cases received a decision this run (13 G
 
 ## Assumptions
 
-- Assumes the existing `NDC_tests_SHAFT` package's `AdminTestBase`/`CommonMethod`/`CredentialsLoader` infrastructure remains stable for the duration of this run's generation (unchanged from prior runs' own assumption).
+- Assumes the existing `tests_SHAFT` package's `AdminTestBase`/`CommonMethod`/`CredentialsLoader` infrastructure remains stable for the duration of this run's generation (unchanged from prior runs' own assumption).
 - Assumes the Reference Project's `formcontrolname="isView"/"isEdit"/"isApprove"` attributes are still current (last confirmed by the Reference Project's own codebase, cross-checked against this run's own Discovery screenshots — consistent).

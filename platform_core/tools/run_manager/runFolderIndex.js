@@ -80,7 +80,7 @@ function buildIndexEntry(legacyName, inferredNewName, { source, confidence }) {
 }
 
 /**
- * @param {string} runsDir - the project's runs directory (e.g. projects/NDC/runs)
+ * @param {string} runsDir - the project's runs directory (e.g. platform_core_data/runs)
  * @returns {object[]} the current index entries, or [] if none exist yet
  */
 function loadIndex(runsDir) {

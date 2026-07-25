@@ -5,7 +5,7 @@ inputs:
   - name: project_context
     type: file_path
     required: true
-    description: Approved Project Context at `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md`.
+    description: Approved Project Context at `platform_core_data/workspace/context/ProjectContext.md`.
   - name: discovery_source
     type: environment_var
     required: true
@@ -13,27 +13,27 @@ inputs:
 outputs:
   - name: discovery_snapshots
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/discovery/*.md"
+    location: "platform_core_data/workspace/discovery/*.md"
     description: One structural/accessibility snapshot per distinct in-scope screen or UI state.
   - name: timeline
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/discovery/Timeline.md"
+    location: "platform_core_data/workspace/discovery/Timeline.md"
     description: Chronological, timestamped log of actions/events for the run.
   - name: coverage_summary
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/discovery/Coverage_Summary.md"
+    location: "platform_core_data/workspace/discovery/Coverage_Summary.md"
     description: Visited/Skipped/Blocked/Unreachable areas and computed coverage percentage.
   - name: qa_assessment_report
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md"
-    description: Synthesized discovery report structured per the Standard Output Contract (§19). NDC uses a `workspace/discovery/` variant of these paths — see `projects/NDC/onboarding.md`.
+    location: "platform_core_data/workspace/discovery/QA_Assessment_Report.md"
+    description: Synthesized discovery report structured per the Standard Output Contract (§19). NDC uses a `workspace/discovery/` variant of these paths — see `platform_core_data/onboarding.md`.
   - name: findings_summary
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md"
+    location: "platform_core_data/workspace/discovery/findings/Findings_Summary.md"
     description: Index of every finalized Finding raised during the run.
   - name: evidence_packages
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/"
+    location: "platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/"
     description: Per-Finding `metadata.md` plus captured evidence files.
 dependencies:
   - project-context-agent (upstream skill)
@@ -313,20 +313,19 @@ Any candidate touching Navigation (per §5.8) additionally requires video record
 Every Finding must generate its own dedicated evidence package, stored under a per-Finding directory:
 
 ```
-artifacts/
-  {{PROJECT_NAME}}/
-    findings/
-      FINDING-001_Login/
-        metadata.md
-        before.png
-        after.png
-        failure.png
-        recording.webm
-        console.log
-        network.har
-        request_response_summary.md
-        dom_snapshot.html
-        accessibility_snapshot.yml
+platform_core_data/runs/{{RUN_FOLDER}}/discovery/
+  findings/
+    FINDING-001_Login/
+      metadata.md
+      before.png
+      after.png
+      failure.png
+      recording.webm
+      console.log
+      network.har
+      request_response_summary.md
+      dom_snapshot.html
+      accessibility_snapshot.yml
 ```
 
 - The directory name is `FINDING-{3-digit sequence, zero-padded}_{ShortDescriptiveName}`, sequence assigned in the order Findings are created within the run.
@@ -397,7 +396,7 @@ Example:
 10:18  FINDING-001 created (Category: Security Concern)
 ```
 
-Saved as: `projects/{{PROJECT_NAME}}/artifacts/discovery/Timeline.md`
+Saved as: `platform_core_data/workspace/discovery/Timeline.md`
 
 # 7. Coverage
 
@@ -413,13 +412,13 @@ Track, at minimum:
 - **Coverage %** — a simple, stated ratio of Visited Screens against the Project Context's total declared in-scope screens/surface, with the ratio's basis shown (e.g., "6/6 Login-scope screens visited = 100%") — a mechanical count, not a judgment of whether that coverage was *sufficient*
 - **Discovery Mode per entry** — each Visited/Skipped/Blocked/Unreachable entry additionally records which Discovery Mode (§8.1) covered it, so a reviewer can see at a glance which parts of the run were live-verified versus covered by a fallback mode.
 
-Saved as: `projects/{{PROJECT_NAME}}/artifacts/discovery/Coverage_Summary.md`, and summarized in the QA Assessment Report (§12).
+Saved as: `platform_core_data/workspace/discovery/Coverage_Summary.md`, and summarized in the QA Assessment Report (§12).
 
 # 8. Inputs
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | Primary | Required | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` — supplies URL, credentials, in-scope modules, environment constraints, carried-forward assumptions, and the expected behavior to validate against |
+| Project Context | Primary | Required | `platform_core_data/workspace/context/ProjectContext.md` — supplies URL, credentials, in-scope modules, environment constraints, carried-forward assumptions, and the expected behavior to validate against |
 | Discovery Source | Secondary | Required | The best available source of truth about the running application's actual behavior. Browser automation against the live application is preferred; when unavailable, the agent falls back through the priority-ordered Discovery Modes in §8.1 rather than treating this input as unsatisfiable. |
 
 No other inputs are used. The Explorer Agent does not read the PRD directly — the Project Context is its complete brief on what is expected; the Discovery Source is the only other thing it looks at, in whichever Discovery Mode is actually available. The agent's own Timeline (§6) and Coverage tracker (§7) are maintained by the agent itself during the run, not supplied externally.
@@ -514,12 +513,12 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 
 | Artifact | Path |
 |---|---|
-| Discovery snapshots | `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md` — one file per distinct screen/state explored, limited to in-scope modules |
-| Timeline | `projects/{{PROJECT_NAME}}/artifacts/discovery/Timeline.md` |
-| Coverage Summary | `projects/{{PROJECT_NAME}}/artifacts/discovery/Coverage_Summary.md` |
-| QA Assessment Report | `projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md` |
-| Findings Summary | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md` |
-| Evidence Packages | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/` — containing `metadata.md` and the evidence files captured per §5.10–5.12 |
+| Discovery snapshots | `platform_core_data/workspace/discovery/*.md` — one file per distinct screen/state explored, limited to in-scope modules |
+| Timeline | `platform_core_data/workspace/discovery/Timeline.md` |
+| Coverage Summary | `platform_core_data/workspace/discovery/Coverage_Summary.md` |
+| QA Assessment Report | `platform_core_data/workspace/discovery/QA_Assessment_Report.md` |
+| Findings Summary | `platform_core_data/workspace/discovery/findings/Findings_Summary.md` |
+| Evidence Packages | `platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/` — containing `metadata.md` and the evidence files captured per §5.10–5.12 |
 
 # 13. Operational Prompt
 
@@ -578,14 +577,14 @@ don't fabricate discovery.
 ## Input
 
 Read the Project Context:
-projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
+platform_core_data/workspace/context/ProjectContext.md
 
 Use it to determine: target application URL, credentials/role to use,
 modules in scope, environment constraints, and the carried-forward
 assumptions/risks you must specifically investigate.
 
 Also read the current Findings Summary for this run (once one exists):
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md
+platform_core_data/workspace/discovery/findings/Findings_Summary.md
 You will check every new candidate against it before creating a Finding.
 
 ## Instructions
@@ -595,7 +594,7 @@ You will check every new candidate against it before creating a Finding.
    not explore modules listed as "Out of Scope."
 3. For each distinct screen or UI state within scope, capture a structural
    (accessibility-tree) snapshot and save it to:
-   projects/{{PROJECT_NAME}}/artifacts/discovery/{screen_name}.md
+   platform_core_data/workspace/discovery/{screen_name}.md
 4. Do NOT perform destructive, irreversible, or persistent data-mutating
    actions unless the Project Context's Environment Constraints explicitly
    authorize it. This includes investigation probes and recovery attempts
@@ -722,7 +721,7 @@ Never publish a Finding that has skipped any of these steps.
 ## Evidence package
 
 Save each finalized (or updated, for a recurring) Finding to:
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{NNN}_{ShortName}/
+platform_core_data/workspace/discovery/findings/FINDING-{NNN}_{ShortName}/
 
 with a metadata.md containing: Finding ID, Title, Category, Severity,
 Severity Reason, Confidence Score, Status, Business Risk, Technical Risk,
@@ -743,11 +742,11 @@ do not invent what it should say.
 
 ## Timeline and Coverage — maintain continuously
 
-Update projects/{{PROJECT_NAME}}/artifacts/discovery/Timeline.md with a timestamped
+Update platform_core_data/workspace/discovery/Timeline.md with a timestamped
 entry for every significant action, every Event-Driven Capture trigger, and
 every Finding created — as it happens, not reconstructed afterward.
 
-Update projects/{{PROJECT_NAME}}/artifacts/discovery/Coverage_Summary.md with visited
+Update platform_core_data/workspace/discovery/Coverage_Summary.md with visited
 screens/components, skipped/blocked/unreachable areas, and a coverage %
 against the Project Context's in-scope surface — as it happens.
 
@@ -830,7 +829,7 @@ the run.
 ## Generate the Findings Summary
 
 Save a single index of every finalized Finding raised in this run to:
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md
+platform_core_data/workspace/discovery/findings/Findings_Summary.md
 
 List, per Finding: ID, Title, Category, Severity, Confidence Score, Status,
 Occurrence Count, Module, and a one-line description, so a reviewer can
@@ -840,17 +839,17 @@ current throughout the run — it's what you check during duplicate detection.
 ## Output
 
 Save the report as:
-projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md
+platform_core_data/workspace/discovery/QA_Assessment_Report.md
 
 Save the Findings Summary as:
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md
+platform_core_data/workspace/discovery/findings/Findings_Summary.md
 
 Save the Timeline and Coverage Summary as:
-projects/{{PROJECT_NAME}}/artifacts/discovery/Timeline.md
-projects/{{PROJECT_NAME}}/artifacts/discovery/Coverage_Summary.md
+platform_core_data/workspace/discovery/Timeline.md
+platform_core_data/workspace/discovery/Coverage_Summary.md
 
 Save each Finding's evidence package under:
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{NNN}_{ShortName}/
+platform_core_data/workspace/discovery/findings/FINDING-{NNN}_{ShortName}/
 
 Do not write automation code. Do not generate test cases — that is the
 responsibility of the Test Design Agent.
@@ -861,11 +860,11 @@ responsibility of the Test Design Agent.
 *Illustrative only — not executed as part of this task.*
 
 ```text
-Input: projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md
+Input: platform_core_data/workspace/context/ProjectContext.md
   (In Scope: Admin, PIM, Leave — as produced by the Project Context Agent)
 ```
 
-Hypothetical result: `projects/OrangeHRM/artifacts/discovery/*.md` snapshots covering only Admin-security-perimeter screens (login, forgot password, Administrator Access modal), PIM screens (Employee List, Add Employee, employee detail tabs), and Leave screens (Apply Leave, Leave List) — explicitly skipping Time, Recruitment, Performance, and Directory since those are Out of Scope for this run, alongside a `Timeline.md` logging every navigation/action/trigger in order and a `Coverage_Summary.md` showing, say, "9/9 in-scope screens visited = 100%."
+Hypothetical result: `platform_core_data/workspace/discovery/*.md` snapshots covering only Admin-security-perimeter screens (login, forgot password, Administrator Access modal), PIM screens (Employee List, Add Employee, employee detail tabs), and Leave screens (Apply Leave, Leave List) — explicitly skipping Time, Recruitment, Performance, and Directory since those are Out of Scope for this run, alongside a `Timeline.md` logging every navigation/action/trigger in order and a `Coverage_Summary.md` showing, say, "9/9 in-scope screens visited = 100%."
 
 While exploring PIM's Add Employee screen, an Event-Driven Capture trigger (a console error) fires the instant the Employee Id field is edited — evidence is captured immediately (screenshot, console log, DOM snapshot) before the agent even finishes the current action, and the trigger is logged in the Timeline. The candidate enters the Investigation Workflow: validated by reproducing on a second attempt; the failure category is "Unexpected UI rendering," so the agent refreshes once per the Investigation & Recovery Engine — the console error does not recur after refresh, so the Recovery Result is "resolved on recovery," and Confidence is set to 65% (observed once before recovery, not reproduced after) — below the 90% floor, so Status is `Needs Human Review` regardless of how the requirement question would otherwise resolve. The agent still separately notes the Gap Analysis item that the Project Context described the Employee Id field as "system-suggested" while the observed application allows it to be freely overwritten — this is investigated as its own candidate: validated, checked against the Validation boundary conditions (empty, spaces, unicode, emoji, long input, special characters — noting which revealed additional inconsistencies), classified as `Requirement Gap` (Severity N/A), Confidence 95% on the observation itself, Business Risk "duplicate/malformed employee IDs could reach payroll/reporting downstream," Technical Risk "no visible server-side uniqueness constraint enforced through the UI," a Root Cause Hypothesis ("possibly a deliberate default-not-enforced design, consistent with a 'suggested' rather than 'assigned' ID — Unknowns: whether server-side uniqueness validation exists but simply isn't surfaced client-side"), and Status `Needs Human Review` (the Project Context doesn't state whether "system-suggested" is meant to be enforced). It then checks the Findings Summary, finds no equivalent entry, and creates `FINDING-004_EmployeeIdEditable` with `Occurrence Count: 1`. Exploration continues into Leave afterward — neither Finding was treated as a reason to stop.
 

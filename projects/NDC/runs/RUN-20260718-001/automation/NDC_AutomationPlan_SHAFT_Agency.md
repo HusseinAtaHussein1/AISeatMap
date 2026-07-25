@@ -8,13 +8,13 @@ Per `agents/automation_agent.md` §5. Written in full before any code generation
 |---|---|
 | Proceed with Stage 4 now? | Yes — explicit request ("run automation for Agency Module"). |
 | Automation Target (§32.3) | Inside the platform (not the Reference Project `E:\Automation2\NDC-Uplift-Automation`, which stays read-only). |
-| Framework (§31.2) | SHAFT (Java / TestNG / Allure), per `projects/NDC/automation_framework.md`. |
-| Strategy (§33) | **Start a new package** — not an extension of the existing `NDC_tests_SHAFT` (RUN-20260712-001/002) in place. |
-| Environment override (live, mid-run) | Discovery and automation login target `http://192.168.1.70` for this run, per explicit user instruction — **not** `.80`, which `projects/NDC/browser/profile.json` currently documents as the FINDING-001-resolved host. This is a live override, not a reversal of FINDING-001 — flagged as a Risk below, not silently reconciled. |
+| Framework (§31.2) | SHAFT (Java / TestNG / Allure), per `platform_core_data/automation_framework.md`. |
+| Strategy (§33) | **Start a new package** — not an extension of the existing `tests_SHAFT` (RUN-20260712-001/002) in place. |
+| Environment override (live, mid-run) | Discovery and automation login target `http://192.168.1.70` for this run, per explicit user instruction — **not** `.80`, which `platform_core_data/browser/profile.json` currently documents as the FINDING-001-resolved host. This is a live override, not a reversal of FINDING-001 — flagged as a Risk below, not silently reconciled. |
 
 ## Target Framework
 
-**SHAFT Engine 7.4.20231015**, Java 17 / Maven / TestNG / Allure — matching `projects/NDC/automation_framework.md`'s SHAFT package structure (Pages / Locators / Tests / Data layers, `Btn_`/`Txt_`/`Lst_`/`Icn_`/`Rbtn_`/`Cbox_`/`Dpick_` naming) and the existing `NDC_tests_SHAFT` package's own conventions, since this is the same framework, just a new package instance.
+**SHAFT Engine 7.4.20231015**, Java 17 / Maven / TestNG / Allure — matching `platform_core_data/automation_framework.md`'s SHAFT package structure (Pages / Locators / Tests / Data layers, `Btn_`/`Txt_`/`Lst_`/`Icn_`/`Rbtn_`/`Cbox_`/`Dpick_` naming) and the existing `tests_SHAFT` package's own conventions, since this is the same framework, just a new package instance.
 
 ## Target Language
 
@@ -22,13 +22,13 @@ Java 17.
 
 ## Project Architecture
 
-Page Object Model with a shared driver/session layer (`Drive_Factory.CommonMethod`, `SHAFT.GUI.WebDriver`), TestNG for orchestration, Allure for reporting — identical shape to the existing `NDC_tests_SHAFT` package, copied fresh into this new package rather than imported as a dependency (per the Strategy answer above).
+Page Object Model with a shared driver/session layer (`Drive_Factory.CommonMethod`, `SHAFT.GUI.WebDriver`), TestNG for orchestration, Allure for reporting — identical shape to the existing `tests_SHAFT` package, copied fresh into this new package rather than imported as a dependency (per the Strategy answer above).
 
 ## Design Pattern
 
 Page Object Model. Three Agency-scoped page objects this run:
 
-- **`Agency_Page`** (extends the existing one from `NDC_tests_SHAFT`, carried into this new package and extended with every newly-confirmed field) — used for **both** the Add screen (`/admin/agency/add`) and the Update screen (`/admin/agency/edit/{id}`), since live discovery (`runs/RUN-20260718-001/discovery/Agency_Update.md`) confirmed the Update screen renders the identical field `id`s as Add, just pre-populated. One page object, two screens — not duplicated.
+- **`Agency_Page`** (extends the existing one from `tests_SHAFT`, carried into this new package and extended with every newly-confirmed field) — used for **both** the Add screen (`/admin/agency/add`) and the Update screen (`/admin/agency/edit/{id}`), since live discovery (`runs/RUN-20260718-001/discovery/Agency_Update.md`) confirmed the Update screen renders the identical field `id`s as Add, just pre-populated. One page object, two screens — not duplicated.
 - **`SearchAgency_Page`** (existing, extended with Agency Code / State / City / combined-filter search).
 - **`AgencyActions_Page`** (new) — the List screen's Actions column: pencil → Update navigation, thumbs-up/thumbs-down → remark popup, remark-popup fill/submit, per-row Status/Approval Status/icon reads. Backed entirely by `runs/RUN-20260718-001/discovery/Agency_Actions.md`.
 
@@ -45,9 +45,9 @@ Page Object Model. Three Agency-scoped page objects this run:
 
 | Package | What's reusable | Reused how |
 |---|---|---|
-| `NDC_tests_SHAFT` (`runs/RUN-20260712-001/`, extended by `RUN-20260712-002`) | `Drive_Factory.CommonMethod`, `AdminPages.Login.LogIn_Page`, `AdminPages.Admin.AdminMenu`, `AdminPages.Admin.AdminTestBase`, `utilities.CredentialsLoader`, `Agency_Page.java` (Add form, Core/Classification/Owner/Documents/Sales Contact/Invoice/Cash fields), `SearchAgency_Page.java` (Name/Status search), `pom.xml`/properties/config. | **Copied fresh** into this new package (per the Strategy answer — "start a new package," not "continue in place") and then extended. Not imported as a dependency; SHAFT packages in this project have historically been standalone Maven projects, and the registry (`NDC_AutomationPackages.md`) already tracks each as its own artifact. |
-| `NDC_tests` (Playwright) | Login-only, stale, predates the finalized suite. | Not reused — different framework, out of scope for this Framework Decision Gate answer. |
-| Reference Project (`E:\Automation2\NDC-Uplift-Automation`) | Its own `AdminMenu.java`, `Drive_Factory.CommonMethod` were already found reusable by RUN-20260712-002 (carried into `NDC_tests_SHAFT`, now carried again into this package). Its own Agency Add-form page objects (`AddAgencyCore_Page.java`, `AddAgency_Page.java`) were already found stale/empty for this scope by RUN-20260712-002 and are not reused here either. | Read-only, inspected, not modified (Target Decision Gate answer: inside the platform). |
+| `tests_SHAFT` (`runs/RUN-20260712-001/`, extended by `RUN-20260712-002`) | `Drive_Factory.CommonMethod`, `AdminPages.Login.LogIn_Page`, `AdminPages.Admin.AdminMenu`, `AdminPages.Admin.AdminTestBase`, `utilities.CredentialsLoader`, `Agency_Page.java` (Add form, Core/Classification/Owner/Documents/Sales Contact/Invoice/Cash fields), `SearchAgency_Page.java` (Name/Status search), `pom.xml`/properties/config. | **Copied fresh** into this new package (per the Strategy answer — "start a new package," not "continue in place") and then extended. Not imported as a dependency; SHAFT packages in this project have historically been standalone Maven projects, and the registry (`AutomationPackages.md`) already tracks each as its own artifact. |
+| `tests` (Playwright) | Login-only, stale, predates the finalized suite. | Not reused — different framework, out of scope for this Framework Decision Gate answer. |
+| Reference Project (`E:\Automation2\NDC-Uplift-Automation`) | Its own `AdminMenu.java`, `Drive_Factory.CommonMethod` were already found reusable by RUN-20260712-002 (carried into `tests_SHAFT`, now carried again into this package). Its own Agency Add-form page objects (`AddAgencyCore_Page.java`, `AddAgency_Page.java`) were already found stale/empty for this scope by RUN-20260712-002 and are not reused here either. | Read-only, inspected, not modified (Target Decision Gate answer: inside the platform). |
 
 ## Assets To Generate
 
@@ -67,7 +67,7 @@ Of 66 approved Agency test cases (v3 Test Design):
 
 | Disposition | Count | IDs |
 |---|---|---|
-| **Reuse** (already automated in `NDC_tests_SHAFT`, ported forward) | 2 | CREATE-001, SEARCH-002 |
+| **Reuse** (already automated in `tests_SHAFT`, ported forward) | 2 | CREATE-001, SEARCH-002 |
 | **Generate** (new code, real live-verified locators) | 43 | CREATE-002/003/005/006/007/008/009/010/011/012/013/014/017/018/025/026/027/029/034/036/038†/039† (22); SEARCH-001/003/004/005/006/007/008/009 (8); ACTIONS-001–009 (9); UPDATE-001/002/003/004 (4) |
 | **Partially Automatable** (assert the evidence-backed part only; remainder stays manual) | 8 | CREATE-004/015/019/020/028 (5); UPDATE-005/006/007 (3) |
 | **Blocked** (no live-verified locator exists; not fabricated) | 5 | CREATE-016/021/022/023/024 — confirmed by human 2026-07-18: stays deferred, no further discovery this run |
@@ -90,7 +90,7 @@ CREATE-016, -021, -022, -023, -024 — confirmed to stay Blocked this run (human
 
 ## Risks
 
-1. **Environment discrepancy (`.70` vs `.80`)** — this run's discovery and the generated `TestBase`'s login target both point at `.70`, per live user instruction, while `projects/NDC/browser/profile.json` and FINDING-001 (2026-07-13) document `.80` as the resolved, correct STG host. The two hosts are confirmed-independent datasets (different Agency Code sequences observed: `.80` was in the AGN97xx range, `.70` is in the AGN101xx/102xx range). This is a live override, not a re-resolution of FINDING-001 — a human should reconcile which host is authoritative before this package is treated as the project's standing Agency automation.
+1. **Environment discrepancy (`.70` vs `.80`)** — this run's discovery and the generated `TestBase`'s login target both point at `.70`, per live user instruction, while `platform_core_data/browser/profile.json` and FINDING-001 (2026-07-13) document `.80` as the resolved, correct STG host. The two hosts are confirmed-independent datasets (different Agency Code sequences observed: `.80` was in the AGN97xx range, `.70` is in the AGN101xx/102xx range). This is a live override, not a re-resolution of FINDING-001 — a human should reconcile which host is authoritative before this package is treated as the project's standing Agency automation.
 2. **FINDING-008 fallout** — 10 test cases (5 Blocked, 5 Deferred) reference form elements this run's live inspection could not find. If those elements exist behind a role/config this session's Admin account didn't have, this plan's Blocked/Deferred classification is wrong and should be revisited once that's confirmed.
 3. **ACTIONS-002 wording mismatch** — the generated Actions test asserts the *real* observed icon-per-status behavior (Pending: pencil+up+down; Approved: pencil+down only; Rejected: pencil+up only), not the Test Design's literal "shown only for Pending" wording. Flagged, not silently resolved either way.
 4. **Shared STG environment** — all fixture data uses `QASPIKE_`-prefixed Agency names, consistent with this project's established mutation-authorization scope (Branch/Agency/Staff records only).
@@ -98,6 +98,6 @@ CREATE-016, -021, -022, -023, -024 — confirmed to stay Blocked this run (human
 
 ## Assumptions
 
-- The existing `NDC_tests_SHAFT` package's scaffold (`CommonMethod`, `LogIn_Page`, `AdminMenu`, `AdminTestBase`, `CredentialsLoader`) remains stable and is safe to copy forward unmodified into this new package.
+- The existing `tests_SHAFT` package's scaffold (`CommonMethod`, `LogIn_Page`, `AdminMenu`, `AdminTestBase`, `CredentialsLoader`) remains stable and is safe to copy forward unmodified into this new package.
 - `.70`'s Branch "Test" and its State/City option lists are stable enough across this suite's test runs (confirmed live 2026-07-18: Branch "Test" exists on `.70` with a full Egypt state/city list, structurally equivalent to `.80`'s).
 - The Update screen's own `Approve`/`Reject` buttons (distinct from the grid icons) use the same remark-popup mechanics documented in `Agency_Actions.md` — not independently confirmed byte-for-byte this run (see UPDATE-005/006's Partially Automatable disposition).

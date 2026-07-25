@@ -1,6 +1,6 @@
 # NDC — Coverage Report — Admin / Agency (Create · Search · Update · Actions)
 
-> **Approved** 2026-07-18 (user) — copied here from `runs/RUN-20260718-001/test_design/` as the current latest-approved state, per `workspace/test_design/README.md`. **Note added 2026-07-25:** `NDC_TestCases_Agency.md` was rewritten to the Canonical Test Case Writing Standard (lean, execution-focused fields) — Risk moved to `NDC_TraceabilityMatrix.md`'s new Test Case Reference appendix, and Test Type/Category/Automation-Candidate-hint moved to each test case's Tags field. Content/scope below is unchanged; only the source fields' location shifted.
+> **Approved** 2026-07-18 (user) — copied here from `runs/RUN-20260718-001/test_design/` as the current latest-approved state, per `workspace/test_design/README.md`. **Note added 2026-07-25:** `TestCases_Agency.md` was rewritten to the Canonical Test Case Writing Standard (lean, execution-focused fields) — Risk moved to `TraceabilityMatrix.md`'s new Test Case Reference appendix, and Test Type/Category/Automation-Candidate-hint moved to each test case's Tags field. Content/scope below is unchanged; only the source fields' location shifted.
 
 **Run:** RUN-20260718-001 · Structured per `agents/test_design_agent.md` §18 Standard Output Contract.
 
@@ -8,16 +8,16 @@
 
 - **Run Scope Type:** User Story · **Source:** Pasted text — four jointly-scoped User Stories: Create Agency, Search Agency, Agency Actions, Update Agency.
 - **Run Type:** User Story.
-- **Project Context designed against:** `context/NDC_ProjectContext_Agency.md` — a single living document, not a version sequence (per explicit user instruction 2026-07-18); status `Pending` at time of this Test Design pass.
+- **Project Context designed against:** `context/ProjectContext_Agency.md` — a single living document, not a version sequence (per explicit user instruction 2026-07-18); status `Pending` at time of this Test Design pass.
 - **Test Design Strategy applied:** User Story strategy per `agents/test_design_agent.md` §16 — narrowest breadth, one test case per enumerated acceptance criterion. Update Agency's field-level validation is cited from Create Agency's own test cases (Regression Impact dimension, §17) rather than re-derived; this suite does not wander into WT1-T2919's E-Ticket Branding scope (Track B, separate document).
 
 ## 2. Requirements Covered
 
-84 of 96 in-scope Requirement IDs (`NDC_ProjectContext_Agency.md` §2) are **Covered** (§8.1) — at least one test case's Requirement Reference cites them with no open ambiguity. See `NDC_TraceabilityMatrix.md` for the full per-requirement list.
+84 of 96 in-scope Requirement IDs (`ProjectContext_Agency.md` §2) are **Covered** (§8.1) — at least one test case's Requirement Reference cites them with no open ambiguity. See `TraceabilityMatrix.md` for the full per-requirement list.
 
 ## 3. Coverage Matrix
 
-See `NDC_TraceabilityMatrix.md` for the full Requirement ID × Test Case ID cross-reference, organized by section (Create Agency §2.1, Search Agency §2.2, Agency Actions §2.3/§2.4, Update Agency §2.5).
+See `TraceabilityMatrix.md` for the full Requirement ID × Test Case ID cross-reference, organized by section (Create Agency §2.1, Search Agency §2.2, Agency Actions §2.3/§2.4, Update Agency §2.5).
 
 ## 4. Business Rules
 
@@ -43,7 +43,7 @@ By module: **Create Agency** — see this Coverage Report's original per-section
 
 ## 6. Manual Test Cases
 
-Full test case content: `test_design/NDC_TestCases_Agency.md` (Markdown) and `test_design/NDC_TestCases_Agency.xlsx` (Excel) — identical underlying data. Every test case's **Tags** field carries its Test Type (Smoke/Regression) and, where flagged Yes, an `AutomationCandidate` tag (advisory); Partial/No dispositions and reasons are listed in §11 below and in the Traceability Matrix appendix, not on the test case itself.
+Full test case content: `test_design/TestCases_Agency.md` (Markdown) and `test_design/TestCases_Agency.xlsx` (Excel) — identical underlying data. Every test case's **Tags** field carries its Test Type (Smoke/Regression) and, where flagged Yes, an `AutomationCandidate` tag (advisory); Partial/No dispositions and reasons are listed in §11 below and in the Traceability Matrix appendix, not on the test case itself.
 
 ## 7. Assumptions
 
@@ -61,7 +61,7 @@ Plus every Create-Agency-only assumption already tagged in the original pass (Pr
 
 ## 8. Coverage Gaps
 
-**Uncovered Requirements:** 0 — every Requirement ID in `NDC_ProjectContext_Agency.md` §2 has at least one citing test case.
+**Uncovered Requirements:** 0 — every Requirement ID in `ProjectContext_Agency.md` §2 has at least one citing test case.
 
 **Partially Covered Requirements (12):**
 
@@ -119,9 +119,9 @@ Advisory only — the binding Automation Decision remains the Automation Agent's
 
 | Automation Agent needs | Status |
 |---|---|
-| Project Context (Governing) | `context/NDC_ProjectContext_Agency.md` — present, `Pending` review |
-| Manual Test Suite (Primary) | `test_design/NDC_TestCases_Agency.md` + `.xlsx` — present, 66 active test cases (+1 retired pointer) |
-| Requirement Traceability Matrix (Primary) | `test_design/NDC_TraceabilityMatrix.md` — present, updated for all four User Stories |
+| Project Context (Governing) | `context/ProjectContext_Agency.md` — present, `Pending` review |
+| Manual Test Suite (Primary) | `test_design/TestCases_Agency.md` + `.xlsx` — present, 66 active test cases (+1 retired pointer) |
+| Requirement Traceability Matrix (Primary) | `test_design/TraceabilityMatrix.md` — present, updated for all four User Stories |
 | Coverage Report (Secondary) | This document |
 | Discovery Artifacts (Secondary) | Partial for Create Agency; **none** for Search Agency/Agency Actions/Update Agency — a real gap, per Recommendation 3 |
 | Findings (Secondary) | FINDING-002 (resolved), FINDING-004 (regression-guarded, TC-AGENCY-ACTIONS-008), FINDING-006 (resolved), FINDING-007 (re-examined, not yet re-confirmed) |

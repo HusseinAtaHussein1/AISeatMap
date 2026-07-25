@@ -14,7 +14,7 @@
 ## Project Architecture
 
 ```
-projects/NDC/artifacts/runs/RUN-20260712-001/automation/NDC_tests_SHAFT/
+platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT/
   pom.xml
   src/main/resources/properties/default/{TestNG.properties, Reporting.properties}
   src/main/java/
@@ -29,11 +29,11 @@ Package/class names (`AdminPages.Login.LogIn_Page`, `AdminPages.Login.LogIn_TC`)
 
 ## Design Pattern
 
-Page Object Model, matching the **Reference Project's actual convention** — locators as `private final By` fields directly inside the Page class (not a separate Locators class). This is a deliberate departure from `projects/NDC/automation_framework.md`'s mandated separate Locators Layer, per the Gap Resolution Rule that document itself defines: `automation_framework.md` governs the platform-native package path (Automation Target = "inside the platform"); it does not govern a Reference-Project-compatible export, where fitting the *actual, already-adopted* architecture takes precedence (`agents/automation_agent.md` §32.5) over the platform's own structural preference. This is disclosed here explicitly, not applied silently.
+Page Object Model, matching the **Reference Project's actual convention** — locators as `private final By` fields directly inside the Page class (not a separate Locators class). This is a deliberate departure from `platform_core_data/automation_framework.md`'s mandated separate Locators Layer, per the Gap Resolution Rule that document itself defines: `automation_framework.md` governs the platform-native package path (Automation Target = "inside the platform"); it does not govern a Reference-Project-compatible export, where fitting the *actual, already-adopted* architecture takes precedence (`agents/automation_agent.md` §32.5) over the platform's own structural preference. This is disclosed here explicitly, not applied silently.
 
 ## Existing Framework Analysis (§9) / Existing Assets
 
-Per `projects/NDC/reference_automation_project.md`'s Architecture Summary (one-time analysis, 2026-07-12):
+Per `platform_core_data/reference_automation_project.md`'s Architecture Summary (one-time analysis, 2026-07-12):
 - **Reused verbatim:** `Txt_Username`, `Txt_Password`, `Btn_LogINButton`, `Txt_ErrorOfUserName`, `Txt_ErrorOfPassword`, `Txt_InValidCred` — all six locators are the Reference Project's own real, confirmed-working selectors (re-confirmed live by this run's own Discovery, 2026-07-12), not re-derived from scratch.
 - **Reproduced as an export copy, not reused directly:** `Drive_Factory.CommonMethod` — cannot literally `import` across two separate Maven projects, so a copy is included here for this package to compile/run standalone. Flagged in the Automation Manifest to be deleted in favor of the real one at merge time.
 - **Deliberately NOT carried over:**
@@ -73,4 +73,4 @@ None.
 ## Assumptions
 
 - Assumes SHAFT Engine `7.4.20231015` (pinned to match the Reference Project) remains resolvable from Maven Central / the local `.m2` cache — confirmed via a successful `mvn test-compile` this run (exit 0, all 5 classes produced).
-- Assumes the existing NDC STG credential (`projects/NDC/credentials/credentials.json`) remains valid at Stage 5 execution time.
+- Assumes the existing NDC STG credential (`platform_core_data/credentials/credentials.json`) remains valid at Stage 5 execution time.

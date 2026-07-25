@@ -7,7 +7,7 @@
 | Execution ID | EXEC-20260712-001-001 (initial), EXEC-20260712-001-001-REPAIR (repair rerun, same day) |
 | Run Scope / Run Type | Feature · Custom scope description · Observation-based Spike (Project Context v2) |
 | Environment | Shared staging, `http://192.168.1.70` (read-only for app data; login itself is the feature under test) |
-| Framework | SHAFT Engine 7.4.20231015 / Java 17 / Maven / TestNG (`NDC_tests_SHAFT`) |
+| Framework | SHAFT Engine 7.4.20231015 / Java 17 / Maven / TestNG (`tests_SHAFT`) |
 | Execution Mode | **Headed** (per user decision, 2026-07-12 — recorded in `run_configuration.md`) |
 | Concurrency Mode | Sequential (`setParallel=NONE`, `setThreadCount=1`) |
 | Retry Policy | None configured — each test ran exactly once per execution (repair rerun is a separate, explicit execution, not an automatic retry) |
@@ -16,7 +16,7 @@
 
 ## 2. Execution Summary
 
-All 8 approved Login test cases (TC-LOGIN-001–008) were executed live for the first time, headed Chrome, against the shared staging environment. Initial result: 3 Passed, 5 Failed (4 Automation Failure, 1 Inconclusive) — **0 Application Failures**. Two Automation Repair Loop passes followed (`agents/execution_agent.md` §25–§26); see `NDC_AutomationRepairReport.md` for full detail. **Final state: all 8 test cases confirmed working — 3 clean Passed, 5 Automation Repaired. 0 outstanding Automation Failures, 0 Application Failures.**
+All 8 approved Login test cases (TC-LOGIN-001–008) were executed live for the first time, headed Chrome, against the shared staging environment. Initial result: 3 Passed, 5 Failed (4 Automation Failure, 1 Inconclusive) — **0 Application Failures**. Two Automation Repair Loop passes followed (`agents/execution_agent.md` §25–§26); see `AutomationRepairReport.md` for full detail. **Final state: all 8 test cases confirmed working — 3 clean Passed, 5 Automation Repaired. 0 outstanding Automation Failures, 0 Application Failures.**
 
 ## 3. Health Summary (§25.6 — never a single merged "Failed" count)
 
@@ -46,8 +46,8 @@ All 8 approved Login test cases (TC-LOGIN-001–008) were executed live for the 
 | Test Case | Evidence | Path |
 |---|---|---|
 | TC-LOGIN-002 | Failure screenshot (initial run, auto-captured) | `evidence/TC-LOGIN-002_failure_blank_form.png` |
-| All (initial) | Raw execution log, Surefire/Allure results | `../automation/NDC_tests_SHAFT/target/` (cleared after each run — not committed; see `.gitignore`) |
-| Repair rerun | `testng-repair.xml` (method-filtered suite used for the targeted rerun) | `../automation/NDC_tests_SHAFT/testng-repair.xml` |
+| All (initial) | Raw execution log, Surefire/Allure results | `../automation/tests_SHAFT/target/` (cleared after each run — not committed; see `.gitignore`) |
+| Repair rerun | `testng-repair.xml` (method-filtered suite used for the targeted rerun) | `../automation/tests_SHAFT/testng-repair.xml` |
 
 No evidence gaps — every non-Passed result has a precise log-timestamp trail and/or screenshot sufficient to explain it.
 
@@ -61,28 +61,28 @@ No evidence gaps — every non-Passed result has a precise log-timestamp trail a
 
 ## 7. Automation Repair Loop Outcome (§25–§26)
 
-Triggered (4 `Automation Failure` results from the initial execution). Repair pass #1: 4/4 fixed (`Automation Repaired`), 1 additional item (TC-LOGIN-002, `Inconclusive`) included by explicit request but not resolved — root cause only partially understood at that point (a real code bug, but not why the element was absent). Per the new Root Cause Confidence gate (§26.0), TC-LOGIN-002 was classified **Medium** confidence, not High — a Diagnosis Strategy ran before any second repair attempt, per platform rule (never repair on a Medium-confidence guess). The diagnosis identified the true root cause (wrong locator, not a timing gap), which raised confidence to High; repair pass #2 then fixed it, confirmed by rerun. Full detail, both Repair Confidence Reports, and the Before/After comparisons: **`NDC_AutomationRepairReport.md`**. Final outcome: **8 Fixed/Passed, 0 Remaining Failures, 0 New Failures.**
+Triggered (4 `Automation Failure` results from the initial execution). Repair pass #1: 4/4 fixed (`Automation Repaired`), 1 additional item (TC-LOGIN-002, `Inconclusive`) included by explicit request but not resolved — root cause only partially understood at that point (a real code bug, but not why the element was absent). Per the new Root Cause Confidence gate (§26.0), TC-LOGIN-002 was classified **Medium** confidence, not High — a Diagnosis Strategy ran before any second repair attempt, per platform rule (never repair on a Medium-confidence guess). The diagnosis identified the true root cause (wrong locator, not a timing gap), which raised confidence to High; repair pass #2 then fixed it, confirmed by rerun. Full detail, both Repair Confidence Reports, and the Before/After comparisons: **`AutomationRepairReport.md`**. Final outcome: **8 Fixed/Passed, 0 Remaining Failures, 0 New Failures.**
 
 New Knowledge Base rules written (execution-confirmed only, `knowledge_base/AUTOMATION_REPAIR_KB.md`): **AUTO-RULE-001** (SPA redirect timing), **AUTO-RULE-002** (stale assumed text from a secondary source), **AUTO-RULE-003** (transient toast + wrong locator + framework-internal-wait pitfall).
 
 ## 8. Known Limitations
 
-- The Test Case document (`NDC_TestCases_Login.md`) still states the Reference Project's original "Username/Password is required" text — deliberately not changed by this repair (out of scope per §25.3 rule 4) — so the Test Case doc and the now-repaired automation intentionally disagree on this one string pending a separate, explicit Test Design correction.
+- The Test Case document (`TestCases_Login.md`) still states the Reference Project's original "Username/Password is required" text — deliberately not changed by this repair (out of scope per §25.3 rule 4) — so the Test Case doc and the now-repaired automation intentionally disagree on this one string pending a separate, explicit Test Design correction.
 - The Reference Project's own `Btn_RememberMyInfoNextTime` locator and `ClickSuperAdmin()`/`ClickAdmin()` hardcoded-credential methods (not reused here) remain unaddressed in that external repository — flagged, not fixed, per its read-only-by-default status.
 
 ## 9. Execution Recommendations
 
-1. Correct `NDC_TestCases_Login.md`/`.xlsx` and `NDC_TraceabilityMatrix.md` to state "Required" instead of "Username/Password is required" — an explicit Test Design update, deliberately not done automatically by this repair.
+1. Correct `TestCases_Login.md`/`.xlsx` and `TraceabilityMatrix.md` to state "Required" instead of "Username/Password is required" — an explicit Test Design update, deliberately not done automatically by this repair.
 2. Flag to the Reference Project's maintainers that its own `LogIn_TC.java` asserts the same stale "Username/Password is required" text, and that its `Btn_RememberMyInfoNextTime` locator targets a removed element.
 3. Consider investigating the `.../odeysysadmin/Admin2/loginAction` API route observed during TC-LOGIN-002's diagnosis (the real account's username appears embedded in the login endpoint path regardless of the username submitted) — noted as an interesting observation, not evaluated for security impact by this run.
-4. This Login automation package (`NDC_tests_SHAFT`) is now validated end-to-end: 0 Application Failures, 0 outstanding Automation Failures, 8/8 test cases confirmed working.
+4. This Login automation package (`tests_SHAFT`) is now validated end-to-end: 0 Application Failures, 0 outstanding Automation Failures, 8/8 test cases confirmed working.
 
 ## 10. Inputs for Reporting Agent
 
 - Execution Results: this document
-- Automation Repair Report: `NDC_AutomationRepairReport.md`
-- Automation Summary: `../automation/NDC_AutomationSummary_SHAFT.md`
-- Test Design: `../test_design/NDC_CoverageReport.md`, `NDC_TestCases_Login.md`, `NDC_LoginGapAnalysis.md`
+- Automation Repair Report: `AutomationRepairReport.md`
+- Automation Summary: `../automation/AutomationSummary_SHAFT.md`
+- Test Design: `../test_design/CoverageReport.md`, `TestCases_Login.md`, `LoginGapAnalysis.md`
 - Discovery: `../discovery/QA_Assessment_Report.md`, `Login_Screen.md`, Findings (`FINDING-NDC-LOGIN-001`, `FINDING-NDC-LOGIN-002`)
-- Project Context: `../context/NDC_ProjectContext_LoginAuthentication.md`
+- Project Context: `../context/ProjectContext_LoginAuthentication.md`
 - Evidence: `evidence/`

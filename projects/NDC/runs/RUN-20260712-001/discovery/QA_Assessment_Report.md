@@ -5,7 +5,7 @@
 ## 1. Scope
 
 - Run Scope: Type = Feature · Source = Custom scope description (Observation-based Spike — no PRD coverage)
-- Project Context version used: `NDC_ProjectContext_LoginAuthentication.md` (Pending Review)
+- Project Context version used: `ProjectContext_LoginAuthentication.md` (Pending Review)
 
 ## 2. Objectives
 

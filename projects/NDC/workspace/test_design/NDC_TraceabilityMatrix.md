@@ -1,6 +1,6 @@
 # NDC — Requirement Traceability Matrix (RUN-20260712-002)
 
-> **OBS-AGENCY-CRUD row below is superseded (2026-07-18).** Per explicit user instruction, see `test_design/Agency/NDC_TraceabilityMatrix.md` instead (`FR-AGCRT-*`/`FR-AGSEARCH-*`/`FR-AGACTION-*`/`FR-AGUPDATE-*`, RUN-20260718-001) — the current sole authoritative Agency traceability document. **OBS-BRANCH-CRUD and OBS-STAFF-CRUD remain fully authoritative, unchanged.**
+> **OBS-AGENCY-CRUD row below is superseded (2026-07-18).** Per explicit user instruction, see `test_design/Agency/TraceabilityMatrix.md` instead (`FR-AGCRT-*`/`FR-AGSEARCH-*`/`FR-AGACTION-*`/`FR-AGUPDATE-*`, RUN-20260718-001) — the current sole authoritative Agency traceability document. **OBS-BRANCH-CRUD and OBS-STAFF-CRUD remain fully authoritative, unchanged.**
 
 **Status:** Pending Review (Branch/Staff portions) · Produced by Test Design Agent v3. Requirement IDs are Observation-derived (`OBS-` prefix), since no PRD exists for this Custom-scope Spike — traced to Project Context v3 §2 (in-scope modules) and §6 (carried-forward Open Questions), not to any external requirement document.
 

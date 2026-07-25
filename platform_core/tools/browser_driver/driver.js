@@ -1,25 +1,22 @@
 // Browser Driver Layer — internal auth/session bootstrap.
 //
 // This is SHARED PLATFORM INFRASTRUCTURE ONLY — a reusable execution engine. It contains no
-// project-specific data. Every project's own browser configuration and credentials live inside
-// that project's own folder — this module loads both dynamically by project name. Design
-// principle (see tools/browser_driver/README.md):
-//   Shared execution engine  -> tools/
-//   Project knowledge        -> projects/
-//   Generated outputs        -> projects/{PROJECT}/artifacts/                (includes Stage 4's
-//                                                                              SHAFT automation package,
-//                                                                              artifacts/automation/)
-//   Browser Driver config    -> projects/{PROJECT}/browser/                  (Stage 2 exploration
-//                                                                              tooling — NOT Stage 4
-//                                                                              output; kept out of any
-//                                                                              "automation" folder to
-//                                                                              avoid two unrelated
-//                                                                              concepts sharing a name)
-//   Credentials              -> projects/{PROJECT}/credentials/              (git-ignored, never committed)
+// project-specific data: the browser configuration and credentials it loads live under
+// platform_core_data/, the single project root (pipeline.md §1). Design principle
+// (see tools/browser_driver/README.md):
+//   Shared execution engine  -> platform_core/tools/
+//   Project knowledge        -> platform_core_data/
+//   Generated outputs        -> platform_core_data/workspace/     (includes the SHAFT automation
+//                                                                  package, under workspace/automation/)
+//   Browser Driver config    -> platform_core_data/browser/       (Stage 2 exploration tooling —
+//                                                                  NOT Stage 5 output; kept out of any
+//                                                                  "automation" folder to avoid two
+//                                                                  unrelated concepts sharing a name)
+//   Credentials              -> platform_core_data/credentials/   (git-ignored, never committed)
 //
-// This module is intentionally low-level and intentionally narrow: it knows how to load a
-// project's Browser Profile (browser init + login mechanics ONLY — see profile.json's own
-// contract below), load that project's Credentials file (WHO is logging in), launch a browser,
+// This module is intentionally low-level and intentionally narrow: it knows how to load the
+// Browser Profile (browser init + login mechanics ONLY — see profile.json's own
+// contract below), load the Credentials file (WHO is logging in), launch a browser,
 // and produce an authenticated Playwright `page`. It knows nothing about screens, menus,
 // tables, or any other application-specific locator — that is Screen/Component Knowledge,
 // loaded separately by `api.js` on demand (see `useScreen`/`useComponent`).
@@ -29,15 +26,15 @@
 // touch the Playwright API surface directly.
 //
 // SECURITY CONTRACT (do not weaken without updating tools/browser_driver/README.md):
-//   - Browser Profiles (projects/{PROJECT}/browser/profile.json) contain ONLY
+//   - The Browser Profile (platform_core_data/browser/profile.json) contains ONLY
 //     non-secret structural configuration — defaultBaseUrl, browser settings, login
-//     selectors/flow — and are versioned in this repo, inside the project's own folder. They
-//     must stay small and stable; they are NOT a place to accumulate screen/menu/table/dialog
-//     locators (see api.js) — those live in that same project's screens/ and components/.
-//   - Credentials live at projects/{PROJECT}/credentials/credentials.json, loaded automatically
-//     by project name — callers never need to pass a path. That file is real, secret, and
-//     git-ignored (both a repo-root rule and a local projects/{PROJECT}/credentials/.gitignore)
-//     — it is NEVER committed. A non-secret projects/{PROJECT}/credentials/credentials.template.json
+//     selectors/flow — and is versioned in this repo. It must stay small and stable; it is NOT a
+//     place to accumulate screen/menu/table/dialog locators (see api.js) — those live in
+//     platform_core_data/browser/screens/ and .../components/.
+//   - Credentials live at platform_core_data/credentials/credentials.json, resolved from the
+//     single project root — callers never need to pass a path. That file is real, secret, and
+//     git-ignored (both a repo-root rule and a local platform_core_data/credentials/.gitignore)
+//     — it is NEVER committed. A non-secret platform_core_data/credentials/credentials.template.json
 //     is committed and shows the expected shape; a human copies it and fills in real values.
 //   - The agent must not create or read this file itself — only this module (a plain Node
 //     script the agent runs) reads it, and only at runtime.
@@ -54,34 +51,37 @@ const { chromium } = require('playwright');
 
 // platform_core/tools/browser_driver/driver.js -> repo root is three levels up.
 const REPO_ROOT = path.join(__dirname, '..', '..', '..');
+// The single project root — one project at a time, no project-name path segment (pipeline.md §1).
+const DATA_ROOT = path.join(REPO_ROOT, 'platform_core_data');
 
-function projectBrowserDir(project) {
-  return path.join(REPO_ROOT, 'projects', project, 'browser');
+function projectBrowserDir() {
+  return path.join(DATA_ROOT, 'browser');
 }
 
-function projectCredentialsPath(project) {
-  return path.join(REPO_ROOT, 'projects', project, 'credentials', 'credentials.json');
+function projectCredentialsPath() {
+  return path.join(DATA_ROOT, 'credentials', 'credentials.json');
 }
 
 // UI Knowledge Base — canonical, versioned baseline screenshots + screen metadata. Distinct from
-// Discovery run evidence (projects/{PROJECT}/artifacts/discovery/...), which stays per-run/temporary.
-function projectUiScreenshotsDir(project) {
-  return path.join(REPO_ROOT, 'projects', project, 'ui', 'screenshots');
+// Discovery run evidence (platform_core_data/workspace/discovery/...), which stays per-run/temporary.
+function projectUiScreenshotsDir() {
+  return path.join(DATA_ROOT, 'ui', 'screenshots');
 }
 
-function loadProfile(project) {
-  const profilePath = path.join(projectBrowserDir(project), 'profile.json');
+function loadProfile() {
+  const profilePath = path.join(projectBrowserDir(), 'profile.json');
   if (!fs.existsSync(profilePath)) {
     throw new Error(
-      `No browser profile for project "${project}". Expected: ${profilePath}\n` +
-      `Create it under projects/${project}/browser/profile.json — see tools/browser_driver/README.md.`
+      `No browser profile found. Expected: ${profilePath}\n` +
+      `Create it at platform_core_data/browser/profile.json — see ` +
+      `platform_core/tools/browser_driver/README.md.`
     );
   }
   return JSON.parse(fs.readFileSync(profilePath, 'utf8'));
 }
 
 /**
- * Loads a project's credentials file (projects/{PROJECT}/credentials/credentials.json, unless
+ * Loads the credentials file (platform_core_data/credentials/credentials.json, unless
  * `credentialsPathOverride` is given) and resolves which environment block to use.
  * Supported shapes (see tools/browser_driver/README.md):
  *   1. { "environment": "STG", "username": "...", "password": "...", "baseUrl": "..." }
@@ -91,16 +91,16 @@ function loadProfile(project) {
  *
  * @returns {{ creds: {username, password, baseUrl?}, env: string|undefined }}
  */
-function loadCredentials(project, envOverride, credentialsPathOverride) {
-  const credentialsPath = credentialsPathOverride || projectCredentialsPath(project);
+function loadCredentials(envOverride, credentialsPathOverride) {
+  const credentialsPath = credentialsPathOverride || projectCredentialsPath();
 
   if (!fs.existsSync(credentialsPath)) {
     throw new Error(
       `Credentials file not found: ${credentialsPath}\n` +
       `Create it yourself (not via the agent) by copying ` +
-      `projects/${project}/credentials/credentials.template.json to credentials.json in that ` +
+      `platform_core_data/credentials/credentials.template.json to credentials.json in that ` +
       `same folder and filling in real values — see tools/browser_driver/README.md and ` +
-      `projects/${project}/credentials/README.md.`
+      `platform_core_data/credentials/README.md.`
     );
   }
   const parsed = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
@@ -141,17 +141,15 @@ function loadCredentials(project, envOverride, credentialsPathOverride) {
  * low-level building block.
  *
  * @param {object} opts
- * @param {string} opts.project - project name, e.g. "NDC" (matches projects/NDC/browser/profile.json
- *   and projects/NDC/credentials/credentials.json)
  * @param {string} [opts.env] - environment label, e.g. "STG" | "PREPROD" | "PROD" — overrides
  *   whatever the credentials file names itself; omit to let the credentials file decide.
  * @param {string} [opts.credentialsPath] - override the auto-resolved
- *   projects/{PROJECT}/credentials/credentials.json path; only needed for edge cases (e.g. tests).
+ *   platform_core_data/credentials/credentials.json path; only needed for edge cases (e.g. tests).
  * @param {boolean} [opts.headless] - overrides the profile's browser.headless default when given
  */
-async function launchAuthenticated({ project, env, credentialsPath, headless }) {
-  const profile = loadProfile(project);
-  let { creds, env: resolvedEnv } = loadCredentials(project, env, credentialsPath);
+async function launchAuthenticated({ env, credentialsPath, headless } = {}) {
+  const profile = loadProfile();
+  let { creds, env: resolvedEnv } = loadCredentials(env, credentialsPath);
 
   const browserSettings = profile.browser || {};
   const isHeadless = typeof headless === 'boolean' ? headless : !!browserSettings.headless;

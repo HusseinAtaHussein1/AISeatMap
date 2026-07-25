@@ -5,24 +5,24 @@ inputs:
   - name: execution_results
     type: file_path
     required: true
-    description: "`projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md` — sole source of pass/fail/skip outcomes."
+    description: "`platform_core_data/workspace/execution/ExecutionResults.md` — sole source of pass/fail/skip outcomes."
   - name: manual_test_suites
     type: file_path
     required: true
-    description: "`projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.md`."
+    description: "`platform_core_data/workspace/test_design/TestCases_*.md`."
   - name: traceability_matrix
     type: file_path
     required: true
-    description: "`projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md`."
+    description: "`platform_core_data/workspace/test_design/TraceabilityMatrix.md`."
   - name: project_context
     type: file_path
     required: true
-    description: "`projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` — for resolving carried-forward assumptions/risks."
+    description: "`platform_core_data/workspace/context/ProjectContext.md` — for resolving carried-forward assumptions/risks."
 outputs:
   - name: final_qa_report
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md"
-    description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations. NDC uses a `workspace/reporting/` variant of this path — see `projects/NDC/onboarding.md`."
+    location: "platform_core_data/workspace/reporting/Final_QA_Report.md"
+    description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations. NDC uses a `workspace/reporting/` variant of this path — see `platform_core_data/onboarding.md`."
 dependencies:
   - automation-execution-agent, test-design-agent, project-context-agent (upstream skills)
   - "platform_core/knowledge/reporting/ (Platform Knowledge patterns, if any promoted)"
@@ -56,10 +56,10 @@ The Reporting Agent is the final stage of the pipeline. It synthesizes the raw E
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Execution Results | Primary | Required | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md` |
-| Manual Test Suites | Required | Required | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.md` (Markdown and/or Excel) |
-| Traceability Matrix | Required | Required | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` |
-| Project Context | Required | Required | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| Execution Results | Primary | Required | `platform_core_data/workspace/execution/ExecutionResults.md` |
+| Manual Test Suites | Required | Required | `platform_core_data/workspace/test_design/TestCases_*.md` (Markdown and/or Excel) |
+| Traceability Matrix | Required | Required | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` |
+| Project Context | Required | Required | `platform_core_data/workspace/context/ProjectContext.md` |
 
 # 5. Outputs
 
@@ -86,7 +86,7 @@ The Reporting Agent is the final stage of the pipeline. It synthesizes the raw E
 
 | Artifact | Path |
 |---|---|
-| Final QA Report | `projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md` |
+| Final QA Report | `platform_core_data/workspace/reporting/Final_QA_Report.md` |
 
 Document structure:
 1. Executive Summary
@@ -113,12 +113,12 @@ Context.
 ## Input
 
 Read:
-projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md
+platform_core_data/workspace/execution/ExecutionResults.md
 
 Also read:
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_*.md
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md
-projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
+platform_core_data/workspace/test_design/TestCases_*.md
+platform_core_data/workspace/test_design/TraceabilityMatrix.md
+platform_core_data/workspace/context/ProjectContext.md
 
 ## Instructions
 
@@ -156,7 +156,7 @@ refuted, or remains unverified based on the execution outcome.
 ## Output
 
 Save the report as:
-projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md
+platform_core_data/workspace/reporting/Final_QA_Report.md
 
 Do not re-run tests. Do not modify execution results, test cases, or the
 Project Context.
@@ -168,15 +168,15 @@ Project Context.
 
 ```text
 Input:
-  projects/OrangeHRM/artifacts/execution/OrangeHRM_ExecutionResults.md
-  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TestCases_Admin.md
-  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TestCases_PIM.md
-  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TestCases_Leave.md
-  projects/OrangeHRM/artifacts/test_design/OrangeHRM_TraceabilityMatrix.md
-  projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md
+  platform_core_data/workspace/execution/ExecutionResults.md
+  platform_core_data/workspace/test_design/TestCases_Admin.md
+  platform_core_data/workspace/test_design/TestCases_PIM.md
+  platform_core_data/workspace/test_design/TestCases_Leave.md
+  platform_core_data/workspace/test_design/TraceabilityMatrix.md
+  platform_core_data/workspace/context/ProjectContext.md
 ```
 
-Hypothetical result: `projects/OrangeHRM/artifacts/reporting/OrangeHRM_Final_QA_Report.md` stating, e.g., an Executive Summary of overall run health; a Detailed Execution Report listing each of the 36 executed tests with its Test Case ID and Automation Script ID; Passed/Failed Statistics showing 31 passed / 3 failed / 2 skipped; a Defect Summary describing TC-PIM-013, TC-PIM-014, and TC-LEA-013; Requirement Coverage showing, e.g., 47 of 52 traced Project Context requirements have an executed test; Automation Coverage showing 36 of 56 manual test cases were automated; and a Risks section noting that SR-5 (brute-force protection) remains unverified because the corresponding test was never authorized to run against the shared demo environment.
+Hypothetical result: `platform_core_data/workspace/reporting/Final_QA_Report.md` stating, e.g., an Executive Summary of overall run health; a Detailed Execution Report listing each of the 36 executed tests with its Test Case ID and Automation Script ID; Passed/Failed Statistics showing 31 passed / 3 failed / 2 skipped; a Defect Summary describing TC-PIM-013, TC-PIM-014, and TC-LEA-013; Requirement Coverage showing, e.g., 47 of 52 traced Project Context requirements have an executed test; Automation Coverage showing 36 of 56 manual test cases were automated; and a Risks section noting that SR-5 (brute-force protection) remains unverified because the corresponding test was never authorized to run against the shared demo environment.
 
 # 11. Architecture Principle
 

@@ -8,7 +8,7 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 
 ## Responsibility
 
-**This folder owns orchestration and process governance** — control flow, approval gates, run identity, and reusable named invocations of a subset of stages. It owns none of the behavioral logic of any individual stage (that's `.claude/`'s), none of the reusable cross-project engineering knowledge a stage consults (`platform_core/knowledge/`'s), and none of any specific application's business content (`projects/`'s).
+**This folder owns orchestration and process governance** — control flow, approval gates, run identity, and reusable named invocations of a subset of stages. It owns none of the behavioral logic of any individual stage (that's `.claude/`'s), none of the reusable cross-project engineering knowledge a stage consults (`platform_core/knowledge/`'s), and none of the hosted application's business content (`platform_core_data/`'s).
 
 ## What Lives Here
 
@@ -20,8 +20,8 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 
 - **Agent behavioral logic.** What a Skill actually does belongs in `.claude/skills/` — this folder only sequences and gates it.
 - **Reusable engineering knowledge.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core/knowledge/`, cited by a Skill, never encoded as pipeline logic here.
-- **Project-specific business content.** Nothing here ever names a specific application's screens, business rules, or requirements — every reference uses the `{{PROJECT_NAME}}` placeholder.
-- **Generated run artifacts.** Execution output lives under `projects/{{PROJECT_NAME}}/artifacts/runs/` — this folder only defines the rules governing that structure, it never contains a run's actual output.
+- **Application-specific business content.** Nothing here ever names the hosted application's screens, business rules, or requirements. Paths are written literally against `platform_core_data/`, which is a *location*, not an application identity.
+- **Generated run artifacts.** Execution output lives under `platform_core_data/runs/` — this folder only defines the rules governing that structure, it never contains a run's actual output.
 
 ## Folder Structure
 
@@ -53,12 +53,12 @@ workflows/{name}.md  ──layers on top of──▶  pipeline/pipeline.md
                                                     │
                                      resolves ──────┼────── governs the rules of
                                                     ▼                  ▼
-                                     platform_core/knowledge/   projects/{PROJECT}/artifacts/
+                                     platform_core/knowledge/   platform_core_data/workspace/
 ```
 
 - **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven Skills — it invokes each in sequence and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
 - **`workflows_and_pipelines/` → `platform_core/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core/knowledge/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
-- **`workflows_and_pipelines/` → `projects/`:** this folder defines every artifact path convention, versioning rule, Run Workspace layout, and Run Scope concept that governs how `projects/{{PROJECT_NAME}}/artifacts/` (current-approved state) and `.../artifacts/runs/` (per-run snapshots) are organized — but it never contains a project's actual generated content itself.
+- **`workflows_and_pipelines/` → `platform_core_data/`:** this folder defines every artifact path convention, versioning rule, Run Workspace layout, and Run Scope concept that governs how `platform_core_data/workspace/` (current-approved state) and `platform_core_data/runs/` (per-run snapshots) are organized — but it never contains the generated content itself.
 - **`.claude/` never depends back on this folder.** The dependency direction is strictly one-way: orchestration invokes behavior, behavior never invokes orchestration.
 
 ## Lifecycle
@@ -73,9 +73,9 @@ Run Manager (run_manager.md) allocates Run ID + Display Name, creates the Run Wo
 pipeline.md invokes Stage 1 → checkpoint (§5.1) → Stage 2 → checkpoint → Stage 3 → checkpoint
         → Stage 4 → checkpoint (§5.1) → Stage 5 → checkpoint (§5.2) → Stage 6 (mechanical, no gate) → Stage 7
         ↓
-Each stage resolves Knowledge (platform_core/knowledge/ + projects/{PROJECT}/knowledge_base/, §10)
+Each stage resolves Knowledge (platform_core/knowledge/ + platform_core_data/knowledge_base/, §10)
         ↓
-Each stage reads/writes projects/{PROJECT}/artifacts/, per pipeline.md §7's versioning rules
+Each stage reads/writes platform_core_data/workspace/, per pipeline.md §7's versioning rules
         ↓
 Run reaches a terminal status (§8 of run_manager.md) — Run Manager publishes run_summary.md
 ```
@@ -86,7 +86,7 @@ Run reaches a terminal status (§8 of run_manager.md) — Run Manager publishes 
 - **Single Responsibility, mechanically enforced** — the Run Manager explicitly must never judge, analyze, or generate a Finding; its entire mandate is identity, workspace, and status bookkeeping (`run_manager.md` §3).
 - **Governance-first** — nothing crosses a checkpoint without an explicit human decision; no silent timeout, no inferred approval (`pipeline.md` §5.3, §6 Rule 6).
 - **Extensibility via composition, not modification** — a new named workflow is added under `workflows/` without editing `pipeline.md`, `run_manager.md`, or any Skill spec.
-- **Project Agnosticism** — every rule here is expressed in terms of `{{PROJECT_NAME}}`, never a concrete application.
+- **Application Agnosticism** — every rule here is expressed in terms of `platform_core_data/` and `{{RUN_FOLDER}}`, never a concrete application's modules or screens.
 
 ## Rules
 
@@ -115,10 +115,10 @@ Run Manifest updated at each checkpoint; Run Summary published on terminal statu
 - **"Add a fourth Login sub-check as a new pipeline stage."** No — the pipeline is fixed at seven stages (`pipeline.md` §6 Rule 3); a narrower or additional check is expressed as a named workflow selecting existing stages, never a new stage.
 - **"Put this agent behavioral rule in `pipeline.md` since it affects the whole run."** No — agent behavior belongs exclusively in the corresponding `.claude/skills/{stage}/SKILL.md`; `pipeline.md` only sequences and gates it.
 - **"Let the Run Manager flag this Finding since it's already tracking the run."** No — the Run Manager has no judgment role of any kind; a Finding is exclusively the Explorer Agent's output.
-- **"Store this run's screenshots inside `workflows_and_pipelines/`."** No — generated run content lives under `projects/{{PROJECT_NAME}}/artifacts/runs/`; this folder only defines the rules for that structure.
+- **"Store this run's screenshots inside `workflows_and_pipelines/`."** No — generated run content lives under `platform_core_data/runs/`; this folder only defines the rules for that structure.
 
 ## Related Layers
 
 - [`../.claude/`](../.claude/) — the Skills this layer sequences and gates; dependency flows one way, from here into `.claude/`.
 - [`../platform_core/`](../platform_core/) — whose Knowledge Architecture (`platform_core/knowledge/`) is canonically defined in `pipeline/pipeline.md` §10, not restated there.
-- [`../projects/`](../projects/) — where every artifact path, versioning rule, and Run Workspace this layer defines is actually realized on disk.
+- [`../platform_core_data/`](../platform_core_data/) — where every artifact path, versioning rule, and Run Workspace this layer defines is actually realized on disk.

@@ -11,7 +11,7 @@ Per `agents/automation_agent.md` §13 — every approved test case gets exactly 
 | TC-BRANCH-005 | Generate | Simple, directly observed structural check (row count > 0) |
 | TC-BRANCH-006 | **Manual Only** | Exploratory-test disposition (FINDING-004, Status Needs Human Review) — a human-judgment charter, never a fixed-assertion script |
 | TC-BRANCH-007 | **Blocked** (2026-07-18, FINDING-008) | Icon selector itself confirmed fine; genuinely blocked upstream — the Pending Branch it needs to reject is not visible in the List/Grid via any path (Search, default view, or any Status filter). Same shape as Activate Agency. Code remains in `Branch_TC.java` but cannot pass until the real approval mechanism is found. |
-| TC-BRANCH-008 | Generate | Confirmed application behavior (APP-002, 2026-07-18): Branch Payment Option reflects Master Payment Method Online/Offline status directly — asserted end-to-end, execution-confirmed passing against `.70` (see `NDC_AutomationSummary_SHAFT.md`'s Known Limitations for the environment note) |
+| TC-BRANCH-008 | Generate | Confirmed application behavior (APP-002, 2026-07-18): Branch Payment Option reflects Master Payment Method Online/Offline status directly — asserted end-to-end, execution-confirmed passing against `.70` (see `AutomationSummary_SHAFT.md`'s Known Limitations for the environment note) |
 | TC-AGENCY-001 | Generate | Clean happy-path structure; but see Known Limitations — Agency_Page.java is newly authored this run, not yet execution-confirmed |
 | TC-AGENCY-002 | Partially Automatable | Same reasoning as TC-BRANCH-002 |
 | TC-AGENCY-003 | **Manual Only** | Exploratory-test disposition (FINDING-003) |

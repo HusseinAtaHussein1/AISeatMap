@@ -23,7 +23,7 @@ import java.util.List;
  * FINDING-004 (Actions-column ambiguity): reusing a named, class-based locator instead of a
  * positional guess. This has NOT yet been independently confirmed live against Branch's own Actions
  * column by this platform's own Discovery — Execution (Stage 5) is this locator's first live test
- * against Branch specifically, per TC-BRANCH-006's exploratory charter (NDC_TestCases_Branch.md).
+ * against Branch specifically, per TC-BRANCH-006's exploratory charter (TestCases_Branch.md).
  */
 public class Branch_Page {
     public Branch_Page(SHAFT.GUI.WebDriver driver) {
@@ -343,8 +343,18 @@ public class Branch_Page {
 
     /** Payment Option checkboxes are dynamically named per Master data (APP-002) — no stable
      *  per-name locator exists for a random test entry, so this checks the rendered Payment
-     *  Option section's own text rather than a specific checkbox id. */
+     *  Option section's own text rather than a specific checkbox id. Scoped to the ancestor
+     *  &lt;form&gt; of the always-present Cash checkbox (id-PaymentOption-Cash, confirmed live)
+     *  rather than the full page source — narrower than a raw getPageSource()/body scan, though
+     *  the ancestor::form assumption itself has not been independently reconfirmed live (same
+     *  disclosure pattern as this class's other Known Limitations); flag for Stage 5/6 if it ever
+     *  under- or over-matches. */
+    private By paymentOptionAncestorForm() {
+        return By.xpath("//p-checkbox[.//input[@id=\"id-PaymentOption-Cash\"]]/ancestor::form[1]");
+    }
+
     public boolean paymentOptionLabelPresent(String paymentMethodName) {
-        return driver.getDriver().getPageSource().contains(paymentMethodName);
+        List<WebElement> forms = driver.getDriver().findElements(paymentOptionAncestorForm());
+        return !forms.isEmpty() && forms.get(0).getText().contains(paymentMethodName);
     }
 }

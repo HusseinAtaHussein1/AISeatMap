@@ -5,7 +5,7 @@
 
 ## Target Framework
 
-**Playwright**, driven through **SHAFT-structured** Page/Locator/Test/Data layers per `projects/NDC/automation_framework.md` (mandatory, project-wide — Framework Configuration is explicit, so §7 Rule 1 applies; no criteria-based selection needed).
+**Playwright**, driven through **SHAFT-structured** Page/Locator/Test/Data layers per `platform_core_data/automation_framework.md` (mandatory, project-wide — Framework Configuration is explicit, so §7 Rule 1 applies; no criteria-based selection needed).
 
 Justification: `automation_framework.md` mandates the SHAFT **structure** (Pages Layer, Locators Layer with prefix naming, Tests Layer, JSON-driven Data Layer) — it does not mandate a specific language/runner. Per §7 Rule 2 ("reuse an existing framework already in the project"), this repository already has Playwright (`^1.61.1`, root `package.json`) as its one and only browser-automation dependency, already used by `tools/browser_driver/` (Stage 2 tooling) and by OrangeHRM's own prior automation run (`projects/OrangeHRM/artifacts/runs/RUN-20260706-002/automation/`). Introducing Java/TestNG/SHAFT-the-library would add a second, competing toolchain with zero existing foothold in this repository — exactly what §7 Rule 2 forbids without an explicit human decision to migrate. Playwright + the mandated SHAFT structure satisfies both the project's explicit framework mandate and the "reuse what exists" rule simultaneously.
 
@@ -18,7 +18,7 @@ Justification: `automation_framework.md` mandates the SHAFT **structure** (Pages
 SHAFT-structured Page Object Model — one Page class + one Locators class per screen, Tests calling Page methods only, Data in JSON:
 
 ```
-projects/NDC/artifacts/runs/RUN-20260712-001/automation/NDC_tests/
+platform_core_data/runs/RUN-20260712-001/automation/tests/
   playwright.config.js
   pages/
     LoginPage.js
@@ -32,11 +32,11 @@ projects/NDC/artifacts/runs/RUN-20260712-001/automation/NDC_tests/
 
 ## Design Pattern
 
-Page Object Model, SHAFT-structured per `projects/NDC/automation_framework.md`:
+Page Object Model, SHAFT-structured per `platform_core_data/automation_framework.md`:
 - **Pages Layer** (`pages/LoginPage.js`) — UI-interaction methods only (`navigate()`, `login(username, password)`, `getErrorMessage()`, `isOnDashboard()`). No locators, no assertions, no business logic.
 - **Locators Layer** (`locators/LoginLocators.js`) — one class, one method per locator, prefixed per the mandatory naming table (`Txt_Username`, `Txt_Password`, `Btn_Login`, `Txt_ErrorMessage`, `Txt_DashboardSignal`). The "Forgot Password?" link (confirmed present during Discovery, `discovery/Login_Screen.md`) has no locator here — the flow is explicitly out of scope this run (Project Context v2 §3), so no locator was generated for it, avoiding both dead code and the need to extend the mandatory prefix table (which has no `Link` element type) for something not actually automated.
 - **Tests Layer** (`tests/login.spec.js`) — flow + assertions only, calling `LoginPage` methods, reading test data from the Data Layer — no locators, no hardcoded strings.
-- **Data Layer** (`data/loginTestData.json`) — the non-existent probe username/password and expected message text; the one real valid-credential case reads from `projects/NDC/credentials/credentials.json` at run time (never duplicated into this JSON file, per the credentials-handling contract).
+- **Data Layer** (`data/loginTestData.json`) — the non-existent probe username/password and expected message text; the one real valid-credential case reads from `platform_core_data/credentials/credentials.json` at run time (never duplicated into this JSON file, per the credentials-handling contract).
 
 ## Planned Automation Suites
 
@@ -45,7 +45,7 @@ One suite, per the Suite Planning Engine (§10) — a single business workflow (
 
 ## Existing Assets
 
-None. `projects/NDC/artifacts/automation/` (flat path) is empty — this is NDC's first-ever Automation Agent run. Per Existing Framework Analysis (§9): no existing test scripts, page objects, fixtures, or config found to reuse anywhere in the project. This is greenfield generation. (`tools/browser_driver/` was inspected and is a *Discovery*-stage tool, not a Stage 4 automation asset — reused only as a naming/convention reference, not as code.)
+None. `platform_core_data/workspace/automation/` (flat path) is empty — this is NDC's first-ever Automation Agent run. Per Existing Framework Analysis (§9): no existing test scripts, page objects, fixtures, or config found to reuse anywhere in the project. This is greenfield generation. (`tools/browser_driver/` was inspected and is a *Discovery*-stage tool, not a Stage 4 automation asset — reused only as a naming/convention reference, not as code.)
 
 ## Assets To Generate
 
@@ -79,5 +79,5 @@ None. All 3 approved test cases have sufficient Test Data/Steps/Expected Result 
 
 ## Assumptions
 
-- Assumes the existing NDC STG credential (`projects/NDC/credentials/credentials.json`) remains valid at Stage 5 execution time.
+- Assumes the existing NDC STG credential (`platform_core_data/credentials/credentials.json`) remains valid at Stage 5 execution time.
 - Assumes `browser/profile.json`'s selectors (`#id-Username`, `#id-Password`, submit button text "Login", success text "Dashboard") remain the live, correct selectors — confirmed directly during this run's own Stage 2 Discovery (2026-07-12), not stale.

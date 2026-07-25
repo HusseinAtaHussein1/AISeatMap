@@ -16,7 +16,7 @@ Both stories modify the same underlying CRUD screen and must be tested for inter
 
 ## 2. Modules In Scope
 
-| Module (per live Navigation Model, `projects/NDC/architecture.md`) | Why in scope |
+| Module (per live Navigation Model, `platform_core_data/architecture.md`) | Why in scope |
 |---|---|
 | `Master → Supplier → Credential Routes Filter` | Primary target of both stories — the CRUD being modified |
 | `Master → Flight → Airport` | Airport-level BlackList/WhiteList — the AND-logic counterpart T3002-066's Notes ask to investigate before implementing |
@@ -32,12 +32,12 @@ Everything else in the confirmed live Navigation Model is out of scope for this 
 
 ## 4. Roles & Credentials Required
 
-- **NDC Admin** — both stories are written "As an NDC Admin." A working Admin session is confirmed (`E.Saady`, full nav bar) per `projects/NDC/run_configuration.md`. Username/password values are not recorded in this repo; see `projects/NDC/resources/credentials/`.
-- **Agency / Agent** — not the actor in either story, but T3087's "Portal Booking Module" in-scope item may require an Agency or Agent-facing credential to verify search-result filtering from that side. Per `projects/NDC/run_configuration.md`, Agency is unconfirmed and Agent is not available for this run — **flagged as a credential gap for the Explorer Agent to surface, not assumed resolved.**
+- **NDC Admin** — both stories are written "As an NDC Admin." A working Admin session is confirmed (`E.Saady`, full nav bar) per `platform_core_data/run_configuration.md`. Username/password values are not recorded in this repo; see `platform_core_data/resources/credentials/`.
+- **Agency / Agent** — not the actor in either story, but T3087's "Portal Booking Module" in-scope item may require an Agency or Agent-facing credential to verify search-result filtering from that side. Per `platform_core_data/run_configuration.md`, Agency is unconfirmed and Agent is not available for this run — **flagged as a credential gap for the Explorer Agent to surface, not assumed resolved.**
 
 ## 5. Environment Constraints
 
-Per `projects/NDC/run_configuration.md` (unchanged by this run):
+Per `platform_core_data/run_configuration.md` (unchanged by this run):
 - Target: `http://192.168.1.70`, shared staging, not isolated to this testing effort.
 - **Read-only for now** — no creating, editing, or deleting Companies, Branches, Agencies, Agents, bookings, or reference data (this explicitly includes Credential Routes Filter rules, Airport BlackList/WhiteList entries, and Supplier Credentials/Restricted Airlines settings) is authorized until explicitly cleared.
 - **Direct consequence for this run:** the Explorer Agent may *observe* current Credential Routes Filter / Airport / Supplier Credentials configuration and behavior, but may **not** create or modify a rule to empirically test the AND-logic or Restricted-Airlines-independence claims below — those claims can only be corroborated via what's already configured, or via read-only inspection (e.g., the `TT_TS_SETTINGS`-style direct-DB view already used once in this project), not via new mutating test rules.
@@ -52,7 +52,7 @@ Per `projects/NDC/run_configuration.md` (unchanged by this run):
 | 4 | Audit log, supplier-verification/diagnostic function, and origin/destination-exclusive route tag do not exist yet in the live system | Absence from all captured screenshots; T3002-066 "We need to implement" section | Treat as net-new capabilities — no live baseline to explore; Test Design will need to mark these test cases assumption-based pending build |
 | 5 | T3087's new in-rule Airlines list and the pre-existing Restricted Airlines setting are two distinct mechanisms that will coexist, and their independence (per assumption #2) is **untested for this new combination** | Derived by cross-referencing both stories — not stated explicitly in either | Open risk — flag explicitly for Explorer/Test Design, do not assume it holds just because Restricted Airlines vs. plain route filtering already does |
 | 6 | Max number of airlines storable per rule is undetermined pending DBA sign-off | T3087 Prerequisites | Unresolved dependency — do not assume any specific cap in test design |
-| 7 | Database engine mismatch: infographic-derived architecture says Oracle/SQL Server; a screenshot shows a MySQL-Workbench-style tool querying schema `wonderdb` | `projects/NDC/architecture.md` Known Structural Risks | Relevant if Explorer needs to inspect how Credential Routes Filter rules are actually persisted — confirm engine before relying on either claim |
+| 7 | Database engine mismatch: infographic-derived architecture says Oracle/SQL Server; a screenshot shows a MySQL-Workbench-style tool querying schema `wonderdb` | `platform_core_data/architecture.md` Known Structural Risks | Relevant if Explorer needs to inspect how Credential Routes Filter rules are actually persisted — confirm engine before relying on either claim |
 | 8 | "Portal Booking Module" as a distinct booking surface from "Admin Booking Module" (`Booking-Mid Office`) is asserted by T3087 but not yet confirmed to exist/be reachable in this environment | T3087 Scope section | Explorer must confirm whether this is a separate accessible surface or the same Booking-Mid Office under a different name |
 
 ## 7. Traceability Anchor
@@ -64,9 +64,9 @@ Per `projects/NDC/run_configuration.md` (unchanged by this run):
 | §6 Assumption 1, 2 | US1 Comments, Examples 1–2 | `artifacts/NDC/knowledge/NDC_PRD.md` §"User Story 1" |
 | §6 Assumption 3 | US1 Notes | `artifacts/NDC/knowledge/NDC_PRD.md` §"User Story 1" |
 | §2 Modules In Scope (Airlines dropdown, GDS-only, Portal Booking Module), §6 Assumption 5, 6, 8 | US2 Description + Acceptance Criteria + Prerequisites | `artifacts/NDC/knowledge/NDC_PRD.md` §"User Story 2" |
-| §4 Roles & Credentials, §5 Environment Constraints | Run configuration | `projects/NDC/run_configuration.md` |
-| §6 Assumption 7 | Standing architecture risk | `projects/NDC/architecture.md` §"Known Structural Risks" |
+| §4 Roles & Credentials, §5 Environment Constraints | Run configuration | `platform_core_data/run_configuration.md` |
+| §6 Assumption 7 | Standing architecture risk | `platform_core_data/architecture.md` §"Known Structural Risks" |
 
 ---
 
-*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review (suggested reviewer: Business Analyst / Product Owner) before Stage 2 (Explorer Agent) may begin. It is not yet the "current approved" Project Context — see `artifacts/NDC/pipeline/NDC_RunManifest.md`.*
+*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review (suggested reviewer: Business Analyst / Product Owner) before Stage 2 (Explorer Agent) may begin. It is not yet the "current approved" Project Context — see `artifacts/NDC/pipeline/RunManifest.md`.*

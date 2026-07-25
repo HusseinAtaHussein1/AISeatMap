@@ -1,4 +1,4 @@
-// Locators Layer — projects/NDC/automation_framework.md §2.
+// Locators Layer — platform_core_data/automation_framework.md §2.
 // One class, one method per locator. No duplicate locators. Never imported by tests directly —
 // only LoginPage (Pages Layer) may use this class.
 class LoginLocators {
@@ -22,7 +22,7 @@ class LoginLocators {
     return 'text=Invalid credentials, Please try again.';
   }
 
-  // Success signal — matches projects/NDC/browser/profile.json's login.successSelector exactly,
+  // Success signal — matches platform_core_data/browser/profile.json's login.successSelector exactly,
   // so Discovery and Automation never assert two different definitions of "logged in".
   Txt_DashboardSignal() {
     return 'text=Dashboard';

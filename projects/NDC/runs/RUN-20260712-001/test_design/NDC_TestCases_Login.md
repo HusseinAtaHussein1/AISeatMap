@@ -9,7 +9,7 @@
 | Objective | Verify that submitting correct, existing credentials logs the user in and reaches the Dashboard. |
 | Priority | P1 |
 | Risk | High — core authentication path, every other module depends on it |
-| Preconditions | User is logged out. A valid NDC credential is available (projects/NDC/credentials/credentials.json). |
+| Preconditions | User is logged out. A valid NDC credential is available (platform_core_data/credentials/credentials.json). |
 | Test Data | Existing valid username/password (see credentials.json — not reproduced here) |
 | Steps | 1. Navigate to the NDC login screen. 2. Enter a valid Username and Password. 3. Click Login. |
 | Expected Result | User is redirected to the Dashboard (page title "NDC - Dashboard"); login screen is no longer shown. |
@@ -134,11 +134,11 @@
 | Objective | Verify that a wrong-password attempt against a real, existing NDC username produces the identical generic "Invalid credentials" message as a wrong attempt against a non-existent username (TC-LOGIN-002) — no username-existence leak. |
 | Priority | P2 |
 | Risk | Medium — a message or timing difference here would be a real anti-enumeration security gap, not cosmetic |
-| Preconditions | User is logged out. A valid, existing NDC username is available (projects/NDC/credentials/credentials.json). |
+| Preconditions | User is logged out. A valid, existing NDC username is available (platform_core_data/credentials/credentials.json). |
 | Test Data | Username: the real, existing NDC username from credentials.json. Password: one fabricated, deliberately wrong value. Exactly one attempt — never repeated, per the shared-env negative-testing default. |
 | Steps | 1. Navigate to the NDC login screen. 2. Enter the real, existing Username with a deliberately wrong Password. 3. Click Login. |
 | Expected Result | "Invalid credentials, Please try again." is shown — textually identical to TC-LOGIN-002's message; user remains on the login screen. No lockout, delay, or distinguishing behavior observed on this single attempt. |
-| Requirement Reference | Observation-derived (this validation pass — added per the automatic Engineering Decision rule, see NDC_LoginGapAnalysis.md) |
+| Requirement Reference | Observation-derived (this validation pass — added per the automatic Engineering Decision rule, see LoginGapAnalysis.md) |
 | Discovery Reference | Not yet independently observed this run — mirrors the Reference SHAFT Project's LogInWithInvalidPassword test as secondary evidence that this scenario is safe and meaningful to design. |
 | Finding Reference | N/A |
 | Evidence Reference | N/A |

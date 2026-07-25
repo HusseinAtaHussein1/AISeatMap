@@ -11,7 +11,7 @@ import java.nio.file.Path;
 /**
  * NDC Login Test Suite — RUN-20260712-001, Stage 4 (Automation Agent).
  * Automates exactly TC-LOGIN-001 through TC-LOGIN-008, no more — every scenario traces to
- * NDC_TestCases_Login.md / NDC_TraceabilityMatrix.md. Target = "export a package compatible with
+ * TestCases_Login.md / TraceabilityMatrix.md. Target = "export a package compatible with
  * the Reference Project" (E:\Automation2\NDC-Uplift-Automation) — same package/class-name
  * conventions, reused locators, but this repository itself is untouched.
  */
@@ -63,7 +63,7 @@ public class LogIn_TC extends TestBase {
     // expected "Username/Password is required" (copied from the Reference Project's own, stale
     // tests). Live app directly observed (this execution, 3x independently) to show plain
     // "Required" for both fields — corrected here in the automation only, per repair scope rules;
-    // NDC_TestCases_Login.md is intentionally not touched by this repair (see NDC_ExecutionResults.md).
+    // TestCases_Login.md is intentionally not touched by this repair (see ExecutionResults.md).
     @Test(priority = 3)
     public void emptyUsernameAndPasswordBlocked() {
         LogIn_Page login = new LogIn_Page(driver).navigateToLogin();

@@ -1,4 +1,4 @@
-// Tests Layer — projects/NDC/automation_framework.md §3.
+// Tests Layer — platform_core_data/automation_framework.md §3.
 // Flow + assertions only. No locators, no static data, no business logic — calls LoginPage
 // (Pages Layer) methods and reads test data from the Data Layer only.
 const { test, expect } = require('@playwright/test');

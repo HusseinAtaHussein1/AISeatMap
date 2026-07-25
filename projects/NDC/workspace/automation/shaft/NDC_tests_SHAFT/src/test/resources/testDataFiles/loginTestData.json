@@ -5,5 +5,5 @@
     "expectedMessage": "Invalid credentials, Please try again."
   },
   "wrongPasswordForRealUsername": "ProbeOnly!23",
-  "note": "Valid-credential test data is intentionally NOT stored here — see utilities.CredentialsLoader, which reads projects/NDC/credentials/credentials.json at execution time only."
+  "note": "Valid-credential test data is intentionally NOT stored here — see utilities.CredentialsLoader, which reads platform_core_data/credentials/credentials.json at execution time only."
 }

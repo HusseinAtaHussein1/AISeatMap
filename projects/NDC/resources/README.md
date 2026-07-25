@@ -1,6 +1,6 @@
 # resources/
 
-Supplementary reference material for the NDC project that doesn't fit `onboarding.md`, `run_configuration.md`, `architecture.md`, or `glossary.md`. This layout is standardized across every project under `projects/` so material is always in a predictable place — see `projects/README.md` for how this fits into the overall `projects/` vs `projects/{{PROJECT_NAME}}/artifacts/` split.
+Supplementary reference material about the application under test that doesn't fit `onboarding.md`, `run_configuration.md`, `architecture.md`, or `glossary.md`. The subfolder layout below is fixed, so material is always in a predictable place — see [`../README.md`](../README.md) for how this fits into the overall inputs vs `workspace/` split.
 
 > **Never commit secrets.** Passwords, API keys, tokens, connection strings, or any other credential material must never be committed to this repository — not in `credentials/`, not in `sample_data/`, not anywhere else in this folder or the project. Reference where real credentials are stored (a secrets manager, vault, or environment variable) instead of pasting the values themselves. See `credentials/` below.
 
@@ -25,10 +25,10 @@ NDC has four screenshot locations, each with a different owner and purpose — n
 
 | Location | Owner | Purpose |
 |---|---|---|
-| `projects/NDC/resources/screenshots/` | Human-maintained | General onboarding/context captures — currently empty. Use for anything informal that doesn't fit the other three. |
-| `projects/NDC/ui/screenshots/` | Browser Driver Layer | One reference baseline image per screen defined in `projects/NDC/browser/screens/*.json` — paired 1:1 by screen name (e.g. `Dashboard.json` ↔ `Dashboard.png`). |
-| `projects/NDC/workspace/discovery/UI Baseline/` | Explorer Agent, current state | The full, latest-approved UI baseline capture set across every in-scope module, organized by module/category — see `UI_Baseline_Screen_Inventory.md` in the same folder. |
-| `projects/NDC/runs/RUN-YYYYMMDD-XXX-{slug}/discovery/*.png` | Explorer Agent, per run | Run-scoped discovery/evidence screenshots captured during that specific run (e.g. login flow states, Finding evidence). Immutable once the run completes. |
+| `platform_core_data/resources/screenshots/` | Human-maintained | General onboarding/context captures — currently empty. Use for anything informal that doesn't fit the other three. |
+| `platform_core_data/ui/screenshots/` | Browser Driver Layer | One reference baseline image per screen defined in `platform_core_data/browser/screens/*.json` — paired 1:1 by screen name (e.g. `Dashboard.json` ↔ `Dashboard.png`). |
+| `platform_core_data/workspace/discovery/UI Baseline/` | Explorer Agent, current state | The full, latest-approved UI baseline capture set across every in-scope module, organized by module/category — see `UI_Baseline_Screen_Inventory.md` in the same folder. |
+| `platform_core_data/runs/RUN-YYYYMMDD-XXX-{slug}/discovery/*.png` | Explorer Agent, per run | Run-scoped discovery/evidence screenshots captured during that specific run (e.g. login flow states, Finding evidence). Immutable once the run completes. |
 
 ### `requirements/` breakdown
 
@@ -54,6 +54,6 @@ This keeps the folder layout stable regardless of where a requirement came from 
 
 *(Folder-per-Source was tried first, 2026-07-10 — `user_stories/pasted/`, `user_stories/markdown/`, `user_stories/azure_devops/` — and replaced with this metadata-based approach the same day, once it became clear Source would proliferate faster than Type. NDC's two existing User Stories were moved from `user_stories/pasted/` directly into `user_stories/` as part of that second change, and each was given an explicit `Source:` metadata line.)*
 
-## Adding a new project from this template
+## Retargeting the platform
 
-This entire `project_template/` directory (including this `resources/` layout) is meant to be copied wholesale into a new `projects/NDC/` directory — see `projects/README.md` → "Adding a new project."
+This `resources/` layout is fixed and survives retargeting: when the platform is pointed at a different application, the subfolders stay and only their *contents* are replaced — see [`../README.md`](../README.md) and the root [`README.md`](../../README.md) §17.2.

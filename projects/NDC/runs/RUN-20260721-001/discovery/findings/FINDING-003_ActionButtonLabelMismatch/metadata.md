@@ -13,7 +13,7 @@
 - **Module:** Admin → Role Management → Create Role (`/admin/role/add`)
 - **Workflow:** Add Role — action buttons
 - **Description:** The AC's Action Buttons section names the primary submission button "Submit for Approval." The live Add Role screen's button reads "Send For Approval" instead. The Cancel button's label matches the AC exactly.
-- **Expected Behavior:** Per `NDC_ProjectContext_Role.md` §2.6 (`FR-ROLECRT-ACTION-01`): button labeled "Submit for Approval."
+- **Expected Behavior:** Per `ProjectContext_Role.md` §2.6 (`FR-ROLECRT-ACTION-01`): button labeled "Submit for Approval."
 - **Actual Behavior:** Button labeled "Send For Approval."
 - **Steps to Reproduce:** Navigate to `/admin/role/add` as `odeysysadmin`; observe the button at the bottom-right of the form.
 - **Investigation/Recovery Result:** Not applicable — static UI-text observation, no retry warranted.

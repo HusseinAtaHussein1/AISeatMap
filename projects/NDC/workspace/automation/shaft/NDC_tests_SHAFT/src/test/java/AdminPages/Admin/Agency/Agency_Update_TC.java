@@ -4,46 +4,44 @@ import AdminPages.Admin.AdminMenu;
 import AdminPages.Admin.AdminTestBase;
 import AdminPages.Admin.Agency.Agency.Agency_Page;
 import AdminPages.Admin.Agency.Agency.AgencyActions_Page;
-import org.openqa.selenium.By;
+import AdminPages.Admin.Agency.Agency.SearchAgency_Page;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.nio.file.Path;
-import java.util.List;
 
 /**
- * NDC Admin / Agency — Update suite. RUN-20260718-001, Stage 4 (new NDC_tests_SHAFT_Agency
+ * NDC Admin / Agency — Update suite. RUN-20260718-001, Stage 4 (new tests_SHAFT_Agency
  * package). Traces to TC-AGENCY-UPDATE-001 through -007. Reuses Agency_Page (see its own
  * class-level comment: confirmed live via runs/RUN-20260718-001/discovery/Agency_Update.md that
  * /admin/agency/edit/{id} renders the identical field ids as /admin/agency/add) rather than a
  * separate page object.
  *
- * UPDATE-005/006/007 are Partially Automatable per NDC_AutomationPlan_SHAFT_Agency.md — the
+ * UPDATE-005/006/007 are Partially Automatable per AutomationPlan_SHAFT_Agency.md — the
  * Update screen's own Approve/Reject buttons were seen present but not independently exercised
  * live this run (only the grid-icon path was), so these reuse the grid-icon mechanics
  * (Agency_Actions.md) already fully proven, rather than asserting the Update screen's own buttons
  * behave identically without direct confirmation.
+ *
+ * Refactored 2026-07-25: navigation (openAgencyAdd/openAgencyList), the resolveCodeForName grid
+ * scan, and every direct field-value read now go through AdminMenu/SearchAgency_Page/Agency_Page
+ * instead of raw By.xpath locators duplicated in this test class.
  */
 public class Agency_Update_TC extends AdminTestBase {
 
-    private void openAgencyAdd() {
-        new AdminMenu(driver).openAgency();
-        driver.element().click(By.xpath("//a[@href=\"/admin/agency\"]"));
-        driver.element().click(By.xpath("//button[normalize-space()=\"Add agency\"]"));
+    private Agency_Page openAgencyAdd() {
+        new AdminMenu(driver).openAgency().openAgencyList();
+        return new SearchAgency_Page(driver).clickAddAgency();
     }
 
-    private void openAgencyList() {
-        new AdminMenu(driver).openAgency();
-        driver.element().click(By.xpath("//a[@href=\"/admin/agency\"]"));
-        driver.element().click(By.xpath("//p-radiobutton[.//input[@id=\"id-Status-Both\"]]"));
-        driver.element().click(By.xpath("//button[@type=\"submit\"]"));
-        waitBriefly();
+    private SearchAgency_Page openAgencyList() throws InterruptedException {
+        new AdminMenu(driver).openAgency().openAgencyList();
+        return new SearchAgency_Page(driver).showAll();
     }
 
     private String createFreshFixture(String prefix) throws Exception {
         String uniqueName = prefix + (System.nanoTime() % 100000);
-        openAgencyAdd();
-        Agency_Page agency = new Agency_Page(driver);
+        Agency_Page agency = openAgencyAdd();
         agency.selectBranch("Test")
                 .fillRequiredCore(uniqueName, "QA Spike Update test address", "1009876543")
                 .selectStateAndCity("Asyut", "Asyut")
@@ -64,29 +62,13 @@ public class Agency_Update_TC extends AdminTestBase {
         return Path.of("src/test/resources/testAssets/qa_spike_agency_asset.png").toAbsolutePath().toString();
     }
 
-    private String resolveCodeForName(String agencyName) {
-        openAgencyList();
-        List<org.openqa.selenium.WebElement> rows = driver.getDriver().findElements(By.xpath("//table/tbody/tr"));
-        for (org.openqa.selenium.WebElement row : rows) {
-            List<org.openqa.selenium.WebElement> cells = row.findElements(By.tagName("td"));
-            if (!cells.isEmpty() && cells.get(1).getText().equals(agencyName)) {
-                return cells.get(0).getText();
-            }
-        }
-        throw new IllegalStateException("Could not find a freshly-created Agency named " + agencyName + " in the first page of results.");
+    private String resolveCodeForName(String agencyName) throws InterruptedException {
+        return openAgencyList().resolveCodeForName(agencyName);
     }
 
     private void openUpdateScreenFor(String code) {
         new AgencyActions_Page(driver).clickPencilForCode(code);
         waitBriefly();
-    }
-
-    private void waitBriefly() {
-        try {
-            Thread.sleep(1200);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 
     // ---- TC-AGENCY-UPDATE-001 ----
@@ -95,10 +77,11 @@ public class Agency_Update_TC extends AdminTestBase {
         String name = createFreshFixture("QASPIKE_UPD001_");
         String code = resolveCodeForName(name);
         openUpdateScreenFor(code);
-        Assert.assertTrue(driver.getDriver().getCurrentUrl().contains("/admin/agency/edit/"));
-        Assert.assertEquals(driver.element().getAttribute(By.xpath("//input[@id=\"id-Agency\"]"), "value"), name);
-        Assert.assertEquals(driver.element().getAttribute(By.xpath("//input[@id=\"id-Contactperson\"]"), "value"), "QA Spike Update Contact");
-        Assert.assertEquals(driver.element().getAttribute(By.xpath("//input[@id=\"id-Postofficebox\"]"), "value"), "QASPIKEB");
+        Agency_Page agency = new Agency_Page(driver);
+        Assert.assertTrue(agency.getCurrentUrl().contains("/admin/agency/edit/"));
+        Assert.assertEquals(agency.getAgencyNameValue(), name);
+        Assert.assertEquals(agency.getContactPersonValue(), "QA Spike Update Contact");
+        Assert.assertEquals(agency.getPostOfficeBoxValue(), "QASPIKEB");
         // Branch/State/City/Invoice-generation intentionally NOT asserted here — confirmed live
         // (Agency_Update.md) that their proxy <input> reads back empty even with a real
         // selection (a PrimeNG display quirk, not missing data); asserting those needs opening
@@ -113,8 +96,7 @@ public class Agency_Update_TC extends AdminTestBase {
         openUpdateScreenFor(code);
         Agency_Page agency = new Agency_Page(driver);
         agency.fillOwnerDetails("QA Spike Update Contact EDITED", "qa.spike.update.edited@example.com", "1009876599");
-        driver.element().click(By.xpath("//button[normalize-space()=\"Send For Approval\"]"));
-        waitBriefly();
+        agency.submit();
         String toast = agency.getSuccessToastTextIfPresent();
         Assert.assertNotNull(toast, "Expected a success toast after editing and resubmitting. Diagnostics: " + agency.getInvalidFieldsDiagnostic());
     }
@@ -129,10 +111,10 @@ public class Agency_Update_TC extends AdminTestBase {
         agency.fillOwnerDetails("SHOULD NOT BE SAVED", "should.not.save@example.com", "1000000000");
         agency.clickCancel();
         waitBriefly();
-        Assert.assertFalse(driver.getDriver().getCurrentUrl().contains("/edit/"), "Cancel should navigate away from the Update screen.");
+        Assert.assertFalse(agency.getCurrentUrl().contains("/edit/"), "Cancel should navigate away from the Update screen.");
         String recode = resolveCodeForName(name);
         openUpdateScreenFor(recode);
-        String contactPersonAfterCancel = driver.element().getAttribute(By.xpath("//input[@id=\"id-Contactperson\"]"), "value");
+        String contactPersonAfterCancel = new Agency_Page(driver).getContactPersonValue();
         Assert.assertEquals(contactPersonAfterCancel, "QA Spike Update Contact",
                 "Cancel must discard the unsaved edit — Contact Person should still be the original value.");
     }
@@ -143,10 +125,10 @@ public class Agency_Update_TC extends AdminTestBase {
         String name = createFreshFixture("QASPIKE_UPD004_");
         String code = resolveCodeForName(name);
         openUpdateScreenFor(code);
-        driver.element().type(By.xpath("//input[@id=\"id-Agency\"]"), "");
-        driver.element().click(By.xpath("//button[normalize-space()=\"Send For Approval\"]"));
-        waitBriefly();
-        Assert.assertTrue(driver.getDriver().getCurrentUrl().contains("/edit/"),
+        Agency_Page agency = new Agency_Page(driver);
+        agency.clearAgencyName();
+        agency.submit();
+        Assert.assertTrue(agency.getCurrentUrl().contains("/edit/"),
                 "Clearing a mandatory field (Agency Name) and resubmitting should not succeed.");
     }
 
@@ -157,9 +139,9 @@ public class Agency_Update_TC extends AdminTestBase {
         String name = createFreshFixture("QASPIKE_UPD005_");
         String code = resolveCodeForName(name);
         openUpdateScreenFor(code);
-        new Agency_Page(driver).fillOwnerDetails("QA Spike Update Contact V2", "qa.spike.update.v2@example.com", "1009876500");
-        driver.element().click(By.xpath("//button[normalize-space()=\"Send For Approval\"]"));
-        waitBriefly();
+        Agency_Page agency = new Agency_Page(driver);
+        agency.fillOwnerDetails("QA Spike Update Contact V2", "qa.spike.update.v2@example.com", "1009876500");
+        agency.submit();
         openAgencyList();
         new AgencyActions_Page(driver).clickApproveForCode(code).fillRemarkAndSubmit("QA Spike automation - approve after update.");
         waitBriefly();
@@ -173,9 +155,9 @@ public class Agency_Update_TC extends AdminTestBase {
         String name = createFreshFixture("QASPIKE_UPD006_");
         String code = resolveCodeForName(name);
         openUpdateScreenFor(code);
-        new Agency_Page(driver).fillOwnerDetails("QA Spike Update Contact V3", "qa.spike.update.v3@example.com", "1009876501");
-        driver.element().click(By.xpath("//button[normalize-space()=\"Send For Approval\"]"));
-        waitBriefly();
+        Agency_Page agency = new Agency_Page(driver);
+        agency.fillOwnerDetails("QA Spike Update Contact V3", "qa.spike.update.v3@example.com", "1009876501");
+        agency.submit();
         openAgencyList();
         new AgencyActions_Page(driver).clickRejectForCode(code).fillRemarkAndSubmit("QA Spike automation - reject after update, reason: test coverage.");
         waitBriefly();
@@ -194,7 +176,7 @@ public class Agency_Update_TC extends AdminTestBase {
         waitBriefly();
         openAgencyList();
         openUpdateScreenFor(code);
-        String contactPersonAfterReject = driver.element().getAttribute(By.xpath("//input[@id=\"id-Contactperson\"]"), "value");
+        String contactPersonAfterReject = new Agency_Page(driver).getContactPersonValue();
         Assert.assertEquals(contactPersonAfterReject, "QA Spike Update Contact",
                 "A Rejected Agency's prior data (Contact Person) must still be intact, not lost.");
     }

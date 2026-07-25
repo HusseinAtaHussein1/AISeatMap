@@ -5,22 +5,22 @@
 [![Version](https://img.shields.io/badge/version-1.0-2563eb?style=flat-square)](docs/CHANGELOG.md)
 [![Architecture](https://img.shields.io/badge/architecture-multi--agent-2563eb?style=flat-square)](#7-agent-architecture)
 [![Enterprise Ready](https://img.shields.io/badge/enterprise-ready-2563eb?style=flat-square)](#13-design-principles)
-[![Multi-Project](https://img.shields.io/badge/multi--project-ready-2563eb?style=flat-square)](projects/README.md)
+[![Single Project](https://img.shields.io/badge/single--project-focused-2563eb?style=flat-square)](platform_core_data/README.md)
 [![Human Governed](https://img.shields.io/badge/human--governed-yes-16a34a?style=flat-square)](#6-pipeline-architecture)
 [![AI Assisted](https://img.shields.io/badge/AI--assisted-yes-16a34a?style=flat-square)](#1-project-overview)
 [![Knowledge Driven](https://img.shields.io/badge/knowledge--driven-yes-16a34a?style=flat-square)](#11-knowledge-base)
 [![Traceability](https://img.shields.io/badge/traceability-end--to--end-16a34a?style=flat-square)](#6-pipeline-architecture)
 [![Documentation](https://img.shields.io/badge/documentation-comprehensive-6b7280?style=flat-square)](#18-documentation-map)
 
-The Agentic AI Testing Platform is a multi-agent system that runs the complete software QA lifecycle — from an approved requirement to a delivered Final QA Report — as one governed, traceable pipeline. It exists to close the gap between conventional test automation tooling, which assumes test cases already exist, and the much larger problem most QA teams actually face: understanding an application, designing the right tests, generating automation that stays maintainable, and trusting the results enough to act on them. It's built for QA leads, test architects, and automation engineers who need enterprise-grade traceability and governance across many applications at once — not simply a faster way to write scripts.
+The Agentic AI Testing Platform is a multi-agent system that runs the complete software QA lifecycle — from an approved requirement to a delivered Final QA Report — as one governed, traceable pipeline. It exists to close the gap between conventional test automation tooling, which assumes test cases already exist, and the much larger problem most QA teams actually face: understanding an application, designing the right tests, generating automation that stays maintainable, and trusting the results enough to act on them. It's built for QA leads, test architects, and automation engineers who need enterprise-grade traceability and governance over the application they own — not simply a faster way to write scripts.
 
-Where a traditional automation framework turns a fixed set of test cases into runnable code, this platform treats automation as one stage in a longer, artifact-driven chain: specialized AI agents explore the application, design test cases, generate automation, execute it, and report results, handing off a versioned artifact at every step. Every step that carries real risk — a document about to govern downstream work, code about to execute against a real environment — stops for explicit human approval. The result is a platform designed to get more reliable over time, not just faster: confirmed repairs and reusable engineering knowledge are captured once and applied automatically the next time a similar failure occurs, across every project it manages.
+Where a traditional automation framework turns a fixed set of test cases into runnable code, this platform treats automation as one stage in a longer, artifact-driven chain: specialized AI agents explore the application, design test cases, generate automation, execute it, and report results, handing off a versioned artifact at every step. Every step that carries real risk — a document about to govern downstream work, code about to execute against a real environment — stops for explicit human approval. The result is a platform designed to get more reliable over time, not just faster: confirmed repairs and reusable engineering knowledge are captured once and applied automatically the next time a similar failure occurs.
 
 ---
 
 ## Vision
 
-The long-term vision is an enterprise QA function where AI agents carry out the mechanical work — exploration, test design, automation, execution — while humans retain every decision that carries real business or technical risk. Automation quality should compound through a shared Knowledge Base instead of being rebuilt from scratch on every project, and every one of those capabilities should stay fully auditable, one traceable artifact at a time. This is the direction the architecture is built toward — see [Current Project Status](#current-project-status) below for exactly how much of it is implemented today versus still in progress.
+The long-term vision is an enterprise QA function where AI agents carry out the mechanical work — exploration, test design, automation, execution — while humans retain every decision that carries real business or technical risk. Automation quality should compound through a durable Knowledge Base instead of being rebuilt from scratch every engagement, and every one of those capabilities should stay fully auditable, one traceable artifact at a time. This is the direction the architecture is built toward — see [Current Project Status](#current-project-status) below for exactly how much of it is implemented today versus still in progress.
 
 ---
 
@@ -32,7 +32,7 @@ The long-term vision is an enterprise QA function where AI agents carry out the 
 | Single script / suite | Multi-agent architecture |
 | Manual context gathering | AI-generated Project Context |
 | No traceability | Requirement-to-result traceability |
-| Single project | Multi-project, isolated by design |
+| Framework decides the process | Process decides the framework |
 | Framework-centric | Knowledge-centric |
 | Manual maintenance | Repair Knowledge Base |
 | Static reports | Professional QA reports |
@@ -43,7 +43,7 @@ The long-term vision is an enterprise QA function where AI agents carry out the 
 
 | | | |
 |---|---|---|
-| Multi-Agent Architecture | Multi-Project Support | Project Context |
+| Multi-Agent Architecture | Single-Project Focus | Project Context |
 | Run Scope | Knowledge Base | AI-Driven Discovery |
 | Test Design | Automation Generation | Execution |
 | Reporting | Repair Knowledge Base | Human Approval Workflow |
@@ -72,7 +72,7 @@ The long-term vision is an enterprise QA function where AI agents carry out the 
 | Documentation | ✅ Comprehensive |
 | Platform Design (Agents, Pipeline, Knowledge Architecture) | ✅ Stable |
 | Reference Project Validation (NDC) | ✅ Executed |
-| Cross-Project Rollout (beyond NDC / OrangeHRM) | 🚧 In Progress |
+| Retargeting to a New Application (clear + repopulate `platform_core_data/`) | 🚧 In Progress |
 | Deterministic Tooling Layer (beyond the Browser Driver) | 🚧 In Progress |
 | Enterprise Integrations (ALM, Dashboards) | 📅 Planned |
 
@@ -132,7 +132,7 @@ Concretely, the platform:
 - **Traceability by construction.** Every test case, automation script, and execution result carries a citation back to the requirement it covers — not because someone remembered to fill in a spreadsheet column, but because the pipeline's artifact contracts require it.
 - **Governed, not autonomous.** The platform is AI-*assisted*. Every stage that produces a document or authorizes code execution stops at a named checkpoint until a human with the right role signs off — see §5.5 of [`workflows_and_pipelines/pipeline/pipeline.md`](workflows_and_pipelines/pipeline/pipeline.md) for exactly which decisions are reserved for a human versus made automatically.
 - **Compounding, not repeating.** Repair strategies that are confirmed to work are captured in a versioned Knowledge Base and reused on the next failure with the same signature — instead of every run re-diagnosing the same class of problem from zero.
-- **Multi-project by design.** Each onboarded application is fully self-contained under its own `projects/{{PROJECT_NAME}}/` directory, so the same seven agents and one pipeline specification scale to dozens of unrelated applications without per-project code changes.
+- **Single project, cleanly separated.** The hosted application is fully self-contained under `platform_core_data/`, and nothing application-specific lives outside it — so the same seven agents and one pipeline specification apply unchanged when the platform is retargeted at a different application, with no code changes.
 
 ### Philosophy of AI-assisted testing
 
@@ -161,7 +161,7 @@ This is why the platform reads as "a pipeline with agents inside it," not "an ag
 | **Self-Descriptive Run Management** | Every execution gets a deterministic, self-descriptive folder name (`YYYY-MM-DD_HH-mm-ss__Scope__Target`), generated by a single reusable utility, an on-demand-built workspace, structured metadata, and a factual run summary — with no judgment role of its own | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) |
 | **Run Scope** | Every run declares exactly what it's allowed to validate — Entire Project, Epic, Feature, User Story, Bug, Requirement Document, or Custom Scope | [`workflows_and_pipelines/pipeline/run_scope.md`](workflows_and_pipelines/pipeline/run_scope.md) |
 | **Reference Automation Project Support** | A project can register an external, human-owned automation codebase as a reference — read-only by default, with an explicit gate before any write to it | [`.claude/skills/automation-agent/SKILL.md` §32](.claude/skills/automation-agent/SKILL.md) |
-| **Browser Driver Layer** | A single shared engine (`platform_core/tools/browser_driver/`) drives authenticated browser sessions for every project, with credentials always outside the repo's tracked history | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) |
+| **Browser Driver Layer** | A single shared engine (`platform_core/tools/browser_driver/`) drives every authenticated browser session, with credentials always outside the repo's tracked history | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) |
 | **Reporting** | A Final QA Report that computes Requirement Coverage and Automation Coverage by walking the full traceability chain, not by re-asserting the Automation Execution Agent's raw output | [`.claude/skills/reporting-agent/SKILL.md`](.claude/skills/reporting-agent/SKILL.md) |
 | **Execution Analysis** | Application Health, Automation Health, and Environment Health are always reported as three separate figures — never one merged "Failed" count | [`.claude/skills/automation-execution-agent/SKILL.md` §25.6](.claude/skills/automation-execution-agent/SKILL.md) |
 
@@ -222,27 +222,27 @@ A capability listed here as *Implemented* has a written agent/pipeline specifica
 | Video → Automation | 📅 Planned | |
 | Regression Intelligence / Impact Analysis | 📅 Planned | |
 | ALM Integration — Azure DevOps / Jira / TestRail / Xray | 📅 Planned | [`workflows_and_pipelines/pipeline/run_scope.md`](workflows_and_pipelines/pipeline/run_scope.md) already names these as future Run Scope Sources |
-| Enterprise Dashboard / Cross-Project Run Index | 📅 Planned | |
+| Enterprise Dashboard / Consolidated Run Index | 📅 Planned | |
 
 ---
 
 ## 5. High-Level Architecture
 
-The platform is organized as five concentric layers. Reusable engineering logic lives at the top; a single project's history of runs lives at the bottom.
+The platform is organized as five concentric layers. Reusable engineering logic lives at the top; the hosted project's history of runs lives at the bottom.
 
 ```mermaid
 flowchart TD
     PLAT["Platform<br/><small>.claude/skills/ · workflows_and_pipelines/pipeline/ · platform_core/knowledge/ · platform_core/tools/</small>"]
-    PROJ["Projects<br/><small>projects/PROJECT_NAME/ — one self-contained directory per application</small>"]
+    PROJ["Project Data<br/><small>platform_core_data/ — the one hosted application, fully self-contained</small>"]
     PIPE["Pipeline<br/><small>the fixed seven-stage execution order, gates, and artifact contracts</small>"]
     AGENTS["Agents<br/><small>the seven specialized AI agents that do the actual work of each stage</small>"]
-    WORK[("Workspace<br/><small>projects/PROJECT_NAME/artifacts/ — current-approved state per stage</small>")]
-    RUNS[("Runs<br/><small>projects/PROJECT_NAME/artifacts/runs/YYYY-MM-DD_HH-mm-ss__Scope__Target/ — immutable per-run snapshots</small>")]
+    WORK[("Workspace<br/><small>platform_core_data/workspace/ — current-approved state per stage</small>")]
+    RUNS[("Runs<br/><small>platform_core_data/runs/YYYY-MM-DD_HH-mm-ss__Scope__Target/ — immutable per-run snapshots</small>")]
 
     PLAT --> PROJ --> PIPE --> AGENTS --> WORK --> RUNS
 ```
 
-Reading this top to bottom: the **Platform** defines reusable rules that never change per application. Each **Project** applies those rules to one real application. The **Pipeline** is the fixed sequence those rules run in. The **Agents** are the workers that actually execute each stage. The **Workspace** is where each stage's current-approved output lives (cylinder = data store, consistent with [§3](#3-end-to-end-platform-overview) and [§11](#11-knowledge-base)). **Runs** are the immutable, timestamped history of every time the pipeline (or part of it) was executed.
+Reading this top to bottom: the **Platform** defines reusable rules that hold whatever application is under test. **Project Data** is those rules applied to the one real application currently hosted. The **Pipeline** is the fixed sequence those rules run in. The **Agents** are the workers that actually execute each stage. The **Workspace** is where each stage's current-approved output lives (cylinder = data store, consistent with [§3](#3-end-to-end-platform-overview) and [§11](#11-knowledge-base)). **Runs** are the immutable, timestamped history of every time the pipeline (or part of it) was executed.
 
 ---
 
@@ -354,7 +354,7 @@ flowchart LR
 
 ## 8. Automation Package Lifecycle
 
-A project never has "one" automation codebase to overwrite. It holds a **registry of independent Automation Packages** — e.g. `NDC_tests_SHAFT` and `NDC_tests_Playwright` for the same project — each generated, approved, executed, and repaired on its own track. A project may also register an external, human-owned **Reference Automation Project** that the platform treats as read-only by default.
+A project never has "one" automation codebase to overwrite. It holds a **registry of independent Automation Packages** — e.g. `tests_SHAFT` and `tests_Playwright` for the same project — each generated, approved, executed, and repaired on its own track. A project may also register an external, human-owned **Reference Automation Project** that the platform treats as read-only by default.
 
 ### Sequence — one Stage 5 → Stage 6 pass
 
@@ -419,13 +419,13 @@ When a project designates an external, real automation codebase (e.g. NDC's prod
 - **Read-only by default.** The agent inspects it, learns its architecture (framework/version, Page Object pattern, driver init, naming conventions), and generates *compatible* code — it never edits the reference project's files unless a human explicitly chooses to, for that run, every time.
 - **A separate Target decision** — generate inside the platform, export a platform-generated package structured to drop into the reference project, or (only if explicitly chosen) update the reference project directly.
 
-See [`.claude/skills/automation-agent/SKILL.md` §32](.claude/skills/automation-agent/SKILL.md) and the project-level registration this produces, e.g. [`projects/NDC/reference_automation_project.md`](projects/NDC/reference_automation_project.md).
+See [`.claude/skills/automation-agent/SKILL.md` §32](.claude/skills/automation-agent/SKILL.md) and the project-level registration this produces, e.g. [`platform_core_data/reference_automation_project.md`](platform_core_data/reference_automation_project.md).
 
 ---
 
 ## 9. Repository Structure
 
-Every project is fully self-contained: durable knowledge and generated artifacts for one application both live under that application's own `projects/{{PROJECT_NAME}}/` directory. There is no repository-root `artifacts/` directory.
+Every project is fully self-contained: durable knowledge and generated artifacts for one application both live under that application's own `platform_core_data/` directory. There is no repository-root `artifacts/` directory.
 
 ```text
 agentic-ai-testing-platform/
@@ -448,11 +448,11 @@ agentic-ai-testing-platform/
 │   └── workflows/
 │       └── first_run.md                # Smoke-test workflow: Stages 1–3 only, Login module
 │
-├── platform_core/                     # Project-specific business knowledge + shared source code
+├── platform_core/                     # Reusable engineering knowledge + shared source code
 │   ├── knowledge/                     # Platform Knowledge — reusable, application-agnostic engineering knowledge
 │   │   ├── automation_patterns/       # (empty until promoted)
 │   │   ├── diagnosis_patterns/        # (empty until promoted)
-│   │   ├── repair_patterns/           # Confirmed, cross-project repair strategies (REPAIR-NNN)
+│   │   ├── repair_patterns/           # Confirmed, application-agnostic repair strategies (REPAIR-NNN)
 │   │   ├── execution_patterns/        # (empty until promoted)
 │   │   ├── framework_patterns/        # (empty until promoted)
 │   │   ├── reasoning/                 # General AI reasoning patterns (REASON-NNN)
@@ -461,29 +461,23 @@ agentic-ai-testing-platform/
 │   │   └── INDEX.md                   # Catalog of every promoted document
 │   └── tools/
 │       └── browser_driver/          # Shared browser automation engine — zero project-specific data
-│           ├── driver.js              # Resolves project paths, loads profile + credentials, launches, logs in
+│           ├── driver.js              # Resolves platform_core_data/ paths, loads profile + credentials, logs in
 │           ├── api.js                 # BrowserDriver — the only surface agents/scripts use directly
 │           └── README.md
 │
-├── projects/                         # One self-contained directory per onboarded application
-│   ├── README.md                       # Layout convention every project follows
-│   ├── templates/
-│   │   └── project_template/            # Canonical, copyable skeleton for onboarding a new project
-│   ├── OrangeHRM/                       # Reference implementation of the standard layout
-│   │   ├── PRD.md · onboarding.md · architecture.md · glossary.md · run_configuration.md
-│   │   ├── resources/                    # requirements/, api/, diagrams/, screenshots/, sample_data/, notes/, ...
-│   │   └── artifacts/                    # generated outputs — context/, discovery/, test_design/, manual_execution/, automation/, execution/, reporting/, pipeline/, runs/
-│   └── NDC/                             # Most mature onboarded project
-│       ├── PRD.md · onboarding.md · architecture.md · glossary.md · run_configuration.md
-│       ├── automation_framework.md       # Binding SHAFT package structure for NDC's SHAFT package
-│       ├── reference_automation_project.md  # Registration of the external production SHAFT repo
-│       ├── browser/                      # Browser Driver profile + screen/component locators for NDC
-│       ├── credentials/                  # credentials.json (git-ignored) + template + README
-│       ├── knowledge_base/               # Project Knowledge — see §11
-│       ├── resources/
-│       ├── ui/                           # Reference screenshots captured during onboarding/discovery
-│       ├── workspace/ + runs/            # NDC's variant of artifacts/ — see §10
-│       └── runs/
+├── platform_core_data/               # THE hosted project — inputs and every generated artifact (§9.1)
+│   ├── README.md                       # This folder's own layout contract
+│   ├── PRD.md · PRD_UserStories.md      # Stage 1's only requirements input
+│   ├── onboarding.md · architecture.md · glossary.md · run_configuration.md
+│   ├── automation_framework.md          # Binding SHAFT package structure — Stage 5 must comply
+│   ├── reference_automation_project.md  # Registration of the external production SHAFT repo
+│   ├── browser/                         # Browser Driver profile + screen/component locators
+│   ├── credentials/                     # credentials.json (git-ignored) + template + README
+│   ├── knowledge_base/                  # Project Knowledge — see §11
+│   ├── resources/                       # requirements/, api/, diagrams/, screenshots/, sample_data/, notes/, ...
+│   ├── ui/                              # Reference screenshots captured during onboarding/discovery
+│   ├── workspace/                       # Current-approved state per stage — see §10
+│   └── runs/                            # Immutable per-run snapshots — see §10
 │
 ├── docs/                             # Supplementary and historical platform documentation — see §18
 │   ├── README.md · CHANGELOG.md · LESSONS_LEARNED.md
@@ -493,7 +487,7 @@ agentic-ai-testing-platform/
 └── README.md                         # This document — the platform's primary entry point
 ```
 
-There is deliberately no `credentials/` or `ui/` folder at the repository root — both are project-scoped (`projects/{{PROJECT_NAME}}/credentials/`, `projects/{{PROJECT_NAME}}/ui/`), and `credentials/credentials.json` is git-ignored in every project, never committed.
+There is deliberately no `credentials/` or `ui/` folder at the repository root — both live under the project root (`platform_core_data/credentials/`, `platform_core_data/ui/`), and `credentials.json` is git-ignored, never committed.
 
 ---
 
@@ -501,10 +495,10 @@ There is deliberately no `credentials/` or `ui/` folder at the repository root �
 
 ### Immutable runs, mutable "current approved" state
 
-Two things live side by side under every project's artifact tree, and they are not the same concept:
+Two things live side by side under `platform_core_data/`, and they are not the same concept:
 
-- **Current-approved artifacts** (`projects/{{PROJECT_NAME}}/artifacts/{context,discovery,test_design,manual_execution,automation,execution,reporting}/`) — the latest approved version of each stage's output, updated only at the moment a reviewer approves a new version.
-- **Run history** (`projects/{{PROJECT_NAME}}/artifacts/runs/{{RUN_FOLDER}}/`) — an immutable, timestamped snapshot of exactly what that specific run produced. A run is never edited after the fact; a correction is a new run, not a rewrite of an old one.
+- **Current-approved artifacts** (`platform_core_data/workspace/{context,discovery,test_design,manual_execution,automation,execution,reporting}/`) — the latest approved version of each stage's output, updated only at the moment a reviewer approves a new version.
+- **Run history** (`platform_core_data/runs/{{RUN_FOLDER}}/`) — an immutable, timestamped snapshot of exactly what that specific run produced. A run is never edited after the fact; a correction is a new run, not a rewrite of an old one.
 
 ### Self-descriptive run naming
 
@@ -516,7 +510,7 @@ YYYY-MM-DD_HH-mm-ss__[Scope]__[Module-or-UserStory]
 
 e.g. `2026-07-23_10-35-18__FullRun__FlightSearch`, `2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter`. `Scope` is always one of a canonical set (`FullRun`, `Regression`, `Smoke`, `Sanity`, `Targeted`, `Module`, `UserStory`) — a run that only executed specific tests is always named `Targeted`, never something that reads as a full run. The name is generated once, deterministically, by the reusable module [`platform_core/tools/run_manager/`](platform_core/tools/run_manager/) — never hand-formatted per call site, never an AI-generated slug.
 
-**Existing run folders keep their original `RUN-YYYYMMDD-XXX[-slug]` names.** They are not renamed: every one of them was found to have real, live external references (cross-run path dependencies, generated code paths, manifest citations), which fails the module's own safety check for a physical rename. Instead, each project gets a `.run_folder_index.json` mapping each legacy folder to its inferred new-convention name, so lookups work under either naming style without touching the originals. Full rules, including the naming utility's API, the migration script, and the compatibility index: [`workflows_and_pipelines/pipeline/run_manager.md` §5](workflows_and_pipelines/pipeline/run_manager.md).
+**Existing run folders keep their original `RUN-YYYYMMDD-XXX[-slug]` names.** They are not renamed: every one of them was found to have real, live external references (cross-run path dependencies, generated code paths, manifest citations), which fails the module's own safety check for a physical rename. Instead, `platform_core_data/runs/.run_folder_index.json` maps each legacy folder to its inferred new-convention name, so lookups work under either naming style without touching the originals. Full rules, including the naming utility's API, the migration script, and the compatibility index: [`workflows_and_pipelines/pipeline/run_manager.md` §5](workflows_and_pipelines/pipeline/run_manager.md).
 
 ### On-demand workspace
 
@@ -553,18 +547,18 @@ Full specification: [`workflows_and_pipelines/pipeline/run_manager.md`](workflow
 
 ## 11. Knowledge Base
 
-The platform supports dozens of simultaneous, isolated projects while still reusing genuinely cross-project engineering knowledge. This is governed by one canonical model ([`workflows_and_pipelines/pipeline/pipeline.md` §10](workflows_and_pipelines/pipeline/pipeline.md)), referenced by every agent rather than restated.
+The platform hosts one project at a time, but splits what it learns into two layers so that retargeting it at a different application discards the application's specifics without discarding the engineering knowledge. This is governed by one canonical model ([`workflows_and_pipelines/pipeline/pipeline.md` §10](workflows_and_pipelines/pipeline/pipeline.md)), referenced by every agent rather than restated.
 
 ### Two layers
 
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
 | **Platform Knowledge** | `platform_core/knowledge/` | Reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting, pipeline decisions | Anything application-specific |
-| **Project Knowledge** | `projects/{{PROJECT_NAME}}/knowledge_base/` | Business rules, UI observations, findings, execution/repair/automation history for that one application | Anything reusable enough to belong at the Platform layer instead |
+| **Project Knowledge** | `platform_core_data/knowledge_base/` | Business rules, UI observations, findings, execution/repair/automation history for the hosted application | Anything that would still be true after retargeting — that belongs at the Platform layer instead |
 
 ### Resolution order
 
-Every agent resolves knowledge in a fixed order and merges both: **Platform Knowledge first, then the current project's Knowledge.** Project Knowledge extends Platform Knowledge; a project-specific finding that appears to contradict a Platform pattern is disclosed as a discrepancy, never silently substituted.
+Every agent resolves knowledge in a fixed order and merges both: **Platform Knowledge first, then Project Knowledge.** Project Knowledge extends Platform Knowledge; an application-specific finding that appears to contradict a Platform pattern is disclosed as a discrepancy, never silently substituted.
 
 ```mermaid
 flowchart LR
@@ -573,27 +567,23 @@ flowchart LR
         RS["reasoning/"]
         OTH["automation_patterns/ · diagnosis_patterns/ · execution_patterns/ · framework_patterns/ · reporting/ · pipeline_decision_patterns/"]
     end
-    subgraph ProjA["projects/NDC/knowledge_base/"]
+    subgraph ProjA["platform_core_data/knowledge_base/"]
         A1["business_rules/ · application/ · ui/"]
         A2["repair/ · automation/ · execution/ · diagnosis/"]
         A3["findings/ · lessons_learned/"]
     end
-    subgraph ProjB["projects/OrangeHRM/knowledge_base/"]
-        B1["(same shape, isolated content)"]
-    end
 
     Platform --> ProjA
-    Platform --> ProjB
-    ProjA -.never leaks into.-> ProjB
+    ProjA -. "promotion — human-gated, §10.5" .-> Platform
 ```
 
 ### Promotion — explicit human approval only
 
-Knowledge is written project-scoped by default. When an agent recognizes a lesson as reusable beyond one application, it asks exactly once: *"This lesson appears reusable across multiple projects. Promote it to Platform Knowledge?"* Declined lessons stay project-scoped and are not re-proposed on every subsequent run of the same pattern — only a second, independent project producing the same pattern resurfaces the question.
+Knowledge is written project-scoped by default. When an agent recognizes a lesson as one that would still hold against a *different* application, it asks exactly once: *"This lesson looks application-independent. Promote it to Platform Knowledge?"* Declined lessons stay project-scoped and are not re-proposed on every subsequent run of the same pattern — only genuinely new evidence of generality resurfaces the question.
 
 ### Repair Knowledge Base
 
-A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): confirmed repairs are written to `projects/{{PROJECT_NAME}}/knowledge_base/repair/REP-NNN.md` at the moment a repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core/knowledge/repair_patterns/REPAIR-NNN.md` or `platform_core/knowledge/reasoning/REASON-NNN.md`. See the current catalog in [`platform_core/knowledge/INDEX.md`](platform_core/knowledge/INDEX.md).
+A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): confirmed repairs are written to `platform_core_data/knowledge_base/repair/REP-NNN.md` at the moment a repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core/knowledge/repair_patterns/REPAIR-NNN.md` or `platform_core/knowledge/reasoning/REASON-NNN.md`. See the current catalog in [`platform_core/knowledge/INDEX.md`](platform_core/knowledge/INDEX.md).
 
 ### Future expansion
 
@@ -607,17 +597,17 @@ The category folders for `automation_patterns/`, `diagnosis_patterns/`, `executi
 
 - **Discovery technology ≠ Automation technology.** The tool used to explore an application in Stage 2 (e.g. Playwright, for browser-driven discovery) has no bearing on which framework Stage 5 selects — this is enforced explicitly, because it has previously been the exact mistake an early agent revision made.
 - **Framework choice is scoped to one package, one run's decision** — never inferred as a standing project default. Every Stage 5 invocation asks again.
-- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`projects/NDC/automation_framework.md`](projects/NDC/automation_framework.md) — and is binding only for runs that select SHAFT.
+- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/automation_framework.md`](platform_core_data/automation_framework.md) — and is binding only for runs that select SHAFT.
 - **Currently supported:** Playwright, SHAFT Engine. **Named as first-class candidates whenever a project's needs call for them:** Selenium, Cypress, Appium, REST Assured — the Automation Agent's framework detection/selection model already treats these as standard options ([`.claude/skills/automation-agent/SKILL.md` §6–§8](.claude/skills/automation-agent/SKILL.md)); onboarding one for a real project is a per-project decision, not a platform-level gap.
 
 ```mermaid
 flowchart TD
     NDC["Project: NDC"]
-    NDC --> SHAFT["NDC_tests_SHAFT<br/>(Java · TestNG · SHAFT Engine)"]
-    NDC --> PW["NDC_tests_Playwright<br/>(JavaScript · Playwright)"]
+    NDC --> SHAFT["tests_SHAFT<br/>(Java · TestNG · SHAFT Engine)"]
+    NDC --> PW["tests_Playwright<br/>(JavaScript · Playwright)"]
     NDC --> REF["Reference Automation Project<br/>(external, read-only by default)"]
 
-    SHAFT --> REG["NDC_AutomationPackages.md<br/>(registry — tracks every package + last-touched run)"]
+    SHAFT --> REG["AutomationPackages.md<br/>(registry — tracks every package + last-touched run)"]
     PW --> REG
 ```
 
@@ -632,11 +622,11 @@ flowchart TD
 | **Immutable History** | A run's snapshot is never edited after the fact; a correction is always a new version or a new run |
 | **Two Distinct Approval-Gate Types** | Reviewing a document and authorizing code to execute are different risk classes and get different gates ([§6](#6-pipeline-architecture)) |
 | **Human Decisions vs. Engineering Decisions** | Only genuine business/authorization calls interrupt the pipeline to ask; routine engineering judgment (adding a negative test case, deferring an unsafe scenario) is made and disclosed, never gated |
-| **Project Isolation** | An agent working on one project loads only that project's own directory plus Platform Knowledge — never a sibling project's business rules or findings |
+| **Single Project Root** | An agent loads application content only from `platform_core_data/`, plus Platform Knowledge — never from an external repository or a second project directory |
 | **Framework Independence** | Discovery tooling and automation tooling are independent axes; the platform has no built-in bias toward any one framework |
 | **Reuse Before Generation** | Every stage that could generate something new inspects what already exists first — an existing automation package, a confirmed repair rule, a promoted knowledge document |
 | **Extensibility** | The Automation Agent's abstractions (Locator Strategy, Suite Planning, Traceability Model) are already framed generically enough to extend to API, Mobile, Desktop, Microservices, Message Queue, Batch Job, and Cloud Resource automation without redesigning the core contracts ([`.claude/skills/automation-agent/SKILL.md` §29](.claude/skills/automation-agent/SKILL.md)) |
-| **Scalability** | The same seven-agent, one-pipeline architecture is designed to support dozens of simultaneous, isolated projects, not just the ones onboarded today |
+| **Portability** | The same seven-agent, one-pipeline architecture carries over to any application: retargeting replaces `platform_core_data/`'s contents and touches no specification, agent, or tool |
 | **No Debug Artifacts in the Project Tree** | Throwaway reconnaissance scripts and raw tool-output dumps are never persisted into `artifacts/` — only the synthesized, human-readable deliverable a stage is actually specified to produce ([`workflows_and_pipelines/pipeline/pipeline.md` §11](workflows_and_pipelines/pipeline/pipeline.md)) |
 
 ---
@@ -649,13 +639,13 @@ Short, direct answers to "why does the platform work this way," each pointing ba
 Every run's snapshot is written once and never edited afterward; a correction is always a new run. This makes run history genuinely auditable — a reviewer can trust that what's in `artifacts/runs/{{RUN_FOLDER}}/` today is exactly what that run produced on the day it ran. See [§10](#10-run-architecture).
 
 **ADR-002 — Workspace vs. Runs**
-"What's authoritative right now" (`artifacts/{stage}/`) and "what actually happened on a specific date" (`artifacts/runs/`) are kept as two distinct trees rather than one. Collapsing them would force a choice between losing history and losing a clear current state — the platform needs both simultaneously. See [§10](#10-run-architecture).
+"What's authoritative right now" (`platform_core_data/workspace/{stage}/`) and "what actually happened on a specific date" (`platform_core_data/runs/`) are kept as two distinct trees rather than one. Collapsing them would force a choice between losing history and losing a clear current state — the platform needs both simultaneously. See [§10](#10-run-architecture).
 
 **ADR-003 — Two Human Approval Gate Types**
 An early revision treated every checkpoint identically; in practice, approving a wrong *document* and authorizing *code to execute against a real environment* carry very different blast radii. The pipeline now names these separately — "Human Review Required" and "Automation Approval Required" — so the latter is never reviewed as lightly as the former ([Lessons Learned §3](docs/LESSONS_LEARNED.md)). See [§6](#6-pipeline-architecture).
 
 **ADR-004 — Platform Knowledge vs. Project Knowledge**
-Dozens of isolated projects need to share proven engineering patterns (a repair strategy, a synchronization technique) without one application's business rules or findings ever leaking into another. The two-layer model plus an explicit Promotion step gives cross-project reuse without cross-project contamination. See [§11](#11-knowledge-base).
+Proven engineering patterns (a repair strategy, a synchronization technique) must survive the platform being retargeted, while one application's business rules and findings must not. The two-layer model plus an explicit Promotion step keeps the durable half separable from the disposable half. Originally motivated by cross-project isolation; that rationale was superseded by the 2026-07-25 single-project restructure, but the layer split earned its keep on durability grounds alone. See [§11](#11-knowledge-base).
 
 **ADR-005 — Framework Independence**
 An early Automation Agent revision inferred the automation framework from whichever tool Discovery happened to use for browser exploration — an incorrect coupling, since discovery tooling and automation tooling answer unrelated questions. The Framework Decision Gate now asks explicitly, every run, and Discovery's tool choice is never treated as evidence for it. See [§12](#12-multi-framework-architecture).
@@ -669,11 +659,11 @@ The platform's specifications describe *what* runs, not a fixed proprietary runt
 | Area | Details |
 |---|---|
 | **Specification format** | Markdown — every agent, pipeline stage, gate, and knowledge document is a versioned `.md` contract, not code |
-| **Supported automation frameworks** | SHAFT Engine (Java/TestNG) and Playwright (JavaScript), live side by side per project; Selenium/Cypress/Appium/REST Assured designed as first-class options (§4), not yet onboarded for a real project |
-| **Browser automation** | Playwright, via the shared [`platform_core/tools/browser_driver/`](platform_core/tools/browser_driver/) engine — one `BrowserDriver` API surface, project-specific profile + screen/component locators |
+| **Supported automation frameworks** | SHAFT Engine (Java/TestNG) and Playwright (JavaScript), live side by side; Selenium/Cypress/Appium/REST Assured designed as first-class options (§4), not yet onboarded against a real application |
+| **Browser automation** | Playwright, via the shared [`platform_core/tools/browser_driver/`](platform_core/tools/browser_driver/) engine — one `BrowserDriver` API surface, with the profile and screen/component locators resolved from `platform_core_data/browser/` |
 | **Documentation format** | Markdown + Mermaid diagrams throughout — every diagram renders natively in the repository, no external diagramming tool required |
 | **Knowledge storage** | Small, individually-versioned Markdown documents, one concern per file, stable IDs (`REPAIR-NNN`, `REASON-NNN`, `REP-NNN`) — no database |
-| **Artifact storage** | Plain file-system tree per project (`projects/{{PROJECT_NAME}}/artifacts/`) — no external artifact server or object store |
+| **Artifact storage** | Plain file-system tree (`platform_core_data/workspace/` and `platform_core_data/runs/`) — no external artifact server or object store |
 | **Execution model** | Human-gated, stage-sequential pipeline orchestrated by the Run Manager — no autonomous or parallel stage execution |
 | **Package management** | npm ([`package.json`](package.json)) — Playwright is currently the platform's one declared runtime dependency |
 
@@ -681,18 +671,19 @@ The platform's specifications describe *what* runs, not a fixed proprietary runt
 
 ## 16. Quick Start
 
-The essentials — enough to run Stage 1 against a new project in under two minutes. Full detail (Browser Driver setup, the complete pipeline walkthrough, the smoke-test workflow) is in [§17 Getting Started](#17-getting-started).
+The essentials — enough to run Stage 1 in under two minutes. Full detail (Browser Driver setup, the complete pipeline walkthrough, the smoke-test workflow) is in [§17 Getting Started](#17-getting-started).
 
 ```bash
 git clone https://github.com/ayman2911/agentic-ai-testing-platform.git
 cd agentic-ai-testing-platform
-cp -r projects/templates/project_template projects/{{PROJECT_NAME}}
 ```
 
-1. Fill in `projects/{{PROJECT_NAME}}/PRD.md` — the approved requirements document.
-2. Fill in `projects/{{PROJECT_NAME}}/run_configuration.md` — target environment, in-scope modules.
+1. Fill in `platform_core_data/PRD.md` — the approved requirements document.
+2. Fill in `platform_core_data/run_configuration.md` — target environment, in-scope modules.
 3. Invoke Stage 1 (Project Context Agent) against those two files.
 4. Review and approve the generated Project Context — every stage after this one depends on that approval.
+
+The repository ships with `platform_core_data/` already populated for the application it currently hosts. Pointing it at a different one is [§17.2](#17-getting-started), not a clone-time step.
 
 ---
 
@@ -705,19 +696,21 @@ git clone https://github.com/ayman2911/agentic-ai-testing-platform.git
 cd agentic-ai-testing-platform
 ```
 
-### 2. Onboard a new project
+### 2. Retarget the platform at your application
 
-Copy the canonical skeleton and fill in the new application's specifics:
+The platform hosts **one** project at a time, rooted at [`platform_core_data/`](platform_core_data/) — there is no project selector and no second project directory ([`pipeline.md` §1](workflows_and_pipelines/pipeline/pipeline.md)). Pointing it at a different application means replacing that folder's *contents*, never adding a sibling:
 
-```bash
-cp -r projects/templates/project_template projects/{{PROJECT_NAME}}
-```
+1. **Clear the outgoing project's generated state** — delete `platform_core_data/workspace/` and `platform_core_data/runs/`. Both are reproducible output; the run history belongs to the old application, not the new one. Commit that deletion on its own so the old history stays recoverable from git.
+2. **Replace the inputs** — `PRD.md`, `PRD_UserStories.md`, `run_configuration.md`, `architecture.md`, `glossary.md`, `onboarding.md`, and everything under `resources/`.
+3. **Replace the live-browser assets** — `browser/profile.json`, `browser/screens/`, `browser/components/`, and `credentials/credentials.json` (see step 3 below).
+4. **Empty, but do not delete, `knowledge_base/`** — clear each subfolder's contents and reset its `INDEX.md`. The folder *shape* is fixed and always present, including for categories with no entries yet ([`pipeline.md` §10.4](workflows_and_pipelines/pipeline/pipeline.md)).
+5. **Leave `platform_core/knowledge/` alone.** That layer is what survives retargeting — it is the entire reason the two-layer split exists ([§11](#11-knowledge-base)).
 
-Populate, in order: `PRD.md` (the approved requirements document — the only input Stage 1 ever reads), `run_configuration.md` (target environment, credentials location, in-scope modules), `architecture.md`, and `glossary.md`. The project's `knowledge_base/` tree scaffolds automatically with the same shape every project uses.
+Populate the inputs in this order: `PRD.md` (the approved requirements document — the only input Stage 1 ever reads), `run_configuration.md` (target environment, credentials location, in-scope modules), `architecture.md`, then `glossary.md`.
 
-### 3. Set up the Browser Driver (if the project needs live browser access)
+### 3. Set up the Browser Driver (if the application needs live browser access)
 
-Follow [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md): create `projects/{{PROJECT_NAME}}/browser/profile.json` (login selectors + a post-login success signal), then create `projects/{{PROJECT_NAME}}/credentials/credentials.json` from the provided template — this file is git-ignored and must never be committed.
+Follow [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md): create `platform_core_data/browser/profile.json` (login selectors + a post-login success signal), then create `platform_core_data/credentials/credentials.json` from the provided template — this file is git-ignored and must never be committed.
 
 ### 4. Run the pipeline
 
@@ -725,7 +718,7 @@ Every stage after Stage 1 requires the previous stage's checkpoint to already be
 
 ```mermaid
 flowchart LR
-    A["Invoke Stage 1<br/>against the new project"] --> B{{"Approve Project Context?"}}
+    A["Invoke Stage 1"] --> B{{"Approve Project Context?"}}
     B -->|yes| C["Invoke Stage 2"] --> D{{"Approve Discovery?"}}
     D -->|yes| E["Invoke Stage 3"] --> F{{"Approve Test Design?"}}
     F -->|yes| G["Invoke Stage 4"] --> GG{{"Approve Manual Execution?"}}
@@ -733,7 +726,7 @@ flowchart LR
     HH -->|yes| I["Invoke Stage 6 (mechanical)"] --> J["Invoke Stage 7"] --> K["Final QA Report delivered"]
 ```
 
-### 5. Validate the platform itself first (recommended for a brand-new project)
+### 5. Validate the platform itself first (recommended after retargeting)
 
 Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/workflows/first_run.md) — a narrow, fast smoke test covering only Stages 1–3 against a single module (Login). It proves the pipeline machinery works end to end; it is explicitly **not** a QA sign-off on the application itself.
 
@@ -750,7 +743,7 @@ Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/w
 | [`.claude/skills/*/SKILL.md`](.claude/skills/) | Full specification of each of the seven agent skills |
 | [`platform_core/knowledge/README.md`](platform_core/knowledge/README.md) | Platform Knowledge layer — structure and promotion rules |
 | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) | Shared browser automation engine, Browser Profile, Screen/Component knowledge, credentials handling |
-| [`projects/README.md`](projects/README.md) | The standard per-project layout every onboarded application follows |
+| [`platform_core_data/README.md`](platform_core_data/README.md) | The layout of the hosted project's inputs, workspace, and run history |
 | [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/workflows/first_run.md) | The Stages 1–3 smoke-test workflow |
 | [`workflows_and_pipelines/workflows/user_story_run.md`](workflows_and_pipelines/workflows/user_story_run.md) | Stages 3–7 for one User Story, reusing an existing Project Context + Discovery baseline |
 | [`workflows_and_pipelines/workflows/bug_fix_run.md`](workflows_and_pipelines/workflows/bug_fix_run.md) | Reproduce/verify a known bug's regression test case — Stage 6 → (conditional) Stage 5 → Stage 6 → Stage 7 |
@@ -773,8 +766,8 @@ Everything above this section is implemented or fully specified today (see [§4 
 - **Azure DevOps / Jira / TestRail / Xray integration** — resolving a work-item ID directly into a Run Scope, instead of pasted text or a Markdown file today.
 - **Story-Based Execution** — running the pipeline scoped to a single tracked work item end to end.
 - **Rich Reporting / HTML Dashboard** — a rendered view of the Final QA Report and run history, beyond today's Markdown artifacts.
-- **A cross-project run index** — a consolidated view across every onboarded project's run history, complementing (not replacing) each project's own `artifacts/runs/`.
-- **Additional automation frameworks** — Selenium and Cypress, onboarded the same way SHAFT and Playwright already are, per project need.
+- **A consolidated run index** — a queryable view over `platform_core_data/runs/`, complementing (not replacing) the run folders themselves.
+- **Additional automation frameworks** — Selenium and Cypress, onboarded the same way SHAFT and Playwright already are, as the application requires.
 
 ### Longer-term
 

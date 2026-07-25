@@ -6,8 +6,8 @@
 
 1. **Proceed with Stage 4 now?** Yes.
 2. **Automation Target** (§32.3): **Export, Reference-Project-compatible** — same choice as RUN-20260712-001's Login package. `E:\Automation2\NDC-Uplift-Automation` remains read-only; nothing in this run writes to it.
-3. **Framework** (§31.2): **SHAFT** — matches the Reference Project and the existing `NDC_tests_SHAFT` package.
-4. **Automation Strategy** (§33): **Continue `NDC_tests_SHAFT`** — this run extends the existing package in place (`projects/NDC/artifacts/runs/RUN-20260712-001/automation/NDC_tests_SHAFT/`), adding new Branch/Agency/Staff assets alongside the existing, untouched Login assets. Nothing under `AdminPages/Login/` was modified.
+3. **Framework** (§31.2): **SHAFT** — matches the Reference Project and the existing `tests_SHAFT` package.
+4. **Automation Strategy** (§33): **Continue `tests_SHAFT`** — this run extends the existing package in place (`platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT/`), adding new Branch/Agency/Staff assets alongside the existing, untouched Login assets. Nothing under `AdminPages/Login/` was modified.
 
 ## Target Framework
 
@@ -23,7 +23,7 @@ Page Object Model with a shared driver/session layer (`Drive_Factory.CommonMetho
 
 ## Design Pattern
 
-Page Object Model — one Page class per screen/module (`Branch_Page`, `Agency_Page`, `Staff_Page`), no locators in test classes, JSON-driven test data — per `projects/NDC/automation_framework.md`'s SHAFT package structure (Pages / Locators / Tests / Data layers).
+Page Object Model — one Page class per screen/module (`Branch_Page`, `Agency_Page`, `Staff_Page`), no locators in test classes, JSON-driven test data — per `platform_core_data/automation_framework.md`'s SHAFT package structure (Pages / Locators / Tests / Data layers).
 
 ## Planned Automation Suites
 
@@ -34,7 +34,7 @@ Organized by business workflow, per module (not by individual screen):
 
 ## Existing Assets (per §9 Existing Framework Analysis)
 
-Inspected both the platform's own registry (`NDC_AutomationPackages.md`) and the registered Reference Automation Project (`E:\Automation2\NDC-Uplift-Automation`), per §31.1/§32.4:
+Inspected both the platform's own registry (`AutomationPackages.md`) and the registered Reference Automation Project (`E:\Automation2\NDC-Uplift-Automation`), per §31.1/§32.4:
 
 | Asset | Source | Disposition |
 |---|---|---|
@@ -44,8 +44,8 @@ Inspected both the platform's own registry (`NDC_AutomationPackages.md`) and the
 | `SearchAgency_Page.java` (Agency List/Search) | Reference Project | Inspected, confirmed current/reusable, **not needed this run** (TC-AGENCY-003 is a manual charter, not automated) |
 | `AddAgencyCore_Page.java` (Agency Add form) | Reference Project | **NOT reused — stale.** Targets a materially different, older form (`groupId`/`agencyphone`/`orgModal.address` ids, jQuery-UI datepicker) that matches nothing this run's Discovery observed. A Reference Project staleness gap, not silently fixed in place (§32.2). |
 | `AddAgency_Page.java` | Reference Project | **NOT reused — empty stub**, no locators/methods at all. |
-| `Drive_Factory.CommonMethod` | This platform's own `NDC_tests_SHAFT` (RUN-20260712-001) | Reused unchanged |
-| `AdminPages.Login.LogIn_Page` / `CredentialsLoader` | This platform's own `NDC_tests_SHAFT` (RUN-20260712-001) | Reused unchanged, for the shared `AdminTestBase` login step |
+| `Drive_Factory.CommonMethod` | This platform's own `tests_SHAFT` (RUN-20260712-001) | Reused unchanged |
+| `AdminPages.Login.LogIn_Page` / `CredentialsLoader` | This platform's own `tests_SHAFT` (RUN-20260712-001) | Reused unchanged, for the shared `AdminTestBase` login step |
 
 ## Assets To Generate
 
@@ -61,7 +61,7 @@ See "Existing Assets" table above — `Branch_Page.java`'s and `Staff_Page.java`
 
 ## Estimated Automation Coverage
 
-13 of 17 approved test cases (76%) received a Generate decision. 1 (TC-BRANCH-007) is a conditional Generate, pending TC-BRANCH-006's charter. 3 (TC-BRANCH-006, TC-AGENCY-003, TC-STAFF-004) are Manual Only — Exploratory-test dispositions carried directly from Test Design, never forced into a fixed-assertion script. See `NDC_AutomationDecisionReport_SHAFT.md` for the full per-case breakdown.
+13 of 17 approved test cases (76%) received a Generate decision. 1 (TC-BRANCH-007) is a conditional Generate, pending TC-BRANCH-006's charter. 3 (TC-BRANCH-006, TC-AGENCY-003, TC-STAFF-004) are Manual Only — Exploratory-test dispositions carried directly from Test Design, never forced into a fixed-assertion script. See `AutomationDecisionReport_SHAFT.md` for the full per-case breakdown.
 
 ## Known Manual Tests
 

@@ -6,7 +6,7 @@ Per-case disposition for every one of the 66 approved Agency Test Design cases (
 
 | Test Case | Disposition | Reason |
 |---|---|---|
-| CREATE-001 | Reuse | Already automated in `NDC_tests_SHAFT` (RUN-20260712-002), ported forward |
+| CREATE-001 | Reuse | Already automated in `tests_SHAFT` (RUN-20260712-002), ported forward |
 | CREATE-002 | Generate | `Send For Approval` + `getInvalidFieldsDiagnostic()` already proven |
 | CREATE-003 | Generate | Same fill/submit mechanics as CREATE-001, different Agency Name value |
 | CREATE-004 | Partially Automatable | No documented length limit (Test Design itself calls it exploratory) |
@@ -51,7 +51,7 @@ Per-case disposition for every one of the 66 approved Agency Test Design cases (
 | Test Case | Disposition | Reason |
 |---|---|---|
 | SEARCH-001 | Generate | `id-Agencycode` confirmed live |
-| SEARCH-002 | Reuse | Already automated in `NDC_tests_SHAFT` (RUN-20260713-001), ported forward with `.70` fixture data |
+| SEARCH-002 | Reuse | Already automated in `tests_SHAFT` (RUN-20260713-001), ported forward with `.70` fixture data |
 | SEARCH-003 | Generate | `id-SelectCountry`/`id-State`/`id-City` (p-multiselect) confirmed live |
 | SEARCH-004 | Generate | `id-Status-Active/Inactive/Both` already proven |
 | SEARCH-005 | Generate | `isNoDataFoundShown()` already proven (existing SearchAgency_Page) |

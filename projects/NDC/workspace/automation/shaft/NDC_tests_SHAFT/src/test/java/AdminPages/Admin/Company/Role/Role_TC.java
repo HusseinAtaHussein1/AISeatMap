@@ -14,11 +14,11 @@ import java.util.List;
 /**
  * NDC Admin / Role (Create Role) Test Suite — RUN-20260721-001, Stage 4 (Automation Agent).
  * Automates TC-ROLE-002, 003, 004, 009, 010, 011, 012, 013, 014, 015, 016, 019, 020 — every
- * scenario traces to NDC_TestCases_Role.md / NDC_TraceabilityMatrix.md (workspace/test_design/Role/).
+ * scenario traces to TestCases_Role.md / TraceabilityMatrix.md (workspace/test_design/Role/).
  * TC-ROLE-001 is Partially Automatable (see roleValidNameRaisesNoFormatOrDuplicateError, below —
  * deliberately never completes a real save). TC-ROLE-005/006/007/008/017/018 are Assumption-based
  * (Test Design disposition) and TC-ROLE-021/022 are Exploratory charters (Finding disposition) —
- * none of these six are @Test methods here, per NDC_AutomationDecisionReport_SHAFT.md.
+ * none of these six are @Test methods here, per AutomationDecisionReport_SHAFT.md.
  *
  * Environment note: mutation is NOT authorized this run (Project Context §5, shared staging). Every
  * test below either (a) asserts a validation path that blocks submission before any save occurs, or

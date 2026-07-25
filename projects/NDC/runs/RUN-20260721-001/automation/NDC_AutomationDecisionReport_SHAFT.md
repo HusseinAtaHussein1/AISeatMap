@@ -1,6 +1,6 @@
 # NDC — Automation Decision Report — RUN-20260721-001 — SHAFT
 
-**Status:** Pending Review · Every one of the 22 approved test cases (`workspace/test_design/Role/NDC_TestCases_Role.md`) receives exactly one decision below.
+**Status:** Pending Review · Every one of the 22 approved test cases (`workspace/test_design/Role/TestCases_Role.md`) receives exactly one decision below.
 
 | Test Case | Decision | Justification | Reused Assets | Generated Assets | Automation Readiness | Known Limitations |
 |---|---|---|---|---|---|---|
@@ -24,7 +24,7 @@
 | TC-ROLE-018 | **Manual Only** | Test Design's own assumption-based disposition — cross-row isolation, not independently re-verified for every row combination. | — | — | Not automated this run | — |
 | TC-ROLE-019 | Generate New Automation | Deterministic navigation assertion, no data persisted. | `Branch_Page`'s Cancel-button locator pattern | `Role_TC.cancelNavigatesToRoleList()` | Ready | — |
 | TC-ROLE-020 | Generate New Automation | Structural/cosmetic label check (FINDING-003). | — | `Role_TC.submitButtonLabelIsSendForApproval()` | Ready | Confirms the button resolves and is reachable; the label text itself is evidenced by this run's Discovery screenshot, not re-scraped via a separate `getText()` call for a single cosmetic assertion. |
-| TC-ROLE-021 | **Manual Only** (Exploratory charter) | Finding disposition (FINDING-001) — no fixed pass/fail assertion is possible for a control that does not exist; per explicit user instruction, this is a charter for a human reviewer, not a script. | — | — | Not automated — by design | See `NDC_TestCases_Role.md` TC-ROLE-021. |
+| TC-ROLE-021 | **Manual Only** (Exploratory charter) | Finding disposition (FINDING-001) — no fixed pass/fail assertion is possible for a control that does not exist; per explicit user instruction, this is a charter for a human reviewer, not a script. | — | — | Not automated — by design | See `TestCases_Role.md` TC-ROLE-021. |
 | TC-ROLE-022 | **Manual Only** (Exploratory charter) | Finding disposition (FINDING-004) — same reasoning; also requires the Admin-tier credential this project doesn't currently have. | — | — | Not automated — by design | Same |
 
 ## Totals

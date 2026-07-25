@@ -14,7 +14,7 @@
 
 ## Automation Coverage
 
-**100%** of the 3 approved Manual Test Suite cases received a full automation decision (Generate New Automation). This figure reflects a deliberately narrow, Spike-scoped Manual Test Suite (Project Context v2) — it is not a claim of exhaustive Login-security coverage. See `NDC_CoverageReport.md` (Stage 3) Coverage Gaps for everything explicitly deferred (lockout, rate-limiting, security-input handling, boundary values) before this figure is read as "Login is fully tested."
+**100%** of the 3 approved Manual Test Suite cases received a full automation decision (Generate New Automation). This figure reflects a deliberately narrow, Spike-scoped Manual Test Suite (Project Context v2) — it is not a claim of exhaustive Login-security coverage. See `CoverageReport.md` (Stage 3) Coverage Gaps for everything explicitly deferred (lockout, rate-limiting, security-input handling, boundary values) before this figure is read as "Login is fully tested."
 
 ## Named Reasons — Partially Automatable / Manual Only
 

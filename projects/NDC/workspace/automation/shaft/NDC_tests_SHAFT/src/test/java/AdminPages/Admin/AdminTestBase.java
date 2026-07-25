@@ -30,4 +30,17 @@ public class AdminTestBase {
     public void teardownDriver() {
         CommonMethod.quitDriver();
     }
+
+    /** Short, fixed pause for Angular-async-render gaps that don't expose a reliable poll target
+     *  (e.g. a toast fade-in). Centralized 2026-07-25 — was duplicated identically across
+     *  Agency_Actions_TC/Agency_Search_TC/Agency_Update_TC. Prefer a real poll (see Agency_Page's
+     *  own submit()/Branch_Page's waitForOptionPanel()) over this wherever a concrete end-state
+     *  exists to wait for. */
+    protected void waitBriefly() {
+        try {
+            Thread.sleep(1200);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

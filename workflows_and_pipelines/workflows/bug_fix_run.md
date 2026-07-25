@@ -72,7 +72,7 @@ This workflow requires, already `Approved`, from a prior run:
 
 Per the same mechanism as `workflows_and_pipelines/workflows/user_story_run.md` §4 Step 1 (`pipeline/pipeline.md` §5.4, extended to this workflow's entry point):
 
-1. Inspect the Run Manifest for `{{PROJECT_NAME}}` and confirm, plainly: Stage 1 Approved, Stage 3 Approved with this bug's regression test case present and traceable to its Finding ID, and an existing Automation Package with a recorded decision for that test case.
+1. Inspect the Run Manifest and confirm, plainly: Stage 1 Approved, Stage 3 Approved with this bug's regression test case present and traceable to its Finding ID, and an existing Automation Package with a recorded decision for that test case.
 2. If any of these is missing: **stop and ask** — never assume a test case exists, never invent one, never silently fall back to running Stage 3 without being asked to.
 3. Once confirmed, proceed to Step 2.
 
@@ -138,13 +138,13 @@ This step is skipped only in the branch where Step 3 itself was skipped (automat
 
 | Artifact | Path | Produced By |
 |---|---|---|
-| Execution Results (reproduction) | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 2) |
-| Updated Automation Package (if Step 3 ran) | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests_{Framework}/` | Automation Agent |
-| Execution Results (verification, if Step 4 ran) | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 4) |
-| Final QA Report | `projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md` | Reporting Agent |
-| Run Summary | `projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX-{ai_generated_slug}/metadata/run_summary.md` | Run Manager |
+| Execution Results (reproduction) | `platform_core_data/workspace/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 2) |
+| Updated Automation Package (if Step 3 ran) | `platform_core_data/workspace/automation/tests_{Framework}/` | Automation Agent |
+| Execution Results (verification, if Step 4 ran) | `platform_core_data/workspace/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 4) |
+| Final QA Report | `platform_core_data/workspace/reporting/Final_QA_Report.md` | Reporting Agent |
+| Run Summary | `platform_core_data/runs/RUN-YYYYMMDD-XXX-{ai_generated_slug}/metadata/run_summary.md` | Run Manager |
 
-NDC uses its `workspace/` variant of these paths — see `projects/NDC/onboarding.md`.
+NDC uses its `workspace/` variant of these paths — see `platform_core_data/onboarding.md`.
 
 # 6. Success Criteria
 
@@ -177,10 +177,9 @@ This workflow does not introduce a new pipeline, stage, or skill. It is a **reus
 
 ```text
 Workflow: Bug Fix Run
-Application: OrangeHRM
 Bug: FINDING-003 — "Forgot Password must not time out for a valid,
      existing username" (regression test case TC-LOGIN-004, disposition:
      Regression test, per a prior Test Design run)
 ```
 
-Hypothetical result: Step 1 confirms `OrangeHRM_ProjectContext.md`, the Login Manual Test Suite (with `TC-LOGIN-004`), and an existing Playwright automation package are all Approved; Step 2 re-runs `TC-LOGIN-004`'s existing script and it now Passes (the corrected, non-timing-out behavior is observed) — automation for this case already existed in full, so Step 3 is skipped; Step 5 (Reporting) produces a Final QA Report stating FINDING-003's regression test case now passes, confirming the fix, with no further automation work required.
+Hypothetical result: Step 1 confirms `ProjectContext.md`, the Login Manual Test Suite (with `TC-LOGIN-004`), and an existing Playwright automation package are all Approved; Step 2 re-runs `TC-LOGIN-004`'s existing script and it now Passes (the corrected, non-timing-out behavior is observed) — automation for this case already existed in full, so Step 3 is skipped; Step 5 (Reporting) produces a Final QA Report stating FINDING-003's regression test case now passes, confirming the fix, with no further automation work required.

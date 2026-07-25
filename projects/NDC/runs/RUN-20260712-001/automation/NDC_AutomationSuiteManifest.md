@@ -2,7 +2,7 @@
 
 # Automation Suite Manifest — NDC
 
-## Login Suite (`NDC_tests/tests/login.spec.js`)
+## Login Suite (`tests/tests/login.spec.js`)
 
 - **Business workflow:** Login / Authentication
 - **Test cases:** TC-LOGIN-001, TC-LOGIN-002, TC-LOGIN-003

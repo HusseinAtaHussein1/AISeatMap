@@ -18,7 +18,7 @@ const {
 /**
  * Builds a `relPath -> sha256` map for every non-ignored file under `dirAbsPath`, plus the list of
  * ignored paths found along the way (build output, IDE folders, report archives — real, confirmed
- * examples: NDC_tests_SHAFT ships its own nested .gitignore excluding target/, allure-results/,
+ * examples: tests_SHAFT ships its own nested .gitignore excluding target/, allure-results/,
  * execution-summary/, generatedReport*.zip). Ignored files are never part of the merge diff; they
  * are reported separately ("discardedIgnored") so their removal at Cleanup is a visible, accounted-
  * for decision rather than a silent side effect of a directory delete.

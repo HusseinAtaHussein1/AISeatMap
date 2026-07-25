@@ -10,7 +10,7 @@
 
 ## Observed Behaviour
 
-1. Navigated to `http://192.168.1.70` (the login screen's own host, per `projects/NDC/browser/profile.json`'s `defaultBaseUrl`).
+1. Navigated to `http://192.168.1.70` (the login screen's own host, per `platform_core_data/browser/profile.json`'s `defaultBaseUrl`).
 2. Authenticated successfully with a valid, existing project credential.
 3. Browser was redirected to `http://192.168.1.80/dashboard` (title "NDC - Dashboard") — a **different IP** than the login screen's host.
 
@@ -27,7 +27,7 @@ Possibly a reverse-proxy/load-balancer arrangement where `.70` fronts authentica
 
 ## Recommendation
 
-Confirm with the infrastructure/DevOps owner whether this is intentional. If intentional, `projects/NDC/browser/profile.json`'s `login.successSelector` (`text=Dashboard`) remains valid as-is (it does not assert a host), and no automation change is needed — but `defaultBaseUrl` should be revisited if any future screen needs to be reached directly by URL post-login. If unintentional, this may indicate a misconfigured redirect worth its own investigation.
+Confirm with the infrastructure/DevOps owner whether this is intentional. If intentional, `platform_core_data/browser/profile.json`'s `login.successSelector` (`text=Dashboard`) remains valid as-is (it does not assert a host), and no automation change is needed — but `defaultBaseUrl` should be revisited if any future screen needs to be reached directly by URL post-login. If unintentional, this may indicate a misconfigured redirect worth its own investigation.
 
 ## Missing Evidence
 

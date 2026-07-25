@@ -8,16 +8,16 @@
 
 - **Run Scope Type:** User Story · **Source:** Pasted text — WT1-T2919 "E-Ticket Template Modification – Agency Branding On/Off Feature."
 - **Run Type:** User Story.
-- **Project Context designed against:** `context/NDC_ProjectContext_ETicketBranding.md` ("Track B" — a separate document from `NDC_ProjectContext_Agency.md`, per the user-confirmed track split 2026-07-18), status `Pending`.
+- **Project Context designed against:** `context/ProjectContext_ETicketBranding.md` ("Track B" — a separate document from `ProjectContext_Agency.md`, per the user-confirmed track split 2026-07-18), status `Pending`.
 - **Test Design Strategy applied:** User Story strategy — narrowest breadth, one test case per enumerated acceptance criterion. Several genuine AC ambiguities (§7) meant designing both a literal-reading case and, where a contrast/inverse behavior was only inferred rather than stated, a separate inferred-continuity case — flagged as such, not silently merged with the directly-stated one.
 
 ## 2. Requirements Covered
 
-12 of 19 in-scope Requirement IDs are **Covered**. See `NDC_TraceabilityMatrix_ETicketBranding.md` for the full list.
+12 of 19 in-scope Requirement IDs are **Covered**. See `TraceabilityMatrix_ETicketBranding.md` for the full list.
 
 ## 3. Coverage Matrix
 
-See `NDC_TraceabilityMatrix_ETicketBranding.md`.
+See `TraceabilityMatrix_ETicketBranding.md`.
 
 ## 4. Business Rules
 
@@ -38,13 +38,13 @@ See `NDC_TraceabilityMatrix_ETicketBranding.md`.
 
 By area: Agency Type Configuration (4: TC-001 through 004), E-Ticket Page (11: TC-005 through 015), Booking Confirmation Page (4: TC-016 through 019), Edge Cases (2: TC-020, 021), Design Notes/Integration (3: TC-022 through 024).
 
-**Negative Test Generation Engine (§7) accounting:** this feature has no free-text/numeric user-input fields of its own (Agency Type is a two-value radio button already covered by Positive/Exploratory design) — Invalid Inputs, Boundary Values, Unicode, Special Characters, and Security Inputs are **Not Applicable** for this User Story's own new surface (they remain applicable to Agency CRUD's *other* fields, already covered in `NDC_TestCases_Agency.md`). Empty Values is applicable and covered (TC-ETB-004, Agency Type left unselected). Timeouts is Not Applicable (Stage 5 environment control unavailable to Test Design).
+**Negative Test Generation Engine (§7) accounting:** this feature has no free-text/numeric user-input fields of its own (Agency Type is a two-value radio button already covered by Positive/Exploratory design) — Invalid Inputs, Boundary Values, Unicode, Special Characters, and Security Inputs are **Not Applicable** for this User Story's own new surface (they remain applicable to Agency CRUD's *other* fields, already covered in `TestCases_Agency.md`). Empty Values is applicable and covered (TC-ETB-004, Agency Type left unselected). Timeouts is Not Applicable (Stage 5 environment control unavailable to Test Design).
 
 **Required Dimensions (§17) accounting:** Positive Scenarios, Validation Rules (partial — Mandatory/Optional status itself unstated), Business Rules, Permissions (N/A — no new role introduced), Configuration (this entire feature *is* a configuration-driven rendering toggle — Agency Type as the config, TC-ETB-001 through 024 collectively cover it), Regression Impact (TC-ETB-021's already-issued-tickets guard), Integration Behaviour (TC-ETB-024), Risk-based Prioritization, and Exploratory Recommendations (§10) are all evaluated. Boundary Testing and Error Handling are largely Not Applicable — this feature has no numeric/format fields or user-facing error messages of its own.
 
 ## 6. Manual Test Cases
 
-Full test case content: `test_design/NDC_TestCases_ETicketBranding.md` (Markdown) and `.xlsx` (Excel) — identical underlying data.
+Full test case content: `test_design/TestCases_ETicketBranding.md` (Markdown) and `.xlsx` (Excel) — identical underlying data.
 
 ## 7. Assumptions
 
@@ -71,7 +71,7 @@ Full test case content: `test_design/NDC_TestCases_ETicketBranding.md` (Markdown
 | FR-ETB-EDGE-01 | Depends on TC-ETB-004 first confirming an Agency-Type-unset state is actually reachable. |
 | FR-ETB-DESIGN-01 | Visual-consistency check (TC-ETB-022) is a judgment call, not a fixed assertion. |
 
-**Out-of-Scope Requirements:** Agency CRUD's own existing field-level validation (governed by `NDC_ProjectContext_Agency.md`); any Booking Module screen other than E-Ticket/Booking Confirmation; Rule Engine Module (not named by this User Story).
+**Out-of-Scope Requirements:** Agency CRUD's own existing field-level validation (governed by `ProjectContext_Agency.md`); any Booking Module screen other than E-Ticket/Booking Confirmation; Rule Engine Module (not named by this User Story).
 
 **Unknown/Unassessed Requirements:** none.
 
@@ -103,9 +103,9 @@ Full test case content: `test_design/NDC_TestCases_ETicketBranding.md` (Markdown
 
 | Automation Agent needs | Status |
 |---|---|
-| Project Context (Governing) | `context/NDC_ProjectContext_ETicketBranding.md` — present, `Pending` review |
-| Manual Test Suite (Primary) | `test_design/NDC_TestCases_ETicketBranding.md` + `.xlsx` — present, 24 test cases |
-| Requirement Traceability Matrix (Primary) | `test_design/NDC_TraceabilityMatrix_ETicketBranding.md` — present |
+| Project Context (Governing) | `context/ProjectContext_ETicketBranding.md` — present, `Pending` review |
+| Manual Test Suite (Primary) | `test_design/TestCases_ETicketBranding.md` + `.xlsx` — present, 24 test cases |
+| Requirement Traceability Matrix (Primary) | `test_design/TraceabilityMatrix_ETicketBranding.md` — present |
 | Coverage Report (Secondary) | This document |
 | Discovery Artifacts (Secondary) | **None exist** — every Discovery Reference in this suite says so explicitly; a real, standing gap per Recommendation 2 |
 | Findings (Secondary) | None raised yet — no Discovery has run |

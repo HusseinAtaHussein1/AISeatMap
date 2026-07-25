@@ -4,19 +4,17 @@ import AdminPages.Admin.AdminMenu;
 import AdminPages.Admin.AdminTestBase;
 import AdminPages.Admin.Agency.Agency.Agency_Page;
 import AdminPages.Admin.Agency.Agency.AgencyActions_Page;
-import com.google.gson.JsonObject;
-import org.openqa.selenium.By;
+import AdminPages.Admin.Agency.Agency.SearchAgency_Page;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.List;
 
 /**
- * NDC Admin / Agency — Actions suite. RUN-20260718-001, Stage 4 (new NDC_tests_SHAFT_Agency
+ * NDC Admin / Agency — Actions suite. RUN-20260718-001, Stage 4 (new tests_SHAFT_Agency
  * package). Traces to TC-AGENCY-ACTIONS-001 through -009 (ACTIONS-010 is Manual Only, a
- * role/business clarification, not coded here — see NDC_AutomationPlan_SHAFT_Agency.md).
+ * role/business clarification, not coded here — see AutomationPlan_SHAFT_Agency.md).
  *
  * Fully backed by runs/RUN-20260718-001/discovery/Agency_Actions.md — a live browser session
  * against http://192.168.1.70 that created disposable QASPIKE_ACT* fixtures and drove each of
@@ -27,26 +25,21 @@ import java.util.List;
  */
 public class Agency_Actions_TC extends AdminTestBase {
 
-    private void openAgencyAdd() {
-        new AdminMenu(driver).openAgency();
-        driver.element().click(By.xpath("//a[@href=\"/admin/agency\"]"));
-        driver.element().click(By.xpath("//button[normalize-space()=\"Add agency\"]"));
+    private SearchAgency_Page openAgencyList() throws InterruptedException {
+        new AdminMenu(driver).openAgency().openAgencyList();
+        return new SearchAgency_Page(driver).showAll();
     }
 
-    private void openAgencyList() {
-        new AdminMenu(driver).openAgency();
-        driver.element().click(By.xpath("//a[@href=\"/admin/agency\"]"));
-        driver.element().click(By.xpath("//p-radiobutton[.//input[@id=\"id-Status-Both\"]]"));
-        driver.element().click(By.xpath("//button[@type=\"submit\"]"));
-        waitBriefly();
+    private Agency_Page openAgencyAdd() {
+        new AdminMenu(driver).openAgency().openAgencyList();
+        return new SearchAgency_Page(driver).clickAddAgency();
     }
 
     /** Creates one fresh, disposable Pending Agency and returns its unique name (== its Agency
      *  Code column's Agency Name cell, which every test below searches the grid for). */
     private String createFreshPendingFixture(String prefix) throws Exception {
         String uniqueName = prefix + (System.nanoTime() % 100000);
-        openAgencyAdd();
-        Agency_Page agency = new Agency_Page(driver);
+        Agency_Page agency = openAgencyAdd();
         agency.selectBranch("Test")
                 .fillRequiredCore(uniqueName, "QA Spike Actions test address", "1009876543")
                 .selectStateAndCity("Asyut", "Asyut")
@@ -65,24 +58,8 @@ public class Agency_Actions_TC extends AdminTestBase {
 
     /** Resolves the Agency Code (e.g. "AGN10200") for a given Agency Name by reading row 0 of a
      *  blank/Both search — confirmed live that a freshly-created record sorts to the top. */
-    private String resolveCodeForName(String agencyName) {
-        openAgencyList();
-        List<org.openqa.selenium.WebElement> rows = driver.getDriver().findElements(By.xpath("//table/tbody/tr"));
-        for (org.openqa.selenium.WebElement row : rows) {
-            List<org.openqa.selenium.WebElement> cells = row.findElements(By.tagName("td"));
-            if (!cells.isEmpty() && cells.get(1).getText().equals(agencyName)) {
-                return cells.get(0).getText();
-            }
-        }
-        throw new IllegalStateException("Could not find a freshly-created Agency named " + agencyName + " in the first page of results.");
-    }
-
-    private void waitBriefly() {
-        try {
-            Thread.sleep(1200);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    private String resolveCodeForName(String agencyName) throws InterruptedException {
+        return openAgencyList().resolveCodeForName(agencyName);
     }
 
     // ---- TC-AGENCY-ACTIONS-001 ----
@@ -95,7 +72,7 @@ public class Agency_Actions_TC extends AdminTestBase {
         waitBriefly();
         Assert.assertTrue(actions.getCurrentUrl().contains("/admin/agency/edit/"),
                 "Pencil should navigate to the Update Agency screen (/admin/agency/edit/{id}).");
-        String storedName = driver.element().getAttribute(By.xpath("//input[@id=\"id-Agency\"]"), "value");
+        String storedName = new Agency_Page(driver).getAgencyNameValue();
         Assert.assertEquals(storedName, name, "The Update screen must be for the exact row clicked.");
     }
 

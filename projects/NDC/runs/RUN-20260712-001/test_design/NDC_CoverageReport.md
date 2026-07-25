@@ -1,14 +1,14 @@
 # NDC — Coverage Report — RUN-20260712-001 (Login / Authentication)
 
-**Status:** `Approved` (reviewer: Aymoon, QA Architect / Test Lead role, 2026-07-12) · Produced by Test Design Agent v3, per the Standard Output Contract (`agents/test_design_agent.md` §18). Updated 2026-07-12 after the Login Test Case Validation Pass (`NDC_LoginGapAnalysis.md`), then finalized the same day once the anti-enumeration and Logout questions were resolved as automatic Engineering Decisions (`pipeline/pipeline.md` §5.5) rather than asked about.
+**Status:** `Approved` (reviewer: Aymoon, QA Architect / Test Lead role, 2026-07-12) · Produced by Test Design Agent v3, per the Standard Output Contract (`agents/test_design_agent.md` §18). Updated 2026-07-12 after the Login Test Case Validation Pass (`LoginGapAnalysis.md`), then finalized the same day once the anti-enumeration and Logout questions were resolved as automatic Engineering Decisions (`pipeline/pipeline.md` §5.5) rather than asked about.
 
 ## 1. Run Scope
 
-Type = Feature · Source = Custom scope description · **Observation-based Spike** — see `NDC_ProjectContext_LoginAuthentication.md`. Scope: the NDC Admin Portal Login screen only.
+Type = Feature · Source = Custom scope description · **Observation-based Spike** — see `ProjectContext_LoginAuthentication.md`. Scope: the NDC Admin Portal Login screen only.
 
 ## 2. Requirements Covered
 
-8 test cases now trace to either a Project Context v2 §6 Open Question or a directly-observed structural property (see `NDC_LoginGapAnalysis.md`'s Traceability Matrix for the full cross-reference against the live screen, this platform's own Discovery, and the Reference SHAFT Project). Forgot Password existence, Logout, and lockout/rate-limiting remain explicitly out of scope / deferred, not uncovered requirements — Logout's exclusion was decided automatically (Engineering Decision), not asked about.
+8 test cases now trace to either a Project Context v2 §6 Open Question or a directly-observed structural property (see `LoginGapAnalysis.md`'s Traceability Matrix for the full cross-reference against the live screen, this platform's own Discovery, and the Reference SHAFT Project). Forgot Password existence, Logout, and lockout/rate-limiting remain explicitly out of scope / deferred, not uncovered requirements — Logout's exclusion was decided automatically (Engineering Decision), not asked about.
 
 ## 3. Coverage Matrix
 
@@ -38,7 +38,7 @@ Positive (valid login, password masking, loading-indicator attribute), Negative 
 
 ## 6. Manual Test Cases (by reference)
 
-TC-LOGIN-001 through TC-LOGIN-008 — see `NDC_TestCases_Login.md` / `.xlsx`.
+TC-LOGIN-001 through TC-LOGIN-008 — see `TestCases_Login.md` / `.xlsx`.
 
 ## 7. Assumptions
 
@@ -55,7 +55,7 @@ TC-LOGIN-001 through TC-LOGIN-008 — see `NDC_TestCases_Login.md` / `.xlsx`.
 | Empty-field submission — direct re-observation (combined + both split cases) | Not independently re-verified this run (time-boxed Spike) | Test Gap — recommend a follow-up Discovery pass before Stage 4 hardens TC-LOGIN-003/005/006's assertions |
 | TC-LOGIN-008 (anti-enumeration) not yet independently observed | Designed from Test Design reasoning + Reference Project precedent; not yet exercised via this platform's own live Discovery | Test Gap — recommend Stage 5 (Execution) as the first real observation of this exact scenario, or a quick Discovery confirmation first if higher confidence is wanted before automating |
 | Logout | Out of Current Scope — decided automatically as an Engineering Decision, not a gap | Documented candidate for a future module/run, not designed this run |
-| Enter-key submission, already-authenticated-user behavior, password-visibility toggle, field trimming, copy/paste restrictions, browser-refresh mid-form, session/cookie inspection | No evidence from any source (this run's Discovery or the Reference Project) that these exist/apply | Not designed — explicitly not invented, per instruction; recorded as Open Questions in `NDC_LoginGapAnalysis.md`, not silently omitted |
+| Enter-key submission, already-authenticated-user behavior, password-visibility toggle, field trimming, copy/paste restrictions, browser-refresh mid-form, session/cookie inspection | No evidence from any source (this run's Discovery or the Reference Project) that these exist/apply | Not designed — explicitly not invented, per instruction; recorded as Open Questions in `LoginGapAnalysis.md`, not silently omitted |
 
 ## 9. Risks
 
@@ -84,11 +84,11 @@ TC-LOGIN-001 through TC-LOGIN-008 — see `NDC_TestCases_Login.md` / `.xlsx`.
 
 ## 12. Inputs for Automation Agent
 
-- Manual Test Suite: `NDC_TestCases_Login.md` / `.xlsx` (this folder)
-- Traceability Matrix: `NDC_TraceabilityMatrix.md` (this folder)
+- Manual Test Suite: `TestCases_Login.md` / `.xlsx` (this folder)
+- Traceability Matrix: `TraceabilityMatrix.md` (this folder)
 - Coverage Report: this document
-- Gap Analysis / Validation Pass: `NDC_LoginGapAnalysis.md` (this folder)
+- Gap Analysis / Validation Pass: `LoginGapAnalysis.md` (this folder)
 - Discovery Artifacts: `../discovery/Login_Screen.md`, `Timeline.md`, `Coverage_Summary.md`, `QA_Assessment_Report.md`, `_login_discovery_supplement_results.json`
 - Findings: `../discovery/findings/Findings_Summary.md`, `FINDING-NDC-LOGIN-001_CrossHostRedirect/metadata.md`, `FINDING-NDC-LOGIN-002_ReferenceProjectRememberMeStale/metadata.md`
-- Project Context: `../context/NDC_ProjectContext_LoginAuthentication.md`
-- Automation Package options (per the platform's multi-package model, `agents/automation_agent.md` §31): the SHAFT-structure spec at `projects/NDC/automation_framework.md`, and/or the Reference SHAFT Project at `projects/NDC/reference_automation_project.md` — which one (or neither) applies is decided by Stage 4's own Framework/Target/Strategy Decision Gates, not fixed here.
+- Project Context: `../context/ProjectContext_LoginAuthentication.md`
+- Automation Package options (per the platform's multi-package model, `agents/automation_agent.md` §31): the SHAFT-structure spec at `platform_core_data/automation_framework.md`, and/or the Reference SHAFT Project at `platform_core_data/reference_automation_project.md` — which one (or neither) applies is decided by Stage 4's own Framework/Target/Strategy Decision Gates, not fixed here.

@@ -44,7 +44,7 @@ Structured per `agents/execution_agent.md` §18 Standard Output Contract.
 ## 4. Evidence Inventory
 
 - Raw JUnit/TestNG XML: `target/surefire-reports/TEST-TestSuite.xml` (in the package directory, not copied into this run's artifacts — gitignored build output, regenerable via the Execution Instructions).
-- Allure results (screenshots/attachments per test): `.../NDC_tests_SHAFT/allure-results/` — shared, cumulative across both RUN-20260712-001 and this run (not partitioned per-run by the tooling itself); not individually curated into `projects/NDC/artifacts/runs/RUN-20260712-002/execution/evidence/` this pass — a stated gap, not a silent one (see Known Limitations).
+- Allure results (screenshots/attachments per test): `.../tests_SHAFT/allure-results/` — shared, cumulative across both RUN-20260712-001 and this run (not partitioned per-run by the tooling itself); not individually curated into `platform_core_data/runs/RUN-20260712-002/execution/evidence/` this pass — a stated gap, not a silent one (see Known Limitations).
 - Full console log captured for this invocation; failure stack traces reproduced verbatim in §3 above and the Repair Summary.
 
 ## 5. Execution Statistics
@@ -102,10 +102,10 @@ A second repair round was not attempted without checking back in — see the que
 ## 10. Inputs for Reporting Agent
 
 - This Execution Results document
-- `NDC_AutomationSummary_SHAFT.md`, `NDC_AutomationDecisionReport_SHAFT.md` (Stage 4)
-- `NDC_CoverageReport.md`, `NDC_TraceabilityMatrix.md` (Stage 3)
+- `AutomationSummary_SHAFT.md`, `AutomationDecisionReport_SHAFT.md` (Stage 4)
+- `CoverageReport.md`, `TraceabilityMatrix.md` (Stage 3)
 - `QA_Assessment_Report.md`, `Findings_Summary.md` (Stage 2)
-- Project Context: `NDC_ProjectContext_BranchAgencyStaff.md`
+- Project Context: `ProjectContext_BranchAgencyStaff.md`
 
 ---
 

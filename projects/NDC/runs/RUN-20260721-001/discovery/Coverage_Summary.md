@@ -29,7 +29,7 @@ Run Scope Type: **User Story** (narrowest strategy — verify the AC's own state
 
 ## Unreachable Areas
 
-- **Admin-tier credential's (`e.saady`) view of the Add Role screen** — `projects/NDC/credentials/credentials.json` currently populates only the Super Admin (`odeysysadmin`) account for this project's STG environment; the Admin-tier account is not available to test with this session. Relevant specifically to FINDING-004 (whether the Admin tier sees a different/fuller segment list, e.g. including Import PNR/Import Booked PNR).
+- **Admin-tier credential's (`e.saady`) view of the Add Role screen** — `platform_core_data/credentials/credentials.json` currently populates only the Super Admin (`odeysysadmin`) account for this project's STG environment; the Admin-tier account is not available to test with this session. Relevant specifically to FINDING-004 (whether the Admin tier sees a different/fuller segment list, e.g. including Import PNR/Import Booked PNR).
 
 ## Coverage %
 

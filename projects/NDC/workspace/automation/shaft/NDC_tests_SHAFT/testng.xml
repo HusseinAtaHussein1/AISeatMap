@@ -12,8 +12,8 @@
     </classes>
   </test>
   <!-- Agency: updated 2026-07-24 -- the four split classes below replace the old combined
-       Agency_TC, consolidated in from the former NDC_tests_SHAFT_Agency package (see
-       ../NDC_AutomationPackages.md Notes). -->
+       Agency_TC, consolidated in from the former tests_SHAFT_Agency package (see
+       ../AutomationPackages.md Notes). -->
   <test name="Agency">
     <classes>
       <class name="AdminPages.Admin.Agency.Agency_Create_TC"/>

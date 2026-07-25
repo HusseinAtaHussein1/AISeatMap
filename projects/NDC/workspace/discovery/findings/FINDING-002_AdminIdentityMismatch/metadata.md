@@ -12,7 +12,7 @@
 - **Module:** Global session/identity (observed via top-right user menu across all 3 Credential Routes Filter screens)
 - **Workflow:** Login / session identity
 - **Description:** `run_configuration.md`'s Credentials table records the Admin account as "confirmed working" with a displayed name of `E.Saady` (captured 2026-07-10). All three screenshots in this session show the top-right user menu reading `odeysysadmin` instead.
-- **Expected Behavior:** Per `projects/NDC/run_configuration.md` §"Credentials Available": Admin role displays as `E.Saady`.
+- **Expected Behavior:** Per `platform_core_data/run_configuration.md` §"Credentials Available": Admin role displays as `E.Saady`.
 - **Actual Behavior:** Top-right user menu reads `odeysysadmin` in all three screenshots (Add/List/Edit Routes Filter).
 - **Steps to Reproduce:** Log in to `http://192.168.1.70` with the Admin credential used this session → observe top-right user menu.
 - **Investigation/Recovery Result:** Not applicable — static identity observation, not a failure condition.

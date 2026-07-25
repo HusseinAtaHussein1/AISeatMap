@@ -10,10 +10,10 @@ const {
 const FIXED_NOW = new Date('2026-07-24T12:00:00.000Z');
 
 test('buildCommitMessage summarizes added/modified/deleted/renamed counts', () => {
-  const msg = buildCommitMessage('NDC', 'NDC_tests_SHAFT', 'RUN-20260712-001', {
+  const msg = buildCommitMessage('NDC', 'tests_SHAFT', 'RUN-20260712-001', {
     added: ['a', 'b'], modified: ['c'], deleted: [], renamed: [{ from: 'x', to: 'y' }],
   });
-  assert.match(msg, /NDC\/NDC_tests_SHAFT/);
+  assert.match(msg, /NDC\/tests_SHAFT/);
   assert.match(msg, /RUN-20260712-001/);
   assert.match(msg, /\+2\/~1\/-0\/→1/);
 });
@@ -37,7 +37,7 @@ test('acquireLock creates an exclusive lock file, and a second acquire fails whi
 test('acquireLock creates the baseline directory first when it does not exist yet (first-ever merge for a brand-new package)', () => {
   const parent = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeapply-lock-greenfield-'));
   try {
-    const baselineDir = path.join(parent, 'not-created-yet', 'NDC_tests_SHAFT');
+    const baselineDir = path.join(parent, 'not-created-yet', 'tests_SHAFT');
     assert.equal(fs.existsSync(baselineDir), false);
     const lockPath = acquireLock(baselineDir, { now: FIXED_NOW });
     assert.equal(fs.existsSync(lockPath), true);

@@ -32,4 +32,4 @@ Confirmed by 1 execution, across 1 project.
 
 ## Confirmed In
 
-- [[NDC/REP-003]] — `projects/NDC/knowledge_base/repair/REP-003.md`
+- [[NDC/REP-003]] — `platform_core_data/knowledge_base/repair/REP-003.md`

@@ -1,13 +1,13 @@
 # NDC — SHAFT Automation Package Structure
 
-> **Reframed 2026-07-12 (`.claude/skills/automation-agent/SKILL.md` v5):** This document specifies the structure for NDC's **SHAFT** Automation Package specifically — it is **not** a project-wide mandate binding every NDC automation effort to SHAFT. Per the platform's multi-package model, NDC may hold several independent Automation Packages (e.g. `NDC_tests_SHAFT/`, `NDC_tests_Playwright/`), each tracked in `projects/NDC/workspace/automation/NDC_AutomationPackages.md`. Which package (and therefore which framework) a given Stage 5 run targets is decided by the Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31) at the start of that run — this document is authoritative only for whichever run's answer is "SHAFT."
+> **Reframed 2026-07-12 (`.claude/skills/automation-agent/SKILL.md` v5):** This document specifies the structure for NDC's **SHAFT** Automation Package specifically — it is **not** a project-wide mandate binding every NDC automation effort to SHAFT. Per the platform's multi-package model, NDC may hold several independent Automation Packages (e.g. `tests_SHAFT/`, `tests_Playwright/`), each tracked in `platform_core_data/workspace/automation/AutomationPackages.md`. Which package (and therefore which framework) a given Stage 5 run targets is decided by the Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31) at the start of that run — this document is authoritative only for whichever run's answer is "SHAFT."
 
 This is the durable, versioned specification for the SHAFT package's own internal structure, referenced whenever a Stage 5 run's Framework Decision Gate answer is SHAFT.
 
 > Per `.claude/skills/automation-agent/SKILL.md` §7 Rule 1 ("If the Project Context explicitly specifies a framework, the agent must use it — no selection process overrides an explicit instruction... still requires running the Framework Decision Gate §31 first") and §6 ("SHAFT Engine [is] a first-class option"): this file is the structural specification for the SHAFT package whenever a run's Framework Decision Gate selects it. It must be read before generating any SHAFT-package code, and compared against the approved Test Design first — implementation gaps identified by that comparison are resolved before generation starts (see "Gap Resolution Rule" below).
 
 **Source:** SHAFT Automation Framework Structure Rules, supplied 2026-07-11.
-**Status:** Binding on the SHAFT package specifically, whenever a run selects it via the Framework Decision Gate — do not redesign or replace this package's internal architecture. Only extend it, and only when a real, discovered-during-implementation limitation requires it (see "Gap Resolution Rule"). Does not constrain any other package (e.g. `NDC_tests_Playwright/`) this project may also hold.
+**Status:** Binding on the SHAFT package specifically, whenever a run selects it via the Framework Decision Gate — do not redesign or replace this package's internal architecture. Only extend it, and only when a real, discovered-during-implementation limitation requires it (see "Gap Resolution Rule"). Does not constrain any other package (e.g. `tests_Playwright/`) this project may also hold.
 
 ---
 
@@ -75,7 +75,7 @@ This is the durable, versioned specification for the SHAFT package's own interna
 | §14.1 Naming Conventions | = this framework's **Locators Layer prefix table** (§2 above) — must be followed exactly (`Btn_`, `Txt_`, `Lst_`, `Icn_`, `Rbtn_`, `Cbox_`, `Dpick_`), not a new convention invented per suite. |
 | §14.1 Test Data Separation | = this framework's **Data Layer (JSON Driven)** (§4 above) — no hardcoded test data in code, ever. |
 | §24 Locator Strategy | Locators still follow §24.1's accessibility-first priority order *within* the Locators Layer's own classes — this framework governs *where* locators live and how they're named, not a replacement for the priority order itself. |
-| §9 Existing Framework Analysis / §11 Automation Knowledge Base | When Stage 5 runs, it must inspect `projects/NDC/workspace/automation/NDC_tests/` (once one exists) against this structure before generating anything new — reuse existing Page/Locator/Test/Data classes before authoring new ones. |
+| §9 Existing Framework Analysis / §11 Automation Knowledge Base | When Stage 5 runs, it must inspect `platform_core_data/workspace/automation/tests/` (once one exists) against this structure before generating anything new — reuse existing Page/Locator/Test/Data classes before authoring new ones. |
 
 ## Gap Resolution Rule
 

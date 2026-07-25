@@ -10,7 +10,7 @@ const LOGIN_CASES = [
   {
     id: 'TC-LOGIN-001', title: 'Valid login redirects to the Dashboard', objective: 'Verify that submitting correct, existing credentials logs the user in and reaches the Dashboard.',
     priority: 'P1', risk: 'High — core authentication path, every other module depends on it',
-    preconditions: 'User is logged out. A valid NDC credential is available (projects/NDC/credentials/credentials.json).',
+    preconditions: 'User is logged out. A valid NDC credential is available (platform_core_data/credentials/credentials.json).',
     testData: 'Existing valid username/password (see credentials.json — not reproduced here)',
     steps: '1. Navigate to the NDC login screen. 2. Enter a valid Username and Password. 3. Click Login.',
     expected: 'User is redirected to the Dashboard (page title "NDC - Dashboard"); login screen is no longer shown.',
@@ -80,11 +80,11 @@ const LOGIN_CASES = [
   {
     id: 'TC-LOGIN-008', title: 'Anti-enumeration — wrong password against a real, valid username yields the same generic message', objective: 'Verify that a wrong-password attempt against a real, existing NDC username produces the identical generic "Invalid credentials" message as a wrong attempt against a non-existent username (TC-LOGIN-002) — no username-existence leak.',
     priority: 'P2', risk: 'Medium — a message or timing difference here would be a real anti-enumeration security gap, not cosmetic',
-    preconditions: 'User is logged out. A valid, existing NDC username is available (projects/NDC/credentials/credentials.json).',
+    preconditions: 'User is logged out. A valid, existing NDC username is available (platform_core_data/credentials/credentials.json).',
     testData: 'Username: the real, existing NDC username from credentials.json. Password: one fabricated, deliberately wrong value. Exactly one attempt — never repeated, per the shared-env negative-testing default.',
     steps: '1. Navigate to the NDC login screen. 2. Enter the real, existing Username with a deliberately wrong Password. 3. Click Login.',
     expected: '"Invalid credentials, Please try again." is shown — textually identical to TC-LOGIN-002\'s message; user remains on the login screen. No lockout, delay, or distinguishing behavior observed on this single attempt.',
-    reqRef: 'Observation-derived (this validation pass — added per the automatic Engineering Decision rule, see NDC_LoginGapAnalysis.md)', discRef: 'Not yet independently observed this run — mirrors the Reference SHAFT Project\'s LogInWithInvalidPassword test as secondary evidence that this scenario is safe and meaningful to design.', findRef: 'N/A', evidRef: 'N/A',
+    reqRef: 'Observation-derived (this validation pass — added per the automatic Engineering Decision rule, see LoginGapAnalysis.md)', discRef: 'Not yet independently observed this run — mirrors the Reference SHAFT Project\'s LogInWithInvalidPassword test as secondary evidence that this scenario is safe and meaningful to design.', findRef: 'N/A', evidRef: 'N/A',
     category: 'Negative — Security Inputs (anti-enumeration)',
   },
 ];
@@ -101,7 +101,7 @@ const DEFERRED = [
 
 // ---- Pending Decisions ----
 // (none currently — the anti-enumeration case and Logout scope question were both resolved
-// automatically as Engineering Decisions, 2026-07-12, per pipeline.md §5.5; see NDC_LoginGapAnalysis.md.)
+// automatically as Engineering Decisions, 2026-07-12, per pipeline.md §5.5; see LoginGapAnalysis.md.)
 const PENDING_DECISION = [];
 
 // ---- Markdown generation ----
@@ -129,14 +129,14 @@ function renderMarkdownSuite(moduleName, cases) {
   md += `| Category | Reason Deferred |\n|---|---|\n`;
   for (const d of DEFERRED) md += `| ${d.category} | ${d.reason} |\n`;
   if (PENDING_DECISION.length) {
-    md += `\n## Pending Decisions (not deferred, not designed — awaiting an explicit human answer; see NDC_LoginGapAnalysis.md)\n\n`;
+    md += `\n## Pending Decisions (not deferred, not designed — awaiting an explicit human answer; see LoginGapAnalysis.md)\n\n`;
     md += `| Category | Reason |\n|---|---|\n`;
     for (const p of PENDING_DECISION) md += `| ${p.category} | ${p.reason} |\n`;
   }
   return md;
 }
 
-fs.writeFileSync(path.join(OUT_DIR, 'NDC_TestCases_Login.md'), renderMarkdownSuite('Login / Authentication', LOGIN_CASES));
+fs.writeFileSync(path.join(OUT_DIR, 'TestCases_Login.md'), renderMarkdownSuite('Login / Authentication', LOGIN_CASES));
 
 // ---- Excel generation ----
 const COLUMNS = [
@@ -178,7 +178,7 @@ async function buildWorkbook() {
     PENDING_DECISION.forEach((p) => wsPending.addRow(p));
   }
 
-  await wb.xlsx.writeFile(path.join(OUT_DIR, 'NDC_TestCases_Login.xlsx'));
+  await wb.xlsx.writeFile(path.join(OUT_DIR, 'TestCases_Login.xlsx'));
   console.log('Excel workbook written.');
 }
 

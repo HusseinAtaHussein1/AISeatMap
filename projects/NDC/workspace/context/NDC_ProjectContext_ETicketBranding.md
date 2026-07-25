@@ -3,9 +3,9 @@
 **Run:** RUN-20260718-001 · **Status:** `Pending` (checkpoint open per `pipeline/pipeline.md` §5.3 — awaiting Human Review) · **Produced by:** Project Context Agent (Stage 1) · **Date:** 2026-07-18
 **Run Scope:** Type = User Story · Source = Pasted text — WT1-T2919 "E-Ticket Template Modification – Agency Branding On/Off Feature."
 
-> **Track B — a separate, unrelated scope from `NDC_ProjectContext_Agency.md`.** Per the user-confirmed track split (2026-07-18), this document does not extend or depend on the Agency CRUD Project Context beyond one shared data point: the new **Agency Type** field this User Story adds to the Agency CRUD screen. Every other testable behavior here belongs to the **E-Ticket Page** and **Booking Confirmation Page** — screens outside the Agency module entirely.
+> **Track B — a separate, unrelated scope from `ProjectContext_Agency.md`.** Per the user-confirmed track split (2026-07-18), this document does not extend or depend on the Agency CRUD Project Context beyond one shared data point: the new **Agency Type** field this User Story adds to the Agency CRUD screen. Every other testable behavior here belongs to the **E-Ticket Page** and **Booking Confirmation Page** — screens outside the Agency module entirely.
 >
-> **Single living document, not a version sequence** — consistent with the naming pattern adopted for `NDC_ProjectContext_Agency.md` the same session. Moves to `projects/NDC/workspace/context/NDC_ProjectContext_ETicketBranding.md` once approved.
+> **Single living document, not a version sequence** — consistent with the naming pattern adopted for `ProjectContext_Agency.md` the same session. Moves to `platform_core_data/workspace/context/ProjectContext_ETicketBranding.md` once approved.
 
 ---
 
@@ -13,7 +13,7 @@
 
 As an Admin, the Agency CRUD screen (Create/Edit) gains one new field — **Agency Type** (B2B / Freelance), a radio button, stored and retrievable per Agency. Once configured, two downstream, customer-facing rendering surfaces change conditionally based on that Agency Type: the **E-Ticket Page** and the **Booking Confirmation Page**. Freelance-type Agencies get a reduced/de-branded presentation (no Agency name/contact/branding, no booking reference, no Trip ID, a distinct header/title treatment, a small "Flywt.com" credit); B2B-type Agencies retain the existing full presentation. A background image asset change and edge-case guarantees (default behavior for unconfigured Agencies, no impact to already-issued tickets) round out the scope.
 
-This is a genuinely different testable surface from Agency CRUD (Create/Search/Update/Actions, `NDC_ProjectContext_Agency.md`) — only the new Agency Type *field* lives on that screen; everything the field actually *does* happens on the E-Ticket/Booking Confirmation screens.
+This is a genuinely different testable surface from Agency CRUD (Create/Search/Update/Actions, `ProjectContext_Agency.md`) — only the new Agency Type *field* lives on that screen; everything the field actually *does* happens on the E-Ticket/Booking Confirmation screens.
 
 ## 2. Modules In Scope
 
@@ -68,7 +68,7 @@ This is a genuinely different testable surface from Agency CRUD (Create/Search/U
 
 ## 3. Modules Out of Scope
 
-- **Agency CRUD's own field-level validation** (Create/Search/Update/Actions) — governed entirely by `NDC_ProjectContext_Agency.md`; this document only adds the one new Agency Type field to that screen and does not restate or re-test its existing fields.
+- **Agency CRUD's own field-level validation** (Create/Search/Update/Actions) — governed entirely by `ProjectContext_Agency.md`; this document only adds the one new Agency Type field to that screen and does not restate or re-test its existing fields.
 - **Any other Booking Module screen** not named by this User Story (e.g., the booking search/itinerary flow itself, payment processing) — only the E-Ticket Page and Booking Confirmation Page are in scope.
 - **Rule Engine Module (Discount, Markups)** — not mentioned by this User Story at all (unlike Agency Actions', which explicitly names it in Reflection); not in scope here.
 
@@ -85,7 +85,7 @@ This document governs Stage 1 (Project Context) and Stage 3 (Test Design) only. 
 
 | # | Item | Status |
 |---|---|---|
-| 1 | **Agency Type's Mandatory/Optional status is not stated.** Every other Agency CRUD field states this explicitly (per `NDC_ProjectContext_Agency.md`); this AC does not. | Test Design should design a case probing whether submission is blocked when Agency Type is left unselected, without assuming an answer — log as a Coverage Gap if genuinely ambiguous once observed. |
+| 1 | **Agency Type's Mandatory/Optional status is not stated.** Every other Agency CRUD field states this explicitly (per `ProjectContext_Agency.md`); this AC does not. | Test Design should design a case probing whether submission is blocked when Agency Type is left unselected, without assuming an answer — log as a Coverage Gap if genuinely ambiguous once observed. |
 | 2 | **Whether the Title/Subtitle (FR-ETB-ETICKET-04/05) and flight-details-immediately-after-title (FR-ETB-ETICKET-06) apply only to Freelance tickets, or to all tickets, is not explicitly stated.** These three bullets appear directly after the Freelance-specific header-removal bullet, with no explicit "in this case" qualifier repeated — a genuinely ambiguous business rule. | Design the case against the more literal, narrower reading (Freelance-only, since it's listed in sequence with the other Freelance-specific bullets) and log the ambiguity as a Coverage Gap for confirmation, per `agents/test_design_agent.md` §19 Ambiguous Business Rules. |
 | 3 | **B2B's own retained behavior is never explicitly stated** — the AC only states what changes *for Freelance* (header removed, agency details hidden, booking reference/Trip ID removed, "Flywt.com" shown). B2B's continuation of the existing/current behavior is an inference, not a direct AC statement. | Design B2B test cases as the inverse/contrast case, explicitly noting they assert *inferred continuity*, not a directly stated requirement. |
 | 4 | **No end-user credential is available** to test the full "Admin configures → user views the issued E-Ticket" loop end-to-end via a real second session; this project's `run_configuration.md` lists only Admin/Agency/Agent (Admin-tier) credentials. | Design test cases assuming the E-Ticket/Booking Confirmation Page can be reached via the same Admin session (e.g., a preview/reissue action) or flag as a Coverage Gap requiring a dedicated end-user credential once Discovery clarifies how these pages are actually reached. |
@@ -97,8 +97,8 @@ This document governs Stage 1 (Project Context) and Stage 3 (Test Design) only. 
 | Item above | Source |
 |---|---|
 | §2.1–§2.6 (all requirements) | WT1-T2919, pasted text, 2026-07-18 |
-| §6 #4 (end-user credential gap) | `projects/NDC/run_configuration.md`, Credentials Available table |
-| §6 #6 (no prior Discovery) | Cross-checked against `projects/NDC/runs/*/discovery/` — no E-Ticket/Booking Confirmation artifacts exist |
+| §6 #4 (end-user credential gap) | `platform_core_data/run_configuration.md`, Credentials Available table |
+| §6 #6 (no prior Discovery) | Cross-checked against `platform_core_data/runs/*/discovery/` — no E-Ticket/Booking Confirmation artifacts exist |
 
 ---
 

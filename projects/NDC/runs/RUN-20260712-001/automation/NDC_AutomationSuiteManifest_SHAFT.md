@@ -2,7 +2,7 @@
 
 # Automation Suite Manifest — NDC Login (SHAFT Export)
 
-## Login Suite (`NDC_tests_SHAFT/src/test/java/AdminPages/Login/LogIn_TC.java`)
+## Login Suite (`tests_SHAFT/src/test/java/AdminPages/Login/LogIn_TC.java`)
 
 - **Business workflow:** Login / Authentication
 - **Test cases:** TC-LOGIN-001 through TC-LOGIN-008

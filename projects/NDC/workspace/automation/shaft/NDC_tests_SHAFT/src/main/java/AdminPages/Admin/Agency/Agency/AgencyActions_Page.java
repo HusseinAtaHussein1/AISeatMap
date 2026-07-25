@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 /**
- * New page object — RUN-20260718-001 (Stage 4, new NDC_tests_SHAFT_Agency package).
+ * New page object — RUN-20260718-001 (Stage 4, new tests_SHAFT_Agency package).
  *
  * Backed entirely by runs/RUN-20260718-001/discovery/Agency_Actions.md (live browser session,
  * .70, 2026-07-18) — every locator/behavior here was individually confirmed against real

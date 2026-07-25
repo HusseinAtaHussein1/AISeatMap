@@ -10,7 +10,7 @@
 
 This document defines the **execution workflow** of the Agentic AI Testing Platform: the fixed order in which agents run, the artifacts that flow between them, and the human checkpoints that gate progression. The Agent Framework (`.claude/skills/`) specifies *what each skill does in isolation*, via each skill's own YAML contract header (`inputs`/`outputs`/`dependencies`); this Pipeline Specification defines *how those skills are wired together into one governed, repeatable process*.
 
-The pipeline is project-agnostic. Running it against a new project means substituting `{{PROJECT_NAME}}` and supplying a new PRD/run configuration — the stage order, checkpoints, and rules below do not change.
+**The platform hosts exactly one project at a time** (restructured 2026-07-25, user-mandated). That project's every input and every generated artifact lives under a single root, `platform_core_data/` — there is no project-name path segment, no project selector, and no second project to disambiguate against. The stage order, checkpoints, and rules below are still written as reusable process logic: retargeting the platform at a different application means replacing `platform_core_data/`'s *contents* (PRD, run configuration, resources, knowledge base) and clearing its `workspace/` and `runs/`, not editing this specification.
 
 ## 2. Architecture Principle
 
@@ -105,7 +105,7 @@ The pipeline exists to enforce this principle mechanically: no stage may reach i
 | **Input** | PRD · Supporting Documents · Run Configuration |
 | **Output** | Project Context |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| **Artifact path** | `platform_core_data/workspace/context/ProjectContext.md` |
 
 Notes:
 - "Supporting Documents" (optional) covers any material that informs scope but is not itself the PRD — e.g., prior audit/QA reports, compliance policies, org-specific testing standards. These are folded into the Project Context alongside the PRD; they are never treated as a substitute source of requirements.
@@ -120,7 +120,7 @@ Notes:
 | **Input** | Project Context · Running Application |
 | **Output** | Discovery Artifacts |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md`, `projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md` |
+| **Artifact path** | `platform_core_data/workspace/discovery/*.md`, `platform_core_data/workspace/discovery/QA_Assessment_Report.md` |
 
 Notes:
 - "Running Application" is the live target system, reached through browser automation — it is data to be observed, not a source of requirements.
@@ -135,7 +135,7 @@ Notes:
 | **Input** | Project Context (primary) · Discovery Artifacts (secondary) |
 | **Output** | Manual Test Suites (Markdown) · Manual Test Suites (Excel) · Requirement Traceability Matrix |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.md`, `...{Module}.xlsx`, `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` |
+| **Artifact path** | `platform_core_data/workspace/test_design/TestCases_{Module}.md`, `...{Module}.xlsx`, `platform_core_data/workspace/test_design/TraceabilityMatrix.md` |
 
 Notes:
 - Project Context governs *what* is tested; Discovery Artifacts only validate, enrich, and surface gaps — per the reversed primary/secondary relationship established in the Agent Framework.
@@ -150,7 +150,7 @@ Notes:
 | **Input** | Approved Manual Test Suites · Requirement Traceability Matrix · Coverage Report · Project Context |
 | **Output** | Manual Execution Results · Manual Execution Summary · Automation Candidate Package · Evidence |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionResults.md`, `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionSummary.md`, `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_AutomationCandidatePackage.md`, `projects/{{PROJECT_NAME}}/artifacts/manual_execution/artifacts/` |
+| **Artifact path** | `platform_core_data/workspace/manual_execution/ManualExecutionResults.md`, `platform_core_data/workspace/manual_execution/ManualExecutionSummary.md`, `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md`, `platform_core_data/workspace/manual_execution/artifacts/` |
 
 Notes:
 - The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 3 artifacts *after* they have cleared the Stage 3 checkpoint, never a draft or in-progress test suite.
@@ -167,7 +167,7 @@ Notes:
 | **Input** | Approved Automation Candidate Package · Manual Execution Summary · Manual Test Suites (content source) · Traceability Matrix · Coverage Report · Project Context |
 | **Output** | Automation Scripts |
 | **Checkpoint** | **Automation Approval Required** |
-| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests/`, `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSummary.md` |
+| **Artifact path** | `platform_core_data/workspace/automation/tests/`, `platform_core_data/workspace/automation/AutomationSummary.md` |
 
 Notes:
 - The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 4 Automation Candidate Package *after* it has cleared the Stage 4 checkpoint, never a draft or in-progress result set.
@@ -183,7 +183,7 @@ Notes:
 | **Input** | Automation Scripts |
 | **Output** | Execution Results · Screenshots · Logs · Execution Metadata |
 | **Checkpoint** | *None — mechanical run, gated only by the Stage 5 Automation Approval that already occurred* |
-| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md`, `projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/` |
+| **Artifact path** | `platform_core_data/workspace/execution/ExecutionResults.md`, `platform_core_data/workspace/execution/artifacts/` |
 
 Notes:
 - Project Context remains a standing reference for this stage (target environment, credentials, safety constraints) even though it is not re-listed as a primary artifact input here — see §6, Rule 5. The Automation Execution Agent's own specification requires it to confirm the target environment against the Project Context before running anything.
@@ -200,7 +200,7 @@ Notes:
 | **Input** | Execution Results · Traceability Matrix · Project Context |
 | **Output** | Final QA Report |
 | **Checkpoint** | *None — terminal stage, delivered to human stakeholders outside the pipeline* |
-| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md` |
+| **Artifact path** | `platform_core_data/workspace/reporting/Final_QA_Report.md` |
 
 Notes:
 - The Traceability Matrix is consulted here specifically to compute Requirement Coverage and Automation Coverage, and to carry forward every Manual Test Suite "Assumption-based test" tag into a resolved (confirmed/refuted/unverified) status.
@@ -314,17 +314,17 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 6. **Human approval gates must stop the pipeline until approval is granted.** See §5.3 — no silent timeouts, no auto-approval, no proceeding on an assumed "looks fine."
 7. **All artifacts must be versionable.** See §7 — every artifact carries a version identifier and prior versions are retained, never overwritten in place.
 8. **Every output must maintain traceability.** See §8 — every artifact from Stage 3 onward can be traced back, ID for ID, to the Project Context requirement (and, transitively, the PRD) that generated it.
-9. **Project Isolation.** When onboarding or executing a project, agents must load knowledge exclusively from that project's own directory (`projects/{{PROJECT_NAME}}/`) and its corresponding artifacts (`projects/{{PROJECT_NAME}}/artifacts/`), plus Platform Knowledge (§10) — never from another project's directory. Other projects under `projects/` may be consulted only as structural examples or templates (e.g., to see how a sibling project's `resources/` folder is laid out) — they must never contribute functional requirements, business rules, test cases, or domain knowledge to the project currently being worked on.
+9. **Single Project Root.** Every input and every artifact an agent may read or write lives under `platform_core_data/` (plus Platform Knowledge, §10). Agents must not read application content from anywhere else on disk — most importantly not from an external Reference Automation Project (`platform_core_data/reference_automation_project.md`), which is a read-only structural reference for automation *style*, never a source of functional requirements, business rules, test cases, or domain knowledge. The platform hosts one project at a time (§1); there is no sibling-project directory to isolate against, and none may be introduced under `platform_core_data/`.
 
 ## 7. Artifact & Versioning Conventions
 
-Every artifact produced by this pipeline lives under `projects/{{PROJECT_NAME}}/artifacts/` in the subdirectory conventions established in the Agent Framework (`context/`, `discovery/`, `Reports/`, `testcases/`, `manual_execution/`, `Automation/`, `execution/`).
+Every artifact produced by this pipeline lives under `platform_core_data/workspace/` in the subdirectory conventions established in the Agent Framework (`context/`, `discovery/`, `Reports/`, `testcases/`, `manual_execution/`, `Automation/`, `execution/`).
 
 To satisfy Rule 7 (versionable artifacts) and Rule 6 (gates that truly stop the pipeline), each stage's artifact is versioned as follows:
 
-- **Version-suffixed files:** each artifact is written with a version suffix, e.g. `{{PROJECT_NAME}}_ProjectContext.v1.md`, `.v2.md`, etc. A rejected-and-revised artifact is a new version, never an in-place edit of the rejected one — the rejected version remains on record.
-- **A "current approved" pointer:** the unsuffixed filename referenced throughout the Agent Framework (e.g., `{{PROJECT_NAME}}_ProjectContext.md`) always refers to the **latest approved** version. It is only updated at the moment a reviewer approves a version — never before.
-- **Run Manifest:** a single tracking artifact, `projects/{{PROJECT_NAME}}/artifacts/pipeline/{{PROJECT_NAME}}_RunManifest.md`, records for every stage: version number produced, timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, and a direct link to that version's artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
+- **Version-suffixed files:** each artifact is written with a version suffix, e.g. `ProjectContext.v1.md`, `.v2.md`, etc. A rejected-and-revised artifact is a new version, never an in-place edit of the rejected one — the rejected version remains on record.
+- **A "current approved" pointer:** the unsuffixed filename referenced throughout the Agent Framework (e.g., `ProjectContext.md`) always refers to the **latest approved** version. It is only updated at the moment a reviewer approves a version — never before.
+- **Run Manifest:** a single tracking artifact, `platform_core_data/workspace/pipeline/RunManifest.md`, records for every stage: version number produced, timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, and a direct link to that version's artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
 
 ## 8. Traceability Chain
 
@@ -367,21 +367,23 @@ A gap anywhere in this chain (an artifact that cannot cite its predecessor) is i
 
 ## 10. Knowledge Architecture (added 2026-07-12, user-mandated — the canonical definition every agent references)
 
-**The platform is not a single-project automation generator — it must support dozens of projects simultaneously, each with isolated knowledge, while still reusing genuinely cross-project engineering knowledge.** This section is the single source of truth for that model; every agent spec references it by number rather than restating it.
+**The platform hosts one project at a time (§1), but knowledge still splits into two layers — and that split survives the restructure for a reason.** Knowledge that is *about this application* (a screen's quirk, a business rule, a redirect behavior) is disposable the moment the platform is retargeted; knowledge that is *about testing engineering* (a locator recovery strategy, a retry pattern, a framework convention) must outlive it. Keeping the two apart is what lets `platform_core_data/` be cleared and repopulated for a new application without throwing away everything the platform has learned about doing its job. This section is the single source of truth for that model; every agent spec references it by number rather than restating it.
+
+Note (2026-07-25): this section previously justified the split by cross-project isolation — dozens of concurrent projects each needing a sealed knowledge base. That justification no longer applies; the durability one above does, and it is now the operative rationale.
 
 ### 10.1 Two layers
 
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
 | **Platform Knowledge** | `platform_core/knowledge/` | Reusable, application-agnostic engineering knowledge: automation strategies, repair strategies, diagnosis strategies, proven exceptions to Execution Engine defaults (not the engine's core retry/concurrency/stop-condition mechanics — fixed capability logic in `.claude/skills/automation-execution-agent/SKILL.md` §5, §19–§20), framework best practices, synchronization patterns, locator recovery strategies, reporting conventions, AI reasoning patterns, pipeline decision patterns, shared engineering lessons | Anything application-specific (a named screen, a specific business rule, a specific app's redirect behavior); anything that is Capability rather than Knowledge (agent skill definitions, orchestration/engine mechanics, runtime configuration) — those belong in `.claude/skills/` or `workflows_and_pipelines/`, never here |
-| **Project Knowledge** | `projects/{{PROJECT_NAME}}/knowledge_base/` | Knowledge discovered from that one application only: business rules, UI observations, application findings, known behaviors, module relationships, navigation knowledge, screen inventory, discovery artifacts, execution history, automation history, repair history, known workarounds, project-specific locator rules, lessons learned | Anything reusable enough to apply to a different project unmodified — that belongs in Platform Knowledge instead, via Promotion (§10.5) |
+| **Project Knowledge** | `platform_core_data/knowledge_base/` | Knowledge discovered from the hosted application only: business rules, UI observations, application findings, known behaviors, module relationships, navigation knowledge, screen inventory, discovery artifacts, execution history, automation history, repair history, known workarounds, application-specific locator rules, lessons learned | Anything that would still be true after the platform is retargeted at a different application — that belongs in Platform Knowledge instead, via Promotion (§10.5) |
 
 ### 10.2 Knowledge Resolution
 
 Whenever any agent needs knowledge to do its job, it resolves in this fixed order and merges both into its working context — never one layer alone:
 
 1. **Platform Knowledge** (`platform_core/knowledge/`)
-2. **Current Project Knowledge** (`projects/{{PROJECT_NAME}}/knowledge_base/`)
+2. **Project Knowledge** (`platform_core_data/knowledge_base/`)
 
 Project Knowledge *extends* Platform Knowledge; it never overrides or contradicts it silently — a project-specific finding that appears to contradict a Platform pattern is disclosed as a discrepancy, not silently substituted.
 
@@ -397,75 +399,77 @@ There is no `skills/` subfolder here (removed, 2026-07-21 governance review). Cr
 
 There is no `confidence_patterns/` subfolder here (removed, 2026-07-21). The Confidence Engine's scoring rubric (§27.2 of the Automation Execution Agent spec) is fixed Capability logic, not a promotable Knowledge category — the rubric has never needed a calibration-adjustment layer in practice, and keeping an empty category open for one invited exactly the scope ambiguity flagged in that review.
 
-Project Knowledge subfolders (identical shape for every project, per §10.4): `automation/`, `diagnosis/`, `repair/`, `execution/`, `application/`, `ui/`, `findings/`, `business_rules/`, `lessons_learned/`.
+Project Knowledge subfolders (the fixed shape §10.4 scaffolds): `automation/`, `diagnosis/`, `repair/`, `execution/`, `application/`, `ui/`, `findings/`, `business_rules/`, `lessons_learned/`.
 
 Each top-level knowledge directory carries an `INDEX.md` (ID · Category · Title · Status · Producer · Consumers · Path) so an agent can locate relevant knowledge without scanning every file's full content.
 
-### 10.4 Automatic Project Scaffolding
+### 10.4 Automatic Scaffolding
 
-Whenever a new project is created under `projects/`, its `knowledge_base/` tree (§10.3's project subfolder list, each with its own `INDEX.md`) is scaffolded automatically as part of project setup — no manual step, no exceptions, the same shape every time.
+`platform_core_data/knowledge_base/` always carries §10.3's full subfolder list, each with its own `INDEX.md` — including folders currently holding nothing. An empty, indexed folder tells an agent "this category exists and has no entries yet"; a missing folder tells it nothing, and invites each agent to invent its own place to write. Whenever the platform is retargeted at a new application, that tree is scaffolded as part of setup — no manual step, no exceptions, the same shape every time.
 
 ### 10.5 Promotion Workflow — explicit human approval only
 
-Not every lesson learned on one project becomes Platform Knowledge. Whichever agent writes a new piece of knowledge (e.g. the Automation Execution Agent writing a confirmed repair rule, per `.claude/skills/automation-execution-agent/SKILL.md` §28) writes it **only into the current project's `knowledge_base/`** by default. When that agent recognizes the lesson as reusable beyond this one application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "NDC's dashboard redirect" or "OrangeHRM's Employee workflow"), it proposes promotion and asks exactly once:
+Not every lesson learned becomes Platform Knowledge. Whichever agent writes a new piece of knowledge (e.g. the Automation Execution Agent writing a confirmed repair rule, per `.claude/skills/automation-execution-agent/SKILL.md` §28) writes it **only into `platform_core_data/knowledge_base/`** by default. When that agent recognizes the lesson as one that would still hold against a *different* application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "the dashboard redirects after login"), it proposes promotion and asks exactly once:
 
-> "This lesson appears reusable across multiple projects. Promote it to Platform Knowledge?"
+> "This lesson looks application-independent. Promote it to Platform Knowledge?"
 
-- **Approved:** the agent authors a new (or updates an existing) Platform Knowledge document in the matching `platform_core/knowledge/` subfolder, generalized beyond the one project, and the project-level document is updated to reference it (§10.2's merge, made explicit) rather than duplicating its content.
-- **Declined:** the knowledge stays exactly where it is, project-scoped, and is never silently re-proposed on every subsequent run of the same pattern — only when a *different* project independently produces the same pattern does the question resurface, since that is new evidence of reusability.
+- **Approved:** the agent authors a new (or updates an existing) Platform Knowledge document in the matching `platform_core/knowledge/` subfolder, generalized beyond this application, and the project-level document is updated to reference it (§10.2's merge, made explicit) rather than duplicating its content.
+- **Declined:** the knowledge stays exactly where it is, project-scoped, and is never silently re-proposed on every subsequent run of the same pattern. It may be re-proposed only on genuinely new evidence of generality — most obviously, the same pattern recurring after the platform has been retargeted at a different application.
 
 This is a Human Decision (`§5.5`), never inferred, never defaulted to "yes" because a pattern merely looks generic.
 
-### 10.6 Isolation guarantee
+### 10.6 Layer separation guarantee
 
-Knowledge belonging to one project must never automatically appear inside another project's working context — this extends §6 Rule 9 (Project Isolation) to the knowledge layer explicitly. `projects/NDC/knowledge_base/` must never leak into `projects/OrangeHRM/` or any future project; only Platform Knowledge is shared, and only after passing the explicit Promotion Workflow above.
+Application-specific knowledge must never end up in `platform_core/knowledge/` — this extends §6 Rule 9 (Single Project Root) to the knowledge layer explicitly. An agent writes to Platform Knowledge only by passing the §10.5 Promotion Workflow's explicit human gate; it never writes there directly, and never "generalizes on the way in" to justify skipping the gate. The failure this prevents: a Platform layer quietly accumulating this application's screens and business rules, so that retargeting the platform carries the old application's assumptions along with it.
 
 ### 10.7 Agent read/write map
 
 | Agent | Reads | Writes |
 |---|---|---|
-| Project Context Agent (Stage 1) | Platform Knowledge + current Project Knowledge | Project Knowledge (`business_rules/`, `application/`) as it establishes scope |
-| Explorer Agent (Stage 2) | Platform Knowledge + current Project Knowledge | Project Knowledge (`findings/`, `ui/`, `application/`) |
-| Test Design Agent (Stage 3) | Platform Knowledge + current Project Knowledge | Project Knowledge (`findings/`, `lessons_learned/`) where a design decision surfaces one |
-| Manual Execution Agent (Stage 4) | Platform Knowledge + current Project Knowledge | Project Knowledge (`execution/`, `lessons_learned/`) where a manual execution surfaces one |
-| Automation Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + current Project Knowledge (`automation/`), per `.claude/skills/automation-agent/SKILL.md` §11 | Project Knowledge (`automation/`) |
-| Automation Execution Agent (Stage 6) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + current Project Knowledge (`repair/`, `diagnosis/`, `execution/`), per `.claude/skills/automation-execution-agent/SKILL.md` §28 | Project Knowledge (`repair/`, `diagnosis/`, `execution/`) by default; Platform Knowledge only via §10.5 Promotion |
-| Reporting Agent (Stage 7) | Platform Knowledge (`reporting/`) + current Project Knowledge | — (terminal stage) |
+| Project Context Agent (Stage 1) | Platform Knowledge + Project Knowledge | Project Knowledge (`business_rules/`, `application/`) as it establishes scope |
+| Explorer Agent (Stage 2) | Platform Knowledge + Project Knowledge | Project Knowledge (`findings/`, `ui/`, `application/`) |
+| Test Design Agent (Stage 3) | Platform Knowledge + Project Knowledge | Project Knowledge (`findings/`, `lessons_learned/`) where a design decision surfaces one |
+| Manual Execution Agent (Stage 4) | Platform Knowledge + Project Knowledge | Project Knowledge (`execution/`, `lessons_learned/`) where a manual execution surfaces one |
+| Automation Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + Project Knowledge (`automation/`), per `.claude/skills/automation-agent/SKILL.md` §11 | Project Knowledge (`automation/`) |
+| Automation Execution Agent (Stage 6) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + Project Knowledge (`repair/`, `diagnosis/`, `execution/`), per `.claude/skills/automation-execution-agent/SKILL.md` §28 | Project Knowledge (`repair/`, `diagnosis/`, `execution/`) by default; Platform Knowledge only via §10.5 Promotion |
+| Reporting Agent (Stage 7) | Platform Knowledge (`reporting/`) + Project Knowledge | — (terminal stage) |
 | Pipeline Orchestrator (tooling) | *(none — no read dependency on `pipeline_decision_patterns/` is defined yet)* | — |
 
 ## 11. Debug Mode & Temporary Execution Artifacts (added 2026-07-12, user-mandated)
 
-Stages that drive a live browser or write throwaway scripts to accomplish their work (chiefly Stage 2 Explorer, Stage 4 Manual Execution, Stage 5 Automation's selector verification, Stage 6 Automation Execution) must not let that internal tooling leak into a project's permanent artifact tree. Only the **outputs** those stages are actually specified to produce (§4's Expected Artifacts per agent — Discovery snapshots/Findings/Coverage/QA Assessment Report, Automation packages, Execution Results/Evidence, Reports) belong under `projects/{{PROJECT_NAME}}/artifacts/`.
+Stages that drive a live browser or write throwaway scripts to accomplish their work (chiefly Stage 2 Explorer, Stage 4 Manual Execution, Stage 5 Automation's selector verification, Stage 6 Automation Execution) must not let that internal tooling leak into a project's permanent artifact tree. Only the **outputs** those stages are actually specified to produce (§4's Expected Artifacts per agent — Discovery snapshots/Findings/Coverage/QA Assessment Report, Automation packages, Execution Results/Evidence, Reports) belong under `platform_core_data/workspace/`.
 
 ### 11.1 Debug Mode flag
 
 A project- or run-level flag, **default `Off`**, recorded in that run's Project Context or `run_configuration.md` if ever turned on:
 
-- **Debug Mode: Off (default).** Any script written purely to drive browser automation, probe a screen's structure, or otherwise accomplish a stage's work (e.g., a one-off Node/Playwright script) must be written to a temporary location outside the project tree (the platform's scratchpad, or an OS temp directory) and **deleted immediately after the run extracts what it needs from it**. Raw tool-output dumps (full-page JSON captures, unfiltered element enumerations) are never written into `artifacts/` — only the synthesized, human-readable artifact the stage is actually specified to produce.
-- **Debug Mode: On.** Explicitly enabled by the user for active troubleshooting of the tooling itself (not of the application under test). When on, intermediate scripts and raw result dumps may be persisted, but only under a clearly separated `_debug/` subfolder within that run's workspace (e.g. `artifacts/runs/{{RUN_ID}}/_debug/`) — never mixed into `discovery/`, `automation/`, `execution/`, etc. — and the run's manifest entry must note Debug Mode was on, so a reviewer isn't confused about why extra files exist.
+- **Debug Mode: Off (default).** Any script written purely to drive browser automation, probe a screen's structure, or otherwise accomplish a stage's work (e.g., a one-off Node/Playwright script) must be written to a temporary location outside the project tree (the platform's scratchpad, or an OS temp directory) and **deleted immediately after the run extracts what it needs from it**. Raw tool-output dumps (full-page JSON captures, unfiltered element enumerations) are never written into `platform_core_data/` — only the synthesized, human-readable artifact the stage is actually specified to produce.
+- **Debug Mode: On.** Explicitly enabled by the user for active troubleshooting of the tooling itself (not of the application under test). When on, intermediate scripts and raw result dumps may be persisted, but only under a clearly separated `_debug/` subfolder within that run's own folder (`platform_core_data/runs/{{RUN_FOLDER}}/_debug/`) — never mixed into `discovery/`, `automation/`, `execution/`, etc. — and the run's manifest entry must note Debug Mode was on, so a reviewer isn't confused about why extra files exist.
 
 ### 11.2 What counts as a permanent artifact vs. debug scaffolding
 
 - **Permanent:** a Discovery snapshot, a Finding and its Evidence Package, the QA Assessment Report, Timeline, Coverage Summary, Test Design outputs, an Automation package, Execution Results/evidence, the Final QA Report — i.e., anything §4/Expected-Artifacts tables across the agent specs actually name. A screenshot that documents an in-scope screen as part of a Discovery snapshot or a Finding's evidence is permanent.
 - **Debug scaffolding, never persisted by default:** the Node/Playwright (or other) script used to drive the browser to get that screenshot; raw, pre-synthesis JSON dumps of every element on a page; one-off reconnaissance screenshots taken only to verify navigation/tooling before the real discovery pass, not to document an application screen.
-- When in doubt whether a given file is a deliverable or scaffolding, ask: "Does an agent spec's Expected Artifacts table name this?" If not, it does not belong in `artifacts/`.
+- When in doubt whether a given file is a deliverable or scaffolding, ask: "Does an agent spec's Expected Artifacts table name this?" If not, it does not belong anywhere under `platform_core_data/`.
 
 ### 11.3 Retroactive scope
 
 This rule governs all runs from 2026-07-12 onward. Pre-existing debug scripts/raw dumps left in earlier runs' artifact folders (e.g., `_login_discovery.js` and its `_results.json` under RUN-20260712-001) are not automatically deleted by this section — cleaning up a prior, already-approved run's artifacts is a separate decision to confirm with the user, not an automatic side effect of adopting this rule.
 
-This must remain a permanent platform capability, not a one-off built for any single project — every future project (OrangeHRM, Banking, ERP, or otherwise) loads Platform Knowledge plus its own Project Knowledge, with no architectural change required.
+This must remain a permanent platform capability, not a habit built around the currently-hosted application — whatever `platform_core_data/` is retargeted at next loads Platform Knowledge plus its own Project Knowledge, with no architectural change required.
 
 ## 12. Automation Asset Lifecycle (added 2026-07-24, user-mandated)
 
-**The platform generates automation inside a Run, but a Run is temporary — without a persistent baseline, every project either loses generated automation to a growing pile of per-run folders, or, as happened for NDC prior to this section, quietly reverses course and starts hand-editing one run folder's files in place across several later runs, defeating the "immutable run" model this pipeline otherwise enforces.** This section makes explicit what `projects/README.md`'s own Folder Structure diagram already implied but never operationalized: `artifacts/automation/` (or, for NDC, `workspace/automation/{Framework}/`) is the **Workspace Automation Baseline** — the single authoritative, persistent copy of a project's automation code — and every Run works from a **temporary working copy** of it, never the baseline directly.
+**The platform generates automation inside a Run, but a Run is temporary — without a persistent baseline, generated automation is either lost to a growing pile of per-run folders, or, as happened here prior to this section, the process quietly reverses course and starts hand-editing one run folder's files in place across several later runs, defeating the "immutable run" model this pipeline otherwise enforces.** This section makes explicit what the Folder Structure diagram in [`platform_core_data/README.md`](../../platform_core_data/README.md) already implied but never operationalized: `platform_core_data/workspace/automation/{Framework}/` is the **Workspace Automation Baseline** — the single authoritative, persistent copy of the project's automation code — and every Run works from a **temporary working copy** of it, never the baseline directly.
 
 ### 12.1 Two locations
 
 | Location | Path | Role |
 |---|---|---|
-| **Workspace Automation Baseline** | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests_{Framework}/` (NDC: `projects/NDC/workspace/automation/{Framework}/{{PROJECT_NAME}}_tests_{Framework}/`) | The authoritative, persistent copy of one Automation Package. Never edited directly during generation — only ever written by the Workspace Merge (§12.4). |
-| **Run Automation Working Copy** | `projects/{{PROJECT_NAME}}/artifacts/runs/{{RUN_FOLDER}}/automation/{{PROJECT_NAME}}_tests_{Framework}/` (NDC: `projects/NDC/runs/{{RUN_FOLDER}}/automation/...`) | Temporary. Where Stage 5 (Automation Agent) actually generates/extends code for this run, and where Stage 6 (Automation Execution Agent) actually runs it. Deleted (source only — see §12.5) once its content has been merged back into the baseline. |
+| **Workspace Automation Baseline** | `platform_core_data/workspace/automation/{framework}/tests_{Framework}/` — e.g. `.../automation/shaft/tests_SHAFT/` | The authoritative, persistent copy of one Automation Package. Never edited directly during generation — only ever written by the Workspace Merge (§12.4). |
+| **Run Automation Working Copy** | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` | Temporary. Where Stage 5 (Automation Agent) actually generates/extends code for this run, and where Stage 6 (Automation Execution Agent) actually runs it. Deleted (source only — see §12.5) once its content has been merged back into the baseline. |
+
+The framework subfolder appears in the baseline path but not the run path, and that asymmetry is deliberate: the baseline holds every framework's package side by side and needs them separated, while a run works on exactly one package (resolved by §33.1's gate) and has nothing to separate it from.
 
 This composes with, and does not replace, `.claude/skills/automation-agent/SKILL.md` §30–§33.1's existing consolidated Decision Gate — that gate decides *which* package (Target/Framework/Strategy) a run works on; this section governs what happens to that package's *files* before, during, and after the run.
 
@@ -518,7 +522,7 @@ Only triggered once Automation Review (§5.2) marks the run's automation `Approv
    - **Changed** — a *different* run's merge landed in this same baseline while this run was in flight. A naive two-way diff is unsound here: it cannot tell "the other run added this, we never saw it" apart from "we deleted this," and would silently delete the other run's already-merged work. Instead, a proper **three-way classification** is used — base (baseline content at the recorded snapshot, reconstructed via `git show`), theirs (baseline now), ours (working copy now) — the same base/theirs/ours model every real merge tool uses. Only a path genuinely changed on *both* sides since the snapshot is a real conflict, held for explicit human approval before merging just those files; everything else merges normally.
 3. **Lock guard:** an exclusive lock file (`.automation_lifecycle.lock`, created via an atomic `wx`-flag write) in the baseline directory prevents two merges from racing on the same baseline.
 4. **Write the merge:** new/modified content is copied over the baseline and `git add`-ed; deletions are `git rm`-ed; unambiguous, unmodified renames are `git mv`-ed (a renamed-and-modified file is not auto-detected as a rename — it merges as a separate delete+add; this is a stated, acceptable limitation, not a data-loss risk, since the content is still fully accounted for). The commit message records the source run and Added/Modified/Deleted/Renamed counts.
-5. **Untracked/ignored files are classified separately, never silently dropped or silently merged.** A generated package commonly contains build/IDE output its own nested `.gitignore` excludes (confirmed real example: `NDC_tests_SHAFT/` has 299 files on disk but only 65 tracked — `target/`, `allure-results/`, `execution-summary/`, `generatedReport*.zip` are all git-ignored) — these are evaluated via `git check-ignore --no-index` (which works even on a not-yet-committed working copy) and reported on their own explicit "Discarded Untracked" line in the Merge Summary.
+5. **Untracked/ignored files are classified separately, never silently dropped or silently merged.** A generated package commonly contains build/IDE output its own nested `.gitignore` excludes (confirmed real example: `tests_SHAFT/` has 299 files on disk but only 65 tracked — `target/`, `allure-results/`, `execution-summary/`, `generatedReport*.zip` are all git-ignored) — these are evaluated via `git check-ignore --no-index` (which works even on a not-yet-committed working copy) and reported on their own explicit "Discarded Untracked" line in the Merge Summary.
 6. Produces a **Merge Summary**: Added / Modified / Deleted / Renamed / Conflicts (and resolution) / Discarded Untracked — the source data for `automation_promotion.md` (§12.6).
 
 Implemented by `platform_core/tools/automation_lifecycle/mergePlan.js` (plan computation, side-effect-free) and `mergeApply.js` (the actual writes, gated behind an explicit `apply` flag — dry-run by default, mirroring `run_manager/migrate.js`'s own `--apply` convention).
@@ -539,7 +543,7 @@ A **Bootstrap Migration** — lifting pre-existing, not-yet-lifecycle-managed au
 
 ### 12.7 Registry cross-reference
 
-`{{PROJECT_NAME}}_AutomationPackages.md` (`.claude/skills/automation-agent/SKILL.md` §19/§31) is extended with a Baseline Ref / Last Merged Run column per package, so the next Stage 5 run's registry summary (§31.1) can state not just which packages exist, but whether their Workspace Automation Baseline is current.
+`AutomationPackages.md` (`.claude/skills/automation-agent/SKILL.md` §19/§31) is extended with a Baseline Ref / Last Merged Run column per package, so the next Stage 5 run's registry summary (§31.1) can state not just which packages exist, but whether their Workspace Automation Baseline is current.
 
 ---
 

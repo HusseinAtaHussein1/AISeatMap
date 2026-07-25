@@ -1,0 +1,23 @@
+{
+  "Run ID": "2026-07-25_16-45-00__Module__RuleEngine",
+  "Project Name": "NDC",
+  "Pipeline Version": "unversioned",
+  "Run Type": "Full Regression (all 7 stages requested)",
+  "Run Scope Type": "Feature (module-level) — normalized to folder scope segment `Module`",
+  "Run Scope Source": "Requirement document reference — platform_core_data/PRD.md §7.7 (Rule Engine), §9, §11 E2E-01",
+  "Project Context Version": "v1 (this run) — ProjectContext_RuleEngine.md",
+  "Explorer Version": "not started",
+  "Test Design Version": "not started",
+  "Manual Execution Version": "not started",
+  "Automation Version": "not started",
+  "Execution Version": "not started",
+  "Reporting Version": "not started",
+  "Browser": "Chrome, via platform_core/tools/browser_driver (Stage 2/4) — execution mode Headed per run_configuration.md",
+  "Environment": "http://192.168.1.70 (Admin, STG) — reachable, verified 2026-07-25 (19ms). Portal http://192.168.1.92:9500 reachable but out of scope this run.",
+  "Resolution": "1440x900",
+  "Mutation Authorization": "GRANTED for Rule Engine records only (Markup, Discount, Service Charge, Cancellation Charge, Fare Rules, Offer Pricing, Terms & Conditions) — user decision 2026-07-25, this run only. Standing read-only constraint remains in force for every other module.",
+  "Started Time": "2026-07-25T16:45:00Z",
+  "Finished Time": null,
+  "Duration": null,
+  "Status": "Running — Stage 1 complete, Pending Human Review"
+}

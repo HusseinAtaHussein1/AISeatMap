@@ -1,4 +1,4 @@
-// Pages Layer — projects/NDC/automation_framework.md §1.
+// Pages Layer — platform_core_data/automation_framework.md §1.
 // UI-interaction methods only. No business logic, no assertions — those belong to the Tests Layer.
 const { LoginLocators } = require('../locators/LoginLocators');
 

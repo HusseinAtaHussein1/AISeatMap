@@ -5,7 +5,7 @@ inputs:
   - name: prd
     type: file_path
     required: true
-    description: Approved Product Requirements Document at `projects/{{PROJECT_NAME}}/PRD.md`. This is the only skill in the pipeline permitted to read it directly.
+    description: Approved Product Requirements Document at `platform_core_data/PRD.md`. This is the only skill in the pipeline permitted to read it directly.
   - name: run_configuration
     type: markdown
     required: true
@@ -13,8 +13,8 @@ inputs:
 outputs:
   - name: project_context
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md"
-    description: Single source-of-truth artifact (Scope Summary, Modules In/Out of Scope, Roles & Credentials, Environment Constraints, Carried-Forward Assumptions & Risks, Traceability Anchor) every downstream skill consumes. NDC uses a `workspace/context/` variant of this path — see `projects/NDC/onboarding.md`.
+    location: "platform_core_data/workspace/context/ProjectContext.md"
+    description: Single source-of-truth artifact (Scope Summary, Modules In/Out of Scope, Roles & Credentials, Environment Constraints, Carried-Forward Assumptions & Risks, Traceability Anchor) every downstream skill consumes. NDC uses a `workspace/context/` variant of this path — see `platform_core_data/onboarding.md`.
 dependencies:
   - Read, Write, Glob (file tools only — no browser automation, no code execution)
   - none upstream (first stage in the pipeline)
@@ -53,7 +53,7 @@ Without this agent, each downstream agent would need to re-derive scope, credent
 
 | Input | Required? | Description |
 |---|---|---|
-| Product Requirements Document | Required | `projects/{{PROJECT_NAME}}/PRD.md` |
+| Product Requirements Document | Required | `platform_core_data/PRD.md` |
 | Run configuration | Required | Modules in scope for this run, target environment URL, environment constraints, available credentials/roles |
 
 # 5. Outputs
@@ -82,7 +82,7 @@ A single **Project Context** document that becomes the sole source of truth for 
 
 | Artifact | Path |
 |---|---|
-| Project Context document | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` |
+| Project Context document | `platform_core_data/workspace/context/ProjectContext.md` |
 
 Document structure:
 1. Scope Summary
@@ -107,7 +107,7 @@ in this pipeline will use as its scope-of-truth.
 ## Input
 
 Read:
-projects/{{PROJECT_NAME}}/PRD.md
+platform_core_data/PRD.md
 
 Run configuration (provided alongside this prompt):
 - Modules in scope for this run: {{MODULES_IN_SCOPE}}
@@ -139,7 +139,7 @@ it, halt and report the discrepancy instead of guessing.
 ## Output
 
 Save the document as:
-projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
+platform_core_data/workspace/context/ProjectContext.md
 
 Do not perform exploration. Do not generate test cases or automation.
 Generate only the Project Context.
@@ -151,15 +151,17 @@ Generate only the Project Context.
 
 ```text
 Run configuration:
-  PROJECT_NAME       = OrangeHRM
-  MODULES_IN_SCOPE   = Admin, PIM, Leave
-  APP_URL            = https://opensource-demo.orangehrmlive.com/
-  ENVIRONMENT_NOTES  = "Shared public demo — no destructive or persistent
+  MODULES_IN_SCOPE   = Agency, Branch, Staff
+  APP_URL            = (per platform_core_data/run_configuration.md — STG)
+  ENVIRONMENT_NOTES  = "Shared environment — no destructive or persistent
                         data-mutating actions without explicit authorization"
-  ROLE/USERNAME/PW   = Admin / Admin / admin123
+  ROLE               = Admin  (credentials resolved at runtime from
+                       platform_core_data/credentials/, never written here)
 ```
 
-Hypothetical result: `projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md`, listing Admin/PIM/Leave as In Scope; Time, Recruitment, Performance, Directory, Maintenance-as-a-standalone-module as Out of Scope for this run; carrying forward the PRD's SR-4 (unverified RBAC), SR-5 (no visible brute-force protection), and BR-4 (Employee Id uniqueness unconfirmed) as assumptions the Explorer Agent should specifically probe.
+There is no `PROJECT_NAME` key: the platform hosts one project, rooted at `platform_core_data/` (`workflows_and_pipelines/pipeline/pipeline.md` §1), so a run configuration describes *scope and environment*, never which project it applies to.
+
+Hypothetical result: `platform_core_data/workspace/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer Agent should specifically probe.
 
 # 11. Architecture Principle
 

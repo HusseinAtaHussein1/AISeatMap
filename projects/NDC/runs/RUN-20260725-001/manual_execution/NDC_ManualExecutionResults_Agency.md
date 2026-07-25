@@ -2,8 +2,8 @@
 
 > **Run:** RUN-20260725-001 · **Status:** Raw execution record (not a checkpointed/versioned artifact) · **Produced by:** Manual Execution Agent (Stage 4) · **Date:** 2026-07-25
 > **Executed against:** `http://192.168.1.70` (Shared staging — per `run_configuration.md` §Environment Constraints) · **Role:** Admin (`odeysysadmin`)
-> **Manual Test Suite executed against:** `workspace/test_design/Agency/NDC_TestCases_Agency.md` (Approved 2026-07-18) — 66 test cases total
-> **Project Context:** `workspace/context/NDC_ProjectContext_Agency.md` — header still reads `Status: Pending`; user explicitly confirmed treating it as approved and proceeding without correcting the header (2026-07-25)
+> **Manual Test Suite executed against:** `workspace/test_design/Agency/TestCases_Agency.md` (Approved 2026-07-18) — 66 test cases total
+> **Project Context:** `workspace/context/ProjectContext_Agency.md` — header still reads `Status: Pending`; user explicitly confirmed treating it as approved and proceeding without correcting the header (2026-07-25)
 > **Run Scope executed this run:** Smoke/P1 subset only (16 of 66 cases) — explicit user scope decision, 2026-07-25 (see Summary §Known Limitations). Remaining 48 Regression-tagged cases are `Not Executed`; 2 cases (`TC-AGENCY-CREATE-037`, `TC-AGENCY-SEARCH-010`) are `Superseded` per the Test Suite's own text, not executed by design.
 > **Mutation authorization:** user explicitly authorized creating new Agency records this run, restricted to **only update/approve/reject records this run itself created** — no pre-existing Agency record on the shared environment was modified (2026-07-25, overriding the standing "read-only" default in `run_configuration.md` for this run's own new records only).
 

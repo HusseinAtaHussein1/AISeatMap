@@ -5,6 +5,7 @@ import AdminPages.Admin.AdminTestBase;
 import AdminPages.Master.PaymentGateway.PaymentMethod_Page;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.shaft.tools.io.ReportManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,31 +15,11 @@ import java.nio.file.Path;
 /**
  * NDC Admin / Branch Test Suite — RUN-20260712-002, Stage 4 (Automation Agent).
  * Automates TC-BRANCH-001, 002, 003, 004, 005, 007, 008 — every scenario traces to
- * NDC_TestCases_Branch.md / NDC_TraceabilityMatrix.md. TC-BRANCH-006 is an Exploratory/manual
+ * TestCases_Branch.md / TraceabilityMatrix.md. TC-BRANCH-006 is an Exploratory/manual
  * charter (Test Design disposition) and is deliberately NOT a @Test here — see
- * NDC_AutomationDecisionReport_SHAFT.md.
+ * AutomationDecisionReport_SHAFT.md.
  */
 public class Branch_TC extends AdminTestBase {
-
-    // TEMPORARY diagnostic (2026-07-18) — dumping real State dropdown options. Remove after confirmed.
-    @Test(priority = 100)
-    public void diagStateOptions() throws Exception {
-        JsonObject data = loadTestData().getAsJsonObject("happyPath");
-        new AdminMenu(driver).openBranch();
-        Branch_Page branch = new Branch_Page(driver).openAddBranch();
-        branch.fillRequiredCore(data.get("operatingCountry").getAsString(), data.get("name").getAsString(), data.get("phone").getAsString());
-        driver.element().click(org.openqa.selenium.By.xpath("//p-dropdown[.//input[@id=\"id-State\"]]"));
-        long deadline = System.currentTimeMillis() + 10000L;
-        while (System.currentTimeMillis() < deadline
-                && driver.getDriver().findElements(org.openqa.selenium.By.xpath("//li[@role='option']")).isEmpty()) {
-            Thread.sleep(200);
-        }
-        java.util.List<org.openqa.selenium.WebElement> options = driver.getDriver().findElements(org.openqa.selenium.By.xpath("//li[@role='option']"));
-        System.out.println("DIAG: found " + options.size() + " State options");
-        for (org.openqa.selenium.WebElement o : options) {
-            System.out.println("DIAG_STATE_OPT: [" + o.getText().trim() + "]");
-        }
-    }
 
     private JsonObject testData;
 
@@ -92,7 +73,7 @@ public class Branch_TC extends AdminTestBase {
         String urlAfter = branch.currentUrl();
         Assert.assertTrue(urlAfter.contains("/admin/branch/add"), "Form must not navigate away on an empty required-field submission.");
         // Actual validation text captured for human review, not asserted against an invented message:
-        System.out.println("TC-BRANCH-002 validation text observed: " + branch.getValidationSummaryTextIfPresent());
+        ReportManager.log("TC-BRANCH-002 validation text observed: " + branch.getValidationSummaryTextIfPresent());
     }
 
     // TC-BRANCH-003 — Name field boundary length. Partially Automatable: exact max length unconfirmed.
@@ -103,7 +84,7 @@ public class Branch_TC extends AdminTestBase {
         new AdminMenu(driver).openBranch();
         Branch_Page branch = new Branch_Page(driver).openAddBranch();
         branch.typeNameOnly(longName);
-        System.out.println("TC-BRANCH-003 validation text observed: " + branch.getValidationSummaryTextIfPresent());
+        ReportManager.log("TC-BRANCH-003 validation text observed: " + branch.getValidationSummaryTextIfPresent());
     }
 
     // TC-BRANCH-004 — Name field handles a security-probe string safely (input-handling probe only).
@@ -114,7 +95,7 @@ public class Branch_TC extends AdminTestBase {
         Branch_Page branch = new Branch_Page(driver).openAddBranch();
         branch.typeNameOnly(data.get("securityProbeName").getAsString());
         // Passes as long as no internal error/stack trace is exposed; captured for human review.
-        System.out.println("TC-BRANCH-004 validation text observed: " + branch.getValidationSummaryTextIfPresent());
+        ReportManager.log("TC-BRANCH-004 validation text observed: " + branch.getValidationSummaryTextIfPresent());
     }
 
     // TC-BRANCH-005 — Branch List auto-populates without an explicit Search click.

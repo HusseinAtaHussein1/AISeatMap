@@ -4,23 +4,23 @@ Structured per `.claude/skills/automation-agent/SKILL.md` §25 Standard Output C
 
 ## 1. Automation Summary
 
-Run Scope: User Story / Pasted text (`Create-Role.md`) — Admin → Role Management → Create Role. Framework: SHAFT (Java 17/Maven/TestNG), continuing the existing `NDC_tests_SHAFT` package (Target: Export, Reference-Project-compatible). Outcome: 13 of 22 approved test cases fully automated (Generate), 1 Partially Automatable (a deliberately mutation-safe design), 8 Manual Only (6 assumption-based per Test Design, 2 Exploratory charters per Finding disposition). Compilation verified — BUILD SUCCESS.
+Run Scope: User Story / Pasted text (`Create-Role.md`) — Admin → Role Management → Create Role. Framework: SHAFT (Java 17/Maven/TestNG), continuing the existing `tests_SHAFT` package (Target: Export, Reference-Project-compatible). Outcome: 13 of 22 approved test cases fully automated (Generate), 1 Partially Automatable (a deliberately mutation-safe design), 8 Manual Only (6 assumption-based per Test Design, 2 Exploratory charters per Finding disposition). Compilation verified — BUILD SUCCESS.
 
 ## 2. Generated Files
 
-See `NDC_AutomationManifest_SHAFT.md` — 2 new Java files (`Role_Page.java`, `Role_TC.java`), 1 new JSON test-data file (`roleTestData.json`), 1 extended file (`AdminMenu.java`, additive only). All existing Login/Branch/Agency/Staff assets untouched.
+See `AutomationManifest_SHAFT.md` — 2 new Java files (`Role_Page.java`, `Role_TC.java`), 1 new JSON test-data file (`roleTestData.json`), 1 extended file (`AdminMenu.java`, additive only). All existing Login/Branch/Agency/Staff assets untouched.
 
 ## 3. Framework Used
 
-SHAFT Engine, per the consolidated Decision Gate answered explicitly this run (`NDC_AutomationPlan_SHAFT.md`) — Automation Target = Export/Reference-Project-compatible, Framework = SHAFT, Strategy = Continue `NDC_tests_SHAFT`.
+SHAFT Engine, per the consolidated Decision Gate answered explicitly this run (`AutomationPlan_SHAFT.md`) — Automation Target = Export/Reference-Project-compatible, Framework = SHAFT, Strategy = Continue `tests_SHAFT`.
 
 ## 4. Coverage
 
-59.1% Generate, 4.5% Partially Automatable, 36.4% Manual Only, 0% Uncovered. See `NDC_AutomationCoverageReport_SHAFT.md` for the full breakdown.
+59.1% Generate, 4.5% Partially Automatable, 36.4% Manual Only, 0% Uncovered. See `AutomationCoverageReport_SHAFT.md` for the full breakdown.
 
 ## 5. Automation Decisions
 
-13 Generate, 1 Partially Automatable, 8 Manual Only, 0 Reuse — full per-case reasoning in `NDC_AutomationDecisionReport_SHAFT.md`.
+13 Generate, 1 Partially Automatable, 8 Manual Only, 0 Reuse — full per-case reasoning in `AutomationDecisionReport_SHAFT.md`.
 
 ## 6. Known Limitations
 
@@ -32,19 +32,19 @@ SHAFT Engine, per the consolidated Decision Gate answered explicitly this run (`
 
 ## 7. Execution Instructions
 
-From `projects/NDC/runs/RUN-20260712-001/automation/NDC_tests_SHAFT/`:
+From `platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT/`:
 ```
 mvn -o clean test-compile   # verify compilation only, already confirmed 2026-07-21
 mvn -o test                 # runs the full testng.xml — add Role_TC to testng.xml's suite
                              # definition first if a Role-only run is wanted (not yet added
                              # this run — Stage 5's own scoping decision)
 ```
-No new environment variables/config required beyond what the Login run already established (`projects/NDC/credentials/credentials.json`, read automatically by `CredentialsLoader`/`AdminTestBase`).
+No new environment variables/config required beyond what the Login run already established (`platform_core_data/credentials/credentials.json`, read automatically by `CredentialsLoader`/`AdminTestBase`).
 
 ## 8. Inputs for Execution Agent
 
-- This automation package: `projects/NDC/runs/RUN-20260712-001/automation/NDC_tests_SHAFT/` (continued in place)
-- Manual Test Suite / Traceability Matrix / Coverage Report: `projects/NDC/workspace/test_design/Role/`
-- Discovery Artifacts + Findings: `projects/NDC/runs/RUN-20260721-001/discovery/`
-- Project Context: `projects/NDC/workspace/context/NDC_ProjectContext_Role.md`
+- This automation package: `platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT/` (continued in place)
+- Manual Test Suite / Traceability Matrix / Coverage Report: `platform_core_data/workspace/test_design/Role/`
+- Discovery Artifacts + Findings: `platform_core_data/runs/RUN-20260721-001/discovery/`
+- Project Context: `platform_core_data/workspace/context/ProjectContext_Role.md`
 - **Before executing:** confirm whether Stage 5 should scope to Role tests only (a new `testng-role-only.xml`, matching this package's existing per-scope XML precedent, e.g. `testng-branch-payment-method.xml`) or run the full suite; confirm mutation authorization is still not granted before any test attempting a real save is added in a future run.

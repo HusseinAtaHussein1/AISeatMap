@@ -37,7 +37,7 @@ function isPathClean(relPath, { execFileSync }) {
 
 /**
  * True if `absPath` would be excluded by any applicable .gitignore (repo-root or nested within the
- * package itself — real, confirmed example: NDC_tests_SHAFT ships its own nested .gitignore
+ * package itself — real, confirmed example: tests_SHAFT ships its own nested .gitignore
  * excluding target/, allure-results/, execution-summary/, generatedReport*.zip). Evaluated via
  * `--no-index` so it works even for a path that was never staged/committed — the normal state of a
  * freshly-generated run's working copy before its first merge.

@@ -1,6 +1,6 @@
 # NDC — Automation Manifest — RUN-20260721-001 — SHAFT
 
-**Status:** Pending Review · Package: `projects/NDC/runs/RUN-20260712-001/automation/NDC_tests_SHAFT/` (continued in place)
+**Status:** Pending Review · Package: `platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT/` (continued in place)
 
 ## File Inventory
 
@@ -25,7 +25,7 @@ No other file in the existing package was modified. Login/Branch/Agency/Staff as
 - **Architecture:** Matches the Automation Plan's stated Page Object Model / `AdminTestBase`-extension pattern — no deviation.
 - **Compilation/syntax readiness:** `mvn -o clean test-compile` → **BUILD SUCCESS** (10 main source files, 7 test source files; confirmed 2026-07-21).
 - **Framework compliance:** Uses `SHAFT.GUI.WebDriver`, `driver.element().click/type()`, TestNG `@Test`/`Assert` — no raw, unwrapped Selenium calls introduced.
-- **Traceability:** Every `Role_TC` test method's comment states its Test Case ID and (where applicable) Finding Reference; all resolve against `workspace/test_design/Role/NDC_TraceabilityMatrix.md`.
+- **Traceability:** Every `Role_TC` test method's comment states its Test Case ID and (where applicable) Finding Reference; all resolve against `workspace/test_design/Role/TraceabilityMatrix.md`.
 
 ## Recommendations
 

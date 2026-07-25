@@ -1,6 +1,6 @@
 # NDC — Requirement Traceability Matrix — E-Ticket Agency Branding (WT1-T2919)
 
-**Run:** RUN-20260718-001 · **Run Scope:** User Story / Pasted text (WT1-T2919) · **Project Context:** `context/NDC_ProjectContext_ETicketBranding.md` · **Test Suite:** `test_design/NDC_TestCases_ETicketBranding.md` / `.xlsx`
+**Run:** RUN-20260718-001 · **Run Scope:** User Story / Pasted text (WT1-T2919) · **Project Context:** `context/ProjectContext_ETicketBranding.md` · **Test Suite:** `test_design/TestCases_ETicketBranding.md` / `.xlsx`
 
 ## Agency Type Configuration
 
@@ -46,4 +46,4 @@
 | FR-ETB-DESIGN-01 (Logo/Agency info/Booking date differences only) | TC-ETB-022, -023 | Not independently verified in Discovery | N/A | Partially Covered — visual-consistency judgment call (TC-ETB-022 exploratory), Booking date sub-item (TC-ETB-023) fully covered |
 | BR-ETB-01 (Agency CRUD dependency) | TC-ETB-001, -002 | Covered (as precondition) | N/A | Covered |
 
-**Out-of-scope Requirement IDs:** none — every Requirement ID in `NDC_ProjectContext_ETicketBranding.md` §2 has at least one citing Test Case. See `NDC_CoverageReport_ETicketBranding.md` for the Coverage Percentage computation.
+**Out-of-scope Requirement IDs:** none — every Requirement ID in `ProjectContext_ETicketBranding.md` §2 has at least one citing Test Case. See `CoverageReport_ETicketBranding.md` for the Coverage Percentage computation.

@@ -4,19 +4,19 @@ Per workflows_and_pipelines/pipeline/pipeline.md §12 (Automation Asset Lifecycl
 permanent run history and is never deleted by Cleanup.
 
 > **Superseded 2026-07-24 (same day):** the destination this record describes,
-> `projects/NDC/workspace/automation/shaft/NDC_tests_SHAFT_Agency/`, no longer exists as a separate
+> `platform_core_data/workspace/automation/shaft/tests_SHAFT_Agency/`, no longer exists as a separate
 > Workspace Automation Baseline. Once the platform adopted "exactly one authoritative automation
 > project per framework" (`.claude/skills/automation-agent/SKILL.md` §31.5, v8), this package's
-> content was folded into `projects/NDC/workspace/automation/shaft/NDC_tests_SHAFT/` instead. This
+> content was folded into `platform_core_data/workspace/automation/shaft/tests_SHAFT/` instead. This
 > record remains accurate as a description of what was migrated *at the time* — see
-> `../../../workspace/automation/NDC_AutomationPackages.md` Notes for the consolidation record
+> `../../../workspace/automation/AutomationPackages.md` Notes for the consolidation record
 > (what was kept, what was ported, what was dropped, and why).
 
 - **Promotion Status:** Bootstrap Migration
 - **Merge Date:** 2026-07-24T12:51:45.822Z
 - **Approved By:** N/A — Bootstrap Migration
 - **Source Run:** RUN-20260718-001
-- **Workspace Destination:** projects/NDC/workspace/automation/shaft/NDC_tests_SHAFT_Agency/
+- **Workspace Destination:** platform_core_data/workspace/automation/shaft/tests_SHAFT_Agency/
 - **Merge Result:** Success
 
 ## Files Added
@@ -303,4 +303,4 @@ permanent run history and is never deleted by Cleanup.
 
 ## Notes
 
-Bootstrap Migration Acknowledgment — pre-existing content relocated from this run into the new Workspace Automation Baseline (workflows_and_pipelines/pipeline/pipeline.md §12), not yet reviewed against pipeline.md §5.2 Automation Approval criteria. This package remains Pending Automation Approval exactly as it was before migration — only its storage location changed. NDC_tests_SHAFT_Agency was generated as an independent package (not an extension of NDC_tests_SHAFT), per the human decision recorded at this run's Framework/Strategy Decision Gate.
+Bootstrap Migration Acknowledgment — pre-existing content relocated from this run into the new Workspace Automation Baseline (workflows_and_pipelines/pipeline/pipeline.md §12), not yet reviewed against pipeline.md §5.2 Automation Approval criteria. This package remains Pending Automation Approval exactly as it was before migration — only its storage location changed. tests_SHAFT_Agency was generated as an independent package (not an extension of tests_SHAFT), per the human decision recorded at this run's Framework/Strategy Decision Gate.

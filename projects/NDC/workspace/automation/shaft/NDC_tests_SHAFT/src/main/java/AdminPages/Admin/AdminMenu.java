@@ -39,6 +39,7 @@ public class AdminMenu {
     By Btn_Admin = By.xpath("//a[@id=\"p-tabpanel-1-label\"]");
     By Btn_Branch = By.xpath("//a[@href=\"/admin/branch\"]");
     By Btn_Agency = By.xpath("//li[3]//tilde-theme-accordion[1]//header[1]//a[1]");
+    By Btn_AgencyList = By.xpath("//a[@href=\"/admin/agency\"]");
     By Btn_Staff = By.xpath("//a[@href=\"/admin/staff\"]");
     By Btn_Company = By.xpath("//span[normalize-space()='Company']");
     By Btn_Role = By.xpath("//span[normalize-space()='Role']");
@@ -60,6 +61,15 @@ public class AdminMenu {
 
     public AdminMenu openAgency() {
         driver.element().click(Btn_Agency);
+        return this;
+    }
+
+    /** Requires openAgency() first (expands the Agency accordion). Navigates to /admin/agency
+     *  (the Agency List/Search screen) — same two-hop convention as openCompany()/openRole().
+     *  Centralized here 2026-07-25 to remove the duplicated raw-locator navigation helpers that
+     *  had accumulated across Agency_Actions_TC/Agency_Create_TC/Agency_Update_TC. */
+    public AdminMenu openAgencyList() {
+        driver.element().click(Btn_AgencyList);
         return this;
     }
 

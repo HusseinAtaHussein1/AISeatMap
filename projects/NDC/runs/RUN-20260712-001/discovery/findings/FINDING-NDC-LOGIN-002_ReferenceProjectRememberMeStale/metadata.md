@@ -23,7 +23,7 @@ Most likely the "Remember Me" feature was removed from the live login screen at 
 
 ## Recommendation
 
-Do not reuse `LogIn_Page.java`'s `Btn_RememberMyInfoNextTime`/`ClickRememberMe()` when extending the Reference Project for Login automation (per `projects/NDC/reference_automation_project.md`) — this locator currently targets nothing live. Do not design a "Remember Me" test case for the current Login Manual Test Suite (RUN-20260712-001) — there is nothing to test. Flag to the reference project's maintainers that this method may be dead code.
+Do not reuse `LogIn_Page.java`'s `Btn_RememberMyInfoNextTime`/`ClickRememberMe()` when extending the Reference Project for Login automation (per `platform_core_data/reference_automation_project.md`) — this locator currently targets nothing live. Do not design a "Remember Me" test case for the current Login Manual Test Suite (RUN-20260712-001) — there is nothing to test. Flag to the reference project's maintainers that this method may be dead code.
 
 ## Missing Evidence
 

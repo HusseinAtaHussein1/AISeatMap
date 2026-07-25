@@ -1,29 +1,127 @@
-# NDC — Project Knowledge
+# `platform_core_data/`
 
-This folder contains **all project-specific knowledge for NDC only** — onboarding notes, run configuration, the architecture of the application under test, and domain terminology. It does not contain any pipeline output.
+## Purpose
 
-**Generated outputs remain under [`projects/NDC/workspace/`](workspace/)** (latest approved state) **and [`projects/NDC/runs/`](runs/)** (immutable per-run history) — Project Context, Discovery Artifacts, Manual Test Suites, Automation Scripts, Execution Results, and Reports, per `pipeline/pipeline.md` and `pipeline/run_manager.md`. NDC uses `workspace/` + `runs/` instead of the platform-default `artifacts/` folder name — see `onboarding.md`. Nothing in this folder is read or written by the pipeline agents themselves; it exists for the humans (and future agent sessions) who need to get oriented on this project before or between pipeline runs.
+This folder holds **everything specific to the one application the platform is currently pointed at** — durable Project Knowledge (what the application is, how to reach it, what's been learned about it) *and* every artifact the pipeline produces while validating it. Nothing application-specific lives outside this folder; nothing reusable lives inside it.
 
-## Files in this folder
+**The platform hosts exactly one project at a time** ([`workflows_and_pipelines/pipeline/pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md) §1). There is no project-name path segment, no project selector, and no sibling project directory. Retargeting the platform at a different application means replacing this folder's *contents* — not adding a second one, and not editing any specification outside it.
 
-| File | Purpose |
-|---|---|
-| [`onboarding.md`](onboarding.md) | Start here — what NDC is, where its knowledge lives, how to get oriented fast |
-| [`run_configuration.md`](run_configuration.md) | The run configuration (modules in scope, target URL, credentials, environment constraints) the Project Context Agent consumes |
-| [`architecture.md`](architecture.md) | Architecture of the NDC application under test (not the testing platform itself) |
-| [`automation_framework.md`](automation_framework.md) | **Mandatory** SHAFT automation framework structure — Stage 4 (Automation Agent) must comply with this, not select or invent a different architecture |
-| [`glossary.md`](glossary.md) | NDC domain/product terminology |
-| [`resources/`](resources/) | Supplementary reference material — see `resources/README.md` for the standardized subfolder layout |
+The application currently hosted here is **NDC**.
 
-## Where the real project artifacts live
+It exists as its own top-level layer, separate from [`platform_core/`](../platform_core/) (reusable engineering assets), [`.claude/`](../.claude/) (agent behavior), and [`workflows_and_pipelines/`](../workflows_and_pipelines/) (orchestration rules), because everything under here is true of exactly one application and is never generalized without an explicit Promotion decision (`pipeline.md` §10.5).
+
+## Responsibility
+
+**This folder owns what the application under test *is*, and everything the pipeline has produced by validating it.** It does not own reusable engineering knowledge (`platform_core/knowledge/`), agent behavior (`.claude/skills/`), or the stage sequencing and checkpoint rules that operate on it (`workflows_and_pipelines/`).
+
+## What Lives Here
+
+- **Project Knowledge** — durable facts about the application: its PRD, onboarding notes, architecture, domain glossary, run configuration, and supporting resources (requirements, API specs, diagrams, screenshots, credentials documentation). Written by humans; changes only when the application itself changes.
+- **Project Knowledge Base** (`knowledge_base/`) — accumulated engineering experience against *this* application: confirmed repairs, diagnosis notes, automation assets, application/UI findings, business rules, lessons learned. The application-scoped counterpart to `platform_core/knowledge/`, per `pipeline.md` §10.
+- **Browser Driver assets** (`browser/`, `credentials/`) — the Browser Profile (login mechanics), Screen/Component locator knowledge, and real (git-ignored) credentials. See [`platform_core/tools/browser_driver/README.md`](../platform_core/tools/browser_driver/README.md) for the full four-way split this implements.
+- **Workspace** (`workspace/`) — the current-approved output of each pipeline stage.
+- **Runs** (`runs/`) — immutable per-run snapshots.
+
+## What Does NOT Belong Here
+
+- **Reusable engineering knowledge.** A pattern that would still hold against a *different* application is promoted out to `platform_core/knowledge/` (`pipeline.md` §10.5) — never grown indefinitely here on the assumption it "probably applies everywhere."
+- **Agent behavioral specifications.** What a Skill does belongs in `.claude/skills/`; this folder supplies a Skill's *inputs*, never its behavior.
+- **Orchestration or sequencing logic.** Stage order and checkpoint mechanics belong in `workflows_and_pipelines/`.
+- **A second project.** Adding one would reintroduce exactly the project-selection ambiguity the single-project model removes (`pipeline.md` §6 Rule 9).
+- **Real secrets committed to git.** `credentials.json` is git-ignored by design (two overlapping `.gitignore` rules); only `credentials.template.json`, placeholders only, is ever committed.
+
+## Folder Structure
+
+```
+platform_core_data/
+  PRD.md                          # Product Requirements Document — Stage 1 INPUT, never generated
+  PRD_UserStories.md              # user-story breakdown accompanying the PRD
+  README.md                       # this file
+  onboarding.md                   # how a new person/agent gets oriented fast
+  run_configuration.md            # modules in scope, target URL, credentials, environment notes
+  architecture.md                 # architecture of the application under test (not the platform)
+  glossary.md                     # domain/product terminology
+  automation_framework.md         # binding SHAFT package structure — Stage 5 must comply, not re-select
+  reference_automation_project.md # registration of the external production SHAFT repo (read-only)
+  resources/                      # supplementary material — standardized layout
+    requirements/                   # organized by Type only: epics/, features/, user_stories/,
+                                    #   bugs/, specifications/ — Source is in-file metadata, not a
+                                    #   subfolder (see workflows_and_pipelines/pipeline/run_scope.md §4.3)
+    api/{swagger,postman}/
+    diagrams/ · screenshots/ · sample_data/ · notes/ · external_links/ · Documents/ · Records/ · TestData/
+    credentials/                    # documentation ABOUT credentials only — never real secrets
+  knowledge_base/                 # this application's own engineering experience (pipeline.md §10)
+    repair/                         # confirmed repair records (REP-NNN)
+    diagnosis/ · execution/ · automation/    # evidence-gathering / execution / generation history
+    application/ · ui/                       # application behavior and UI observations
+    findings/ · lessons_learned/             # Explorer/Test Design-surfaced knowledge
+    business_rules/                          # this application's business logic (never promoted)
+    INDEX.md
+  browser/                        # Browser Driver Layer — live-browser assets
+    profile.json                    # auth + browser init only
+    screens/ · components/          # per-screen / shared-component locator knowledge
+  credentials/                    # real (git-ignored) credentials — see credentials/README.md
+    credentials.template.json       # committed — schema only, placeholder values
+    credentials.json                # real values — NEVER committed
+  ui/screenshots/                 # UI Knowledge Base — canonical baseline screenshots
+  workspace/                      # current-approved state, one folder per stage
+    context/                        # current-approved Project Context
+    discovery/                      # current-approved Discovery snapshots, QA Assessment Report
+      findings/                       # current Finding evidence packages
+    test_design/                    # current-approved Manual Test Suite, Traceability Matrix, Coverage Report
+    manual_execution/               # current-approved Manual Execution Results / Summary / Candidate Package
+    automation/                     # Workspace Automation Baseline — the authoritative, persistent
+      {framework}/                  #   Automation Package(s); a run's own automation/ is only ever a
+        tests_{Framework}/          #   temporary working copy of this, per the Automation Asset
+                                    #   Lifecycle (pipeline.md §12)
+    execution/                      # current Execution Results + evidence
+    reporting/                      # current Final QA Report
+    pipeline/                       # RunManifest.md — generated pipeline artifacts only
+  runs/                           # immutable per-run snapshots
+    YYYY-MM-DD_HH-mm-ss__Scope__Target/   # current naming convention (run_manager.md §5)
+    RUN-YYYYMMDD-XXX[-slug]/              # pre-existing runs — never renamed (run_manager.md §5.6)
+      metadata/                       # run.json + run_summary.md — always created
+      context/ · discovery/{findings/} · test_design/ · manual_execution/ · execution/ · reporting/
+                                      # created only when that stage actually writes to it
+      automation/                     # temporary working copy of the Workspace Automation Baseline
+                                      #   (pipeline.md §12.1) — its source is removed after a successful
+                                      #   Workspace Merge; automation_promotion.md and every
+                                      #   Plan/Manifest/Report/Summary stay forever
+```
+
+**Artifact filenames carry no project prefix** (changed 2026-07-25): `ProjectContext_Agency.md`, not `NDC_ProjectContext_Agency.md`. With one project, that prefix was a constant on every filename and distinguished nothing.
+
+**Hard rule, no exceptions:** secrets, passwords, and API keys must never be committed anywhere in this repository.
+
+## Where the Current Artifacts Live
 
 | Artifact | Path |
 |---|---|
-| Product Requirements Document | `projects/NDC/PRD.md` |
-| Project Context (current approved) | `projects/NDC/workspace/context/NDC_ProjectContext_CredentialRoutesFilter.md` |
-| Discovery Artifacts | `projects/NDC/workspace/discovery/*.md` |
-| Manual Test Suites & Traceability Matrix | `projects/NDC/workspace/test_design/` |
-| Automation Scripts | `projects/NDC/workspace/automation/` |
-| Run Workspaces (immutable history) | `projects/NDC/runs/RUN-YYYYMMDD-XXX-{slug}/` (new runs); pre-existing runs keep their original `RUN-YYYYMMDD-XXX/` name |
-| Run Manifest | `projects/NDC/workspace/pipeline/NDC_RunManifest.md` |
-| Reports | `projects/NDC/workspace/reporting/` |
+| Product Requirements Document | `PRD.md` |
+| Project Context (current approved) | `workspace/context/ProjectContext_{Scope}.md` |
+| Discovery Artifacts | `workspace/discovery/*.md` |
+| Manual Test Suites & Traceability Matrix | `workspace/test_design/` |
+| Automation Baseline | `workspace/automation/{framework}/tests_{Framework}/` |
+| Run Manifest | `workspace/pipeline/RunManifest.md` |
+| Reports | `workspace/reporting/` |
+| Run history (immutable) | `runs/` |
+
+## Human-Facing Files
+
+The documents below are not *generated* artifacts — they exist for the humans (and future agent sessions) getting oriented before or between runs. `PRD.md` and `run_configuration.md` are the exception: they are Stage 1's declared **inputs**.
+
+| File | Purpose |
+|---|---|
+| [`onboarding.md`](onboarding.md) | Start here — what the application is, where its knowledge lives, how to get oriented fast |
+| [`run_configuration.md`](run_configuration.md) | Modules in scope, target URL, credentials location, environment constraints — a Stage 1 input |
+| [`architecture.md`](architecture.md) | Architecture of the application under test (not of the testing platform) |
+| [`automation_framework.md`](automation_framework.md) | **Mandatory** SHAFT package structure — Stage 5 must comply with it, not select or invent an alternative |
+| [`reference_automation_project.md`](reference_automation_project.md) | Registration of the external production SHAFT repository this package must stay merge-compatible with |
+| [`glossary.md`](glossary.md) | Domain/product terminology |
+| [`resources/`](resources/) | Supplementary reference material — see `resources/README.md` for the standardized subfolder layout |
+
+## Related Layers
+
+- [`../platform_core/`](../platform_core/) — reusable Knowledge and Tools; the only layer a pattern from `knowledge_base/` may be promoted into.
+- [`../.claude/`](../.claude/) — the Skills whose declared Inputs and Outputs resolve to paths in this folder.
+- [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — where every path convention, versioning rule, and Run Workspace layout realized here is actually defined.

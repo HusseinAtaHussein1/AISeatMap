@@ -3,7 +3,7 @@
 **Run:** RUN-20260712-001 · **Status:** `Approved` (reviewer: Aymoon, Business Analyst / Product Owner role, 2026-07-12) · **Produced by:** Project Context Agent (Stage 1) · **Date:** 2026-07-12
 **Run Scope:** Type = Feature · Source = Custom scope description · per `pipeline/run_scope.md` §3/§4.1
 
-> ⚠️ **OBSERVATION-BASED SPIKE — NOT PRD-BACKED.** `projects/NDC/PRD.md` contains zero content on Login/Authentication (it holds only the two Credential Routes Filter user stories used by RUN-20260710-001). Per explicit user authorization on 2026-07-12, this run's scope is established via a **Custom scope description** (`pipeline/run_scope.md` §4.2) instead of a PRD, and every requirement below is derived from **directly observed live application behavior** (Discovery Mode: Browser Automation), not a written business rule. Every such item is tagged **"Observation-derived"**. This is a deliberate, one-off relaxation of `agents/project_context_agent.md`'s normal PRD-traceability rule, authorized for exploratory/spike runs where an application exists ahead of its documentation — see the platform's "Observation-based Spike run type" standing decision. This Project Context does **not** supersede or amend `NDC_ProjectContext_CredentialRoutesFilter.md` (RUN-20260710-001, Credential Routes Filter scope), which remains independently Approved and untouched.
+> ⚠️ **OBSERVATION-BASED SPIKE — NOT PRD-BACKED.** `platform_core_data/PRD.md` contains zero content on Login/Authentication (it holds only the two Credential Routes Filter user stories used by RUN-20260710-001). Per explicit user authorization on 2026-07-12, this run's scope is established via a **Custom scope description** (`pipeline/run_scope.md` §4.2) instead of a PRD, and every requirement below is derived from **directly observed live application behavior** (Discovery Mode: Browser Automation), not a written business rule. Every such item is tagged **"Observation-derived"**. This is a deliberate, one-off relaxation of `agents/project_context_agent.md`'s normal PRD-traceability rule, authorized for exploratory/spike runs where an application exists ahead of its documentation — see the platform's "Observation-based Spike run type" standing decision. This Project Context does **not** supersede or amend `ProjectContext_CredentialRoutesFilter.md` (RUN-20260710-001, Credential Routes Filter scope), which remains independently Approved and untouched.
 
 ---
 
@@ -23,12 +23,12 @@ Everything else — every module covered or not covered by RUN-20260710-001's Pr
 
 ## 4. Roles & Credentials Required
 
-- One working Admin-tier credential is required to confirm the positive (valid-login) case — already available per `projects/NDC/credentials/credentials.json` (STG environment), the same credential used by prior Discovery in this project. No new credential is required for this run.
+- One working Admin-tier credential is required to confirm the positive (valid-login) case — already available per `platform_core_data/credentials/credentials.json` (STG environment), the same credential used by prior Discovery in this project. No new credential is required for this run.
 - No distinct role/permission matrix applies to the Login screen itself — it is pre-authentication and identical regardless of which role subsequently logs in.
 
 ## 5. Environment Constraints
 
-Per `projects/NDC/run_configuration.md` (unchanged by this run):
+Per `platform_core_data/run_configuration.md` (unchanged by this run):
 - Target: `http://192.168.1.70`, **shared staging**, not isolated to this testing effort.
 - Read-only for now — unchanged; Login itself does not create/edit/delete persistent business data, but see the negative-testing constraint below, which is stricter than a general read-only rule.
 - **Negative-testing constraint (new, standing default as of 2026-07-12):** because this environment is Shared, this run performs **at most one invalid-login attempt**, using a **non-existent username** (never the real shared credential with a wrong password), solely to observe error-message behavior. Lockout, brute-force, rate-limiting, repeated-invalid-attempt, and other security/destructive-oriented scenarios are explicitly **out of scope** for this run and are recorded as Deferred (§6), not silently skipped. See the platform's "shared-env negative testing default" standing decision.
@@ -50,10 +50,10 @@ Since this is a Spike with no PRD, this section carries forward **Open Questions
 | Item above | Section | Source |
 |---|---|---|
 | §1–§3 (Scope) | Custom scope description | User instruction, 2026-07-12 (chat), recorded in platform memory `project_observation_based_spike_run_type` |
-| §4 (Credentials) | Existing project setup | `projects/NDC/credentials/credentials.json`, `projects/NDC/run_configuration.md` |
+| §4 (Credentials) | Existing project setup | `platform_core_data/credentials/credentials.json`, `platform_core_data/run_configuration.md` |
 | §5 (Environment Constraints, negative-testing default) | User instruction, 2026-07-12 | Recorded in platform memory `project_shared_env_negative_testing_default` |
 | §6 (Open Questions) | Observation-derived | To be resolved by Stage 2 (Explorer Agent), Discovery Mode: Browser Automation |
 
 ---
 
-*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review (suggested reviewer: Business Analyst / Product Owner) before Stage 2 (Explorer Agent) may formally clear its own checkpoint — Stage 2 discovery below was, per explicit user instruction, performed concurrently with this draft rather than strictly after its approval, given this run's Spike/exploratory nature. Final sign-off for all of Stages 1–3 together is requested in one batch — see the run's status note in `NDC_RunManifest.md`.*
+*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review (suggested reviewer: Business Analyst / Product Owner) before Stage 2 (Explorer Agent) may formally clear its own checkpoint — Stage 2 discovery below was, per explicit user instruction, performed concurrently with this draft rather than strictly after its approval, given this run's Spike/exploratory nature. Final sign-off for all of Stages 1–3 together is requested in one batch — see the run's status note in `RunManifest.md`.*

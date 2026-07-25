@@ -6,7 +6,7 @@
 
 - Run Scope: Type = User Story (Q2-CORE-WT1-T3002-066 + T3087, jointly scoped) · Source = Pasted text
 - Run Type: not explicitly stated beyond User Story scoping
-- Project Context version used: `NDC_ProjectContext_CredentialRoutesFilter.md` (Approved)
+- Project Context version used: `ProjectContext_CredentialRoutesFilter.md` (Approved)
 
 ## 2. Objectives
 

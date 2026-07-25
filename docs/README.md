@@ -12,7 +12,7 @@
 
 ![Architecture](https://img.shields.io/badge/Architecture-Multi--Agent-blue?style=for-the-badge)
 
-![Projects](https://img.shields.io/badge/Multi--Project-Ready-green?style=for-the-badge)
+![Project](https://img.shields.io/badge/Single--Project-Focused-green?style=for-the-badge)
 
 ![License](https://img.shields.io/badge/License-MIT-orange?style=for-the-badge)
 
@@ -224,15 +224,12 @@ agentic-ai-testing-platform/
 │   └── workflows/
 │       └── first_run.md
 │
-├── projects/
+├── platform_core_data/         (THE hosted project — one at a time, no project-name segment)
 │   ├── README.md
-│   ├── OrangeHRM/
-│   │   └── artifacts/          (generated outputs — self-contained per project, no root-level artifacts/)
-│   ├── NDC/
-│   │   └── workspace/          (generated outputs — this project uses workspace/ instead of artifacts/, see projects/NDC/onboarding.md)
-│   └── templates/
-│       └── project_template/
-│           └── artifacts/      (empty skeleton, per workflows_and_pipelines/pipeline/run_manager.md §6)
+│   ├── PRD.md · run_configuration.md · architecture.md · glossary.md · onboarding.md
+│   ├── resources/ · knowledge_base/ · browser/ · credentials/ · ui/
+│   ├── workspace/              (current-approved state, one folder per stage)
+│   └── runs/                   (immutable per-run snapshots)
 │
 ├── docs/
 │   ├── README.md
@@ -246,39 +243,27 @@ agentic-ai-testing-platform/
 
 ---
 
-# 📁 Multi-Project Architecture
+# 📁 Single-Project Architecture
 
-The platform is designed to support multiple applications using the same testing pipeline.
+The platform hosts exactly one application at a time, rooted at `platform_core_data/`. Everything that is *not* about that application — the pipeline specification, the seven agent skills, Platform Knowledge, and the shared tools — sits outside it and is untouched when the platform is retargeted.
 
 ```mermaid
 flowchart LR
 
-Platform
+Platform["Platform<br/>.claude/ · workflows_and_pipelines/ · platform_core/"]
 
---> OrangeHRM
+Data["platform_core_data/<br/>the one hosted application"]
 
-Platform
+Work["workspace/<br/>current-approved state"]
 
---> NDC
+Runs["runs/<br/>immutable history"]
 
-Platform
-
---> Banking
-
-Platform
-
---> CRM
-
-OrangeHRM --> Runs1["Runs"]
-
-NDC --> Runs2["Runs"]
-
-Banking --> Runs3["Runs"]
-
-CRM --> Runs4["Runs"]
+Platform --> Data
+Data --> Work
+Data --> Runs
 ```
 
-Each project is completely independent and maintains its own:
+The hosted project owns, and is the only place that holds:
 
 - Project Knowledge
 - Run Configuration
@@ -286,23 +271,25 @@ Each project is completely independent and maintains its own:
 - Generated Artifacts
 - Execution History
 
+Retargeting the platform at a different application means replacing `platform_core_data/`'s contents — see the root [`README.md`](../README.md) §17.2. It never means adding a second project directory.
+
 ---
 
 # 📚 Project Knowledge
 
-Every application onboarded into the platform has its own knowledge base.
+The platform hosts one application at a time, and everything known about it lives under one root.
 
 ```text
-projects/
-
-└── OrangeHRM/
-    ├── PRD.md
-    ├── onboarding.md
-    ├── architecture.md
-    ├── glossary.md
-    ├── run_configuration.md
-    ├── resources/
-    └── artifacts/          (generated outputs live here — see below)
+platform_core_data/
+├── PRD.md
+├── onboarding.md
+├── architecture.md
+├── glossary.md
+├── run_configuration.md
+├── resources/
+├── knowledge_base/
+├── workspace/          (generated outputs live here — see below)
+└── runs/
 ```
 
 Project Knowledge represents the permanent understanding of an application.
@@ -313,16 +300,14 @@ It is maintained by engineers and evolves with the product.
 
 # 📦 Generated Artifacts
 
-Generated outputs never modify the original project knowledge. As of the repository's v1.0 architecture, every project is **fully self-contained** — generated artifacts live *inside* the project's own folder, under `projects/{{PROJECT_NAME}}/artifacts/` by default. There is no repository-root `artifacts/` directory. (NDC is an exception: it uses `projects/NDC/workspace/` and a sibling `projects/NDC/runs/` — see `projects/NDC/onboarding.md`.)
+Generated outputs never modify the original project knowledge. The hosted project is **fully self-contained**: generated artifacts live under `platform_core_data/workspace/` (current-approved state) and `platform_core_data/runs/` (immutable per-run snapshots). There is no repository-root `artifacts/` directory and no project-name path segment.
 
 ```text
-projects/
-
-└── OrangeHRM/
+platform_core_data/
 
     ├── PRD.md              # Project Knowledge — a Stage 1 input, not a generated artifact
 
-    └── artifacts/          # pipeline-stage outputs only — nothing here duplicates project knowledge
+    └── workspace/          # pipeline-stage outputs only — nothing here duplicates project knowledge
 
         ├── context/
         ├── discovery/
@@ -361,7 +346,7 @@ One of the most important architectural concepts in the platform.
 |-------------------|-----------------|
 | Permanent | Generated Per Run |
 | Maintained by Engineers | Generated by AI |
-| Lives under `projects/{{PROJECT_NAME}}/` (excluding `artifacts/`) | Lives under `projects/{{PROJECT_NAME}}/artifacts/` |
+| Lives under `platform_core_data/` (excluding `artifacts/`) | Lives under `platform_core_data/workspace/` |
 | Contains everything about the application | Contains only what is required for the current run |
 | Changes rarely | Generated for every execution |
 
@@ -485,15 +470,13 @@ git clone https://github.com/ayman2911/agentic-ai-testing-platform.git
 cd agentic-ai-testing-platform
 ```
 
-## Create a New Project
+## Retarget the Platform
 
 ```text
-projects/
-
-└── MyProject/
+platform_core_data/
 ```
 
-Populate the project knowledge.
+Clear `workspace/` and `runs/`, then populate the project knowledge.
 
 Configure the Run Scope.
 
@@ -517,7 +500,7 @@ Review the generated QA Report.
 | docs/PLATFORM_VALIDATION_REPORT.md | End-to-End Validation |
 | .claude/skills/ | Agent Specifications (as Skills) |
 | workflows_and_pipelines/pipeline/ | Pipeline Architecture |
-| projects/ | Project Knowledge |
+| platform_core_data/ | Project Knowledge and every generated artifact |
 | workflows_and_pipelines/workflows/ | Execution Workflows |
 
 ---

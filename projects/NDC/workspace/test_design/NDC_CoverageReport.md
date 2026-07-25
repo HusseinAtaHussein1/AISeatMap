@@ -1,12 +1,12 @@
 # NDC — Coverage Report — RUN-20260712-002 (Admin: Branch, Agency, Staff)
 
-> **Agency rows below are superseded (2026-07-18).** Per explicit user instruction, the Agency test cases in this document (TC-AGENCY-001–005) are no longer relied upon — `test_design/Agency/NDC_CoverageReport.md` (66 test cases, User-Story-backed, RUN-20260718-001) is now the sole authoritative Agency coverage document. **Branch and Staff rows below remain fully authoritative, unchanged.**
+> **Agency rows below are superseded (2026-07-18).** Per explicit user instruction, the Agency test cases in this document (TC-AGENCY-001–005) are no longer relied upon — `test_design/Agency/CoverageReport.md` (66 test cases, User-Story-backed, RUN-20260718-001) is now the sole authoritative Agency coverage document. **Branch and Staff rows below remain fully authoritative, unchanged.**
 
 **Status:** Pending Review (Branch/Staff portions) · Produced by Test Design Agent v3, per the Standard Output Contract (`agents/test_design_agent.md` §18).
 
 ## 1. Run Scope
 
-Type = Feature · Source = Custom scope description · **Observation-based Spike** — see `NDC_ProjectContext_BranchAgencyStaff.md`. Scope: Admin → Branch, Agency, Staff (List + Add; Edit deferred — see Coverage Gaps). Designed against Project Context v3 and Discovery Artifacts from RUN-20260712-002 (both currently `Pending` — per Execution Rule 4 this would normally block Stage 3, but per `pipeline/pipeline.md` §5.3 Rule 5 this run's Spike/exploratory nature authorizes Stages 1–4 to be reviewed together in one batch, the same deviation used for RUN-20260712-001).
+Type = Feature · Source = Custom scope description · **Observation-based Spike** — see `ProjectContext_BranchAgencyStaff.md`. Scope: Admin → Branch, Agency, Staff (List + Add; Edit deferred — see Coverage Gaps). Designed against Project Context v3 and Discovery Artifacts from RUN-20260712-002 (both currently `Pending` — per Execution Rule 4 this would normally block Stage 3, but per `pipeline/pipeline.md` §5.3 Rule 5 this run's Spike/exploratory nature authorizes Stages 1–4 to be reviewed together in one batch, the same deviation used for RUN-20260712-001).
 
 ## 2. Requirements Covered
 
@@ -19,7 +19,7 @@ Type = Feature · Source = Custom scope description · **Observation-based Spike
 | Branch — Add (happy path + validation + boundary + security) | Covered | TC-BRANCH-001–004 |
 | Branch — List (auto-load) | Covered | TC-BRANCH-005 |
 | Branch — Edit | Partially Covered — blocked by FINDING-004, exploratory charter designed instead of a fixed case | TC-BRANCH-006, TC-BRANCH-007 |
-| Agency — Add/List/Edit (superseded) | **See `test_design/Agency/NDC_CoverageReport.md` instead** — TC-AGENCY-001/002/004/005 superseded by the `TC-AGENCY-CREATE-*` suite; TC-AGENCY-003/006 (List/Search) still valid but now cross-referenced from the new Agency suite rather than tracked here | — |
+| Agency — Add/List/Edit (superseded) | **See `test_design/Agency/CoverageReport.md` instead** — TC-AGENCY-001/002/004/005 superseded by the `TC-AGENCY-CREATE-*` suite; TC-AGENCY-003/006 (List/Search) still valid but now cross-referenced from the new Agency suite rather than tracked here | — |
 | Staff — Add (happy path + validation + uniqueness) | Covered | TC-STAFF-001, 002, 003, 005 |
 | Staff — List (record existence) | Unknown/Unassessed — inconclusive per FINDING-005 | TC-STAFF-004 (exploratory) |
 | Staff — Edit | Unknown/Unassessed — no record was ever located to edit | — |
@@ -36,7 +36,7 @@ No `BR-`prefixed requirements exist for this scope — no PRD backs this module,
 
 ## 6. Manual Test Cases (by reference)
 
-TC-BRANCH-001–007 (`NDC_TestCases_Branch.md`/`.xlsx`), TC-AGENCY-001–005 (`NDC_TestCases_Agency.md`/`.xlsx`), TC-STAFF-001–005 (`NDC_TestCases_Staff.md`/`.xlsx`).
+TC-BRANCH-001–007 (`TestCases_Branch.md`/`.xlsx`), TC-AGENCY-001–005 (`TestCases_Agency.md`/`.xlsx`), TC-STAFF-001–005 (`TestCases_Staff.md`/`.xlsx`).
 
 ## 7. Assumptions
 
@@ -84,10 +84,10 @@ TC-BRANCH-001–007 (`NDC_TestCases_Branch.md`/`.xlsx`), TC-AGENCY-001–005 (`N
 
 ## 12. Inputs for Automation Agent
 
-- Manual Test Suite: `NDC_TestCases_Branch.md`/`.xlsx`, `NDC_TestCases_Agency.md`/`.xlsx`, `NDC_TestCases_Staff.md`/`.xlsx` (this folder)
-- Traceability Matrix: `NDC_TraceabilityMatrix.md` (this folder)
+- Manual Test Suite: `TestCases_Branch.md`/`.xlsx`, `TestCases_Agency.md`/`.xlsx`, `TestCases_Staff.md`/`.xlsx` (this folder)
+- Traceability Matrix: `TraceabilityMatrix.md` (this folder)
 - Coverage Report: this document
 - Discovery Artifacts: `../discovery/Branch_List.md`, `Branch_Add.md`, `Agency_List.md`, `Agency_Add.md`, `Staff_List.md`, `Staff_Add.md`, `Timeline.md`, `Coverage_Summary.md`, `QA_Assessment_Report.md`
 - Findings: `../discovery/findings/Findings_Summary.md` and all 5 `FINDING-*/metadata.md`
-- Project Context: `../context/NDC_ProjectContext_BranchAgencyStaff.md` (or `projects/NDC/workspace/context/NDC_ProjectContext_BranchAgencyStaff.md`)
-- Automation Package options (per the platform's multi-package model, `agents/automation_agent.md` §31): the SHAFT-structure spec at `projects/NDC/automation_framework.md`, and/or the Reference SHAFT Project at `projects/NDC/reference_automation_project.md` — which one (or neither) applies, and the Automation Target/Framework/Strategy, is decided fresh by Stage 4's own Decision Gate, not fixed here.
+- Project Context: `../context/ProjectContext_BranchAgencyStaff.md` (or `platform_core_data/workspace/context/ProjectContext_BranchAgencyStaff.md`)
+- Automation Package options (per the platform's multi-package model, `agents/automation_agent.md` §31): the SHAFT-structure spec at `platform_core_data/automation_framework.md`, and/or the Reference SHAFT Project at `platform_core_data/reference_automation_project.md` — which one (or neither) applies, and the Automation Target/Framework/Strategy, is decided fresh by Stage 4's own Decision Gate, not fixed here.

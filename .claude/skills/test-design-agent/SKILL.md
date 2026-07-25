@@ -9,23 +9,23 @@ inputs:
   - name: discovery_artifacts
     type: file_path
     required: true
-    description: Approved Discovery Report, QA Assessment Report, Findings Summary, and per-Finding Evidence Packages at `projects/{{PROJECT_NAME}}/artifacts/discovery/` — secondary inputs used only to validate, enrich, and surface gaps against the Project Context.
+    description: Approved Discovery Report, QA Assessment Report, Findings Summary, and per-Finding Evidence Packages at `platform_core_data/workspace/discovery/` — secondary inputs used only to validate, enrich, and surface gaps against the Project Context.
 outputs:
   - name: manual_test_suite_md
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.md"
+    location: "platform_core_data/workspace/test_design/TestCases_{Module}.md"
     description: Human-readable manual test cases, grouped by module.
   - name: manual_test_suite_xlsx
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.xlsx"
+    location: "platform_core_data/workspace/test_design/TestCases_{Module}.xlsx"
     description: Identical test case set, spreadsheet form. Must never diverge from the Markdown rendering.
   - name: traceability_matrix
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md"
-    description: "Project Context requirement ID → Test Case ID mapping, annotated with Discovery/Finding/Evidence references. NDC uses a `workspace/test_design/` variant of these paths — see `projects/NDC/onboarding.md`."
+    location: "platform_core_data/workspace/test_design/TraceabilityMatrix.md"
+    description: "Project Context requirement ID → Test Case ID mapping, annotated with Discovery/Finding/Evidence references. NDC uses a `workspace/test_design/` variant of these paths — see `platform_core_data/onboarding.md`."
   - name: coverage_report
     type: file_path
-    location: "projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_CoverageReport.md"
+    location: "platform_core_data/workspace/test_design/CoverageReport.md"
     description: Requirement Coverage and Finding Coverage accounting, structured per the Standard Output Contract (§18).
 dependencies:
   - project-context-agent (upstream skill)
@@ -85,16 +85,16 @@ The Test Design Agent transforms validated project knowledge — the approved Pr
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | **Primary** | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md` — the sole source of requirements, scope, roles, and business rules for test design |
+| Project Context | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/context/ProjectContext.md` — the sole source of requirements, scope, roles, and business rules for test design |
 | Run Scope | Primary (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Called out here explicitly, not left an implicit read of prose, because it is what §16's strategy selection keys off of. |
-| Discovery Report | Secondary | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/discovery/*.md` (including `Timeline.md` and `Coverage_Summary.md` where the Explorer Agent version in use produces them) — raw structural/behavioral observation, used only to validate, enrich, and identify gaps against the Project Context |
-| QA Assessment Report | Secondary | Required, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md` — the Explorer Agent's synthesized report (Application Overview, Workflows, Risk Analysis, Gap Analysis, Coverage) |
-| Findings | Secondary | Required if any exist for this run, must be `Approved` | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md` plus each individual `FINDING-{ID}_{ShortName}/metadata.md` — every Finding must be read and dispositioned (§5.3), not merely skimmed |
-| Evidence Packages | Secondary | Required wherever a Finding or negative test cites specific evidence, must be `Approved` alongside its parent Finding | `projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/` — the captured evidence files backing each Finding, cited by reference (§5.1), never copied wholesale into a test case |
+| Discovery Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/discovery/*.md` (including `Timeline.md` and `Coverage_Summary.md` where the Explorer Agent version in use produces them) — raw structural/behavioral observation, used only to validate, enrich, and identify gaps against the Project Context |
+| QA Assessment Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/discovery/QA_Assessment_Report.md` — the Explorer Agent's synthesized report (Application Overview, Workflows, Risk Analysis, Gap Analysis, Coverage) |
+| Findings | Secondary | Required if any exist for this run, must be `Approved` | `platform_core_data/workspace/discovery/findings/Findings_Summary.md` plus each individual `FINDING-{ID}_{ShortName}/metadata.md` — every Finding must be read and dispositioned (§5.3), not merely skimmed |
+| Evidence Packages | Secondary | Required wherever a Finding or negative test cites specific evidence, must be `Approved` alongside its parent Finding | `platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/` — the captured evidence files backing each Finding, cited by reference (§5.1), never copied wholesale into a test case |
 
-**This agent must never read the PRD directly** (`projects/{{PROJECT_NAME}}/PRD.md` or equivalent) — only Stage 1 (Project Context Agent) is permitted to do so, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. Any requirement question this agent cannot resolve from the Project Context is a gap to log, not a reason to open the PRD.
+**This agent must never read the PRD directly** (`platform_core_data/PRD.md` or equivalent) — only Stage 1 (Project Context Agent) is permitted to do so, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. Any requirement question this agent cannot resolve from the Project Context is a gap to log, not a reason to open the PRD.
 
-**This agent must never read `projects/{{PROJECT_NAME}}/` (Project Knowledge) directly, either** — `onboarding.md`, `architecture.md`, `glossary.md`, `run_configuration.md`, and `resources/` are Stage 1's inputs to reconcile into the Project Context; by the time Stage 3 runs, whatever from Project Knowledge is relevant has already been folded in. Re-reading Project Knowledge directly would let this agent silently reintroduce detail the Project Context Agent deliberately scoped out — the same failure mode the PRD prohibition exists to prevent, applied to the other upstream source.
+**This agent must never read `platform_core_data/` (Project Knowledge) directly, either** — `onboarding.md`, `architecture.md`, `glossary.md`, `run_configuration.md`, and `resources/` are Stage 1's inputs to reconcile into the Project Context; by the time Stage 3 runs, whatever from Project Knowledge is relevant has already been folded in. Re-reading Project Knowledge directly would let this agent silently reintroduce detail the Project Context Agent deliberately scoped out — the same failure mode the PRD prohibition exists to prevent, applied to the other upstream source.
 
 **Hidden-assumption check: Acceptance Criteria are not a separate input — they must arrive embedded in the Project Context's requirement statements.** Nothing upstream of this agent guarantees a User Story's acceptance-criteria-level granularity survives being distilled into the Project Context; if a requirement's Project Context entry is summarized down to a level where individual acceptance criteria can no longer be identified, that is an "Incomplete acceptance criteria" Stop Condition (§19), not something this agent infers or reconstructs on its own.
 
@@ -341,7 +341,7 @@ Any future integration that maps these canonical artifacts into a third-party AL
 15. **Must produce a Coverage Report** (§8–§9) quantifying Requirement Coverage and Finding Coverage, with an explicit accounting (not a silent omission) of every Uncovered Requirement and every Uncovered Finding.
 16. Must not write or suggest automation code, and must not execute any test.
 17. **Must never shape any output, schema, field, or terminology around a specific external ALM, issue-tracking, or test-management system.** This agent produces only the platform's own canonical artifacts (§9); any third-party import/export format is strictly out of scope for the core architecture.
-18. **Must never read `projects/{{PROJECT_NAME}}/` (Project Knowledge) directly.** Only the Project Context, already reconciled by Stage 1, is read — re-reading Project Knowledge risks reintroducing detail the Project Context Agent deliberately scoped out.
+18. **Must never read `platform_core_data/` (Project Knowledge) directly.** Only the Project Context, already reconciled by Stage 1, is read — re-reading Project Knowledge risks reintroducing detail the Project Context Agent deliberately scoped out.
 19. **Must select the Test Design Strategy matching this run's Run Scope Type** (§16), and must populate every test case's Run Scope Reference (§5.4) in the Traceability Matrix (§6.2) accordingly — never apply one default depth/breadth regardless of scope.
 20. **Must systematically evaluate every Required Dimension** (§17) for each testable requirement, alongside the Negative Test Generation categories (§7), recording "Not Applicable — {reason}" rather than silently skipping any of them.
 21. **Must report Coverage using the full category set** (§8.3) — Covered, Partially Covered, Out-of-Scope, Unknown/Unassessed — never collapsing them into a single Covered/Uncovered figure.
@@ -354,10 +354,10 @@ Any future integration that maps these canonical artifacts into a third-party AL
 
 | Artifact | Path |
 |---|---|
-| Manual Test Suite — Markdown (per module) | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.md` |
-| Manual Test Suite — Excel (per module) | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.xlsx` |
-| Requirement Traceability Matrix | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` |
-| Coverage Report | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_CoverageReport.md` |
+| Manual Test Suite — Markdown (per module) | `platform_core_data/workspace/test_design/TestCases_{Module}.md` |
+| Manual Test Suite — Excel (per module) | `platform_core_data/workspace/test_design/TestCases_{Module}.xlsx` |
+| Requirement Traceability Matrix | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` |
+| Coverage Report | `platform_core_data/workspace/test_design/CoverageReport.md` |
 
 # 13. Operational Prompt
 
@@ -377,19 +377,19 @@ the platform core and produce only the platform's own canonical artifacts.
 ## Input
 
 Read (primary — the source of truth for requirements):
-projects/{{PROJECT_NAME}}/artifacts/context/{{PROJECT_NAME}}_ProjectContext.md
+platform_core_data/workspace/context/ProjectContext.md
 — including its embedded Run Scope Type/Source (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4), which drives your strategy below.
 
 Read (secondary — validation, enrichment, and disposition material — every
 one of these must be Approved at its own checkpoint before you use it):
-projects/{{PROJECT_NAME}}/artifacts/discovery/*.md
-projects/{{PROJECT_NAME}}/artifacts/discovery/QA_Assessment_Report.md
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/Findings_Summary.md
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/metadata.md (every Finding)
-projects/{{PROJECT_NAME}}/artifacts/discovery/findings/FINDING-{ID}_{ShortName}/ (Evidence Packages, cited by reference)
+platform_core_data/workspace/discovery/*.md
+platform_core_data/workspace/discovery/QA_Assessment_Report.md
+platform_core_data/workspace/discovery/findings/Findings_Summary.md
+platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/metadata.md (every Finding)
+platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/ (Evidence Packages, cited by reference)
 
 Do NOT read the PRD. Only Stage 1 (Project Context Agent) is permitted to.
-Do NOT read `projects/{{PROJECT_NAME}}/` (Project Knowledge) directly either
+Do NOT read `platform_core_data/` (Project Knowledge) directly either
 — by the time you run, anything relevant from it is already reconciled into
 the Project Context; re-reading it risks reintroducing detail Stage 1
 deliberately scoped out.
@@ -586,16 +586,16 @@ scope.
 ## Output
 
 Save the Markdown test cases as:
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.md
+platform_core_data/workspace/test_design/TestCases_{Module}.md
 
 Save the Excel test cases as:
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.xlsx
+platform_core_data/workspace/test_design/TestCases_{Module}.xlsx
 
 Save the traceability matrix as:
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md
+platform_core_data/workspace/test_design/TraceabilityMatrix.md
 
 Save the coverage report as:
-projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_CoverageReport.md
+platform_core_data/workspace/test_design/CoverageReport.md
 
 Do not write automation code. Do not execute any tests. Do not read the
 PRD. Generate only the test design artifacts listed above.
@@ -607,14 +607,14 @@ PRD. Generate only the test design artifacts listed above.
 
 ```text
 Input:
-  projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md        (primary; scope: Login / Authentication & Access)
-  projects/OrangeHRM/artifacts/discovery/*.md                              (secondary)
-  projects/OrangeHRM/artifacts/discovery/QA_Assessment_Report.md             (secondary)
-  projects/OrangeHRM/artifacts/discovery/findings/Findings_Summary.md                (secondary)
-  projects/OrangeHRM/artifacts/discovery/findings/FINDING-001.../metadata.md ... FINDING-004.../metadata.md  (secondary)
+  platform_core_data/workspace/context/ProjectContext.md        (primary; scope: Login / Authentication & Access)
+  platform_core_data/workspace/discovery/*.md                              (secondary)
+  platform_core_data/workspace/discovery/QA_Assessment_Report.md             (secondary)
+  platform_core_data/workspace/discovery/findings/Findings_Summary.md                (secondary)
+  platform_core_data/workspace/discovery/findings/FINDING-001.../metadata.md ... FINDING-004.../metadata.md  (secondary)
 ```
 
-Hypothetical result: `OrangeHRM_TestCases_Login.md` / `.xlsx`, `OrangeHRM_TraceabilityMatrix.md`, and `OrangeHRM_CoverageReport.md` under `projects/OrangeHRM/artifacts/test_design/`. `TC-LOGIN-004`'s own entry in the Manual Test Suite is lean — Title ("Forgot Password does not time out for a valid, existing username"), Objective, Preconditions, Steps, Expected Result stating the *corrected* behavior ("A generic success message is returned within a reasonable time"), Priority, and Tags (`Regression`) — while the Traceability Matrix carries its Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, and Risk `High — inherited from FINDING-003's Technical Risk` — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this agent does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
+Hypothetical result: `TestCases_Login.md` / `.xlsx`, `TraceabilityMatrix.md`, and `CoverageReport.md` under `platform_core_data/workspace/test_design/`. `TC-LOGIN-004`'s own entry in the Manual Test Suite is lean — Title ("Forgot Password does not time out for a valid, existing username"), Objective, Preconditions, Steps, Expected Result stating the *corrected* behavior ("A generic success message is returned within a reasonable time"), Priority, and Tags (`Regression`) — while the Traceability Matrix carries its Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, and Risk `High — inherited from FINDING-003's Technical Risk` — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this agent does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
 
 # 15. Architecture Principle
 

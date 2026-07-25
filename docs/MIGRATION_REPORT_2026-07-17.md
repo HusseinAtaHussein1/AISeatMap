@@ -11,8 +11,8 @@ Nothing in this refactor has been committed. All changes are in the working tree
 
 | Before | After | Notes |
 |---|---|---|
-| `projects/NDC/artifacts/runs/` | `projects/NDC/runs/` | Extracted to be a sibling of `workspace/`, not nested inside it — matches "runs are immutable history, workspace is current state." |
-| `projects/NDC/artifacts/` | `projects/NDC/workspace/` | NDC-specific override. The platform-wide `projects/{{PROJECT_NAME}}/artifacts/` convention used by every other project (OrangeHRM, the template, future projects) is **unchanged** — see §7. |
+| `platform_core_data/runs/` | `platform_core_data/runs/` | Extracted to be a sibling of `workspace/`, not nested inside it — matches "runs are immutable history, workspace is current state." |
+| `platform_core_data/workspace/` | `platform_core_data/workspace/` | NDC-specific override. The platform-wide `platform_core_data/workspace/` convention used by every other project (OrangeHRM, the template, future projects) is **unchanged** — see §7. |
 
 Git detected 205 of the file movements inside these two renames as tracked renames (not delete+add), so blame/history is preserved.
 
@@ -21,14 +21,14 @@ Git detected 205 of the file movements inside these two renames as tracked renam
 | Folder | Reason |
 |---|---|
 | `docs/` | Destination for the four root docs (see §4) + the new changelog. |
-| `projects/NDC/config/` | Per your requested structure; empty, holds a `.gitkeep`. |
-| `projects/NDC/resources/Records/` | New, empty (`.gitkeep`). |
-| `projects/NDC/resources/TestData/` | New, empty (`.gitkeep`). |
-| `projects/NDC/resources/Documents/` | New, empty (`.gitkeep`). |
-| `projects/NDC/workspace/test_design/{Login,Branch,Agency,Staff}/` | Module-based reorganization (see §5). |
-| `projects/NDC/workspace/automation/{shaft,playwright}/` | Framework-based reorganization (see §6). |
+| `platform_core_data/config/` | Per your requested structure; empty, holds a `.gitkeep`. |
+| `platform_core_data/resources/Records/` | New, empty (`.gitkeep`). |
+| `platform_core_data/resources/TestData/` | New, empty (`.gitkeep`). |
+| `platform_core_data/resources/Documents/` | New, empty (`.gitkeep`). |
+| `platform_core_data/workspace/test_design/{Login,Branch,Agency,Staff}/` | Module-based reorganization (see §5). |
+| `platform_core_data/workspace/automation/{shaft,playwright}/` | Framework-based reorganization (see §6). |
 
-**`resources/Screenshots/` was NOT created as a separate folder** — this filesystem is case-insensitive, and `projects/NDC/resources/screenshots/` already exists. Attempting to create `Screenshots/` resolved to the same directory (verified: a test file written via the `Screenshots` path appeared under `screenshots`). Left as the existing lowercase folder, consistent with the platform-wide `resources/` convention used elsewhere. No action needed unless you want it renamed platform-wide, which is a separate, bigger discussion.
+**`resources/Screenshots/` was NOT created as a separate folder** — this filesystem is case-insensitive, and `platform_core_data/resources/screenshots/` already exists. Attempting to create `Screenshots/` resolved to the same directory (verified: a test file written via the `Screenshots` path appeared under `screenshots`). Left as the existing lowercase folder, consistent with the platform-wide `resources/` convention used elsewhere. No action needed unless you want it renamed platform-wide, which is a separate, bigger discussion.
 
 ## 3. Deleted
 
@@ -58,33 +58,33 @@ No top-level `test_design/` existed before (test design artifacts only ever live
 
 | Destination | Copied from | Files |
 |---|---|---|
-| `workspace/test_design/Login/` | `runs/RUN-20260712-001/test_design/` | `NDC_CoverageReport.md`, `NDC_LoginGapAnalysis.md`, `NDC_TestCases_Login.md`, `NDC_TestCases_Login.xlsx`, `NDC_TraceabilityMatrix.md` |
-| `workspace/test_design/Agency/` | `runs/RUN-20260712-002/test_design/` | `NDC_TestCases_Agency.md`, `.xlsx` |
-| `workspace/test_design/Branch/` | `runs/RUN-20260712-002/test_design/` | `NDC_TestCases_Branch.md`, `.xlsx` |
-| `workspace/test_design/Staff/` | `runs/RUN-20260712-002/test_design/` | `NDC_TestCases_Staff.md`, `.xlsx` |
-| `workspace/test_design/` (root) | `runs/RUN-20260712-002/test_design/` | `NDC_CoverageReport.md`, `NDC_TraceabilityMatrix.md` — combined Agency+Branch+Staff document, kept at root per your answer rather than duplicated into all 3 module folders |
+| `workspace/test_design/Login/` | `runs/RUN-20260712-001/test_design/` | `CoverageReport.md`, `LoginGapAnalysis.md`, `TestCases_Login.md`, `TestCases_Login.xlsx`, `TraceabilityMatrix.md` |
+| `workspace/test_design/Agency/` | `runs/RUN-20260712-002/test_design/` | `TestCases_Agency.md`, `.xlsx` |
+| `workspace/test_design/Branch/` | `runs/RUN-20260712-002/test_design/` | `TestCases_Branch.md`, `.xlsx` |
+| `workspace/test_design/Staff/` | `runs/RUN-20260712-002/test_design/` | `TestCases_Staff.md`, `.xlsx` |
+| `workspace/test_design/` (root) | `runs/RUN-20260712-002/test_design/` | `CoverageReport.md`, `TraceabilityMatrix.md` — combined Agency+Branch+Staff document, kept at root per your answer rather than duplicated into all 3 module folders |
 
 Added `workspace/test_design/README.md` documenting this provenance so a future engineer knows these are copies and where the source-of-truth run is.
 
 ## 9. `workspace/automation/` — framework reorganization
 
-Per your answer ("registry only, no duplication"): the real generated code — Playwright's `NDC_tests/` and SHAFT's `NDC_tests_SHAFT/` (438MB including `target/`, `.idea/`, `allure-results/`, report zips) — was **not** copied anywhere. It stays exactly where it was generated, inside `runs/RUN-20260712-001/automation/`.
+Per your answer ("registry only, no duplication"): the real generated code — Playwright's `tests/` and SHAFT's `tests_SHAFT/` (438MB including `target/`, `.idea/`, `allure-results/`, report zips) — was **not** copied anywhere. It stays exactly where it was generated, inside `runs/RUN-20260712-001/automation/`.
 
 - `workspace/automation/shaft/README.md` and `.../playwright/README.md` are pointer-only documents naming the exact run path where each framework's real code lives.
-- `NDC_AutomationPackages.md` (the registry) moved with the rest of `artifacts/` → `workspace/` and had its internal paths updated to the new `runs/` location.
+- `AutomationPackages.md` (the registry) moved with the rest of `artifacts/` → `workspace/` and had its internal paths updated to the new `runs/` location.
 
 ## 10. All path references updated (outside immutable runs/)
 
-Files edited to reflect the renames: `projects/NDC/README.md`, `onboarding.md`, `run_configuration.md`, `automation_framework.md`, `resources/README.md`, `workspace/pipeline/NDC_RunManifest.md` (21 occurrences), `workspace/discovery/UI_Baseline_Screen_Inventory.md`, `workspace/discovery/findings/FINDING-004.../metadata.md`, `workspace/test_design/NDC_CoverageReport.md` (the new copy). Also fixed two unrelated but real broken relative links discovered during validation: `projects/OrangeHRM/README.md` and `projects/OrangeHRM/onboarding.md` linked to `../../SESSION_HANDOFF.md` / `../../LESSONS_LEARNED.md`, which broke when those files moved to `docs/`.
+Files edited to reflect the renames: `platform_core_data/README.md`, `onboarding.md`, `run_configuration.md`, `automation_framework.md`, `resources/README.md`, `workspace/pipeline/RunManifest.md` (21 occurrences), `workspace/discovery/UI_Baseline_Screen_Inventory.md`, `workspace/discovery/findings/FINDING-004.../metadata.md`, `workspace/test_design/CoverageReport.md` (the new copy). Also fixed two unrelated but real broken relative links discovered during validation: `projects/OrangeHRM/README.md` and `projects/OrangeHRM/onboarding.md` linked to `../../SESSION_HANDOFF.md` / `../../LESSONS_LEARNED.md`, which broke when those files moved to `docs/`.
 
 ## 11. Known, intentional exceptions — stale paths left inside immutable runs/
 
-Per "never modify anything inside `runs/`," the following files still say `projects/NDC/artifacts/...` in their own historical prose, and were deliberately **not** edited:
+Per "never modify anything inside `runs/`," the following files still say `platform_core_data/workspace/...` in their own historical prose, and were deliberately **not** edited:
 
-- `runs/RUN-20260712-002/execution/NDC_ExecutionResults.md`
-- `runs/RUN-20260712-002/automation/NDC_AutomationSummary_SHAFT.md`, `NDC_AutomationManifest_SHAFT.md`, `NDC_AutomationPlan_SHAFT.md`
-- `runs/RUN-20260712-002/test_design/NDC_CoverageReport.md` (line 92 — a relative link `../context/...` that resolved correctly under the old nested layout but no longer does, since `context/` moved out from being a sibling of `runs/`)
-- `runs/RUN-20260712-001/automation/NDC_AutomationSummary_SHAFT.md`, `NDC_AutomationPlan_SHAFT.md`, `NDC_AutomationPlan.md`, `NDC_AutomationSummary.md`
+- `runs/RUN-20260712-002/execution/ExecutionResults.md`
+- `runs/RUN-20260712-002/automation/AutomationSummary_SHAFT.md`, `AutomationManifest_SHAFT.md`, `AutomationPlan_SHAFT.md`
+- `runs/RUN-20260712-002/test_design/CoverageReport.md` (line 92 — a relative link `../context/...` that resolved correctly under the old nested layout but no longer does, since `context/` moved out from being a sibling of `runs/`)
+- `runs/RUN-20260712-001/automation/AutomationSummary_SHAFT.md`, `AutomationPlan_SHAFT.md`, `AutomationPlan.md`, `AutomationSummary.md`
 
 This is an inherent tension in immutability: fixing these would mean editing historical run records. Flagging instead of silently fixing or silently ignoring, per your validation rule.
 

@@ -1,6 +1,6 @@
 # NDC — QA Assessment Report — RUN-20260721-001 (Admin → Role Management → Create Role)
 
-**Produced by:** Explorer Agent (Stage 2) · **Date:** 2026-07-21 · **Project Context validated:** `projects/NDC/workspace/context/NDC_ProjectContext_Role.md` (Approved 2026-07-21)
+**Produced by:** Explorer Agent (Stage 2) · **Date:** 2026-07-21 · **Project Context validated:** `platform_core_data/workspace/context/ProjectContext_Role.md` (Approved 2026-07-21)
 
 ## 1. Scope
 

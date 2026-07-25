@@ -3,9 +3,9 @@
 **Run:** RUN-20260721-001 · **Status:** `Pending` (checkpoint open per `pipeline/pipeline.md` §5.1 — awaiting Human Review) · **Produced by:** Project Context Agent (Stage 1) · **Date:** 2026-07-21
 **Run Scope:** Type = User Story · Source = Pasted text — **Create Role**, one User Story (Search Role/Update Role/Staff CRUD named only in its own Reflection section, not jointly scoped this run).
 
-> **Relationship to other Project Context documents:** this is a new scope/entity — no prior Project Context document covers Role/permission management. `NDC_ProjectContext_Agency.md`, `NDC_ProjectContext_BranchAgencyStaff.md` (Branch/Staff sections), `NDC_ProjectContext_CredentialRoutesFilter.md`, `NDC_ProjectContext_LoginAuthentication.md`, and `NDC_ProjectContext_ETicketBranding.md` are untouched and unrelated. Per the project's per-scope naming convention, this document is filed as `NDC_ProjectContext_Role.md` and will be extended in place (not re-versioned) if Search Role / Update Role arrive later, per the same track-split precedent used for Agency.
+> **Relationship to other Project Context documents:** this is a new scope/entity — no prior Project Context document covers Role/permission management. `ProjectContext_Agency.md`, `ProjectContext_BranchAgencyStaff.md` (Branch/Staff sections), `ProjectContext_CredentialRoutesFilter.md`, `ProjectContext_LoginAuthentication.md`, and `ProjectContext_ETicketBranding.md` are untouched and unrelated. Per the project's per-scope naming convention, this document is filed as `ProjectContext_Role.md` and will be extended in place (not re-versioned) if Search Role / Update Role arrive later, per the same track-split precedent used for Agency.
 >
-> **Approval workflow:** this file lives under `runs/RUN-20260721-001/context/` while still `Pending`. Once approved it moves to `projects/NDC/workspace/context/NDC_ProjectContext_Role.md`, per the project's standing approval-flow convention.
+> **Approval workflow:** this file lives under `runs/RUN-20260721-001/context/` while still `Pending`. Once approved it moves to `platform_core_data/workspace/context/ProjectContext_Role.md`, per the project's standing approval-flow convention.
 
 ---
 
@@ -70,17 +70,17 @@ This document covers the **Admin → Role Management → Create Role** screen: a
 
 - **Search Role** — named only in the User Story's own Reflection section; no AC provided this run.
 - **Update Role** — same; no AC provided this run.
-- **STAFF CRUD** — named in Reflection; already independently governed by `NDC_ProjectContext_BranchAgencyStaff.md` (Staff section) — not duplicated here.
+- **STAFF CRUD** — named in Reflection; already independently governed by `ProjectContext_BranchAgencyStaff.md` (Staff section) — not duplicated here.
 - Every other module/sub-module named only as a **segment label** in §2.3 (Dashboard, Master, Rule Engine, Settings, User Management, Booking Mid Office, Profile, Reports, and Admin's Branch/Agency/Staff sub-modules) — these appear in this User Story solely as entries the Role Create grid must display, not as modules whose own screens/functionality are being tested by this document.
 - All modules already scoped by prior runs and unrelated to Role Management: Login/Authentication, Credential Routes Filter/Airport/Supplier Credentials/Airline/Booking-Mid Office, Agency CRUD (Create/Search/Update/Actions), E-Ticket Agency Branding, Branch (Admin) CRUD.
 
 ## 4. Roles & Credentials Required
 
-- **OdesysesAdmin / Admin** — the User Story's own actor line ("As an OdesysesAdmin & Admin"). Maps to the existing **Admin** credential (`projects/NDC/credentials/credentials.json`, STG environment) — confirmed available. Whether "OdesysesAdmin" here refers to the distinct Super Admin tier already documented in **FINDING-004** (`NDC_ProjectContext_CredentialRoutesFilter.md` §4 — Super Admin `odeysysadmin` vs. Admin `e.saady`, different feature access) is not stated by this User Story and is carried forward as an open item (§6 #2).
+- **OdesysesAdmin / Admin** — the User Story's own actor line ("As an OdesysesAdmin & Admin"). Maps to the existing **Admin** credential (`platform_core_data/credentials/credentials.json`, STG environment) — confirmed available. Whether "OdesysesAdmin" here refers to the distinct Super Admin tier already documented in **FINDING-004** (`ProjectContext_CredentialRoutesFilter.md` §4 — Super Admin `odeysysadmin` vs. Admin `e.saady`, different feature access) is not stated by this User Story and is carried forward as an open item (§6 #2).
 
 ## 5. Environment Constraints
 
-Per `projects/NDC/run_configuration.md`'s standing constraint: **shared staging environment, read-only by default** — no mutation authorization has been asked for or granted for this run. This document governs Stage 1 (Project Context) and, if the user proceeds, Stage 3 (Test Design) only; per platform memory `feedback_automation_decision_gates`, mutation authorization (needed for actually creating a Role live) is not assumed from any prior run's grant and must be asked fresh if/when Discovery or Execution against this scope is requested.
+Per `platform_core_data/run_configuration.md`'s standing constraint: **shared staging environment, read-only by default** — no mutation authorization has been asked for or granted for this run. This document governs Stage 1 (Project Context) and, if the user proceeds, Stage 3 (Test Design) only; per platform memory `feedback_automation_decision_gates`, mutation authorization (needed for actually creating a Role live) is not assumed from any prior run's grant and must be asked fresh if/when Discovery or Execution against this scope is requested.
 
 ## 6. Carried-Forward Assumptions & Risks
 
@@ -92,7 +92,7 @@ Per `projects/NDC/run_configuration.md`'s standing constraint: **shared staging 
 | 4 | **This screen/module ("Role Management" / "Create Role") does not appear anywhere in `architecture.md`'s Navigation Model** (observed Admin sub-items are Company, Agency, Staff only — no "Role" top-level entry under Admin, and no standalone "Role Management" module). | Unconfirmed — Explorer must directly observe where this screen actually lives in the live navigation (a new Admin sub-module, a Settings item, or elsewhere) before Test Design or Automation can target it. |
 | 5 | **Segment/module list named in this AC** (Dashboard, Admin, Master, Rule Engine, Settings, User Management, Booking Mid Office, Profile, Reports) **does not include PNR Query, Transfer PNR, Import PNR, or Import Booked PNR**, all of which `architecture.md` lists as live top-nav modules. | Not treated as a defect — the Role Create grid's exact segment list is only confirmed by direct observation; log the discrepancy as a Coverage Gap rather than assume the AC's list is complete or that those four modules are deliberately ungoverned by roles. |
 | 6 | **Select All / Edit-implies-View / Approval-implies-View interaction rules are stated as behavior, never independently observed live.** | Unconfirmed — Explorer to verify directly once Discovery is authorized for this scope. |
-| 7 | **FINDING-004** (existing, `NDC_ProjectContext_CredentialRoutesFilter.md` §4 / `workspace/discovery/findings/FINDING-004_MultipleAdminRolesNotInProjectContext`) is now directly on-topic: it documents that NDC has at least two distinct Admin-tier roles with different feature access, and recommends Project Context explicitly name both when next revised. This document's own actor ambiguity (#2 above) is a direct instance of that still-open recommendation. | Carried forward, not newly resolved by this document — the Role Management screen itself may be exactly where that permission model is configured, making its own Discovery relevant to closing FINDING-004. |
+| 7 | **FINDING-004** (existing, `ProjectContext_CredentialRoutesFilter.md` §4 / `workspace/discovery/findings/FINDING-004_MultipleAdminRolesNotInProjectContext`) is now directly on-topic: it documents that NDC has at least two distinct Admin-tier roles with different feature access, and recommends Project Context explicitly name both when next revised. This document's own actor ambiguity (#2 above) is a direct instance of that still-open recommendation. | Carried forward, not newly resolved by this document — the Role Management screen itself may be exactly where that permission model is configured, making its own Discovery relevant to closing FINDING-004. |
 
 ## 7. Traceability Anchor
 
@@ -101,9 +101,9 @@ Per `projects/NDC/run_configuration.md`'s standing constraint: **shared staging 
 | §2.1–§2.6 (Create Role AC) | User Story, full text | `resources/requirements/user_stories/Create-Role.md`; `PRD.md` User Story 4 |
 | §3 (Out of Scope: Search Role/Update Role/STAFF CRUD) | User Story's own "Reflection" section | `resources/requirements/user_stories/Create-Role.md` |
 | §4 (Roles & Credentials, actor ambiguity) | User Story Description line; existing Finding | `resources/requirements/user_stories/Create-Role.md`; `workspace/discovery/findings/FINDING-004_MultipleAdminRolesNotInProjectContext/metadata.md` |
-| §6 #4–#5 (navigation/segment-list discrepancies) | `architecture.md` Navigation Model table | `projects/NDC/architecture.md` |
+| §6 #4–#5 (navigation/segment-list discrepancies) | `architecture.md` Navigation Model table | `platform_core_data/architecture.md` |
 | §6 #7 (FINDING-004 relevance) | Existing Finding, RUN-20260710-001 | `workspace/discovery/findings/FINDING-004_MultipleAdminRolesNotInProjectContext/metadata.md` |
 
 ---
 
-*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review before Stage 2 (Explorer Agent) or Stage 3 (Test Design Agent) may formally clear its own checkpoint. Once approved, this file moves to `projects/NDC/workspace/context/NDC_ProjectContext_Role.md` per the project's standing approval-flow convention.*
+*Per `pipeline/pipeline.md` §5.1, this artifact requires Human Review before Stage 2 (Explorer Agent) or Stage 3 (Test Design Agent) may formally clear its own checkpoint. Once approved, this file moves to `platform_core_data/workspace/context/ProjectContext_Role.md` per the project's standing approval-flow convention.*

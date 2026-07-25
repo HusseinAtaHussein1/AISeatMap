@@ -19,7 +19,7 @@ import java.io.IOException;
  *      loginWithValidCredential(), which reads the real credential from the platform's own
  *      git-ignored credentials.json at execution time only.
  * On merge, this class's locators should be reconciled with (not blindly overwrite) the
- * Reference Project's real LogIn_Page.java — see NDC_AutomationPlan_SHAFT.md.
+ * Reference Project's real LogIn_Page.java — see AutomationPlan_SHAFT.md.
  */
 public class LogIn_Page {
     SHAFT.GUI.WebDriver driver;

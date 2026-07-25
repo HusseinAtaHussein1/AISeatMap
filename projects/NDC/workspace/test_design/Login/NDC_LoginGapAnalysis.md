@@ -5,10 +5,10 @@
 ## Sources Consulted
 
 1. Live Login screen — Browser Automation, this run's original Discovery (`discovery/Login_Screen.md`) plus a new, targeted supplementary pass (`discovery/_login_discovery_supplement.js`), both today.
-2. Project Context v2 (`context/NDC_ProjectContext_LoginAuthentication.md`).
+2. Project Context v2 (`context/ProjectContext_LoginAuthentication.md`).
 3. Discovery artifacts (`discovery/Login_Screen.md`, `Timeline.md`, `Coverage_Summary.md`, `QA_Assessment_Report.md`, `findings/`).
-4. Current Login Test Cases (`test_design/NDC_TestCases_Login.md` — TC-LOGIN-001/002/003, before this pass).
-5. Reference SHAFT Project (`E:\Automation2\NDC-Uplift-Automation`, specifically `AdminPages/Login/LogIn_Page.java` and `src/test/java/AdminPages/Login/LogIn_TC.java`) — read-only, per `projects/NDC/reference_automation_project.md`. Treated as **secondary, Documentation-category evidence** (an existing test suite's own expectations, not this run's Direct Observation) — used to surface scenarios worth checking, never as a substitute for this platform's own observation.
+4. Current Login Test Cases (`test_design/TestCases_Login.md` — TC-LOGIN-001/002/003, before this pass).
+5. Reference SHAFT Project (`E:\Automation2\NDC-Uplift-Automation`, specifically `AdminPages/Login/LogIn_Page.java` and `src/test/java/AdminPages/Login/LogIn_TC.java`) — read-only, per `platform_core_data/reference_automation_project.md`. Treated as **secondary, Documentation-category evidence** (an existing test suite's own expectations, not this run's Direct Observation) — used to surface scenarios worth checking, never as a substitute for this platform's own observation.
 
 ## Traceability Matrix
 
@@ -51,8 +51,8 @@ All five are additive — no existing test case (TC-LOGIN-001/002/003) was alter
 The two items below were originally surfaced as questions for the human. Per a same-day platform clarification (`pipeline/pipeline.md` §5.5, Human Decisions vs. Engineering Decisions), both are ordinary Test Design/scope-management calls, not Human Decisions — resolved automatically instead of asked about:
 
 1. **Anti-enumeration check (valid username + wrong password).** Resolved: **include it** — added as TC-LOGIN-008 above. One single attempt, generic-message-only assertion, no repeats, consistent with the shared-env negative-testing default.
-2. **Logout.** Resolved: **stays Out of Current Scope** for this Login-only run. Documented as a candidate for a future module/run (see `NDC_TestCases_Login.md`'s Deferred Scenarios table) — not a test case, not a Project Context amendment, per the explicit instruction that adjacent-feature scope questions shouldn't interrupt execution unless they'd change the run's business objective.
+2. **Logout.** Resolved: **stays Out of Current Scope** for this Login-only run. Documented as a candidate for a future module/run (see `TestCases_Login.md`'s Deferred Scenarios table) — not a test case, not a Project Context amendment, per the explicit instruction that adjacent-feature scope questions shouldn't interrupt execution unless they'd change the run's business objective.
 
 ## Coverage Impact Summary
 
-Before this pass: 3 test cases, 100% of a narrow, un-cross-referenced scope. After this pass: 8 test cases (3 kept unchanged + 5 added), both candidate scenarios from the validation pass resolved (one included, one kept out of scope) without a round-trip, and 8 scenarios from the example list explicitly confirmed **not to apply** (no evidence they exist) rather than fabricated. See updated `NDC_CoverageReport.md` and `NDC_TraceabilityMatrix.md`.
+Before this pass: 3 test cases, 100% of a narrow, un-cross-referenced scope. After this pass: 8 test cases (3 kept unchanged + 5 added), both candidate scenarios from the validation pass resolved (one included, one kept out of scope) without a round-trip, and 8 scenarios from the example list explicitly confirmed **not to apply** (no evidence they exist) rather than fabricated. See updated `CoverageReport.md` and `TraceabilityMatrix.md`.

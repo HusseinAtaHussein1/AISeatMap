@@ -297,7 +297,7 @@ function renderMarkdownSuite(moduleName, cases) {
   return md;
 }
 
-fs.writeFileSync(path.join(OUT_DIR, 'NDC_TestCases_Role.md'), renderMarkdownSuite('Admin → Role Management → Create Role', ROLE_CASES));
+fs.writeFileSync(path.join(OUT_DIR, 'TestCases_Role.md'), renderMarkdownSuite('Admin → Role Management → Create Role', ROLE_CASES));
 
 // ---- Excel generation ----
 const COLUMNS = [
@@ -338,7 +338,7 @@ async function buildWorkbook() {
   wsGaps.getRow(1).font = { bold: true };
   COVERAGE_GAPS.forEach((g) => wsGaps.addRow(g));
 
-  await wb.xlsx.writeFile(path.join(OUT_DIR, 'NDC_TestCases_Role.xlsx'));
+  await wb.xlsx.writeFile(path.join(OUT_DIR, 'TestCases_Role.xlsx'));
   console.log('Excel workbook written.');
 }
 

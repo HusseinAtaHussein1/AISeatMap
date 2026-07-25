@@ -19,4 +19,4 @@ TC-ROLE-005, 006, 007, 008, 017, 018 (Manual Only, assumption-based) and TC-ROLE
 
 ## Relationship to Existing Suites
 
-The Login/Branch/Agency/Staff suites in this same package (`NDC_tests_SHAFT`) are entirely untouched by this run — no shared fixture/utility used by them was modified, only `AdminMenu.java` was extended (additively).
+The Login/Branch/Agency/Staff suites in this same package (`tests_SHAFT`) are entirely untouched by this run — no shared fixture/utility used by them was modified, only `AdminMenu.java` was extended (additively).

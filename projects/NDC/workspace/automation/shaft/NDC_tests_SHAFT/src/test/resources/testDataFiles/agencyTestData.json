@@ -18,7 +18,7 @@
     "salesContactPhone": "1001234569",
     "invoiceGenerationOption": null
   },
-  "note_environment": "This package's TestBase logs in against http://192.168.1.70 (see AdminPages.Login.LogIn_Page's NDC_LOGIN_URL), per explicit user instruction this run (RUN-20260718-001) — a live override of FINDING-001's .80 resolution, not a reversal of it (see NDC_AutomationPlan_SHAFT_Agency.md Risk #1). State/City ('Asyut'/'Asyut') are simply the first options rendered for Branch 'Test' on .70, confirmed live 2026-07-18, not otherwise significant. invoiceGenerationOption is deliberately null — the fill code selects whatever the first rendered p-dropdown option is, since the option list itself is data-driven and not stable across environments.",
+  "note_environment": "This package's TestBase logs in against http://192.168.1.70 (see AdminPages.Login.LogIn_Page's NDC_LOGIN_URL), per explicit user instruction this run (RUN-20260718-001) — a live override of FINDING-001's .80 resolution, not a reversal of it (see AutomationPlan_SHAFT_Agency.md Risk #1). State/City ('Asyut'/'Asyut') are simply the first options rendered for Branch 'Test' on .70, confirmed live 2026-07-18, not otherwise significant. invoiceGenerationOption is deliberately null — the fill code selects whatever the first rendered p-dropdown option is, since the option list itself is data-driven and not stable across environments.",
 
   "specialCharacterAgencyName": "QA_SPIKE_Agency-O'Brien & Co. (2026)",
   "agencyNameLengthBoundaryProbe": "QA_SPIKE_AgencyNameThatIsDeliberatelyVeryLongToProbeForAnUndocumentedLengthLimitXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",

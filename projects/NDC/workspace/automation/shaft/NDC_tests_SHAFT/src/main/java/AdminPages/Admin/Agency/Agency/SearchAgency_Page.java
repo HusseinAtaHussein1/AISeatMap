@@ -46,11 +46,101 @@ public class SearchAgency_Page {
     By Btn_AddAgency = By.xpath("//button[contains(normalize-space(.), 'Add agency')]");
 
     public SearchAgency_Page searchByName(String agencyName) throws InterruptedException {
+        return typeAgencyName(agencyName).selectStatusBoth().submitSearch();
+    }
+
+    /** Centralized 2026-07-25 to remove the raw-locator search/filter sequences that had
+     *  accumulated directly in Agency_Search_TC — every field below already had a confirmed
+     *  locator on this class (searchFixtures_dot70 extensions, RUN-20260718-001), they were just
+     *  never given their own public method. */
+    public SearchAgency_Page typeAgencyName(String agencyName) {
         driver.element().type(Txt_AgencyName, agencyName);
+        return this;
+    }
+
+    public SearchAgency_Page typeAgencyCode(String agencyCode) {
+        driver.element().type(Txt_AgencyCode, agencyCode);
+        return this;
+    }
+
+    public SearchAgency_Page selectStatusBoth() {
         driver.element().click(Rbtn_Both);
+        return this;
+    }
+
+    public SearchAgency_Page selectStatusActive() {
+        driver.element().click(Rbtn_Active);
+        return this;
+    }
+
+    public SearchAgency_Page selectStatusInactive() {
+        driver.element().click(Rbtn_Inactive);
+        return this;
+    }
+
+    /** Opens the City multiselect, picks the option whose text contains the given value, then
+     *  dismisses the overlay by clicking outside it — same panel-open/option-match/close sequence
+     *  Agency_Search_TC's own search003 test drove inline before this method existed. */
+    public SearchAgency_Page filterByCity(String city) throws InterruptedException {
+        driver.element().click(Lst_City);
+        Thread.sleep(800);
+        driver.element().click(By.xpath(String.format(
+                "//li[contains(@class,'p-multiselect-item')]//*[contains(normalize-space(text()),'%s')]", city)));
+        closeOpenOverlay();
+        return this;
+    }
+
+    private void closeOpenOverlay() {
+        driver.getDriver().findElement(By.tagName("body")).click();
+    }
+
+    public SearchAgency_Page submitSearch() throws InterruptedException {
         driver.element().click(Btn_SearchGrid);
         waitForResultsToRender();
         return this;
+    }
+
+    public SearchAgency_Page searchByCode(String agencyCode) throws InterruptedException {
+        return typeAgencyCode(agencyCode).selectStatusBoth().submitSearch();
+    }
+
+    /** Both-status, no filters — the default "load everything" list view used by tests that just
+     *  need the grid populated (e.g. to resolve a freshly-created record's Agency Code). */
+    public SearchAgency_Page showAll() throws InterruptedException {
+        return selectStatusBoth().submitSearch();
+    }
+
+    /** Navigates to the Add Agency form. */
+    public Agency_Page clickAddAgency() {
+        driver.element().click(Btn_AddAgency);
+        return new Agency_Page(driver);
+    }
+
+    /** Resolves the Agency Code (e.g. "AGN10200") for a given Agency Name by reading the currently
+     *  rendered grid rows — confirmed live that a freshly-created record sorts to the top, so
+     *  callers typically call showAll() first. Centralized 2026-07-25 (was duplicated identically
+     *  in Agency_Actions_TC and Agency_Update_TC). */
+    public String resolveCodeForName(String agencyName) {
+        List<WebElement> rows = driver.getDriver().findElements(Tbl_Rows);
+        for (WebElement row : rows) {
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            if (!cells.isEmpty() && cells.get(1).getText().equals(agencyName)) {
+                return cells.get(0).getText();
+            }
+        }
+        throw new IllegalStateException("Could not find a freshly-created Agency named " + agencyName + " in the first page of results.");
+    }
+
+    /** TC-AGENCY-SEARCH-006: scoped to the search form itself (the field under test and its
+     *  immediate container), not the full page body — a script-tag payload reflected unescaped
+     *  would render as literal text within this container. */
+    private By searchFormContainer() {
+        return By.xpath("//form[.//input[@id=\"id-Agencyname\"]]");
+    }
+
+    public boolean searchAreaContainsRawScriptTag() {
+        List<WebElement> forms = driver.getDriver().findElements(searchFormContainer());
+        return !forms.isEmpty() && forms.get(0).getText().contains("<script>");
     }
 
     /**

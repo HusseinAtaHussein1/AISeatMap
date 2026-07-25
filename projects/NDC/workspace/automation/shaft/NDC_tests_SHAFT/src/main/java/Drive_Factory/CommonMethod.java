@@ -12,7 +12,7 @@ import java.util.Map;
  * (E:\Automation2\NDC-Uplift-Automation\src\main\java\Drive_Factory\CommonMethod.java), reproduced
  * here only so this standalone export package compiles/runs independently. On merge into the
  * Reference Project, this file should be DELETED in favor of reusing the real one — see
- * NDC_AutomationPlan_SHAFT.md "Existing Assets."
+ * AutomationPlan_SHAFT.md "Existing Assets."
  */
 public class CommonMethod {
     private static SHAFT.GUI.WebDriver driver;

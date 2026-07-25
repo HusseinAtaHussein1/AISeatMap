@@ -178,9 +178,9 @@
 > `Isaiah`, one of the exact entries from the user's original authorization. Both passed identically.
 >
 > **Now a permanent regression test** — `branchPaymentOptionReflectsMasterPaymentMethodStatus()` in
-> `NDC_tests_SHAFT/.../Branch_TC.java`, using new Page Object `PaymentMethod_Page.java`
+> `tests_SHAFT/.../Branch_TC.java`, using new Page Object `PaymentMethod_Page.java`
 > (`AdminPages/Master/PaymentGateway/`). `mvn test` confirms: **1/1 Passed**. Also fixed, as a
 > byproduct: `CredentialsLoader.java` had a stale relative path to `credentials.json` (broken by an
 > earlier, unrelated repo directory restructuring) — corrected, unblocking every test's login step,
-> not just this one. See `NDC_AutomationSummary_SHAFT.md` §6 Known Limitations for the environment-
+> not just this one. See `AutomationSummary_SHAFT.md` §6 Known Limitations for the environment-
 > split flag (`.70` vs `.80`) this introduces across the suite.

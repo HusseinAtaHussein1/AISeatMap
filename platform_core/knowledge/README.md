@@ -4,7 +4,7 @@ Reusable, application-agnostic engineering knowledge — automation/repair/diagn
 
 **Canonical architecture definition:** `workflows_and_pipelines/pipeline/pipeline.md` §10 (Knowledge Architecture) — resolution order, promotion workflow, isolation guarantee, agent read/write map. This file is a pointer, not a duplicate; read §10 first.
 
-Project-specific knowledge (business rules, UI observations, findings, execution/repair history for one application) lives instead in `projects/{{PROJECT_NAME}}/knowledge_base/` — never here.
+Project-specific knowledge (business rules, UI observations, findings, execution/repair history for one application) lives instead in `platform_core_data/knowledge_base/` — never here.
 
 ## Structure
 

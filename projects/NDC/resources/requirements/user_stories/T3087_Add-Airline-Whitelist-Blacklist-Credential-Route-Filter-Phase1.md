@@ -56,6 +56,6 @@ The filtering logic is applied consistently in both:
 
 ## Cross-references
 
-- Relevant existing modules observed live (see `projects/NDC/architecture.md` Navigation Model): `Master → Supplier → Credential Routes Filter`, `Master → Flight → Airline` (Airline Type field distinguishes GDS/LCC/Both), `Master → Supplier → Supplier Credentials` (pre-existing Restricted Airlines).
+- Relevant existing modules observed live (see `platform_core_data/architecture.md` Navigation Model): `Master → Supplier → Credential Routes Filter`, `Master → Flight → Airline` (Airline Type field distinguishes GDS/LCC/Both), `Master → Supplier → Supplier Credentials` (pre-existing Restricted Airlines).
 - **Open overlap to test, not yet resolved:** `Q2-CORE-WT1-T3002-066` documented that the pre-existing **Restricted Airlines** setting (in Supplier Credentials) operates independently of Credential Routes filtering, applying only after route validation, with no conflict. This story adds a *second*, distinct airline-level filter living inside the Credential Routes rule itself, scoped to GDS suppliers only. The same independence question T3002-066 answered for Restricted Airlines vs. route-level filtering needs re-asking for Restricted Airlines vs. this new in-rule Airlines list — they are two different mechanisms that will now coexist.
 - DBA sign-off on max airline-selection count is an **unresolved prerequisite**, not a settled detail — do not assume a specific cap until confirmed.

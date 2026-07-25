@@ -4,7 +4,7 @@
 //
 // Usage:
 //   node platform_core/tools/run_manager/cli.js --scope UserStory --target "Create Role" \
-//     --started 2026-07-23T10:35:18 --existing-dir projects/NDC/runs [--json]
+//     --started 2026-07-23T10:35:18 --existing-dir platform_core_data/runs [--json]
 //
 // --started defaults to now if omitted. --existing-dir, if given, is scanned for existing folder
 // names so collisions get a deterministic __2/__3 suffix.

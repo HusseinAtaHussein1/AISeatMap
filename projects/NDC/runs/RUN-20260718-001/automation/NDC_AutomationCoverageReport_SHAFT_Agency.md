@@ -1,6 +1,6 @@
 # NDC — Automation Coverage Report (Agency, SHAFT, new package) — RUN-20260718-001
 
-Of **66** approved Agency Test Design cases (v3, `runs/RUN-20260718-001/test_design/NDC_TestCases_Agency.md`):
+Of **66** approved Agency Test Design cases (v3, `runs/RUN-20260718-001/test_design/TestCases_Agency.md`):
 
 | Disposition | Count | % of 66 |
 |---|---:|---:|
@@ -12,7 +12,7 @@ Of **66** approved Agency Test Design cases (v3, `runs/RUN-20260718-001/test_des
 | Manual Only | 1 | 2% |
 | Superseded/N/A | 2 | 3% |
 
-**A real TestNG `@Test` method exists this run for 53/66 (80%)** — the 2 Reuse + 43 Generate + 8 Partially Automatable rows. The remaining 13 (20%) are individually named and reasoned about, not silently dropped — see `NDC_AutomationDecisionReport_SHAFT_Agency.md` for the per-case table and `NDC_AutomationPlan_SHAFT_Agency.md` for the full rationale (including FINDING-008, the human-confirmed decision to leave Blocked/Deferred cases as-is this run).
+**A real TestNG `@Test` method exists this run for 53/66 (80%)** — the 2 Reuse + 43 Generate + 8 Partially Automatable rows. The remaining 13 (20%) are individually named and reasoned about, not silently dropped — see `AutomationDecisionReport_SHAFT_Agency.md` for the per-case table and `AutomationPlan_SHAFT_Agency.md` for the full rationale (including FINDING-008, the human-confirmed decision to leave Blocked/Deferred cases as-is this run).
 
 ## By suite
 

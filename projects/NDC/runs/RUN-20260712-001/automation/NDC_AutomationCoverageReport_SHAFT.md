@@ -14,7 +14,7 @@
 
 ## Automation Coverage
 
-**100%** of the 8 approved Login test cases received Generate New Automation. As with the earlier Playwright package, this reflects a deliberately-scoped Login-only Manual Test Suite (see `../test_design/NDC_CoverageReport.md` for the full Coverage Gaps — lockout/rate-limiting/security-input/boundary-value scenarios remain deferred, and Logout remains out of current scope, both by deliberate Engineering Decision).
+**100%** of the 8 approved Login test cases received Generate New Automation. As with the earlier Playwright package, this reflects a deliberately-scoped Login-only Manual Test Suite (see `../test_design/CoverageReport.md` for the full Coverage Gaps — lockout/rate-limiting/security-input/boundary-value scenarios remain deferred, and Logout remains out of current scope, both by deliberate Engineering Decision).
 
 ## Named Reasons — Partially Automatable / Manual Only
 

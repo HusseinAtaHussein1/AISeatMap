@@ -8,5 +8,5 @@
     "username": "",
     "password": ""
   },
-  "note": "Valid-credential test data is intentionally NOT stored here — TC-LOGIN-001 reads the real NDC STG credential from projects/NDC/credentials/credentials.json at run time (via tools/browser_driver conventions), per the platform's credentials-handling contract (never duplicated into a test-data JSON file)."
+  "note": "Valid-credential test data is intentionally NOT stored here — TC-LOGIN-001 reads the real NDC STG credential from platform_core_data/credentials/credentials.json at run time (via tools/browser_driver conventions), per the platform's credentials-handling contract (never duplicated into a test-data JSON file)."
 }

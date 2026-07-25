@@ -56,5 +56,5 @@ This means:
 
 ## Cross-references
 
-- Relevant existing modules observed live (see `projects/NDC/architecture.md` Navigation Model): `Master → Supplier → Credential Routes Filter`, `Master → Flight → Airport`, `Master → Supplier → Supplier Credentials` (Restricted Airlines).
+- Relevant existing modules observed live (see `platform_core_data/architecture.md` Navigation Model): `Master → Supplier → Credential Routes Filter`, `Master → Flight → Airport`, `Master → Supplier → Supplier Credentials` (Restricted Airlines).
 - Per [`pipeline/run_scope.md`](../../../../pipeline/run_scope.md), this is a **User Story** Run Scope Type — a future Project Context version scoped to this story should treat the Comments section above as already-confirmed behavior, not as something to re-litigate as a defect.

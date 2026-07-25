@@ -2,7 +2,7 @@
 // generation time, never logged). Mirrors tools/browser_driver/driver.js's loadCredentials
 // contract so this suite never duplicates real values into a versioned JSON file. Not part of the
 // Locators/Pages/Tests layers proper — a thin Data Layer utility, per
-// projects/NDC/automation_framework.md §4 ("no hardcoded data in code").
+// platform_core_data/automation_framework.md §4 ("no hardcoded data in code").
 const fs = require('fs');
 const path = require('path');
 

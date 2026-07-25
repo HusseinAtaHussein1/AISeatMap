@@ -27,7 +27,7 @@ Confidence: Medium
 
 ## Repair Scope Applied
 
-Modified **only** `NDC_tests_SHAFT/` (`LogIn_Page.java`, `LogIn_TC.java`) — added a `waitUntil` polling helper, `waitForDashboardTitle()`, `waitForInvalidCredentialsMessage()`; corrected 3 expected-string literals. **Not modified:** Discovery artifacts, Project Context, `NDC_TestCases_Login.md`/`.xlsx` (per repair-scope rule 4 — the Test Case document still states "Username/Password is required" pending a separate, explicit Test Design correction; this is a deliberate, disclosed discrepancy between the Test Case doc and the now-corrected automation, not an oversight).
+Modified **only** `tests_SHAFT/` (`LogIn_Page.java`, `LogIn_TC.java`) — added a `waitUntil` polling helper, `waitForDashboardTitle()`, `waitForInvalidCredentialsMessage()`; corrected 3 expected-string literals. **Not modified:** Discovery artifacts, Project Context, `TestCases_Login.md`/`.xlsx` (per repair-scope rule 4 — the Test Case document still states "Username/Password is required" pending a separate, explicit Test Design correction; this is a deliberate, disclosed discrepancy between the Test Case doc and the now-corrected automation, not an oversight).
 
 Reran **only** the 5 affected tests (`testng-repair.xml`, method-filtered), not the full 8 — via a temporary `pom.xml` `suiteXmlFile` swap, reverted to `testng.xml` immediately after.
 

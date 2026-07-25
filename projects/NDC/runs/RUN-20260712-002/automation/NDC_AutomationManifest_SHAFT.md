@@ -1,6 +1,6 @@
 # NDC — Automation Manifest — RUN-20260712-002 — SHAFT
 
-Package location: `projects/NDC/artifacts/runs/RUN-20260712-001/automation/NDC_tests_SHAFT/` (continued in place — this run's Strategy answer, per `agents/automation_agent.md` §31.4, the package's "last touched" run moves to RUN-20260712-002 without relocating its files).
+Package location: `platform_core_data/runs/RUN-20260712-001/automation/tests_SHAFT/` (continued in place — this run's Strategy answer, per `agents/automation_agent.md` §31.4, the package's "last touched" run moves to RUN-20260712-002 without relocating its files).
 
 ## New files (this run)
 

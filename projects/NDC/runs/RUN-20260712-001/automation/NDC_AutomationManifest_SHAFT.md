@@ -6,7 +6,7 @@
 
 | File | Status | Layer |
 |---|---|---|
-| `NDC_tests_SHAFT/pom.xml` | Generated (mirrors Reference Project's coordinates) | Config |
+| `tests_SHAFT/pom.xml` | Generated (mirrors Reference Project's coordinates) | Config |
 | `src/main/resources/properties/default/TestNG.properties` | Generated (mirrors Reference Project) | Config |
 | `src/main/resources/properties/default/Reporting.properties` | Generated (mirrors Reference Project) | Config |
 | `src/main/java/AdminPages/Login/LogIn_Page.java` | Generated (locators reused from Reference Project verbatim; new methods for TC-LOGIN-004/007/008) | Page Object |
@@ -22,7 +22,7 @@
 - **Duplicate code:** `Drive_Factory.CommonMethod` is a deliberate, disclosed duplicate (export-copy) of the Reference Project's real file — not an undisclosed one. No other duplication found.
 - **Broken references / compilation readiness:** **Verified — `mvn test-compile` run against this package completed with exit code 0**, all 5 main+test classes compiled successfully (`LogIn_Page`, `CommonMethod`, `CredentialsLoader`, `TestBase`, `LogIn_TC`). This is a real, executed static check (compilation only — no live browser/test execution), not an assumption.
 - **Framework Compliance:** SHAFT Engine idioms used throughout (`SHAFT.GUI.WebDriver`, `driver.element()`, `driver.browser()`) — no raw Selenium/WebDriver calls, per `agents/automation_agent.md` §8.
-- **Traceability:** Every test method's comment cites its Test Case ID; `LogIn_TC.java`'s class-level comment cites `NDC_TestCases_Login.md`/`NDC_TraceabilityMatrix.md`.
+- **Traceability:** Every test method's comment cites its Test Case ID; `LogIn_TC.java`'s class-level comment cites `TestCases_Login.md`/`TraceabilityMatrix.md`.
 - **Missing reusable assets:** None for Login. Future NDC modules automated against this Reference Project should extend this same package/folder convention (new `AdminPages/{Module}/...` classes) rather than starting a third, parallel structure.
 - **Recommendations:**
   1. On merge into the Reference Project, delete this package's `Drive_Factory.CommonMethod` copy and re-point `TestBase` at the real one.

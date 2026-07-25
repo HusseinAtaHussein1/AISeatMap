@@ -13,8 +13,8 @@ import java.nio.file.Path;
 
 /**
  * NDC Admin / Staff Test Suite — RUN-20260712-002, Stage 4 (Automation Agent).
- * Automates TC-STAFF-001, 002, 003, 005 — every scenario traces to NDC_TestCases_Staff.md /
- * NDC_TraceabilityMatrix.md. TC-STAFF-004 is an Exploratory/manual charter (Test Design
+ * Automates TC-STAFF-001, 002, 003, 005 — every scenario traces to TestCases_Staff.md /
+ * TraceabilityMatrix.md. TC-STAFF-004 is an Exploratory/manual charter (Test Design
  * disposition) and is deliberately NOT a @Test here.
  */
 public class Staff_TC extends AdminTestBase {

@@ -63,7 +63,11 @@ projects/
       discovery/                      # current-approved Discovery snapshots, QA Assessment Report
         findings/                       # current Finding evidence packages
       test_design/                    # current-approved Manual Test Suite, Traceability Matrix, Coverage Report
-      automation/                     # current-approved Automation Package, Plan, Manifest, Summary
+      automation/                     # Workspace Automation Baseline — the authoritative, persistent
+                                       #   Automation Package(s), Plan, Manifest, Summary; a run's own
+                                       #   automation/ (below) is only ever a temporary working copy of
+                                       #   this, per the Automation Asset Lifecycle
+                                       #   (workflows_and_pipelines/pipeline/pipeline.md §12)
       execution/                      # current Execution Results + evidence
       reporting/                      # current Final QA Report
       pipeline/                       # Run Manifest — generated pipeline artifacts only, no project knowledge
@@ -71,8 +75,12 @@ projects/
         RUN-YYYYMMDD-XXX-{slug}/        # slug is AI-generated for runs created after 2026-07-21 (see
                                          #   workflows_and_pipelines/pipeline/run_manager.md §5)
           metadata/                       # run.json + run_summary.md — always created
-          context/ · discovery/{findings/} · test_design/ · automation/ · execution/ · reporting/
+          context/ · discovery/{findings/} · test_design/ · execution/ · reporting/
                                            # created only when that stage actually writes to it
+          automation/                     # temporary working copy of the Workspace Automation Baseline
+                                           #   above (pipeline.md §12.1) — its source is removed after a
+                                           #   successful Workspace Merge; automation_promotion.md and
+                                           #   every Plan/Manifest/Report/Summary stay forever
   templates/
     project_template/               # canonical, copyable skeleton — same shape as above, all placeholders
 ```
@@ -141,11 +149,13 @@ Stage 2 (Explorer Agent, using browser/ + credentials/) → artifacts/discovery/
         ↓
 Stage 3 (Test Design Agent) → artifacts/test_design/
         ↓
-Stage 4 (Automation Agent) → artifacts/automation/
+Stage 4 (Manual Execution Agent) → artifacts/manual_execution/
         ↓
-Stage 5 (Execution Agent) → artifacts/execution/ + knowledge_base/repair/ (on confirmed fixes)
+Stage 5 (Automation Agent) → artifacts/automation/
         ↓
-Stage 6 (Reporting Agent) → artifacts/reporting/
+Stage 6 (Automation Execution Agent) → artifacts/execution/ + knowledge_base/repair/ (on confirmed fixes)
+        ↓
+Stage 7 (Reporting Agent) → artifacts/reporting/
 ```
 
 ## Common Mistakes

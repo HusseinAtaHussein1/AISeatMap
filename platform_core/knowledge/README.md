@@ -15,17 +15,17 @@ One concern per document, one stable ID per document (e.g. `REPAIR-001`), groupe
 | `automation_patterns/` | Reusable automation-generation strategies |
 | `diagnosis_patterns/` | Evidence-gathering strategies specific to root-causing an automation/execution failure (no code/behavior change) |
 | `repair_patterns/` | Confirmed, cross-project repair strategies |
-| `execution_patterns/` | Proven, empirically-derived exceptions to Execution Engine defaults (e.g. an environment class where a default concurrency/retry setting needs overriding) — never the engine's core retry/concurrency/stop-condition mechanics, which are fixed capability logic in `.claude/skills/execution-agent/SKILL.md` §5, §19–§20 |
+| `execution_patterns/` | Proven, empirically-derived exceptions to Execution Engine defaults (e.g. an environment class where a default concurrency/retry setting needs overriding) — never the engine's core retry/concurrency/stop-condition mechanics, which are fixed capability logic in `.claude/skills/automation-execution-agent/SKILL.md` §5, §19–§20 |
 | `framework_patterns/` | Framework best practices (SHAFT, Playwright, etc.) |
 | `reasoning/` | General AI reasoning patterns that apply across more than one agent/skill — if a pattern is specifically about sourcing evidence during failure investigation, it belongs in `diagnosis_patterns/` instead |
 | `reporting/` | Reporting conventions |
-| `pipeline_decision_patterns/` | Cross-project pipeline decision heuristics (e.g. "defer Stage 4 by default for Run Scope=Bug on a Shared environment") — distinct from `workflows_and_pipelines/pipeline/`, which is the orchestration engine's own spec, not a knowledge category. **Currently held empty**: no agent or workflow is yet named as a reader in `pipeline.md` §10.7, and no project-level `knowledge_base/` counterpart folder exists to promote from — do not promote a document into this folder until both exist. |
+| `pipeline_decision_patterns/` | Cross-project pipeline decision heuristics (e.g. "defer Stage 5 by default for Run Scope=Bug on a Shared environment") — distinct from `workflows_and_pipelines/pipeline/`, which is the orchestration engine's own spec, not a knowledge category. **Currently held empty**: no agent or workflow is yet named as a reader in `pipeline.md` §10.7, and no project-level `knowledge_base/` counterpart folder exists to promote from — do not promote a document into this folder until both exist. |
 
 See `INDEX.md` for the full catalog of documents currently in this layer.
 
 There is no `skills/` category here. Cross-cutting agent capability lives in `.claude/skills/` — a different platform layer entirely (Capability, not Knowledge). Meta-guidance on how to author a good `SKILL.md` belongs as documentation alongside that layer, never inside this runtime-consulted Knowledge Base.
 
-There is no `confidence_patterns/` category here (removed, 2026-07-21). The Confidence Engine's scoring rubric is fixed Capability logic in `.claude/skills/execution-agent/SKILL.md` §27.2 — that spec is the sole source of truth for how confidence is derived.
+There is no `confidence_patterns/` category here (removed, 2026-07-21). The Confidence Engine's scoring rubric is fixed Capability logic in `.claude/skills/automation-execution-agent/SKILL.md` §27.2 — that spec is the sole source of truth for how confidence is derived.
 
 ## Document metadata standard
 
@@ -38,8 +38,8 @@ title: <one-line summary>
 category: repair_patterns
 status: confirmed              # proposed | confirmed | superseded | retired
 tags: [spa, redirect, auth]     # free-form, retrieval-oriented
-producer: execution-agent       # the skill/workflow/human that authored this
-consumers: [execution-agent, automation-agent]  # every skill expected to read it
+producer: automation-execution-agent       # the skill/workflow/human that authored this
+consumers: [automation-execution-agent, automation-agent]  # every skill expected to read it
 promoted_from: NDC/REP-001      # the exact project-level document this generalizes
 confidence: "2 executions, 2 projects"  # evidence count, never invented
 related_knowledge: [REASON-001] # cross-references to other documents in this layer

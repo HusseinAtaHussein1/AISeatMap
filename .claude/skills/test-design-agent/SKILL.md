@@ -1,6 +1,6 @@
 ---
 name: test-design-agent
-description: Stage 3 of 6 in the Agentic AI Testing Platform pipeline (Requirement-Driven Test Engineering Agent). Transforms the approved Project Context plus Discovery Artifacts/Findings/Evidence into a fully-traceable Manual Test Suite (Markdown + Excel), Requirement Traceability Matrix, and Coverage Report. Use when designing manual test cases for a project after Discovery is approved.
+description: Stage 3 of 7 in the Agentic AI Testing Platform pipeline (Requirement-Driven Test Engineering Agent). Transforms the approved Project Context plus Discovery Artifacts/Findings/Evidence into a fully-traceable Manual Test Suite (Markdown + Excel), Requirement Traceability Matrix, and Coverage Report. Use when designing manual test cases for a project after Discovery is approved.
 inputs:
   - name: project_context
     type: file_path
@@ -33,7 +33,7 @@ dependencies:
   - Spreadsheet-writing library/tool for the Excel export
 ---
 
-> **Pipeline position:** Stage 3 of 6 — consumes the Project Context (primary) and Discovery Artifacts, Findings, Evidence Packages, and the QA Assessment Report (secondary), produces Manual Test Suites.
+> **Pipeline position:** Stage 3 of 7 — consumes the Project Context (primary) and Discovery Artifacts, Findings, Evidence Packages, and the QA Assessment Report (secondary), produces Manual Test Suites.
 > **Traceability:** `Project Context → Test Cases`, informed and validated by `Discovery → Test Cases` and, where applicable, `Finding/Evidence → Test Cases`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
@@ -43,7 +43,7 @@ dependencies:
 
 # 2. Purpose
 
-The Test Design Agent transforms validated project knowledge — the approved Project Context, Discovery Report, Findings, Evidence Packages, and QA Assessment Report — into a complete, structured set of manual test assets with full, explicit, four-dimension traceability. It is the quality gate between "what the business requires and what was actually observed" (Stages 1–2) and "what gets automated" (Automation Agent, Stage 4).
+The Test Design Agent transforms validated project knowledge — the approved Project Context, Discovery Report, Findings, Evidence Packages, and QA Assessment Report — into a complete, structured set of manual test assets with full, explicit, four-dimension traceability. It is the quality gate between "what the business requires and what was actually observed" (Stages 1–2) and "what gets manually validated, and ultimately automated" (Manual Execution Agent, Stage 4, followed by the Automation Agent, Stage 5).
 
 **The Project Context is this agent's primary source of truth.** Discovery Artifacts, Findings, and Evidence Packages — everything the Explorer Agent produced — are secondary inputs used to validate that requirements hold in the live application, enrich test scenarios with real UI detail and observed evidence, detect undocumented behavior, and ensure every Finding is deliberately accounted for in the test suite. None of these secondary sources is ever treated as more authoritative than the Project Context; where they disagree, the disagreement is recorded as a discrepancy, not silently resolved in favor of whichever source this agent happens to read first.
 
@@ -102,7 +102,7 @@ The Test Design Agent transforms validated project knowledge — the approved Pr
 
 # 5. Traceability Model
 
-Every generated Test Case must trace back to, and explicitly cite, up to four sources. This traceability must be **explicit** — present as named fields on the test case itself (§6), never left implicit or inferable only from context.
+Every generated Test Case must trace back to, and explicitly cite, up to four sources. This traceability must be **explicit** — present as named columns in the Requirement Traceability Matrix, keyed by Test Case ID (§6.2; the test case document itself stays lean per the Test Case Writing Standard, §6.1) — never left implicit or inferable only from context.
 
 ## 5.1 The Four Dimensions
 
@@ -146,23 +146,111 @@ These two additional fields extend, and never substitute for, the four mandatory
 
 # 6. Test Case Schema
 
-Every Test Case must contain the following fields, in this order:
+**Canonical Test Case Writing Standard, per explicit user instruction (2026-07-25):** every test case must prioritize clarity, simplicity, and executability over exhaustive detail. The goal is that any QA engineer, regardless of project familiarity, can read a test case once and execute it correctly without additional explanation — **the test case is for execution, not analysis.** Traceability, Risk, and categorization detail (§6.2) still exist and are still mandatory for the pipeline's traceability guarantee (§5.2) — they are simply recorded in the Requirement Traceability Matrix (keyed by Test Case ID) and Coverage Report, not written as inline fields on the test case document itself, so the execution-facing document stays lean.
+
+### 6.0 Lean Test Case Philosophy (Canonical)
+
+**The purpose of a test case is to verify one business behavior — not to document the entire application workflow.**
+
+- **One business behavior per test case.** A test case that chains multiple unrelated actions ("Create Agency, verify validation, approve Agency, edit Agency, reject Agency, search Agency") must be split into independent test cases, each verifying exactly one thing. This is distinct from a single behavior exercised across several data points (e.g., "every Mandatory field blocks empty submission" tested field-by-field in one matrix-style case, §7) — that is still one behavior, parameterized, not several behaviors chained. Whenever a case is legitimately broader than one atomic rule, its Granularity Tier (§6.0.1) must be explicitly Scenario or End-to-End, stated on the case itself — never an unexplained bundle left to read as if it were Atomic.
+
+### 6.0.1 Test Case Granularity (Canonical)
+
+Before creating or modifying a test case, determine its intended scope. Every test case is **exactly one** of the following tiers, recorded as a Tag (§6.1):
+
+| Tier | Verifies | Examples |
+|---|---|---|
+| **Atomic** | A single business rule or validation. | "Create Agency without Product Access," "Reject Active Agency," "Search by Agency Name." |
+| **Scenario** | One complete user workflow composed of several related business rules. | "Successfully create a new Agency," "Complete Agency approval workflow," "Update Agency information." |
+| **End-to-End (E2E)** | An entire business journey spanning multiple screens or modules. | "Agency Creation → Approval → Availability for Booking." |
+
+**End-to-End test cases must:**
+- Clearly state, in the Objective, that they are workflow tests spanning multiple screens/modules.
+- Never replace the Atomic or Scenario test cases that cover the same ground in isolation — E2E is additive, confirming composition, not a substitute for per-rule coverage.
+- Be tagged `E2E` (§6.1) — Atomic and Scenario tiers are likewise always tagged (`Atomic` or `Scenario`) so the tier is never left implicit.
+- Focus on verifying the overall journey rather than re-asserting every individual validation already covered at the Atomic/Scenario tier.
+
+**Never mix unrelated business behaviors simply to reduce the number of test cases** — a Scenario or E2E tier is earned by genuinely composing related rules into one real workflow, not used as cover for bundling.
+- **A tester should understand the test within 30 seconds**, and be able to execute it without reading additional documentation. This is a tighter, comprehension-focused bar than the Success Criteria's two-minute *execution* bar below — both apply.
+- **Write like a human** — as if giving instructions to another QA engineer, not documenting requirements. Avoid long paragraphs, requirement-style wording, explaining obvious actions, or describing internal implementation.
+- **Steps carry actions; Expected Result carries verification — never mix them.** "Click Save and verify the validation message appears" is two things in one step; write "Click Save." as the step and put the validation message in Expected Result.
+- **Test Data uses only the minimum values required** to execute the case — don't overload the reader with values the steps never reference.
+- **Notes are for genuinely helpful execution context only** — never move essential execution information (a step, a value, the actual expected outcome) into Notes to keep Steps short; that's hiding required content, not simplifying.
+
+**Readability Check — apply before finalizing every test case:**
+1. Can a new QA engineer execute it without help?
+2. Can it be understood in under 30 seconds?
+3. Is every step necessary?
+4. Is there any redundant wording?
+5. Does it verify only one business rule?
+
+If any answer is "No," rewrite the test case.
+
+**Golden Rule: if removing a sentence does not change how the test is executed, remove it.** Every sentence must help the tester execute or verify the test — nothing else earns its place in the document.
+
+## 6.1 Test Case Fields (Manual Test Suite document)
+
+Every Test Case in the Manual Test Suite (Markdown/Excel) contains exactly these fields, in this order — no more:
 
 - **Test Case ID** — a stable, unique identifier (e.g., `TC-LOGIN-001`), scoped per module
-- **Title** — a short, specific, human-scannable summary
-- **Objective** — one sentence stating what this test case verifies (distinct from Title — the Title names it, the Objective states its purpose)
-- **Priority** — execution priority (e.g., P1–P4 or High/Medium/Low), reflecting how urgently this case should run relative to others, independent of Risk
-- **Risk** — the risk being mitigated by this test case, as a Risk Level (Critical/High/Medium/Low — using the same scale as the Explorer Agent's Severity Matrix for pipeline-wide consistency) plus a one-line statement of what could go wrong if this isn't tested. **Where this test case's Finding Reference is populated, Risk must be derived from that Finding's own Business Risk / Technical Risk framing, not independently re-assessed from scratch.**
-- **Preconditions** — the required starting state (login state, data state, role) before executing this test
-- **Test Data** — the specific input values used, including, for negative tests, the exact boundary/invalid value being exercised (§7)
-- **Steps** — the precise, numbered action sequence
-- **Expected Result** — the specific, observable outcome that constitutes a pass — for a regression test derived from a Finding (§5.3), this is the *corrected* behavior, never a restatement of the bug
-- **Requirement Reference** — per §5.1, always populated
-- **Discovery Reference** — per §5.1, always populated
-- **Finding Reference** — per §5.1, populated or `N/A`
-- **Evidence Reference** — per §5.1, populated (if Finding Reference is populated) or `N/A`
-- **Acceptance Criteria Reference** — per §5.4, populated when the governing requirement is a User Story with enumerated acceptance criteria, otherwise `N/A`
-- **Run Scope Reference** — per §5.4, always populated
+- **Title** — a short, specific, human-scannable summary (see Title Rules below)
+- **Objective** — one sentence stating what this test case verifies (see Objective Rules below)
+- **Preconditions** — only what's required immediately before execution (e.g., "User is logged in as Admin.")
+- **Test Data** — the specific input values used, kept simple (e.g., `Agency Name: QA_AGENCY_001`), including, for negative tests, the exact boundary/invalid value being exercised (§7); omit this field entirely when a case has no test data
+- **Steps** — a numbered list, one user action per step (see Step Writing Rules below)
+- **Expected Result** — the specific, observable outcome that constitutes a pass, one verification point per statement (see Expected Result Rules below) — for a regression test derived from a Finding (§5.3), this is the *corrected* behavior, never a restatement of the bug
+- **Priority** — execution priority (P1–P4), reflecting how urgently this case should run relative to others
+- **Tags** — short labels only, always including the Granularity Tier (`Atomic`/`Scenario`/`E2E`, §6.0.1, mandatory on every case), plus e.g. `Smoke`, `Regression`, `Negative-InvalidInputs`, `AutomationCandidate` — the compact, at-a-glance categorization that replaces what used to be separate Category/Test Type/Automation-Candidate fields on the test case itself; never a paragraph
+- **Notes** *(optional)* — anywhere additional explanation is genuinely needed, so Steps/Expected Result never grow long carrying it instead (see "If additional explanation is needed" below)
+
+### Step Writing Rules
+
+- One user action per step. One verification per expected result.
+- Short, direct sentences — no unnecessary technical jargon, no long paragraphs.
+- Good: "1. Open the Agency page. 2. Click **Create Agency**. 3. Enter a valid Agency Name. 4. Leave the Product Access section empty. 5. Click **Save**."
+- Bad: "Navigate to the Agency management module, ensuring all required prerequisites are satisfied before attempting to initiate the creation workflow…"
+
+### Expected Result Rules
+
+Write only what the tester should verify — a complete but minimal statement, not a hedge or a value judgment.
+
+- Good: "The system displays a validation message indicating that Product Access is required."
+- Bad: "The application should ideally validate according to the business rules and prevent the user from proceeding."
+
+### Title Rules
+
+Keep titles short and specific, describing the behavior under test: "Create Agency successfully," "Create Agency without Product Access," "Reject Pending Agency," "Search Agency by Name," "Update Agency Status."
+
+- Good: "Create Agency without Product Access"
+- Bad: "Verify that the Agency creation process correctly validates mandatory Product Access configuration before allowing successful submission"
+
+### Verify One Thing
+
+Each test case validates a single behavior — split anything that doesn't.
+
+- Good: "Create Agency without Product Access"
+- Bad: "Create Agency, verify validation, approve Agency, edit Agency, reject Agency, search Agency" — split into independent test cases instead.
+
+### Objective Rules
+
+One sentence only. Example: "Verify that an Agency cannot be created without Product Access."
+
+### Avoid, in the test case itself
+
+Do not explain why every step exists. Do not include implementation details. Do not speculate. Do not describe internal logic. Do not write requirement documentation inside the test case — that belongs in the Traceability Matrix/Coverage Report (§6.2), or in Notes if it's a genuinely necessary execution caveat, never inline in Steps or Expected Result.
+
+### Success Criteria
+
+Every test case should be executable by a new team member in under two minutes of reading. If a step feels difficult to understand, rewrite it using simpler language. The reader should immediately know: what to do, what to expect, and whether the test passed or failed.
+
+## 6.2 Traceability, Risk, and Categorization — recorded in the Traceability Matrix and Coverage Report, not on the test case
+
+The following are still mandatory pipeline outputs — nothing here is dropped, only relocated out of the execution-facing test case document:
+
+- **Requirement Reference, Discovery Reference, Finding Reference, Evidence Reference, Acceptance Criteria Reference, Run Scope Reference** (§5.1, §5.4) — recorded in the Requirement Traceability Matrix, one row per Test Case ID, per the same mandatory/`N/A` rules as before. §5.2's "No Test Case Without Traceability" rule is unchanged: a test case with no corresponding Requirement Reference and Discovery Reference row in the Matrix must not be generated.
+- **Risk** (Level + one-line statement, derived from a populated Finding's own Business/Technical Risk where applicable) — recorded in the Traceability Matrix's Risk column, aggregated in the Coverage Report's Risks section (§18 #9).
+- **Category** (Positive/Negative-{subtype}/Exploratory/etc., §7) and **Test Type** (Smoke/Regression) — recorded as compact Tags on the test case (§6.1) *and* rolled up in the Coverage Report's Test Scenarios section (§18 #5) for at-a-glance breakdown.
+- **Automation Candidate** (advisory Yes/No/Partially hint, §9.2/§18 #11) — recorded as a Tag on the test case (§6.1) when Yes, *and* listed in the Coverage Report's Automation Candidates section — never only in one place, since the Manual Execution Agent's own tooling may read either.
 
 # 7. Negative Test Generation Engine
 
@@ -220,7 +308,7 @@ The Test Design Agent generates **only the platform's own canonical artifacts.**
 1. **Manual Test Suite (Markdown)** — human-readable, version-control-friendly test case documents, grouped by module
 2. **Manual Test Suite (Excel)** — the same test cases in spreadsheet form, for stakeholders and tools that consume tabular test data
 3. **Requirement Traceability Matrix** — Project Context requirement ID → Test Case ID, annotated with Discovery/Finding/Evidence references and validation status
-4. **Coverage Report** — the consolidated Requirement Coverage (§8.1, §8.3) and Finding Coverage (§8.2) accounting, structured per the Standard Output Contract (§18): Run Scope, Requirements Covered, Coverage Matrix, Business Rules, Test Scenarios, Manual Test Cases (by reference), Assumptions, Coverage Gaps, Risks, Recommendations, Automation Candidates, and Inputs for Automation Agent
+4. **Coverage Report** — the consolidated Requirement Coverage (§8.1, §8.3) and Finding Coverage (§8.2) accounting, structured per the Standard Output Contract (§18): Run Scope, Requirements Covered, Coverage Matrix, Business Rules, Test Scenarios, Manual Test Cases (by reference), Assumptions, Coverage Gaps, Risks, Recommendations, Automation Candidates, and Inputs for Manual Execution Agent
 
 The Markdown and Excel test suites are two renderings of one underlying test case set — they must never diverge in content. A field added, corrected, or removed in one format is added, corrected, or removed in the other in the same pass.
 
@@ -242,25 +330,25 @@ Any future integration that maps these canonical artifacts into a third-party AL
 4. **Must never consume an input artifact that is not itself `Approved`** at its own pipeline checkpoint — must halt and report the blocking artifact rather than drafting against a `Pending Review`, `Pending Automation Approval`, or `Rejected` source (§4).
 5. **Must never invent requirements.** Every testable requirement a test case covers must be traceable to an explicit Project Context statement (§5.1).
 6. **Must never invent business rules.** A business rule not stated in the Project Context is not assumed, extrapolated, or "filled in" for the sake of a more complete-looking test case.
-7. **Must never create a test case without traceability** (§5.2) — at minimum a Requirement Reference and Discovery Reference; a Finding Reference and Evidence Reference wherever the test case exists because of a specific Finding.
+7. **Must never create a test case without traceability** (§5.2) — at minimum a Requirement Reference and Discovery Reference row in the Traceability Matrix (§6.2); a Finding Reference and Evidence Reference wherever the test case exists because of a specific Finding. The test case document itself stays lean (§6.1) — traceability lives in the Matrix, but it must exist there for every test case, with no exceptions.
 8. **Must ensure every Finding is dispositioned** as a regression test, an exploratory test, or a documented exception (§5.3) — an Uncovered Finding is a defect in this agent's own output.
-9. Must carry forward every assumption/risk flag from the Project Context into a correspondingly tagged test case — never silently resolve an open question.
-10. **Must systematically evaluate every applicable Negative Test Generation category** (§7) for each testable requirement/workflow, generating the test case or recording an explicit "Not Applicable" reason — never silently skipping a category.
+9. Must carry forward every assumption/risk flag from the Project Context into a correspondingly tagged test case (§3) — never silently resolve an open question.
+10. **Must systematically evaluate every applicable Negative Test Generation category** (§7) for each testable requirement/workflow, generating the test case or recording an explicit "Not Applicable" reason (in the Coverage Report, §18 #5/#8) — never silently skipping a category.
 11. Must cover, at minimum, one positive case and the applicable negative categories (§7) for every testable requirement; boundary and security cases wherever applicable.
-12. Every test case must include all fields in §6 — no partial schema, no field silently omitted (use `N/A` explicitly where a field genuinely does not apply, per §5.1's rule for Finding/Evidence References).
+12. Every test case must include all fields in §6.1 (the lean, execution-facing schema) — no partial schema, no field silently omitted. Every test case must additionally have a corresponding, complete Traceability Matrix row per §6.2 — use `N/A` explicitly where a Matrix field genuinely does not apply, per §5.1's rule for Finding/Evidence References.
 13. **Must produce both canonical test suite formats — Markdown and Excel — from the same underlying test case set.** The two must never diverge in content.
-14. **Must produce a Requirement Traceability Matrix covering 100% of the test cases it generates** — no orphan test case without a traced Project Context requirement.
+14. **Must produce a Requirement Traceability Matrix covering 100% of the test cases it generates** — no orphan test case without a traced Project Context requirement row in the Matrix (§6.2).
 15. **Must produce a Coverage Report** (§8–§9) quantifying Requirement Coverage and Finding Coverage, with an explicit accounting (not a silent omission) of every Uncovered Requirement and every Uncovered Finding.
 16. Must not write or suggest automation code, and must not execute any test.
 17. **Must never shape any output, schema, field, or terminology around a specific external ALM, issue-tracking, or test-management system.** This agent produces only the platform's own canonical artifacts (§9); any third-party import/export format is strictly out of scope for the core architecture.
 18. **Must never read `projects/{{PROJECT_NAME}}/` (Project Knowledge) directly.** Only the Project Context, already reconciled by Stage 1, is read — re-reading Project Knowledge risks reintroducing detail the Project Context Agent deliberately scoped out.
-19. **Must select the Test Design Strategy matching this run's Run Scope Type** (§16), and must populate every test case's Run Scope Reference (§5.4) accordingly — never apply one default depth/breadth regardless of scope.
+19. **Must select the Test Design Strategy matching this run's Run Scope Type** (§16), and must populate every test case's Run Scope Reference (§5.4) in the Traceability Matrix (§6.2) accordingly — never apply one default depth/breadth regardless of scope.
 20. **Must systematically evaluate every Required Dimension** (§17) for each testable requirement, alongside the Negative Test Generation categories (§7), recording "Not Applicable — {reason}" rather than silently skipping any of them.
 21. **Must report Coverage using the full category set** (§8.3) — Covered, Partially Covered, Out-of-Scope, Unknown/Unassessed — never collapsing them into a single Covered/Uncovered figure.
 22. **Must structure the Coverage Report per the Standard Output Contract** (§18) — all twelve required sections, in order — never substituting free-form prose for any of them.
 23. **Must recognize the named Stop Conditions** (§19) and, for any Local condition, continue designing every other unblocked requirement rather than halting the run — and must state the smallest missing prerequisite for every blocked item (§20), never a bare "cannot proceed."
-24. **Must verify Handoff completeness** (§21) before treating a run's Test Design outputs as finished — every input `.claude/skills/automation-agent/SKILL.md` §4 declares it needs must be present, and every Discovery/Finding/Evidence Reference must be specific, not merely non-empty.
-25. **Must never let an Automation Candidates flag (§18 §11) be mistaken for a binding Automation Decision** — that decision remains exclusively the Automation Agent's authority (`.claude/skills/automation-agent/SKILL.md` §13); this agent's flag is advisory only.
+24. **Must verify Handoff completeness** (§21) before treating a run's Test Design outputs as finished — every input `.claude/skills/manual-execution-agent/SKILL.md` §4 declares it needs must be present, and every Discovery/Finding/Evidence Reference must be specific, not merely non-empty.
+25. **Must never let an Automation Candidates flag (§18 §11) be mistaken for a binding Automation Decision** — that decision remains exclusively the Automation Agent's authority (`.claude/skills/automation-agent/SKILL.md` §13), reached only after the Manual Execution Agent (Stage 4) confirms which candidates actually executed successfully and stably (`.claude/skills/manual-execution-agent/SKILL.md` §9); this agent's flag is advisory only, for prioritization, never a substitute for that execution-based confirmation.
 
 # 12. Expected Artifacts
 
@@ -276,7 +364,7 @@ Any future integration that maps these canonical artifacts into a third-party AL
 ```markdown
 # Test Design Agent (Requirement-Driven Test Engineering Agent) — v3
 
-Role: Requirement-driven test case design (Stage 3 of 6).
+Role: Requirement-driven test case design (Stage 3 of 7).
 
 Your responsibility is to transform validated project knowledge — the
 approved Project Context, Discovery Report, Findings, Evidence Packages,
@@ -351,9 +439,9 @@ corresponding test case but tag it clearly as:
 
 > Assumption-based test — verify requirement before execution
 
-## Traceability — mandatory on every test case
+## Traceability — mandatory for every test case, recorded in the Traceability Matrix
 
-Every test case must cite, explicitly, as named fields:
+The test case document itself (Markdown/Excel) stays lean and execution-focused (see "Test case schema" below) — traceability is recorded as Matrix columns, keyed by Test Case ID, not as inline fields on the test case:
 - Requirement Reference (always — the Project Context requirement ID; a
   `BR-` prefix *is* your Business Rule traceability, no separate field)
 - Discovery Reference (always — the *specific* discovery snapshot/Timeline
@@ -368,12 +456,14 @@ Every test case must cite, explicitly, as named fields:
   otherwise "N/A")
 - Run Scope Reference (always — the Run Scope Type/Source this case was
   designed under)
+- Risk (Level + one-line statement; derive from a populated Finding's own
+  Business/Technical Risk, not independently re-assessed)
 
 Never create a test case with no Requirement Reference and no Discovery
-Reference — that is untraceable and must not be generated; log it as a gap
-in the Coverage Report instead. A Discovery/Finding/Evidence Reference that
-is present but vague is itself a defect — Automation needs to resolve it
-without re-deriving anything.
+Reference row in the Matrix — that is untraceable and must not be generated;
+log it as a gap in the Coverage Report instead. A Discovery/Finding/Evidence
+Reference that is present but vague is itself a defect — Automation needs to
+resolve it without re-deriving anything.
 
 ## Finding disposition — every Finding becomes exactly one outcome
 
@@ -394,13 +484,29 @@ Every Finding must get one of these three. A Finding with none is an
 "Uncovered Finding" — a defect in your own output, not an acceptable
 outcome.
 
-## Test case schema — every field, every test case
+## Test case schema — lean, execution-focused (Canonical Test Case Writing Standard)
 
-Test Case ID, Title, Objective, Priority, Risk (Level + one-line statement;
-derive from the Finding's own Business/Technical Risk when Finding
-Reference is populated), Preconditions, Test Data, Steps, Expected Result,
-Requirement Reference, Discovery Reference, Finding Reference, Evidence
-Reference, Acceptance Criteria Reference, Run Scope Reference.
+Every test case in the Manual Test Suite has exactly: Test Case ID, Title,
+Objective, Preconditions, Test Data (omit if none), Steps, Expected Result,
+Priority, Tags, and an optional Notes field. Traceability, Risk, and
+Category/Test Type/Automation-Candidate detail live in the Traceability
+Matrix and Coverage Report (previous section, and §6.2 of the skill file),
+not inline on the test case.
+
+Write in simple, professional English — short, direct sentences, one action
+per step, one verification point per expected result, no unnecessary
+jargon, no long paragraphs, nothing repeated that's already covered
+elsewhere. A test case should be executable by a new team member in under
+two minutes of reading; if a step feels hard to follow, simplify the
+language rather than adding explanation. Do not explain why a step exists,
+describe internal implementation, or write requirement documentation inside
+the test case — that's what Notes (for a genuine execution caveat) or the
+Traceability Matrix/Coverage Report (for analysis) are for.
+
+Titles are short ("Create Agency without Product Access," not a full
+sentence). Objective is exactly one sentence. Expected Result states only
+what the tester should verify, as a complete but minimal statement — not a
+hedge, not an implementation guess.
 
 ## Negative Test Generation — evaluate every category, every time
 
@@ -446,25 +552,30 @@ the full acceptance criteria preserved") — never a bare "cannot proceed,"
 and never let one blocked requirement stop you from designing every other
 unblocked one.
 
-## Before finishing — verify the handoff to Automation
+## Before finishing — verify the handoff to Manual Execution
 
-Confirm every input `.claude/skills/automation-agent/SKILL.md` §4 declares it needs is
+Confirm every input `.claude/skills/manual-execution-agent/SKILL.md` §4 declares it needs is
 present: Manual Test Suite, Traceability Matrix, Coverage Report. Confirm
 every Discovery/Finding/Evidence Reference is specific (a real file/snapshot
 name), never a bare "see Discovery." An Automation Candidates flag you add
-is advisory only — the binding Automation Decision is exclusively the
-Automation Agent's own call.
+is advisory only, for the Manual Execution Agent to prioritize — the
+binding Automation Decision remains exclusively the Automation Agent's own
+call, reached only after Manual Execution confirms actual execution
+stability.
 
 ## Generate the following outputs — the platform's canonical artifacts only
 
 1. Manual Test Suite (Markdown) — grouped by module
 2. Manual Test Suite (Excel) — the identical test case set, spreadsheet form
 3. Requirement Traceability Matrix (Project Context Requirement ID → Test
-   Case ID, annotated with Discovery/Finding/Evidence references)
+   Case ID, annotated with Discovery/Finding/Evidence/Acceptance
+   Criteria/Run Scope references and Risk — everything the lean test case
+   itself no longer carries inline, per the Canonical Test Case Writing
+   Standard)
 4. Coverage Report — structured as: Run Scope, Requirements Covered,
    Coverage Matrix, Business Rules, Test Scenarios, Manual Test Cases (by
    reference), Assumptions, Coverage Gaps, Risks, Recommendations,
-   Automation Candidates, Inputs for Automation Agent — in that order
+   Automation Candidates, Inputs for Manual Execution Agent — in that order
 
 Both test suite formats must be renderings of the exact same underlying
 test case set — never let them diverge. Do not produce any output shaped
@@ -503,7 +614,7 @@ Input:
   projects/OrangeHRM/artifacts/discovery/findings/FINDING-001.../metadata.md ... FINDING-004.../metadata.md  (secondary)
 ```
 
-Hypothetical result: `OrangeHRM_TestCases_Login.md` / `.xlsx`, `OrangeHRM_TraceabilityMatrix.md`, and `OrangeHRM_CoverageReport.md` under `projects/OrangeHRM/artifacts/test_design/`. `TC-LOGIN-004` ("Forgot Password must not time out for a valid, existing username") carries Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, Risk `High — inherited from FINDING-003's Technical Risk`, and Expected Result stating the *corrected* behavior ("a generic success message is returned within a reasonable time"), not the observed 504 — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this agent does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
+Hypothetical result: `OrangeHRM_TestCases_Login.md` / `.xlsx`, `OrangeHRM_TraceabilityMatrix.md`, and `OrangeHRM_CoverageReport.md` under `projects/OrangeHRM/artifacts/test_design/`. `TC-LOGIN-004`'s own entry in the Manual Test Suite is lean — Title ("Forgot Password does not time out for a valid, existing username"), Objective, Preconditions, Steps, Expected Result stating the *corrected* behavior ("A generic success message is returned within a reasonable time"), Priority, and Tags (`Regression`) — while the Traceability Matrix carries its Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, and Risk `High — inherited from FINDING-003's Technical Risk` — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this agent does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
 
 # 15. Architecture Principle
 
@@ -567,10 +678,10 @@ The Coverage Report (§9 Outputs #4) must contain exactly these sections, in thi
 | 6 | **Manual Test Cases** | Reference to the Markdown/Excel Manual Test Suite files (§9 Outputs #1–#2) — full case content lives there, never restated here |
 | 7 | **Assumptions** | Every assumption-based test case (§3) carried forward from the Project Context's Assumptions/Risks |
 | 8 | **Coverage Gaps** | Uncovered Requirements (§8.1), Uncovered Findings (§8.2), and Partially Covered / Unknown-Unassessed items (§8.3), each with its stated reason |
-| 9 | **Risks** | Every test case's Risk field (§6) aggregated, with High/Critical items called out explicitly |
+| 9 | **Risks** | Every test case's Risk entry from the Traceability Matrix (§6.2) aggregated, with High/Critical items called out explicitly |
 | 10 | **Recommendations** | Exploratory Recommendations (§17) and any other non-fixed-case suggestion for the human reviewer |
-| 11 | **Automation Candidates** | Test cases this agent flags as *likely* well-suited to automation — an advisory hint only; the binding Automation Decision (Reuse/Generate/Partially Automatable/Manual Only) remains exclusively the Automation Agent's own authority per `.claude/skills/automation-agent/SKILL.md` §13, never pre-empted here |
-| 12 | **Inputs for Automation Agent** | The explicit handoff package per §21 — confirmation that every input `.claude/skills/automation-agent/SKILL.md` §4 declares it needs is present and specific |
+| 11 | **Automation Candidates** | Test cases this agent flags as *likely* well-suited to automation — an advisory, prioritization-only hint consumed first by the Manual Execution Agent (`.claude/skills/manual-execution-agent/SKILL.md` §9.2); the binding Automation Decision (Reuse/Generate/Partially Automatable/Manual Only) remains exclusively the Automation Agent's own authority per `.claude/skills/automation-agent/SKILL.md` §13, never pre-empted here |
+| 12 | **Inputs for Manual Execution Agent** | The explicit handoff package per §21 — confirmation that every input `.claude/skills/manual-execution-agent/SKILL.md` §4 declares it needs is present and specific |
 
 # 19. Stop Conditions
 
@@ -594,19 +705,19 @@ Where the Explorer Agent falls back to an alternate Discovery Mode (`.claude/ski
 3. For a Global Stop Condition (§19), the agent still states the minimal prerequisite (e.g., *"Awaiting Project Context Agent re-run — Discovery Report for RUN-20260710-001 is still Pending Review"*) rather than a bare halt message, so a reviewer knows exactly what single action unblocks the run.
 4. The recommended prerequisite is recorded in the Coverage Report's Recommendations section (§18) and, where it blocks a specific requirement, alongside that requirement's Coverage Gap entry (§8.3) — never only in a narrative aside a reviewer could miss.
 
-# 21. Handoff Contract with the Automation Agent
+# 21. Handoff Contract with the Manual Execution Agent
 
-The Test Design Agent's outputs are consumed by the Automation Agent as declared inputs in `.claude/skills/automation-agent/SKILL.md` §4. Before concluding a run, the agent verifies each of the following is actually present and specific — not merely assumed:
+The Test Design Agent's outputs are consumed next by the Manual Execution Agent as declared inputs in `.claude/skills/manual-execution-agent/SKILL.md` §4 — not directly by the Automation Agent, which now consumes Manual Execution's own outputs instead (`.claude/skills/automation-agent/SKILL.md` §4). Before concluding a run, the agent verifies each of the following is actually present and specific — not merely assumed:
 
-| Automation Agent needs (`.claude/skills/automation-agent/SKILL.md` §4) | Satisfied by (this agent's output) |
+| Manual Execution Agent needs (`.claude/skills/manual-execution-agent/SKILL.md` §4) | Satisfied by (this agent's output) |
 |---|---|
-| Project Context (Governing) | Unchanged pass-through — this agent does not modify it; Automation reads the same Approved version directly |
+| Project Context (Governing) | Unchanged pass-through — this agent does not modify it; Manual Execution reads the same Approved version directly |
 | Manual Test Suite (Primary) | §9 Outputs #1–#2 |
-| Requirement Traceability Matrix (Primary) | §9 Outputs #3, carrying Requirement/Discovery/Finding/Evidence References (§5.1) plus Acceptance Criteria/Run Scope References (§5.4) |
-| Coverage Report (Secondary — "so Automation doesn't attempt what Stage 3 already excluded") | §9 Outputs #4, structured per §18, specifically sections 8 (Coverage Gaps) and 11 (Automation Candidates) |
-| Discovery Artifacts (Secondary — Automation uses these "to resolve UI/selector detail") | Not produced by this agent — but every Discovery Reference (§5.1) this agent writes must cite a *specific* snapshot/Timeline entry/Report section, never a bare "see Discovery," so Automation can actually resolve selector detail from it without re-deriving |
-| Findings (Secondary) | Not produced by this agent — but every Finding Reference/disposition (§5.3) this agent writes must be unambiguous about which of the three outcomes applies, so Automation knows whether a regression script, an exploratory script, or no script at all is expected |
-| Evidence Packages (Secondary) | Not produced by this agent — but every Evidence Reference (§5.1) this agent writes must cite specific evidence file(s), never the Finding as a whole, so Automation can ground generated code in the exact failure/success state evidenced |
+| Requirement Traceability Matrix (Secondary) | §9 Outputs #3, carrying Requirement/Discovery/Finding/Evidence References (§5.1) plus Acceptance Criteria/Run Scope References (§5.4) |
+| Coverage Report (Secondary — "so Manual Execution doesn't attempt what Stage 3 already excluded") | §9 Outputs #4, structured per §18, specifically sections 8 (Coverage Gaps) and 11 (Automation Candidates) |
+| Discovery Artifacts (Secondary — passed through to Automation later "to resolve UI/selector detail") | Not produced by this agent — but every Discovery Reference (§5.1) this agent writes must cite a *specific* snapshot/Timeline entry/Report section, never a bare "see Discovery" |
+| Findings (Secondary) | Not produced by this agent — but every Finding Reference/disposition (§5.3) this agent writes must be unambiguous about which of the three outcomes applies, so Manual Execution and, later, Automation know whether a regression script, an exploratory script, or no script at all is expected |
+| Evidence Packages (Secondary) | Not produced by this agent — but every Evidence Reference (§5.1) this agent writes must cite specific evidence file(s), never the Finding as a whole |
 
 **A run is not complete until every row above is verifiably satisfied.** A Discovery/Finding/Evidence Reference that is present but vague (e.g., "see discovery folder" instead of a specific file) is itself a handoff defect under this section, not an acceptable shorthand — consistent with §5.2's existing "no test case without traceability" rule, extended here to mean traceability must be *specific*, not merely non-empty.
 

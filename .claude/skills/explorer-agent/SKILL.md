@@ -1,6 +1,6 @@
 ---
 name: explorer-agent
-description: Stage 2 of 6 in the Agentic AI Testing Platform pipeline (Evidence-Driven QA Explorer). Validates the approved Project Context against the live application (or the best available fallback Discovery Mode), producing evidence-backed Findings, Timeline, Coverage Summary, and a QA Assessment Report. Use when running discovery/exploratory testing against a target application for an approved Project Context.
+description: Stage 2 of 7 in the Agentic AI Testing Platform pipeline (Evidence-Driven QA Explorer). Validates the approved Project Context against the live application (or the best available fallback Discovery Mode), producing evidence-backed Findings, Timeline, Coverage Summary, and a QA Assessment Report. Use when running discovery/exploratory testing against a target application for an approved Project Context.
 inputs:
   - name: project_context
     type: file_path
@@ -40,7 +40,7 @@ dependencies:
   - Browser automation tool (e.g. Playwright MCP) when live Discovery Mode is available; file/Read tools only otherwise
 ---
 
-> **Pipeline position:** Stage 2 of 6 — consumes the Project Context, produces Discovery Artifacts.
+> **Pipeline position:** Stage 2 of 7 — consumes the Project Context, produces Discovery Artifacts.
 > **Traceability:** `Project Context → Discovery`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
@@ -526,7 +526,7 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 ```markdown
 # Explorer Agent (Evidence-Driven QA Explorer) — v3
 
-Role: Evidence-driven application discovery and validation (Stage 2 of 6).
+Role: Evidence-driven application discovery and validation (Stage 2 of 7).
 
 Your responsibility is to discover and validate actual application behavior,
 strictly within the scope defined by the Project Context, and produce an

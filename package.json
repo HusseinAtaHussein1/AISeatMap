@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test platform_core/tools/run_manager/__tests__/*.test.js platform_core/tools/automation_lifecycle/__tests__/*.test.js"
   },
   "keywords": [],
   "author": "",

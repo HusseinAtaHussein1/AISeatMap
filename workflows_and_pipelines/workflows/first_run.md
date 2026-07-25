@@ -1,4 +1,4 @@
-> **Position:** A reusable workflow specification, layered on top of [`workflows_and_pipelines/pipeline/pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md) and [`workflows_and_pipelines/pipeline/run_manager.md`](../workflows_and_pipelines/pipeline/run_manager.md). It does not modify either document, does not modify any Agent specification under [`.claude/skills/`](../../.claude/skills/), and does not change the platform's 6-stage architecture — it defines one specific, narrow-scoped *invocation* of the first three stages of that architecture.
+> **Position:** A reusable workflow specification, layered on top of [`workflows_and_pipelines/pipeline/pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md) and [`workflows_and_pipelines/pipeline/run_manager.md`](../workflows_and_pipelines/pipeline/run_manager.md). It does not modify either document, does not modify any Agent specification under [`.claude/skills/`](../../.claude/skills/), and does not change the platform's 7-stage architecture — it defines one specific, narrow-scoped *invocation* of the first three stages of that architecture.
 > **Status:** Specification only. This document defines the workflow; it has not been executed, and no run, agent, or project artifact has been produced as part of authoring it.
 
 # 1. Workflow Name
@@ -51,8 +51,8 @@ This workflow runs exactly three Agent stages, orchestrated by the Run Manager, 
               │ (approved)
               ▼
       Stop Workflow
-      (Automation, Execution, and Reporting Agents are
-       intentionally excluded from this workflow)
+      (Manual Execution, Automation, Automation Execution, and Reporting
+       Agents are intentionally excluded from this workflow)
 ```
 
 ## Step 1 — Run Manager
@@ -113,11 +113,12 @@ The workflow does not proceed to Step 4 until this checkpoint is explicitly appr
 
 Once Step 4's checkpoint is approved, this workflow ends. The following stages are **intentionally excluded** from First Run and must not be launched under this workflow:
 
-- Automation Agent (Pipeline Stage 4)
-- Execution Agent (Pipeline Stage 5)
-- Reporting Agent (Pipeline Stage 6)
+- Manual Execution Agent (Pipeline Stage 4)
+- Automation Agent (Pipeline Stage 5)
+- Automation Execution Agent (Pipeline Stage 6)
+- Reporting Agent (Pipeline Stage 7)
 
-Excluding these stages from *this workflow* does not remove them from the platform's architecture — a full pipeline run (per `workflows_and_pipelines/pipeline/pipeline.md`) still includes all six stages. First Run is simply a shorter, purpose-built workflow that stops early by design.
+Excluding these stages from *this workflow* does not remove them from the platform's architecture — a full pipeline run (per `workflows_and_pipelines/pipeline/pipeline.md`) still includes all seven stages. First Run is simply a shorter, purpose-built workflow that stops early by design.
 
 # 5. Explorer Objectives (First-Run-Specific Direction)
 
@@ -177,11 +178,11 @@ On failure, the Run Manager records Status `Failed` in `run.json` and `run_summa
 1. **The workflow must stop immediately whenever a Human Review checkpoint is reached.** No stage proceeds past its own checkpoint on its own initiative — see `workflows_and_pipelines/pipeline/pipeline.md` §5.3, unmodified and fully in effect here.
 2. **The next stage may execute only after approval.** An open (`Pending`) checkpoint blocks the next stage exactly as `workflows_and_pipelines/pipeline/pipeline.md` §5.3 Rule 5 requires.
 3. **The workflow never skips a stage.** Steps 2, 3, and 4 (§4) each run in full, in order, every time this workflow executes.
-4. **The workflow never executes excluded stages.** Automation, Execution, and Reporting Agents (§4, "Stop Workflow") must not be launched under this workflow under any circumstance, including on retry after a failure — retrying First Run means re-running Steps 1–4, not extending into the excluded stages.
+4. **The workflow never executes excluded stages.** Manual Execution, Automation, Automation Execution, and Reporting Agents (§4, "Stop Workflow") must not be launched under this workflow under any circumstance, including on retry after a failure — retrying First Run means re-running Steps 1–4, not extending into the excluded stages.
 
 # 10. Relationship to the Platform Architecture
 
-This workflow does not introduce a new pipeline, a new stage, or a new agent. It is a **reusable, scoped invocation** of the existing first three stages of the six-stage architecture defined in `workflows_and_pipelines/pipeline/pipeline.md`, orchestrated by the existing Run Manager defined in `workflows_and_pipelines/pipeline/run_manager.md`. A full pipeline run for `{{PROJECT_NAME}}` (all six stages, all in-scope modules) remains the platform's standard execution mode; First Run exists alongside it as a fast operational check, not a replacement.
+This workflow does not introduce a new pipeline, a new stage, or a new agent. It is a **reusable, scoped invocation** of the existing first three stages of the seven-stage architecture defined in `workflows_and_pipelines/pipeline/pipeline.md`, orchestrated by the existing Run Manager defined in `workflows_and_pipelines/pipeline/run_manager.md`. A full pipeline run for `{{PROJECT_NAME}}` (all seven stages, all in-scope modules) remains the platform's standard execution mode; First Run exists alongside it as a fast operational check, not a replacement.
 
 # 11. Example
 

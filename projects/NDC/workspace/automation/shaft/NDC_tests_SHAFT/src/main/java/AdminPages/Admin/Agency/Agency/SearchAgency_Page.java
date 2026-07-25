@@ -33,6 +33,18 @@ public class SearchAgency_Page {
     By Tbl_Rows = By.xpath("//table/tbody/tr");
     By Txt_NoDataFound = By.xpath("//*[contains(text(),'No data has been found')]");
 
+    // EXTENSIONS — RUN-20260718-001, confirmed live (input-id DOM query on the List/Search filter
+    // area, this run): id-Agencycode, id-SelectCountry/id-State/id-City (p-multiselect wrappers,
+    // same wrapping convention as the Add form's single-select p-dropdowns), id-Status-Inactive/
+    // -Active (Both was already present above).
+    By Txt_AgencyCode = By.xpath("//input[@id=\"id-Agencycode\"]");
+    By Rbtn_Active = By.xpath("//p-radiobutton[.//input[@id=\"id-Status-Active\"]]");
+    By Rbtn_Inactive = By.xpath("//p-radiobutton[.//input[@id=\"id-Status-Inactive\"]]");
+    By Lst_Country = By.xpath("//p-multiselect[.//input[@id=\"id-SelectCountry\"]]");
+    By Lst_State = By.xpath("//p-multiselect[.//input[@id=\"id-State\"]]");
+    By Lst_City = By.xpath("//p-multiselect[.//input[@id=\"id-City\"]]");
+    By Btn_AddAgency = By.xpath("//button[contains(normalize-space(.), 'Add agency')]");
+
     public SearchAgency_Page searchByName(String agencyName) throws InterruptedException {
         driver.element().type(Txt_AgencyName, agencyName);
         driver.element().click(Rbtn_Both);

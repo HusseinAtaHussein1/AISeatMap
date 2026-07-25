@@ -1,6 +1,6 @@
 # Browser Driver Layer
 
-The platform's shared, standard mechanism for live browser access — used by **Browser Automation** Discovery Mode (`.claude/skills/explorer-agent/SKILL.md` §8.1 #1) and any other stage needing a live, logged-in browser session (e.g. the Automation Agent's selector-verification use of browser tools, `.claude/skills/automation-agent/SKILL.md` §17; a future Execution Agent run).
+The platform's shared, standard mechanism for live browser access — used by **Browser Automation** Discovery Mode (`.claude/skills/explorer-agent/SKILL.md` §8.1 #1), the Manual Execution Agent's execution of manually-designed test cases (`.claude/skills/manual-execution-agent/SKILL.md` §11), and any other stage needing a live, logged-in browser session (e.g. the Automation Agent's selector-verification use of browser tools, `.claude/skills/automation-agent/SKILL.md` §17).
 
 **Design principle — four clearly separate responsibilities, never blurred:**
 

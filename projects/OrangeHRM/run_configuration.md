@@ -57,3 +57,5 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 | RUN-20260707-001 | Full Regression | Entire Project / Entire Project | All 10 PRD Core Modules | v3 (**current approved**) |
 
 For the authoritative detail behind any row, read the corresponding Project Context version file directly — this table is a pointer, not a substitute. The flat `projects/OrangeHRM/artifacts/context/OrangeHRM_ProjectContext.md` pointer now mirrors v3.
+
+**Run folder naming (2026-07-23 update):** every run above still uses its original `RUN-YYYYMMDD-XXX` folder name — none were renamed (see `workflows_and_pipelines/pipeline/run_manager.md` §5.6 for why). Their inferred equivalents under the new `YYYY-MM-DD_HH-mm-ss__Scope__Target` convention are recorded in `projects/OrangeHRM/artifacts/runs/.run_folder_index.json`. Every run going forward gets a folder name in the new convention directly, generated via `platform_core/tools/run_manager/` — no new row here should cite a `RUN-YYYYMMDD-XXX` name.

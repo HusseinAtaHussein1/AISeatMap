@@ -34,12 +34,13 @@ It does **not** own *when* or *in what order* agents run (that is `workflows_and
     ├── project-context-agent/SKILL.md    # Stage 1 — PRD + Run Configuration → Project Context
     ├── explorer-agent/SKILL.md           # Stage 2 — Project Context → Discovery Artifacts + Findings
     ├── test-design-agent/SKILL.md        # Stage 3 — Discovery → Manual Test Suite + Traceability Matrix
-    ├── automation-agent/SKILL.md         # Stage 4 — Manual Test Suite → Automation Package
-    ├── execution-agent/SKILL.md          # Stage 5 — Automation Package → Execution Results
-    └── reporting-agent/SKILL.md          # Stage 6 — Execution Results → Final QA Report
+    ├── manual-execution-agent/SKILL.md   # Stage 4 — Manual Test Suite → Manual Execution Results + Automation Candidate Package
+    ├── automation-agent/SKILL.md         # Stage 5 — Automation Candidate Package → Automation Package
+    ├── automation-execution-agent/SKILL.md  # Stage 6 — Automation Package → Execution Results
+    └── reporting-agent/SKILL.md          # Stage 7 — Execution Results → Final QA Report
 ```
 
-Each subfolder corresponds 1:1 to one of the six pipeline stages defined in `workflows_and_pipelines/pipeline/pipeline.md` §4 — there is no Skill here without a matching stage, and no stage without a matching Skill. Siblings never call each other directly; each declares its own inputs/outputs, and it is the orchestration layer's job to wire the output of one into the input of the next.
+Each subfolder corresponds 1:1 to one of the seven pipeline stages defined in `workflows_and_pipelines/pipeline/pipeline.md` §4 — there is no Skill here without a matching stage, and no stage without a matching Skill. Siblings never call each other directly; each declares its own inputs/outputs, and it is the orchestration layer's job to wire the output of one into the input of the next.
 
 ## Interaction with Other Layers
 
@@ -54,7 +55,7 @@ workflows_and_pipelines/pipeline/pipeline.md
         └──▶ projects/{PROJECT}/        (reads its declared Inputs, writes its declared Outputs)
 ```
 
-- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the six skills; it invokes them in a fixed order and enforces checkpoints. A Skill never reads `pipeline.md` to decide its own behavior — it only needs to already conform to the contract that document describes.
+- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven skills; it invokes them in a fixed order and enforces checkpoints. A Skill never reads `pipeline.md` to decide its own behavior — it only needs to already conform to the contract that document describes.
 - **`.claude/` → `platform_core/`:** each Skill's `dependencies` line names exactly which Platform Knowledge subfolders it consults (e.g. `automation-agent` reads `repair_patterns/`, `automation_patterns/`, `framework_patterns/`) and, where relevant, which shared tool it uses (e.g. the Browser Driver, `platform_core/tools/browser_driver/`).
 - **`.claude/` → `projects/`:** every Skill's actual Inputs and Outputs at runtime resolve to files under `projects/{{PROJECT_NAME}}/artifacts/` (and, for knowledge writes, `projects/{{PROJECT_NAME}}/knowledge_base/`) — a Skill file itself contains no project-specific paths, only the `{{PROJECT_NAME}}` placeholder.
 
@@ -91,7 +92,7 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 - **Never** read the PRD, except `project-context-agent` — the only Skill permitted to (`pipeline.md` §6 Rule 4).
 - **Never** invoke another Skill directly — sequencing is `workflows_and_pipelines/`'s responsibility, never this folder's.
 - **Never** embed project-specific business logic, screen names, or credentials — a Skill file must remain correct for every project.
-- **Must not** grow a Skill's own scoring rubric or engine mechanics into a "promotable knowledge" category once it's fixed Capability logic (e.g. the Confidence Engine rubric in `execution-agent/SKILL.md` §27.2) — that logic stays here, permanently, as Capability.
+- **Must not** grow a Skill's own scoring rubric or engine mechanics into a "promotable knowledge" category once it's fixed Capability logic (e.g. the Confidence Engine rubric in `automation-execution-agent/SKILL.md` §27.2) — that logic stays here, permanently, as Capability.
 - **Must** record revision history in `docs/CHANGELOG.md`, never inline in the `SKILL.md` itself.
 
 ## Typical Flow
@@ -99,11 +100,11 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 ```
 Pipeline Orchestrator (workflows_and_pipelines/pipeline/pipeline.md)
         ↓
-.claude/skills/automation-agent/SKILL.md invoked for Stage 4
+.claude/skills/automation-agent/SKILL.md invoked for Stage 5
         ↓
 Resolves platform_core/knowledge/repair_patterns/, automation_patterns/, framework_patterns/
         ↓
-Reads projects/{PROJECT}/artifacts/test_design/ (its declared Input)
+Reads projects/{PROJECT}/artifacts/manual_execution/ (Automation Candidate Package — its declared primary Input) and artifacts/test_design/ (content source)
         ↓
 Writes projects/{PROJECT}/artifacts/automation/ (its declared Output)
         ↓
@@ -113,7 +114,7 @@ Marks Pending Automation Approval — pipeline.md §5.2 checkpoint
 ## Common Mistakes
 
 - **"Add the new sequencing rule to the Skill file."** No — sequencing, gates, and stage order belong exclusively in `workflows_and_pipelines/pipeline/pipeline.md`.
-- **"This repair pattern is proven now, just leave it growing inside `execution-agent/SKILL.md`."** No — once a pattern is confirmed reusable across projects, it is promoted to `platform_core/knowledge/repair_patterns/`, cited from the Skill's `dependencies` line, not accumulated inline indefinitely.
+- **"This repair pattern is proven now, just leave it growing inside `automation-execution-agent/SKILL.md`."** No — once a pattern is confirmed reusable across projects, it is promoted to `platform_core/knowledge/repair_patterns/`, cited from the Skill's `dependencies` line, not accumulated inline indefinitely.
 - **"Note this project's specific screen name in the Skill spec so it's handled correctly."** No — a Skill file must stay project-agnostic; project specifics belong in `projects/{{PROJECT_NAME}}/`.
 - **"Log this revision at the top of the SKILL.md like before."** No — revision history was deliberately extracted to `docs/CHANGELOG.md`; a Skill file describes only its current behavior.
 

@@ -1,5 +1,5 @@
 {
-  "defaultBaseUrl": "http://192.168.1.80",
+  "defaultBaseUrl": "http://192.168.1.70",
   "browser": {
     "channel": "chrome",
     "headless": false,
@@ -11,5 +11,5 @@
     "submitSelector": "button:has-text(\"Login\")",
     "successSelector": "text=Dashboard"
   },
-  "notes": "Auth/browser-init config ONLY. Updated 2026-07-13 per FINDING-001 (EnvironmentURLDiscrepancy, RUN-20260712-002): defaultBaseUrl changed from .70 to .80 to match credentials.json's actual STG baseUrl, so relative-path navigate() calls resolve against the same host the session actually authenticates to. Screen/component locators do NOT belong here — see tools/browser_driver/projects/NDC/screens/ and /components/."
+  "notes": "Auth/browser-init config ONLY. Updated 2026-07-25 (Manual Execution Agent, Agency module run): defaultBaseUrl reverted from .80 back to .70 — live login (credentials.json's current STG baseUrl) now redirects to http://192.168.1.70/dashboard, not .80. The .80 value set 2026-07-13 per FINDING-001 no longer matches reality; relative-path navigate() calls were failing (redirected to /auth/login) because they resolved against the wrong origin's cookie jar. Screen/component locators do NOT belong here — see projects/NDC/browser/screens/ and /components/."
 }

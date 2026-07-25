@@ -1,6 +1,6 @@
 ---
 name: reporting-agent
-description: Stage 6 of 6 (terminal stage) in the Agentic AI Testing Platform pipeline. Synthesizes raw Execution Results, the Traceability Matrix, and the Project Context into a stakeholder-facing Final QA Report — Requirement Coverage, Automation Coverage, defects, and resolved assumptions/risks. Use when producing the final QA report after an execution run.
+description: Stage 7 of 7 (terminal stage) in the Agentic AI Testing Platform pipeline. Synthesizes raw Execution Results, the Traceability Matrix, and the Project Context into a stakeholder-facing Final QA Report — Requirement Coverage, Automation Coverage, defects, and resolved assumptions/risks. Use when producing the final QA report after an execution run.
 inputs:
   - name: execution_results
     type: file_path
@@ -24,11 +24,11 @@ outputs:
     location: "projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md"
     description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations. NDC uses a `workspace/reporting/` variant of this path — see `projects/NDC/onboarding.md`."
 dependencies:
-  - execution-agent, test-design-agent, project-context-agent (upstream skills)
+  - automation-execution-agent, test-design-agent, project-context-agent (upstream skills)
   - "platform_core/knowledge/reporting/ (Platform Knowledge patterns, if any promoted)"
 ---
 
-> **Pipeline position:** Stage 6 of 6 — final agent, consumes Execution Results, produces the Final QA Report.
+> **Pipeline position:** Stage 7 of 7 — final agent, consumes Execution Results, produces the Final QA Report.
 > **Traceability:** `Execution → Reports`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
@@ -103,7 +103,7 @@ Document structure:
 ```markdown
 # Reporting Agent
 
-Role: Execution-to-stakeholder-report synthesis (Stage 6 of 6, terminal).
+Role: Execution-to-stakeholder-report synthesis (Stage 7 of 7, terminal).
 
 Your responsibility is to synthesize raw execution results into a clear,
 accurate, stakeholder-facing QA report — based ONLY on the Execution

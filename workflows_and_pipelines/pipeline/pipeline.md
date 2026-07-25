@@ -2,7 +2,7 @@
 
 **Type:** Reusable pipeline orchestration specification
 **Status:** Specification only — no stage, agent, or checkpoint in this document has been executed.
-**Governs:** The six skills defined in [`.claude/skills/`](../../.claude/skills/) — `project-context-agent`, `explorer-agent`, `test-design-agent`, `automation-agent`, `execution-agent`, `reporting-agent`.
+**Governs:** The seven skills defined in [`.claude/skills/`](../../.claude/skills/) — `project-context-agent`, `explorer-agent`, `test-design-agent`, `manual-execution-agent`, `automation-agent`, `automation-execution-agent`, `reporting-agent`.
 
 ---
 
@@ -48,30 +48,43 @@ The pipeline exists to enforce this principle mechanically: no stage may reach i
    Project Context ───────▶                   │──▶ Manual Test Suites (Markdown)
    Discovery Artifacts ───▶  STAGE 3           │──▶ Manual Test Suites (Excel)
                           │  Test Design Agent │──▶ Requirement Traceability Matrix
+                          └───────────────────┘──▶ Coverage Report
+                                    │
+                     ⛔ CHECKPOINT — Human Review Required ⛔
+                                    │ (approved)
+                                    ▼
+                          ┌───────────────────┐
+   Approved Manual ───────▶                   │──▶ Manual Execution Results
+     Test Suites          │  STAGE 4          │──▶ Manual Execution Summary
+   Traceability Matrix ───▶  Manual Execution  │──▶ Automation Candidate Package
+   Coverage Report ───────▶  Agent             │──▶ Evidence
+   Project Context ───────▶                   │
                           └───────────────────┘
                                     │
                      ⛔ CHECKPOINT — Human Review Required ⛔
                                     │ (approved)
                                     ▼
                           ┌───────────────────┐
-   Approved Manual ───────▶                   │
-     Test Suites          │  STAGE 4           │──▶ Automation Scripts
-   Project Context ───────▶  Automation Agent  │
+   Automation Candidate ──▶                   │
+     Package              │  STAGE 5           │──▶ Automation Scripts
+   Manual Test Suites ────▶  Automation Agent  │
+   Project Context ───────▶                   │
                           └───────────────────┘
                                     │
                      ⛔ CHECKPOINT — Automation Approval Required ⛔
                                     │ (approved)
                                     ▼
                           ┌───────────────────┐
-   Automation Scripts ────▶  STAGE 5           │──▶ Execution Results
-                          │  Execution Agent   │──▶ Screenshots
-                          └───────────────────┘──▶ Logs
-                                    │              ──▶ Execution Metadata
+   Automation Scripts ────▶  STAGE 6           │──▶ Execution Results
+                          │  Automation        │──▶ Screenshots
+                          │  Execution Agent    │──▶ Logs
+                          └───────────────────┘──▶ Execution Metadata
+                                    │
                                     │ (no gate — mechanical run)
                                     ▼
                           ┌───────────────────┐
    Execution Results ─────▶                   │
-   Traceability Matrix ───▶  STAGE 6           │──▶ Final QA Report
+   Traceability Matrix ───▶  STAGE 7           │──▶ Final QA Report
    Project Context ───────▶  Reporting Agent   │
                           └───────────────────┘
                                     │
@@ -128,38 +141,57 @@ Notes:
 - Project Context governs *what* is tested; Discovery Artifacts only validate, enrich, and surface gaps — per the reversed primary/secondary relationship established in the Agent Framework.
 - The Markdown and Excel test suites must never diverge — they are two renderings of one underlying test case set.
 
-### Stage 4 — Automation Agent
+### Stage 4 — Manual Execution Agent
+
+**Spec:** [`.claude/skills/manual-execution-agent/SKILL.md`](../../.claude/skills/manual-execution-agent/SKILL.md)
+
+| | |
+|---|---|
+| **Input** | Approved Manual Test Suites · Requirement Traceability Matrix · Coverage Report · Project Context |
+| **Output** | Manual Execution Results · Manual Execution Summary · Automation Candidate Package · Evidence |
+| **Checkpoint** | **Human Review Required** |
+| **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionResults.md`, `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionSummary.md`, `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_AutomationCandidatePackage.md`, `projects/{{PROJECT_NAME}}/artifacts/manual_execution/artifacts/` |
+
+Notes:
+- The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 3 artifacts *after* they have cleared the Stage 3 checkpoint, never a draft or in-progress test suite.
+- This stage executes manually-designed test cases against the live application — validating that they actually hold true — *before* any automation effort is committed to them. It never writes or runs automation code.
+- The Automation Candidate Package it produces is the *sole* scope-determining input for Stage 5 (Automation Agent): only test cases confirmed successful and stable here are eligible for an automation decision downstream.
+- Reviewed here, rather than passed straight through, because this stage performs real execution against a live environment (mutating actions included) — the same category of risk Stage 2 review already covers for Discovery.
+
+### Stage 5 — Automation Agent
 
 **Spec:** [`.claude/skills/automation-agent/SKILL.md`](../../.claude/skills/automation-agent/SKILL.md)
 
 | | |
 |---|---|
-| **Input** | Approved Manual Test Suites · Project Context |
+| **Input** | Approved Automation Candidate Package · Manual Execution Summary · Manual Test Suites (content source) · Traceability Matrix · Coverage Report · Project Context |
 | **Output** | Automation Scripts |
 | **Checkpoint** | **Automation Approval Required** |
 | **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests/`, `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_AutomationSummary.md` |
 
 Notes:
-- The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 3 artifacts *after* they have cleared the Stage 3 checkpoint, never a draft or in-progress test suite.
+- The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 4 Automation Candidate Package *after* it has cleared the Stage 4 checkpoint, never a draft or in-progress result set.
+- This stage no longer determines automation scope directly from the raw Manual Test Suite — only test case IDs named in the Automation Candidate Package receive an automation decision; the Manual Test Suite is still read directly, but only for full test case content (Steps, Test Data, Expected Result), not for scope.
 - "Automation Approval Required" is deliberately named differently from "Human Review Required" (see §5) because it gates the point at which generated code is authorized to later execute against a real environment.
 
-### Stage 5 — Execution Agent
+### Stage 6 — Automation Execution Agent
 
-**Spec:** [`.claude/skills/execution-agent/SKILL.md`](../../.claude/skills/execution-agent/SKILL.md)
+**Spec:** [`.claude/skills/automation-execution-agent/SKILL.md`](../../.claude/skills/automation-execution-agent/SKILL.md)
 
 | | |
 |---|---|
 | **Input** | Automation Scripts |
 | **Output** | Execution Results · Screenshots · Logs · Execution Metadata |
-| **Checkpoint** | *None — mechanical run, gated only by the Stage 4 Automation Approval that already occurred* |
+| **Checkpoint** | *None — mechanical run, gated only by the Stage 5 Automation Approval that already occurred* |
 | **Artifact path** | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md`, `projects/{{PROJECT_NAME}}/artifacts/execution/artifacts/` |
 
 Notes:
-- Project Context remains a standing reference for this stage (target environment, credentials, safety constraints) even though it is not re-listed as a primary artifact input here — see §6, Rule 5. The Execution Agent's own specification requires it to confirm the target environment against the Project Context before running anything.
-- Execution Metadata includes, at minimum, the Executed Test Case ID and Automation Script ID for every result, plus Execution Time — per the Execution Agent specification.
-- No human checkpoint follows this stage: once automation is approved (Stage 4 gate), running it is a deterministic, repeatable operation, not a judgment call. Any judgment on the *results* happens in Stage 6.
+- Project Context remains a standing reference for this stage (target environment, credentials, safety constraints) even though it is not re-listed as a primary artifact input here — see §6, Rule 5. The Automation Execution Agent's own specification requires it to confirm the target environment against the Project Context before running anything.
+- Execution Metadata includes, at minimum, the Executed Test Case ID and Automation Script ID for every result, plus Execution Time — per the Automation Execution Agent specification.
+- No human checkpoint follows this stage: once automation is approved (Stage 5 gate), running it is a deterministic, repeatable operation, not a judgment call. Any judgment on the *results* happens in Stage 7.
+- This stage executes only automated test suites — running manually-designed test cases directly is exclusively Stage 4's (Manual Execution Agent's) responsibility; the two never overlap.
 
-### Stage 6 — Reporting Agent
+### Stage 7 — Reporting Agent
 
 **Spec:** [`.claude/skills/reporting-agent/SKILL.md`](../../.claude/skills/reporting-agent/SKILL.md)
 
@@ -183,11 +215,13 @@ Each skill under `.claude/skills/` now declares a strict `inputs`/`outputs`/`dep
 | *(none — first stage)* | — | → | `project-context-agent` | `prd`, `run_configuration` (supplied at invocation) |
 | `project-context-agent` | `project_context` | → | `explorer-agent` | `project_context` |
 | `explorer-agent` | `qa_assessment_report`, `findings_summary`, `evidence_packages`, `discovery_snapshots` | → | `test-design-agent` | `discovery_artifacts` (`project_context` is re-supplied from Stage 1's output, not re-derived) |
-| `test-design-agent` | `manual_test_suite_md`, `manual_test_suite_xlsx`, `traceability_matrix`, `coverage_report` | → | `automation-agent` | `manual_test_suite`, `traceability_matrix`, `coverage_report` |
-| `automation-agent` | `automation_package`, `automation_summary` | → | `execution-agent` | `automation_suite`, `automation_summary` |
-| `execution-agent` | `execution_results` | → | `reporting-agent` | `execution_results` |
+| `test-design-agent` | `manual_test_suite_md`, `manual_test_suite_xlsx`, `traceability_matrix`, `coverage_report` | → | `manual-execution-agent` | `manual_test_suite`, `traceability_matrix`, `coverage_report` |
+| `manual-execution-agent` | `automation_candidate_package`, `manual_execution_summary` | → | `automation-agent` | `automation_candidate_package`, `manual_execution_summary` |
+| `test-design-agent` (pass-through) | `manual_test_suite_md`/`.xlsx`, `traceability_matrix`, `coverage_report` | → | `automation-agent` | `manual_test_suite`, `traceability_matrix`, `coverage_report` — content source only; scope comes from `manual-execution-agent`'s output above |
+| `automation-agent` | `automation_package`, `automation_summary` | → | `automation-execution-agent` | `automation_suite`, `automation_summary` |
+| `automation-execution-agent` | `execution_results` | → | `reporting-agent` | `execution_results` |
 | `test-design-agent` (pass-through) | `traceability_matrix`, `manual_test_suite_md`/`.xlsx` | → | `reporting-agent` | `traceability_matrix`, `manual_test_suites` |
-| `project-context-agent` (pass-through) | `project_context` | → | *every stage 2–6* | `project_context` — re-supplied unchanged at each stage, per §6 Rule 5 (Single Source of Truth), never re-derived |
+| `project-context-agent` (pass-through) | `project_context` | → | *every stage 2–7* | `project_context` — re-supplied unchanged at each stage, per §6 Rule 5 (Single Source of Truth), never re-derived |
 
 Notes:
 - A downstream skill's input key name does not need to match the upstream skill's output key name verbatim (each contract is written independently, like a function's own parameter names) — this table is what reconciles them for orchestration purposes.
@@ -198,25 +232,26 @@ Notes:
 
 The pipeline defines exactly two gate types. Both **stop the pipeline** until a named human explicitly approves — no agent may infer approval, time out into approval, or proceed on silence.
 
-### 5.1 Human Review Required (Stages 1, 2, 3)
+### 5.1 Human Review Required (Stages 1, 2, 3, 4)
 
 | Stage | Suggested Reviewer Role | Reviews For |
 |---|---|---|
 | 1 — Project Context | Business Analyst / Product Owner | Scope accuracy, correct in-scope/out-of-scope split, correct carried-forward assumptions |
 | 2 — Discovery Artifacts | QA Lead | Exploration completeness within scope, correctness of the Gap Analysis, no unauthorized mutating actions taken |
 | 3 — Manual Test Suites | QA Architect / Test Lead | Test case correctness, traceability completeness, appropriate use of Discovery for enrichment (not as an unauthorized requirements source) |
+| 4 — Manual Execution Results / Automation Candidate Package | QA Lead / Test Lead | Execution correctness against the live application, completeness of the Evidence Inventory, no unauthorized mutating actions taken, and that the Automation Candidate Package's qualifying criteria were actually applied rather than rubber-stamping Test Design's advisory hint |
 
-### 5.2 Automation Approval Required (Stage 4)
+### 5.2 Automation Approval Required (Stage 5)
 
 | Stage | Suggested Reviewer Role | Reviews For |
 |---|---|---|
-| 4 — Automation Scripts | Automation Lead / Release Manager | Selector robustness, correct skip/not-automatable reporting, environment safety (no unauthorized destructive actions scripted), no invented business logic |
+| 5 — Automation Scripts | Automation Lead / Release Manager | Selector robustness, correct skip/not-automatable reporting, environment safety (no unauthorized destructive actions scripted), no invented business logic |
 
-This gate is named distinctly from "Human Review Required" because approving it authorizes code that will execute against a real environment in Stage 5 — a materially different risk than approving a document. Treat it as at least as strict as a production deployment approval, not as a lighter-weight variant of Stage 1–3 review.
+This gate is named distinctly from "Human Review Required" because approving it authorizes code that will execute against a real environment in Stage 6 — a materially different risk than approving a document. Treat it as at least as strict as a production deployment approval, not as a lighter-weight variant of Stage 1–4 review.
 
 ### 5.3 Gate Mechanics
 
-1. On completing its output, an agent stops and marks its artifact `Pending Review` (or `Pending Automation Approval` for Stage 4). It does not hand off to the next stage itself.
+1. On completing its output, an agent stops and marks its artifact `Pending Review` (or `Pending Automation Approval` for Stage 5). It does not hand off to the next stage itself.
 2. A human with the appropriate role (§5.1/§5.2) reviews the artifact against the criteria above.
 3. **Approved:** the reviewer marks the artifact `Approved` (see §7 for the recommended mechanism) and the next stage's agent may now be invoked with that artifact as input.
 4. **Rejected:** the pipeline halts at the current stage. The rejecting reviewer's feedback is attached to the artifact. The *same* agent that produced the rejected artifact re-runs, incorporating that feedback, against its original inputs — a rejection does not cascade back further up the pipeline unless the reviewer explicitly determines the fault lies in an upstream artifact (e.g., a flawed Project Context surfaced only once Test Design tried to use it), in which case the reviewer escalates to that earlier stage's checkpoint instead.
@@ -224,7 +259,7 @@ This gate is named distinctly from "Human Review Required" because approving it 
 
 ### 5.4 Automation Start Decision Gate (pre-flight — added 2026-07-12, user-mandated)
 
-**Added after the orchestrator, during a real run, unilaterally decided to run Stages 1–4 in a single pass on a bare request to "run automation" — a judgment call it had no authority to make alone.** This gate runs *before* any stage is invoked or resumed, whenever a human asks for automation (Stage 4) or any other single downstream stage, for any project:
+**Added after the orchestrator, during a real run, unilaterally decided to run Stages 1–4 in a single pass on a bare request to "run automation" — a judgment call it had no authority to make alone.** This gate runs *before* any stage is invoked or resumed, whenever a human asks for automation (Stage 5) or any other single downstream stage, for any project:
 
 1. **Inspect, don't assume.** The orchestrator reads that project's Run Manifest (§7) and determines, per stage: does an Approved artifact exist? A Pending one? Nothing at all? It must not proceed on an assumption about what "probably" exists.
 2. **Report the actual state plainly**, e.g.:
@@ -233,7 +268,8 @@ This gate is named distinctly from "Human Review Required" because approving it 
    ✓ Stage 1 — Approved
    ✓ Stage 2 — Approved
    ✓ Stage 3 — Approved
-   ✗ Stage 4 — Not started
+   ✓ Stage 4 — Approved
+   ✗ Stage 5 — Not started
    ```
    or, for a project/scope with nothing yet: "No previous automation exists."
 3. **Ask how to proceed** — present at minimum these options, and let the human choose (or specify something else via "Other"):
@@ -245,13 +281,14 @@ This gate is named distinctly from "Human Review Required" because approving it 
 
 This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes explicit that a human-authorized partial or skip-ahead run is a distinct, deliberately chosen path each time, never an inferred default.
 
-### 5.5 Human Decisions vs. Engineering Decisions (added 2026-07-12, user-mandated — applies to every stage, not only Stage 4)
+### 5.5 Human Decisions vs. Engineering Decisions (added 2026-07-12, user-mandated — applies to every stage, not only Stage 5)
 
 **Not every judgment call an agent makes is a Human Decision.** §5.4 and `.claude/skills/automation-agent/SKILL.md` §31–§33 added several legitimate human-in-the-loop gates; this section exists so those gates don't over-fire into ordinary engineering work that no stage's own spec requires a human to approve mid-flight (the Checkpoint & Approval Gates in §5.1–§5.2 already provide the real review point — this section is about what happens *before* that checkpoint, while an agent is still doing its own work).
 
 **Human Decisions — always ask, never infer:**
 - Which automation framework to use (§31)
-- Continue an existing package/framework or create a new one (§31, §33)
+- Extend the existing project for a framework, start a project for a framework with none yet, or (rare, explicit) reset one from scratch (§31, §33) — never a coexisting second package for a framework that already has a project (`.claude/skills/automation-agent/SKILL.md` §31.5)
+- **Automation merge destination and repository structure** (added 2026-07-24) — which project a run's automation is merged into, and any other repository-structure question the Automation Asset Lifecycle (§12) surfaces; governed by the explicit gather → analyze → recommend → wait procedure in `.claude/skills/automation-agent/SKILL.md` §31.6
 - Which project/repository to target — including whether to generate inside the platform, export a compatible package, or modify an external Reference Automation Project directly (§32)
 - Environment selection, when more than one is genuinely available for a run
 - Executing any destructive or irreversible operation
@@ -271,9 +308,9 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 
 1. **Agents execute sequentially.** Stage *N+1* never starts before Stage *N* completes and, where applicable, clears its checkpoint.
 2. **Every stage consumes artifacts from the previous stage(s).** No stage invents its own inputs or reaches past its declared Input list.
-3. **No agent may skip a stage.** All six stages run, in order, on every full pipeline execution — even when a stage's output is small (e.g., zero defects), it still runs and produces its artifact.
+3. **No agent may skip a stage.** All seven stages run, in order, on every full pipeline execution — even when a stage's output is small (e.g., zero defects), it still runs and produces its artifact.
 4. **No downstream agent may read the PRD directly.** Only Stage 1 has the PRD in its Input list. This is enforced structurally, not just by convention: no other stage's Input table in §4 contains the PRD.
-5. **Project Context is the Single Source of Truth.** From Stage 1 onward, every agent's understanding of "what the product should do" is scoped by the Project Context artifact — including Stage 5 and 6, which reference it for environment/safety and risk-resolution purposes even where it is not the headline input of that stage.
+5. **Project Context is the Single Source of Truth.** From Stage 1 onward, every agent's understanding of "what the product should do" is scoped by the Project Context artifact — including Stages 4, 6, and 7, which reference it for environment/safety and risk-resolution purposes even where it is not the headline input of that stage.
 6. **Human approval gates must stop the pipeline until approval is granted.** See §5.3 — no silent timeouts, no auto-approval, no proceeding on an assumed "looks fine."
 7. **All artifacts must be versionable.** See §7 — every artifact carries a version identifier and prior versions are retained, never overwritten in place.
 8. **Every output must maintain traceability.** See §8 — every artifact from Stage 3 onward can be traced back, ID for ID, to the Project Context requirement (and, transitively, the PRD) that generated it.
@@ -281,7 +318,7 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 
 ## 7. Artifact & Versioning Conventions
 
-Every artifact produced by this pipeline lives under `projects/{{PROJECT_NAME}}/artifacts/` in the subdirectory conventions established in the Agent Framework (`context/`, `discovery/`, `Reports/`, `testcases/`, `Automation/`, `execution/`).
+Every artifact produced by this pipeline lives under `projects/{{PROJECT_NAME}}/artifacts/` in the subdirectory conventions established in the Agent Framework (`context/`, `discovery/`, `Reports/`, `testcases/`, `manual_execution/`, `Automation/`, `execution/`).
 
 To satisfy Rule 7 (versionable artifacts) and Rule 6 (gates that truly stop the pipeline), each stage's artifact is versioned as follows:
 
@@ -299,15 +336,19 @@ PRD
        ├─▶ Discovery Artifacts               (validates/enriches only)
        └─▶ Manual Test Suites (MD + Excel)
              └─▶ Requirement Traceability Matrix
-                   └─▶ Automation Scripts
-                         └─▶ Execution Results (+ Screenshots, Logs, Execution Metadata)
-                               └─▶ Final QA Report
+                   └─▶ Manual Execution Results
+                         └─▶ Automation Candidate Package
+                               └─▶ Automation Scripts
+                                     └─▶ Execution Results (+ Screenshots, Logs, Execution Metadata)
+                                           └─▶ Final QA Report
 ```
 
 Concretely, this means:
 - Every Manual Test Suite test case cites the Project Context requirement ID it covers (§4, Stage 3).
+- Every Manual Execution Result cites the Test Case ID it executed (Agent Framework, Manual Execution Agent §3).
+- Every Automation Candidate Package entry cites the Manual Execution Result that confirmed it (Agent Framework, Manual Execution Agent §9.3).
 - Every Automation Script cites the Test Case ID it automates (Agent Framework, Automation Agent §7).
-- Every Execution Result cites the Test Case ID *and* the Automation Script ID that produced it (Agent Framework, Execution Agent §3).
+- Every Execution Result cites the Test Case ID *and* the Automation Script ID that produced it (Agent Framework, Automation Execution Agent §3).
 - The Final QA Report's Requirement Coverage and Automation Coverage sections walk this entire chain in reverse — from Execution Result back to Project Context requirement — to compute what was actually verified versus merely documented.
 
 A gap anywhere in this chain (an artifact that cannot cite its predecessor) is itself a pipeline defect and must be surfaced at the next available checkpoint, not silently patched over.
@@ -319,9 +360,10 @@ A gap anywhere in this chain (an artifact that cannot cite its predecessor) is i
 | Business Analyst / Product Owner | Stage 1 checkpoint |
 | QA Lead | Stage 2 checkpoint |
 | QA Architect / Test Lead | Stage 3 checkpoint |
-| Automation Lead / Release Manager | Stage 4 checkpoint |
+| QA Lead / Test Lead | Stage 4 checkpoint |
+| Automation Lead / Release Manager | Stage 5 checkpoint |
 | Pipeline Orchestrator (tooling, not a person) | Invoking each agent in order, enforcing §5.3 gate mechanics, maintaining the Run Manifest |
-| All stakeholders | Consumers of the Stage 6 Final QA Report — no approval role, as this is the terminal artifact |
+| All stakeholders | Consumers of the Stage 7 Final QA Report — no approval role, as this is the terminal artifact |
 
 ## 10. Knowledge Architecture (added 2026-07-12, user-mandated — the canonical definition every agent references)
 
@@ -331,7 +373,7 @@ A gap anywhere in this chain (an artifact that cannot cite its predecessor) is i
 
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
-| **Platform Knowledge** | `platform_core/knowledge/` | Reusable, application-agnostic engineering knowledge: automation strategies, repair strategies, diagnosis strategies, proven exceptions to Execution Engine defaults (not the engine's core retry/concurrency/stop-condition mechanics — fixed capability logic in `.claude/skills/execution-agent/SKILL.md` §5, §19–§20), framework best practices, synchronization patterns, locator recovery strategies, reporting conventions, AI reasoning patterns, pipeline decision patterns, shared engineering lessons | Anything application-specific (a named screen, a specific business rule, a specific app's redirect behavior); anything that is Capability rather than Knowledge (agent skill definitions, orchestration/engine mechanics, runtime configuration) — those belong in `.claude/skills/` or `workflows_and_pipelines/`, never here |
+| **Platform Knowledge** | `platform_core/knowledge/` | Reusable, application-agnostic engineering knowledge: automation strategies, repair strategies, diagnosis strategies, proven exceptions to Execution Engine defaults (not the engine's core retry/concurrency/stop-condition mechanics — fixed capability logic in `.claude/skills/automation-execution-agent/SKILL.md` §5, §19–§20), framework best practices, synchronization patterns, locator recovery strategies, reporting conventions, AI reasoning patterns, pipeline decision patterns, shared engineering lessons | Anything application-specific (a named screen, a specific business rule, a specific app's redirect behavior); anything that is Capability rather than Knowledge (agent skill definitions, orchestration/engine mechanics, runtime configuration) — those belong in `.claude/skills/` or `workflows_and_pipelines/`, never here |
 | **Project Knowledge** | `projects/{{PROJECT_NAME}}/knowledge_base/` | Knowledge discovered from that one application only: business rules, UI observations, application findings, known behaviors, module relationships, navigation knowledge, screen inventory, discovery artifacts, execution history, automation history, repair history, known workarounds, project-specific locator rules, lessons learned | Anything reusable enough to apply to a different project unmodified — that belongs in Platform Knowledge instead, via Promotion (§10.5) |
 
 ### 10.2 Knowledge Resolution
@@ -353,7 +395,7 @@ Platform Knowledge subfolders: `automation_patterns/`, `diagnosis_patterns/`, `r
 
 There is no `skills/` subfolder here (removed, 2026-07-21 governance review). Cross-cutting agent capability is not Knowledge — it lives in `.claude/skills/`, a separate platform layer.
 
-There is no `confidence_patterns/` subfolder here (removed, 2026-07-21). The Confidence Engine's scoring rubric (§27.2 of the Execution Agent spec) is fixed Capability logic, not a promotable Knowledge category — the rubric has never needed a calibration-adjustment layer in practice, and keeping an empty category open for one invited exactly the scope ambiguity flagged in that review.
+There is no `confidence_patterns/` subfolder here (removed, 2026-07-21). The Confidence Engine's scoring rubric (§27.2 of the Automation Execution Agent spec) is fixed Capability logic, not a promotable Knowledge category — the rubric has never needed a calibration-adjustment layer in practice, and keeping an empty category open for one invited exactly the scope ambiguity flagged in that review.
 
 Project Knowledge subfolders (identical shape for every project, per §10.4): `automation/`, `diagnosis/`, `repair/`, `execution/`, `application/`, `ui/`, `findings/`, `business_rules/`, `lessons_learned/`.
 
@@ -365,7 +407,7 @@ Whenever a new project is created under `projects/`, its `knowledge_base/` tree 
 
 ### 10.5 Promotion Workflow — explicit human approval only
 
-Not every lesson learned on one project becomes Platform Knowledge. Whichever agent writes a new piece of knowledge (e.g. the Execution Agent writing a confirmed repair rule, per `.claude/skills/execution-agent/SKILL.md` §28) writes it **only into the current project's `knowledge_base/`** by default. When that agent recognizes the lesson as reusable beyond this one application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "NDC's dashboard redirect" or "OrangeHRM's Employee workflow"), it proposes promotion and asks exactly once:
+Not every lesson learned on one project becomes Platform Knowledge. Whichever agent writes a new piece of knowledge (e.g. the Automation Execution Agent writing a confirmed repair rule, per `.claude/skills/automation-execution-agent/SKILL.md` §28) writes it **only into the current project's `knowledge_base/`** by default. When that agent recognizes the lesson as reusable beyond this one application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "NDC's dashboard redirect" or "OrangeHRM's Employee workflow"), it proposes promotion and asks exactly once:
 
 > "This lesson appears reusable across multiple projects. Promote it to Platform Knowledge?"
 
@@ -385,14 +427,15 @@ Knowledge belonging to one project must never automatically appear inside anothe
 | Project Context Agent (Stage 1) | Platform Knowledge + current Project Knowledge | Project Knowledge (`business_rules/`, `application/`) as it establishes scope |
 | Explorer Agent (Stage 2) | Platform Knowledge + current Project Knowledge | Project Knowledge (`findings/`, `ui/`, `application/`) |
 | Test Design Agent (Stage 3) | Platform Knowledge + current Project Knowledge | Project Knowledge (`findings/`, `lessons_learned/`) where a design decision surfaces one |
-| Automation Agent (Stage 4) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + current Project Knowledge (`automation/`), per `.claude/skills/automation-agent/SKILL.md` §11 | Project Knowledge (`automation/`) |
-| Execution Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + current Project Knowledge (`repair/`, `diagnosis/`, `execution/`), per `.claude/skills/execution-agent/SKILL.md` §28 | Project Knowledge (`repair/`, `diagnosis/`, `execution/`) by default; Platform Knowledge only via §10.5 Promotion |
-| Reporting Agent (Stage 6) | Platform Knowledge (`reporting/`) + current Project Knowledge | — (terminal stage) |
+| Manual Execution Agent (Stage 4) | Platform Knowledge + current Project Knowledge | Project Knowledge (`execution/`, `lessons_learned/`) where a manual execution surfaces one |
+| Automation Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + current Project Knowledge (`automation/`), per `.claude/skills/automation-agent/SKILL.md` §11 | Project Knowledge (`automation/`) |
+| Automation Execution Agent (Stage 6) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + current Project Knowledge (`repair/`, `diagnosis/`, `execution/`), per `.claude/skills/automation-execution-agent/SKILL.md` §28 | Project Knowledge (`repair/`, `diagnosis/`, `execution/`) by default; Platform Knowledge only via §10.5 Promotion |
+| Reporting Agent (Stage 7) | Platform Knowledge (`reporting/`) + current Project Knowledge | — (terminal stage) |
 | Pipeline Orchestrator (tooling) | *(none — no read dependency on `pipeline_decision_patterns/` is defined yet)* | — |
 
 ## 11. Debug Mode & Temporary Execution Artifacts (added 2026-07-12, user-mandated)
 
-Stages that drive a live browser or write throwaway scripts to accomplish their work (chiefly Stage 2 Explorer, Stage 4 Automation's selector verification, Stage 5 Execution) must not let that internal tooling leak into a project's permanent artifact tree. Only the **outputs** those stages are actually specified to produce (§4's Expected Artifacts per agent — Discovery snapshots/Findings/Coverage/QA Assessment Report, Automation packages, Execution Results/Evidence, Reports) belong under `projects/{{PROJECT_NAME}}/artifacts/`.
+Stages that drive a live browser or write throwaway scripts to accomplish their work (chiefly Stage 2 Explorer, Stage 4 Manual Execution, Stage 5 Automation's selector verification, Stage 6 Automation Execution) must not let that internal tooling leak into a project's permanent artifact tree. Only the **outputs** those stages are actually specified to produce (§4's Expected Artifacts per agent — Discovery snapshots/Findings/Coverage/QA Assessment Report, Automation packages, Execution Results/Evidence, Reports) belong under `projects/{{PROJECT_NAME}}/artifacts/`.
 
 ### 11.1 Debug Mode flag
 
@@ -412,6 +455,91 @@ A project- or run-level flag, **default `Off`**, recorded in that run's Project 
 This rule governs all runs from 2026-07-12 onward. Pre-existing debug scripts/raw dumps left in earlier runs' artifact folders (e.g., `_login_discovery.js` and its `_results.json` under RUN-20260712-001) are not automatically deleted by this section — cleaning up a prior, already-approved run's artifacts is a separate decision to confirm with the user, not an automatic side effect of adopting this rule.
 
 This must remain a permanent platform capability, not a one-off built for any single project — every future project (OrangeHRM, Banking, ERP, or otherwise) loads Platform Knowledge plus its own Project Knowledge, with no architectural change required.
+
+## 12. Automation Asset Lifecycle (added 2026-07-24, user-mandated)
+
+**The platform generates automation inside a Run, but a Run is temporary — without a persistent baseline, every project either loses generated automation to a growing pile of per-run folders, or, as happened for NDC prior to this section, quietly reverses course and starts hand-editing one run folder's files in place across several later runs, defeating the "immutable run" model this pipeline otherwise enforces.** This section makes explicit what `projects/README.md`'s own Folder Structure diagram already implied but never operationalized: `artifacts/automation/` (or, for NDC, `workspace/automation/{Framework}/`) is the **Workspace Automation Baseline** — the single authoritative, persistent copy of a project's automation code — and every Run works from a **temporary working copy** of it, never the baseline directly.
+
+### 12.1 Two locations
+
+| Location | Path | Role |
+|---|---|---|
+| **Workspace Automation Baseline** | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests_{Framework}/` (NDC: `projects/NDC/workspace/automation/{Framework}/{{PROJECT_NAME}}_tests_{Framework}/`) | The authoritative, persistent copy of one Automation Package. Never edited directly during generation — only ever written by the Workspace Merge (§12.4). |
+| **Run Automation Working Copy** | `projects/{{PROJECT_NAME}}/artifacts/runs/{{RUN_FOLDER}}/automation/{{PROJECT_NAME}}_tests_{Framework}/` (NDC: `projects/NDC/runs/{{RUN_FOLDER}}/automation/...`) | Temporary. Where Stage 5 (Automation Agent) actually generates/extends code for this run, and where Stage 6 (Automation Execution Agent) actually runs it. Deleted (source only — see §12.5) once its content has been merged back into the baseline. |
+
+This composes with, and does not replace, `.claude/skills/automation-agent/SKILL.md` §30–§33.1's existing consolidated Decision Gate — that gate decides *which* package (Target/Framework/Strategy) a run works on; this section governs what happens to that package's *files* before, during, and after the run.
+
+### 12.2 The four steps
+
+1. **Working Copy Creation** (§12.3) — right after §33.1's gate resolves the package identity, before any generation.
+2. **Automation Review** — the *existing*, unmodified §5.2 Automation Approval Required gate. Only `Approved` triggers step 3.
+3. **Workspace Merge** (§12.4) — only after Approved.
+4. **Cleanup** (§12.5) — only for files the merge actually accounted for.
+
+```
+  Workspace Automation Baseline                     Run Automation Working Copy
+  (authoritative, persistent)                       (temporary, per run)
+ ┌───────────────────────────┐    Step 1: Copy-in   ┌───────────────────────────┐
+ │  {Project}_tests_{FW}/     │ ───────────────────▶ │  {Project}_tests_{FW}/     │
+ │                            │                       │  (Stage 5 generates here)  │
+ └───────────────────────────┘                       └─────────────┬─────────────┘
+              ▲                                                     │
+              │                                        Step 2: Automation Review
+              │                                          (pipeline.md §5.2)
+              │                                                     │
+              │                                            Approved │  Rejected/Needs Changes
+              │                                                     │  (loop back to Stage 5,
+              │   Step 3: Workspace Merge                           │   same working copy)
+              └───────────────  (after Approved) ◀───────────────────┘
+                         │
+                         ▼
+               Step 4: Cleanup — delete the
+               working copy's merged source;
+               keep every report/evidence file
+               (see §12.5) forever
+```
+
+### 12.3 Step 1 — Working Copy Creation
+
+Once §33.1's consolidated gate has resolved which package this run targets:
+
+- If a Workspace Automation Baseline already exists for that package, copy it wholesale into the run's working automation folder before any generation begins. Record a **baseline snapshot** — the baseline's path-scoped git commit hash at that moment (`git log -1 --format=%H -- <baseline-path>`, never a bare repo `HEAD`, since this is a monorepo and an unrelated commit elsewhere must never look like a baseline change) — in a small per-run file, `.lifecycle_snapshot.json`, alongside the working copy. This is what Step 3's conflict check compares against later.
+- If no baseline exists yet (a brand-new package), the run starts empty, exactly as today.
+- **Generation happens only inside the run's working copy.** The Automation Agent must never edit the Workspace Automation Baseline directly (see the corresponding Execution Rule added to `.claude/skills/automation-agent/SKILL.md` §18).
+- Implemented by `platform_core/tools/automation_lifecycle/baselineCopy.js` (`copyBaselineIntoRun`) — no agent or script hand-rolls this copy step, the same discipline already established for run folder naming (`workflows_and_pipelines/pipeline/run_manager.md` §5.5).
+
+### 12.4 Step 3 — Workspace Merge
+
+Only triggered once Automation Review (§5.2) marks the run's automation `Approved`.
+
+1. **Hard pre-check:** the baseline must have zero uncommitted changes (`git status --porcelain`). A dirty baseline — e.g. a human hand-edited a file directly, outside the pipeline — blocks the merge and is reported; it is never silently overwritten.
+2. **Conflict check:** compare the baseline's current path-scoped commit hash to the snapshot recorded at Step 1.
+   - **Unchanged** — nothing else has merged into this baseline since this run started. A plain two-way diff (working copy vs. baseline) is valid: every difference is this run's own intentional change. Fast-forward merge.
+   - **Changed** — a *different* run's merge landed in this same baseline while this run was in flight. A naive two-way diff is unsound here: it cannot tell "the other run added this, we never saw it" apart from "we deleted this," and would silently delete the other run's already-merged work. Instead, a proper **three-way classification** is used — base (baseline content at the recorded snapshot, reconstructed via `git show`), theirs (baseline now), ours (working copy now) — the same base/theirs/ours model every real merge tool uses. Only a path genuinely changed on *both* sides since the snapshot is a real conflict, held for explicit human approval before merging just those files; everything else merges normally.
+3. **Lock guard:** an exclusive lock file (`.automation_lifecycle.lock`, created via an atomic `wx`-flag write) in the baseline directory prevents two merges from racing on the same baseline.
+4. **Write the merge:** new/modified content is copied over the baseline and `git add`-ed; deletions are `git rm`-ed; unambiguous, unmodified renames are `git mv`-ed (a renamed-and-modified file is not auto-detected as a rename — it merges as a separate delete+add; this is a stated, acceptable limitation, not a data-loss risk, since the content is still fully accounted for). The commit message records the source run and Added/Modified/Deleted/Renamed counts.
+5. **Untracked/ignored files are classified separately, never silently dropped or silently merged.** A generated package commonly contains build/IDE output its own nested `.gitignore` excludes (confirmed real example: `NDC_tests_SHAFT/` has 299 files on disk but only 65 tracked — `target/`, `allure-results/`, `execution-summary/`, `generatedReport*.zip` are all git-ignored) — these are evaluated via `git check-ignore --no-index` (which works even on a not-yet-committed working copy) and reported on their own explicit "Discarded Untracked" line in the Merge Summary.
+6. Produces a **Merge Summary**: Added / Modified / Deleted / Renamed / Conflicts (and resolution) / Discarded Untracked — the source data for `automation_promotion.md` (§12.6).
+
+Implemented by `platform_core/tools/automation_lifecycle/mergePlan.js` (plan computation, side-effect-free) and `mergeApply.js` (the actual writes, gated behind an explicit `apply` flag — dry-run by default, mirroring `run_manager/migrate.js`'s own `--apply` convention).
+
+### 12.5 Step 4 — Cleanup
+
+Only for files the Merge Summary actually accounted for (added/modified/deleted/renamed-from/discarded-untracked) — anything still held back for an unresolved conflict stays in the run until a follow-up merge resolves it.
+
+- Deletes the run's working copy of the merged package's source/build content (its `src/`, page objects, components, utilities, `pom.xml`/`build.gradle`/`package.json`/`playwright.config.*`/`testng.xml`/other framework source, and any build/IDE artifacts already logged as Discarded Untracked).
+- **Never touches anything outside the package directory** — every one of the following is permanent run history and is never deleted by this step: the Automation Plan/Manifest/Decision Report/Coverage Report/Suite Manifest/Summary (`.claude/skills/automation-agent/SKILL.md` §19), Automation Review notes, Stage 6 Execution Results and all evidence (screenshots/videos/logs/traces/network captures), Automation Repair Loop reports, and `automation_promotion.md` itself.
+- Implemented by `platform_core/tools/automation_lifecycle/cleanup.js` (`cleanupRunPackage`) — deletion is always driven by the Merge Summary's own accounted-for file list, never a blind recursive directory delete, so nothing can vanish from a run without a corresponding line in that run's Merge Summary.
+
+### 12.6 `automation_promotion.md`
+
+Written permanently into the run (never deleted by Cleanup) at `.../automation/automation_promotion.md`, recording: Promotion Status, Merge Date, Approved By, Source Run, Workspace Destination, Files Added, Files Modified, Files Deleted, Files Renamed, Discarded Untracked Files, Conflicts Detected, Conflicts Resolved, Merge Result, Notes. Rendered by `platform_core/tools/automation_lifecycle/promotionRecord.js`.
+
+A **Bootstrap Migration** — lifting pre-existing, not-yet-lifecycle-managed automation into a Workspace Automation Baseline for the first time — is recorded with `Promotion Status: Bootstrap Migration` and `Approved By: N/A — Bootstrap Migration`, never a fabricated Automation Approval record for code that hasn't actually been reviewed against §5.2's real criteria. The originating run's own Automation Approval checkpoint is left exactly as it was — a bootstrap migration and a real Automation Approval are two distinct events, never conflated.
+
+### 12.7 Registry cross-reference
+
+`{{PROJECT_NAME}}_AutomationPackages.md` (`.claude/skills/automation-agent/SKILL.md` §19/§31) is extended with a Baseline Ref / Last Merged Run column per package, so the next Stage 5 run's registry summary (§31.1) can state not just which packages exist, but whether their Workspace Automation Baseline is current.
 
 ---
 

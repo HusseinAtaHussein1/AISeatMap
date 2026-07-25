@@ -24,6 +24,17 @@ import java.util.List;
  * SearchAgency_Page.java (List/Search), by contrast, WAS current and reusable — but this run's
  * automated test cases don't need it (TC-AGENCY-003, the List auto-load question, is an
  * Exploratory/manual charter per Test Design, not automated this run), so it is not duplicated here.
+ *
+ * EXTENDED 2026-07-18 (RUN-20260718-001, Stage 4 — new NDC_tests_SHAFT_Agency package): this same
+ * class now doubles as the Update Agency page object too — live discovery
+ * (runs/RUN-20260718-001/discovery/Agency_Update.md) confirmed /admin/agency/edit/{id} renders the
+ * identical field ids as /admin/agency/add, just pre-populated. Every locator/method added below is
+ * backed by that same discovery pass (input-id DOM dump) plus Agency_Add.md's/the live full-page
+ * screenshot's field inventory — never fabricated. Fields the discovery pass could NOT confirm a
+ * real id for (Bank Account Details, Sales Contact "Designation", document remove/replace, "Enable
+ * Search Limit"'s own checkbox, the entire PCC/Airline Supplier Credential section, "Save as Draft")
+ * are deliberately NOT given locators here — see FINDING-008 and NDC_AutomationPlan_SHAFT_Agency.md
+ * "Blocked"/"Deferred" tables.
  */
 public class Agency_Page {
     public Agency_Page(SHAFT.GUI.WebDriver driver) {
@@ -249,6 +260,18 @@ public class Agency_Page {
         return this;
     }
 
+    /** Invoice Generation's own option list is data-driven and not stable across environments —
+     *  confirmed live (RUN-20260718-001) that clicking whichever option renders first is
+     *  sufficient for a successful submission; used where the specific option's label doesn't
+     *  matter to the test case. */
+    public Agency_Page selectFirstInvoiceGenerationOption() throws InterruptedException {
+        driver.element().click(Lst_InvoiceGeneration);
+        Thread.sleep(500);
+        driver.element().click(By.xpath("//li[@role='option']"));
+        Thread.sleep(300);
+        return this;
+    }
+
     public Agency_Page selectPaymentOptionCash() {
         driver.element().click(Cbox_PaymentOptionCash);
         return this;
@@ -311,5 +334,117 @@ public class Agency_Page {
                         ".filter(e => ['INPUT','P-DROPDOWN','P-CALENDAR','P-CHECKBOX','P-RADIOBUTTON','TEXTAREA'].includes(e.tagName))" +
                         ".map(e => e.tagName + (e.id ? ('#' + e.id) : '')).join(', ');");
         return String.valueOf(result);
+    }
+
+    // ================================================================================
+    // EXTENSIONS — RUN-20260718-001, confirmed live via Agency_Update.md's input-id dump
+    // and the Add form's full-page screenshot. Used for both /add and /edit/{id}.
+    // ================================================================================
+
+    By Txt_CompanyURL = By.id("id-CompanyURL");
+    By Txt_FaxNo = By.id("id-FaxNo");
+    By Rbtn_IATAAgencyYes = By.xpath("//p-radiobutton[.//input[@id=\"id-IATAAgency-yes\"]]");
+    By Rbtn_IATAAgencyNo = By.xpath("//p-radiobutton[.//input[@id=\"id-IATAAgency-No\"]]");
+    By Txt_CreditLimit = By.xpath("//input[@id=\"id-Creditlimit\"]");
+    By Txt_TopUpLimit = By.xpath("//input[@id=\"id-Topuplimit\"]");
+    By Txt_CreditTermsDays = By.xpath("//input[@id=\"id-CreditTerms(Days)\"]");
+    By Txt_ReachingPercentage = By.xpath("//input[@id=\"id-ReachingPercentage\"]");
+    By Txt_WarningPromptDays = By.xpath("//input[@id=\"id-WarningPrompt(Days)\"]");
+    By Cbox_CreditAgency = By.xpath("//p-checkbox[.//input[@id=\"id--Creditagency\"]]");
+    By Cbox_SelectProductFlight = By.xpath("//p-checkbox[.//input[@id=\"id-SelectProduct-Flight\"]]");
+    By Cbox_SelectProductOthers = By.xpath("//p-checkbox[.//input[@id=\"id-SelectProduct-Others\"]]");
+    By Cbox_ImportPNROption = By.xpath("//p-checkbox[.//input[@id=\"id--ImportPNROption\"]]");
+    By Cbox_TransferPNROption = By.xpath("//p-checkbox[.//input[@id=\"id--TransferPnrOption\"]]");
+    By Cbox_BlueCommandScreen = By.xpath("//p-checkbox[.//input[@id=\"id--BlueCommandScreen\"]]");
+    By Btn_Cancel = By.xpath("//button[normalize-space(.)='Cancel']");
+
+    public Agency_Page fillCompanyURL(String url) {
+        driver.element().type(Txt_CompanyURL, url);
+        return this;
+    }
+
+    public Agency_Page fillFaxNo(String faxNo) {
+        driver.element().type(Txt_FaxNo, faxNo);
+        return this;
+    }
+
+    public Agency_Page selectIATAAgency(boolean yes) {
+        driver.element().click(yes ? Rbtn_IATAAgencyYes : Rbtn_IATAAgencyNo);
+        return this;
+    }
+
+    /** Confirmed live (Agency_Update.md): Credit Limit/Top-Up Limit/Credit Terms (Days) carry real
+     *  server-side defaults (50000/500000/1) even when never filled — this method is only needed
+     *  for cases that deliberately override or probe those defaults (e.g. non-numeric rejection). */
+    public Agency_Page fillPaymentSettingsNumericFields(String creditLimit, String topUpLimit, String creditTermsDays) {
+        driver.element().type(Txt_CreditLimit, creditLimit);
+        driver.element().type(Txt_TopUpLimit, topUpLimit);
+        driver.element().type(Txt_CreditTermsDays, creditTermsDays);
+        return this;
+    }
+
+    public Agency_Page fillReachingPercentage(String value) {
+        driver.element().type(Txt_ReachingPercentage, value);
+        return this;
+    }
+
+    public Agency_Page fillWarningPromptDays(String value) {
+        driver.element().type(Txt_WarningPromptDays, value);
+        return this;
+    }
+
+    public Agency_Page toggleCreditAgency() {
+        driver.element().click(Cbox_CreditAgency);
+        return this;
+    }
+
+    /** Generic payment-option toggle by its confirmed id suffix (e.g. "Wallet", "CreditCard",
+     *  "BANQUEMISR") — mirrors selectPaymentOptionCash()'s own convention rather than duplicating a
+     *  dedicated method per option, since the option list is long and data-driven (~26 items,
+     *  confirmed live via the Update-screen id dump). */
+    public Agency_Page togglePaymentOption(String idSuffix) {
+        driver.element().click(By.xpath(String.format(
+                "//p-checkbox[.//input[@id=\"id-Paymentoption-%s\"]]", idSuffix)));
+        return this;
+    }
+
+    public Agency_Page selectProductFlight() {
+        driver.element().click(Cbox_SelectProductFlight);
+        return this;
+    }
+
+    public Agency_Page selectProductOthers() {
+        driver.element().click(Cbox_SelectProductOthers);
+        return this;
+    }
+
+    public Agency_Page toggleImportPNROption() {
+        driver.element().click(Cbox_ImportPNROption);
+        return this;
+    }
+
+    public Agency_Page toggleTransferPNROption() {
+        driver.element().click(Cbox_TransferPNROption);
+        return this;
+    }
+
+    public Agency_Page toggleBlueCommandScreen() {
+        driver.element().click(Cbox_BlueCommandScreen);
+        return this;
+    }
+
+    /** TC-AGENCY-CREATE-036: abandons the in-progress form. Confirmed live (Agency_Update.md) that
+     *  the equivalent button on the Update screen navigates back to /admin/agency the same way. */
+    public Agency_Page clickCancel() {
+        driver.element().click(Btn_Cancel);
+        return this;
+    }
+
+    public String getCompanyURLValue() {
+        return driver.element().getAttribute(Txt_CompanyURL, "value");
+    }
+
+    public String getPostOfficeBoxValue() {
+        return driver.element().getAttribute(Txt_PostOfficeBox, "value");
     }
 }

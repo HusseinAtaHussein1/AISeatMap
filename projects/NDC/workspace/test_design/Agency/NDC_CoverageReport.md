@@ -1,6 +1,6 @@
 # NDC — Coverage Report — Admin / Agency (Create · Search · Update · Actions)
 
-> **Approved** 2026-07-18 (user) — copied here from `runs/RUN-20260718-001/test_design/` as the current latest-approved state, per `workspace/test_design/README.md`.
+> **Approved** 2026-07-18 (user) — copied here from `runs/RUN-20260718-001/test_design/` as the current latest-approved state, per `workspace/test_design/README.md`. **Note added 2026-07-25:** `NDC_TestCases_Agency.md` was rewritten to the Canonical Test Case Writing Standard (lean, execution-focused fields) — Risk moved to `NDC_TraceabilityMatrix.md`'s new Test Case Reference appendix, and Test Type/Category/Automation-Candidate-hint moved to each test case's Tags field. Content/scope below is unchanged; only the source fields' location shifted.
 
 **Run:** RUN-20260718-001 · Structured per `agents/test_design_agent.md` §18 Standard Output Contract.
 
@@ -43,7 +43,7 @@ By module: **Create Agency** — see this Coverage Report's original per-section
 
 ## 6. Manual Test Cases
 
-Full test case content: `test_design/NDC_TestCases_Agency.md` (Markdown) and `test_design/NDC_TestCases_Agency.xlsx` (Excel) — identical underlying data. Every row states **Test Type** (Smoke/Regression) and **Automation Candidate** (advisory).
+Full test case content: `test_design/NDC_TestCases_Agency.md` (Markdown) and `test_design/NDC_TestCases_Agency.xlsx` (Excel) — identical underlying data. Every test case's **Tags** field carries its Test Type (Smoke/Regression) and, where flagged Yes, an `AutomationCandidate` tag (advisory); Partial/No dispositions and reasons are listed in §11 below and in the Traceability Matrix appendix, not on the test case itself.
 
 ## 7. Assumptions
 
@@ -81,6 +81,8 @@ Plus every Create-Agency-only assumption already tagged in the original pass (Pr
 (Two more from the original Create Agency pass carried unchanged: none remaining after the phone-format resolution — the count above already reflects that; 10 listed + the phone-related items already resolved out.)
 
 **Out-of-Scope Requirements:** WT1-T2919 (Track B) entirely; Branch/Staff CRUD (v3); Login (v2); Credential Routes Filter et al. (v1); Reflection-named modules (Rule Engine, Search & Booking, NDC Portal, Reports, Import PNR portal display, Region Module CRUD).
+
+**Granularity note (added 2026-07-25, `.claude/skills/test-design-agent/SKILL.md` §6.0.1):** this suite is 63 Atomic + 3 Scenario (`CREATE-001`, `UPDATE-002`, `ACTIONS-009`) + **0 End-to-End**. The one journey that would qualify as E2E — "Agency Creation → Approval → Availability for Booking" — crosses into the Search & Booking module, already Out-of-Scope above. Not a gap in this suite's own execution, but a real gap in end-to-end coverage of the Agency lifecycle's actual business purpose; worth a dedicated E2E run once Search & Booking is in scope.
 
 **Unknown/Unassessed Requirements:** none.
 

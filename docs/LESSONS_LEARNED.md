@@ -25,8 +25,8 @@ Architectural lessons discovered while redesigning the legacy 4-stage `prompts/`
 **Problem this caused:** No structural guarantee that "raw results" and "narrative conclusions" stay separate. A single agent that both runs tests and writes the report is one code change away from quietly softening a failure into a footnote, or asserting a conclusion the raw data doesn't fully support.
 
 **Better approach identified:** Two new, single-purpose terminal stages:
-- **Execution Agent** — mechanical only. Records Test Case ID, Automation Script ID, status, timing, screenshots, logs. Explicitly forbidden from interpreting, summarizing, or drawing conclusions (`.claude/skills/execution-agent/SKILL.md` §7, rule 5).
-- **Reporting Agent** — synthesis only, and explicitly forbidden from re-running anything or inventing a result not present in the Execution Agent's raw output (`.claude/skills/reporting-agent/SKILL.md` §7, rule 1).
+- **Automation Execution Agent** (named "Execution Agent" until the 2026-07-24 Manual/Automation Execution separation) — mechanical only. Records Test Case ID, Automation Script ID, status, timing, screenshots, logs. Explicitly forbidden from interpreting, summarizing, or drawing conclusions (`.claude/skills/automation-execution-agent/SKILL.md` §7, rule 5).
+- **Reporting Agent** — synthesis only, and explicitly forbidden from re-running anything or inventing a result not present in the Automation Execution Agent's raw output (`.claude/skills/reporting-agent/SKILL.md` §7, rule 1).
 
 **Architectural improvement for future projects:** Any stage that both produces data and draws conclusions from that data should be split, even if in practice one person/agent invocation will always do both back-to-back — the separation is what makes each stage's output independently auditable.
 
@@ -38,7 +38,7 @@ Architectural lessons discovered while redesigning the legacy 4-stage `prompts/`
 
 **Why that's insufficient:** Approving a Project Context or a Manual Test Suite risks, at worst, a wrong document going to the next stage. Approving Automation Scripts authorizes *code that is about to execute against a real environment* — a materially different blast radius (potential data mutation, destructive actions, credential use).
 
-**Better approach identified:** Two distinct, named gate types — "Human Review Required" (Stages 1–3) vs. "Automation Approval Required" (Stage 4) — with the pipeline spec explicitly instructing that the latter be treated "as at least as strict as a production deployment approval, not as a lighter-weight variant of Stage 1–3 review" (`workflows_and_pipelines/pipeline/pipeline.md` §5.2).
+**Better approach identified:** Two distinct, named gate types — "Human Review Required" (Stages 1–4) vs. "Automation Approval Required" (Stage 5) — with the pipeline spec explicitly instructing that the latter be treated "as at least as strict as a production deployment approval, not as a lighter-weight variant of Stage 1–4 review" (`workflows_and_pipelines/pipeline/pipeline.md` §5.2).
 
 **Architectural improvement for future projects:** When adding any new gate to this platform, ask "what is the blast radius if this is wrongly approved?" before defaulting to the generic review gate — a gate whose failure mode is "bad code runs against production-like data" should never look, in the spec, like a gate whose failure mode is "bad document gets read."
 

@@ -1,6 +1,6 @@
 ---
 name: project-context-agent
-description: Stage 1 of 6 in the Agentic AI Testing Platform pipeline. Reads an approved PRD and a run configuration, and distills them into the single Project Context artifact — the source of truth every downstream stage (Explorer, Test Design, Automation, Execution, Reporting) consumes. Use when starting a new pipeline run, onboarding a new project, or a PRD/run configuration needs to be reconciled into an approved Project Context.
+description: Stage 1 of 7 in the Agentic AI Testing Platform pipeline. Reads an approved PRD and a run configuration, and distills them into the single Project Context artifact — the source of truth every downstream stage (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) consumes. Use when starting a new pipeline run, onboarding a new project, or a PRD/run configuration needs to be reconciled into an approved Project Context.
 inputs:
   - name: prd
     type: file_path
@@ -20,7 +20,7 @@ dependencies:
   - none upstream (first stage in the pipeline)
 ---
 
-> **Pipeline position:** Stage 1 of 6 — first agent in the pipeline, consumes the PRD.
+> **Pipeline position:** Stage 1 of 7 — first agent in the pipeline, consumes the PRD.
 > **Traceability:** `PRD → Project Context`. This is the only agent in the pipeline permitted to read the PRD directly.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
@@ -32,7 +32,7 @@ dependencies:
 
 The Project Context Agent is the entry point of the pipeline. It reads an already-approved Product Requirements Document (PRD) and a run configuration, and distills both into a single, compact **Project Context** artifact.
 
-**The Project Context is the single source of truth (SSOT) for every downstream agent in this pipeline.** Once published, it — not the PRD — is the authoritative reference that the Explorer, Test Design, Automation, Execution, and Reporting Agents read. No downstream agent independently re-reads or reinterprets the original PRD; every one of them consumes the same, already-reconciled Project Context.
+**The Project Context is the single source of truth (SSOT) for every downstream agent in this pipeline.** Once published, it — not the PRD — is the authoritative reference that the Explorer, Test Design, Manual Execution, Automation, Automation Execution, and Reporting Agents read. No downstream agent independently re-reads or reinterprets the original PRD; every one of them consumes the same, already-reconciled Project Context.
 
 Without this agent, each downstream agent would need to re-derive scope, credentials, environment constraints, and risk posture from the PRD on its own — inviting drift and inconsistent interpretation across a multi-agent run. The Project Context Agent exists so that scope and requirements are interpreted exactly once, in exactly one place, and every other agent inherits that single interpretation.
 
@@ -58,7 +58,7 @@ Without this agent, each downstream agent would need to re-derive scope, credent
 
 # 5. Outputs
 
-A single **Project Context** document that becomes the sole source of truth for every downstream agent — the Explorer Agent, Test Design Agent, Automation Agent, Execution Agent, and Reporting Agent. It is not a new PRD, not a rewrite of it, but a distilled, run-specific lens onto it. None of the downstream agents read the PRD file directly; they read this artifact instead.
+A single **Project Context** document that becomes the sole source of truth for every downstream agent — the Explorer Agent, Test Design Agent, Manual Execution Agent, Automation Agent, Automation Execution Agent, and Reporting Agent. It is not a new PRD, not a rewrite of it, but a distilled, run-specific lens onto it. None of the downstream agents read the PRD file directly; they read this artifact instead.
 
 # 6. Allowed Tools
 
@@ -76,7 +76,7 @@ A single **Project Context** document that becomes the sole source of truth for 
 4. Must carry forward every PRD `> Assumption` and Risk entry relevant to in-scope modules verbatim in meaning, not diluted or reworded away from its original caveat.
 5. Must cite the PRD section number each extracted item was drawn from, preserving traceability back to the source document.
 6. Must not alter, contradict, or "correct" the PRD — this agent summarizes and structures; it does not edit the source document.
-7. Once this agent publishes the Project Context, it becomes the single source of truth for the remainder of the pipeline. No downstream agent (Explorer, Test Design, Automation, Execution, Reporting) may read the PRD directly or independently reinterpret it — any requirement change must flow through a new Project Context Agent run, not through a downstream agent going back to the PRD on its own.
+7. Once this agent publishes the Project Context, it becomes the single source of truth for the remainder of the pipeline. No downstream agent (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) may read the PRD directly or independently reinterpret it — any requirement change must flow through a new Project Context Agent run, not through a downstream agent going back to the PRD on its own.
 
 # 8. Expected Artifacts
 
@@ -98,7 +98,7 @@ Document structure:
 ```markdown
 # Project Context Agent
 
-Role: Requirements-to-Project-Context distillation (Stage 1 of 6).
+Role: Requirements-to-Project-Context distillation (Stage 1 of 7).
 
 Your responsibility is to convert an approved Product Requirements Document
 (PRD) into a single, structured Project Context that every downstream agent

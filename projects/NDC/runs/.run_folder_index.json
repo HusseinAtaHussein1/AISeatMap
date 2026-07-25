@@ -1,0 +1,44 @@
+[
+  {
+    "legacyName": "RUN-20260710-001",
+    "inferredNewName": "2026-07-10_00-00-00__UserStory__CredentialRoutesFilter,AirportBlackListWhiteList,SupplierCre",
+    "confidence": "high",
+    "source": "run_configuration.md history table",
+    "renameSafe": false
+  },
+  {
+    "legacyName": "RUN-20260712-001",
+    "inferredNewName": "2026-07-12_00-00-00__Module__LoginAuthentication",
+    "confidence": "high",
+    "source": "run_configuration.md history table",
+    "renameSafe": false
+  },
+  {
+    "legacyName": "RUN-20260712-002",
+    "inferredNewName": "2026-07-12_00-00-00__Module__Administration—Branch,Agency,Staff(Company→Branch→Agency→Sta",
+    "confidence": "high",
+    "source": "run_configuration.md history table",
+    "renameSafe": false
+  },
+  {
+    "legacyName": "RUN-20260713-001",
+    "inferredNewName": "2026-07-13_00-00-00__Module__AdminAgency—SearchAgencyautomation,ActivateAgencyspike(Block",
+    "confidence": "high",
+    "source": "run_configuration.md history table",
+    "renameSafe": false
+  },
+  {
+    "legacyName": "RUN-20260718-001",
+    "inferredNewName": "2026-07-18_00-00-00__UserStory__Admin→AgencyfullCRUDlifecycle(TrackACreate,Search,Update,Act",
+    "confidence": "high",
+    "source": "run_configuration.md history table",
+    "renameSafe": false
+  },
+  {
+    "legacyName": "RUN-20260721-001",
+    "inferredNewName": "2026-07-21_00-00-00__UserStory__Admin→RoleManagement—CreateRole(RoleName,modulesub-moduletab",
+    "confidence": "high",
+    "source": "run_configuration.md history table",
+    "renameSafe": false
+  }
+]

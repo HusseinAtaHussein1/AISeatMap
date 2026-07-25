@@ -23,7 +23,7 @@ Do not paste real secret values into this table for a non-public environment —
 ## Browser Automation (Browser Driver Layer)
 
 If Browser Automation Discovery Mode is used for this project, see `tools/browser_driver/README.md` for the full contract. `tools/browser_driver/` is shared, project-agnostic infrastructure — everything project-specific lives inside this project's own folder:
-- **Browser Profile** (non-secret, versioned, small/stable): `browser/profile.json` — create this once, from a one-time inspection of the login page. Auth + browser init only — never add screen/menu/table locators here. Deliberately NOT under `automation/` — that name is reserved for Stage 4's SHAFT output (`artifacts/automation/`).
+- **Browser Profile** (non-secret, versioned, small/stable): `browser/profile.json` — create this once, from a one-time inspection of the login page. Auth + browser init only — never add screen/menu/table locators here. Deliberately NOT under `automation/` — that name is reserved for Stage 5's SHAFT output (`artifacts/automation/`).
 - **Screen/Component Knowledge** (non-secret, versioned, grows over time): `browser/screens/*.json` and `.../components/*.json` — one small file per screen or shared component, added as each is explored.
 - **Credentials** (real, git-ignored, never committed): `credentials/credentials.json` — copy `credentials/credentials.template.json` (already scaffolded in this template, along with a local `.gitignore`) and fill in real values, keyed by environment (`STG`/`PREPROD`/`PROD`).
 - Agents request a session via `BrowserDriver.authenticate({project: 'NDC_INT', env})` — credentials load automatically by project name; agents never see login mechanics or credential values directly.

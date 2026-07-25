@@ -1,9 +1,0 @@
-{
-  "invalidLogin": {
-    "username": "qa_probe_nonexistent_user",
-    "password": "ProbeOnly!23",
-    "expectedMessage": "Invalid credentials, Please try again."
-  },
-  "wrongPasswordForRealUsername": "ProbeOnly!23",
-  "note": "Valid-credential test data is intentionally NOT stored here — see utilities.CredentialsLoader, which reads projects/NDC/credentials/credentials.json at execution time only."
-}

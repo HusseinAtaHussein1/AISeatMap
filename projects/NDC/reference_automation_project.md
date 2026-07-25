@@ -1,6 +1,6 @@
 # NDC — Reference Automation Project
 
-**Registered:** 2026-07-12, per explicit user instruction. This is the company's real, production SHAFT automation codebase for NDC — analyzed once and persisted here as project knowledge so future Stage 4 (Automation Agent) runs never have to re-derive it from scratch.
+**Registered:** 2026-07-12, per explicit user instruction. This is the company's real, production SHAFT automation codebase for NDC — analyzed once and persisted here as project knowledge so future Stage 5 (Automation Agent) runs never have to re-derive it from scratch.
 
 ## Location
 
@@ -34,11 +34,11 @@
 | **Configuration** | `src/test/resources/Environment.properties` — base URLs (Admin `192.168.1.70`, Portal `192.168.1.92:9500`) plus credentials in plain text (see Security Flag above). |
 | **Reusable utilities** | `Drive_Factory.CommonMethod` (driver factory, partially adopted), `utilities.DataUtils` (properties + JSON test-data reader), `utilities.FakerSingleton` (Java Faker wrapper), `utilities.FileUploadUtil`, `Generic_Classes.*` (direct STG database query execution — `Connect_DB_And_Execute_Query`, `Get_DB_Config_STG`, `Execute_And_Save_To_CSV_Production_DB` — a DB-level verification capability beyond pure UI, directly relevant to this platform's own still-open Assumption #7 about NDC's database engine). |
 | **Naming conventions** | `_Page` suffix (Page Objects), `_TC` suffix (Test Cases), `Btn_`/`Txt_` locator prefixes (matches `automation_framework.md`'s table). |
-| **What Stage 4 should always reuse from here** | `SHAFT.GUI.WebDriver` + `Drive_Factory.CommonMethod` for driver setup (prefer over ad-hoc inline instantiation), `utilities.DataUtils` for any property/JSON test data, the existing `AdminPages.Login.LogIn_Page` class itself for Login specifically — extend it, never re-author a competing Login page object from scratch. |
+| **What Stage 5 should always reuse from here** | `SHAFT.GUI.WebDriver` + `Drive_Factory.CommonMethod` for driver setup (prefer over ad-hoc inline instantiation), `utilities.DataUtils` for any property/JSON test data, the existing `AdminPages.Login.LogIn_Page` class itself for Login specifically — extend it, never re-author a competing Login page object from scratch. |
 
-## Standing Rules for Future Stage 4 Runs Against This Project
+## Standing Rules for Future Stage 5 Runs Against This Project
 
-1. **Auto-detect this file at the start of every Stage 4 run for NDC.** State plainly: "Reference Project detected: `E:\Automation2\NDC-Uplift-Automation`" and ask whether to continue using it, change it, or remove it (never silently assume "yes"). See `agents/automation_agent.md` §32.
+1. **Auto-detect this file at the start of every Stage 5 run for NDC.** State plainly: "Reference Project detected: `E:\Automation2\NDC-Uplift-Automation`" and ask whether to continue using it, change it, or remove it (never silently assume "yes"). See `.claude/skills/automation-agent/SKILL.md` §32.
 2. **Never recreate SHAFT infrastructure or framework boilerplate** (driver factory, base test classes, TestNG/Allure wiring) that already exists here — generate only the business/page-specific automation code that fits this existing architecture.
 3. **Reuse existing utilities and patterns whenever possible** (table above) rather than authoring parallel equivalents.
 4. **Read-only by default** — see "Status" above.

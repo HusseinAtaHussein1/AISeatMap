@@ -105,11 +105,15 @@ flowchart TD
 
     TD --> TESTS["📋 Manual Test Suite"]
 
-    TESTS --> AUTO["🤖 Automation Agent"]
+    TESTS --> MANEX["🧪 Manual Execution Agent"]
+
+    MANEX --> CANDIDATES["📋 Automation Candidate Package"]
+
+    CANDIDATES --> AUTO["🤖 Automation Agent"]
 
     AUTO --> PACKAGE["📦 Automation Package"]
 
-    PACKAGE --> EXEC["▶️ Execution Agent"]
+    PACKAGE --> EXEC["▶️ Automation Execution Agent"]
 
     EXEC --> RESULTS["📊 Execution Results"]
 
@@ -135,7 +139,9 @@ Context --> Explorer
 
 Explorer --> TestDesign
 
-TestDesign --> Automation
+TestDesign --> ManualExecution
+
+ManualExecution --> Automation
 
 Automation --> Execution
 
@@ -153,8 +159,9 @@ Each agent has a single responsibility and communicates only through approved ar
 | 🧠 Project Context Agent | Builds the operational Project Context from Project Knowledge and Run Scope |
 | 🔍 Explorer Agent | Explores the application and discovers findings |
 | 📝 Test Design Agent | Generates manual test suites and traceability |
-| 🤖 Automation Agent | Generates maintainable automation packages |
-| ▶️ Execution Agent | Executes automation and collects execution evidence |
+| 🧪 Manual Execution Agent | Executes the manual test suite and identifies Automation Candidates |
+| 🤖 Automation Agent | Generates maintainable automation packages from Automation Candidates |
+| ▶️ Automation Execution Agent | Executes automation and collects execution evidence |
 | 📊 Reporting Agent | Produces the final QA assessment report |
 
 ---
@@ -204,8 +211,9 @@ agentic-ai-testing-platform/
 │       ├── project-context-agent/SKILL.md
 │       ├── explorer-agent/SKILL.md
 │       ├── test-design-agent/SKILL.md
+│       ├── manual-execution-agent/SKILL.md
 │       ├── automation-agent/SKILL.md
-│       ├── execution-agent/SKILL.md
+│       ├── automation-execution-agent/SKILL.md
 │       └── reporting-agent/SKILL.md
 │
 ├── workflows_and_pipelines/

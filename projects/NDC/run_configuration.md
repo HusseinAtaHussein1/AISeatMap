@@ -16,7 +16,7 @@ This is the durable, versioned home for the "run configuration" that `agents/pro
 
 | Field | Value |
 |---|---|
-| Execution Mode | **Headed** — set 2026-07-12 for RUN-20260712-001's Stage 5 (Execution Agent), per `agents/execution_agent.md` §5.1 (no default assumed; asked explicitly since this field was previously undefined). Applies to future runs unless a run's own Project Context overrides it. |
+| Execution Mode | **Headed** — set 2026-07-12 for RUN-20260712-001's Stage 6 (Automation Execution Agent, renamed from Execution Agent), per `.claude/skills/automation-execution-agent/SKILL.md` §5.1 (no default assumed; asked explicitly since this field was previously undefined). Applies to future runs unless a run's own Project Context overrides it. |
 
 ## Credentials Available
 
@@ -32,7 +32,7 @@ Do not paste real secret values into this table for a non-public environment —
 
 Available for this project — engine is shared platform infrastructure (`tools/browser_driver/`), everything project-specific lives inside this project's own folder. See `tools/browser_driver/README.md` for the full contract. Four separate pieces:
 - **Shared execution engine** (not project-specific): `tools/browser_driver/driver.js` + `api.js`.
-- **Browser Profile** (non-secret, versioned, small/stable): `browser/profile.json` — auth + browser init only (login selectors, default URL, browser settings). Deliberately NOT under `automation/` — that name is reserved for Stage 4's SHAFT output (`artifacts/automation/`).
+- **Browser Profile** (non-secret, versioned, small/stable): `browser/profile.json` — auth + browser init only (login selectors, default URL, browser settings). Deliberately NOT under `automation/` — that name is reserved for Stage 5's SHAFT output (`artifacts/automation/`).
 - **Screen/Component Knowledge** (non-secret, versioned, grows over time): `browser/screens/*.json` and `.../components/*.json` — one file per screen or shared component, loaded on demand via `useScreen()`/`useComponent()`. Currently has `components/GlobalNavigation.json` and `screens/CredentialRoutesFilter.json`.
 - **Credentials** (real, git-ignored, never committed): `credentials/credentials.json` — copy `credentials/credentials.template.json`, fill in real values. `STG` confirmed reachable at `http://192.168.1.70`; `PREPROD`/`PROD` not yet set up for this project.
 - Agents request a session via `BrowserDriver.authenticate({project: 'NDC', env})` — credentials load automatically by project name; agents never see login mechanics or credential values directly.
@@ -47,13 +47,13 @@ Available for this project — engine is shared platform infrastructure (`tools/
 
 ## Automation Packages (per-package, not project-wide — updated 2026-07-12, `agents/automation_agent.md` v5)
 
-NDC does **not** bind every automation effort to one project-wide framework — the platform stores independent Automation Packages, and which one (and which framework) a given Stage 4 run targets is decided by that run's Framework Decision Gate (`agents/automation_agent.md` §31), asked fresh every run. See `projects/NDC/workspace/automation/NDC_AutomationPackages.md` for the current registry of packages that exist.
+NDC does **not** bind every automation effort to one project-wide framework — the platform stores independent Automation Packages, and which one (and which framework) a given Stage 5 run targets is decided by that run's Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31), asked fresh every run. See `projects/NDC/workspace/automation/NDC_AutomationPackages.md` for the current registry of packages that exist.
 
 [`automation_framework.md`](automation_framework.md) documents the **SHAFT package's** own internal structure (Pages / Locators / Tests / Data layers, naming conventions, core rules) — binding whenever a run's Framework Decision Gate selects SHAFT, not a project-wide mandate. Not to be redesigned; only extended per that document's Gap Resolution Rule when a SHAFT-package run discovers a real implementation gap.
 
 ## Reference Automation Project (registered 2026-07-12)
 
-NDC has a registered **Reference Automation Project** — the company's real, external, production SHAFT codebase at `E:\Automation2\NDC-Uplift-Automation` (outside this repository; a live Git repo with remote `ahmedrefat-prog/NDC-Uplift-Automation`). See [`reference_automation_project.md`](reference_automation_project.md) for its full Architecture Summary. **Read-only by default** — per `agents/automation_agent.md` §32, every Stage 4 run must detect it, state it plainly, and ask the Automation Target Decision Gate (generate inside the platform / export a compatible package / update the Reference Project directly) before generating or modifying anything; a prior run's answer is never carried forward as a default.
+NDC has a registered **Reference Automation Project** — the company's real, external, production SHAFT codebase at `E:\Automation2\NDC-Uplift-Automation` (outside this repository; a live Git repo with remote `ahmedrefat-prog/NDC-Uplift-Automation`). See [`reference_automation_project.md`](reference_automation_project.md) for its full Architecture Summary. **Read-only by default** — per `.claude/skills/automation-agent/SKILL.md` §32, every Stage 5 run must detect it, state it plainly, and ask the Automation Target Decision Gate (generate inside the platform / export a compatible package / update the Reference Project directly) before generating or modifying anything; a prior run's answer is never carried forward as a default.
 
 ⚠️ That reference project's `Environment.properties` and some Login-related Java files contain hardcoded plaintext NDC credentials, committed to Git history — a pre-existing condition, not introduced by this platform, flagged in `reference_automation_project.md` for the credential owner's attention (rotation / history scrub).
 
@@ -88,4 +88,6 @@ Per [`../../pipeline/run_scope.md`](../../pipeline/run_scope.md), a run's scope 
 | RUN-20260713-001 | Feature (Observation-based Spike) | Feature / Custom scope description | Admin/Agency — Search Agency automation, Activate Agency spike (Blocked), FINDING-006 resolution, Branch full re-verification | Continuing `NDC_ProjectContext_BranchAgencyStaff.md` |
 | RUN-20260718-001 | User Story | User Story / Pasted text | Admin → Agency full CRUD lifecycle (Track A: Create, Search, Update, Actions/Approve-Reject) — see `context/NDC_ProjectContext_Agency.md`; Track B (WT1-T2919 E-Ticket Agency Branding) tracked separately, non-Agency-CRUD scope | Non-versioned (per 2026-07-18 process change) — Pending |
 | RUN-20260721-001 | User Story | User Story / Pasted text | Admin → Role Management — Create Role (Role Name, module/sub-module/tab permission grid, Submit for Approval/Cancel) — new scope/entity | `NDC_ProjectContext_Role.md` — Approved |
-| <!-- RUN-YYYYMMDD-XXX-{slug} --> | <!-- Full Regression / Smoke / Feature / User Story / Bug / Epic / Custom --> | <!-- e.g. User Story / Pasted text --> | <!-- summary --> | <!-- vN --> |
+| <!-- YYYY-MM-DD_HH-mm-ss__Scope__Target --> | <!-- Full Regression / Smoke / Feature / User Story / Bug / Epic / Custom --> | <!-- e.g. User Story / Pasted text --> | <!-- summary --> | <!-- vN --> |
+
+**Run folder naming (2026-07-23 update):** every run above still uses its original `RUN-YYYYMMDD-XXX` folder name — none were renamed (see `workflows_and_pipelines/pipeline/run_manager.md` §5.6 for why). Their inferred equivalents under the new `YYYY-MM-DD_HH-mm-ss__Scope__Target` convention are recorded in `projects/NDC/runs/.run_folder_index.json`. Every run going forward gets a folder name in the new convention directly, generated via `platform_core/tools/run_manager/` — no new row here should cite a `RUN-YYYYMMDD-XXX` name.

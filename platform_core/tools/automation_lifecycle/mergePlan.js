@@ -1,0 +1,199 @@
+// Workspace Merge Plan — computes what a Workspace Merge would do, per
+// workflows_and_pipelines/pipeline/pipeline.md §12. Never mutates anything; mergeApply.js performs
+// the writes this plan describes, gated behind an explicit `apply` flag.
+//
+// The classification below is a standard three-way merge (base/theirs/ours), not a naive two-way
+// diff — see pipeline.md §12 Step 3 for why: once a *different* run has already merged into this
+// same baseline since this run's Step-1 snapshot was taken, a plain "working copy vs. baseline now"
+// diff cannot tell "the other run added this, we never saw it" apart from "we deleted this," and
+// would silently delete the other run's already-merged work. Recording the baseline's content at
+// snapshot time ("base") resolves that ambiguity.
+
+const path = require('path');
+const { hashContent, walkFiles } = require('./hashUtils');
+const {
+  getPathScopedRef, isPathClean, isIgnored, showFileAtRef, listFilesAtRef, REPO_ROOT,
+} = require('./gitUtils');
+
+/**
+ * Builds a `relPath -> sha256` map for every non-ignored file under `dirAbsPath`, plus the list of
+ * ignored paths found along the way (build output, IDE folders, report archives — real, confirmed
+ * examples: NDC_tests_SHAFT ships its own nested .gitignore excluding target/, allure-results/,
+ * execution-summary/, generatedReport*.zip). Ignored files are never part of the merge diff; they
+ * are reported separately ("discardedIgnored") so their removal at Cleanup is a visible, accounted-
+ * for decision rather than a silent side effect of a directory delete.
+ * @param {string} dirAbsPath
+ * @param {{fs?: object, execFileSync: Function}} deps
+ * @returns {{tracked: Map<string,string>, ignored: string[]}}
+ */
+function buildDiskSnapshot(dirAbsPath, deps) {
+  const fsImpl = deps.fs || require('fs');
+  const tracked = new Map();
+  const ignored = [];
+  for (const absFile of walkFiles(dirAbsPath, { fs: fsImpl })) {
+    const relFile = path.relative(dirAbsPath, absFile).split(path.sep).join('/');
+    if (isIgnored(absFile, deps)) {
+      ignored.push(relFile);
+      continue;
+    }
+    tracked.set(relFile, hashContent(fsImpl.readFileSync(absFile)));
+  }
+  return { tracked, ignored };
+}
+
+/**
+ * Reconstructs the `relPath -> sha256` map for `relDirPath` as it existed at `ref` — only ever
+ * needed on the conflict path (baseline has moved since this run's snapshot), since that's the
+ * only time the current working tree no longer reflects the state a diff needs to compare against.
+ * @param {string} ref
+ * @param {string} relDirPath
+ * @param {{execFileSync: Function}} deps
+ * @returns {Map<string,string>}
+ */
+function buildGitSnapshot(ref, relDirPath, deps) {
+  const map = new Map();
+  const posixDir = relDirPath.split(path.sep).join('/');
+  for (const relFile of listFilesAtRef(ref, relDirPath, deps)) {
+    const content = showFileAtRef(ref, `${posixDir}/${relFile}`, deps);
+    if (content !== null) map.set(relFile, hashContent(content));
+  }
+  return map;
+}
+
+/**
+ * Pure three-way classification. `base`/`theirs`/`ours` are `relPath -> sha256` Maps:
+ *   base   = baseline content at this run's Step-1 snapshot (or == theirs, if no prior baseline
+ *            existed, or the baseline hasn't moved since the snapshot was taken)
+ *   theirs = baseline content now (may have moved if another run merged in the meantime)
+ *   ours   = this run's working copy content now
+ *
+ * Mirrors the standard base/theirs/ours merge rules used by every real merge tool — see
+ * pipeline.md §12 Step 3 for the worked-through rationale behind each branch below.
+ *
+ * @param {{base: Map<string,string>, theirs: Map<string,string>, ours: Map<string,string>}} trees
+ * @returns {{added: string[], modified: string[], deleted: string[], conflicts: string[]}}
+ */
+function classifyChanges({ base, theirs, ours }) {
+  const added = [];
+  const modified = [];
+  const deleted = [];
+  const conflicts = [];
+
+  const allPaths = new Set([...theirs.keys(), ...ours.keys()]);
+
+  for (const p of allPaths) {
+    const inBase = base.has(p);
+    const inTheirs = theirs.has(p);
+    const inOurs = ours.has(p);
+    const baseHash = base.get(p);
+    const theirsHash = theirs.get(p);
+    const oursHash = ours.get(p);
+
+    if (inTheirs && inOurs) {
+      if (theirsHash === oursHash) continue; // unchanged, nothing to do
+      if (!inBase) { conflicts.push(p); continue; } // both independently introduced this path, differently
+      if (baseHash === theirsHash) { modified.push(p); continue; } // only we changed it
+      if (baseHash === oursHash) continue; // only the other run changed it — already reflected in baseline, leave alone
+      conflicts.push(p); // both changed it, differently
+      continue;
+    }
+
+    if (inTheirs && !inOurs) {
+      if (!inBase) continue; // the other run added this after our snapshot; unrelated to us
+      if (baseHash === theirsHash) { deleted.push(p); continue; } // unchanged since base, and we don't have it -> we deleted it
+      conflicts.push(p); // the other run modified it AND we don't have it at all -> ambiguous, ask a human
+      continue;
+    }
+
+    if (!inTheirs && inOurs) {
+      if (!inBase) { added.push(p); continue; } // brand new file we introduced
+      if (baseHash === oursHash) continue; // we never touched it; the other run deleted it -> respect that deletion
+      conflicts.push(p); // we changed it AND the other run deleted it
+    }
+  }
+
+  return { added, modified, deleted, conflicts };
+}
+
+/**
+ * Reclassifies exact-content-match Added/Deleted pairs as Renamed. This is intentionally an exact
+ * hash match only (not git's fuzzy similarity-index rename detection) — a renamed-and-modified
+ * file will show up as one Delete + one Add rather than a Rename. That's a stated, acceptable
+ * limitation (pipeline.md §12 Step 3), not a data-loss risk: the content is still fully accounted
+ * for, just under a less precise label.
+ * @param {{added: string[], deleted: string[]}} changes
+ * @param {{theirs: Map<string,string>, ours: Map<string,string>}} trees
+ * @returns {{added: string[], deleted: string[], renamed: {from: string, to: string}[]}}
+ */
+function detectRenames({ added, deleted }, { theirs, ours }) {
+  const renamed = [];
+  const remainingAdded = [...added];
+  const remainingDeleted = [];
+
+  for (const delPath of deleted) {
+    const delHash = theirs.get(delPath);
+    const matchIdx = remainingAdded.findIndex((addPath) => ours.get(addPath) === delHash);
+    if (matchIdx >= 0) {
+      renamed.push({ from: delPath, to: remainingAdded[matchIdx] });
+      remainingAdded.splice(matchIdx, 1);
+    } else {
+      remainingDeleted.push(delPath);
+    }
+  }
+
+  return { added: remainingAdded, deleted: remainingDeleted, renamed };
+}
+
+/**
+ * Full merge plan for one (baseline, working copy) pair. Read-only — computes and returns the
+ * plan; mergeApply.js performs the writes.
+ *
+ * @param {string} baselineAbsPath
+ * @param {string} workingCopyAbsPath
+ * @param {{baselineRef: string|null}|null} snapshot - from baselineCopy.js's Step-1 snapshot, or
+ *   null if none was ever recorded (treated the same as "baseline unchanged" — see baselineMoved)
+ * @param {{fs?: object, execFileSync: Function}} deps
+ * @returns {object} the Merge Plan — see pipeline.md §12 Step 3 for field meanings
+ */
+function computeMergePlan(baselineAbsPath, workingCopyAbsPath, snapshot, deps) {
+  const relBaselinePath = path.relative(REPO_ROOT, baselineAbsPath).split(path.sep).join('/');
+
+  const dirty = isPathClean(relBaselinePath, deps) ? [] : ['baseline has uncommitted changes'];
+
+  const currentRef = getPathScopedRef(relBaselinePath, deps);
+  const snapshotRef = snapshot ? snapshot.baselineRef : null;
+  const baselineMoved = Boolean(snapshotRef) && currentRef !== snapshotRef;
+
+  const { tracked: theirs, ignored: theirsIgnored } = buildDiskSnapshot(baselineAbsPath, deps);
+  const { tracked: ours, ignored: oursIgnored } = buildDiskSnapshot(workingCopyAbsPath, deps);
+
+  const base = baselineMoved && snapshotRef
+    ? buildGitSnapshot(snapshotRef, relBaselinePath, deps)
+    : theirs; // unchanged (or first-ever promotion): base == theirs is the correct degenerate case
+
+  const classified = classifyChanges({ base, theirs, ours });
+  const { added, deleted, renamed } = detectRenames(classified, { theirs, ours });
+
+  return {
+    baselinePath: relBaselinePath,
+    currentRef,
+    snapshotRef,
+    baselineMoved,
+    dirty,
+    added,
+    modified: classified.modified,
+    deleted,
+    renamed,
+    conflicts: classified.conflicts,
+    discardedIgnored: oursIgnored,
+    baselineIgnored: theirsIgnored,
+  };
+}
+
+module.exports = {
+  buildDiskSnapshot,
+  buildGitSnapshot,
+  classifyChanges,
+  detectRenames,
+  computeMergePlan,
+};

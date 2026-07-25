@@ -1,4 +1,4 @@
-> **Position:** A reusable workflow specification, layered on top of [`pipeline/pipeline.md`](../pipeline/pipeline.md), [`pipeline/run_manager.md`](../pipeline/run_manager.md), and [`pipeline/run_scope.md`](../pipeline/run_scope.md). It does not modify any of those documents, does not modify any Agent specification under [`.claude/skills/`](../../.claude/skills/), and does not change the platform's 6-stage architecture — it defines one specific, narrow-scoped *invocation* of Stages 3–6 against an already-existing Project Context and Discovery baseline.
+> **Position:** A reusable workflow specification, layered on top of [`pipeline/pipeline.md`](../pipeline/pipeline.md), [`pipeline/run_manager.md`](../pipeline/run_manager.md), and [`pipeline/run_scope.md`](../pipeline/run_scope.md). It does not modify any of those documents, does not modify any Agent specification under [`.claude/skills/`](../../.claude/skills/), and does not change the platform's 7-stage architecture — it defines one specific, narrow-scoped *invocation* of Stages 3–7 against an already-existing Project Context and Discovery baseline.
 > **Status:** Specification only. This document defines the workflow; it has not been executed, and no run, agent, or project artifact has been produced as part of authoring it.
 
 # 1. Workflow Name
@@ -40,14 +40,18 @@ Only this story's acceptance criteria are in scope for Stage 3's test design (`.
       │  ⛔ Human Review Required ⛔
               │ (approved)
               ▼
- 3. Automation Agent                 [= Pipeline Stage 4]
+ 3. Manual Execution Agent           [= Pipeline Stage 4]
+      │  ⛔ Human Review Required ⛔
+              │ (approved)
+              ▼
+ 4. Automation Agent                 [= Pipeline Stage 5]
       │  ⛔ Automation Approval Required ⛔
               │ (approved)
               ▼
- 4. Execution Agent                  [= Pipeline Stage 5]
-      │  (mechanical — no separate gate, per pipeline/pipeline.md §4 Stage 5)
+ 5. Automation Execution Agent       [= Pipeline Stage 6]
+      │  (mechanical — no separate gate, per pipeline/pipeline.md §4 Stage 6)
               ▼
- 5. Reporting Agent                  [= Pipeline Stage 6]
+ 6. Reporting Agent                  [= Pipeline Stage 7]
               │
               ▼
       Stop Workflow
@@ -76,40 +80,54 @@ Before Stage 3 is invoked, the Run Manager performs the Automation Start Decisio
 
 Per `.claude/skills/test-design-agent/SKILL.md` §16 ("User Story" strategy): at minimum one test case per enumerated acceptance criterion, and every carried-forward Assumption/Risk tied to this story gets its own explicitly tagged assumption-based test case. If the story's specific area was never independently exercised by the existing Discovery Artifacts, the agent's own existing rule applies — it records `"Not independently verified in Discovery"` (§5.1) rather than treating that as a blocker.
 
-## Step 3 — Automation Agent *(Pipeline Stage 4)*
+## Step 3 — Manual Execution Agent *(Pipeline Stage 4)*
+
+**Spec:** `.claude/skills/manual-execution-agent/SKILL.md` — unmodified.
+
+| | |
+|---|---|
+| **Input** | Approved Manual Test Suite / Traceability Matrix / Coverage Report from Step 2 · existing Approved Project Context |
+| **Contract keys consumed** | `manual_test_suite`, `traceability_matrix`, `coverage_report`, `project_context` |
+| **Output** | Manual Execution Results · Manual Execution Summary · Automation Candidate Package, scoped to this story's test cases only |
+| **Contract keys produced** | `manual_execution_results`, `manual_execution_summary`, `automation_candidate_package`, `manual_execution_artifacts` |
+| **Checkpoint** | **Human Review Required** (QA Lead / Test Lead, per `pipeline/pipeline.md` §5.1) |
+
+Per `.claude/skills/manual-execution-agent/SKILL.md` §17 ("User Story" Run Scope): execute only the test cases traceable to this story's acceptance criteria — no opportunistic execution of unrelated suite content. Only test cases confirmed successful and stable here (§9 of that spec) become Automation Candidates for Step 4.
+
+## Step 4 — Automation Agent *(Pipeline Stage 5)*
 
 **Spec:** `.claude/skills/automation-agent/SKILL.md` — unmodified.
 
 | | |
 |---|---|
-| **Input** | Approved Manual Test Suite / Traceability Matrix / Coverage Report from Step 2 · existing Approved Project Context · any existing Automation Package for this project |
-| **Contract keys consumed** | `manual_test_suite`, `traceability_matrix`, `coverage_report`, `project_context`, `existing_automation_package` (optional) |
-| **Output** | Automation Package (new assets for this story's test cases, or reused/extended existing assets per the agent's own reuse-before-generate rule) |
+| **Input** | Approved Automation Candidate Package + Manual Execution Summary from Step 3 · Manual Test Suite / Traceability Matrix / Coverage Report from Step 2 (content source) · existing Approved Project Context · any existing Automation Package for this project |
+| **Contract keys consumed** | `automation_candidate_package`, `manual_execution_summary`, `manual_test_suite`, `traceability_matrix`, `coverage_report`, `project_context`, `existing_automation_package` (optional) |
+| **Output** | Automation Package (new assets for this story's Automation Candidates, or reused/extended existing assets per the agent's own reuse-before-generate rule) |
 | **Contract keys produced** | `automation_plan`, `automation_package`, `automation_manifest`, `automation_decision_report`, `automation_coverage_report`, `automation_suite_manifest`, `automation_summary` |
 | **Checkpoint** | **Automation Approval Required** (Automation Lead / Release Manager, per `pipeline/pipeline.md` §5.2) |
 
-The Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31) still applies in full — this workflow does not pre-select a framework on the human's behalf.
+The Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31) still applies in full — this workflow does not pre-select a framework on the human's behalf. Only test case IDs named in Step 3's Automation Candidate Package receive an automation decision — a story's acceptance criterion whose test case failed or was blocked during Step 3 is never automated this run.
 
-## Step 4 — Execution Agent *(Pipeline Stage 5)*
+## Step 5 — Automation Execution Agent *(Pipeline Stage 6)*
 
-**Spec:** `.claude/skills/execution-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/automation-execution-agent/SKILL.md` — unmodified.
 
 | | |
 |---|---|
-| **Input** | Approved Automation Package + Automation Summary from Step 3 · existing Approved Project Context |
+| **Input** | Approved Automation Package + Automation Summary from Step 4 · existing Approved Project Context |
 | **Contract keys consumed** | `automation_suite`, `automation_summary`, `project_context`, `execution_mode` (must still be explicitly resolved per the skill's own §5.1 — never defaulted by this workflow) |
-| **Execution scope** | Selective — only this story's newly generated/extended test cases, per `.claude/skills/execution-agent/SKILL.md` §13 ("User Story" Run Scope Type: "execute only the test cases traceable to that story's acceptance criteria") |
+| **Execution scope** | Selective — only this story's newly generated/extended test cases, per `.claude/skills/automation-execution-agent/SKILL.md` §13 ("User Story" Run Scope Type: "execute only the test cases traceable to that story's acceptance criteria") |
 | **Output** | Execution Results + evidence |
 | **Contract keys produced** | `execution_results`, `execution_artifacts` |
-| **Checkpoint** | *None — mechanical, gated only by Step 3's Automation Approval* |
+| **Checkpoint** | *None — mechanical, gated only by Step 4's Automation Approval* |
 
-## Step 5 — Reporting Agent *(Pipeline Stage 6)*
+## Step 6 — Reporting Agent *(Pipeline Stage 7)*
 
 **Spec:** `.claude/skills/reporting-agent/SKILL.md` — unmodified.
 
 | | |
 |---|---|
-| **Input** | Step 4's Execution Results · Step 2's Manual Test Suite + Traceability Matrix · existing Approved Project Context |
+| **Input** | Step 5's Execution Results · Step 2's Manual Test Suite + Traceability Matrix · existing Approved Project Context |
 | **Contract keys consumed** | `execution_results`, `manual_test_suites`, `traceability_matrix`, `project_context` |
 | **Output** | Final QA Report, scoped to this story |
 | **Contract key produced** | `final_qa_report` |
@@ -132,8 +150,11 @@ Neither of these is regenerated by this workflow. If either does not exist or is
 | Manual Test Suite (Excel) | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TestCases_{Module}.xlsx` | Test Design Agent |
 | Requirement Traceability Matrix | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_TraceabilityMatrix.md` | Test Design Agent |
 | Coverage Report | `projects/{{PROJECT_NAME}}/artifacts/test_design/{{PROJECT_NAME}}_CoverageReport.md` | Test Design Agent |
+| Manual Execution Results | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionResults.md` | Manual Execution Agent |
+| Manual Execution Summary | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_ManualExecutionSummary.md` | Manual Execution Agent |
+| Automation Candidate Package | `projects/{{PROJECT_NAME}}/artifacts/manual_execution/{{PROJECT_NAME}}_AutomationCandidatePackage.md` | Manual Execution Agent |
 | Automation Package + supporting reports | `projects/{{PROJECT_NAME}}/artifacts/automation/{{PROJECT_NAME}}_tests_{Framework}/` and siblings | Automation Agent |
-| Execution Results | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md` | Execution Agent |
+| Execution Results | `projects/{{PROJECT_NAME}}/artifacts/execution/{{PROJECT_NAME}}_ExecutionResults.md` | Automation Execution Agent |
 | Final QA Report | `projects/{{PROJECT_NAME}}/artifacts/reporting/{{PROJECT_NAME}}_Final_QA_Report.md` | Reporting Agent |
 | Run Summary | `projects/{{PROJECT_NAME}}/artifacts/runs/RUN-YYYYMMDD-XXX-{ai_generated_slug}/metadata/run_summary.md` | Run Manager |
 
@@ -143,7 +164,8 @@ NDC uses its `workspace/` variant of these paths — see `projects/NDC/onboardin
 
 - [ ] Step 1's Stage-State Check confirms Stages 1–2 are `Approved` before Stage 3 launches (or the human explicitly chose an alternative path).
 - [ ] Test Design output covers every acceptance criterion in the story, each with a populated `Acceptance Criteria Reference` (`.claude/skills/test-design-agent/SKILL.md` §5.4).
-- [ ] Automation Decision is recorded for every generated test case; Automation Approval is granted.
+- [ ] Manual Execution Results cover exactly this story's test cases, and the Automation Candidate Package's qualifying criteria (`.claude/skills/manual-execution-agent/SKILL.md` §9.1) were actually applied before Human Review approval.
+- [ ] Automation Decision is recorded for every test case named in the Automation Candidate Package; Automation Approval is granted.
 - [ ] Execution Results cover exactly this story's test cases — no unrelated suite content opportunistically included.
 - [ ] Final QA Report is produced and clearly scoped to this story.
 
@@ -157,12 +179,12 @@ NDC uses its `workspace/` variant of these paths — see `projects/NDC/onboardin
 
 1. **This workflow never re-runs Stage 1 or Stage 2** — it consumes their existing Approved outputs unchanged. If they don't exist or aren't current, Step 1 stops and asks; it does not run them itself (that would make this workflow indistinguishable from a full pipeline run, which already exists).
 2. **The Stage-State Check (§4 Step 1) always runs first** — never assumed, never skipped, per `pipeline/pipeline.md` §5.4's existing "never choose on the human's behalf" rule.
-3. **All applicable checkpoints from `pipeline/pipeline.md` §5 still apply in full** — Human Review at Stage 3, Automation Approval at Stage 4.
+3. **All applicable checkpoints from `pipeline/pipeline.md` §5 still apply in full** — Human Review at Stage 3 and Stage 4, Automation Approval at Stage 5.
 4. **Scope never widens beyond this story's acceptance criteria** without an explicit, disclosed Human Decision (`pipeline/pipeline.md` §5.5) — an adjacent feature staying out of scope is documented, not silently folded in.
 
 # 10. Relationship to the Platform Architecture
 
-This workflow does not introduce a new pipeline, stage, or skill. It is a **reusable, scoped invocation** of Stages 3–6 of the existing six-stage architecture, conditioned on Stages 1–2 already being satisfied. A full pipeline run remains the platform's standard execution mode for a new project or a genuinely new exploration pass; User Story Run exists alongside it for the common case of adding one story to an already-explored application.
+This workflow does not introduce a new pipeline, stage, or skill. It is a **reusable, scoped invocation** of Stages 3–7 of the existing seven-stage architecture, conditioned on Stages 1–2 already being satisfied. A full pipeline run remains the platform's standard execution mode for a new project or a genuinely new exploration pass; User Story Run exists alongside it for the common case of adding one story to an already-explored application.
 
 # 11. Example
 
@@ -175,4 +197,4 @@ Run Scope: User Story — "As an Admin, I want to filter the Employee List by
            Sub Unit so that I can quickly find employees in a given department."
 ```
 
-Hypothetical result: the Stage-State Check finds Stage 1 (`OrangeHRM_ProjectContext.md`, v2) and Stage 2 Approved and current; Test Design Agent produces `OrangeHRM_TestCases_PIM.md`/`.xlsx` scoped to this one filter behavior, each case citing its Acceptance Criteria Reference, and clears Human Review; Automation Agent extends the existing `OrangeHRM_tests_Playwright/` package with the new filter test cases and clears Automation Approval; Execution Agent runs only those new cases; Reporting Agent produces a Final QA Report scoped to this story alone.
+Hypothetical result: the Stage-State Check finds Stage 1 (`OrangeHRM_ProjectContext.md`, v2) and Stage 2 Approved and current; Test Design Agent produces `OrangeHRM_TestCases_PIM.md`/`.xlsx` scoped to this one filter behavior, each case citing its Acceptance Criteria Reference, and clears Human Review; Manual Execution Agent executes those cases against the live application, confirms all of them Passed and stable, produces an Automation Candidate Package naming all of them, and clears Human Review; Automation Agent extends the existing `OrangeHRM_tests_Playwright/` package with the new filter test cases named in that package and clears Automation Approval; Automation Execution Agent runs only those new cases; Reporting Agent produces a Final QA Report scoped to this story alone.

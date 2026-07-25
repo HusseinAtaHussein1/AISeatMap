@@ -1,6 +1,6 @@
 # NDC — Requirement Traceability Matrix — Admin / Agency (Create · Search · Update · Actions)
 
-> **Approved** 2026-07-18 (user) — copied here from `runs/RUN-20260718-001/test_design/` as the current latest-approved state, per `workspace/test_design/README.md`.
+> **Approved** 2026-07-18 (user) — copied here from `runs/RUN-20260718-001/test_design/` as the current latest-approved state, per `workspace/test_design/README.md`. **Extended 2026-07-25** with a new "Test Case Reference" appendix (Risk/Acceptance Criteria/Run Scope, keyed by Test Case ID) when `NDC_TestCases_Agency.md` was rewritten to the Canonical Test Case Writing Standard — the Requirement-ID-centric rows below are otherwise unchanged in content.
 
 **Run:** RUN-20260718-001 · **Run Scope:** User Story / Pasted text (four jointly-scoped User Stories) · **Project Context:** `context/NDC_ProjectContext_Agency.md` (single living document, not versioned — per explicit user instruction 2026-07-18) · **Test Suite:** `test_design/NDC_TestCases_Agency.md` / `.xlsx`
 
@@ -187,3 +187,56 @@ Maps every Requirement ID from Project Context v4 §2 to the Test Case ID(s) tha
 | FR-AGCRT-MASTER-02 (reused for Update spot-check) | TC-AGENCY-UPDATE-004 | Validated (Create) | N/A | Covered |
 
 **Out-of-scope Requirement IDs:** none — every Requirement ID in `NDC_ProjectContext_Agency.md` §2 has at least one citing Test Case. See `NDC_CoverageReport.md` for the Coverage Percentage computation and the full Coverage Gaps accounting (Partially Covered items above, plus the Findings disposition table).
+
+---
+
+## Test Case Reference (Risk, Acceptance Criteria, Run Scope)
+
+**Added 2026-07-25**, when `NDC_TestCases_Agency.md` was rewritten to the Canonical Test Case Writing Standard (`.claude/skills/test-design-agent/SKILL.md` §6.1) — Risk, Acceptance Criteria Reference, and Run Scope Reference moved here from inline test-case fields; Requirement/Discovery/Finding/Evidence References are unchanged above, keyed by Requirement ID.
+
+**Run Scope Reference (all 66 test cases, no exceptions):** User Story / Pasted text — four jointly-scoped User Stories (Create, Search, Actions, Update), RUN-20260718-001.
+
+**Acceptance Criteria Reference:** each test case's governing acceptance criterion is the same one named against its Requirement ID's own row above (e.g. `TC-AGENCY-CREATE-030` → Product Access Details, Product/Status Column/Credential name/Description rows). Not repeated per test case here — follow the Requirement ID back to its section above.
+
+**Risk** (Level + one-line statement — derived from the populating Finding's own Business/Technical Risk where one applies, otherwise independently assessed against this User Story's own stated risk framing):
+
+| Test Case ID | Risk | Test Case ID | Risk |
+|---|---|---|---|
+| CREATE-001 | High — core positive path across the whole User Story; inherits FINDING-002's approval-workflow risk. | ACTIONS-001 | High — inherits FINDING-004's near-miss context (wrong action triggered on a real record). |
+| CREATE-002 | High — a missing/wrong validation message on any Mandatory field lets bad data reach the approval queue. | ACTIONS-002 | High — showing Approve/Reject on an already-decided row risks a duplicate/contradictory workflow action. **Confirmed 2026-07-25 — see Manual Execution Results.** |
+| CREATE-003 | Medium — ambiguous reading of "special characters allowed"; re-interpretation risk regardless of outcome. | ACTIONS-003 | High — formalizes FINDING-002's approval-workflow mechanism. |
+| CREATE-004 | Low — data-integrity/UI-truncation concern, not a stated requirement. | ACTIONS-004 | High — financial/operational impact if an Approved Agency is left Inactive. |
+| CREATE-005 | Medium — silent truncation risks an incomplete Post Office Box value undetected. | ACTIONS-005 | High — same rationale as ACTIONS-003, Reject path. |
+| CREATE-006 | Low — Optional field; malformed data is cosmetic, not a workflow blocker. | ACTIONS-006 | High — same operational-impact rationale as Approve. |
+| CREATE-007 | Medium — internationalization/data-entry-format concern; behavior confirmed by design, not an open conflict. | ACTIONS-007 | Medium — completes the three-state Status Reflection matrix. |
+| CREATE-008 | Medium — an editable/incorrect Country would misclassify the Agency's operating country downstream. | ACTIONS-008 | High — inherits FINDING-004's near-miss (a real shared-environment record was nearly affected). |
+| CREATE-009 | Low — Optional, no stated validation message. | ACTIONS-009 | High — same as the individual Status Reflection cases this consolidates. |
+| CREATE-010 | Medium — a Name field accepting digits/symbols pollutes contact records used elsewhere. | ACTIONS-010 | Medium — if a distinct role is actually required and unavailable, every Approve/Reject case may need re-scoping. |
+| CREATE-011 | Low — internationalization/data-integrity concern, already confirmed by design for Contact Person. | UPDATE-001 | High — a field that fails to pre-populate could be silently blanked and overwritten on next Save. |
+| CREATE-012 | Medium — an invalid stored email breaks downstream approval-workflow communication. | UPDATE-002 | High — core positive path for the entire Update Agency feature. |
+| CREATE-013 | Medium — accepting a non-PDF contract document risks invalid compliance records. | UPDATE-003 | Medium — a Cancel that silently saves partial edits violates explicit user intent. |
+| CREATE-014 | Medium — unenforced Start/End ordering could create a contract with an inverted/zero-length validity period. | UPDATE-004 | Medium — if Update's validation is looser than Create's, bad data could enter an existing record. |
+| CREATE-015 | Medium — a user unable to confirm which file was attached cannot verify the correct upload. | UPDATE-005 | Medium — confirms Update's re-entry into the approval workflow is a real, functioning loop. |
+| CREATE-016 | Medium — without a remove/replace path, a wrong-file upload has no recovery short of abandoning the form. | UPDATE-006 | Medium — same rationale as UPDATE-005, Reject path. |
+| CREATE-017 | Medium — an oversized/invalid logo could break Agency Portal branding rendering. | UPDATE-007 | Medium — if rejected edits are silently applied anyway, that's a real data-integrity defect. |
+| CREATE-018 | Low — a UX/confirmation concern, not a blocking defect if still correctly saved. | SEARCH-001 | Medium — Agency Code is expected to be the most precise search key among 9,500+ records. |
+| CREATE-019 | Medium — an un-editable/incorrect default forces every Agency under a Branch to share one contact. | SEARCH-002 | Medium — same rationale as SEARCH-001. |
+| CREATE-020 | Medium — a hard single-entry limit would be a functional gap against the AC. | SEARCH-003 | Medium — an incorrect geo-filter could surface/hide Agencies from the wrong region. |
+| CREATE-021 | Low — Optional field. | SEARCH-004 | Medium — Status is a primary way staff distinguish Active from Inactive/Pending. |
+| CREATE-022 | Medium — financial/reconciliation impact if multi-account Agencies can't be represented. | SEARCH-005 | Low — UX clarity; an empty grid with no message could look broken. |
+| CREATE-023 | Medium — an invalid Account Number stored without rejection risks a misdirected payment downstream. | SEARCH-006 | Low — Optional search fields; a gap here doesn't block any workflow. |
+| CREATE-024 | Low — Optional field; a rejected/blank Account Type is a data-completeness concern, not a blocker. | SEARCH-007 | Medium — incorrect AND/OR logic could hide a real record or surface unrelated ones. |
+| CREATE-025 | High — financial/credit-control fields; non-numeric or nonsensical values undermine the User Story's compliance goal. | SEARCH-008 | Low — navigation-only, but a broken entry point blocks Create Agency's discoverability. |
+| CREATE-026 | Medium — an unbounded percentage stored without rejection misrepresents the Agency Wallet threshold logic. | SEARCH-009 | Low — an Optional-everything form blocking on empty submission would contradict its own field statuses. |
+| CREATE-027 | High — Payment Options directly govern invoicing/settlement; wrong/absent settings have direct financial impact. | | |
+| CREATE-028 | Medium — Invoice Generation directly determines how/when the Agency is invoiced. | | |
+| CREATE-029 | Medium — incorrect inheritance would let an Agency access products its parent Branch was never granted. | | |
+| CREATE-030 | High — Product Access governs a live booking capability. **Confirmed 2026-07-25 — see Manual Execution Results.** | | |
+| CREATE-031 | High — PCC credentials gate GDS/ticketing access; incorrect inheritance risks the wrong supplier's credential scope. | | |
+| CREATE-032 | High — same rationale as CREATE-031. **Inconclusive 2026-07-25 — re-test needed, see Manual Execution Results.** | | |
+| CREATE-033 | Medium — an incorrect filter could let a user select a mismatched credential. | | |
+| CREATE-034 | Medium — if the toggle has no observable Portal effect, Admin has no way to confirm it took effect. | | |
+| CREATE-035 | Medium — if Draft enforces full validation it adds no value; if it allows zero fields, an unidentifiable empty record is created. | | |
+| CREATE-036 | Low — a Cancel that silently persists a partial record would pollute the Agency list. | | |
+| CREATE-038 | High — this User Story explicitly frames Agency creation around compliance; unsanitized input is a real security exposure. | | |
+| CREATE-039 | Low — internationalization/data-integrity concern, consistent with an already-confirmed-by-design precedent. | | |

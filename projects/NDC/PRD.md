@@ -14,7 +14,7 @@ Full originals, with cross-reference notes, live at:
 
 ### Description
 
-As an NDC Admin user, I want to apply filters on returned journeys based on supplier and supplier credentials at the route level (not only airport level), so that I can have better control over search results and ensure only valid and relevant journeys are displayed to agencies.
+As an NDC Admin user, I want to apply filters on returned journeys based on supplier and supplier credentials at the route level (not only airport level), so that I can have better control over search results and ensure only valid and relevant v are displayed to agencies.
 
 ### Acceptance Criteria
 
@@ -288,4 +288,4 @@ N/A
 
 - Search Role
 - Update Role
-- STAFF CRUD
+- STUFF CRUD

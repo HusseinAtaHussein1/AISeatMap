@@ -1,10 +1,13 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="NDC Agency Create Diagnostic" verbose="1">
+  <!-- Updated 2026-07-24: retargeted to the consolidated Agency_Create_TC (see
+       ../NDC_AutomationPackages.md Notes) -- the old Agency_TC.addAgencyHappyPathEntersApprovalQueue
+       this suite originally targeted no longer exists; createAgency001 is its direct successor. -->
   <test name="AgencyCreateDiagnostic">
     <classes>
-      <class name="AdminPages.Admin.Agency.Agency_TC">
+      <class name="AdminPages.Admin.Agency.Agency_Create_TC">
         <methods>
-          <include name="addAgencyHappyPathEntersApprovalQueue"/>
+          <include name="createAgency001_HappyPathEntersApprovalQueue"/>
         </methods>
       </class>
     </classes>

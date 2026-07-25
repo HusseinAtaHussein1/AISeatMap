@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This folder exists to define the **fixed, repeatable process** that wires the platform's six independent Skills (`.claude/skills/`) together into one governed pipeline — the sequencing, the artifact handoff contracts, the human checkpoints, and the run-identity/workspace mechanics around them.
+This folder exists to define the **fixed, repeatable process** that wires the platform's seven independent Skills (`.claude/skills/`) together into one governed pipeline — the sequencing, the artifact handoff contracts, the human checkpoints, and the run-identity/workspace mechanics around them.
 
 `.claude/skills/` defines what each stage does *in isolation*; this folder defines *how those stages are wired together*, in what order, with what gates, and how one run is told apart from another. Without this layer, "what order do agents run in" and "who approves what" would have to be re-decided, informally, every time — this folder exists so that decision is made once and enforced mechanically on every run.
 
@@ -12,7 +12,7 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 
 ## What Lives Here
 
-- **The pipeline specification** — the invariant, six-stage execution model: stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the end-to-end traceability chain, and the Knowledge Architecture governing `platform_core/knowledge/`.
+- **The pipeline specification** — the invariant, seven-stage execution model: stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the end-to-end traceability chain, and the Knowledge Architecture governing `platform_core/knowledge/`.
 - **Orchestration component specifications** — mechanical (non-judgment) components the pipeline specification delegates full detail to: run identity/workspace/status management, and the Run Scope concept (what a given run is allowed to validate).
 - **Named, reusable workflows** — specific, narrower-than-full-pipeline invocations layered on top of the pipeline specification (e.g. a three-stage smoke check), never modifying it.
 
@@ -28,7 +28,7 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 ```
 workflows_and_pipelines/
 ├── pipeline/
-│   ├── pipeline.md       # the canonical 6-stage specification — stages, gates, versioning,
+│   ├── pipeline.md       # the canonical 7-stage specification — stages, gates, versioning,
 │   │                      #   traceability, Knowledge Architecture (§10), Debug Mode (§11)
 │   ├── run_manager.md    # the Run Manager — a mechanical orchestration component, not an Agent:
 │   │                      #   Run ID/workspace/metadata/status, never a judgment role
@@ -56,7 +56,7 @@ workflows/{name}.md  ──layers on top of──▶  pipeline/pipeline.md
                                      platform_core/knowledge/   projects/{PROJECT}/artifacts/
 ```
 
-- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the six Skills — it invokes each in sequence and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
+- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven Skills — it invokes each in sequence and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
 - **`workflows_and_pipelines/` → `platform_core/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core/knowledge/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
 - **`workflows_and_pipelines/` → `projects/`:** this folder defines every artifact path convention, versioning rule, Run Workspace layout, and Run Scope concept that governs how `projects/{{PROJECT_NAME}}/artifacts/` (current-approved state) and `.../artifacts/runs/` (per-run snapshots) are organized — but it never contains a project's actual generated content itself.
 - **`.claude/` never depends back on this folder.** The dependency direction is strictly one-way: orchestration invokes behavior, behavior never invokes orchestration.
@@ -71,7 +71,7 @@ Run requested (optionally via a named workflows/{name}.md)
 Run Manager (run_manager.md) allocates Run ID + Display Name, creates the Run Workspace
         ↓
 pipeline.md invokes Stage 1 → checkpoint (§5.1) → Stage 2 → checkpoint → Stage 3 → checkpoint
-        → Stage 4 → checkpoint (§5.2) → Stage 5 (mechanical, no gate) → Stage 6
+        → Stage 4 → checkpoint (§5.1) → Stage 5 → checkpoint (§5.2) → Stage 6 (mechanical, no gate) → Stage 7
         ↓
 Each stage resolves Knowledge (platform_core/knowledge/ + projects/{PROJECT}/knowledge_base/, §10)
         ↓
@@ -105,14 +105,14 @@ Named Workflow (workflows/first_run.md)
 Run Manager creates Run Workspace, allocates Run ID
         ↓
 pipeline.md Stage 1 (Project Context) → ⛔ checkpoint → Stage 2 (Explorer) → ⛔ checkpoint
-        → Stage 3 (Test Design) → ⛔ checkpoint → Stop (this workflow excludes Stages 4–6)
+        → Stage 3 (Test Design) → ⛔ checkpoint → Stop (this workflow excludes Stages 4–7)
         ↓
 Run Manifest updated at each checkpoint; Run Summary published on terminal status
 ```
 
 ## Common Mistakes
 
-- **"Add a fourth Login sub-check as a new pipeline stage."** No — the pipeline is fixed at six stages (`pipeline.md` §6 Rule 3); a narrower or additional check is expressed as a named workflow selecting existing stages, never a new stage.
+- **"Add a fourth Login sub-check as a new pipeline stage."** No — the pipeline is fixed at seven stages (`pipeline.md` §6 Rule 3); a narrower or additional check is expressed as a named workflow selecting existing stages, never a new stage.
 - **"Put this agent behavioral rule in `pipeline.md` since it affects the whole run."** No — agent behavior belongs exclusively in the corresponding `.claude/skills/{stage}/SKILL.md`; `pipeline.md` only sequences and gates it.
 - **"Let the Run Manager flag this Finding since it's already tracking the run."** No — the Run Manager has no judgment role of any kind; a Finding is exclusively the Explorer Agent's output.
 - **"Store this run's screenshots inside `workflows_and_pipelines/`."** No — generated run content lives under `projects/{{PROJECT_NAME}}/artifacts/runs/`; this folder only defines the rules for that structure.

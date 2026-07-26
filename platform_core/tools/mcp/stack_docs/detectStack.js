@@ -329,14 +329,18 @@ function parseCsproj(file) {
  * lockfile, and framework-config paths.
  *
  * @param {string} root
+ * @param {{maxDepth?: number}} [options] Defaults to MAX_DEPTH. A Maven/SHAFT tree keeps its test
+ *   sources at `src/test/java/com/company/pages` — deeper than the default — so a caller scanning a
+ *   whole application repository raises this rather than silently missing them.
  * @returns {{manifests: Array<object>, configs: Array<object>}}
  */
-function findManifestFiles(root) {
+function findManifestFiles(root, options = {}) {
+  const maxDepth = Number.isInteger(options.maxDepth) ? options.maxDepth : MAX_DEPTH;
   const manifests = [];
   const configs = [];
 
   function walk(dir, depth) {
-    if (depth > MAX_DEPTH) return;
+    if (depth > maxDepth) return;
     let entries;
     try {
       entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -384,15 +388,17 @@ function findManifestFiles(root) {
  * `version` is the version the suite will actually run against wherever one could be resolved.
  *
  * @param {string} root Absolute or cwd-relative path to walk.
- * @param {{materialOnly?: boolean}} [options] `materialOnly` (default true) restricts the result to
- *   dependencies whose API surface generated automation touches — see README.md §2.4.
+ * @param {{materialOnly?: boolean, maxDepth?: number}} [options] `materialOnly` (default true)
+ *   restricts the result to dependencies whose API surface generated automation touches — see
+ *   README.md §2.4. `maxDepth` (default MAX_DEPTH) bounds the walk; raise it for a deep source tree
+ *   such as Maven's `src/test/java/com/company/pages`, which sits below the default.
  * @returns {{root: string, ecosystems: string[], frameworks: string[], dependencies: Array<object>,
- *   sources: string[], unpinned: string[]}}
+ *   sources: string[], configs: Array<object>, unpinned: string[]}}
  */
 function detectStack(root, options = {}) {
-  const { materialOnly = true } = options;
+  const { materialOnly = true, maxDepth } = options;
   const resolvedRoot = path.resolve(root);
-  const { manifests, configs } = findManifestFiles(resolvedRoot);
+  const { manifests, configs } = findManifestFiles(resolvedRoot, { maxDepth });
 
   // Keyed by `${ecosystem}::${lowercased name}`; a 'lock' source replaces a 'manifest' one.
   const byKey = new Map();
@@ -449,4 +455,6 @@ module.exports = {
   isMaterial,
   normalizeVersion,
   MATERIAL_PATTERNS,
+  IGNORED_DIRS,
+  MAX_DEPTH,
 };

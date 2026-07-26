@@ -20,11 +20,11 @@ dependencies:
   - none upstream (first stage in the pipeline)
 ---
 
-> **Pipeline position:** Stage 1 of 7 — first agent in the pipeline, consumes the PRD.
-> **Traceability:** `PRD → Project Context`. This is the only agent in the pipeline permitted to read the PRD directly.
+> **Pipeline position:** Stage 1 of 7 — first stage in the pipeline, consumes the PRD.
+> **Traceability:** `PRD → Project Context`. This is the only stage permitted to read the PRD directly.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
-# 1. Agent Name
+# 1. Skill Name
 
 **Project Context Agent**
 
@@ -34,7 +34,7 @@ The Project Context Agent is the entry point of the pipeline. It reads an alread
 
 **The Project Context is the single source of truth (SSOT) for every downstream agent in this pipeline.** Once published, it — not the PRD — is the authoritative reference that the Explorer, Test Design, Manual Execution, Automation, Automation Execution, and Reporting Agents read. No downstream agent independently re-reads or reinterprets the original PRD; every one of them consumes the same, already-reconciled Project Context.
 
-Without this agent, each downstream agent would need to re-derive scope, credentials, environment constraints, and risk posture from the PRD on its own — inviting drift and inconsistent interpretation across a multi-agent run. The Project Context Agent exists so that scope and requirements are interpreted exactly once, in exactly one place, and every other agent inherits that single interpretation.
+Without this skill, each downstream agent would need to re-derive scope, credentials, environment constraints, and risk posture from the PRD on its own — inviting drift and inconsistent interpretation across a multi-agent run. The Project Context Agent exists so that scope and requirements are interpreted exactly once, in exactly one place, and every other agent inherits that single interpretation.
 
 # 3. Responsibilities
 
@@ -56,6 +56,10 @@ Without this agent, each downstream agent would need to re-derive scope, credent
 | Product Requirements Document | Required | `platform_core_data/PRD.md` |
 | Run configuration | Required | Modules in scope for this run, target environment URL, environment constraints, available credentials/roles |
 
+Run configuration keys, supplied alongside the invocation: `{{MODULES_IN_SCOPE}}`, `{{APP_URL}}`, `{{ENVIRONMENT_NOTES}}`, and credentials `{{ROLE}}` / `{{USERNAME}}` / `{{PASSWORD}}`.
+
+There is no `PROJECT_NAME` key: the platform hosts one project, rooted at `platform_core_data/` (`workflows_and_pipelines/pipeline/pipeline.md` §1), so a run configuration describes *scope and environment*, never which project it applies to.
+
 # 5. Outputs
 
 A single **Project Context** document that becomes the sole source of truth for every downstream agent — the Explorer Agent, Test Design Agent, Manual Execution Agent, Automation Agent, Automation Execution Agent, and Reporting Agent. It is not a new PRD, not a rewrite of it, but a distilled, run-specific lens onto it. None of the downstream agents read the PRD file directly; they read this artifact instead.
@@ -66,7 +70,7 @@ A single **Project Context** document that becomes the sole source of truth for 
 - Write (Project Context document)
 - Glob (to locate the PRD and any run-configuration files)
 
-**Not permitted:** browser automation tools, code execution tools, or any tool that mutates application data. This agent only reads and structures documents.
+**Not permitted:** browser automation tools, code execution tools, or any tool that mutates application data. This skill only reads and structures documents.
 
 # 7. Execution Rules
 
@@ -75,8 +79,8 @@ A single **Project Context** document that becomes the sole source of truth for 
 3. Must explicitly separate "In Scope" from "Out of Scope" modules — silence on a module is not sufficient; it must be listed in one category or the other.
 4. Must carry forward every PRD `> Assumption` and Risk entry relevant to in-scope modules verbatim in meaning, not diluted or reworded away from its original caveat.
 5. Must cite the PRD section number each extracted item was drawn from, preserving traceability back to the source document.
-6. Must not alter, contradict, or "correct" the PRD — this agent summarizes and structures; it does not edit the source document.
-7. Once this agent publishes the Project Context, it becomes the single source of truth for the remainder of the pipeline. No downstream agent (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) may read the PRD directly or independently reinterpret it — any requirement change must flow through a new Project Context Agent run, not through a downstream agent going back to the PRD on its own.
+6. Must not alter, contradict, or "correct" the PRD — this skill summarizes and structures; it does not edit the source document.
+7. Once this skill publishes the Project Context, it becomes the single source of truth for the remainder of the pipeline. No downstream agent (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) may read the PRD directly or independently reinterpret it — any requirement change must flow through a new Project Context Agent run, not through a downstream agent going back to the PRD on its own.
 
 # 8. Expected Artifacts
 
@@ -93,57 +97,11 @@ Document structure:
 6. Carried-Forward Assumptions & Risks
 7. Traceability Anchor (PRD section references for every item above)
 
-# 9. Operational Prompt
+# 9. Operational Contract
 
-```markdown
-# Project Context Agent
+Role: requirements-to-Project-Context distillation (Stage 1 of 7).
 
-Role: Requirements-to-Project-Context distillation (Stage 1 of 7).
-
-Your responsibility is to convert an approved Product Requirements Document
-(PRD) into a single, structured Project Context that every downstream agent
-in this pipeline will use as its scope-of-truth.
-
-## Input
-
-Read:
-platform_core_data/PRD.md
-
-Run configuration (provided alongside this prompt):
-- Modules in scope for this run: {{MODULES_IN_SCOPE}}
-- Target environment URL: {{APP_URL}}
-- Environment constraints: {{ENVIRONMENT_NOTES}}
-- Credentials available: {{ROLE}} / {{USERNAME}} / {{PASSWORD}}
-
-## Instructions
-
-Read the PRD in full. Do NOT introduce scope, features, or constraints that
-are not present in the PRD or the run configuration above.
-
-Produce a Project Context document structured as:
-
-1. Scope Summary — one paragraph describing what this pipeline run covers
-2. Modules In Scope — explicit list, referencing the PRD's Core Modules section
-3. Modules Out of Scope — explicit list, so downstream agents never wander
-   into unscoped territory
-4. Roles & Credentials Required — drawn from the PRD's User Roles section
-5. Environment Constraints — drawn from the PRD's Dependencies/Risks sections
-   and the run configuration
-6. Carried-Forward Assumptions & Risks — every `> Assumption` and Risk entry
-   in the PRD relevant to the in-scope modules
-7. Traceability Anchor — the PRD section number each item above was drawn from
-
-If the PRD is missing, unreadable, or the run configuration conflicts with
-it, halt and report the discrepancy instead of guessing.
-
-## Output
-
-Save the document as:
-platform_core_data/workspace/context/ProjectContext.md
-
-Do not perform exploration. Do not generate test cases or automation.
-Generate only the Project Context.
-```
+Convert an approved PRD into a single, structured Project Context that every downstream stage uses as its scope-of-truth. Execution is fully specified above — §3 (what to extract), §4 (inputs and run-configuration keys), §7 (rules and halt conditions), §8 (output structure and path). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 10. Example Execution
 
@@ -159,16 +117,10 @@ Run configuration:
                        platform_core_data/credentials/, never written here)
 ```
 
-There is no `PROJECT_NAME` key: the platform hosts one project, rooted at `platform_core_data/` (`workflows_and_pipelines/pipeline/pipeline.md` §1), so a run configuration describes *scope and environment*, never which project it applies to.
-
 Hypothetical result: `platform_core_data/workspace/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer Agent should specifically probe.
 
 # 11. Architecture Principle
 
-> Agents communicate through artifacts only.
->
-> Each agent has a single responsibility.
->
-> Every output produced by an agent becomes the input of another agent whenever applicable.
+> Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this agent specifically: it is the sole reader of the PRD in the entire pipeline, and its sole output — the Project Context — is what every other agent's "single responsibility" is scoped against.
+For this skill specifically: it is the sole reader of the PRD in the entire pipeline, and its sole output — the Project Context — is what every other agent's "single responsibility" is scoped against.

@@ -13,7 +13,7 @@ inputs:
   - name: coverage_report
     type: file_path
     required: true
-    description: Approved Coverage Report — informs which test cases Test Design already excluded/dispositioned, so this agent doesn't attempt to execute what Stage 3 already marked out of scope.
+    description: Approved Coverage Report — informs which test cases Test Design already excluded/dispositioned, so this skill doesn't attempt to execute what Stage 3 already marked out of scope.
   - name: project_context
     type: file_path
     required: true
@@ -44,7 +44,7 @@ dependencies:
 > **Traceability:** `Manual Test Case → Manual Execution Result → Automation Candidate`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
-# 1. Agent Name
+# 1. Skill Name
 
 **Manual Execution Agent** — v1
 
@@ -54,9 +54,9 @@ The Manual Execution Agent runs the approved Manual Test Suite — exactly as th
 
 **Its second responsibility is narrower and just as important: identifying which successfully, stably executed test cases are worth automating**, and packaging exactly those — never the whole suite by default — as the Automation Candidate Package the Automation Agent consumes. A test case that failed, was blocked, or produced an inconsistent outcome this run is never included as a candidate, regardless of how well-written the manual test case itself is.
 
-**This agent does not automate anything and does not decide what gets automated.** Identifying a test case as an Automation Candidate is an evidence-based observation about *execution stability*, not a binding automation decision — that decision (Reuse Existing Automation / Generate New Automation / Partially Automatable / Manual Only) remains exclusively the Automation Agent's own authority, per `.claude/skills/automation-agent/SKILL.md` §13, applied only to the candidates this agent hands it.
+**This skill does not automate anything and does not decide what gets automated.** Identifying a test case as an Automation Candidate is an evidence-based observation about *execution stability*, not a binding automation decision — that decision (Reuse Existing Automation / Generate New Automation / Partially Automatable / Manual Only) remains exclusively the Automation Agent's own authority, per `.claude/skills/automation-agent/SKILL.md` §13, applied only to the candidates this skill hands it.
 
-**This agent does not execute automated test suites.** Running a generated automation package against an environment is exclusively the Automation Execution Agent's responsibility (Stage 6) — the two agents never overlap: this agent executes manually-designed test cases before automation exists for them; the Automation Execution Agent executes automation code after it exists.
+**This skill does not execute automated test suites.** Running a generated automation package against an environment is exclusively the Automation Execution Agent's responsibility (Stage 6) — the two agents never overlap: this skill executes manually-designed test cases before automation exists for them; the Automation Execution Agent executes automation code after it exists.
 
 # 3. Responsibilities
 
@@ -80,15 +80,15 @@ The Manual Execution Agent runs the approved Manual Test Suite — exactly as th
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this agent never adds, removes, or reinterprets a case |
+| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case |
 | Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` — carried through unmodified onto every Manual Execution Result and the Automation Candidate Package |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-agent/SKILL.md`) and advisory Automation Candidates (§18 #11 there), which this agent treats only as a starting hint to prioritize, never as a substitute for this agent's own execution-based confirmation |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-agent/SKILL.md`) and advisory Automation Candidates (§18 #11 there), which this skill treats only as a starting hint to prioritize, never as a substitute for this skill's own execution-based confirmation |
 | Project Context | Governing | Required, must be `Approved` | `platform_core_data/workspace/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Drives §17's strategy selection. |
 
-**Every input above must be in an `Approved` checkpoint state before this agent consumes it.** If any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, the agent halts and reports the blocking artifact rather than executing against a draft.
+**Every input above must be in an `Approved` checkpoint state before this skill consumes it.** If any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, the agent halts and reports the blocking artifact rather than executing against a draft.
 
-**This agent must never read the PRD directly** — only Stage 1 (Project Context Agent) is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. A test case whose expected result appears wrong is a discrepancy to log against Test Design, never a reason to independently consult the PRD.
+**This skill must never read the PRD directly** — only Stage 1 (Project Context Agent) is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. A test case whose expected result appears wrong is a discrepancy to log against Test Design, never a reason to independently consult the PRD.
 
 # 5. Precondition Validation
 
@@ -137,16 +137,16 @@ A test case qualifies as an Automation Candidate only when **all** of the follow
 
 1. Its Status this run is `Passed` (§8) — a Failed, Blocked, Skipped, Not Executed, or Inconclusive result never qualifies.
 2. Its Steps and Expected Result are deterministic and objectively verifiable — a test case whose Expected Result requires subjective human/visual judgment (rather than an assertable state) is excluded, however well it executed, and noted as a Manual-Only characteristic for the Automation Agent's own awareness.
-3. Where this agent executed the same test case more than once within this run (e.g., a re-validation), every execution agreed on the outcome — a test case that passed once but produced a different outcome on a repeat execution is excluded as **Not Stable**, with both outcomes cited, never silently included on the strength of its best result.
-4. It is not a test case Test Design (§5.3 of `.claude/skills/test-design-agent/SKILL.md`) already dispositioned as an **Exploratory test** against a Finding — an exploratory disposition means the right resolution depends on ongoing human judgment, which this agent does not override.
+3. Where this skill executed the same test case more than once within this run (e.g., a re-validation), every execution agreed on the outcome — a test case that passed once but produced a different outcome on a repeat execution is excluded as **Not Stable**, with both outcomes cited, never silently included on the strength of its best result.
+4. It is not a test case Test Design (§5.3 of `.claude/skills/test-design-agent/SKILL.md`) already dispositioned as an **Exploratory test** against a Finding — an exploratory disposition means the right resolution depends on ongoing human judgment, which this skill does not override.
 
 ## 9.2 Relationship to Test Design's advisory flag
 
-Test Design's own Coverage Report already carries an advisory, non-binding **Automation Candidates** hint (`.claude/skills/test-design-agent/SKILL.md` §18 #11). This agent treats that hint only as a prioritization signal for which test cases to execute first — it never substitutes for, or is copied directly into, this agent's own Automation Candidate Package. Inclusion in this agent's package is always evidence-based on an actual execution outcome (§9.1), never inherited from a pre-execution guess.
+Test Design's own Coverage Report already carries an advisory, non-binding **Automation Candidates** hint (`.claude/skills/test-design-agent/SKILL.md` §18 #11). This skill treats that hint only as a prioritization signal for which test cases to execute first — it never substitutes for, or is copied directly into, this skill's own Automation Candidate Package. Inclusion in this skill's package is always evidence-based on an actual execution outcome (§9.1), never inherited from a pre-execution guess.
 
 ## 9.3 Automation Candidate Package
 
-The package lists, for every qualifying test case: its Test Case ID, Requirement/Discovery/Finding/Evidence References (carried unmodified from the Traceability Matrix), the Manual Execution Result(s) that confirmed it, and the specific Manual Test Suite file/module it lives in — enough for the Automation Agent to locate the full test case content without this agent duplicating it. A test case that does not qualify is never included, but its exclusion reason is recorded in the Manual Execution Summary (§10 #2) so a reviewer can see why the candidate set is narrower than the full suite.
+The package lists, for every qualifying test case: its Test Case ID, Requirement/Discovery/Finding/Evidence References (carried unmodified from the Traceability Matrix), the Manual Execution Result(s) that confirmed it, and the specific Manual Test Suite file/module it lives in — enough for the Automation Agent to locate the full test case content without this skill duplicating it. A test case that does not qualify is never included, but its exclusion reason is recorded in the Manual Execution Summary (§10 #2) so a reviewer can see why the candidate set is narrower than the full suite.
 
 # 10. Standard Output Contract
 
@@ -242,7 +242,7 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 7. **Must produce a structured Evidence Inventory** (§7, §10) naming every evidence type captured and every one that could not be, with a reason.
 8. Must never modify the Manual Test Suite, Traceability Matrix, or Coverage Report — a test case that appears wrong is escalated as a discrepancy for Stage 3, never silently corrected here.
 9. **Must apply the Automation Candidate qualifying criteria in full** (§9.1) before including any test case in the Automation Candidate Package — a Failed, Blocked, Not Executed, Inconclusive, subjective, or Not Stable test case is never included.
-10. **Must never treat Test Design's advisory Automation Candidates hint as a substitute for this agent's own execution-based confirmation** (§9.2).
+10. **Must never treat Test Design's advisory Automation Candidates hint as a substitute for this skill's own execution-based confirmation** (§9.2).
 11. Must timestamp and uniquely identify each run so results are never ambiguous about which execution they came from.
 12. **Must select the Execution Strategy matching this run's Run Scope and Run Type** (§17) — never apply one default "execute everything" behavior regardless of scope.
 13. **Must produce output conforming to the Standard Output Contract** (§10).
@@ -261,86 +261,11 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 | Automation Candidate Package | `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md` |
 | Captured screenshots / videos / notes / logs | `platform_core_data/workspace/manual_execution/artifacts/` |
 
-# 14. Operational Prompt
+# 14. Operational Contract
 
-```markdown
-# Manual Execution Agent
+Role: manual test case execution, raw result recording, and Automation Candidate identification (Stage 4 of 7).
 
-Role: Manual test case execution, raw result recording, and Automation
-Candidate identification (Stage 4 of 7).
-
-Your responsibility is to execute the approved Manual Test Suite — exactly
-as the Test Design Agent authored it — against a target environment, record
-a raw, unedited result per test case, and identify which successfully,
-stably executed test cases are worth handing to the Automation Agent.
-
-## Input
-
-Manual Test Suite (primary — the exact test cases to execute):
-platform_core_data/workspace/test_design/TestCases_*.md
-platform_core_data/workspace/test_design/TestCases_*.xlsx
-
-Requirement Traceability Matrix and Coverage Report (secondary):
-platform_core_data/workspace/test_design/TraceabilityMatrix.md
-platform_core_data/workspace/test_design/CoverageReport.md
-
-Project Context (environment, credentials, safety constraints):
-platform_core_data/workspace/context/ProjectContext.md
-
-## Instructions
-
-Before executing anything, confirm the target environment matches what the
-Project Context expects. If it does not, halt and report the mismatch.
-
-For every test case, validate its stated Preconditions before running its
-Steps. If a precondition cannot be established, classify the test case
-Blocked and move on — never force-run it and never mark it Skipped instead.
-
-Execute each test case's Steps exactly as authored. Do not invent, skip, or
-reinterpret a step. Do not execute any mutating action the Project Context
-has not explicitly marked safe for this environment — classify that case
-Skipped, with the constraint named.
-
-Classify every result as exactly one of: Passed, Failed, Blocked, Skipped,
-Not Executed, Inconclusive. Capture screenshots (at minimum on
-failure/block), videos, notes, and logs wherever applicable, and name what
-wasn't captured and why.
-
-Never modify the Manual Test Suite, Traceability Matrix, Coverage Report,
-Project Context, or PRD. A test case that appears wrong or outdated is a
-discrepancy to log for Test Design, never something to silently correct
-here.
-
-## Automation Candidates — evidence-based only
-
-After execution, identify Automation Candidates: test cases that (1) Passed
-this run, (2) have deterministic, objectively verifiable Steps and Expected
-Results, (3) produced a consistent outcome across every execution this run
-if executed more than once, and (4) were not dispositioned by Test Design
-as an Exploratory test against a Finding. Test Design's own advisory
-Automation Candidates hint (its Coverage Report) is only a prioritization
-signal for what to execute first — never a substitute for this agent's own
-execution-based confirmation. Every excluded test case's reason is recorded
-in the Manual Execution Summary.
-
-## Output
-
-Save the results as:
-platform_core_data/workspace/manual_execution/ManualExecutionResults.md
-
-Save the summary as:
-platform_core_data/workspace/manual_execution/ManualExecutionSummary.md
-
-Save the Automation Candidate Package as:
-platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md
-
-Save any captured screenshots/videos/notes/logs under:
-platform_core_data/workspace/manual_execution/artifacts/
-
-Do not write automation code. Do not execute any automated test suite. Do
-not modify the Manual Test Suite, Traceability Matrix, Coverage Report,
-Project Context, or PRD.
-```
+Execute the approved Manual Test Suite exactly as authored, record a raw unedited result per test case, and identify which stably-executed cases are worth handing to Stage 5. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Precondition Validation), §6 (Environment Awareness), §7 (Evidence Collection), §8 (Result Classification), §9 (Automation Candidate Identification), §10 (Standard Output Contract, incl. the Defect Documentation Standard §10.1), §12 (Execution Rules), §13 (Artifacts), §17 (Execution Strategy by Run Scope), §18–§19 (Stop Conditions and Recovery), §20 (Handoff Contracts). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 15. Example Execution
 
@@ -358,13 +283,9 @@ Hypothetical result: the agent confirms the target environment matches the Proje
 
 # 16. Architecture Principle
 
-> Agents communicate through artifacts only.
->
-> Each agent has a single responsibility.
->
-> Every output produced by an agent becomes the input of another agent whenever applicable.
+> Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this agent specifically: its single responsibility is faithfully executing manually-designed test cases and evidencing which of them are actually stable enough to justify automation effort — never deciding what gets automated, and never executing automation code itself. Its outputs — the Manual Execution Results, Manual Execution Summary, and Automation Candidate Package — become the Automation Agent's primary scope-determining input in the next stage.
+For this skill specifically: its single responsibility is faithfully executing manually-designed test cases and evidencing which of them are actually stable enough to justify automation effort — never deciding what gets automated, and never executing automation code itself. Its outputs — the Manual Execution Results, Manual Execution Summary, and Automation Candidate Package — become the Automation Agent's primary scope-determining input in the next stage.
 
 # 17. Execution Strategy by Run Scope and Run Type
 
@@ -400,7 +321,7 @@ Consistent with every other execution-capable stage in this pipeline (`.claude/s
 
 ## 20.1 Test Design Agent → Manual Execution Agent
 
-| This agent needs (§4) | Satisfied by (`.claude/skills/test-design-agent/SKILL.md` §9/§21) |
+| This skill needs (§4) | Satisfied by (`.claude/skills/test-design-agent/SKILL.md` §9/§21) |
 |---|---|
 | Manual Test Suite | §9 Outputs #1–#2 |
 | Requirement Traceability Matrix | §9 Outputs #3 |
@@ -409,11 +330,11 @@ Consistent with every other execution-capable stage in this pipeline (`.claude/s
 
 ## 20.2 Manual Execution Agent → Automation Agent
 
-| Automation Agent needs (`.claude/skills/automation-agent/SKILL.md` §4) | Satisfied by (this agent's output) |
+| Automation Agent needs (`.claude/skills/automation-agent/SKILL.md` §4) | Satisfied by (this skill's output) |
 |---|---|
 | Automation Candidate Package (Primary) | §9.3 |
 | Manual Execution Summary (Secondary) | §10 #2, #5 |
-| Manual Test Suite / Traceability Matrix / Coverage Report (content source, unchanged pass-through) | Not produced by this agent — still read directly from `test_design/` by the Automation Agent for full test case content; this agent's package only bounds *which* IDs are in scope |
+| Manual Test Suite / Traceability Matrix / Coverage Report (content source, unchanged pass-through) | Not produced by this skill — still read directly from `test_design/` by the Automation Agent for full test case content; this skill's package only bounds *which* IDs are in scope |
 | Project Context | Unchanged pass-through from Stage 1 |
 
 **A run is not complete until every row above is verifiably satisfied.** An Automation Candidate cited in the package without a resolvable Manual Test Suite/Traceability Matrix reference is a handoff defect, not an acceptable shorthand.
@@ -430,4 +351,4 @@ Consistent with every other execution-capable stage in this pipeline (`.claude/s
 
 # 22. Future Scalability
 
-The Result Classification (§8) and Automation Candidate criteria (§9.1) are already defined in terms of outcome and determinism rather than "a web page" — they extend to Mobile, Desktop, and API-shaped manual test cases (where "Steps" become device gestures or request/response definitions, per `.claude/skills/test-design-agent/SKILL.md` §22) with no change to this agent's Standard Output Contract (§10) or Handoff Contracts (§20).
+The Result Classification (§8) and Automation Candidate criteria (§9.1) are already defined in terms of outcome and determinism rather than "a web page" — they extend to Mobile, Desktop, and API-shaped manual test cases (where "Steps" become device gestures or request/response definitions, per `.claude/skills/test-design-agent/SKILL.md` §22) with no change to this skill's Standard Output Contract (§10) or Handoff Contracts (§20).

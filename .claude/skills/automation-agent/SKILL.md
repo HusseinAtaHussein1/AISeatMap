@@ -73,7 +73,7 @@ dependencies:
 > **Traceability:** `Requirement → Discovery → Finding → Evidence → Manual Test Case → Manual Execution Result → Automation Candidate → Automation Script` (§12).
 > **Revision history:** see `docs/CHANGELOG.md`.
 
-# 1. Agent Name
+# 1. Skill Name
 
 **Automation Agent** (Automation Engineering Agent) — v3
 
@@ -81,7 +81,7 @@ dependencies:
 
 The Automation Agent transforms the test cases the Manual Execution Agent has confirmed successful and stable — pulling their full content from the approved Manual Test Suite — into a **production-quality automation project** — not merely a collection of isolated scripts. It is the bridge between manual validation and automated execution: it must automate exactly what the Automation Candidate Package names — no more, no less — respecting the business rules already reconciled into the Project Context, reusing whatever automation already exists before generating anything new, and being explicit about anything it could not safely, reliably, or confidently automate.
 
-**Its responsibility ends the moment the automation package has been successfully generated.** It never executes automation, never runs the suite against any environment, and never reports pass/fail results — that is exclusively the Automation Execution Agent's responsibility (Stage 6). This boundary is absolute: generating code and running code are two different pipeline stages with two different agents, and this agent stops precisely at the handoff between them.
+**Its responsibility ends the moment the automation package has been successfully generated.** It never executes automation, never runs the suite against any environment, and never reports pass/fail results — that is exclusively the Automation Execution Agent's responsibility (Stage 6). This boundary is absolute: generating code and running code are two different pipeline stages with two different agents, and this skill stops precisely at the handoff between them.
 
 The agent designs and generates a project; it does not execute one.
 
@@ -110,7 +110,7 @@ The agent designs and generates a project; it does not execute one.
 
 # 4. Inputs
 
-The Automation Agent consumes only approved artifacts. Every input below must be in an `Approved` checkpoint state before this agent uses it; if any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, the agent halts and reports the blocking artifact rather than proceeding against a draft.
+The Automation Agent consumes only approved artifacts. Every input below must be in an `Approved` checkpoint state before this skill uses it; if any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, the agent halts and reports the blocking artifact rather than proceeding against a draft.
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
@@ -118,17 +118,17 @@ The Automation Agent consumes only approved artifacts. Every input below must be
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Called out explicitly because it drives §23's strategy selection, not left an implicit read of prose. |
 | Framework Configuration | Governing (embedded, may be absent) | Conditionally required — see §6 | **Hidden-assumption check:** the Project Context's own required document structure (`.claude/skills/project-context-agent/SKILL.md` §8) has no dedicated "Framework" field — a framework preference, if one exists, currently surfaces only informally, inside Environment Constraints prose or an existing automation project (§9). The agent must not assume this field exists or is populated; if no framework is stated anywhere and no existing automation project exists to infer one from, §6's existing halt-and-report rule applies. |
 | Project Configuration | Governing (embedded) | Required | Target environment, credentials, and safety constraints — already covered by the Project Context row above; named separately here only to confirm no *additional*, undeclared configuration source is silently assumed. |
-| Automation Candidate Package | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md` — from the Manual Execution Agent (Stage 4). The sole source of *which* test case IDs are in scope for this run: only test cases the Manual Execution Agent actually executed, confirmed `Passed`, and judged deterministic and stable (`.claude/skills/manual-execution-agent/SKILL.md` §9) may receive an automation decision (§13). This agent no longer determines automation scope directly from the raw Manual Test Suite — a test case absent from this package is out of scope for this run, full stop, regardless of how it reads in the Manual Test Suite. |
+| Automation Candidate Package | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md` — from the Manual Execution Agent (Stage 4). The sole source of *which* test case IDs are in scope for this run: only test cases the Manual Execution Agent actually executed, confirmed `Passed`, and judged deterministic and stable (`.claude/skills/manual-execution-agent/SKILL.md` §9) may receive an automation decision (§13). This skill no longer determines automation scope directly from the raw Manual Test Suite — a test case absent from this package is out of scope for this run, full stop, regardless of how it reads in the Manual Test Suite. |
 | Manual Execution Summary | Secondary | Required, must be `Approved` | `platform_core_data/workspace/manual_execution/ManualExecutionSummary.md` — the execution evidence and exclusion reasoning backing the Automation Candidate Package; consulted for context, never re-litigated |
-| Manual Test Suite | Secondary — content source | Required, must be `Approved` | `platform_core_data/workspace/test_design/TestCases_*.md` and `.xlsx` — read directly for the full test case content (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-agent/SKILL.md`) of exactly the test case IDs named in the Automation Candidate Package. This agent's entire "Automation Requirements" input is the combination of the Automation Candidate Package (which IDs) and this artifact (their full content) — there is no separate requirements artifact to consult beyond them. |
-| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` — carries the Requirement/Discovery/Finding/Evidence references this agent must propagate onto each Automation Script (§12) |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/CoverageReport.md` — informs which test cases and Findings are already known to be Uncovered/exceptions, so this agent doesn't attempt to automate what Stage 3 already excluded |
+| Manual Test Suite | Secondary — content source | Required, must be `Approved` | `platform_core_data/workspace/test_design/TestCases_*.md` and `.xlsx` — read directly for the full test case content (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-agent/SKILL.md`) of exactly the test case IDs named in the Automation Candidate Package. This skill's entire "Automation Requirements" input is the combination of the Automation Candidate Package (which IDs) and this artifact (their full content) — there is no separate requirements artifact to consult beyond them. |
+| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` — carries the Requirement/Discovery/Finding/Evidence references this skill must propagate onto each Automation Script (§12) |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/CoverageReport.md` — informs which test cases and Findings are already known to be Uncovered/exceptions, so this skill doesn't attempt to automate what Stage 3 already excluded |
 | Discovery Artifacts | Secondary | Required, must be `Approved` | `platform_core_data/workspace/discovery/*.md` — used only to resolve UI/selector detail a test case under-specifies, never as a source of business logic |
 | Findings | Secondary | Required if any exist, must be `Approved` | `platform_core_data/workspace/discovery/findings/Findings_Summary.md` and each `FINDING-{ID}_{ShortName}/metadata.md` — used to carry Finding Reference through to the Automation Script that regress-tests or exploratory-tests it |
 | Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
-| Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/workspace/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This agent reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
+| Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/workspace/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This skill reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
 
-**This agent must never read the PRD directly** (`platform_core_data/PRD.md` or equivalent) — only Stage 1 is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
+**This skill must never read the PRD directly** (`platform_core_data/PRD.md` or equivalent) — only Stage 1 is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
 
 # 5. Automation Planning Engine
 
@@ -172,7 +172,7 @@ This list is explicitly extensible and must never be treated as exhaustive — a
 
 If the Project Context does not specify a framework and no existing automation project exists to infer one from, the agent halts and reports the gap rather than picking a framework unilaterally.
 
-**Discovery technology is never Automation technology (v4).** Which tool Stage 2 (Explorer Agent) happened to use for Browser Automation — Playwright, a Playwright MCP server, or anything else — is Discovery tooling, scoped entirely to §8.1 of `.claude/skills/explorer-agent/SKILL.md`. It carries **zero weight** in this agent's framework choice and must never be cited as a reason, partial reason, or tiebreaker for selecting an automation framework. A project whose Framework Configuration names SHAFT (or any other framework) uses that framework's real toolchain (for SHAFT: Java, TestNG, Allure — §8) regardless of which browser-automation tool Discovery happened to use. Conflating the two — e.g., generating Playwright automation because Playwright was already open for Discovery — is a specification violation under this revision, not a harmless convenience. See §31 (Framework Decision Gate).
+**Discovery technology is never Automation technology (v4).** Which tool Stage 2 (Explorer Agent) happened to use for Browser Automation — Playwright, a Playwright MCP server, or anything else — is Discovery tooling, scoped entirely to §8.1 of `.claude/skills/explorer-agent/SKILL.md`. It carries **zero weight** in this skill's framework choice and must never be cited as a reason, partial reason, or tiebreaker for selecting an automation framework. A project whose Framework Configuration names SHAFT (or any other framework) uses that framework's real toolchain (for SHAFT: Java, TestNG, Allure — §8) regardless of which browser-automation tool Discovery happened to use. Conflating the two — e.g., generating Playwright automation because Playwright was already open for Discovery — is a specification violation under this revision, not a harmless convenience. See §31 (Framework Decision Gate).
 
 # 7. Framework Selection
 
@@ -196,7 +196,7 @@ Rules, in order of precedence:
 
 # 8. SHAFT Engine Support
 
-**SHAFT Engine is a first-class automation framework for this agent — not a fallback, and not treated as a lesser-supported option.**
+**SHAFT Engine is a first-class automation framework for this skill — not a fallback, and not treated as a lesser-supported option.**
 
 When SHAFT Engine is selected (per §6–§7), the agent must generate automation that follows SHAFT Engine best practices, and the generated project should align with the standard SHAFT architecture, including appropriate use of:
 
@@ -213,7 +213,7 @@ When SHAFT Engine is selected (per §6–§7), the agent must generate automatio
 
 # 9. Existing Framework Analysis
 
-Before generating any new automation, the agent inspects the project's one existing Automation Package for the resolved framework (per §4's "Existing Automation Package(s)" input and the project's `AutomationPackages.md` registry, §19/§31) — and, if the project uses more than one framework, each of those frameworks' own one project independently. As of §33.2, "an existing Automation Package" means the **Workspace Automation Baseline**, copied wholesale into this run's own working copy at Working Copy Creation (`workflows_and_pipelines/pipeline/pipeline.md` §12.3) — never a prior run's folder inspected in place, and never a location this agent reads from without first having copied it in. For each package found, it detects:
+Before generating any new automation, the agent inspects the project's one existing Automation Package for the resolved framework (per §4's "Existing Automation Package(s)" input and the project's `AutomationPackages.md` registry, §19/§31) — and, if the project uses more than one framework, each of those frameworks' own one project independently. As of §33.2, "an existing Automation Package" means the **Workspace Automation Baseline**, copied wholesale into this run's own working copy at Working Copy Creation (`workflows_and_pipelines/pipeline/pipeline.md` §12.3) — never a prior run's folder inspected in place, and never a location this skill reads from without first having copied it in. For each package found, it detects:
 
 - Existing Test Scripts
 - Existing Page Objects
@@ -289,7 +289,7 @@ Manual Test Case
 Automation Script
 ```
 
-Concretely: every Automation Script cites the Test Case ID it automates (1:1). Through that Test Case ID, it inherits — and must not re-derive or alter — the Requirement Reference, Discovery Reference, Finding Reference, and Evidence Reference already established on that test case by the Test Design Agent (`.claude/skills/test-design-agent/SKILL.md` §5). This agent's job is to carry that chain forward into the generated code (e.g., as a header comment or metadata block on the script) and into the Automation Decision Report (§13) — never to re-investigate or reinterpret what those references mean.
+Concretely: every Automation Script cites the Test Case ID it automates (1:1). Through that Test Case ID, it inherits — and must not re-derive or alter — the Requirement Reference, Discovery Reference, Finding Reference, and Evidence Reference already established on that test case by the Test Design Agent (`.claude/skills/test-design-agent/SKILL.md` §5). This skill's job is to carry that chain forward into the generated code (e.g., as a header comment or metadata block on the script) and into the Automation Decision Report (§13) — never to re-investigate or reinterpret what those references mean.
 
 A gap anywhere in this chain (an Automation Script that cannot cite its Test Case ID, or a Test Case ID that cannot be found in the Traceability Matrix) is itself a defect and must be reported, not silently generated around.
 
@@ -381,7 +381,7 @@ The Automation Agent generates only the following:
 6. **Automation Suite Manifest** — the realized suite structure from the Suite Planning Engine (§10): which suites exist, which test cases and automation assets belong to each, and each suite's shared setup/teardown/fixtures/components/utilities/test data
 7. **Automation Summary** — a single consolidated handoff document, structured per the Standard Output Contract (§25): Automation Summary, Generated Files, Framework Used, Coverage, Automation Decisions, Known Limitations, Execution Instructions, and Inputs for Automation Execution Agent. This is the artifact `.claude/skills/automation-execution-agent/SKILL.md` §4 and `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 5 already name as required (`AutomationSummary.md`) but which v2's six-artifact split never actually produced — see the v3 revision note above. It does not replace the other five artifacts; it is a consolidated pointer/summary over them, for a consumer that needs one file rather than six.
 
-No other artifact is produced by this agent. It does not execute the Automation Package, and it does not produce execution results, logs, or screenshots — those belong to the Automation Execution Agent (Stage 6).
+No other artifact is produced by this skill. It does not execute the Automation Package, and it does not produce execution results, logs, or screenshots — those belong to the Automation Execution Agent (Stage 6).
 
 # 17. Allowed Tools
 
@@ -407,13 +407,13 @@ No other artifact is produced by this agent. It does not execute the Automation 
 12. Must respect every business rule and safety constraint stated in the Project Context, even when a test case's steps do not restate them.
 13. Must report, by Test Case ID and reason, any test case that receives `Partially Automatable` or `Manual Only` — never silently drop a test case and never force an unsafe workaround to force full automation.
 14. **Must never invent missing business logic** to make an underspecified scenario automatable — the correct decision in that case is `Partially Automatable` or `Manual Only`, not a guess.
-15. **Must never modify an approved manual test case.** A test case that needs to change is escalated as a discrepancy for Stage 3 to address, never silently rewritten by this agent.
+15. **Must never modify an approved manual test case.** A test case that needs to change is escalated as a discrepancy for Stage 3 to address, never silently rewritten by this skill.
 16. **Must never overwrite an existing reusable asset without explicit approval** — extend, compose around, or flag the conflict instead.
 17. **Must generate only maintainable code** per the standards in §14 — modular, DRY, readable, reusable, maintainable, versionable, composition-preferred.
 18. **Must perform Self Review (§15) before declaring generation complete**, and must record findings/recommendations in the Automation Manifest even when no issues are found (state that explicitly, rather than omitting the section).
 19. **Must maintain the full traceability chain** (§12) on every generated asset — every Automation Script cites its Test Case ID and inherits that test case's Requirement/Discovery/Finding/Evidence References without alteration.
 20. Every automated test must be independent and idempotent, or use explicit setup/teardown to guarantee that.
-21. **Must never execute the generated Automation Package.** Execution is exclusively the Automation Execution Agent's responsibility (Stage 6) — this agent's task is complete the moment the Automation Package and its accompanying reports (§16) are generated.
+21. **Must never execute the generated Automation Package.** Execution is exclusively the Automation Execution Agent's responsibility (Stage 6) — this skill's task is complete the moment the Automation Package and its accompanying reports (§16) are generated.
 22. **Must never assume Playwright, or any other single framework, as a default** (§6) — a framework is selected only via the §7 precedence rules, never because it happens to appear first in an example.
 23. **Must apply the Locator Strategy's priority order** (§24) and record a fallback/recovery recommendation wherever the top-priority locator type is not viable for a given element.
 24. **Must select the Automation Strategy matching this run's Run Scope Type** (§23) — never apply one default breadth/depth regardless of scope.
@@ -436,227 +436,22 @@ No other artifact is produced by this agent. It does not execute the Automation 
 
 | Artifact | Path |
 |---|---|
-| Automation Package Registry | `platform_core_data/workspace/automation/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This agent reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. |
+| Automation Package Registry | `platform_core_data/workspace/automation/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. |
 | Automation Plan | `platform_core_data/workspace/automation/AutomationPlan_{Framework}.md` |
-| Automation Package (Workspace Automation Baseline) | `platform_core_data/workspace/automation/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this agent never writes here directly (§33.2, Execution Rule 35) |
+| Automation Package (Workspace Automation Baseline) | `platform_core_data/workspace/automation/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this skill never writes here directly (§33.2, Execution Rule 35) |
 | Automation Manifest | `platform_core_data/workspace/automation/AutomationManifest_{Framework}.md` |
 | Automation Decision Report | `platform_core_data/workspace/automation/AutomationDecisionReport_{Framework}.md` |
 | Automation Coverage Report | `platform_core_data/workspace/automation/AutomationCoverageReport_{Framework}.md` |
 | Automation Suite Manifest | `platform_core_data/workspace/automation/AutomationSuiteManifest_{Framework}.md` |
 | Automation Summary | `platform_core_data/workspace/automation/AutomationSummary_{Framework}.md` |
 
-**Where this agent actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `artifacts/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage 6, its Execution Results and evidence.
+**Where this skill actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `artifacts/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage 6, its Execution Results and evidence.
 
-# 20. Operational Prompt
+# 20. Operational Contract
 
-```markdown
-# Automation Agent (Automation Engineering Agent) — v3
+Role: automation engineering (Stage 5 of 7).
 
-Role: Automation package generation (Stage 5 of 7).
-
-Your responsibility is to transform the test cases the Manual Execution
-Agent has confirmed successful and stable into a production-quality
-automation PROJECT — not a bag of isolated scripts. You never execute what
-you generate; execution belongs exclusively to the Automation Execution
-Agent. You never read the PRD.
-
-## Input — every one of these must be Approved before you use it
-
-platform_core_data/workspace/context/ProjectContext.md
-  (including its embedded Run Scope Type/Source, which drives your strategy below)
-platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md
-  (primary — the sole source of which test case IDs are in scope this run)
-platform_core_data/workspace/manual_execution/ManualExecutionSummary.md
-platform_core_data/workspace/test_design/TestCases_*.md (+ .xlsx)
-  (read for full content of exactly the IDs named in the Automation Candidate Package)
-platform_core_data/workspace/test_design/TraceabilityMatrix.md
-platform_core_data/workspace/test_design/CoverageReport.md
-platform_core_data/workspace/discovery/*.md
-platform_core_data/workspace/discovery/findings/Findings_Summary.md and each FINDING-{ID}/metadata.md
-platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/ (Evidence Packages, cited by reference)
-Existing automation project, if any, at platform_core_data/workspace/automation/tests/
-
-Do NOT read the PRD. Only Stage 1 (Project Context Agent) is permitted to.
-
-## Automation Strategy — pick the approach matching this run's Run Scope
-
-Entire Project → every test case in the Automation Candidate Package gets a decision, full suite set.
-Feature → one complete suite, deeper reuse-search since the surface is
-  narrow. User Story → automate only that story's traceable test cases,
-  don't opportunistically extend to unrelated ones. Bug → the regression
-  test case tied to the Finding comes first, never deprioritized.
-Full Regression (Run Type) → prioritize reusing/re-validating existing
-  automation over generating net-new. Smoke (Run Type) → P1/critical-path
-  only, everything else stays Manual Only for this pass, stated explicitly.
-API → still organize suites by business workflow, not by endpoint. Mixed
-  (UI+API) → one suite per workflow even when it spans both.
-If the Project Context states no explicit Run Scope Type, default to Entire
-Project and say so in the Automation Plan.
-
-## Step 1 — Automation Plan (write this first, in full, before any code)
-
-Produce a complete Automation Plan containing: Target Framework, Target
-Language, Project Architecture, Design Pattern, Planned Automation Suites,
-Existing Assets, Assets To Generate, Assets To Reuse, Estimated Automation
-Coverage, Known Manual Tests, Blocked Tests, Risks, Assumptions.
-
-Do not begin generating any script, page object, or configuration file
-until this plan is complete and internally consistent.
-
-## Step 2 — Framework detection and selection
-
-Determine the target framework from the Project Context. NEVER assume one
-— and NEVER default to Playwright specifically just because it's named
-first in examples throughout this document; that's a documentation
-convenience, not a selection preference.
-Supported frameworks include, but are not limited to: Playwright, SHAFT
-Engine, Selenium, Cypress, Appium, REST Assured, Postman — this list is
-extensible, not exhaustive.
-
-- If the Project Context explicitly specifies a framework, use it.
-- Else, if an automation framework already exists in the project, reuse it
-  — never introduce a competing second framework on your own authority.
-- Else, select the most appropriate framework using: existing framework,
-  existing project structure, technology stack, programming language,
-  application type (Web/API/Mobile/Desktop), team standards, existing
-  reusable assets.
-
-Justify the selected framework in the Automation Plan, always.
-
-If SHAFT Engine is selected, follow SHAFT Engine best practices: use
-DriverFactory, Page Object Model, TestNG, Allure Reporting, SHAFT
-configuration, reusable utilities, data-driven testing where applicable,
-and shared test infrastructure. Do NOT fall back to generic, unwrapped
-Selenium code when SHAFT is selected.
-
-## Step 3 — Existing Framework Analysis
-
-Before generating anything new, inspect the existing automation project (if
-one exists). Detect: existing test scripts, page objects, components,
-utilities, fixtures, test data, helpers, folder structure, naming
-conventions, reporting solution, build tool. Reuse before generating.
-Record findings (or their absence) in the Automation Plan.
-
-## Step 4 — Suite Planning
-
-Analyze all approved test cases and group them into logical automation
-suites organized around BUSINESS WORKFLOWS, never individual pages (e.g.,
-Login Suite, Employee Suite, Leave Suite, Recruitment Suite — not
-"Employee List Page Suite"). Each suite should have shared setup, teardown,
-fixtures, components, utilities, and test data.
-
-## Step 5 — Automation Decision, per test case
-
-For every test case named in the Automation Candidate Package, assign exactly one
-decision: Reuse Existing Automation, Generate New Automation, Partially
-Automatable, or Manual Only. For each, record: Decision, Justification,
-Reused Assets, Generated Assets, Automation Readiness, Known Limitations.
-
-Never invent missing business logic to force a scenario into "Generate New
-Automation" — an underspecified scenario is Partially Automatable or Manual
-Only, not a guess.
-
-Never modify an approved manual test case to make it more automatable —
-escalate as a discrepancy instead.
-
-## Step 6 — Generate
-
-For every "Generate New Automation" and the automatable portion of every
-"Partially Automatable" decision, generate code that is: modular, DRY,
-readable, reusable, maintainable, versionable. Prefer composition over
-duplication. Search the Automation Knowledge Base (existing page objects,
-components, utilities, fixtures, helpers, test data, common workflows)
-before creating anything new — never generate a duplicate reusable asset.
-Never overwrite an existing reusable asset without explicit approval.
-
-Use a prioritized Locator Strategy, never one brittle default: (1)
-accessibility-based locators (role/label/text) first, (2) stable test-id
-attributes second, (3) semantic structural selectors third, (4) XPath/
-positional CSS only as a last resort — and record which level you had to
-fall back to, and why, whenever you don't get level 1. A locator that can't
-be made reliable at any level is a Partially Automatable/Manual Only signal
-for that portion of the test, not something to force through.
-
-Every test maps 1:1 to a Test Case ID, stated in the
-test name or an adjacent comment/metadata block, and inherits — without
-alteration — that test case's Requirement/Discovery/Finding/Evidence
-References. Every test is independent and idempotent, or uses explicit
-setup/teardown to guarantee that. Apply Component Objects for cross-page
-reusable UI, Reusable Actions/Assertions for repeated steps/checks, Test
-Data Separation, Configuration Management, Environment Awareness, and
-Parameterization for data-driven variants — all at generation time, not
-just checked afterward.
-
-## Step 7 — Self Review
-
-Before declaring generation complete, review what you produced. Validate:
-naming consistency, duplicate code, broken references, missing reusable
-assets, missing page objects, missing utilities, missing test data,
-**Architecture** (matches the Automation Plan's stated pattern), **Compilation/
-syntax readiness** (passes lint/type-check where available), **Framework
-compliance** (actually follows the selected framework's conventions, not
-generic code), and **Traceability** (every script's Test Case ID and
-inherited References actually resolve). Generate recommendations wherever
-improvements are identified — record them even if none are found (state
-that explicitly).
-
-## Stop Conditions and Recovery — never just fail
-
-Missing framework / Missing manual tests → halt, report the blocker.
-Unsupported technology / Incomplete requirements / Missing selectors →
-local: mark the affected test case(s) Partially Automatable/Manual Only,
-state the smallest fix (e.g., "add a data-testid to X"), and keep
-generating everything else. Conflicting configuration → don't silently pick
-a side; report it and recommend which source should be reconciled. Never a
-bare "cannot proceed" — always name the smallest missing prerequisite.
-
-## Before finishing — verify the handoff to Automation Execution
-
-Confirm every input `.claude/skills/automation-execution-agent/SKILL.md` §4 declares it needs is
-present: the Automation Suite, and the Automation Summary (the file
-Automation Execution's own spec calls `AutomationSummary.md` — you
-must actually produce this, not only the other five artifacts).
-
-## Generate the following outputs
-
-1. Automation Plan (Step 1)
-2. Automation Package — the generated/reused project itself
-3. Automation Manifest — file inventory + Self Review findings/recommendations
-4. Automation Decision Report — every test case's decision (Step 5)
-5. Automation Coverage Report — aggregate decision counts, percentage, and
-   named reasons for every Partially Automatable / Manual Only case
-6. Automation Suite Manifest — realized suite structure (Step 4)
-7. Automation Summary — consolidated handoff doc: Automation Summary,
-   Generated Files, Framework Used, Coverage, Automation Decisions, Known
-   Limitations, Execution Instructions, Inputs for Automation Execution Agent
-
-## Output
-
-Save the plan as:
-platform_core_data/workspace/automation/AutomationPlan.md
-
-Save the automation package under:
-platform_core_data/workspace/automation/tests/
-
-Save the manifest as:
-platform_core_data/workspace/automation/AutomationManifest.md
-
-Save the decision report as:
-platform_core_data/workspace/automation/AutomationDecisionReport.md
-
-Save the coverage report as:
-platform_core_data/workspace/automation/AutomationCoverageReport.md
-
-Save the suite manifest as:
-platform_core_data/workspace/automation/AutomationSuiteManifest.md
-
-Save the automation summary as:
-platform_core_data/workspace/automation/AutomationSummary.md
-
-Do not execute the generated automation. Do not modify the PRD, Project
-Context, or any approved upstream artifact. Generate only what is listed
-above.
-```
+Turn the execution-confirmed Automation Candidate Package into a reviewable automation package. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Automation Planning Engine — the plan is written in full before any code), §6–§7 (Framework Detection and Selection), §8 (SHAFT Engine Support), §9 (Existing Framework Analysis), §10 (Suite Planning Engine), §11 (Automation Knowledge Base), §12 (Traceability), §13 (Automation Decision Engine), §14 (Code Generation Standards), §15 (Self Review), §16 (Outputs), §18 (Execution Rules), §19 (Artifacts), §23 (Strategy by Run Scope), §24 (Locator Strategy), §25 (Standard Output Contract), §26–§27 (Stop Conditions and Recovery), §28 (Handoff Contract), and the human decision gates in §30–§33. This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 21. Example Execution
 
@@ -673,23 +468,19 @@ Input:
   Existing automation project: none found
 ```
 
-Hypothetical result: the Automation Plan detects no existing automation project and no framework explicitly named in the Project Context, so it selects **Playwright + TypeScript** against the selection criteria (Web application, no existing framework to reuse, no team-standard override stated), justified in the plan. Suite Planning produces a single **Login Suite** (matching this run's Login-only scope) with shared setup (navigate + clear session) and shared test data (the known valid/invalid credential sets already evidenced in Discovery). Automation Decisions: `TC-LOGIN-001` (valid login) → Generate New Automation; `TC-LOGIN-004` (Forgot Password must not time out, Finding Reference `FINDING-003`) → Generate New Automation, inheriting `FINDING-003`'s Requirement/Discovery/Evidence References onto the script, with Expected Result asserting the *corrected* behavior; the exploratory test derived from `FINDING-004` → Manual Only, Justification: "response-time-parity acceptability is a pending policy decision, not something this agent can assert pass/fail on." Self Review finds no duplicate code (single suite, first run) but recommends extracting the shared credential test-data fixture proactively for the next module's suite. The Automation Coverage Report shows, say, `5/6 test cases automated (83%), 1 Manual Only`.
+Hypothetical result: the Automation Plan detects no existing automation project and no framework explicitly named in the Project Context, so it selects **Playwright + TypeScript** against the selection criteria (Web application, no existing framework to reuse, no team-standard override stated), justified in the plan. Suite Planning produces a single **Login Suite** (matching this run's Login-only scope) with shared setup (navigate + clear session) and shared test data (the known valid/invalid credential sets already evidenced in Discovery). Automation Decisions: `TC-LOGIN-001` (valid login) → Generate New Automation; `TC-LOGIN-004` (Forgot Password must not time out, Finding Reference `FINDING-003`) → Generate New Automation, inheriting `FINDING-003`'s Requirement/Discovery/Evidence References onto the script, with Expected Result asserting the *corrected* behavior; the exploratory test derived from `FINDING-004` → Manual Only, Justification: "response-time-parity acceptability is a pending policy decision, not something this skill can assert pass/fail on." Self Review finds no duplicate code (single suite, first run) but recommends extracting the shared credential test-data fixture proactively for the next module's suite. The Automation Coverage Report shows, say, `5/6 test cases automated (83%), 1 Manual Only`.
 
 *(If SHAFT Engine had instead been the selected or existing framework, the same Login Suite would be generated using DriverFactory-based session setup, Page Object Model classes for the Login and Forgot Password screens, TestNG test classes, and Allure annotations for reporting — never as raw Selenium calls.)*
 
 # 22. Architecture Principle
 
-> Agents communicate through artifacts only.
->
-> Each agent has a single responsibility.
->
-> Every output produced by an agent becomes the input of another agent whenever applicable.
+> Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this agent specifically: it is responsible for producing a **production-ready automation project**, not merely isolated automation scripts — planning, framework justification, reuse, suite organization, per-test-case decisions, and self review are all part of that responsibility, not optional extras. **Execution belongs exclusively to the Automation Execution Agent.** This agent's outputs — the Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Automation Summary — become the Automation Execution Agent's sole input in the next stage.
+For this skill specifically: it is responsible for producing a **production-ready automation project**, not merely isolated automation scripts — planning, framework justification, reuse, suite organization, per-test-case decisions, and self review are all part of that responsibility, not optional extras. **Execution belongs exclusively to the Automation Execution Agent.** This skill's outputs — the Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Automation Summary — become the Automation Execution Agent's sole input in the next stage.
 
 # 23. Automation Strategy by Run Scope
 
-Automation breadth and priority follow the run's Run Scope Type (`workflows_and_pipelines/pipeline/run_scope.md` §3) and Run Type (§5), stated in the Project Context's Scope Summary and named explicitly in this agent's Run Scope input (§4) — not one default approach regardless of what this run covers:
+Automation breadth and priority follow the run's Run Scope Type (`workflows_and_pipelines/pipeline/run_scope.md` §3) and Run Type (§5), stated in the Project Context's Scope Summary and named explicitly in this skill's Run Scope input (§4) — not one default approach regardless of what this run covers:
 
 | Run Scope Type / Run Type | Strategy |
 |---|---|
@@ -719,7 +510,7 @@ Generated automation must use a deliberate, prioritized approach to identifying 
 ## 24.2 Fallback and Recovery
 
 - Where the top-priority locator type is not viable for a specific element (e.g., no accessible role/label exists and no test-id is present), the agent falls back down the priority order and **records which level it had to fall back to and why**, in the relevant Automation Decision's Known Limitations field (§13).
-- The agent never silently settles for a Level 4 (brittle) locator without recording the recommendation to add a stable `data-testid` or accessible label to that element — this recommendation belongs in the Automation Manifest's Self Review section (§15) or the Automation Decision Report (§13), so a human can act on it even though this agent cannot modify application code itself.
+- The agent never silently settles for a Level 4 (brittle) locator without recording the recommendation to add a stable `data-testid` or accessible label to that element — this recommendation belongs in the Automation Manifest's Self Review section (§15) or the Automation Decision Report (§13), so a human can act on it even though this skill cannot modify application code itself.
 - A locator that cannot be made reliable at any priority level (e.g., a dynamically regenerated, non-deterministic identifier) is a `Partially Automatable` or `Manual Only` signal for that portion of the test case (§13) — the agent does not force a flaky locator into passing automation just to claim full coverage.
 
 # 25. Standard Output Contract
@@ -754,7 +545,7 @@ The agent recognizes the following named conditions. Recognizing one is never, b
 
 # 27. Recovery Strategy — Minimal Prerequisite Recommendation
 
-Like the Test Design Agent (`.claude/skills/test-design-agent/SKILL.md` §20), this agent has no alternate generation mechanism to fall back to — its recovery behavior is: **never let one blocked test case stop the whole run, and always name the smallest thing that would unblock it.**
+Like the Test Design Agent (`.claude/skills/test-design-agent/SKILL.md` §20), this skill has no alternate generation mechanism to fall back to — its recovery behavior is: **never let one blocked test case stop the whole run, and always name the smallest thing that would unblock it.**
 
 1. When a Local Stop Condition (§26) blocks a specific test case, the agent continues processing every *other*, unblocked test case in the Automation Candidate Package — a single blocked case is never a reason to produce zero output for the run.
 2. For the blocked case, the agent states the **smallest missing prerequisite** that would resolve it — never a vague "cannot automate." Examples: *"Add a `data-testid` to the Airlines multi-select dropdown"*, not *"selectors unreliable"*; *"Confirm the maximum airline-selection count with the DBA (T3087 Prerequisites)"*, not *"requirements incomplete."*
@@ -765,15 +556,15 @@ Like the Test Design Agent (`.claude/skills/test-design-agent/SKILL.md` §20), t
 
 The Automation Agent's outputs are consumed by the Automation Execution Agent as declared inputs in `.claude/skills/automation-execution-agent/SKILL.md` §4. Before concluding a run, the agent verifies each of the following is actually present and unambiguous — not merely assumed:
 
-| Automation Execution Agent needs (`.claude/skills/automation-execution-agent/SKILL.md` §4) | Satisfied by (this agent's output) |
+| Automation Execution Agent needs (`.claude/skills/automation-execution-agent/SKILL.md` §4) | Satisfied by (this skill's output) |
 |---|---|
 | Automation Suite (`tests/`) | §16 Outputs #2, the Automation Package itself |
 | Automation Coverage Summary (`AutomationSummary.md`) | §16 Outputs #7, the Automation Summary (§25) — this is the exact filename gap the v3 revision note identifies and closes |
-| Project Context (environment, credentials, safety constraints) | Unchanged pass-through — this agent does not modify it; Automation Execution reads the same Approved version directly |
-| Execution Mode | Not this agent's concern — `.claude/skills/automation-execution-agent/SKILL.md` §5.1 sources it from the Run Configuration or asks the user directly; this agent must not pre-select or assume one on Automation Execution's behalf |
-| Execution scope | Not this agent's concern — an Automation Execution-time parameter, not something generated here |
+| Project Context (environment, credentials, safety constraints) | Unchanged pass-through — this skill does not modify it; Automation Execution reads the same Approved version directly |
+| Execution Mode | Not this skill's concern — `.claude/skills/automation-execution-agent/SKILL.md` §5.1 sources it from the Run Configuration or asks the user directly; this skill must not pre-select or assume one on Automation Execution's behalf |
+| Execution scope | Not this skill's concern — an Automation Execution-time parameter, not something generated here |
 
-**A run is not complete until every row above is verifiably satisfied.** Prior to this revision, the second row was a standing, unverified gap — the Automation Execution Agent's own spec named a file this agent's spec never produced. §16/§25 close it; this table exists so the same category of drift is checked explicitly on every future revision of either agent, not just fixed once here.
+**A run is not complete until every row above is verifiably satisfied.** Prior to this revision, the second row was a standing, unverified gap — the Automation Execution Agent's own spec named a file this skill's spec never produced. §16/§25 close it; this table exists so the same category of drift is checked explicitly on every future revision of either agent, not just fixed once here.
 
 # 29. Future Scalability
 
@@ -794,13 +585,13 @@ The abstractions this revision relies on — Framework Detection/Selection (§6�
 
 # 30. Automation Start Decision Gate
 
-**This is orchestration-level, not this agent's own internal step — it governs whether/how this agent gets invoked at all.** Full specification lives at `workflows_and_pipelines/pipeline/pipeline.md` §5.4; restated here because it directly bounds this agent's authority.
+**This is orchestration-level, not this skill's own internal step — it governs whether/how this skill gets invoked at all.** Full specification lives at `workflows_and_pipelines/pipeline/pipeline.md` §5.4; restated here because it directly bounds this skill's authority.
 
-Whenever a human requests automation (or any single downstream stage) for a project, whoever/whatever is orchestrating the pipeline — a human, a script, or an agent acting in that capacity — must never unilaterally decide whether to: resume from the latest approved stage, run the full pipeline from Stage 1, or skip straight to generating automation. It must first inspect the Run Manifest for that project/run, present the actual current state (which stages are Approved/Pending/absent), and ask. See `workflows_and_pipelines/pipeline/pipeline.md` §5.4 for the required interaction format and options. This agent must never begin generating an Automation Plan or any code until that upstream decision has been made explicitly by a human — "the user asked for automation" is not, by itself, authorization to also silently run or skip Stages 1–4.
+Whenever a human requests automation (or any single downstream stage) for a project, whoever/whatever is orchestrating the pipeline — a human, a script, or an agent acting in that capacity — must never unilaterally decide whether to: resume from the latest approved stage, run the full pipeline from Stage 1, or skip straight to generating automation. It must first inspect the Run Manifest for that project/run, present the actual current state (which stages are Approved/Pending/absent), and ask. See `workflows_and_pipelines/pipeline/pipeline.md` §5.4 for the required interaction format and options. This skill must never begin generating an Automation Plan or any code until that upstream decision has been made explicitly by a human — "the user asked for automation" is not, by itself, authorization to also silently run or skip Stages 1–4.
 
 # 31. Framework Decision Gate
 
-**Framework selection (§6–§8) is never a decision this agent makes and silently proceeds on — it is always a question put to a human, even when the answer looks obvious.** This section is the mandatory interaction that must complete before any Automation Plan (§5) is written or any code is generated.
+**Framework selection (§6–§8) is never a decision this skill makes and silently proceeds on — it is always a question put to a human, even when the answer looks obvious.** This section is the mandatory interaction that must complete before any Automation Plan (§5) is written or any code is generated.
 
 ## 31.1 Step 1 — Inspect and summarize every existing framework's project (v8: one row per framework, never more)
 
@@ -845,7 +636,7 @@ The human's actual answer — not the agent's recommendation — is what gets re
 
 ## 31.6 Human Decision Principle for Repository-Structure Decisions (added 2026-07-24, user-mandated)
 
-For every decision that affects Automation Project/package selection, framework selection, creation of a new framework's project, merge destination, or repository structure generally, this agent must never decide autonomously. It must:
+For every decision that affects Automation Project/package selection, framework selection, creation of a new framework's project, merge destination, or repository structure generally, this skill must never decide autonomously. It must:
 
 1. **Gather** the available options (read the registry, inspect the actual code per §9).
 2. **Analyze** them against the criteria this specification already names (§7, Existing Framework Analysis).
@@ -856,7 +647,7 @@ This is not a new category of judgment call — it is the existing discipline §
 
 # 32. Reference Automation Project
 
-**A project may designate an external, real, human-owned automation codebase as its Reference Automation Project** — e.g. a company's production SHAFT repository living outside this platform's own repository entirely (`E:\...` on local disk, or any path outside `platform_core_data/workspace/automation/`). This is distinct from the platform's own generated Automation Packages (§19, §31): it is not generated by this agent, is not one of the `tests_{Framework}/` packages in the registry, and is never assumed to be the same thing as "an existing automation package" in the §9/§31.1 sense — it gets its own handling.
+**A project may designate an external, real, human-owned automation codebase as its Reference Automation Project** — e.g. a company's production SHAFT repository living outside this platform's own repository entirely (`E:\...` on local disk, or any path outside `platform_core_data/workspace/automation/`). This is distinct from the platform's own generated Automation Packages (§19, §31): it is not generated by this skill, is not one of the `tests_{Framework}/` packages in the registry, and is never assumed to be the same thing as "an existing automation package" in the §9/§31.1 sense — it gets its own handling.
 
 ## 32.1 Registration
 
@@ -884,7 +675,7 @@ If no Reference Automation Project is registered for this project, this gate is 
 
 ## 32.4 Architecture Summary
 
-The one-time registration analysis (§32.1) must produce and persist a plain-language Architecture Summary covering, at minimum: detected framework + version, language + version, build system, project/module structure, Page Object (or equivalent) pattern, base/shared classes, driver initialization pattern, test data strategy, configuration management, reporting solution, naming conventions, and reusable utilities/helpers/wrappers/assertions this agent should always prefer reusing over authoring new equivalents. Any pre-existing inconsistency, duplication, or drift discovered during this analysis (e.g., a locator that no longer matches the live application, two competing driver-init patterns) is recorded plainly, not silently smoothed over — it is knowledge for a human to act on, not this agent's to fix unilaterally.
+The one-time registration analysis (§32.1) must produce and persist a plain-language Architecture Summary covering, at minimum: detected framework + version, language + version, build system, project/module structure, Page Object (or equivalent) pattern, base/shared classes, driver initialization pattern, test data strategy, configuration management, reporting solution, naming conventions, and reusable utilities/helpers/wrappers/assertions this skill should always prefer reusing over authoring new equivalents. Any pre-existing inconsistency, duplication, or drift discovered during this analysis (e.g., a locator that no longer matches the live application, two competing driver-init patterns) is recorded plainly, not silently smoothed over — it is knowledge for a human to act on, not this skill's to fix unilaterally.
 
 ## 32.5 Generation Rules When a Reference Project Governs (Target = Export or Update)
 
@@ -916,6 +707,6 @@ This is the same question already specified at §31.2 — restated here as its o
 
 **Immediately after §33.1's consolidated gate is answered, and before the Automation Plan (§5) is written, Working Copy Creation runs** (`workflows_and_pipelines/pipeline/pipeline.md` §12.3): if the resolved package (Target + Framework + Strategy) already has a Workspace Automation Baseline, it is copied wholesale into this run's own automation folder via `platform_core/tools/automation_lifecycle/baselineCopy.js` — this, not an ad hoc inspection of wherever a prior run happened to leave its files, is what "an existing automation package" (§9) now means. If no baseline exists yet, the run starts empty, exactly as before. Every subsequent step in this specification — Existing Framework Analysis (§9), Suite Planning (§10), generation (§14) — operates on this run's working copy, never on the Workspace Automation Baseline directly; the baseline is only ever written later, by the Workspace Merge (`pipeline.md` §12.4), after this run's automation clears Automation Approval (`pipeline.md` §5.2).
 
-> **Revision note (v7):** User-mandated addition, 2026-07-24, introducing the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12). Adds §33.2 (Working Copy Creation) and Execution Rule 35; reframes §9's "existing Automation Package" and the `existing_automation_package` frontmatter input as the Workspace Automation Baseline copied in at run start, rather than an ambiguous prior package inspected wherever it happens to sit; extends §19's Automation Package Registry row and generation-location note to reflect that this agent now generates into a temporary per-run working copy, promoted to the flat project-level path only after Automation Approval. No prior section's numbering changed, and §30–§33.1's existing Decision Gates are unmodified — this lifecycle composes with them, it does not replace them.
+> **Revision note (v7):** User-mandated addition, 2026-07-24, introducing the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12). Adds §33.2 (Working Copy Creation) and Execution Rule 35; reframes §9's "existing Automation Package" and the `existing_automation_package` frontmatter input as the Workspace Automation Baseline copied in at run start, rather than an ambiguous prior package inspected wherever it happens to sit; extends §19's Automation Package Registry row and generation-location note to reflect that this skill now generates into a temporary per-run working copy, promoted to the flat project-level path only after Automation Approval. No prior section's numbering changed, and §30–§33.1's existing Decision Gates are unmodified — this lifecycle composes with them, it does not replace them.
 
 > **Revision note (v8):** User-mandated reversal, 2026-07-24 (same day as v7), of this specification's own prior "v5" principle that a project may hold multiple independent Automation Packages side by side within the same framework. As of v8, **a project holds exactly one authoritative Automation Package per framework** — different frameworks may still coexist (e.g. one SHAFT project and one Playwright project), but never two competing packages within one framework. Rewrites §4's "Existing Automation Package(s)" input row, §7 Rule 2, §9's opening sentence, §19's heading note, §31.1/§31.2/§31.5, and §33's gate wording accordingly; the "continue an existing package (which one) / create a new package" question becomes "extend the existing project / start a project for a framework with none yet / reset a framework's project from scratch (rare, explicit)." Adds §31.6 (Human Decision Principle for Repository-Structure Decisions — gather, analyze, recommend, wait for explicit approval, never a default) and Execution Rule 36. Prompted directly by consolidating NDC's `tests_SHAFT`/`tests_SHAFT_Agency` split (itself a product of the old v5 principle) back into one project — a real diff during that consolidation surfaced a test-class redesign that had silently dropped a business-rule-backed assertion, which is exactly the kind of decision §31.6 now requires be surfaced to a human rather than resolved silently. §33.2 (Working Copy Creation) and the underlying `platform_core/tools/automation_lifecycle/` mechanics from v7 are unaffected — they already operated on a single resolved baseline path with no assumption about package cardinality.

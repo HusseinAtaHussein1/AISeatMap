@@ -89,6 +89,8 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 
 - **Always** declare `inputs`, `outputs`, and `dependencies` in YAML frontmatter before any prose specification.
 - **Always** cite a `platform_core/knowledge/` subfolder by name in `dependencies` rather than restating its content inline.
+- **Always** state a rule exactly once, in the numbered section that owns it, and cite that section (`§N`) from anywhere else that needs it. A Skill's `Operational Contract` section names the role and points at the sections that specify execution — it never restates them as a second, parallel copy of the spec.
+- **Never** renumber an existing section. Section numbers are cited by `workflows_and_pipelines/`, `docs/`, and run artifacts across the repo; append new sections rather than shifting existing ones.
 - **Never** read the PRD, except `project-context-agent` — the only Skill permitted to (`pipeline.md` §6 Rule 4).
 - **Never** invoke another Skill directly — sequencing is `workflows_and_pipelines/`'s responsibility, never this folder's.
 - **Never** embed project-specific business logic, screen names, or credentials — a Skill file must remain correct for every project.

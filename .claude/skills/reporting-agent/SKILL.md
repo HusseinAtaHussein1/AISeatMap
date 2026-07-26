@@ -28,11 +28,11 @@ dependencies:
   - "platform_core/knowledge/reporting/ (Platform Knowledge patterns, if any promoted)"
 ---
 
-> **Pipeline position:** Stage 7 of 7 — final agent, consumes Execution Results, produces the Final QA Report.
+> **Pipeline position:** Stage 7 of 7 — final stage, consumes Execution Results, produces the Final QA Report.
 > **Traceability:** `Execution → Reports`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
-# 1. Agent Name
+# 1. Skill Name
 
 **Reporting Agent**
 
@@ -70,7 +70,7 @@ The Reporting Agent is the final stage of the pipeline. It synthesizes the raw E
 - File tools: Read (execution results, test suites, traceability matrix, Project Context), Write (final report)
 - Directory-listing shell commands (read-only)
 
-**Not permitted:** browser automation tools, code execution tools, or any tool that could re-run tests or mutate application data. This agent only reads and synthesizes.
+**Not permitted:** browser automation tools, code execution tools, or any tool that could re-run tests or mutate application data. This skill only reads and synthesizes.
 
 # 7. Execution Rules
 
@@ -98,69 +98,11 @@ Document structure:
 7. Risks (carried-forward Project Context risks: confirmed / refuted / still unverified)
 8. Recommendations & Next Steps
 
-# 9. Operational Prompt
+# 9. Operational Contract
 
-```markdown
-# Reporting Agent
+Role: execution-to-stakeholder-report synthesis (Stage 7 of 7, terminal).
 
-Role: Execution-to-stakeholder-report synthesis (Stage 7 of 7, terminal).
-
-Your responsibility is to synthesize raw execution results into a clear,
-accurate, stakeholder-facing QA report — based ONLY on the Execution
-Results, the Manual Test Suites / Traceability Matrix, and the Project
-Context.
-
-## Input
-
-Read:
-platform_core_data/workspace/execution/ExecutionResults.md
-
-Also read:
-platform_core_data/workspace/test_design/TestCases_*.md
-platform_core_data/workspace/test_design/TraceabilityMatrix.md
-platform_core_data/workspace/context/ProjectContext.md
-
-## Instructions
-
-Do NOT introduce any pass/fail outcome, defect, or statistic that is not
-present in the Execution Results.
-
-Compute two distinct coverage figures by cross-referencing the Traceability
-Matrix against what was actually automated and executed:
-- Requirement Coverage — the fraction of Project Context requirements with
-  at least one traced, executed test case
-- Automation Coverage — the fraction of designed manual test cases that were
-  successfully automated and executed
-
-Explicitly call out requirements or test cases that were designed but never
-automated, and those automated but never executed — never conflate designed,
-automated, and executed into a single blended number.
-
-Preserve every "Assumption-based test" flag from the Manual Test Suites into
-this report, and state clearly whether that assumption was confirmed,
-refuted, or remains unverified based on the execution outcome.
-
-## Generate the following sections
-
-1. Executive Summary
-2. Detailed Execution Report (per-test outcomes: Test Case ID, Automation
-   Script ID, Execution Time, Screenshots/Logs references)
-3. Passed / Failed Statistics (totals and by-module breakdown)
-4. Defect Summary (grouped by module, with severity)
-5. Requirement Coverage
-6. Automation Coverage
-7. Risks (carried-forward Project Context risks: confirmed / refuted /
-   still unverified)
-8. Recommendations & Next Steps
-
-## Output
-
-Save the report as:
-platform_core_data/workspace/reporting/Final_QA_Report.md
-
-Do not re-run tests. Do not modify execution results, test cases, or the
-Project Context.
-```
+Synthesize raw execution results into a clear, accurate, stakeholder-facing QA report based only on the Execution Results, the Manual Test Suites / Traceability Matrix, and the Project Context. Execution is fully specified above — §3 (Responsibilities, incl. the two distinct coverage measures), §4 (Inputs), §5 (Outputs), §7 (Execution Rules), §8 (Artifacts and the eight required report sections). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 10. Example Execution
 
@@ -180,10 +122,6 @@ Hypothetical result: `platform_core_data/workspace/reporting/Final_QA_Report.md`
 
 # 11. Architecture Principle
 
-> Agents communicate through artifacts only.
->
-> Each agent has a single responsibility.
->
-> Every output produced by an agent becomes the input of another agent whenever applicable.
+> Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this agent specifically: its single responsibility is synthesis and reporting — never re-testing or code diagnosis. It is the terminal node of the pipeline; its output is consumed by human stakeholders, not by another agent.
+For this skill specifically: its single responsibility is synthesis and reporting — never re-testing or code diagnosis. It is the terminal node of the pipeline; its output is consumed by human stakeholders, not by another agent.

@@ -21,4 +21,6 @@ Project-specific knowledge only — never consulted by any other project (`pipel
 | APP-002 | application | Branch's Payment Option checkboxes are sourced from Master → Payment Gateway → Payment Method (34 entries, Online/Offline) | N/A — application-specific | `application/APP-002.md` |
 | BR-005 | business_rules | Agency Add form's phone fields expect national number only, no literal `+` country-code prefix, despite User Story 3's stated AC (TC-AGENCY-CREATE-007, REP-007) | N/A — application-specific | `business_rules/BR-005.md` |
 
-Empty categories (`automation/`, `diagnosis/`, `execution/`, `ui/`, `findings/`, `lessons_learned/`) have no entries yet.
+Empty categories (`automation/`, `execution/`, `ui/`, `findings/`, `lessons_learned/`) have no entries yet.
+
+This index covers **Project Knowledge only** — the application-scoped folders listed above. It deliberately does not catalog `patterns/`, which sits nested inside this folder but is the separate, application-agnostic Platform Knowledge layer with its own `patterns/INDEX.md` (`pipeline.md` §10.1, §10.6). The `diagnosis/` category moved into that layer on 2026-07-26 and is no longer indexed here.

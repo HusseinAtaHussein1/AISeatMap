@@ -214,6 +214,7 @@ A capability listed here as *Implemented* has a written agent/pipeline specifica
 | Intelligent Run Management | ✅ Implemented | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) |
 | Reference Automation Project support | ✅ Implemented | [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) |
 | Browser Driver Layer | ✅ Implemented | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) |
+| MCP Tools Layer (`playwright` 2nd browser mode, `context7` stack docs) | ✅ Implemented | [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md) |
 | Multi-Framework Support — SHAFT + Playwright, side by side | ✅ Implemented | [§12](#12-multi-framework-architecture) |
 | Additional Frameworks — Selenium / Cypress / Appium / REST Assured | 🚧 Designed | Already named as first-class options in the Framework Decision Gate; no project has selected one yet |
 | Non-Web Automation — API / Mobile / Desktop / Microservices / Batch / Cloud | 🚧 Designed | [`.claude/skills/automation-skill/SKILL.md` §29](.claude/skills/automation-skill/SKILL.md) — abstractions extend without redesign, not yet exercised for a real target |
@@ -232,7 +233,7 @@ The platform is organized as five concentric layers. Reusable engineering logic 
 
 ```mermaid
 flowchart TD
-    PLAT["Platform<br/><small>.claude/skills/ · workflows_and_pipelines/pipeline/ · platform_core/knowledge/ · platform_core/tools/</small>"]
+    PLAT["Platform<br/><small>.claude/skills/ · workflows_and_pipelines/pipeline/ · platform_core_data/knowledge_base/patterns/ · platform_core/tools/</small>"]
     PROJ["Project Data<br/><small>platform_core_data/ — the one hosted application, fully self-contained</small>"]
     PIPE["Pipeline<br/><small>the fixed seven-stage execution order, gates, and artifact contracts</small>"]
     AGENTS["Agents<br/><small>the seven specialized AI agents that do the actual work of each stage</small>"]
@@ -448,22 +449,17 @@ agentic-ai-testing-platform/
 │   └── workflows/
 │       └── first_run.md                # Smoke-test workflow: Stages 1–3 only, Login module
 │
-├── platform_core/                     # Reusable engineering knowledge + shared source code
-│   ├── knowledge/                     # Platform Knowledge — reusable, application-agnostic engineering knowledge
-│   │   ├── automation_patterns/       # (empty until promoted)
-│   │   ├── diagnosis_patterns/        # (empty until promoted)
-│   │   ├── repair_patterns/           # Confirmed, application-agnostic repair strategies (REPAIR-NNN)
-│   │   ├── execution_patterns/        # (empty until promoted)
-│   │   ├── framework_patterns/        # (empty until promoted)
-│   │   ├── reasoning/                 # General AI reasoning patterns (REASON-NNN)
-│   │   ├── reporting/                 # (empty until promoted)
-│   │   ├── pipeline_decision_patterns/ # (held empty — no defined reader or promotion source yet)
-│   │   └── INDEX.md                   # Catalog of every promoted document
+├── platform_core/                     # Shared source code — zero project-specific data
 │   └── tools/
-│       └── browser_driver/          # Shared browser automation engine — zero project-specific data
-│           ├── driver.js              # Resolves platform_core_data/ paths, loads profile + credentials, logs in
-│           ├── api.js                 # BrowserDriver — the only surface agents/scripts use directly
-│           └── README.md
+│       ├── browser_driver/          # Shared browser automation engine — zero project-specific data
+│       │   ├── driver.js              # Resolves platform_core_data/ paths, loads profile + credentials, logs in
+│       │   ├── api.js                 # BrowserDriver — the only surface agents/scripts use directly
+│       │   └── README.md
+│       ├── mcp/                      # MCP servers layer — registration + usage contract, no server code
+│       │   ├── stack_docs/            # Extracts a project's stack + pinned versions; plans Context7 lookups
+│       │   └── README.md              # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
+│       ├── run_manager/              # Run folder naming/indexing — the only place a run name is formatted
+│       └── automation_lifecycle/     # Baseline copy, merge plan/apply, promotion record, cleanup
 │
 ├── platform_core_data/               # THE hosted project — inputs and every generated artifact (§9.1)
 │   ├── README.md                       # This folder's own layout contract
@@ -474,6 +470,22 @@ agentic-ai-testing-platform/
 │   ├── browser/                         # Browser Driver profile + screen/component locators
 │   ├── credentials/                     # credentials.json (git-ignored) + template + README
 │   ├── knowledge_base/                  # Project Knowledge — see §11
+│   │   ├── repair/ · execution/ · automation/        # this application's own history
+│   │   ├── application/ · ui/ · findings/            # observations and Explorer-surfaced knowledge
+│   │   ├── business_rules/ · lessons_learned/        # this application's rules and lessons
+│   │   ├── INDEX.md                     # Catalog of Project Knowledge only (not patterns/)
+│   │   └── patterns/                    # Platform Knowledge — application-agnostic, nested here but a
+│   │       │                            #   SEPARATE layer: resolved first, Promotion-only (see §11)
+│   │       ├── automation_patterns/     # (empty until promoted)
+│   │       ├── diagnosis/               # (empty; moved in from the Project layer 2026-07-26)
+│   │       ├── diagnosis_patterns/      # (empty until promoted)
+│   │       ├── repair_patterns/         # Confirmed, application-agnostic repair strategies (REPAIR-NNN)
+│   │       ├── execution_patterns/      # (empty until promoted)
+│   │       ├── framework_patterns/      # (empty until promoted)
+│   │       ├── reasoning/               # General AI reasoning patterns (REASON-NNN)
+│   │       ├── reporting/               # (empty until promoted)
+│   │       ├── pipeline_decision_patterns/  # (held empty — no defined reader or promotion source yet)
+│   │       └── INDEX.md                 # Catalog of every promoted document
 │   ├── resources/                       # requirements/, api/, diagrams/, screenshots/, sample_data/, notes/, ...
 │   ├── ui/                              # Reference screenshots captured during onboarding/discovery
 │   ├── workspace/                       # Current-approved state per stage — see §10
@@ -553,7 +565,7 @@ The platform hosts one project at a time, but splits what it learns into two lay
 
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
-| **Platform Knowledge** | `platform_core/knowledge/` | Reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting, pipeline decisions | Anything application-specific |
+| **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | Reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting, pipeline decisions | Anything application-specific |
 | **Project Knowledge** | `platform_core_data/knowledge_base/` | Business rules, UI observations, findings, execution/repair/automation history for the hosted application | Anything that would still be true after retargeting — that belongs at the Platform layer instead |
 
 ### Resolution order
@@ -562,20 +574,24 @@ Every agent resolves knowledge in a fixed order and merges both: **Platform Know
 
 ```mermaid
 flowchart LR
-    subgraph Platform["Platform Knowledge (shared, application-agnostic)"]
-        RP["repair_patterns/"]
-        RS["reasoning/"]
-        OTH["automation_patterns/ · diagnosis_patterns/ · execution_patterns/ · framework_patterns/ · reporting/ · pipeline_decision_patterns/"]
-    end
-    subgraph ProjA["platform_core_data/knowledge_base/"]
-        A1["business_rules/ · application/ · ui/"]
-        A2["repair/ · automation/ · execution/ · diagnosis/"]
-        A3["findings/ · lessons_learned/"]
+    subgraph KB["platform_core_data/knowledge_base/"]
+        subgraph Platform["patterns/ — Platform Knowledge (application-agnostic, nested but SEPARATE)"]
+            RP["repair_patterns/"]
+            RS["reasoning/"]
+            OTH["automation_patterns/ · diagnosis/ · diagnosis_patterns/ · execution_patterns/ · framework_patterns/ · reporting/ · pipeline_decision_patterns/"]
+        end
+        subgraph ProjA["Project Knowledge (application-scoped)"]
+            A1["business_rules/ · application/ · ui/"]
+            A2["repair/ · automation/ · execution/"]
+            A3["findings/ · lessons_learned/"]
+        end
     end
 
     Platform --> ProjA
     ProjA -. "promotion — human-gated, §10.5" .-> Platform
 ```
+
+**The nesting is structural, not semantic.** `patterns/` lives inside `knowledge_base/` as of 2026-07-26, but it is not a Project Knowledge category: it resolves first, holds nothing application-specific, and is written to only through Promotion ([`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)). The same change moved `diagnosis/` from the Project layer into `patterns/`, so application-specific diagnosis notes now belong in the `repair/` record that consumed them, or in `findings/`.
 
 ### Promotion — explicit human approval only
 
@@ -583,11 +599,11 @@ Knowledge is written project-scoped by default. When an agent recognizes a lesso
 
 ### Repair Knowledge Base
 
-A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): confirmed repairs are written to `platform_core_data/knowledge_base/repair/REP-NNN.md` at the moment a repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core/knowledge/repair_patterns/REPAIR-NNN.md` or `platform_core/knowledge/reasoning/REASON-NNN.md`. See the current catalog in [`platform_core/knowledge/INDEX.md`](platform_core/knowledge/INDEX.md).
+A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): confirmed repairs are written to `platform_core_data/knowledge_base/repair/REP-NNN.md` at the moment a repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-NNN.md` or `platform_core_data/knowledge_base/patterns/reasoning/REASON-NNN.md`. See the current catalog in [`platform_core_data/knowledge_base/patterns/INDEX.md`](platform_core_data/knowledge_base/patterns/INDEX.md).
 
 ### Future expansion
 
-The category folders for `automation_patterns/`, `diagnosis_patterns/`, `execution_patterns/`, `framework_patterns/`, and `reporting/` already exist at the Platform layer — they simply have no promoted content yet. `pipeline_decision_patterns/` also exists but is held deliberately empty until a defined reader and a project-level promotion source exist for it (see `platform_core/knowledge/README.md`). Nothing about the model changes as the populated categories fill in; promotion is the only path population ever takes.
+The category folders for `automation_patterns/`, `diagnosis_patterns/`, `execution_patterns/`, `framework_patterns/`, and `reporting/` already exist at the Platform layer — they simply have no promoted content yet. `pipeline_decision_patterns/` also exists but is held deliberately empty until a defined reader and a project-level promotion source exist for it (see `platform_core_data/knowledge_base/patterns/README.md`). Nothing about the model changes as the populated categories fill in; promotion is the only path population ever takes.
 
 ---
 
@@ -703,14 +719,16 @@ The platform hosts **one** project at a time, rooted at [`platform_core_data/`](
 1. **Clear the outgoing project's generated state** — delete `platform_core_data/workspace/` and `platform_core_data/runs/`. Both are reproducible output; the run history belongs to the old application, not the new one. Commit that deletion on its own so the old history stays recoverable from git.
 2. **Replace the inputs** — `PRD.md`, `PRD_UserStories.md`, `run_configuration.md`, `architecture.md`, `glossary.md`, `onboarding.md`, and everything under `resources/`.
 3. **Replace the live-browser assets** — `browser/profile.json`, `browser/screens/`, `browser/components/`, and `credentials/credentials.json` (see step 3 below).
-4. **Empty, but do not delete, `knowledge_base/`** — clear each subfolder's contents and reset its `INDEX.md`. The folder *shape* is fixed and always present, including for categories with no entries yet ([`pipeline.md` §10.4](workflows_and_pipelines/pipeline/pipeline.md)).
-5. **Leave `platform_core/knowledge/` alone.** That layer is what survives retargeting — it is the entire reason the two-layer split exists ([§11](#11-knowledge-base)).
+4. **Empty, but do not delete, the Project Knowledge folders in `knowledge_base/`** — clear the contents of `repair/`, `execution/`, `automation/`, `application/`, `ui/`, `findings/`, `business_rules/`, and `lessons_learned/`, and reset `knowledge_base/INDEX.md`. The folder *shape* is fixed and always present, including for categories with no entries yet ([`pipeline.md` §10.4](workflows_and_pipelines/pipeline/pipeline.md)).
+5. **Do not touch `knowledge_base/patterns/` — it is nested inside the folder you just emptied.** ⚠️ This is the one step where a careless `rm -rf knowledge_base/*` destroys the layer that is supposed to survive retargeting. Platform Knowledge moved *inside* `knowledge_base/` on 2026-07-26 (from `platform_core/knowledge/` via `platform_core_data/patterns/`), so step 4 must clear `knowledge_base/`'s Project subfolders **individually**, never the whole directory. `patterns/` and its entire contents — `repair_patterns/`, `reasoning/`, `diagnosis/`, and every held-empty category — carry over untouched; that layer surviving is the entire reason the two-layer split exists ([§11](#11-knowledge-base), [`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)).
 
 Populate the inputs in this order: `PRD.md` (the approved requirements document — the only input Stage 1 ever reads), `run_configuration.md` (target environment, credentials location, in-scope modules), `architecture.md`, then `glossary.md`.
 
 ### 3. Set up the Browser Driver (if the application needs live browser access)
 
 Follow [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md): create `platform_core_data/browser/profile.json` (login selectors + a post-login success signal), then create `platform_core_data/credentials/credentials.json` from the provided template — this file is git-ignored and must never be committed.
+
+**Then approve the two MCP servers.** The repo ships a project-scoped [`.mcp.json`](.mcp.json) registering `playwright` (a second, selectable browser mode alongside the Browser Driver) and `context7` (version-accurate documentation for the stack Stage 5 generates against). Both are launched by `npx`, so there is nothing to install — but a project-scoped `.mcp.json` requires explicit approval before its servers start: run `/mcp` (or `claude mcp`) once per machine. Also run `npx playwright install chromium` for the browsers, and optionally export `CONTEXT7_API_KEY` for higher rate limits — set it in your environment, never in the committed `.mcp.json`. Full contract, including the rule that a credential value is never typed into an MCP tool call: [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md).
 
 ### 4. Run the pipeline
 
@@ -741,8 +759,9 @@ Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/w
 | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) | Run ID allocation, workspace structure, metadata, execution status, run summaries |
 | [`workflows_and_pipelines/pipeline/run_scope.md`](workflows_and_pipelines/pipeline/run_scope.md) | Run Scope Types and Sources — what a given run is allowed to validate |
 | [`.claude/skills/*/SKILL.md`](.claude/skills/) | Full specification of each of the seven agent skills |
-| [`platform_core/knowledge/README.md`](platform_core/knowledge/README.md) | Platform Knowledge layer — structure and promotion rules |
+| [`platform_core_data/knowledge_base/patterns/README.md`](platform_core_data/knowledge_base/patterns/README.md) | Platform Knowledge layer — structure and promotion rules |
 | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) | Shared browser automation engine, Browser Profile, Screen/Component knowledge, credentials handling |
+| [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md) | The two registered MCP servers: `playwright` as a second, selectable browser mode alongside the Browser Driver (and the hard rule against credential values in MCP tool calls), and `context7` for version-accurate documentation of a project's own extracted stack |
 | [`platform_core_data/README.md`](platform_core_data/README.md) | The layout of the hosted project's inputs, workspace, and run history |
 | [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/workflows/first_run.md) | The Stages 1–3 smoke-test workflow |
 | [`workflows_and_pipelines/workflows/user_story_run.md`](workflows_and_pipelines/workflows/user_story_run.md) | Stages 3–7 for one User Story, reusing an existing Project Context + Discovery baseline |

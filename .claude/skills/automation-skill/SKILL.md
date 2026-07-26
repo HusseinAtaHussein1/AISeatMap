@@ -63,10 +63,16 @@ outputs:
     type: file_path
     location: "platform_core_data/workspace/automation/AutomationSummary_{Framework}.md"
     description: "Consolidated handoff document (Framework Used, Execution Instructions, Coverage, Known Limitations) for the automation-execution-skill. NDC uses a `workspace/automation/` variant of these paths — see `platform_core_data/onboarding.md`."
+  - name: stack_documentation_context
+    type: file_path
+    location: "platform_core_data/workspace/automation/StackDocumentationContext_{Framework}.md"
+    description: "Detected stack, pinned dependency versions, Context7 queries performed, version-specific guidelines extracted, conflicts, and documentation gaps (§34) — written before any code generation begins."
 dependencies:
   - project-context-skill, explorer-skill, test-design-skill, manual-execution-skill (upstream skills)
   - Detected automation framework toolchain (Playwright, SHAFT/TestNG/Allure, Selenium, Cypress, Appium, REST Assured, or equivalent)
-  - "platform_core/knowledge/repair_patterns/, automation_patterns/, framework_patterns/ (Platform Knowledge, consulted before generating new assets)"
+  - "platform_core/tools/mcp/ (MCP tools layer — the `context7` server for the §34 Stack Documentation step, and the `playwright` server as a selectable browser mode for selector verification per its README §1.2)"
+  - "platform_core/tools/mcp/stack_docs/ (shared stack + pinned-dependency extractor backing §34.2)"
+  - "platform_core_data/knowledge_base/patterns/repair_patterns/, automation_patterns/, framework_patterns/ (Platform Knowledge, consulted before generating new assets)"
 ---
 
 > **Pipeline position:** Stage 5 of 7 — consumes the Approved Project Context, the Manual Execution skill's Automation Candidate Package and Manual Execution Summary, the Manual Test Suite (content source), Requirement Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, and Evidence Packages, produces a production-quality Automation Package.
@@ -257,7 +263,7 @@ The resulting suite structure is recorded in the Automation Plan (§5, "Planned 
 
 # 11. Automation Knowledge Base
 
-**Distinct from the Automation Repair Knowledge Base (`.claude/skills/automation-execution-skill/SKILL.md` §28)** — that one stores execution-confirmed *repair patterns*, per the two-layer Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10): project-scoped by default at `platform_core_data/knowledge_base/repair/`, generalized into `platform_core/knowledge/repair_patterns/`/`platform_core/knowledge/reasoning/` only via explicit Promotion (§10.5); this section is about reusable *code assets* within one project's own package. Before writing any new automation, also consult both Repair Knowledge Base layers — Platform first, then this project's own — for rules relevant to the flows being automated (e.g., a Login suite checks for any rule tagged "Authentication flows") and apply a matching rule's approach proactively — this closes the loop so a pattern the platform already learned the hard way, via a prior execution's repair, doesn't have to be rediscovered by failing again first.
+**Distinct from the Automation Repair Knowledge Base (`.claude/skills/automation-execution-skill/SKILL.md` §28)** — that one stores execution-confirmed *repair patterns*, per the two-layer Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10): project-scoped by default at `platform_core_data/knowledge_base/repair/`, generalized into `platform_core_data/knowledge_base/patterns/repair_patterns/`/`platform_core_data/knowledge_base/patterns/reasoning/` only via explicit Promotion (§10.5); this section is about reusable *code assets* within one project's own package. Before writing any new automation, also consult both Repair Knowledge Base layers — Platform first, then this project's own — for rules relevant to the flows being automated (e.g., a Login suite checks for any rule tagged "Authentication flows") and apply a matching rule's approach proactively — this closes the loop so a pattern the platform already learned the hard way, via a prior execution's repair, doesn't have to be rediscovered by failing again first.
 
 This skill treats the existing automation project (§9) as a reusable knowledge base, not merely a folder to avoid clobbering. Before creating anything new, it searches for reusable:
 
@@ -387,7 +393,8 @@ No other artifact is produced by this skill. It does not execute the Automation 
 
 - File tools: Read (Project Context, Manual Test Suite, Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, Evidence Packages, and the existing automation project's source files for reuse analysis), Write/Edit (Automation Plan, Automation Package source files, Automation Manifest, Automation Decision Report, Automation Coverage Report, Automation Suite Manifest)
 - Code-authoring/lint/type-check tools (e.g., Bash for installing dependencies and running static checks only — never for running the suite against a live environment)
-- Browser automation tools (e.g., Playwright MCP) strictly for selector verification against the live/staging environment during generation, if available — not for executing the generated suite
+- **Browser tools for selector verification only** — either the Browser Driver (`platform_core/tools/browser_driver/`) or the **`playwright` MCP server** (`browser_navigate`, `browser_snapshot`, `browser_find`, `browser_click`, `browser_evaluate` read-only), selected per the Mode Selection Rule in `platform_core/tools/mcp/README.md` §1.2. Strictly for verifying a selector or reading an accessibility tree against the live/staging environment during generation, if available — **never** for executing the generated suite. A credential value is never typed into an MCP tool call (`mcp/README.md` §1.3): authenticate via `BrowserDriver.authenticate()` and use MCP only on the already-authenticated session.
+- **`context7` MCP server** (`resolve-library-id`, `query-docs`) for the mandatory Stack Documentation step (§34) — version-accurate documentation for this project's own stack, used as a generation guideline. Never a source of business logic, requirements, or coverage justification.
 
 **Not permitted:** modifying the PRD, Project Context, or any approved upstream artifact (Automation Candidate Package, Manual Execution Summary, Manual Test Suite, Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, Evidence Packages); executing the generated Automation Package against any environment; automating any scenario not named in the Automation Candidate Package; inventing business logic to fill a specification gap; overwriting an existing reusable asset without explicit approval.
 
@@ -442,6 +449,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 | Automation Manifest | `platform_core_data/workspace/automation/AutomationManifest_{Framework}.md` |
 | Automation Decision Report | `platform_core_data/workspace/automation/AutomationDecisionReport_{Framework}.md` |
 | Automation Coverage Report | `platform_core_data/workspace/automation/AutomationCoverageReport_{Framework}.md` |
+| Stack Documentation Context (§34) | `platform_core_data/workspace/automation/StackDocumentationContext_{Framework}.md` |
 | Automation Suite Manifest | `platform_core_data/workspace/automation/AutomationSuiteManifest_{Framework}.md` |
 | Automation Summary | `platform_core_data/workspace/automation/AutomationSummary_{Framework}.md` |
 
@@ -451,7 +459,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 
 Role: automation engineering (Stage 5 of 7).
 
-Turn the execution-confirmed Automation Candidate Package into a reviewable automation package. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Automation Planning Engine — the plan is written in full before any code), §6–§7 (Framework Detection and Selection), §8 (SHAFT Engine Support), §9 (Existing Framework Analysis), §10 (Suite Planning Engine), §11 (Automation Knowledge Base), §12 (Traceability), §13 (Automation Decision Engine), §14 (Code Generation Standards), §15 (Self Review), §16 (Outputs), §18 (Execution Rules), §19 (Artifacts), §23 (Strategy by Run Scope), §24 (Locator Strategy), §25 (Standard Output Contract), §26–§27 (Stop Conditions and Recovery), §28 (Handoff Contract), and the human decision gates in §30–§33. This section adds no rules of its own; the contract is stated once above rather than restated here.
+Turn the execution-confirmed Automation Candidate Package into a reviewable automation package. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Automation Planning Engine — the plan is written in full before any code), §6–§7 (Framework Detection and Selection), §8 (SHAFT Engine Support), §9 (Existing Framework Analysis), §10 (Suite Planning Engine), §11 (Automation Knowledge Base), §12 (Traceability), §13 (Automation Decision Engine), §14 (Code Generation Standards), §15 (Self Review), §16 (Outputs), §18 (Execution Rules), §19 (Artifacts), §34 (Stack Documentation Step — mandatory before any code generation), §23 (Strategy by Run Scope), §24 (Locator Strategy), §25 (Standard Output Contract), §26–§27 (Stop Conditions and Recovery), §28 (Handoff Contract), and the human decision gates in §30–§33. This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 21. Example Execution
 
@@ -707,6 +715,51 @@ This is the same question already specified at §31.2 — restated here as its o
 
 **Immediately after §33.1's consolidated gate is answered, and before the Automation Plan (§5) is written, Working Copy Creation runs** (`workflows_and_pipelines/pipeline/pipeline.md` §12.3): if the resolved package (Target + Framework + Strategy) already has a Workspace Automation Baseline, it is copied wholesale into this run's own automation folder via `platform_core/tools/automation_lifecycle/baselineCopy.js` — this, not an ad hoc inspection of wherever a prior run happened to leave its files, is what "an existing automation package" (§9) now means. If no baseline exists yet, the run starts empty, exactly as before. Every subsequent step in this specification — Existing Framework Analysis (§9), Suite Planning (§10), generation (§14) — operates on this run's working copy, never on the Workspace Automation Baseline directly; the baseline is only ever written later, by the Workspace Merge (`pipeline.md` §12.4), after this run's automation clears Automation Approval (`pipeline.md` §5.2).
 
+# 34. Stack Documentation Step (Context7)
+
+**Mandatory, and it runs at a fixed point:** after the Framework Decision Gate (§31) has resolved the framework and Working Copy Creation (§33.2) has brought in the baseline, and **before any code generation begins** (§14). It informs *how* code is written; it never decides *what* is tested.
+
+Full specification: `platform_core/tools/mcp/README.md` §2. This section states the obligation and the stop conditions; the mechanics live there, once.
+
+## 34.1 Why
+
+Automation written from model memory drifts from the stack it must actually run on — an API removed two minor versions ago, a renamed config key, an assertion helper that never existed at the pinned version. When the authoritative, version-specific documentation is fetchable, guessing at a dependency's surface is a defect, not a shortcut.
+
+## 34.2 Extract the stack from the project — never assume it
+
+The stack is discovered from the project under test and its resolved automation project, in both of the forms the project actually records it:
+
+1. **Source code** — dependency manifests and lockfiles (`package.json`/lockfiles, `pom.xml`, `build.gradle(.kts)`, `requirements.txt`, `pyproject.toml`/`poetry.lock`, `Pipfile.lock`, `*.csproj`, `Gemfile.lock`, `go.mod`, `composer.lock`) plus framework config (`playwright.config.*`, `testng.xml`, `cypress.config.*`, `pytest.ini`, SHAFT's `src/main/resources/properties/`). Run `node platform_core/tools/mcp/stack_docs/cli.js --root <resolved automation project> --json` for this — the shared extractor is the single source of truth for detection, exactly as `run_manager` is for run folder names. Never hand-assemble the dependency list when the tool can produce it.
+2. **Documentation** — the project's own stated stack: the approved Project Context's Technology Stack section, `platform_core_data/architecture.md`, `automation_framework.md`, `run_configuration.md`, `onboarding.md`.
+
+**The lockfile wins on version.** A manifest range (`^1.61.1`) is a constraint; the lockfile's resolved version is the fact, and it is the version documented. Where only a range exists, the artifact records it **as a range, flagged unpinned** — never presented as a resolved version.
+
+Where the two sources disagree (documentation says Selenium, the manifests say Playwright), that contradiction is surfaced in the Automation Plan's Assumptions/Risks and at the §31 gate — **never** silently resolved in favor of either. Extracted stack facts do not override the Framework Decision Gate's answer; a manifest containing Playwright is not authorization to generate Playwright.
+
+## 34.3 Query
+
+Per material library (§2.4 of `mcp/README.md` — what the generated code actually imports, not transitive dependencies): `resolve-library-id` with the name **plus the concrete question**, preferring a **version-specific library ID** whenever the version is pinned, then `query-docs` scoped to **one concept per call**. `stack_docs/planQueries.js` produces the concept list and the exact questions; a combined multi-concept query returns shallow results for each and is not how this step is performed.
+
+## 34.4 Output
+
+One artifact per run, before generation: `platform_core_data/workspace/automation/StackDocumentationContext_{Framework}.md`, containing Detected Stack, Dependency Table (library · resolved version · pinned? · source file · Context7 ID · queried?), Queries Performed, Guidelines Extracted, Conflicts, and Documentation Gaps — per `mcp/README.md` §2.5.
+
+The Automation Plan (§5) cites this artifact and records the version-specific guidelines that shaped generation. **A run against a pinned-version stack with zero queries performed and no recorded documentation gap is an incomplete Automation Plan** — the same standard §7 applies to an unjustified framework choice.
+
+## 34.5 The approved project framework governs
+
+Fetched documentation is a **guideline input, never an authority over approved project standards.** Where Context7's idiomatic layout contradicts `platform_core_data/automation_framework.md` (e.g. an idiomatic Playwright structure against SHAFT's Pages/Locators/Tests/Data layering, or accessibility-first locators against the `Btn_`/`Txt_` prefix convention), the **approved framework wins**; the conflict goes in the artifact's Conflicts row and the Plan's Assumptions/Risks, resolved by a human exactly as that document's Gap Resolution Rule requires. Fetched docs never license redesigning an approved framework, and never appear as justification for a coverage decision, a Finding, or a test case's existence — they are outside the traceability chain (§12).
+
+## 34.6 Stop conditions
+
+Consistent with §26–§27 (mark the specific gap, continue generating everything else, never a bare halt):
+
+- **`context7` unavailable or unapproved** — record it as a documentation gap in the artifact and proceed, generating from the pinned versions and the existing project's established conventions. Never present model-memory recall as fetched documentation.
+- **No credible library match, or no docs for the pinned version** — recorded per-library as a documentation gap, never backfilled from memory and never silently dropped.
+- **No material dependency detected at all** — a documentation gap, not an assumed stack. If the framework is resolved but its dependencies are undiscoverable, that is stated plainly in the Plan's Risks.
+
 > **Revision note (v7):** User-mandated addition, 2026-07-24, introducing the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12). Adds §33.2 (Working Copy Creation) and Execution Rule 35; reframes §9's "existing Automation Package" and the `existing_automation_package` frontmatter input as the Workspace Automation Baseline copied in at run start, rather than an ambiguous prior package inspected wherever it happens to sit; extends §19's Automation Package Registry row and generation-location note to reflect that this skill now generates into a temporary per-run working copy, promoted to the flat project-level path only after Automation Approval. No prior section's numbering changed, and §30–§33.1's existing Decision Gates are unmodified — this lifecycle composes with them, it does not replace them.
 
 > **Revision note (v8):** User-mandated reversal, 2026-07-24 (same day as v7), of this specification's own prior "v5" principle that a project may hold multiple independent Automation Packages side by side within the same framework. As of v8, **a project holds exactly one authoritative Automation Package per framework** — different frameworks may still coexist (e.g. one SHAFT project and one Playwright project), but never two competing packages within one framework. Rewrites §4's "Existing Automation Package(s)" input row, §7 Rule 2, §9's opening sentence, §19's heading note, §31.1/§31.2/§31.5, and §33's gate wording accordingly; the "continue an existing package (which one) / create a new package" question becomes "extend the existing project / start a project for a framework with none yet / reset a framework's project from scratch (rare, explicit)." Adds §31.6 (Human Decision Principle for Repository-Structure Decisions — gather, analyze, recommend, wait for explicit approval, never a default) and Execution Rule 36. Prompted directly by consolidating NDC's `tests_SHAFT`/`tests_SHAFT_Agency` split (itself a product of the old v5 principle) back into one project — a real diff during that consolidation surfaced a test-class redesign that had silently dropped a business-rule-backed assertion, which is exactly the kind of decision §31.6 now requires be surfaced to a human rather than resolved silently. §33.2 (Working Copy Creation) and the underlying `platform_core/tools/automation_lifecycle/` mechanics from v7 are unaffected — they already operated on a single resolved baseline path with no assumption about package cardinality.
+
+> **Revision note (v9):** User-mandated addition, 2026-07-26, registering the platform's two MCP servers (`platform_core/tools/mcp/`, repo-root `.mcp.json`) and wiring them into this stage. Adds §34 (Stack Documentation Step) — before any code generation, the project's own stack and its **pinned** dependency versions are extracted from the project's source (manifests/lockfiles/framework config, via the new shared `platform_core/tools/mcp/stack_docs/` extractor) and its documentation (Project Context Technology Stack, `architecture.md`, `automation_framework.md`), then `context7` is queried per material library for version-accurate documentation used as a generation guideline. Adds the `stack_documentation_context` output and its §19 artifact row; rewrites §17's browser-tool bullet so the `playwright` MCP server is an explicitly *selectable second mode* alongside the Browser Driver (selection rule in `platform_core/tools/mcp/README.md` §1.2), with a hard prohibition on typing credential values into MCP tool calls (§1.3); adds the two `platform_core/tools/mcp/` dependencies. **§6's v4 rule is unchanged and reinforced:** that Discovery used Playwright MCP still carries zero weight in the Framework Decision Gate, and §34.5 states the parallel rule for documentation — fetched docs never override an approved project framework (`automation_framework.md` governs; conflicts are surfaced for human resolution, never silently resolved) and never enter the traceability chain (§12). No prior section's numbering changed.

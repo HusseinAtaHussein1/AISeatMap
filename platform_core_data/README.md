@@ -12,19 +12,20 @@ It exists as its own top-level layer, separate from [`platform_core/`](../platfo
 
 ## Responsibility
 
-**This folder owns what the application under test *is*, and everything the pipeline has produced by validating it.** It does not own reusable engineering knowledge (`platform_core/knowledge/`), agent behavior (`.claude/skills/`), or the stage sequencing and checkpoint rules that operate on it (`workflows_and_pipelines/`).
+**This folder owns what the application under test *is*, everything the pipeline has produced by validating it, and the reusable engineering knowledge promoted out of that experience (`patterns/`).** It does not own agent behavior (`.claude/skills/`), the shared runtime engines that operate on it (`platform_core/tools/`), or the stage sequencing and checkpoint rules that govern it (`workflows_and_pipelines/`).
 
 ## What Lives Here
 
 - **Project Knowledge** — durable facts about the application: its PRD, onboarding notes, architecture, domain glossary, run configuration, and supporting resources (requirements, API specs, diagrams, screenshots, credentials documentation). Written by humans; changes only when the application itself changes.
-- **Project Knowledge Base** (`knowledge_base/`) — accumulated engineering experience against *this* application: confirmed repairs, diagnosis notes, automation assets, application/UI findings, business rules, lessons learned. The application-scoped counterpart to `platform_core/knowledge/`, per `pipeline.md` §10.
+- **Project Knowledge Base** (`knowledge_base/`) — accumulated engineering experience against *this* application: confirmed repairs, automation assets, application/UI findings, business rules, lessons learned. Its own direct subfolders (`repair/`, `execution/`, `automation/`, `application/`, `ui/`, `findings/`, `business_rules/`, `lessons_learned/`) are the application-scoped layer, per `pipeline.md` §10.
+- **Platform Knowledge** (`knowledge_base/patterns/`) — the application-*agnostic* layer, nested one level inside the Project Knowledge Base: reusable automation/repair/diagnosis/framework/reasoning patterns, each promoted out of its sibling project-scoped folders by explicit human approval (`pipeline.md` §10.5). Resolved *before* the surrounding `knowledge_base/` folders and read-only outside Promotion. **The nesting is structural only, not semantic** — `patterns/` is a distinct layer that happens to live inside `knowledge_base/`, and nothing application-specific may enter it, per §10.6's Isolation Guarantee. Relocated from `platform_core/knowledge/` → `platform_core_data/patterns/` → here on 2026-07-26.
 - **Browser Driver assets** (`browser/`, `credentials/`) — the Browser Profile (login mechanics), Screen/Component locator knowledge, and real (git-ignored) credentials. See [`platform_core/tools/browser_driver/README.md`](../platform_core/tools/browser_driver/README.md) for the full four-way split this implements.
 - **Workspace** (`workspace/`) — the current-approved output of each pipeline stage.
 - **Runs** (`runs/`) — immutable per-run snapshots.
 
 ## What Does NOT Belong Here
 
-- **Reusable engineering knowledge.** A pattern that would still hold against a *different* application is promoted out to `platform_core/knowledge/` (`pipeline.md` §10.5) — never grown indefinitely here on the assumption it "probably applies everywhere."
+- **Reusable engineering knowledge, anywhere outside `patterns/`.** A pattern that would still hold against a *different* application is promoted out of `knowledge_base/` into `patterns/` (`pipeline.md` §10.5) — never grown indefinitely in `knowledge_base/` on the assumption it "probably applies everywhere," and never written straight into `patterns/` without that approval.
 - **Agent behavioral specifications.** What a Skill does belongs in `.claude/skills/`; this folder supplies a Skill's *inputs*, never its behavior.
 - **Orchestration or sequencing logic.** Stage order and checkpoint mechanics belong in `workflows_and_pipelines/`.
 - **A second project.** Adding one would reintroduce exactly the project-selection ambiguity the single-project model removes (`pipeline.md` §6 Rule 9).
@@ -52,11 +53,19 @@ platform_core_data/
     credentials/                    # documentation ABOUT credentials only — never real secrets
   knowledge_base/                 # this application's own engineering experience (pipeline.md §10)
     repair/                         # confirmed repair records (REP-NNN)
-    diagnosis/ · execution/ · automation/    # evidence-gathering / execution / generation history
-    application/ · ui/                       # application behavior and UI observations
-    findings/ · lessons_learned/             # Explorer/Test Design-surfaced knowledge
-    business_rules/                          # this application's business logic (never promoted)
+    execution/ · automation/        # execution / generation history
+    application/ · ui/              # application behavior and UI observations
+    findings/ · lessons_learned/    # Explorer/Test Design-surfaced knowledge
+    business_rules/                 # this application's business logic (never promoted)
     INDEX.md
+    patterns/                     # PLATFORM Knowledge — application-agnostic, promotion-only (pipeline.md §10).
+                                  #   Nested here structurally; still a SEPARATE layer, resolved first (§10.2)
+                                  #   and never receiving application-specific content (§10.6).
+      repair_patterns/ · reasoning/  # the two populated categories (REPAIR-NNN, REASON-NNN)
+      diagnosis/ · diagnosis_patterns/                                   # empty until promoted
+      automation_patterns/ · execution_patterns/                         # empty until promoted
+      framework_patterns/ · reporting/ · pipeline_decision_patterns/     # empty until promoted
+      INDEX.md · README.md          # catalog of promoted documents + the layer's own spec
   browser/                        # Browser Driver Layer — live-browser assets
     profile.json                    # auth + browser init only
     screens/ · components/          # per-screen / shared-component locator knowledge
@@ -122,6 +131,6 @@ The documents below are not *generated* artifacts — they exist for the humans 
 
 ## Related Layers
 
-- [`../platform_core/`](../platform_core/) — reusable Knowledge and Tools; the only layer a pattern from `knowledge_base/` may be promoted into.
+- [`../platform_core/`](../platform_core/) — the shared runtime Tools (Browser Driver, MCP layer, Run Manager, Automation Lifecycle) that resolve this folder's paths at runtime. Note that reusable *Knowledge* is no longer there: [`patterns/`](patterns/), inside this folder, is the only layer a pattern from `knowledge_base/` may be promoted into.
 - [`../.claude/`](../.claude/) — the Skills whose declared Inputs and Outputs resolve to paths in this folder.
 - [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — where every path convention, versioning rule, and Run Workspace layout realized here is actually defined.

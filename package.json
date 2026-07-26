@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --test platform_core/tools/run_manager/__tests__/*.test.js platform_core/tools/automation_lifecycle/__tests__/*.test.js"
+    "test": "node --test platform_core/tools/run_manager/__tests__/*.test.js platform_core/tools/automation_lifecycle/__tests__/*.test.js platform_core/tools/mcp/stack_docs/__tests__/*.test.js"
   },
   "keywords": [],
   "author": "",

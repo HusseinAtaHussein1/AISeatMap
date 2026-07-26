@@ -8,18 +8,18 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 
 ## Responsibility
 
-**This folder owns orchestration and process governance** — control flow, approval gates, run identity, and reusable named invocations of a subset of stages. It owns none of the behavioral logic of any individual stage (that's `.claude/`'s), none of the reusable cross-project engineering knowledge a stage consults (`platform_core/knowledge/`'s), and none of the hosted application's business content (`platform_core_data/`'s).
+**This folder owns orchestration and process governance** — control flow, approval gates, run identity, and reusable named invocations of a subset of stages. It owns none of the behavioral logic of any individual stage (that's `.claude/`'s), none of the reusable cross-project engineering knowledge a stage consults (`platform_core_data/knowledge_base/patterns/`'s), and none of the hosted application's business content (`platform_core_data/`'s).
 
 ## What Lives Here
 
-- **The pipeline specification** — the invariant, seven-stage execution model: stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the end-to-end traceability chain, and the Knowledge Architecture governing `platform_core/knowledge/`.
+- **The pipeline specification** — the invariant, seven-stage execution model: stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the end-to-end traceability chain, and the Knowledge Architecture governing `platform_core_data/knowledge_base/patterns/`.
 - **Orchestration component specifications** — mechanical (non-judgment) components the pipeline specification delegates full detail to: run identity/workspace/status management, and the Run Scope concept (what a given run is allowed to validate).
 - **Named, reusable workflows** — specific, narrower-than-full-pipeline invocations layered on top of the pipeline specification (e.g. a three-stage smoke check), never modifying it.
 
 ## What Does NOT Belong Here
 
 - **Agent behavioral logic.** What a Skill actually does belongs in `.claude/skills/` — this folder only sequences and gates it.
-- **Reusable engineering knowledge.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core/knowledge/`, cited by a Skill, never encoded as pipeline logic here.
+- **Reusable engineering knowledge.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core_data/knowledge_base/patterns/`, cited by a Skill, never encoded as pipeline logic here.
 - **Application-specific business content.** Nothing here ever names the hosted application's screens, business rules, or requirements. Paths are written literally against `platform_core_data/`, which is a *location*, not an application identity.
 - **Generated run artifacts.** Execution output lives under `platform_core_data/runs/` — this folder only defines the rules governing that structure, it never contains a run's actual output.
 
@@ -53,11 +53,11 @@ workflows/{name}.md  ──layers on top of──▶  pipeline/pipeline.md
                                                     │
                                      resolves ──────┼────── governs the rules of
                                                     ▼                  ▼
-                                     platform_core/knowledge/   platform_core_data/workspace/
+                                     platform_core_data/knowledge_base/patterns/   platform_core_data/workspace/
 ```
 
 - **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven Skills — it invokes each in sequence and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
-- **`workflows_and_pipelines/` → `platform_core/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core/knowledge/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
+- **`workflows_and_pipelines/` → `platform_core_data/knowledge_base/patterns/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core_data/knowledge_base/patterns/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
 - **`workflows_and_pipelines/` → `platform_core_data/`:** this folder defines every artifact path convention, versioning rule, Run Workspace layout, and Run Scope concept that governs how `platform_core_data/workspace/` (current-approved state) and `platform_core_data/runs/` (per-run snapshots) are organized — but it never contains the generated content itself.
 - **`.claude/` never depends back on this folder.** The dependency direction is strictly one-way: orchestration invokes behavior, behavior never invokes orchestration.
 
@@ -73,7 +73,7 @@ Run Manager (run_manager.md) allocates Run ID + Display Name, creates the Run Wo
 pipeline.md invokes Stage 1 → checkpoint (§5.1) → Stage 2 → checkpoint → Stage 3 → checkpoint
         → Stage 4 → checkpoint (§5.1) → Stage 5 → checkpoint (§5.2) → Stage 6 (mechanical, no gate) → Stage 7
         ↓
-Each stage resolves Knowledge (platform_core/knowledge/ + platform_core_data/knowledge_base/, §10)
+Each stage resolves Knowledge (platform_core_data/knowledge_base/patterns/ + platform_core_data/knowledge_base/, §10)
         ↓
 Each stage reads/writes platform_core_data/workspace/, per pipeline.md §7's versioning rules
         ↓
@@ -120,5 +120,5 @@ Run Manifest updated at each checkpoint; Run Summary published on terminal statu
 ## Related Layers
 
 - [`../.claude/`](../.claude/) — the Skills this layer sequences and gates; dependency flows one way, from here into `.claude/`.
-- [`../platform_core/`](../platform_core/) — whose Knowledge Architecture (`platform_core/knowledge/`) is canonically defined in `pipeline/pipeline.md` §10, not restated there.
-- [`../platform_core_data/`](../platform_core_data/) — where every artifact path, versioning rule, and Run Workspace this layer defines is actually realized on disk.
+- [`../platform_core/`](../platform_core/) — the shared runtime Tools the Skills this layer sequences invoke directly.
+- [`../platform_core_data/`](../platform_core_data/) — where every artifact path, versioning rule, and Run Workspace this layer defines is actually realized on disk, and where the Knowledge Architecture canonically defined in `pipeline/pipeline.md` §10 is implemented (`patterns/` + `knowledge_base/`), not restated.

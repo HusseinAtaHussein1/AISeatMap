@@ -25,7 +25,7 @@ outputs:
     description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations. NDC uses a `workspace/reporting/` variant of this path — see `platform_core_data/onboarding.md`."
 dependencies:
   - automation-execution-skill, test-design-skill, project-context-skill (upstream skills)
-  - "platform_core/knowledge/reporting/ (Platform Knowledge patterns, if any promoted)"
+  - "platform_core_data/knowledge_base/patterns/reporting/ (Platform Knowledge patterns, if any promoted)"
 ---
 
 > **Pipeline position:** Stage 7 of 7 — final stage, consumes Execution Results, produces the Final QA Report.

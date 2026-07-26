@@ -2,132 +2,105 @@
 
 ## Purpose
 
-This folder exists to hold everything that stays true **no matter which application the platform is pointed at** — its own durable engineering assets, as distinct from the hosted application's business content (`platform_core_data/`), any single run's generated output, any orchestration logic (`workflows_and_pipelines/`), or any agent's behavioral specification (`.claude/`).
+This folder exists to hold the platform's **shared engineering tooling** — the runtime engines that behave identically no matter which application the platform is pointed at, as distinct from the hosted application's business content (`platform_core_data/`), any single run's generated output, any orchestration logic (`workflows_and_pipelines/`), or any agent's behavioral specification (`.claude/`).
 
 It is the most upstream, most stable layer in the repository: it depends on nothing else here, and everything else may draw on it.
 
+> **Note (2026-07-26):** the Platform Knowledge layer that used to live here as `platform_core/knowledge/` now lives at [`../platform_core_data/knowledge_base/patterns/`](../platform_core_data/knowledge_base/patterns/). This folder is Tools only. The two-layer Knowledge Architecture itself is unchanged — see `workflows_and_pipelines/pipeline/pipeline.md` §10 and `docs/CHANGELOG.md`.
+
 ## Responsibility
 
-**This folder owns what any application under test can be examined *with* — never what the current one *is*.** Concretely, that splits into two reusable asset types: proven engineering *knowledge* (patterns, strategies, heuristics) and shared engineering *tooling* (runtime engines that behave identically regardless of what `platform_core_data/` currently holds).
+**This folder owns what any application under test can be examined *with* — never what the current one *is*.** Concretely: shared engineering *tooling* — runtime engines that behave identically regardless of what `platform_core_data/` currently holds.
 
-It does not own agent behavior (`.claude/skills/`), stage sequencing (`workflows_and_pipelines/`), or anything specific to the application under test (`platform_core_data/`).
+It does not own agent behavior (`.claude/skills/`), stage sequencing (`workflows_and_pipelines/`), reusable engineering *knowledge* (`platform_core_data/knowledge_base/patterns/`), or anything specific to the application under test (the rest of `platform_core_data/`).
 
 ## What Lives Here
 
-- **Platform Knowledge** (`knowledge/`) — small, versioned, human-approved documents capturing a reusable automation/repair/diagnosis/framework/reasoning pattern, never an application-specific fact.
-- **Shared Tools** (`tools/`) — reusable runtime engines callable identically for any project, with zero project-specific data baked in (e.g. the Browser Driver).
+- **Shared Tools** (`tools/`) — reusable runtime engines callable identically for any project, with zero project-specific data baked in (the Browser Driver, the MCP tools layer, the Run Manager, the Automation Lifecycle tools). `tools/mcp/` is the one member that holds no engine code of its own: it registers the `playwright` and `context7` MCP servers (repo-root `.mcp.json`) and specifies the contract under which Skills may drive them — plus `stack_docs/`, the extractor that reads a project's manifests/lockfiles so documentation is fetched for the versions the suite actually runs against.
 
-Both categories share one property: population of either is deliberate. Neither grows by accretion during ordinary pipeline execution — see Rules below.
+Population is deliberate: this layer does not grow by accretion during ordinary pipeline execution — see Rules below.
 
 ## What Does NOT Belong Here
 
 - **Project-specific business rules, findings, credentials, or screen locators.** All of that belongs under `platform_core_data/` — never here, no matter how "generic" it looks on first observation.
+- **Reusable engineering knowledge documents.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core_data/knowledge_base/patterns/`, cited from a Skill's `dependencies` line — not here.
 - **Generated artifacts, execution results, or reports.** Those are per-project, per-run outputs under `platform_core_data/workspace/`.
 - **Orchestration or sequencing logic.** Stage order, checkpoints, and run identity belong in `workflows_and_pipelines/`.
 - **Agent behavioral specifications.** What an agent *does* is `.claude/skills/`'s responsibility, not this folder's.
-- **Anything promoted without proof.** A category existing here (even an empty one) is not license to populate it — see the Promotion Workflow below.
 
 ## Folder Structure
 
 ```
 platform_core/
-├── knowledge/     # Platform Knowledge — reusable, application-agnostic engineering knowledge
-│   ├── automation_patterns/         # generation-time strategies
-│   ├── diagnosis_patterns/          # evidence-gathering strategies (no code/behavior change)
-│   ├── repair_patterns/             # confirmed, cross-project repair strategies
-│   ├── execution_patterns/         # proven exceptions to Execution Engine defaults
-│   ├── framework_patterns/          # framework best practices (SHAFT, Playwright, etc.)
-│   ├── reasoning/                   # general, cross-agent AI reasoning patterns
-│   ├── reporting/                   # reporting conventions
-│   ├── pipeline_decision_patterns/  # cross-project pipeline decision heuristics (held empty — see its README note)
-│   ├── INDEX.md                     # catalog of every promoted document
-│   └── README.md                    # full architecture: structure, promotion, document metadata standard
 └── tools/
-    └── browser_driver/  # shared browser automation engine — zero project-specific data
-        ├── driver.js     # resolves project paths, loads profile + credentials, launches, logs in
-        ├── api.js        # BrowserDriver — the only surface Skills/scripts use
-        └── README.md
+    ├── browser_driver/       # shared browser automation engine — zero project-specific data
+    │   ├── driver.js          # resolves project paths, loads profile + credentials, launches, logs in
+    │   ├── api.js             # BrowserDriver — the only surface Skills/scripts use
+    │   └── README.md
+    ├── mcp/                  # MCP servers layer — registration + usage contract (no server code)
+    │   ├── stack_docs/        # stack + pinned-dependency extractor; plans the Context7 lookups
+    │   └── README.md          # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
+    ├── run_manager/          # run folder naming/indexing — the only place a run name is formatted
+    └── automation_lifecycle/ # baseline copy, merge plan/apply, promotion record, cleanup
 ```
 
-`knowledge/` and `tools/` are peers, not a hierarchy — a Skill may depend on either or both independently. See `platform_core/knowledge/README.md` for the full Knowledge layer specification (structure, document metadata standard, promotion mechanics) and `platform_core/tools/browser_driver/README.md` for the Tools layer's design (the four-way split between the shared engine, a project's Browser Profile, its Screen/Component Knowledge, and its Credentials).
+`platform_core/tools/` and `platform_core_data/knowledge_base/patterns/` are peers, not a hierarchy — a Skill may depend on either or both independently. See `platform_core_data/knowledge_base/patterns/README.md` for the full Knowledge layer specification (structure, document metadata standard, promotion mechanics) and `platform_core/tools/browser_driver/README.md` for this layer's design (the four-way split between the shared engine, a project's Browser Profile, its Screen/Component Knowledge, and its Credentials). `platform_core/tools/mcp/README.md` specifies the two registered MCP servers: `playwright` as a second, selectable browser mode alongside the Browser Driver (§1.2's selection rule, §1.3's absolute prohibition on credential values in MCP tool calls), and `context7` as the source of version-accurate documentation for a project's own extracted stack (§2).
 
 ## Interaction with Other Layers
 
 ```
-platform_core_data/knowledge_base/          .claude/skills/{stage}/SKILL.md
-        │                                            │
-        │  Promotion Workflow                        │  Knowledge Resolution (read)
-        │  (explicit human approval)                 │  + Tool invocation
-        ▼                                            ▼
-              platform_core/knowledge/  ◀────────────┘
-              platform_core/tools/      ◀── resolves platform_core_data/ at runtime
+.claude/skills/{stage}/SKILL.md
+        │
+        │  Tool invocation
+        ▼
+platform_core/tools/      ◀── resolves platform_core_data/ at runtime
 ```
 
-- **`platform_core/` → nothing.** This layer has no dependency on `.claude/`, `workflows_and_pipelines/`, or `platform_core_data/` — it is pure, reusable content.
-- **`.claude/skills/` → `platform_core/` (read-heavy).** Each Skill's `dependencies` line names exactly which `knowledge/` subfolders it consults, resolved per `workflows_and_pipelines/pipeline/pipeline.md` §10.2 (Platform Knowledge first, then `platform_core_data/knowledge_base/`). Skills also call into `tools/browser_driver/` directly; the driver resolves the profile and credentials from `platform_core_data/` itself, so no caller passes a project identifier.
-- **`platform_core_data/knowledge_base/` → `platform_core/knowledge/` (write, gated).** The only path anything ever gets written here: a pattern proven against the hosted application, explicitly promoted by human approval (`pipeline.md` §10.5) — never written directly by a Skill mid-run.
-- **`workflows_and_pipelines/` governs, doesn't consume.** `pipeline.md` §10 is the *canonical specification* of this folder's structure, resolution order, and promotion rules — `platform_core/knowledge/README.md` is deliberately a pointer to it, not a duplicate.
+- **`platform_core/` → nothing.** This layer has no dependency on `.claude/`, `workflows_and_pipelines/`, or `platform_core_data/` at rest — it is pure, reusable code. Its engines resolve `platform_core_data/` paths at runtime.
+- **`.claude/skills/` → `platform_core/` (invocation).** Skills call into `tools/browser_driver/` directly; the driver resolves the profile and credentials from `platform_core_data/` itself, so no caller passes a project identifier. Each Skill's `dependencies` line also names which `platform_core_data/knowledge_base/patterns/` subfolders it consults — that resolution is specified in `workflows_and_pipelines/pipeline/pipeline.md` §10.2 and no longer touches this folder.
+- **`workflows_and_pipelines/` governs, doesn't consume.** `pipeline.md` is the canonical specification of stage sequencing; this layer's engines are invoked by Skills, never by the orchestration layer directly.
 
 ## Lifecycle
 
-Platform Knowledge is **consulted** at the start of nearly every Skill invocation (Knowledge Resolution) but **written to** only after a run completes, via explicit human decision:
-
-```
-Skill invoked for Stage N
-        ↓
-Resolve platform_core/knowledge/ (first) + platform_core_data/knowledge_base/ (extends it)
-        ↓
-Skill performs its work using the merged context
-        ↓
-        ... run completes, a lesson proves reusable ...
-        ↓
-Promotion Workflow: human approves → platform_core/knowledge/{category}/ gains a document
-```
-
-`tools/` participates differently — it is invoked directly, synchronously, whenever a stage needs a live browser session (chiefly Explorer's Browser Automation Discovery Mode, Manual Execution's test case execution, and Automation's selector verification), not through the Knowledge Resolution flow.
+`tools/` is invoked directly and synchronously, whenever a stage needs a live browser session (chiefly Explorer's Browser Automation Discovery Mode, Manual Execution's test case execution, and Automation's selector verification) or a stack-documentation lookup. It does not participate in the Knowledge Resolution flow — that resolves `platform_core_data/knowledge_base/patterns/` then `platform_core_data/knowledge_base/`, per `pipeline.md` §10.2.
 
 ## Design Principles
 
 - **Reusability** — this folder's entire reason to exist; nothing here is single-project by definition.
-- **Isolation Guarantee** — a project's own knowledge never leaks in here automatically (`pipeline.md` §10.6); only the explicit Promotion Workflow crosses that boundary.
-- **Promotion Safety** — every document arrives via proof-then-approval, never invented or defaulted to "looks generic enough."
-- **Zero Project-Specific Data (Tools)** — `browser_driver/` resolves every project-specific path dynamically from a `project` argument; the shared engine itself never hardcodes a project name, selector, or credential.
-- **Category ≠ License** — an empty `knowledge/` subfolder existing is not permission to populate it; a category needs a defined producer, consumer, and promotion source before it may receive a document (see the 2026-07-21 governance review, `docs/CHANGELOG.md`).
+- **Zero Project-Specific Data** — `browser_driver/` resolves every project-specific path dynamically at runtime; the shared engine itself never hardcodes a project name, selector, or credential.
+- **One formatter per concern** — e.g. `run_manager/` is the only place a run folder name is ever formatted, so run identity cannot drift between callers.
+- **Credentials never transit a tool argument** — `tools/mcp/README.md` §1.3: authenticate via `BrowserDriver.authenticate()` and hand MCP only an already-authenticated session, because tool arguments are transcript-visible.
 
 ## Rules
 
-- **Always** promote a Platform Knowledge document only via explicit human approval, after it has first proven itself in a project's own `knowledge_base/`.
 - **Never** write a project-specific fact, business rule, or credential here — no exception for something that "seems like it'll apply everywhere."
-- **Never** populate `pipeline_decision_patterns/` until it has a named reader in `pipeline.md` §10.7 and a project-level source folder to promote from — see `knowledge/README.md`.
+- **Never** add a reusable-knowledge document here; it belongs in `platform_core_data/knowledge_base/patterns/`, arriving only via the Promotion Workflow (`pipeline.md` §10.5).
 - **Only** `tools/browser_driver/` may contain the shared automation engine's code; project-specific profiles, screens, components, and credentials live under `platform_core_data/browser/` and `platform_core_data/credentials/` instead.
-- **Must not** duplicate a Skill's own fixed Capability logic as a "Knowledge" document (e.g. the Confidence Engine's base scoring rubric, which stays in `automation-execution-skill/SKILL.md` §27.2, not in `knowledge/`).
+- **Must not** duplicate a Skill's own fixed Capability logic as tooling (e.g. the Confidence Engine's base scoring rubric stays in `automation-execution-skill/SKILL.md` §27.2).
 
 ## Typical Flow
 
 ```
-Project                 Skill                              Platform Core
-NDC          ──▶   automation-execution-skill invoked ──▶   resolves repair_patterns/, diagnosis_patterns/
-                                                       + platform_core_data/knowledge_base/repair/
-                    proposes a repair using
-                    the merged context
-                          │
-                    repair confirmed by rerun
-                          │
-                    "reusable beyond NDC?" → human approves
-                          ▼
-                                                    platform_core/knowledge/repair_patterns/
-                                                    gains REPAIR-NNN.md
+Skill                                   Platform Core
+manual-execution-skill invoked  ──▶   BrowserDriver.authenticate()
+                                       │  resolves platform_core_data/browser/ profile
+                                       │  + platform_core_data/credentials/ (never echoed)
+                                       ▼
+                                      authenticated session returned
+        │
+        ▼
+executes the authored Steps against that session
 ```
 
 ## Common Mistakes
 
-- **"This business rule is obviously true for every project, put it in `platform_core/knowledge/` directly."** No — it must first prove itself in that project's own `knowledge_base/`, and promotion is always a human decision, never inferred from how generic something looks.
 - **"Add this project's login selectors to `platform_core/tools/browser_driver/`."** No — the shared engine holds zero project data by design; selectors belong in `platform_core_data/browser/screens/`.
-- **"The category folder already exists, so it's fine to write into it."** No — an existing empty category (e.g. `pipeline_decision_patterns/`) is not itself authorization; it needs a defined consumer and promotion source first.
-- **"Restate the repair rule inside the Skill spec instead of citing the Knowledge doc."** No — that duplicates content across two layers and lets them silently drift apart.
+- **"This repair pattern is reusable, put it in `platform_core/`."** No — Platform Knowledge lives in `platform_core_data/knowledge_base/patterns/`, and only via the Promotion Workflow after proving itself in `platform_core_data/knowledge_base/`.
+- **"Pass the password to the Playwright MCP tool so it can log in."** No — `tools/mcp/README.md` §1.3 prohibits a credential value in any MCP tool call; authenticate with the Browser Driver first.
+- **"Format the run folder name inline here, it's just a string."** No — `run_manager/` owns that format; duplicating it lets run identity drift.
 
 ## Related Layers
 
-- [`../.claude/`](../.claude/) — the Skills that read this layer's Knowledge and invoke its Tools.
-- [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — where this layer's canonical architecture (`pipeline.md` §10) is actually defined; this folder's own `knowledge/README.md` is a pointer to it, not a duplicate.
-- [`../platform_core_data/`](../platform_core_data/) — the paired Project Knowledge layer, and the only legitimate source a Platform Knowledge document may be promoted from.
+- [`../.claude/`](../.claude/) — the Skills that invoke this layer's Tools.
+- [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — the orchestration layer that sequences the Skills which call into these engines.
+- [`../platform_core_data/`](../platform_core_data/) — the hosted application's content, resolved by these engines at runtime, and the home of the Platform Knowledge layer (`patterns/`) that used to live here.

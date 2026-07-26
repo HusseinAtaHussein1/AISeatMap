@@ -34,7 +34,8 @@ outputs:
 dependencies:
   - automation-skill (upstream skill)
   - The test runner/framework CLI named in the Automation Summary's Execution Instructions
-  - "platform_core/knowledge/repair_patterns/, diagnosis_patterns/, execution_patterns/ (Platform Knowledge, consulted during the Automation Repair Loop)"
+  - "platform_core_data/knowledge_base/patterns/repair_patterns/, diagnosis_patterns/, execution_patterns/ (Platform Knowledge, consulted during the Automation Repair Loop)"
+  - "platform_core/tools/mcp/ (MCP tools layer — the `context7` server, permitted only inside the Automation Repair Loop per §7 and that README's §2.6)"
 ---
 
 > **Pipeline position:** Stage 6 of 7 — consumes the Automation Suite, produces raw Execution Results.
@@ -154,6 +155,7 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 - File tools: Read (automation suite, Automation Summary, Project Context), Write (execution results, logs)
 - The test framework's own automation layer (browser, API client, mobile driver, or other, per whichever framework Stage 5 selected), as invoked by the test runner itself — not ad hoc manual interaction
 - A direct means of asking the user a question and waiting for their answer, used strictly for the Execution Mode determination in §5.1 when the Run Configuration does not already define one — not used to ask about anything else within this skill's scope
+- **`context7` MCP server** (`resolve-library-id`, `query-docs`) — permitted **only inside the Automation Repair Loop (§25)**, and only when a failure's diagnosis turns on a framework/dependency API question ("is this locator API valid at the pinned version this suite runs against?"). Read this run's `StackDocumentationContext_{Framework}.md` (written by Stage 5, `automation-skill/SKILL.md` §34) **first** and reuse what it already records rather than re-querying; query only for the specific question that artifact does not answer, and record the answer in the Repair Summary (§25.1). Never used to change what a test asserts, and never a source of business logic — a repair needing new business logic is out of the loop's scope regardless of what documentation says. See `platform_core/tools/mcp/README.md` §2.6.
 
 **Not permitted:** editing test scripts to change their logic or expected assertions, editing the PRD/Project Context/test cases, or running any test the Project Context has not authorized for the target environment.
 
@@ -622,9 +624,9 @@ A report is never issued above 95% before the repair is actually rerun and confi
 **A two-layer, cross-run store of repair patterns, per the Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10) — distinct from `.claude/skills/automation-skill/SKILL.md` §11's "Automation Knowledge Base," which is reusable *code assets* within one project's package.** This one is reusable *repair reasoning*: what failure pattern, what fix worked, under what conditions.
 
 - **Project Knowledge (default write target):** `platform_core_data/knowledge_base/repair/REP-{NNN}.md` — this project's own execution-confirmed repair records.
-- **Platform Knowledge (read always; written only via Promotion):** `platform_core/knowledge/repair_patterns/REPAIR-{NNN}.md` and `platform_core/knowledge/reasoning/REASON-{NNN}.md` — generalized, cross-project repair/reasoning patterns.
+- **Platform Knowledge (read always; written only via Promotion):** `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-{NNN}.md` and `platform_core_data/knowledge_base/patterns/reasoning/REASON-{NNN}.md` — generalized, cross-project repair/reasoning patterns.
 
-Every read consults both layers, in the fixed order of `workflows_and_pipelines/pipeline/pipeline.md` §10.2 (Platform Knowledge, then the current project's Knowledge). Every write, by default, targets only the current project's `knowledge_base/repair/` — never `platform_core/knowledge/` directly, per §10.5's Promotion Workflow below.
+Every read consults both layers, in the fixed order of `workflows_and_pipelines/pipeline/pipeline.md` §10.2 (Platform Knowledge, then the current project's Knowledge). Every write, by default, targets only the current project's `knowledge_base/repair/` — never `platform_core_data/knowledge_base/patterns/` directly, per §10.5's Promotion Workflow below.
 
 ## 28.1 Write rule — confirmed repairs only
 
@@ -679,7 +681,7 @@ A second project independently confirming the same Platform pattern increments i
 
 ## 28.3 Read rule — consult before creating something new
 
-- **Automation Execution skill (§25.1)**: before proposing a new repair strategy, check both layers — Platform Knowledge (`platform_core/knowledge/repair_patterns/`, `platform_core/knowledge/reasoning/`) first, then the current project's `knowledge_base/repair/` — for a matching rule; if found, include it as a candidate option (§26.1), explicitly cited by ID.
+- **Automation Execution skill (§25.1)**: before proposing a new repair strategy, check both layers — Platform Knowledge (`platform_core_data/knowledge_base/patterns/repair_patterns/`, `platform_core_data/knowledge_base/patterns/reasoning/`) first, then the current project's `knowledge_base/repair/` — for a matching rule; if found, include it as a candidate option (§26.1), explicitly cited by ID.
 - **Automation skill**: before generating any new automation (`.claude/skills/automation-skill/SKILL.md` §5, §11), consult both layers for patterns relevant to the flows being automated (e.g., a Login suite consults any rule tagged "Authentication flows") and applies a matching rule's approach proactively, rather than waiting to discover the same failure via execution again.
 
 ## 28.4 Explainability

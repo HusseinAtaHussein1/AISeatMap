@@ -49,23 +49,28 @@ const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
 
-// platform_core/tools/browser_driver/driver.js -> repo root is three levels up.
-const REPO_ROOT = path.join(__dirname, '..', '..', '..');
-// The single project root — one project at a time, no project-name path segment (pipeline.md §1).
-const DATA_ROOT = path.join(REPO_ROOT, 'platform_core_data');
+// Roots come from platform_paths, never from this file's own location: once the platform is
+// installed inside a host project, `__dirname/../../..` is the host's repository, not the tool
+// folder (pipeline.md §1.1). Resolved lazily so requiring this module never throws on a
+// misconfigured install — the error surfaces when a path is actually needed.
+const { resolveRoots } = require('../platform_paths/paths');
+
+function dataRoot() {
+  return resolveRoots().dataRoot;
+}
 
 function projectBrowserDir() {
-  return path.join(DATA_ROOT, 'browser');
+  return path.join(dataRoot(), 'browser');
 }
 
 function projectCredentialsPath() {
-  return path.join(DATA_ROOT, 'credentials', 'credentials.json');
+  return path.join(dataRoot(), 'credentials', 'credentials.json');
 }
 
 // UI Knowledge Base — canonical, versioned baseline screenshots + screen metadata. Distinct from
 // Discovery run evidence (platform_core_data/workspace/discovery/...), which stays per-run/temporary.
 function projectUiScreenshotsDir() {
-  return path.join(DATA_ROOT, 'ui', 'screenshots');
+  return path.join(dataRoot(), 'ui', 'screenshots');
 }
 
 function loadProfile() {

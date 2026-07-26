@@ -1,10 +1,11 @@
-// Note on scope: gitUtils.js's REPO_ROOT is fixed to this repository's real root (matching
-// platform_core/tools/run_manager/migrate.js's own REPO_ROOT convention), so these tests never
-// shell out to a *real* git process against a throwaway fixture repo — doing so would mean either
-// mutating this actual repository's git state from a test run, or refactoring the shared REPO_ROOT
-// convention just for testability. Instead, git is faked via dependency injection (a fake
-// `execFileSync`), and the pure classification/rename logic — the highest-risk part per the design
-// review that shaped pipeline.md §12 — is tested directly and thoroughly against Map fixtures.
+// Note on scope: git is injected, both as a fake `execFileSync` and as an explicit GitRepo handle.
+// Before the two-root refactor gitUtils derived one fixed repository root from __dirname, so a test
+// could not point the lifecycle at a throwaway fixture repository without either mutating this
+// actual repository's git state or reworking that convention; faking was the only option. The repo
+// handle is now a parameter, so a test can supply a fixture root directly — see gitUtils.test.js's
+// real-repository cases. These tests keep the fake, because the pure classification/rename logic —
+// the highest-risk part per the design review that shaped pipeline.md §12 — is best exercised
+// directly against Map fixtures rather than through git.
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -12,8 +13,23 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const {
-  classifyChanges, detectRenames, buildDiskSnapshot, computeMergePlan,
+  classifyChanges, detectRenames, buildDiskSnapshot, computeMergePlan, NO_GIT_WARNING,
 } = require('../mergePlan');
+
+/** A writable tool-repo handle rooted at `root`, standing in for discoverRepo's result. */
+function fixtureRepo(root) {
+  return {
+    root: root.split(path.sep).join('/'),
+    available: true,
+    writable: true,
+    mode: 'tool-repo',
+    reason: 'test fixture',
+  };
+}
+
+const UNAVAILABLE_REPO = {
+  root: null, available: false, writable: false, mode: 'off', reason: 'no git in this test',
+};
 
 // ---- classifyChanges -------------------------------------------------------------------------
 
@@ -154,10 +170,32 @@ test('buildDiskSnapshot separates tracked content from git-ignored files', () =>
     fs.mkdirSync(path.join(dir, 'target'));
     fs.writeFileSync(path.join(dir, 'target', 'Page.class'), 'binary');
 
-    const { tracked, ignored } = buildDiskSnapshot(dir, { execFileSync: fakeGitIgnoring(['.class']) });
+    const { tracked, ignored } = buildDiskSnapshot(fixtureRepo(dir), dir, {
+      execFileSync: fakeGitIgnoring(['.class']),
+    });
 
     assert.deepEqual([...tracked.keys()], ['Page.java']);
     assert.deepEqual(ignored, ['target/Page.class']);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('buildDiskSnapshot classifies nothing as ignored when git is unavailable', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeplan-nogit-'));
+  try {
+    fs.writeFileSync(path.join(dir, 'Page.java'), 'source');
+    fs.mkdirSync(path.join(dir, 'target'));
+    fs.writeFileSync(path.join(dir, 'target', 'Page.class'), 'binary');
+
+    const { tracked, ignored } = buildDiskSnapshot(UNAVAILABLE_REPO, dir, {
+      execFileSync: () => { throw new Error('git must not be invoked when unavailable'); },
+    });
+
+    // Everything is tracked content: without git there is no ignore concept to consult, so the
+    // build output is diffed rather than silently discarded.
+    assert.deepEqual([...tracked.keys()].sort(), ['Page.java', 'target/Page.class']);
+    assert.deepEqual(ignored, []);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -184,7 +222,9 @@ test('computeMergePlan: fast-forward case (baseline unchanged since snapshot) us
       throw new Error(`unexpected git invocation: ${args.join(' ')}`);
     };
 
-    const plan = computeMergePlan(baselineDir, workingDir, { baselineRef: 'REF1' }, { execFileSync });
+    const plan = computeMergePlan(baselineDir, workingDir, { baselineRef: 'REF1' }, {
+      execFileSync, repo: fixtureRepo(baselineDir),
+    });
 
     assert.deepEqual(plan.dirty, []);
     assert.equal(plan.baselineMoved, false);
@@ -192,6 +232,8 @@ test('computeMergePlan: fast-forward case (baseline unchanged since snapshot) us
     assert.deepEqual(plan.modified, []);
     assert.deepEqual(plan.deleted, []);
     assert.deepEqual(plan.conflicts, []);
+    assert.equal(plan.degradedMode, null);
+    assert.deepEqual(plan.warnings, []);
   } finally {
     fs.rmSync(baselineDir, { recursive: true, force: true });
     fs.rmSync(workingDir, { recursive: true, force: true });
@@ -215,13 +257,88 @@ test('computeMergePlan: null snapshot (first-ever promotion) treats everything p
       throw new Error(`unexpected git invocation: ${args.join(' ')}`);
     };
 
-    const plan = computeMergePlan(baselineDir, workingDir, null, { execFileSync });
+    const plan = computeMergePlan(baselineDir, workingDir, null, {
+      execFileSync, repo: fixtureRepo(os.tmpdir()),
+    });
 
     assert.equal(plan.currentRef, null);
     assert.equal(plan.baselineMoved, false);
     assert.deepEqual(plan.added, ['Generated.java']);
     assert.deepEqual(plan.conflicts, []);
   } finally {
+    fs.rmSync(workingDir, { recursive: true, force: true });
+  }
+});
+
+// ---- degraded and hard-block paths (pipeline.md §12.4) -----------------------------------------
+
+test('computeMergePlan without git reports degradedMode and warns, rather than implying protection', () => {
+  const baselineDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeplan-degraded-baseline-'));
+  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeplan-degraded-working-'));
+  try {
+    fs.writeFileSync(path.join(baselineDir, 'Existing.java'), 'v1');
+    fs.writeFileSync(path.join(workingDir, 'Existing.java'), 'v2'); // we changed it
+
+    const plan = computeMergePlan(baselineDir, workingDir, null, {
+      repo: UNAVAILABLE_REPO,
+      execFileSync: () => { throw new Error('git must not be invoked when unavailable'); },
+    });
+
+    assert.equal(plan.degradedMode, 'no-git');
+    assert.ok(plan.warnings.some((w) => w.includes(NO_GIT_WARNING)), 'the exact §12.4 wording must be present');
+    assert.equal(plan.repo.available, false);
+    // The diff itself still works: base == theirs, so our edit reads as a modification.
+    assert.deepEqual(plan.modified, ['Existing.java']);
+    assert.deepEqual(plan.conflicts, [], 'degraded is not the same as conflicted');
+    assert.deepEqual(plan.dirty, [], 'no uncommitted-change concept exists without git');
+  } finally {
+    fs.rmSync(baselineDir, { recursive: true, force: true });
+    fs.rmSync(workingDir, { recursive: true, force: true });
+  }
+});
+
+test('computeMergePlan hard-blocks when the snapshot had git but git is gone now', () => {
+  const baselineDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeplan-lostgit-baseline-'));
+  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeplan-lostgit-working-'));
+  try {
+    fs.writeFileSync(path.join(baselineDir, 'A.java'), 'v1');
+
+    const plan = computeMergePlan(baselineDir, workingDir, {
+      baselineRef: 'REF1', gitAvailable: true, repoRoot: '/some/repo',
+    }, {
+      repo: UNAVAILABLE_REPO,
+      execFileSync: () => { throw new Error('git must not be invoked when unavailable'); },
+    });
+
+    assert.ok(plan.conflicts.includes('git-protection-lost'));
+    assert.ok(plan.warnings.some((w) => w.includes('cannot be verified')));
+  } finally {
+    fs.rmSync(baselineDir, { recursive: true, force: true });
+    fs.rmSync(workingDir, { recursive: true, force: true });
+  }
+});
+
+test('computeMergePlan hard-blocks when the baseline changed repository mid-run', () => {
+  const baselineDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeplan-identity-baseline-'));
+  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mergeplan-identity-working-'));
+  try {
+    fs.writeFileSync(path.join(baselineDir, 'A.java'), 'v1');
+
+    const execFileSync = (cmd, args) => {
+      if (args[0] === 'status') return '';
+      if (args[0] === 'log') return 'REF1\n';
+      if (args[0] === 'check-ignore') { const e = new Error('not ignored'); e.status = 1; throw e; }
+      throw new Error(`unexpected: ${args.join(' ')}`);
+    };
+
+    const plan = computeMergePlan(baselineDir, workingDir, {
+      baselineRef: 'REF1', gitAvailable: true, repoRoot: '/a-different/repo',
+    }, { execFileSync, repo: fixtureRepo(baselineDir) });
+
+    assert.ok(plan.conflicts.includes('repo-identity-changed'));
+    assert.ok(plan.warnings.some((w) => w.includes('repository changed mid-run')));
+  } finally {
+    fs.rmSync(baselineDir, { recursive: true, force: true });
     fs.rmSync(workingDir, { recursive: true, force: true });
   }
 });

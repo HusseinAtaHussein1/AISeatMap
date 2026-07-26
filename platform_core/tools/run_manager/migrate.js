@@ -20,16 +20,21 @@ const { execFileSync } = require('child_process');
 const { normalizeScope, sanitizeSegment, buildRunFolderName, formatTimestampUTC } = require('./runFolderName');
 const { isRenameSafe, buildIndexEntry, saveIndex, loadIndex } = require('./runFolderIndex');
 
-const REPO_ROOT = path.join(__dirname, '..', '..', '..');
-// The platform hosts one project, rooted here — no project-name path segment anywhere
-// (workflows_and_pipelines/pipeline/pipeline.md §1 and §6 Rule 9).
-const DATA_ROOT = path.join(REPO_ROOT, 'platform_core_data');
+// Roots come from platform_paths, never from this file's own location: once the platform is
+// installed inside a host project, `__dirname/../../..` is the host's repository, not the tool
+// folder (pipeline.md §1.1). Resolved lazily so requiring this module never throws.
+const { resolveRoots } = require('../platform_paths/paths');
+
+function roots() {
+  return resolveRoots();
+}
+
 const LEGACY_DIR_RE = /^RUN-(\d{8})-(\d{3})(?:-([a-z0-9-]+))?$/i;
 
 // Exactly one runs directory exists. Still returned as a list so a fixture tree with none, or a
 // future second location, needs no call-site change.
-function findRunsDirs() {
-  return [path.join(DATA_ROOT, 'runs')].filter((p) => fs.existsSync(p));
+function findRunsDirs(dataRoot) {
+  return [path.join(dataRoot, 'runs')].filter((p) => fs.existsSync(p));
 }
 
 function findFile(startDir, predicate) {
@@ -135,8 +140,8 @@ function stripMarkdown(text) {
 }
 
 /** Looks up a run's row in run_configuration.md's "History of scope choices" table. */
-function fromRunConfiguration(runId) {
-  const p = path.join(DATA_ROOT, 'run_configuration.md');
+function fromRunConfiguration(runId, dataRoot) {
+  const p = path.join(dataRoot, 'run_configuration.md');
   if (!fs.existsSync(p)) return null;
   const content = fs.readFileSync(p, 'utf8');
   const tables = parseMarkdownTables(content);
@@ -168,8 +173,8 @@ function fromRunConfiguration(runId) {
 }
 
 /** Looks up a run's section in the RunManifest.md file. */
-function fromRunManifest(runId) {
-  const manifestPath = findAllFiles(DATA_ROOT, (name) => /RunManifest\.md$/.test(name))[0];
+function fromRunManifest(runId, dataRoot) {
+  const manifestPath = findAllFiles(dataRoot, (name) => /RunManifest\.md$/.test(name))[0];
   if (!manifestPath) return null;
   const content = fs.readFileSync(manifestPath, 'utf8');
   const lines = content.split(/\r?\n/);
@@ -199,7 +204,7 @@ function fromRunManifest(runId) {
   return {
     scopeRaw: scopeTypeMatch ? scopeTypeMatch[1].trim() : undefined,
     target: headingTitleMatch ? headingTitleMatch[1].trim() : (purposeMatch ? purposeMatch[1].trim() : undefined),
-    source: `${path.relative(REPO_ROOT, manifestPath)}`,
+    source: `${path.relative(dataRoot, manifestPath)}`,
   };
 }
 
@@ -225,7 +230,8 @@ function inferStartedDate(runJson, runId) {
  * (in order) metadata/run.json, run_configuration.md's history table, and *_RunManifest.md —
  * filling only the fields still missing after each source, never overwriting an earlier hit.
  */
-function inferRunMetadata(runId, runFolderAbs) {
+function inferRunMetadata(runId, runFolderAbs, dataRootOverride) {
+  const dataRoot = dataRootOverride || roots().dataRoot;
   const runJson = readRunJson(runFolderAbs);
   // Note: the documented camelCase run.json schema (run_manager.md §7) uses the JSON key `scope`
   // for a *target* description (e.g. "Login Module"), not a scope category — so it's only ever
@@ -238,7 +244,7 @@ function inferRunMetadata(runId, runFolderAbs) {
   if (scopeRaw !== undefined || target !== undefined) sources.push('metadata/run.json');
 
   if (scopeRaw === undefined || target === undefined) {
-    const fromConfig = fromRunConfiguration(runId);
+    const fromConfig = fromRunConfiguration(runId, dataRoot);
     if (fromConfig) {
       if (scopeRaw === undefined && fromConfig.scopeRaw) scopeRaw = fromConfig.scopeRaw;
       if (target === undefined && fromConfig.target) target = fromConfig.target;
@@ -247,7 +253,7 @@ function inferRunMetadata(runId, runFolderAbs) {
   }
 
   if (scopeRaw === undefined || target === undefined) {
-    const fromManifest = fromRunManifest(runId);
+    const fromManifest = fromRunManifest(runId, dataRoot);
     if (fromManifest) {
       if (scopeRaw === undefined && fromManifest.scopeRaw) scopeRaw = fromManifest.scopeRaw;
       if (target === undefined && fromManifest.target) target = fromManifest.target;
@@ -277,8 +283,20 @@ function computeInferredName(meta, runId) {
   });
 }
 
-function migrateRuns({ apply = false } = {}) {
-  const runsDirs = findRunsDirs();
+/**
+ * @param {{apply?: boolean, dataRoot?: string, gitRoot?: string}} [options]
+ *   `dataRoot` and `gitRoot` default to platform_paths' resolution. Both are injectable so a test
+ *   can point the migration at a fixture tree without reaching this repository's own git state.
+ */
+function migrateRuns({ apply = false, dataRoot, gitRoot } = {}) {
+  const resolved = dataRoot ? { dataRoot, toolRoot: dataRoot } : roots();
+  const effectiveDataRoot = dataRoot || resolved.dataRoot;
+  // Renames are scoped to the platform's own data, never the whole repository: installed inside a
+  // host project, scanning from the repository root would walk the application's entire source tree
+  // and could `git mv` inside the host's history (pipeline.md §13.4).
+  const effectiveGitRoot = gitRoot || effectiveDataRoot;
+
+  const runsDirs = findRunsDirs(effectiveDataRoot);
   const report = [];
 
   for (const runsDir of runsDirs) {
@@ -297,7 +315,7 @@ function migrateRuns({ apply = false } = {}) {
       const legacyMatch = folderName.match(LEGACY_DIR_RE);
       const runId = `RUN-${legacyMatch[1]}-${legacyMatch[2]}`;
 
-      const meta = inferRunMetadata(runId, folderAbs);
+      const meta = inferRunMetadata(runId, folderAbs, effectiveDataRoot);
       let inferredNewName = computeInferredName(meta, runId);
 
       // Deduplicate against names already assigned to a *different* legacy folder this run.
@@ -308,7 +326,7 @@ function migrateRuns({ apply = false } = {}) {
       }
       assignedNewNames.add(inferredNewName);
 
-      const safe = isRenameSafe(REPO_ROOT, folderAbs);
+      const safe = isRenameSafe(effectiveGitRoot, folderAbs);
       const entry = buildIndexEntry(folderName, inferredNewName, {
         source: meta.source,
         confidence: meta.confidence,
@@ -319,11 +337,11 @@ function migrateRuns({ apply = false } = {}) {
       let renamed = false;
       if (apply && safe) {
         const target = path.join(runsDir, inferredNewName);
-        execFileSync('git', ['mv', folderAbs, target], { cwd: REPO_ROOT });
+        execFileSync('git', ['mv', folderAbs, target], { cwd: effectiveGitRoot });
         renamed = true;
       }
 
-      report.push({ runsDir: path.relative(REPO_ROOT, runsDir), ...entry, renamed });
+      report.push({ runsDir: path.relative(effectiveDataRoot, runsDir), ...entry, renamed });
     }
 
     saveIndex(runsDir, newIndex);

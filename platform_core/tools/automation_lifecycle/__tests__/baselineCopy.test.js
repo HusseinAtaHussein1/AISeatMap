@@ -20,10 +20,19 @@ test('copyBaselineIntoRun copies an existing baseline and records its ref in a s
   try {
     fs.writeFileSync(path.join(baselineDir, 'Page.java'), 'content');
     const runPackagePath = path.join(runRoot, 'automation', 'Project_tests_SHAFT');
+    const repo = {
+      root: baselineDir.split(path.sep).join('/'),
+      available: true,
+      writable: true,
+      mode: 'tool-repo',
+      reason: 'test fixture',
+    };
 
     const result = copyBaselineIntoRun(baselineDir, runPackagePath, {
       execFileSync: (cmd, args) => (args[0] === 'log' ? 'abc123\n' : ''),
       now: FIXED_NOW,
+      repo,
+      dataRoot: baselineDir,
     });
 
     assert.equal(result.copied, true);
@@ -34,9 +43,42 @@ test('copyBaselineIntoRun copies an existing baseline and records its ref in a s
     assert.equal(snapshot.baselineRef, 'abc123');
     assert.equal(snapshot.copiedAt, FIXED_NOW.toISOString());
     assert.equal(path.basename(result.snapshotPath), SNAPSHOT_FILENAME);
+
+    // schemaVersion 2 records which repository governed the baseline, so a later merge can detect
+    // that git protection was lost or the repository changed identity mid-run (pipeline.md §12.4).
+    assert.equal(snapshot.schemaVersion, 2);
+    assert.equal(snapshot.gitAvailable, true);
+    assert.equal(snapshot.gitMode, 'tool-repo');
+    assert.equal(snapshot.repoRoot, repo.root);
+    assert.equal(snapshot.baselinePath, '.', 'recorded relative to dataRoot');
+    assert.equal(snapshot.baselinePathRoot, 'data');
   } finally {
     fs.rmSync(baselineDir, { recursive: true, force: true });
     fs.rmSync(runRoot, { recursive: true, force: true });
+  }
+});
+
+test('a schemaVersion 1 snapshot is normalized rather than rejected', () => {
+  // An in-flight run created before the two-root upgrade must still be mergeable.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'snapshot-v1-'));
+  try {
+    const p = path.join(dir, '.lifecycle_snapshot.json');
+    fs.writeFileSync(p, JSON.stringify({
+      baselinePath: 'platform_core_data/workspace/automation/tests_SHAFT',
+      baselineRef: 'oldref',
+      copiedAt: FIXED_NOW.toISOString(),
+    }));
+
+    const snapshot = loadSnapshot(p);
+    assert.equal(snapshot.schemaVersion, 1);
+    assert.equal(snapshot.baselineRef, 'oldref');
+    assert.equal(snapshot.baselinePathRoot, 'legacy-repo-relative');
+    // A v1 snapshot could only have been written by a build that required git unconditionally, so
+    // gitAvailable defaults true — which makes "git is gone now" a hard block, not a silent downgrade.
+    assert.equal(snapshot.gitAvailable, true);
+    assert.equal(snapshot.repoRoot, null);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 

@@ -4,26 +4,19 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const Module = require('module');
+const migrate = require('../migrate');
 
-// migrate.js resolves REPO_ROOT from its own __dirname (three levels up from
-// platform_core/tools/run_manager/). To exercise inferRunMetadata()/computeInferredName() against
-// isolated fixtures instead of this repo's real platform_core_data/ tree, we load a copy of the module from a
-// temp location so its REPO_ROOT points at the fixture tree.
-function loadMigrateAgainstFixtureRoot(fixtureRoot) {
-  const realSrc = fs.readFileSync(path.join(__dirname, '..', 'migrate.js'), 'utf8');
-  const fixtureDir = path.join(fixtureRoot, 'platform_core', 'tools', 'run_manager');
-  fs.mkdirSync(fixtureDir, { recursive: true });
-  fs.copyFileSync(path.join(__dirname, '..', 'runFolderName.js'), path.join(fixtureDir, 'runFolderName.js'));
-  fs.copyFileSync(path.join(__dirname, '..', 'runFolderIndex.js'), path.join(fixtureDir, 'runFolderIndex.js'));
-  const fixtureMigratePath = path.join(fixtureDir, 'migrate.js');
-  fs.writeFileSync(fixtureMigratePath, realSrc, 'utf8');
-  delete require.cache[require.resolve(fixtureMigratePath)];
-  return require(fixtureMigratePath);
-}
-
+// migrate.js used to resolve one fixed REPO_ROOT from its own __dirname, so exercising it against an
+// isolated fixture tree meant copying the module into a temp directory just to relocate that root.
+// dataRoot is now an explicit parameter (defaulting to platform_paths' resolution), so a fixture is
+// passed in directly — no module copying, and the real module under test is the one exercised.
 function makeFixtureRoot() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'run-folder-migrate-test-'));
+}
+
+/** The platform_core_data/ root inside a fixture tree. */
+function dataRootOf(fixtureRoot) {
+  return path.join(fixtureRoot, 'platform_core_data');
 }
 
 test('inferRunMetadata reads scope/target from a Title-Case run.json (real schema in use today)', () => {
@@ -39,8 +32,8 @@ test('inferRunMetadata reads scope/target from a Title-Case run.json (real schem
     })
   );
 
-  const { inferRunMetadata, computeInferredName } = loadMigrateAgainstFixtureRoot(root);
-  const meta = inferRunMetadata('RUN-20260707-001', runFolder);
+  const { inferRunMetadata, computeInferredName } = migrate;
+  const meta = inferRunMetadata('RUN-20260707-001', runFolder, dataRootOf(root));
 
   assert.equal(meta.scopeRaw, 'Full Regression');
   assert.equal(meta.source, 'metadata/run.json');
@@ -68,8 +61,8 @@ test('inferRunMetadata falls back to run_configuration.md history table when run
     ].join('\n')
   );
 
-  const { inferRunMetadata } = loadMigrateAgainstFixtureRoot(root);
-  const meta = inferRunMetadata('RUN-20260706-002', runFolder);
+  const { inferRunMetadata } = migrate;
+  const meta = inferRunMetadata('RUN-20260706-002', runFolder, dataRootOf(root));
 
   assert.equal(meta.scopeRaw, 'Custom');
   assert.equal(meta.target, 'Login Module');
@@ -95,8 +88,8 @@ test('inferRunMetadata falls back to *_RunManifest.md when nothing else has the 
     ].join('\n')
   );
 
-  const { inferRunMetadata } = loadMigrateAgainstFixtureRoot(root);
-  const meta = inferRunMetadata('RUN-20260710-001', runFolder);
+  const { inferRunMetadata } = migrate;
+  const meta = inferRunMetadata('RUN-20260710-001', runFolder, dataRootOf(root));
 
   assert.equal(meta.scopeRaw, 'User Story');
   assert.equal(meta.target, 'Credential Routes Filter');
@@ -110,8 +103,8 @@ test('inferRunMetadata never throws and returns Unknown-safe metadata when nothi
   const runFolder = path.join(root, 'platform_core_data', 'runs', 'RUN-20260101-001');
   fs.mkdirSync(runFolder, { recursive: true });
 
-  const { inferRunMetadata, computeInferredName } = loadMigrateAgainstFixtureRoot(root);
-  const meta = inferRunMetadata('RUN-20260101-001', runFolder);
+  const { inferRunMetadata, computeInferredName } = migrate;
+  const meta = inferRunMetadata('RUN-20260101-001', runFolder, dataRootOf(root));
 
   assert.equal(meta.scopeRaw, undefined);
   assert.equal(meta.target, undefined);
@@ -133,13 +126,13 @@ test('migrateRuns is idempotent: running it twice produces an identical index wi
     JSON.stringify({ 'Run Type': 'Smoke', 'Started Time': '2026-01-01T00:00:00Z' })
   );
 
-  const { migrateRuns } = loadMigrateAgainstFixtureRoot(root);
-  const first = migrateRuns({ apply: false });
+  const { migrateRuns } = migrate;
+  const first = migrateRuns({ apply: false, dataRoot: dataRootOf(root) });
   const indexAfterFirst = fs.readFileSync(path.join(runsDir, '.run_folder_index.json'), 'utf8');
 
   // Reload fresh (module caches loadIndex results only via fs reads, so a second in-process call
   // is sufficient to prove idempotency without re-copying fixtures).
-  const second = migrateRuns({ apply: false });
+  const second = migrateRuns({ apply: false, dataRoot: dataRootOf(root) });
   const indexAfterSecond = fs.readFileSync(path.join(runsDir, '.run_folder_index.json'), 'utf8');
 
   assert.equal(indexAfterFirst, indexAfterSecond);

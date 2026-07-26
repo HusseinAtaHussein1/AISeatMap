@@ -125,3 +125,26 @@ Hypothetical result: `platform_core_data/workspace/reporting/Final_QA_Report.md`
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
 For this skill specifically: its single responsibility is synthesis and reporting — never re-testing or code diagnosis. It is the terminal node of the pipeline; its output is consumed by human stakeholders, not by another skill.
+
+# 12. Direct Invocation
+
+This skill is independently invocable — `/reporting-skill`, optionally with a run-scoped instruction (e.g. `/reporting-skill executive summary only`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
+
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may set report emphasis, audience, or section depth. It never authorizes re-testing, code diagnosis, inferring an outcome not present in the Execution Results (§7), or reading the PRD directly — this skill reports what the artifacts say, nothing more.
+- **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4). Report which input is open, then offer both paths (approve → `/reporting-skill`, or revise → the producing skill's command).
+- **Missing upstream → run degraded** (§5.3.1 #5). This is the terminal stage and the most common legitimate direct-invocation target — a report on a partial run is often exactly what is wanted. Report on whatever exists, and state the basis explicitly:
+  - *No Execution Results:* report coverage and design status only. Mark every outcome-dependent section (`Defect Summary`, pass/fail figures, Automation Coverage) as `Not Executed — Requires Stage 6`, never as zero defects or as passing.
+  - *No Traceability Matrix:* omit the Requirement Coverage table and state why, rather than computing coverage from an incomplete basis.
+  - *No Project Context:* carry no assumption/risk resolution section; mark it `Requires Stage 1`.
+  - **A gap is always reported as a gap, never as a favourable result.** An absent input must never render as 0 defects, 100% pass, or full coverage.
+- **Closing message must state the report's basis** (§5.3.1 #6):
+
+```
+Stage 7 complete — Final QA Report v{N}
+  platform_core_data/workspace/reporting/Final_QA_Report.v{N}.md
+  Basis: {inputs present} | Declared gaps: {inputs absent}
+
+Next step — either:
+  1. Regenerate with different emphasis:  /reporting-skill <your focus>
+  2. Fill a declared gap first:           /automation-execution-skill   (then re-report)
+```

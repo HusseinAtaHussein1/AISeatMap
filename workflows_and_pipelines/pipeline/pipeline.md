@@ -255,7 +255,44 @@ This gate is named distinctly from "Human Review Required" because approving it 
 2. A human with the appropriate role (§5.1/§5.2) reviews the artifact against the criteria above.
 3. **Approved:** the reviewer marks the artifact `Approved` (see §7 for the recommended mechanism) and the next stage's agent may now be invoked with that artifact as input.
 4. **Rejected:** the pipeline halts at the current stage. The rejecting reviewer's feedback is attached to the artifact. The *same* agent that produced the rejected artifact re-runs, incorporating that feedback, against its original inputs — a rejection does not cascade back further up the pipeline unless the reviewer explicitly determines the fault lies in an upstream artifact (e.g., a flawed Project Context surfaced only once Test Design tried to use it), in which case the reviewer escalates to that earlier stage's checkpoint instead.
-5. No stage may be invoked while its predecessor's checkpoint is open (`Pending`). This applies even if a human attempts to run a later stage manually — the orchestrator must refuse.
+5. **A stage is not blocked from being *invoked* by its predecessor's open checkpoint — it is blocked from *silently consuming un-approved input*.** A human may invoke any skill directly, at any time, in any order (§5.3.1). What an open (`Pending`) predecessor checkpoint forbids is the *pipeline* advancing on its own: no stage may auto-chain into the next, and no orchestrator may treat "the previous stage finished" as authorization to continue. When a directly-invoked stage finds its required upstream artifact `Pending Review` / `Pending Automation Approval`, it stops and requests that approval per §5.3.1 — it does not refuse the invocation outright, and it does not proceed on the un-approved draft.
+
+### 5.3.1 Direct Skill Invocation (added 2026-07-26, user-mandated)
+
+**Added because approval was the only way to move between stages: finishing Stage *N* left the user able to say "approved" and nothing else. There was no way to call a specific skill on demand, or to call one with extra instructions.** Every skill in `.claude/skills/` is independently invocable by name, as a first-class entry point — not only as the pipeline's next link.
+
+**1. Invocation forms.** All three are equally valid ways to start a skill:
+
+| Form | Example | Meaning |
+|---|---|---|
+| Bare | `/test-design-skill` | Run the skill per its own specification, on its declared inputs. |
+| With instructions | `/test-design-skill cover only the Login module, negative cases only` | Same, plus a run-scoped instruction that narrows or focuses the work. |
+| Approval-driven (pre-existing) | "approved" | Unchanged: approve the open checkpoint, then the recommended next stage may be invoked. |
+
+**2. A direct invocation is authorization to run *that skill*, and nothing else.** It never implies authorization to run, resume, or skip any *other* stage — §5.4's Automation Start Decision Gate and §6 Rule 3 are untouched. Calling `/automation-skill` authorizes the Automation skill to begin its own work; it does not authorize a silent Stages 1–4 catch-up pass.
+
+**3. Instruction prompts are run-scoped, never spec-overriding.** An instruction passed with a direct call may narrow scope, set focus, or prioritize (a module, a requirement ID, a subset of test cases, an output emphasis). It must never be read as permission to violate the invoked skill's own Execution Rules, this document's General Pipeline Rules (§6), the PRD-access restriction (§6 Rule 4), or a Human Decision gate (§5.5). Where an instruction conflicts with a rule, the rule wins and the skill says so plainly, then proceeds with the compliant remainder of the instruction. An instruction that *widens* scope beyond the run's business objective is a Human Decision (§5.5), not a free-form override.
+
+**4. Un-approved upstream artifact → request approval, then recommend.** When a directly-invoked skill's required upstream artifact exists but is `Pending Review` / `Pending Automation Approval`, the skill does not run and does not bypass the gate. It reports what is awaiting approval, requests that approval, and — in the *same* message — names the next step concretely, including the literal command to issue. Format:
+
+```
+Cannot start Stage 3 yet — an upstream checkpoint is open.
+
+  Stage 2 — Discovery Artifacts ....... Pending Review
+    platform_core_data/workspace/discovery/QA_Assessment_Report.v1.md
+
+Next step — either:
+  1. Approve it, then run this stage:   "approved"  →  /test-design-skill
+  2. Revise Stage 2 first:              /explorer-skill <your feedback>
+```
+
+The point of the recommendation is that approval is no longer the *only* move the user can make — the message must always show the direct command as an explicit, available alternative path.
+
+**5. Missing upstream artifact → run degraded, declare the gap.** When a required upstream artifact does not exist at all, a directly-invoked skill runs on whatever inputs *are* present rather than halting. It must, before producing anything: state which required inputs are absent; state what it is falling back to; and mark every affected output section as a declared gap (`Test Gap` / `Open Question` / `Requires Upstream Stage`, per the invoked skill's own gap vocabulary) rather than inventing the missing content. This is the same discipline `.claude/skills/explorer-skill/SKILL.md` §8.2 already applies to unavailable Discovery Modes, generalized to upstream artifacts. It never licenses reading the PRD out of turn (§6 Rule 4) or fabricating requirements — a gap is disclosed, never filled by guessing.
+
+**6. Every skill ends by recommending the next step, with commands.** On completing its work, a skill's closing message states its own checkpoint status *and* the concrete next actions available — the approval that opens the normal path, and the direct commands the user may issue instead. A bare "Pending Review, awaiting approval" is no longer a complete closing message.
+
+**7. Traceability records the invocation path.** The Run Manifest (§7) records, per stage, how that stage was entered: `Pipeline` (invoked after its predecessor's approval), `Direct` (invoked by name), or `Direct (degraded)` (invoked by name with one or more required inputs absent, per #5). Any artifact produced under `Direct (degraded)` carries the same note in its own header, so a later reader can never mistake a gap-laden run for a fully-fed one.
 
 ### 5.4 Automation Start Decision Gate (pre-flight — added 2026-07-12, user-mandated)
 
@@ -306,12 +343,12 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 
 ## 6. General Pipeline Rules
 
-1. **Agents execute sequentially.** Stage *N+1* never starts before Stage *N* completes and, where applicable, clears its checkpoint.
+1. **Agents execute sequentially.** Stage *N+1* never starts before Stage *N* completes and, where applicable, clears its checkpoint. This governs *pipeline-driven* progression — the pipeline never advances itself past an open checkpoint. It does not restrict a human from invoking a skill directly and out of order (§5.3.1), which is a separate, explicitly-authorized entry point with its own disclosure requirements.
 2. **Every stage consumes artifacts from the previous stage(s).** No stage invents its own inputs or reaches past its declared Input list.
-3. **No agent may skip a stage.** All seven stages run, in order, on every full pipeline execution — even when a stage's output is small (e.g., zero defects), it still runs and produces its artifact.
+3. **No agent may skip a stage.** All seven stages run, in order, on every full pipeline execution — even when a stage's output is small (e.g., zero defects), it still runs and produces its artifact. "No agent may skip" binds the *agents and the orchestrator*, not the human: a human invoking a single skill directly (§5.3.1) is choosing a deliberate partial run each time, and the invoked skill must declare the resulting gaps (§5.3.1 #5) rather than pretend the skipped stages ran.
 4. **No downstream agent may read the PRD directly.** Only Stage 1 has the PRD in its Input list. This is enforced structurally, not just by convention: no other stage's Input table in §4 contains the PRD.
 5. **Project Context is the Single Source of Truth.** From Stage 1 onward, every agent's understanding of "what the product should do" is scoped by the Project Context artifact — including Stages 4, 6, and 7, which reference it for environment/safety and risk-resolution purposes even where it is not the headline input of that stage.
-6. **Human approval gates must stop the pipeline until approval is granted.** See §5.3 — no silent timeouts, no auto-approval, no proceeding on an assumed "looks fine."
+6. **Human approval gates must stop the pipeline until approval is granted.** See §5.3 — no silent timeouts, no auto-approval, no proceeding on an assumed "looks fine." A direct skill invocation (§5.3.1) is not an approval and never satisfies this rule: a directly-invoked stage whose upstream artifact is `Pending` still stops and requests that approval (§5.3.1 #4).
 7. **All artifacts must be versionable.** See §7 — every artifact carries a version identifier and prior versions are retained, never overwritten in place.
 8. **Every output must maintain traceability.** See §8 — every artifact from Stage 3 onward can be traced back, ID for ID, to the Project Context requirement (and, transitively, the PRD) that generated it.
 9. **Single Project Root.** Every input and every artifact an agent may read or write lives under `platform_core_data/` (plus Platform Knowledge, §10). Agents must not read application content from anywhere else on disk — most importantly not from an external Reference Automation Project (`platform_core_data/reference_automation_project.md`), which is a read-only structural reference for automation *style*, never a source of functional requirements, business rules, test cases, or domain knowledge. The platform hosts one project at a time (§1); there is no sibling-project directory to isolate against, and none may be introduced under `platform_core_data/`.
@@ -324,7 +361,7 @@ To satisfy Rule 7 (versionable artifacts) and Rule 6 (gates that truly stop the 
 
 - **Version-suffixed files:** each artifact is written with a version suffix, e.g. `ProjectContext.v1.md`, `.v2.md`, etc. A rejected-and-revised artifact is a new version, never an in-place edit of the rejected one — the rejected version remains on record.
 - **A "current approved" pointer:** the unsuffixed filename referenced throughout the Agent Framework (e.g., `ProjectContext.md`) always refers to the **latest approved** version. It is only updated at the moment a reviewer approves a version — never before.
-- **Run Manifest:** a single tracking artifact, `platform_core_data/workspace/pipeline/RunManifest.md`, records for every stage: version number produced, timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, and a direct link to that version's artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
+- **Run Manifest:** a single tracking artifact, `platform_core_data/workspace/pipeline/RunManifest.md`, records for every stage: version number produced, timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, the **Invocation Path** (`Pipeline` / `Direct` / `Direct (degraded)`, per §5.3.1 #7) together with any run-scoped instruction given at invocation, and a direct link to that version's artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
 
 ## 8. Traceability Chain
 

@@ -497,3 +497,25 @@ The dimensions this revision adds — Run-Scope-adaptive strategy (§16), Requir
 | **Cloud Services** | Steps become API/console calls against the provider; Configuration (§17) covers infrastructure-as-code/feature-flag-driven behavior differences. |
 
 **What would need to change, explicitly, and what would not:** supporting any of the above requires only naming the new Steps/Test Data vocabulary for that system shape in the relevant test cases — it requires **no change** to the Traceability Model (§5), the Test Case Schema's field list (§6), the Negative Test Generation categories (§7), the Required Dimensions (§17), the Coverage Model (§8), the Standard Output Contract (§18), or the Handoff Contract (§21). Those are already defined in terms of requirements and evidence, not in terms of "a web page."
+
+# 23. Direct Invocation
+
+This skill is independently invocable — `/test-design-skill`, optionally with a run-scoped instruction (e.g. `/test-design-skill Login module only, negative cases only`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
+
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may restrict which requirements/modules to design for, emphasize a test dimension (§17), or set a depth. It never authorizes skipping traceability (§5), dropping a Required Dimension for a requirement that is in scope, reading the PRD directly (§4, §6 Rule 4), or treating Discovery as a requirements source.
+- **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4). Applies to either input: an un-approved Project Context or un-approved Discovery Artifacts. Report exactly which one is open, then offer both paths (approve → `/test-design-skill`, or revise → the producing skill's command).
+- **Missing upstream → run degraded** (§5.3.1 #5), per input:
+  - *No Project Context:* halt-equivalent for requirement traceability — there is no requirement set to trace to, so design nothing and report it as the blocking gap. This is the one input this skill cannot degrade around, because every test case's Traceability field would be unfillable.
+  - *No Discovery Artifacts:* design from the Project Context alone. Mark every test case that would ordinarily carry a Discovery/Finding/Evidence reference as `Requires Upstream Stage — Stage 2 not run`, record the absence in the Coverage Report's Finding Coverage section as an explicit gap, and never invent selectors, UI labels, or observed behavior to fill it.
+- **Closing message must recommend the next step** (§5.3.1 #6):
+
+```
+Stage 3 complete — Manual Test Suite v{N} → Pending Review
+  platform_core_data/workspace/test_design/TestCases_{Module}.v{N}.md (+ .xlsx)
+  {T} test cases | Requirement coverage {P}%
+
+Next step — either:
+  1. Approve, then continue:   "approved"  →  /manual-execution-skill
+  2. Revise this stage:        /test-design-skill <your feedback>
+  3. Skip manual execution:    /automation-skill   (requires the §5.4 gate + declares gaps)
+```

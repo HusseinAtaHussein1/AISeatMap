@@ -706,3 +706,28 @@ Hard constraints, restated explicitly (all already established individually acro
 5. Never update Discovery artifacts automatically — §25.3 rule 2.
 6. Never learn from a failed repair — §28.1.
 7. Every learning artifact (Knowledge Base rule) must remain explainable and reviewable — §28.4.
+
+# 30. Direct Invocation
+
+This skill is independently invocable — `/automation-execution-skill`, optionally with a run-scoped instruction (e.g. `/automation-execution-skill run the Login spec only, headed`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
+
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may set the Execution Scope (a subset, a failed-test re-run) and may supply the Execution Mode explicitly — supplying it in the invocation is a valid answer to Rule 3's question, and is recorded in the run-identity header exactly as a Run Configuration value would be. An instruction never authorizes assuming a *default* mode when none is given anywhere (Rule 3's halt stands), proceeding against an environment that mismatches the Project Context (Rule 1), running destructive actions the Project Context does not authorize, executing against a Workspace Automation Baseline instead of this run's working copy (§22), or entering the Automation Repair Loop without §25.2's human answer.
+- **Upstream `Pending Automation Approval` → request approval, then recommend** (§5.3.1 #4). This is the strictest gate in the pipeline (§5.2): approving it authorizes code to run against a real environment. A direct invocation never substitutes for it. Report it and offer both paths (approve → `/automation-execution-skill`, or revise → `/automation-skill <feedback>`).
+- **Missing upstream → run degraded** (§5.3.1 #5):
+  - *No Automation Package:* nothing to execute — existing §19 Stop Condition stands. This skill never generates what it would then run.
+  - *No Automation Summary:* if the framework and execution command can be determined from the package itself, execute and mark the Results' framework basis as `Inferred from package — Requires Upstream Stage`. If the framework cannot be determined, the existing Missing Framework halt applies (§15 — this skill never selects one).
+  - *No Project Context:* execute only if the target environment is supplied in the invocation; record the environment/safety basis as `Open Question — Requires Stage 1`, and treat every destructive action not authorized by default as prohibited.
+- **Closing message must recommend the next step** (§5.3.1 #6):
+
+```
+Stage 6 complete — Execution Results v{N}
+  platform_core_data/workspace/execution/ExecutionResults.v{N}.md
+  {P} Passed | {F} Failed | {S} Skipped | {B} Blocked
+  Application {a} / Automation {b} / Environment {c} failures
+  Execution Mode: {mode}
+
+Next step — either:
+  1. Produce the final report:   /reporting-skill
+  2. Repair automation failures: /automation-execution-skill repair   (§25.2 gate applies)
+  3. Re-run failures only:       /automation-execution-skill re-run failed
+```

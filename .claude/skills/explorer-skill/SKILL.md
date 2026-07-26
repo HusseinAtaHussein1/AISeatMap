@@ -683,3 +683,23 @@ The abstractions introduced in this revision — Discovery Mode (§8.1) as *how*
 | **Cloud Resources** | A read-only cloud console/API is functionally identical to the existing APIs Discovery Mode — Static configuration reads are Static Artifacts, live resource state reads are System Response or Direct Observation depending on whether this skill queried it live. |
 
 **What would need to change, explicitly, and what would not:** adding any of the above requires (a) naming the new Discovery Mode and its typical Evidence Category mapping in §8.1/§17, and (b) stating its priority rank for that Project Context's system shape. It requires **no change** to the Finding Framework (§5), the Confidence Model (§18), the Standard Output Contract (§19), the Stop Conditions (§20), the Recovery Strategy (§21), or the Handoff Contract (§22) — those are already defined in terms of evidence and evaluation, not in terms of "a browser." This is the concrete basis for treating the current architecture as extensible without redesign, not an unverified claim.
+
+# 24. Direct Invocation
+
+This skill is independently invocable — `/explorer-skill`, optionally with a run-scoped instruction (e.g. `/explorer-skill explore only the PIM module, no destructive actions`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
+
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may narrow which in-scope areas to explore, prioritize a flow, or cap session length. It never authorizes exceeding the Project Context's safety constraints, taking unauthorized mutating actions, raising a Finding above the Status ceiling its Discovery Mode permits (§18), or reading the PRD directly (§6 Rule 4 of the pipeline).
+- **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4). If `ProjectContext.md` exists but is not `Approved`, do not explore and do not bypass; report it and offer both paths (approve → `/explorer-skill`, or revise → `/project-context-skill <feedback>`).
+- **Missing Project Context → run degraded** (§5.3.1 #5), which composes with this skill's existing Discovery Mode fallback (§8.1–§8.2) rather than replacing it: explore the target using the highest-priority available Discovery Mode, but state up front that no approved scope exists, treat *nothing* as confirmed in/out of scope, and mark the Coverage Summary's scope basis as `Open Question — Requires Stage 1`. Never infer the scope boundary from the application's own surface area, and never substitute the PRD for the missing Project Context.
+- **Closing message must recommend the next step** (§5.3.1 #6):
+
+```
+Stage 2 complete — Discovery Artifacts v{N} → Pending Review
+  platform_core_data/workspace/discovery/QA_Assessment_Report.v{N}.md
+  {F} Findings | Coverage {P}% | Discovery Mode: {mode}
+
+Next step — either:
+  1. Approve, then continue:   "approved"  →  /test-design-skill
+  2. Revise this stage:        /explorer-skill <your feedback>
+  3. Explore further first:    /explorer-skill <additional areas>
+```

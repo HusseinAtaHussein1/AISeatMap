@@ -124,3 +124,22 @@ Hypothetical result: `platform_core_data/workspace/context/ProjectContext.md`, l
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
 For this skill specifically: it is the sole reader of the PRD in the entire pipeline, and its sole output — the Project Context — is what every other skill's "single responsibility" is scoped against.
+
+# 12. Direct Invocation
+
+This skill is independently invocable — `/project-context-skill`, optionally with a run-scoped instruction (e.g. `/project-context-skill scope this run to the Leave module only`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
+
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may narrow scope, focus on named modules, or set emphasis. It never authorizes violating §7's rules — most importantly, it never authorizes proceeding past a missing/unreadable PRD (Rule 1), and never authorizes inventing scope the PRD and run configuration don't support.
+- **No upstream gate applies.** This is Stage 1; there is no predecessor checkpoint to wait on, so a direct call always runs immediately.
+- **Missing run configuration → run degraded** (§5.3.1 #5): produce the Project Context from the PRD alone, list every absent run-configuration key explicitly, and mark the affected sections (Environment Constraints, Roles & Credentials) as `Open Question — Requires Run Configuration` rather than guessing values. A missing *PRD* remains a halt (Rule 1) — it is this stage's only genuinely required input.
+- **Closing message must recommend the next step** (§5.3.1 #6):
+
+```
+Stage 1 complete — Project Context v{N} → Pending Review
+  platform_core_data/workspace/context/ProjectContext.v{N}.md
+
+Next step — either:
+  1. Approve, then continue:   "approved"  →  /explorer-skill
+  2. Revise this stage:        /project-context-skill <your feedback>
+  3. Jump to another stage:    /test-design-skill   (will declare Discovery gaps)
+```

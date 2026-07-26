@@ -352,3 +352,26 @@ Consistent with every other execution-capable stage in this pipeline (`.claude/s
 # 22. Future Scalability
 
 The Result Classification (§8) and Automation Candidate criteria (§9.1) are already defined in terms of outcome and determinism rather than "a web page" — they extend to Mobile, Desktop, and API-shaped manual test cases (where "Steps" become device gestures or request/response definitions, per `.claude/skills/test-design-skill/SKILL.md` §22) with no change to this skill's Standard Output Contract (§10) or Handoff Contracts (§20).
+
+# 23. Direct Invocation
+
+This skill is independently invocable — `/manual-execution-skill`, optionally with a run-scoped instruction (e.g. `/manual-execution-skill run TC-LOGIN-001..008 only`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
+
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may select which test case IDs to execute, set an execution order, or limit the session. It never authorizes force-running a test whose Preconditions are unmet (§5 — that is `Blocked`), taking unauthorized destructive actions, relaxing Evidence capture, reading the PRD directly (§17), or admitting a test case into the Automation Candidate Package without applying §9.1's criteria.
+- **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4). Report which of the Manual Test Suite / Traceability Matrix / Coverage Report / Project Context is open, then offer both paths (approve → `/manual-execution-skill`, or revise → `/test-design-skill <feedback>`).
+- **Missing upstream → run degraded** (§5.3.1 #5):
+  - *No Manual Test Suite:* there is nothing to execute — report it as the blocking gap (existing §18 Stop Condition stands). This skill executes designed test cases; it never authors them to fill the gap.
+  - *No Project Context:* execute only if the target environment and credentials are supplied in the invocation itself; otherwise report the gap. Record the environment/safety basis as `Open Question — Requires Stage 1` and treat every ambiguous action as non-destructive-only.
+  - *No Traceability Matrix / Coverage Report:* execute anyway, carry through whatever traceability the test cases themselves state, and mark the Results' traceability section as `Requires Upstream Stage`.
+- **Closing message must recommend the next step** (§5.3.1 #6):
+
+```
+Stage 4 complete — Manual Execution Results v{N} → Pending Review
+  platform_core_data/workspace/manual_execution/ManualExecutionResults.v{N}.md
+  {P} Passed | {F} Failed | {B} Blocked | {C} Automation Candidates
+
+Next step — either:
+  1. Approve, then continue:   "approved"  →  /automation-skill
+  2. Re-run failed cases:      /manual-execution-skill re-run {IDs}
+  3. Report without automating: /reporting-skill   (declares Automation Coverage gap)
+```

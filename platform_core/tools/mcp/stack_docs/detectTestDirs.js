@@ -225,6 +225,9 @@ function detectTestDirs(root, options = {}) {
   const fsImpl = options.fs || fs;
   const maxDepth = Number.isInteger(options.maxDepth) ? options.maxDepth : DEFAULT_MAX_DEPTH;
   const hintedEcosystems = Array.isArray(options.ecosystems) ? options.ecosystems : null;
+  // Root-relative POSIX paths never walked. The installed tool folder goes here: it ships its own
+  // `__tests__` directories, which are the platform's tests, not the host project's.
+  const excluded = new Set((options.exclude || []).map((p) => p.replace(/\\/g, '/').replace(/\/+$/, '')));
   const resolvedRoot = path.resolve(root);
   const warnings = [];
 
@@ -257,8 +260,10 @@ function detectTestDirs(root, options = {}) {
     for (const entry of entries) {
       if (entry.isDirectory()) {
         if (IGNORED_DIRS.has(entry.name) || entry.name.startsWith('.')) continue;
+        const childRel = rel ? `${rel}/${entry.name}` : entry.name;
+        if (excluded.has(childRel) || excluded.has(entry.name)) continue;
         dirs.push(entry.name);
-        walk(path.join(absDir, entry.name), rel ? `${rel}/${entry.name}` : entry.name, depth + 1);
+        walk(path.join(absDir, entry.name), childRel, depth + 1);
       } else if (entry.isFile()) {
         files.push(entry.name);
       }

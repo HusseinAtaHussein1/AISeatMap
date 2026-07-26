@@ -23,12 +23,17 @@ const PROJECT_MAX_DEPTH = 8;
 
 /**
  * @param {string} root Absolute or cwd-relative path of the target project.
- * @param {{materialOnly?: boolean, maxDepth?: number, includeQueryPlan?: boolean, fs?: object}} [options]
+ * @param {{materialOnly?: boolean, maxDepth?: number, includeQueryPlan?: boolean, fs?: object,
+ *          exclude?: string[]}} [options]
+ *   `exclude` lists root-relative directory names to skip. The installed tool folder belongs here:
+ *   it contains the platform's own `__tests__` directories, and without excluding it a re-detection
+ *   would report the platform's tests as the host project's own test suite.
  * @returns {{root: string, greenfield: boolean, stack: object, testDirs: object,
  *   automationRoot: string|null, recommended: object, plan: object|null, warnings: string[]}}
  */
 function detectProject(root, options = {}) {
   const maxDepth = Number.isInteger(options.maxDepth) ? options.maxDepth : PROJECT_MAX_DEPTH;
+  const exclude = Array.isArray(options.exclude) ? options.exclude : [];
 
   const stack = detectStack(root, {
     materialOnly: options.materialOnly !== false,
@@ -37,6 +42,7 @@ function detectProject(root, options = {}) {
 
   const testDirs = detectTestDirs(root, {
     maxDepth,
+    exclude,
     // Fall back to undefined (consider every ecosystem) when the stack scan found nothing — a
     // project can hold tests with no material dependency pinned yet.
     ecosystems: stack.ecosystems.length ? stack.ecosystems : undefined,

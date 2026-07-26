@@ -119,3 +119,9 @@ Glob matching supports `**`, `*` and `?`, and a bare directory pattern covers it
 | `cli.js` | `roots` · `classify <path>` · `doctor` |
 | `platform.config.schema.json` | the configuration contract |
 | `__tests__/paths.test.js` | precedence, guards, classification, denylist, glob semantics |
+
+## 8. Related
+
+- [`../../../workflows_and_pipelines/pipeline/pipeline.md` §13](../../../workflows_and_pipelines/pipeline/pipeline.md) — the two-root contract this module enforces.
+- [`../../../docs/USER_GUIDE.md` §2](../../../docs/USER_GUIDE.md#2-what-install-changes) — the same contract from the operator's side: what `init` writes into a host repository, and [§11](../../../docs/USER_GUIDE.md#11-troubleshooting) for the symptoms each guard produces when it fires.
+- [`../../../docs/BRANCH_COMPARISON.md` §2](../../../docs/BRANCH_COMPARISON.md#2-the-two-root-contract--new) — why the two-root model exists, and what the single-root model before it could not express.

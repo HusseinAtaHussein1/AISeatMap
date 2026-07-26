@@ -104,3 +104,5 @@ executes the authored Steps against that session
 - [`../.claude/`](../.claude/) — the Skills that invoke this layer's Tools.
 - [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — the orchestration layer that sequences the Skills which call into these engines.
 - [`../platform_core_data/`](../platform_core_data/) — the hosted application's content, resolved by these engines at runtime, and the home of the Platform Knowledge layer (`patterns/`) that used to live here.
+- [`tools/platform_paths/README.md`](tools/platform_paths/README.md) — the two-root resolver every other tool here depends on; start here to understand how Tool Root and Target Root are resolved and enforced.
+- [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md) — operating these tools from the CLI ([§12](../docs/USER_GUIDE.md#12-cli-reference)) and setting up the browser/MCP layers ([§4](../docs/USER_GUIDE.md#4-browser-and-mcp-setup)).

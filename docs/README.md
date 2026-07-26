@@ -22,6 +22,21 @@
 
 ---
 
+> ## ⚠️ This is an archived overview
+>
+> **This document describes the pre-2.0 architecture, in which projects were hosted *inside* the platform under `projects/`.** That model no longer exists — the platform is now installed **into** the repository it tests. Sections below that reference `projects/<name>/`, `*-agent` skill names, or `platform_core/knowledge/` are historical.
+>
+> It is retained for the additional narrative detail it carries. For anything current, use:
+>
+> | Document | What it covers |
+> |---|---|
+> | [`../README.md`](../README.md) | the current architectural reference — the primary entry point |
+> | [`USER_GUIDE.md`](USER_GUIDE.md) | how to actually install and run the platform today |
+> | [`BRANCH_COMPARISON.md`](BRANCH_COMPARISON.md) | exactly what changed between that model and this one, with migration notes |
+> | [`PROMPT_HISTORY.md`](PROMPT_HISTORY.md) | the decisions behind each of those changes |
+
+---
+
 # 📖 Overview
 
 The **Agentic AI Testing Platform** is an enterprise-ready AI-powered software testing platform that orchestrates specialized AI agents to perform the complete software testing lifecycle.

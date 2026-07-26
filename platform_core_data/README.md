@@ -4,11 +4,13 @@
 
 This folder holds **everything specific to the one application the platform is currently pointed at** — durable Project Knowledge (what the application is, how to reach it, what's been learned about it) *and* every artifact the pipeline produces while validating it. Nothing application-specific lives outside this folder; nothing reusable lives inside it.
 
-**The platform hosts exactly one project at a time** ([`workflows_and_pipelines/pipeline/pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md) §1). There is no project-name path segment, no project selector, and no sibling project directory. Retargeting the platform at a different application means replacing this folder's *contents* — not adding a second one, and not editing any specification outside it.
+**The platform hosts exactly one project at a time** ([`workflows_and_pipelines/pipeline/pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md) §1). There is no project-name path segment, no project selector, and no sibling project directory. Retargeting the platform at a different application means running `agentic-testing init` in that application's repository — not adding a second folder here, and not editing any specification outside it.
 
-The application currently hosted here is **NDC**.
+**This folder always sits inside the Tool Root** — `agentic-testing-tool/platform_core_data/` once installed into a host repository. Every *process* artifact lives here; the Target Project receives generated automation code and nothing else. That split is the two-root contract ([`pipeline.md` §13](../workflows_and_pipelines/pipeline/pipeline.md), enforced by [`platform_core/tools/platform_paths/`](../platform_core/tools/platform_paths/)). `init` never overwrites this folder, even with `--force`.
 
-It exists as its own top-level layer, separate from [`platform_core/`](../platform_core/) (reusable engineering assets), [`.claude/`](../.claude/) (agent behavior), and [`workflows_and_pipelines/`](../workflows_and_pipelines/) (orchestration rules), because everything under here is true of exactly one application and is never generalized without an explicit Promotion decision (`pipeline.md` §10.5).
+**No application is currently hosted here.** The prior experiment's (NDC) generated output, knowledge base entries, inputs, and assets were purged on 2026-07-26; the folder structure and templates remain so the tree stays valid for a fresh install. See [`docs/BRANCH_COMPARISON.md`](../docs/BRANCH_COMPARISON.md) for what was removed and what deliberately survived.
+
+It exists as its own top-level layer, separate from [`platform_core/`](../platform_core/) (reusable engineering assets), [`.claude/`](../.claude/) (skill behavior), and [`workflows_and_pipelines/`](../workflows_and_pipelines/) (orchestration rules), because everything under here is true of exactly one application and is never generalized without an explicit Promotion decision (`pipeline.md` §10.5).
 
 ## Responsibility
 
@@ -117,20 +119,23 @@ platform_core_data/
 
 ## Human-Facing Files
 
-The documents below are not *generated* artifacts — they exist for the humans (and future agent sessions) getting oriented before or between runs. `PRD.md` and `run_configuration.md` are the exception: they are Stage 1's declared **inputs**.
+The documents below are not *generated* artifacts — they exist for the humans (and future skill sessions) getting oriented before or between runs. `PRD.md` and `run_configuration.md` are the exception: they are Stage 1's declared **inputs**.
+
+> **Currently these seven documents sit in [`NDC_Previous_used_helper_docs_tobe_delete/`](NDC_Previous_used_helper_docs_tobe_delete/), not at this folder's root.** They hold the prior experiment's (NDC) content and were staged for deletion, then deliberately deferred rather than removed — see [`docs/BRANCH_COMPARISON.md` § Known Open Items](../docs/BRANCH_COMPARISON.md#known-open-items). The links below point at their real location so they resolve. **A self-hosted run therefore has no `PRD.md` at the path Stage 1 expects**; installed usage is unaffected, because `init` scaffolds blank inputs into the target project independently.
 
 | File | Purpose |
 |---|---|
-| [`onboarding.md`](onboarding.md) | Start here — what the application is, where its knowledge lives, how to get oriented fast |
-| [`run_configuration.md`](run_configuration.md) | Modules in scope, target URL, credentials location, environment constraints — a Stage 1 input |
-| [`architecture.md`](architecture.md) | Architecture of the application under test (not of the testing platform) |
-| [`automation_framework.md`](automation_framework.md) | **Mandatory** SHAFT package structure — Stage 5 must comply with it, not select or invent an alternative |
-| [`reference_automation_project.md`](reference_automation_project.md) | Registration of the external production SHAFT repository this package must stay merge-compatible with |
-| [`glossary.md`](glossary.md) | Domain/product terminology |
+| [`onboarding.md`](NDC_Previous_used_helper_docs_tobe_delete/onboarding.md) | Start here — what the application is, where its knowledge lives, how to get oriented fast |
+| [`run_configuration.md`](NDC_Previous_used_helper_docs_tobe_delete/run_configuration.md) | Modules in scope, target URL, credentials location, environment constraints — a Stage 1 input |
+| [`architecture.md`](NDC_Previous_used_helper_docs_tobe_delete/architecture.md) | Architecture of the application under test (not of the testing platform) |
+| [`automation_framework.md`](NDC_Previous_used_helper_docs_tobe_delete/automation_framework.md) | **Mandatory** SHAFT package structure — Stage 5 must comply with it, not select or invent an alternative |
+| [`reference_automation_project.md`](NDC_Previous_used_helper_docs_tobe_delete/reference_automation_project.md) | Registration of the external production SHAFT repository this package must stay merge-compatible with |
+| [`glossary.md`](NDC_Previous_used_helper_docs_tobe_delete/glossary.md) | Domain/product terminology |
 | [`resources/`](resources/) | Supplementary reference material — see `resources/README.md` for the standardized subfolder layout |
 
 ## Related Layers
 
-- [`../platform_core/`](../platform_core/) — the shared runtime Tools (Browser Driver, MCP layer, Run Manager, Automation Lifecycle) that resolve this folder's paths at runtime. Note that reusable *Knowledge* is no longer there: [`patterns/`](patterns/), inside this folder, is the only layer a pattern from `knowledge_base/` may be promoted into.
+- [`../platform_core/`](../platform_core/) — the shared runtime Tools (Browser Driver, MCP layer, Run Manager, Automation Lifecycle) that resolve this folder's paths at runtime. Note that reusable *Knowledge* is no longer there: [`knowledge_base/patterns/`](knowledge_base/patterns/), inside this folder, is the only layer a pattern from `knowledge_base/` may be promoted into.
+- [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md) — how to populate this folder's inputs and where each generated artifact lands ([§3](../docs/USER_GUIDE.md#3-prepare-your-inputs), [§7](../docs/USER_GUIDE.md#7-where-your-artifacts-live)).
 - [`../.claude/`](../.claude/) — the Skills whose declared Inputs and Outputs resolve to paths in this folder.
 - [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — where every path convention, versioning rule, and Run Workspace layout realized here is actually defined.

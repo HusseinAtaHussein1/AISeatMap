@@ -165,3 +165,4 @@ Approve both servers once per machine (`claude mcp` / `/mcp` in an interactive s
 - [`../../README.md`](../../README.md) — the `platform_core/` layer contract this folder sits under.
 - `.claude/skills/explorer-skill/SKILL.md` §8.1, §10 — Discovery Modes and allowed tools.
 - `.claude/skills/automation-skill/SKILL.md` §6, §17, §34 — framework detection, allowed tools, and the Stack Documentation step.
+- [`../../../docs/USER_GUIDE.md` §4](../../../docs/USER_GUIDE.md#4-browser-and-mcp-setup) — the operator-facing setup: approving the project-scoped `.mcp.json`, installing browsers, the optional `CONTEXT7_API_KEY`, and how the version-pinned doc lookup is used at Stage 5.

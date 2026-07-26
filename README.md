@@ -2,15 +2,15 @@
 
 **Explore · Design · Validate · Automate · Execute · Report**
 
-[![Version](https://img.shields.io/badge/version-1.0-2563eb?style=flat-square)](docs/CHANGELOG.md)
-[![Architecture](https://img.shields.io/badge/architecture-multi--agent-2563eb?style=flat-square)](#7-agent-architecture)
+[![Version](https://img.shields.io/badge/version-2.0-2563eb?style=flat-square)](docs/CHANGELOG.md)
+[![Architecture](https://img.shields.io/badge/architecture-seven--stage%20pipeline-2563eb?style=flat-square)](#7-skill-architecture)
 [![Enterprise Ready](https://img.shields.io/badge/enterprise-ready-2563eb?style=flat-square)](#13-design-principles)
-[![Single Project](https://img.shields.io/badge/single--project-focused-2563eb?style=flat-square)](platform_core_data/README.md)
+[![Installable](https://img.shields.io/badge/installable-into%20your%20repo-2563eb?style=flat-square)](#16-quick-start)
 [![Human Governed](https://img.shields.io/badge/human--governed-yes-16a34a?style=flat-square)](#6-pipeline-architecture)
 [![AI Assisted](https://img.shields.io/badge/AI--assisted-yes-16a34a?style=flat-square)](#1-project-overview)
 [![Knowledge Driven](https://img.shields.io/badge/knowledge--driven-yes-16a34a?style=flat-square)](#11-knowledge-base)
 [![Traceability](https://img.shields.io/badge/traceability-end--to--end-16a34a?style=flat-square)](#6-pipeline-architecture)
-[![Documentation](https://img.shields.io/badge/documentation-comprehensive-6b7280?style=flat-square)](#18-documentation-map)
+[![User Guide](https://img.shields.io/badge/user%20guide-read-6b7280?style=flat-square)](docs/USER_GUIDE.md)
 
 The Agentic AI Testing Platform is a multi-agent system that runs the complete software QA lifecycle — from an approved requirement to a delivered Final QA Report — as one governed, traceable pipeline. It exists to close the gap between conventional test automation tooling, which assumes test cases already exist, and the much larger problem most QA teams actually face: understanding an application, designing the right tests, generating automation that stays maintainable, and trusting the results enough to act on them. It's built for QA leads, test architects, and automation engineers who need enterprise-grade traceability and governance over the application they own — not simply a faster way to write scripts.
 
@@ -82,9 +82,11 @@ The long-term vision is an enterprise QA function where AI agents carry out the 
 
 ## Quick Navigation
 
-[Overview](#1-project-overview) · [Architecture](#5-high-level-architecture) · [Pipeline](#6-pipeline-architecture) · [Agents](#7-agent-architecture) · [Repository](#9-repository-structure) · [Knowledge Base](#11-knowledge-base) · [Run Management](#10-run-architecture) · [Getting Started](#17-getting-started) · [Roadmap](#19-future-roadmap)
+[Overview](#1-project-overview) · [Architecture](#5-high-level-architecture) · [Pipeline](#6-pipeline-architecture) · [Skills](#7-skill-architecture) · [Repository](#9-repository-structure) · [Knowledge Base](#11-knowledge-base) · [Run Management](#10-run-architecture) · [Quick Start](#16-quick-start) · [Roadmap](#19-future-roadmap)
 
-The sections below are the platform's complete technical documentation — architecture, pipeline, agents, and full operational detail.
+**New here?** [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) is the task-oriented walkthrough — install, inputs, running the pipeline, troubleshooting, CLI reference. This README is the architectural reference behind it.
+
+The sections below are the platform's complete technical documentation — architecture, pipeline, skills, and full operational detail.
 
 ---
 
@@ -96,7 +98,7 @@ The sections below are the platform's complete technical documentation — archi
 4. [Platform Capabilities Matrix](#4-platform-capabilities-matrix)
 5. [High-Level Architecture](#5-high-level-architecture)
 6. [Pipeline Architecture](#6-pipeline-architecture)
-7. [Agent Architecture](#7-agent-architecture)
+7. [Skill Architecture](#7-skill-architecture)
 8. [Automation Package Lifecycle](#8-automation-package-lifecycle)
 9. [Repository Structure](#9-repository-structure)
 10. [Run Architecture](#10-run-architecture)
@@ -314,20 +316,22 @@ Not every judgment call inside a stage requires stopping to ask. The pipeline dr
 
 ---
 
-## 7. Agent Architecture
+## 7. Skill Architecture
 
-Each of the seven agents has exactly one responsibility and communicates with its neighbors only through the artifacts defined in [§6](#6-pipeline-architecture). The **Run Manager** sits outside this pipeline entirely — it is orchestration tooling, never a judgment-making agent.
+Each of the seven skills has exactly one responsibility and communicates with its neighbors only through the artifacts defined in [§6](#6-pipeline-architecture). The **Run Manager** sits outside this pipeline entirely — it is orchestration tooling, never a judgment-making stage.
+
+Each is invokable in pipeline order, or **directly by name** with an optional instruction prompt — see [`docs/USER_GUIDE.md` §6](docs/USER_GUIDE.md#6-calling-a-single-skill-directly) for the approve-and-recommend and degraded-run semantics that govern an out-of-order call.
 
 | Component | Responsibility | Never does |
 |---|---|---|
 | [Run Manager](workflows_and_pipelines/pipeline/run_manager.md) | Allocates a Run ID, prepares the run workspace, tracks mechanical status, publishes a factual run summary | Analyze application behavior, generate a Finding/test case/script, judge whether a run "succeeded" in a quality sense |
-| [Project Context Agent](.claude/skills/project-context-skill/SKILL.md) | Builds the scoped, approved Project Context from Project Knowledge + Run Scope — the only stage permitted to read the PRD | Re-consult the PRD once its own output is approved |
-| [Explorer Agent](.claude/skills/explorer-skill/SKILL.md) | Explores the application (browser automation, or a documented fallback chain) and produces evidence-backed Discovery Artifacts and Findings | Author or redefine requirements — a live/documented disagreement is logged as a Gap, never silently resolved in the agent's favor |
-| [Test Design Agent](.claude/skills/test-design-skill/SKILL.md) | Derives manual test cases and full traceability from the Project Context, using Discovery only to validate, enrich, and surface gaps | Treat Discovery Artifacts as a requirements source |
-| [Manual Execution Agent](.claude/skills/manual-execution-skill/SKILL.md) | Executes the approved manual test suite against the live application, records raw results and evidence, and identifies only successfully, stably executed test cases as Automation Candidates | Write or execute automation code, or decide what ultimately gets automated |
-| [Automation Agent](.claude/skills/automation-skill/SKILL.md) | Generates a maintainable automation package from the Manual Execution Agent's Automation Candidates, reusing existing automation, assigning every candidate an explicit Automation Decision | Execute what it generates, invent missing business logic, modify an approved manual test case, or automate a test case outside the Automation Candidate Package |
-| [Automation Execution Agent](.claude/skills/automation-execution-skill/SKILL.md) | Runs approved automation, records raw results and evidence, runs the Automation Repair Loop on automation-side failures | Interpret results into a narrative conclusion, execute manually-designed test cases directly, or repair anything without explicit human approval first |
-| [Reporting Agent](.claude/skills/reporting-skill/SKILL.md) | Synthesizes the Final QA Report, computing Requirement/Automation Coverage by walking the traceability chain | Re-run anything, or assert a conclusion not present in the Automation Execution Agent's output |
+| [Project Context skill](.claude/skills/project-context-skill/SKILL.md) *(Stage 1)* | Builds the scoped, approved Project Context from Project Knowledge + Run Scope — the only stage permitted to read the PRD | Re-consult the PRD once its own output is approved |
+| [Explorer skill](.claude/skills/explorer-skill/SKILL.md) *(Stage 2)* | Explores the application (browser automation, or a documented fallback chain) and produces evidence-backed Discovery Artifacts and Findings | Author or redefine requirements — a live/documented disagreement is logged as a Gap, never silently resolved in this skill's favor |
+| [Test Design skill](.claude/skills/test-design-skill/SKILL.md) *(Stage 3)* | Derives manual test cases and full traceability from the Project Context, using Discovery only to validate, enrich, and surface gaps | Treat Discovery Artifacts as a requirements source |
+| [Manual Execution skill](.claude/skills/manual-execution-skill/SKILL.md) *(Stage 4)* | Executes the approved manual test suite against the live application, records raw results and evidence, and identifies only successfully, stably executed test cases as Automation Candidates | Write or execute automation code, or decide what ultimately gets automated |
+| [Automation skill](.claude/skills/automation-skill/SKILL.md) *(Stage 5)* | Generates a maintainable automation package from the Manual Execution skill's Automation Candidates, reusing existing automation, assigning every candidate an explicit Automation Decision | Execute what it generates, invent missing business logic, modify an approved manual test case, or automate a test case outside the Automation Candidate Package |
+| [Automation Execution skill](.claude/skills/automation-execution-skill/SKILL.md) *(Stage 6)* | Runs approved automation, records raw results and evidence, runs the Automation Repair Loop on automation-side failures | Interpret results into a narrative conclusion, execute manually-designed test cases directly, or repair anything without explicit human approval first |
+| [Reporting skill](.claude/skills/reporting-skill/SKILL.md) *(Stage 7)* | Synthesizes the Final QA Report, computing Requirement/Automation Coverage by walking the traceability chain | Re-run anything, or assert a conclusion not present in the Automation Execution skill's output |
 
 ```mermaid
 flowchart LR
@@ -420,7 +424,7 @@ When a project designates an external, real automation codebase (e.g. NDC's prod
 - **Read-only by default.** The agent inspects it, learns its architecture (framework/version, Page Object pattern, driver init, naming conventions), and generates *compatible* code — it never edits the reference project's files unless a human explicitly chooses to, for that run, every time.
 - **A separate Target decision** — generate inside the platform, export a platform-generated package structured to drop into the reference project, or (only if explicitly chosen) update the reference project directly.
 
-See [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) and the project-level registration this produces, e.g. [`platform_core_data/reference_automation_project.md`](platform_core_data/reference_automation_project.md).
+See [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) and the project-level registration this produces, e.g. [`platform_core_data/reference_automation_project.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/reference_automation_project.md).
 
 ---
 
@@ -613,7 +617,7 @@ The category folders for `automation_patterns/`, `diagnosis_patterns/`, `executi
 
 - **Discovery technology ≠ Automation technology.** The tool used to explore an application in Stage 2 (e.g. Playwright, for browser-driven discovery) has no bearing on which framework Stage 5 selects — this is enforced explicitly, because it has previously been the exact mistake an early agent revision made.
 - **Framework choice is scoped to one package, one run's decision** — never inferred as a standing project default. Every Stage 5 invocation asks again.
-- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/automation_framework.md`](platform_core_data/automation_framework.md) — and is binding only for runs that select SHAFT.
+- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/automation_framework.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/automation_framework.md) — and is binding only for runs that select SHAFT.
 - **Currently supported:** Playwright, SHAFT Engine. **Named as first-class candidates whenever a project's needs call for them:** Selenium, Cypress, Appium, REST Assured — the Automation Agent's framework detection/selection model already treats these as standard options ([`.claude/skills/automation-skill/SKILL.md` §6–§8](.claude/skills/automation-skill/SKILL.md)); onboarding one for a real project is a per-project decision, not a platform-level gap.
 
 ```mermaid
@@ -799,6 +803,10 @@ Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/w
 | Document | What it covers |
 |---|---|
 | [`README.md`](README.md) | This document — the platform's primary entry point |
+| [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) | **Task-oriented walkthrough** — install, inputs, browser/MCP setup, running the pipeline, calling a single skill, troubleshooting, CLI reference |
+| [`docs/PROMPT_HISTORY.md`](docs/PROMPT_HISTORY.md) | Every prompt, clarifying question, and answer that shaped the `Project_owns_package` branch, with the impact of each |
+| [`docs/BRANCH_COMPARISON.md`](docs/BRANCH_COMPARISON.md) | Before/after comparison of the whole project against the `main` source branch, including migration notes |
+| [`platform_core/tools/platform_paths/README.md`](platform_core/tools/platform_paths/README.md) | The two-root contract (Tool Root / Target Root), configuration, resolution precedence, and path classification |
 | [`workflows_and_pipelines/pipeline/pipeline.md`](workflows_and_pipelines/pipeline/pipeline.md) | The canonical pipeline specification: stage contracts, gates, traceability chain, Knowledge Architecture |
 | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) | Run ID allocation, workspace structure, metadata, execution status, run summaries |
 | [`workflows_and_pipelines/pipeline/run_scope.md`](workflows_and_pipelines/pipeline/run_scope.md) | Run Scope Types and Sources — what a given run is allowed to validate |

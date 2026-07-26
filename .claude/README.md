@@ -125,3 +125,4 @@ Marks Pending Automation Approval — pipeline.md §5.2 checkpoint
 - [`../platform_core/`](../platform_core/) — the reusable shared Tools every Skill's `dependencies` line draws from.
 - [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — the orchestration layer that sequences and gates every Skill defined here.
 - [`../platform_core_data/`](../platform_core_data/) — where every Skill's actual Inputs and Outputs live at runtime, where the reusable Platform Knowledge it cites lives (`patterns/`), and where application-specific knowledge/business content is kept out of this layer entirely.
+- [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md) — how a human invokes these Skills, including **direct invocation outside pipeline order** and its approve-and-recommend / degraded-run semantics ([§6](../docs/USER_GUIDE.md#6-calling-a-single-skill-directly)).

@@ -122,3 +122,4 @@ Run Manifest updated at each checkpoint; Run Summary published on terminal statu
 - [`../.claude/`](../.claude/) — the Skills this layer sequences and gates; dependency flows one way, from here into `.claude/`.
 - [`../platform_core/`](../platform_core/) — the shared runtime Tools the Skills this layer sequences invoke directly.
 - [`../platform_core_data/`](../platform_core_data/) — where every artifact path, versioning rule, and Run Workspace this layer defines is actually realized on disk, and where the Knowledge Architecture canonically defined in `pipeline/pipeline.md` §10 is implemented (`patterns/` + `knowledge_base/`), not restated.
+- [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md) — the operator-facing view of what this layer specifies: running the pipeline ([§5](../docs/USER_GUIDE.md#5-run-the-pipeline)), the named workflows ([§8](../docs/USER_GUIDE.md#8-named-workflows)), and the approval gates ([§9](../docs/USER_GUIDE.md#9-approvals-and-gates)).

@@ -1,0 +1,18 @@
+{
+  "$schema": "./platform_core/tools/platform_paths/platform.config.schema.json",
+  "configVersion": 1,
+  "mode": "self-hosted",
+  "targetRoot": ".",
+  "dataRoot": "platform_core_data",
+  "target": {
+    "testDirs": {},
+    "automationRoot": null,
+    "writeAllowlist": [],
+    "readDenylist": [],
+    "detectedStack": null
+  },
+  "git": {
+    "mode": "tool-repo",
+    "commitBaseline": true
+  }
+}

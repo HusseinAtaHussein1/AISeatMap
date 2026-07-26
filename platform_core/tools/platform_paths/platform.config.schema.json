@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ayman2911/agentic-ai-testing-platform/platform.config.schema.json",
+  "title": "Agentic AI Testing Platform configuration",
+  "description": "Wiring for an installed platform: where the Tool Root's data lives, which repository is the Target Project, and what the platform may read and write inside it. See pipeline.md §13 and platform_core/tools/platform_paths/README.md.",
+  "type": "object",
+  "required": ["configVersion"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Editor hint. Ignored by the resolver."
+    },
+    "configVersion": {
+      "const": 1,
+      "description": "Schema version. A value this build does not support is a hard error, never a best-effort read."
+    },
+    "mode": {
+      "enum": ["installed", "self-hosted"],
+      "default": "installed",
+      "description": "'installed' — the tool folder sits inside a separate Target Project. 'self-hosted' — the platform tests its own repository (targetRoot === toolRoot); used by this repo's examples/ fixture."
+    },
+    "targetRoot": {
+      "type": ["string", "null"],
+      "description": "The Target Project's root, relative to THIS FILE's directory (absolute permitted for a detached install). Required when mode is 'installed'; never inferred at runtime. Typically \"..\".",
+      "examples": ["..", "../..", "C:/work/my-app"]
+    },
+    "dataRoot": {
+      "type": "string",
+      "default": "platform_core_data",
+      "description": "Where every process artifact lives, relative to the Tool Root. Must resolve inside the Tool Root.",
+      "examples": ["platform_core_data", "examples/ndc/platform_core_data"]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the platform may do inside the Target Project (pipeline.md §13.2-§13.4). All paths are relative to targetRoot.",
+      "properties": {
+        "testDirs": {
+          "type": "object",
+          "description": "Detected or declared test directories by kind. Written by `agentic-testing init` from detectTestDirs().",
+          "additionalProperties": { "type": ["string", "null"] },
+          "examples": [{ "e2e": "tests/e2e", "integration": null, "unit": null }]
+        },
+        "automationRoot": {
+          "type": ["string", "null"],
+          "description": "The single directory generated automation is written to. Required whenever writeAllowlist is non-empty.",
+          "examples": ["tests/e2e", "src/test/java", "cypress/e2e"]
+        },
+        "writeAllowlist": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Glob patterns the platform may write. FAIL-CLOSED: empty or absent means the platform writes nothing to the Target Project and Stage 5 generates inside platform_core_data/ instead. Supports **, * and ?.",
+          "examples": [["tests/e2e/**", "playwright.config.ts"]]
+        },
+        "readDenylist": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Additional never-read patterns. MERGED WITH, never replacing, the non-overridable built-in list (.env*, **/credentials*.json, **/secrets*, **/*.pem, **/*.key, **/.aws/**, **/id_rsa*)."
+        },
+        "detectedStack": {
+          "type": ["object", "null"],
+          "description": "Cached result of the last detection. Advisory only — a stage re-detects rather than trusting this.",
+          "additionalProperties": true,
+          "properties": {
+            "detectedAt": { "type": "string", "format": "date-time" },
+            "ecosystems": { "type": "array", "items": { "type": "string" } },
+            "frameworks": { "type": "array", "items": { "type": "string" } },
+            "greenfield": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Which repository the automation lifecycle's git operations act on (pipeline.md §12.4).",
+      "properties": {
+        "mode": {
+          "enum": ["tool-repo", "host-repo", "off"],
+          "default": "tool-repo",
+          "description": "'tool-repo' (default) — the tool folder is its own nested git repository, so baseline three-way-merge protection always works and no commit ever lands in the host's history. 'host-repo' — commit artifacts into the Target Project's repository (restricted to paths under dataRoot). 'off' — no git; the lifecycle runs in degraded, filesystem-only mode and says so."
+        },
+        "commitBaseline": {
+          "type": "boolean",
+          "default": true,
+          "description": "When false, an approved merge writes baseline files but stages and commits nothing, leaving the commit to a human."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "installed" } }, "required": ["mode"] },
+      "then": {
+        "required": ["targetRoot"],
+        "properties": { "targetRoot": { "type": "string", "minLength": 1 } }
+      }
+    }
+  ]
+}

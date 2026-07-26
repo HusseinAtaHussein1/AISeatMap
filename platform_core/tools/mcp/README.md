@@ -26,6 +26,16 @@ The platform now has **two** mechanisms for live browser access. They are peers,
 | Locator knowledge | Reuses `platform_core_data/browser/screens/` + `components/` via `useScreen()`/`useComponent()` | Accessibility-tree snapshots; no stored locator knowledge |
 | Repeatability | High — deterministic, re-runnable, diff-friendly | Lower — exploratory, sequence depends on what the agent sees |
 | Best at | Authenticated flows, known screens, repeated execution of designed test cases | First-contact exploration of an unknown screen, ad-hoc selector verification, reading the accessibility tree |
+| Display mode | **Headless by default** — `browser.headless: true` in `platform_core_data/browser/profile.json` | **Headless by default** — `--headless` in the repo-root `.mcp.json` |
+
+### 1.1.1 Headless is the default for both mechanisms
+
+Neither mechanism opens a visible browser window unless a human explicitly asks for one. A Skill never needs to request headless — it is already the configured default on both paths:
+
+- **Browser Driver** — `platform_core_data/browser/profile.json` sets `browser.headless: true`. `BrowserDriver.authenticate()` uses that default whenever the `headless` argument is omitted, which is how Skills should call it.
+- **Playwright MCP** — the server is registered in `.mcp.json` with `--headless` (the server is *headed* by default without it, so the flag is required, not cosmetic).
+
+Headed mode is a **local debugging opt-in for a human operator**, never a Skill's autonomous choice: pass `BrowserDriver.authenticate({ headless: false })` for a one-off driver run, or drop the `--headless` flag from `.mcp.json` and restart the MCP server. Because a headless run captures screenshots, DOM, accessibility tree, console, and network exactly as a headed one does, running headless costs no evidence and changes no Evidence Category or Confidence ceiling under `explorer-skill/SKILL.md` §17–§18.
 
 ### 1.2 Mode Selection Rule
 

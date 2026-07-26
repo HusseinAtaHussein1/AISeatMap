@@ -2,7 +2,7 @@
   "defaultBaseUrl": "http://192.168.1.70",
   "browser": {
     "channel": "chrome",
-    "headless": false,
+    "headless": true,
     "viewport": { "width": 1440, "height": 900 }
   },
   "login": {
@@ -11,5 +11,5 @@
     "submitSelector": "button:has-text(\"Login\")",
     "successSelector": "text=Dashboard"
   },
-  "notes": "Auth/browser-init config ONLY. Updated 2026-07-25 (Manual Execution Agent, Agency module run): defaultBaseUrl reverted from .80 back to .70 — live login (credentials.json's current STG baseUrl) now redirects to http://192.168.1.70/dashboard, not .80. The .80 value set 2026-07-13 per FINDING-001 no longer matches reality; relative-path navigate() calls were failing (redirected to /auth/login) because they resolved against the wrong origin's cookie jar. Screen/component locators do NOT belong here — see platform_core_data/browser/screens/ and /components/."
+  "notes": "Auth/browser-init config ONLY. Updated 2026-07-26: browser.headless flipped false -> true — headless is now the platform-wide default for both browser mechanisms (the Playwright MCP server carries a matching --headless in .mcp.json). Headed is an explicit per-call opt-in: BrowserDriver.authenticate({ headless: false }). Updated 2026-07-25 (Manual Execution Agent, Agency module run): defaultBaseUrl reverted from .80 back to .70 — live login (credentials.json's current STG baseUrl) now redirects to http://192.168.1.70/dashboard, not .80. The .80 value set 2026-07-13 per FINDING-001 no longer matches reality; relative-path navigate() calls were failing (redirected to /auth/login) because they resolved against the wrong origin's cookie jar. Screen/component locators do NOT belong here — see platform_core_data/browser/screens/ and /components/."
 }

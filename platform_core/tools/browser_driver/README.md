@@ -20,7 +20,9 @@ const { BrowserDriver } = require('../../platform_core/tools/browser_driver/api'
 
 const driver = await BrowserDriver.authenticate({
   env: 'STG',        // optional — omit to let the credentials file's activeEnvironment/environment decide
-  headless: false,   // optional — omit to use the profile's browser.headless default
+  // headless: false, // optional — ONLY to force a headed window for local debugging.
+  //                  // Omit it: the profile's browser.headless default is `true`, and
+  //                  // headless is the platform-wide default for both browser mechanisms.
 });
 
 driver.useComponent('GlobalNavigation');    // load shared nav locators

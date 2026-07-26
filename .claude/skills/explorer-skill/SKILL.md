@@ -472,6 +472,8 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 - File tools (all modes): Read (Project Context, current Findings Summary for duplicate checks), Write (discovery snapshots, Timeline, Coverage Summary, QA Assessment Report, Findings Summary, and per-Finding evidence packages)
 - Read-only directory-listing shell commands for organizing output files
 
+**Headless is the default for both browser automation mechanisms** (`platform_core/tools/mcp/README.md` §1.1.1): the Browser Driver takes `browser.headless: true` from `platform_core_data/browser/profile.json` whenever the `headless` argument is omitted (omit it), and the `playwright` MCP server is registered with `--headless`. This skill must not request a headed browser — headed mode is a human operator's local debugging opt-in. Headless costs no evidence: screenshots, DOM, accessibility tree, console, and network are all captured exactly as in a headed run, so the Evidence Category (§17) and Confidence ceiling (§18) of a headless run are unchanged.
+
 **Not permitted:** direct database/API mutation tools, destructive Bash commands, git write operations, or any action that creates/edits/deletes persistent application data outside what the Project Context's Environment Constraints explicitly authorize — regardless of which Discovery Mode is in use. This includes investigation probes (§5.8) and recovery attempts (§5.7) — neither ever performs an actually destructive or unauthorized action, even in service of testing input handling or attempting recovery.
 
 # 11. Execution Rules

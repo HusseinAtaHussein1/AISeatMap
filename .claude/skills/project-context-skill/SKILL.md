@@ -58,7 +58,7 @@ Without this skill, each downstream skill would need to re-derive scope, credent
 
 Run configuration keys, supplied alongside the invocation: `{{MODULES_IN_SCOPE}}`, `{{APP_URL}}`, `{{ENVIRONMENT_NOTES}}`, and credentials `{{ROLE}}` / `{{USERNAME}}` / `{{PASSWORD}}`.
 
-There is no `PROJECT_NAME` key: the platform hosts one project, rooted at `platform_core_data/` (`workflows_and_pipelines/pipeline/pipeline.md` §1), so a run configuration describes *scope and environment*, never which project it applies to.
+There is no `PROJECT_NAME` key: the platform tests one Target Project at a time, and its process artifacts are rooted at `platform_core_data/` relative to the Tool Root (`workflows_and_pipelines/pipeline/pipeline.md` §1, §1.1), so a run configuration describes *scope and environment*, never which project it applies to. The Target Project's own location is tool configuration (`platform.config.json` → `targetRoot`), not run configuration.
 
 # 5. Outputs
 

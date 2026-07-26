@@ -10,7 +10,26 @@
 
 This document defines the **execution workflow** of the Agentic AI Testing Platform: the fixed order in which agents run, the artifacts that flow between them, and the human checkpoints that gate progression. The Agent Framework (`.claude/skills/`) specifies *what each skill does in isolation*, via each skill's own YAML contract header (`inputs`/`outputs`/`dependencies`); this Pipeline Specification defines *how those skills are wired together into one governed, repeatable process*.
 
-**The platform hosts exactly one project at a time** (restructured 2026-07-25, user-mandated). That project's every input and every generated artifact lives under a single root, `platform_core_data/` — there is no project-name path segment, no project selector, and no second project to disambiguate against. The stage order, checkpoints, and rules below are still written as reusable process logic: retargeting the platform at a different application means replacing `platform_core_data/`'s *contents* (PRD, run configuration, resources, knowledge base) and clearing its `workspace/` and `runs/`, not editing this specification.
+**The platform tests exactly one Target Project at a time.** Every *process artifact* the platform produces — Project Context, Discovery Artifacts, Manual Test Suite, execution results, reports, run history, knowledge base — lives under a single root, `platform_core_data/`, resolved relative to the Tool Root (§1.1). There is no project-name path segment, no project selector, and no second project's artifacts to disambiguate against.
+
+The **Target Project** is the application repository under test. It is a distinct root, `{{TARGET_ROOT}}` (§1.1), and it has exactly one role in this pipeline: it is where the *generated automation code* lives, and it is the authority on its own technology stack and coding conventions. It is never a source of requirements or business rules — those come exclusively from the approved Project Context (§6 Rule 5). §13 defines precisely what the platform may read from it, what it may write to it, and what it must never touch.
+
+The stage order, checkpoints, and rules below remain reusable process logic. Retargeting the platform at a different application means running `agentic-testing init` against that repository — which replaces `platform_core_data/`'s *contents* (PRD, run configuration, resources, knowledge base), clears `workspace/` and `runs/`, and re-resolves `{{TARGET_ROOT}}` — never editing this specification.
+
+### 1.1 Root resolution
+
+Two roots exist, and **both are resolved by `platform_core/tools/platform_paths/paths.js` and by nothing else**:
+
+| Root | What it is | How it is resolved |
+|---|---|---|
+| **Tool Root** | the platform's own folder — `platform_core/`, `platform_core_data/`, `workflows_and_pipelines/`, `platform.config.json` | marker walk-up from the tool's own location |
+| **Target Project Root** (`{{TARGET_ROOT}}`) | the application repository under test | `targetRoot` in `platform.config.json`, or the `AGENTIC_TESTING_TARGET_ROOT` environment variable — **never inferred** |
+
+An agent that needs an absolute root runs `node platform_core/tools/platform_paths/cli.js roots --json`. **An agent must never infer either root** from `process.cwd()`, from `__dirname`, or by searching for `.git`: installed inside a host project, each of those resolves to the host's repository rather than the tool folder, which is how generated artifacts end up in the wrong place and how a commit ends up in the wrong history.
+
+When the platform is *self-hosted* (`mode: "self-hosted"`, the two roots being the same directory) it is testing its own repository. That is a degenerate case of the same model, not a second one.
+
+Every path written in this specification and in the seven skills — `platform_core_data/PRD.md`, `platform_core_data/workspace/…`, `platform_core_data/runs/…` — is **relative to the Tool Root**. Those paths are correct as written whether the platform is self-hosted or installed as a folder inside a host project; only the resolved prefix differs.
 
 ## 2. Architecture Principle
 
@@ -351,7 +370,15 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 6. **Human approval gates must stop the pipeline until approval is granted.** See §5.3 — no silent timeouts, no auto-approval, no proceeding on an assumed "looks fine." A direct skill invocation (§5.3.1) is not an approval and never satisfies this rule: a directly-invoked stage whose upstream artifact is `Pending` still stops and requests that approval (§5.3.1 #4).
 7. **All artifacts must be versionable.** See §7 — every artifact carries a version identifier and prior versions are retained, never overwritten in place.
 8. **Every output must maintain traceability.** See §8 — every artifact from Stage 3 onward can be traced back, ID for ID, to the Project Context requirement (and, transitively, the PRD) that generated it.
-9. **Single Project Root.** Every input and every artifact an agent may read or write lives under `platform_core_data/` (plus Platform Knowledge, §10). Agents must not read application content from anywhere else on disk — most importantly not from an external Reference Automation Project (`platform_core_data/reference_automation_project.md`), which is a read-only structural reference for automation *style*, never a source of functional requirements, business rules, test cases, or domain knowledge. The platform hosts one project at a time (§1); there is no sibling-project directory to isolate against, and none may be introduced under `platform_core_data/`.
+9. **Two Roots, One Project.** Exactly two roots exist (§1.1), and every read and write an agent performs resolves inside one of them:
+
+    **(a) The Tool Root** — `platform_core_data/` holds every process artifact and every source of *requirements and business rules*; `platform_core/` and `workflows_and_pipelines/` hold Platform Knowledge (§10). This is the **only** source of what the product should do.
+
+    **(b) The Target Project Root** (`{{TARGET_ROOT}}`) — readable for **technical facts only**: technology stack, dependency versions, test-directory layout, coding and naming conventions, existing automation code to extend or reuse. Writable in **exactly one** location: the configured automation target directory (`target.automationRoot` in `platform.config.json`), and only by Stage 5 and Stage 6, and only within the configured write allowlist (§13).
+
+    **Requirements, business rules, acceptance criteria, and test cases are never sourced from the Target Project.** A source file, a comment, an existing test's assertions, or a commit message found in the Target Project is evidence of *what the code currently does* — never evidence of what it *should* do. A discrepancy between the Target Project's code and the approved Project Context is a **Finding to report**, never a requirement to adopt. This is the same discipline §32 already applies to a Reference Automation Project, generalized: read for structure and style, never for intent.
+
+    Nothing outside these two roots may be read or written, with one registered exception: a **Reference Automation Project** (`platform_core_data/reference_automation_project.md`) — a read-only structural reference for automation *style*, never a source of functional requirements, business rules, test cases, or domain knowledge, and never modified except via the explicit gate at `.claude/skills/automation-skill/SKILL.md` §32.3.
 
 ## 7. Artifact & Versioning Conventions
 
@@ -457,7 +484,7 @@ This is a Human Decision (`§5.5`), never inferred, never defaulted to "yes" bec
 
 ### 10.6 Layer separation guarantee
 
-Application-specific knowledge must never end up in `platform_core_data/knowledge_base/patterns/` — this extends §6 Rule 9 (Single Project Root) to the knowledge layer explicitly. An agent writes to Platform Knowledge only by passing the §10.5 Promotion Workflow's explicit human gate; it never writes there directly, and never "generalizes on the way in" to justify skipping the gate. The failure this prevents: a Platform layer quietly accumulating this application's screens and business rules, so that retargeting the platform carries the old application's assumptions along with it.
+Application-specific knowledge must never end up in `platform_core_data/knowledge_base/patterns/` — this extends §6 Rule 9 (Two Roots, One Project) to the knowledge layer explicitly. An agent writes to Platform Knowledge only by passing the §10.5 Promotion Workflow's explicit human gate; it never writes there directly, and never "generalizes on the way in" to justify skipping the gate. The failure this prevents: a Platform layer quietly accumulating this application's screens and business rules, so that retargeting the platform carries the old application's assumptions along with it.
 
 Note (2026-07-26): the Platform layer now sits **nested inside** the Project layer — Platform Knowledge at `platform_core_data/knowledge_base/patterns/`, Project Knowledge in the folders surrounding it (`knowledge_base/repair/`, `execution/`, `automation/`, `application/`, `ui/`, `findings/`, `business_rules/`, `lessons_learned/`). It reached this location in two steps, from `platform_core/knowledge/` via `platform_core_data/patterns/`. **The nesting is structural only and confers nothing semantically:** `patterns/` is not a category of Project Knowledge and does not inherit its application scope. Two consequences follow, and both are unchanged in force:
 
@@ -588,6 +615,95 @@ A **Bootstrap Migration** — lifting pre-existing, not-yet-lifecycle-managed au
 ### 12.7 Registry cross-reference
 
 `AutomationPackages.md` (`.claude/skills/automation-skill/SKILL.md` §19/§31) is extended with a Baseline Ref / Last Merged Run column per package, so the next Stage 5 run's registry summary (§31.1) can state not just which packages exist, but whether their Workspace Automation Baseline is current.
+
+## 13. Target Project Integration (added 2026-07-26, user-mandated)
+
+**The platform is installed into the repository it tests.** The tool folder sits inside the Target Project, and the generated automation this pipeline produces belongs in the Target Project's own test directories — not in a parallel universe under `platform_core_data/`. A suite the host team cannot run with their own `npm test` / `mvn verify` is not a deliverable. This section defines the contract that makes that safe.
+
+### 13.1 The two roots
+
+| Root | Resolved from | Contains | Platform access |
+|---|---|---|---|
+| **Tool Root** | marker walk-up (§1.1) | `platform_core/`, `platform_core_data/`, `workflows_and_pipelines/`, `platform.config.json` | Read + write, unrestricted |
+| **Target Project Root** (`{{TARGET_ROOT}}`) | `platform.config.json` → `targetRoot` | the application under test | Read per §13.2, write per §13.3, never per §13.4 |
+
+Both are resolved by `platform_core/tools/platform_paths/paths.js` and by nothing else. An agent that needs an absolute root runs `node platform_core/tools/platform_paths/cli.js roots --json`. An agent must never infer either root from `process.cwd()`, from `__dirname`, or by searching for `.git`.
+
+### 13.2 What may be READ from the Target Project
+
+Permitted, for **technical fact-finding only**:
+
+1. **Dependency manifests and lockfiles** — via `detectStack` (`platform_core/tools/mcp/stack_docs/detectStack.js`). Establishes framework and version so Stage 5 generates against the real API surface (§34).
+2. **Test-framework configuration** — `playwright.config.*`, `pom.xml`, `pytest.ini`, `testng.xml`, etc. Establishes where tests live and how they run.
+3. **Test directories and their contents** — via `detectTestDirs` (`platform_core/tools/mcp/stack_docs/detectTestDirs.js`). Establishes layout, file naming, page-object pattern, fixture strategy, language, and formatting, so generated code is indistinguishable in style from what the team already writes.
+4. **Existing automation code** — read to *extend and reuse* rather than duplicate. This is §11's Automation Knowledge Base rule and §32.5's reuse rule, applied to the Target Project.
+5. **Build/test scripts** — `package.json#scripts`, Maven/Gradle test tasks — so Stage 6 invokes the suite the way the team does.
+
+**Not permitted as a source of intent, under any circumstances:** application source code, database schemas, API implementations, comments, commit history, issue trackers, or existing tests' assertions, used to derive requirements, business rules, acceptance criteria, or expected behavior. Reading application source to *understand a selector or a route* is permitted and is a technical fact. Reading it to decide *what the correct output should be* is a §6 Rule 9 violation. When the two are hard to separate, the agent stops and asks (§26 Stop Conditions) rather than deciding.
+
+**A read denylist is enforced mechanically**, not by convention: `target.readDenylist` in `platform.config.json`, merged with a non-overridable built-in list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/credentials/credentials.json` (the Browser Driver contract), never by reading the Target Project.
+
+### 13.3 What may be WRITTEN to the Target Project
+
+Writes are **fail-closed**: if `target.writeAllowlist` is absent or empty, the platform writes nothing to the Target Project and Stage 5 falls back to generating inside `platform_core_data/` (the §32.3 Option 1 behavior).
+
+Permitted, when allowlisted:
+
+1. **Generated automation source** under `target.automationRoot` — test files, page objects, fixtures, helpers, test data. This is the deliverable.
+2. **Test-framework configuration**, only when the resolved framework has none and the human approved scaffolding at init (greenfield test infra, §13.6).
+3. **Test-script wiring** — a single added `scripts` entry or Maven/Gradle test-task stanza — only with explicit per-run human approval, and only additive: an existing script value is never modified.
+
+Every write obeys these rules:
+
+- **Filesystem writes only. The platform never runs `git add`, `git commit`, `git mv`, `git rm`, or any other history-modifying git command against the Target Project.** Generated automation is left in the working tree for the host team to review and commit with their own conventions, hooks, and review process. Enforced by `assertSameRepo` in `platform_core/tools/automation_lifecycle/gitUtils.js` — the lifecycle only ever holds the repository handle governing `platform_core_data/`, so a Target Project path passed to any git write raises `RepoBoundaryError`.
+- **Every write is preceded by a Target Write Plan** — the full list of files to be created, modified, or deleted, with a one-line reason each — presented at the Automation Approval gate (§5.2). No file is written to the Target Project before that gate clears.
+- **An existing Target Project file is never modified without being named in the Write Plan and individually approved.** Creating a new file in an allowlisted directory is covered by the gate's blanket approval; modifying a file the team already owns is not.
+- **No deletions**, other than a file this platform itself created in a prior run and recorded in `platform_core_data/workspace/automation/TargetWriteLedger.md`.
+- **Every write is recorded in the Target Write Ledger** (`platform_core_data/workspace/automation/TargetWriteLedger.md`): path, run folder, operation, sha256 after writing. This is the platform's record of what it owns inside someone else's repository, and it is what makes uninstall and drift-detection possible.
+
+### 13.4 What must NEVER be touched
+
+Application source outside the allowlist · CI/CD configuration (`.github/`, `.gitlab-ci.yml`, `Jenkinsfile`, `azure-pipelines.yml`) · `.git/` and every git hook · dependency lockfiles · `.env` and every secret file · the host's `.gitignore` and `.mcp.json` and `.claude/` **outside** the additive fragments written once at install time (§13.5) · infrastructure-as-code · database migrations · any file matching `readDenylist`.
+
+### 13.5 Install-time fragments are not pipeline writes
+
+The additive `.gitignore` marker block, the additive `.mcp.json` server keys, and the `.claude/skills/` directories are written **once, by `agentic-testing init`, with human confirmation** — never by a pipeline stage. No stage may modify them. They are recorded in `.install_manifest.json` and are the only platform-authored content in the Target Project outside `target.automationRoot`.
+
+### 13.6 Greenfield: test infrastructure only
+
+When no stack is detected, the platform scaffolds **test infrastructure only** — the test directory, the framework's config file, one example smoke test, and (with approval) the test-script wiring. **It never scaffolds the application**: no source files, no build config, no framework skeleton, no dependency manifest beyond a test-scoped devDependency the human approved. A greenfield install produces a repository ready to *receive* tests, and nothing else.
+
+### 13.7 Relationship to §12 and to §32.3
+
+§12's Automation Asset Lifecycle is unchanged and continues to govern the **baseline** under `platform_core_data/workspace/automation/{framework}/`, which remains the platform's authoritative, lifecycle-managed, three-way-merge-protected copy. §13 governs the **projection** of an approved baseline into the Target Project's test directories.
+
+Ordering is fixed: generate in the run's working copy (§12.3) → Automation Approval (§5.2) → Workspace Merge into the baseline (§12.4) → **then** project into the Target Project (§13.3). The Target Project is never written before the baseline is updated, so the baseline is always the reproducible source and the Target Project's copy is always reconstructible from it.
+
+This adds a fourth option to `.claude/skills/automation-skill/SKILL.md` §32.3's Automation Target Decision Gate:
+
+```
+4. Write into the Target Project's own test directories ({{TARGET_ROOT}}/<automationRoot>) —
+   the installed-platform default. Generates in the run's working copy, merges to the
+   baseline on approval, then projects into the Target Project per pipeline.md §13.3.
+```
+
+When `platform.config.json` declares `mode: "installed"` with a non-empty `writeAllowlist`, Option 4 is the **presented default** — still asked, never assumed (§31.2's "Ask, never infer" is unchanged).
+
+### 13.8 Bootstrap Migration for an existing suite
+
+A brownfield Target Project that already has automation in `target.automationRoot` is lifted into a Workspace Automation Baseline using §12.6's existing **Bootstrap Migration** promotion status — `Promotion Status: Bootstrap Migration`, `Approved By: N/A — Bootstrap Migration`, never a fabricated Automation Approval for code this platform has not reviewed against §5.2. This runs once, at init or at the first Stage 5, and it is what makes "extend the existing suite" (§33 Strategy 1) mean the *team's real suite* rather than an empty baseline.
+
+### 13.9 Degraded git modes
+
+`git.mode` in `platform.config.json` decides which repository the lifecycle's own git operations act on:
+
+| Mode | Meaning |
+|---|---|
+| `tool-repo` (default) | the tool folder is its own nested git repository, so baseline three-way-merge protection always works and no commit ever lands in the host's history |
+| `host-repo` | process artifacts are committed into the Target Project's repository, restricted to paths under `dataRoot` |
+| `off` | no git; the lifecycle runs filesystem-only |
+
+When git is unavailable — no repository, or the host gitignores the tool folder — the Merge Plan carries `degradedMode: 'no-git'` and a warning reproduced verbatim in the Merge Summary and in `automation_promotion.md`. **The absence of protection is always reported, never implied**: a merge that could not be verified is never presented as a verified one. If a run's Step-1 snapshot recorded that git *was* available and it is not at merge time, that is a hard block, not a downgrade.
 
 ---
 

@@ -72,7 +72,7 @@ The long-term vision is an enterprise QA function where AI agents carry out the 
 | Documentation | ✅ Comprehensive |
 | Platform Design (Agents, Pipeline, Knowledge Architecture) | ✅ Stable |
 | Reference Project Validation (NDC) | ✅ Executed |
-| Retargeting to a New Application (clear + repopulate `platform_core_data/`) | 🚧 In Progress |
+| Installable into any repository (`npx agentic-testing init`, brownfield + greenfield) | ✅ Complete |
 | Deterministic Tooling Layer (beyond the Browser Driver) | 🚧 In Progress |
 | Enterprise Integrations (ALM, Dashboards) | 📅 Planned |
 
@@ -461,7 +461,7 @@ agentic-ai-testing-platform/
 │       ├── run_manager/              # Run folder naming/indexing — the only place a run name is formatted
 │       └── automation_lifecycle/     # Baseline copy, merge plan/apply, promotion record, cleanup
 │
-├── platform_core_data/               # THE hosted project — inputs and every generated artifact (§9.1)
+├── platform_core_data/               # Process artifacts for the Target Project under test (§9.1)
 │   ├── README.md                       # This folder's own layout contract
 │   ├── PRD.md · PRD_UserStories.md      # Stage 1's only requirements input
 │   ├── onboarding.md · architecture.md · glossary.md · run_configuration.md
@@ -559,7 +559,7 @@ Full specification: [`workflows_and_pipelines/pipeline/run_manager.md`](workflow
 
 ## 11. Knowledge Base
 
-The platform hosts one project at a time, but splits what it learns into two layers so that retargeting it at a different application discards the application's specifics without discarding the engineering knowledge. This is governed by one canonical model ([`workflows_and_pipelines/pipeline/pipeline.md` §10](workflows_and_pipelines/pipeline/pipeline.md)), referenced by every agent rather than restated.
+The platform tests one project at a time, but splits what it learns into two layers so that pointing it at a different application discards the application's specifics without discarding the engineering knowledge. This is governed by one canonical model ([`workflows_and_pipelines/pipeline/pipeline.md` §10](workflows_and_pipelines/pipeline/pipeline.md)), referenced by every agent rather than restated.
 
 ### Two layers
 
@@ -687,42 +687,86 @@ The platform's specifications describe *what* runs, not a fixed proprietary runt
 
 ## 16. Quick Start
 
-The essentials — enough to run Stage 1 in under two minutes. Full detail (Browser Driver setup, the complete pipeline walkthrough, the smoke-test workflow) is in [§17 Getting Started](#17-getting-started).
+**You install this platform into the repository you want to test.** It is not a place you copy your project into.
 
 ```bash
-git clone https://github.com/ayman2911/agentic-ai-testing-platform.git
-cd agentic-ai-testing-platform
+cd /path/to/your-project
+npx agentic-testing init
 ```
 
-1. Fill in `platform_core_data/PRD.md` — the approved requirements document.
-2. Fill in `platform_core_data/run_configuration.md` — target environment, in-scope modules.
-3. Invoke Stage 1 (Project Context Agent) against those two files.
-4. Review and approve the generated Project Context — every stage after this one depends on that approval.
+That detects your stack and test layout, then creates:
 
-The repository ships with `platform_core_data/` already populated for the application it currently hosts. Pointing it at a different one is [§17.2](#17-getting-started), not a clone-time step.
+```text
+your-project/
+  src/                          ← untouched
+  tests/e2e/                    ← generated automation lands HERE, in your own conventions
+  agentic-testing-tool/         ← the platform; gitignored, with its own nested git repo
+    platform_core_data/         ← every process artifact: PRD, workspace/, runs/, knowledge_base/
+  .claude/skills/               ← the seven skills, so Claude Code can find them
+```
+
+Then:
+
+1. Fill in `agentic-testing-tool/platform_core_data/PRD.md` — the approved requirements.
+2. Fill in `agentic-testing-tool/platform_core_data/run_configuration.md` — environment and in-scope modules.
+3. Run `/project-context-skill` to produce the Project Context, then review and approve it — every later stage depends on that approval.
+
+Run `npx agentic-testing init --dry-run` first to see exactly what would change, or `npx agentic-testing detect` to see what the platform makes of your project without writing anything.
+
+**What init does to your repository is deliberately small**: it adds one gitignored folder, a marker block in `.gitignore`, two `.mcp.json` server entries, and `.claude/skills/`. It never modifies your source, your CI configuration, your lockfiles, or your existing tests, and it never commits anything to your repository ([`pipeline.md` §13](workflows_and_pipelines/pipeline/pipeline.md)).
+
+**Greenfield projects work too.** With no test suite to detect, the platform scaffolds test *infrastructure* only — the test directory, the framework config, and one example smoke test. It never scaffolds the application itself.
 
 ---
 
 ## 17. Getting Started
 
-### 1. Clone the repository
+### 1. Install the platform into your project
+
+Two routes, sharing one implementation — pick whichever suits you.
+
+**npm** — nothing to clone:
+
+```bash
+cd /path/to/your-project
+npx agentic-testing init
+```
+
+**git clone** — when you want the source, or are working offline:
 
 ```bash
 git clone https://github.com/ayman2911/agentic-ai-testing-platform.git
-cd agentic-ai-testing-platform
+./agentic-ai-testing-platform/scripts/init.sh /path/to/your-project
+# Windows: .\agentic-ai-testing-platform\scripts\init.ps1 C:\path\to\your-project
 ```
 
-### 2. Retarget the platform at your application
+Both invoke the same `bin/agentic-testing.js`, so they produce byte-identical results — a `prepack` check enforces it.
 
-The platform hosts **one** project at a time, rooted at [`platform_core_data/`](platform_core_data/) — there is no project selector and no second project directory ([`pipeline.md` §1](workflows_and_pipelines/pipeline/pipeline.md)). Pointing it at a different application means replacing that folder's *contents*, never adding a sibling:
+Useful flags:
 
-1. **Clear the outgoing project's generated state** — delete `platform_core_data/workspace/` and `platform_core_data/runs/`. Both are reproducible output; the run history belongs to the old application, not the new one. Commit that deletion on its own so the old history stays recoverable from git.
-2. **Replace the inputs** — `PRD.md`, `PRD_UserStories.md`, `run_configuration.md`, `architecture.md`, `glossary.md`, `onboarding.md`, and everything under `resources/`.
-3. **Replace the live-browser assets** — `browser/profile.json`, `browser/screens/`, `browser/components/`, and `credentials/credentials.json` (see step 3 below).
-4. **Empty, but do not delete, the Project Knowledge folders in `knowledge_base/`** — clear the contents of `repair/`, `execution/`, `automation/`, `application/`, `ui/`, `findings/`, `business_rules/`, and `lessons_learned/`, and reset `knowledge_base/INDEX.md`. The folder *shape* is fixed and always present, including for categories with no entries yet ([`pipeline.md` §10.4](workflows_and_pipelines/pipeline/pipeline.md)).
-5. **Do not touch `knowledge_base/patterns/` — it is nested inside the folder you just emptied.** ⚠️ This is the one step where a careless `rm -rf knowledge_base/*` destroys the layer that is supposed to survive retargeting. Platform Knowledge moved *inside* `knowledge_base/` on 2026-07-26 (from `platform_core/knowledge/` via `platform_core_data/patterns/`), so step 4 must clear `knowledge_base/`'s Project subfolders **individually**, never the whole directory. `patterns/` and its entire contents — `repair_patterns/`, `reasoning/`, `diagnosis/`, and every held-empty category — carry over untouched; that layer surviving is the entire reason the two-layer split exists ([§11](#11-knowledge-base), [`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)).
+| Flag | Effect |
+|---|---|
+| `--dry-run` | print the full plan and exit, writing nothing |
+| `--target <path>` | install into a project other than the current directory |
+| `--test-dir <path>` | override the detected automation directory |
+| `--framework <name>` | override the detected framework |
+| `--git-mode <mode>` | `tool-repo` (default) · `host-repo` · `off` — see [§13.9](workflows_and_pipelines/pipeline/pipeline.md) |
+| `--no-mcp` | skip MCP server registration |
+| `--skills none` | skip installing the skills into `.claude/skills/` |
+| `--yes` | skip the confirmation prompt (required in a non-interactive shell) |
 
-Populate the inputs in this order: `PRD.md` (the approved requirements document — the only input Stage 1 ever reads), `run_configuration.md` (target environment, credentials location, in-scope modules), `architecture.md`, then `glossary.md`.
+Other commands: `doctor` (validate an installation and print its resolved roots), `detect` (read-only stack report), `upgrade` (refresh tool code and skills, never your artifacts), `uninstall` (remove tool code; keeps `platform_core_data/` unless `--purge-data`).
+
+### 2. Fill in the inputs
+
+`init` scaffolds blank input documents under `agentic-testing-tool/platform_core_data/`. Populate them in this order: `PRD.md` (the approved requirements — the only input Stage 1 ever reads), `run_configuration.md` (target environment, credentials location, in-scope modules), `architecture.md`, then `glossary.md`.
+
+These are deliberately blank rather than pre-filled with samples: Stage 1 reads the PRD as approved truth and cannot tell a real requirement from a plausible-looking placeholder.
+
+**Retargeting at a different application** means running `agentic-testing init` in that repository. There is no clear-and-repopulate ritual any more, and no second project directory ([`pipeline.md` §1](workflows_and_pipelines/pipeline/pipeline.md)). Two things are worth knowing if you do reuse an installation in place:
+
+- `platform_core_data/` is **never** overwritten by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far; clearing `workspace/` and `runs/` is your decision, not the installer's.
+- `knowledge_base/patterns/` is **Platform Knowledge** and survives retargeting by design — it is the accumulated engineering knowledge, not the application's specifics. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you are leaving behind ([§11](#11-knowledge-base), [`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)).
 
 ### 3. Set up the Browser Driver (if the application needs live browser access)
 
@@ -781,7 +825,7 @@ Everything above this section is implemented or fully specified today (see [§4 
 
 ### Near-term
 
-- **Project Bootstrap Wizard** — guided onboarding instead of manually copying the project template.
+- ~~**Project Bootstrap Wizard** — guided onboarding instead of manually copying the project template.~~ **Done**: `agentic-testing init` detects the target project and scaffolds everything ([§16](#16-quick-start), [`pipeline.md` §13](workflows_and_pipelines/pipeline/pipeline.md)).
 - **Azure DevOps / Jira / TestRail / Xray integration** — resolving a work-item ID directly into a Run Scope, instead of pasted text or a Markdown file today.
 - **Story-Based Execution** — running the pipeline scoped to a single tracked work item end to end.
 - **Rich Reporting / HTML Dashboard** — a rendered view of the Final QA Report and run history, beyond today's Markdown artifacts.

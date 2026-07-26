@@ -21,7 +21,7 @@ It exists for the common case where a project has already been onboarded and exp
 | **Run Scope Source** | Whatever this story is supplied as — pasted text, a Markdown file under `platform_core_data/resources/requirements/user_stories/`, or (once integrated) a tracked work item ID (`pipeline/run_scope.md` §4) |
 | **Module(s)** | Whatever module(s) the story's acceptance criteria touch — named explicitly in the story content, not assumed |
 
-Only this story's acceptance criteria are in scope for Stage 3's test design (`.claude/skills/test-design-agent/SKILL.md` §16, "User Story" strategy: "narrowest and most literal... no broader wandering into adjacent feature coverage the story didn't ask for"). This workflow does not widen that scope.
+Only this story's acceptance criteria are in scope for Stage 3's test design (`.claude/skills/test-design-skill/SKILL.md` §16, "User Story" strategy: "narrowest and most literal... no broader wandering into adjacent feature coverage the story didn't ask for"). This workflow does not widen that scope.
 
 # 4. Execution Flow
 
@@ -67,7 +67,7 @@ Before Stage 3 is invoked, the Run Manager performs the Automation Start Decisio
 
 ## Step 2 — Test Design Agent *(Pipeline Stage 3)*
 
-**Spec:** `.claude/skills/test-design-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/test-design-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -77,11 +77,11 @@ Before Stage 3 is invoked, the Run Manager performs the Automation Start Decisio
 | **Contract keys produced** | `manual_test_suite_md`, `manual_test_suite_xlsx`, `traceability_matrix`, `coverage_report` |
 | **Checkpoint** | **Human Review Required** (QA Architect / Test Lead, per `pipeline/pipeline.md` §5.1) |
 
-Per `.claude/skills/test-design-agent/SKILL.md` §16 ("User Story" strategy): at minimum one test case per enumerated acceptance criterion, and every carried-forward Assumption/Risk tied to this story gets its own explicitly tagged assumption-based test case. If the story's specific area was never independently exercised by the existing Discovery Artifacts, the agent's own existing rule applies — it records `"Not independently verified in Discovery"` (§5.1) rather than treating that as a blocker.
+Per `.claude/skills/test-design-skill/SKILL.md` §16 ("User Story" strategy): at minimum one test case per enumerated acceptance criterion, and every carried-forward Assumption/Risk tied to this story gets its own explicitly tagged assumption-based test case. If the story's specific area was never independently exercised by the existing Discovery Artifacts, the agent's own existing rule applies — it records `"Not independently verified in Discovery"` (§5.1) rather than treating that as a blocker.
 
 ## Step 3 — Manual Execution Agent *(Pipeline Stage 4)*
 
-**Spec:** `.claude/skills/manual-execution-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/manual-execution-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -91,11 +91,11 @@ Per `.claude/skills/test-design-agent/SKILL.md` §16 ("User Story" strategy): at
 | **Contract keys produced** | `manual_execution_results`, `manual_execution_summary`, `automation_candidate_package`, `manual_execution_artifacts` |
 | **Checkpoint** | **Human Review Required** (QA Lead / Test Lead, per `pipeline/pipeline.md` §5.1) |
 
-Per `.claude/skills/manual-execution-agent/SKILL.md` §17 ("User Story" Run Scope): execute only the test cases traceable to this story's acceptance criteria — no opportunistic execution of unrelated suite content. Only test cases confirmed successful and stable here (§9 of that spec) become Automation Candidates for Step 4.
+Per `.claude/skills/manual-execution-skill/SKILL.md` §17 ("User Story" Run Scope): execute only the test cases traceable to this story's acceptance criteria — no opportunistic execution of unrelated suite content. Only test cases confirmed successful and stable here (§9 of that spec) become Automation Candidates for Step 4.
 
 ## Step 4 — Automation Agent *(Pipeline Stage 5)*
 
-**Spec:** `.claude/skills/automation-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/automation-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -105,24 +105,24 @@ Per `.claude/skills/manual-execution-agent/SKILL.md` §17 ("User Story" Run Scop
 | **Contract keys produced** | `automation_plan`, `automation_package`, `automation_manifest`, `automation_decision_report`, `automation_coverage_report`, `automation_suite_manifest`, `automation_summary` |
 | **Checkpoint** | **Automation Approval Required** (Automation Lead / Release Manager, per `pipeline/pipeline.md` §5.2) |
 
-The Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31) still applies in full — this workflow does not pre-select a framework on the human's behalf. Only test case IDs named in Step 3's Automation Candidate Package receive an automation decision — a story's acceptance criterion whose test case failed or was blocked during Step 3 is never automated this run.
+The Framework Decision Gate (`.claude/skills/automation-skill/SKILL.md` §31) still applies in full — this workflow does not pre-select a framework on the human's behalf. Only test case IDs named in Step 3's Automation Candidate Package receive an automation decision — a story's acceptance criterion whose test case failed or was blocked during Step 3 is never automated this run.
 
 ## Step 5 — Automation Execution Agent *(Pipeline Stage 6)*
 
-**Spec:** `.claude/skills/automation-execution-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/automation-execution-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
 | **Input** | Approved Automation Package + Automation Summary from Step 4 · existing Approved Project Context |
 | **Contract keys consumed** | `automation_suite`, `automation_summary`, `project_context`, `execution_mode` (must still be explicitly resolved per the skill's own §5.1 — never defaulted by this workflow) |
-| **Execution scope** | Selective — only this story's newly generated/extended test cases, per `.claude/skills/automation-execution-agent/SKILL.md` §13 ("User Story" Run Scope Type: "execute only the test cases traceable to that story's acceptance criteria") |
+| **Execution scope** | Selective — only this story's newly generated/extended test cases, per `.claude/skills/automation-execution-skill/SKILL.md` §13 ("User Story" Run Scope Type: "execute only the test cases traceable to that story's acceptance criteria") |
 | **Output** | Execution Results + evidence |
 | **Contract keys produced** | `execution_results`, `execution_artifacts` |
 | **Checkpoint** | *None — mechanical, gated only by Step 4's Automation Approval* |
 
 ## Step 6 — Reporting Agent *(Pipeline Stage 7)*
 
-**Spec:** `.claude/skills/reporting-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/reporting-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -162,8 +162,8 @@ NDC uses its `workspace/` variant of these paths — see `platform_core_data/onb
 # 7. Success Criteria
 
 - [ ] Step 1's Stage-State Check confirms Stages 1–2 are `Approved` before Stage 3 launches (or the human explicitly chose an alternative path).
-- [ ] Test Design output covers every acceptance criterion in the story, each with a populated `Acceptance Criteria Reference` (`.claude/skills/test-design-agent/SKILL.md` §5.4).
-- [ ] Manual Execution Results cover exactly this story's test cases, and the Automation Candidate Package's qualifying criteria (`.claude/skills/manual-execution-agent/SKILL.md` §9.1) were actually applied before Human Review approval.
+- [ ] Test Design output covers every acceptance criterion in the story, each with a populated `Acceptance Criteria Reference` (`.claude/skills/test-design-skill/SKILL.md` §5.4).
+- [ ] Manual Execution Results cover exactly this story's test cases, and the Automation Candidate Package's qualifying criteria (`.claude/skills/manual-execution-skill/SKILL.md` §9.1) were actually applied before Human Review approval.
 - [ ] Automation Decision is recorded for every test case named in the Automation Candidate Package; Automation Approval is granted.
 - [ ] Execution Results cover exactly this story's test cases — no unrelated suite content opportunistically included.
 - [ ] Final QA Report is produced and clearly scoped to this story.

@@ -4,8 +4,8 @@ category: repair_patterns
 title: Transient toast/snackbar — text-content locator + non-throwing presence poll
 status: confirmed
 tags: [spa, toast, locator, shaft, framework-behavior]
-producer: automation-execution-agent
-consumers: [automation-execution-agent, automation-agent]
+producer: automation-execution-skill
+consumers: [automation-execution-skill, automation-skill]
 promoted_from: NDC/REP-003
 confidence: "1 execution, 1 project"
 related_knowledge: []

@@ -100,13 +100,13 @@ Promotion Workflow: human approves → platform_core/knowledge/{category}/ gains
 - **Never** write a project-specific fact, business rule, or credential here — no exception for something that "seems like it'll apply everywhere."
 - **Never** populate `pipeline_decision_patterns/` until it has a named reader in `pipeline.md` §10.7 and a project-level source folder to promote from — see `knowledge/README.md`.
 - **Only** `tools/browser_driver/` may contain the shared automation engine's code; project-specific profiles, screens, components, and credentials live under `platform_core_data/browser/` and `platform_core_data/credentials/` instead.
-- **Must not** duplicate a Skill's own fixed Capability logic as a "Knowledge" document (e.g. the Confidence Engine's base scoring rubric, which stays in `automation-execution-agent/SKILL.md` §27.2, not in `knowledge/`).
+- **Must not** duplicate a Skill's own fixed Capability logic as a "Knowledge" document (e.g. the Confidence Engine's base scoring rubric, which stays in `automation-execution-skill/SKILL.md` §27.2, not in `knowledge/`).
 
 ## Typical Flow
 
 ```
 Project                 Skill                              Platform Core
-NDC          ──▶   automation-execution-agent invoked ──▶   resolves repair_patterns/, diagnosis_patterns/
+NDC          ──▶   automation-execution-skill invoked ──▶   resolves repair_patterns/, diagnosis_patterns/
                                                        + platform_core_data/knowledge_base/repair/
                     proposes a repair using
                     the merged context

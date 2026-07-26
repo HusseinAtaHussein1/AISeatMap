@@ -31,13 +31,13 @@ It does **not** own *when* or *in what order* agents run (that is `workflows_and
 .claude/
 ├── settings.json / settings.local.json   # harness permission/tooling config
 └── skills/
-    ├── project-context-agent/SKILL.md    # Stage 1 — PRD + Run Configuration → Project Context
-    ├── explorer-agent/SKILL.md           # Stage 2 — Project Context → Discovery Artifacts + Findings
-    ├── test-design-agent/SKILL.md        # Stage 3 — Discovery → Manual Test Suite + Traceability Matrix
-    ├── manual-execution-agent/SKILL.md   # Stage 4 — Manual Test Suite → Manual Execution Results + Automation Candidate Package
-    ├── automation-agent/SKILL.md         # Stage 5 — Automation Candidate Package → Automation Package
-    ├── automation-execution-agent/SKILL.md  # Stage 6 — Automation Package → Execution Results
-    └── reporting-agent/SKILL.md          # Stage 7 — Execution Results → Final QA Report
+    ├── project-context-skill/SKILL.md    # Stage 1 — PRD + Run Configuration → Project Context
+    ├── explorer-skill/SKILL.md           # Stage 2 — Project Context → Discovery Artifacts + Findings
+    ├── test-design-skill/SKILL.md        # Stage 3 — Discovery → Manual Test Suite + Traceability Matrix
+    ├── manual-execution-skill/SKILL.md   # Stage 4 — Manual Test Suite → Manual Execution Results + Automation Candidate Package
+    ├── automation-skill/SKILL.md         # Stage 5 — Automation Candidate Package → Automation Package
+    ├── automation-execution-skill/SKILL.md  # Stage 6 — Automation Package → Execution Results
+    └── reporting-skill/SKILL.md          # Stage 7 — Execution Results → Final QA Report
 ```
 
 Each subfolder corresponds 1:1 to one of the seven pipeline stages defined in `workflows_and_pipelines/pipeline/pipeline.md` §4 — there is no Skill here without a matching stage, and no stage without a matching Skill. Siblings never call each other directly; each declares its own inputs/outputs, and it is the orchestration layer's job to wire the output of one into the input of the next.
@@ -56,7 +56,7 @@ workflows_and_pipelines/pipeline/pipeline.md
 ```
 
 - **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven skills; it invokes them in a fixed order and enforces checkpoints. A Skill never reads `pipeline.md` to decide its own behavior — it only needs to already conform to the contract that document describes.
-- **`.claude/` → `platform_core/`:** each Skill's `dependencies` line names exactly which Platform Knowledge subfolders it consults (e.g. `automation-agent` reads `repair_patterns/`, `automation_patterns/`, `framework_patterns/`) and, where relevant, which shared tool it uses (e.g. the Browser Driver, `platform_core/tools/browser_driver/`).
+- **`.claude/` → `platform_core/`:** each Skill's `dependencies` line names exactly which Platform Knowledge subfolders it consults (e.g. `automation-skill` reads `repair_patterns/`, `automation_patterns/`, `framework_patterns/`) and, where relevant, which shared tool it uses (e.g. the Browser Driver, `platform_core/tools/browser_driver/`).
 - **`.claude/` → `platform_core_data/`:** every Skill's actual Inputs and Outputs at runtime resolve to files under `platform_core_data/workspace/` (and, for knowledge writes, `platform_core_data/knowledge_base/`). A Skill file names those paths literally — there is no project-name segment to substitute, because the platform hosts one project (`pipeline.md` §1).
 
 ## Lifecycle
@@ -91,10 +91,10 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 - **Always** cite a `platform_core/knowledge/` subfolder by name in `dependencies` rather than restating its content inline.
 - **Always** state a rule exactly once, in the numbered section that owns it, and cite that section (`§N`) from anywhere else that needs it. A Skill's `Operational Contract` section names the role and points at the sections that specify execution — it never restates them as a second, parallel copy of the spec.
 - **Never** renumber an existing section. Section numbers are cited by `workflows_and_pipelines/`, `docs/`, and run artifacts across the repo; append new sections rather than shifting existing ones.
-- **Never** read the PRD, except `project-context-agent` — the only Skill permitted to (`pipeline.md` §6 Rule 4).
+- **Never** read the PRD, except `project-context-skill` — the only Skill permitted to (`pipeline.md` §6 Rule 4).
 - **Never** invoke another Skill directly — sequencing is `workflows_and_pipelines/`'s responsibility, never this folder's.
 - **Never** embed project-specific business logic, screen names, or credentials — a Skill file must remain correct for every project.
-- **Must not** grow a Skill's own scoring rubric or engine mechanics into a "promotable knowledge" category once it's fixed Capability logic (e.g. the Confidence Engine rubric in `automation-execution-agent/SKILL.md` §27.2) — that logic stays here, permanently, as Capability.
+- **Must not** grow a Skill's own scoring rubric or engine mechanics into a "promotable knowledge" category once it's fixed Capability logic (e.g. the Confidence Engine rubric in `automation-execution-skill/SKILL.md` §27.2) — that logic stays here, permanently, as Capability.
 - **Must** record revision history in `docs/CHANGELOG.md`, never inline in the `SKILL.md` itself.
 
 ## Typical Flow
@@ -102,7 +102,7 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 ```
 Pipeline Orchestrator (workflows_and_pipelines/pipeline/pipeline.md)
         ↓
-.claude/skills/automation-agent/SKILL.md invoked for Stage 5
+.claude/skills/automation-skill/SKILL.md invoked for Stage 5
         ↓
 Resolves platform_core/knowledge/repair_patterns/, automation_patterns/, framework_patterns/
         ↓
@@ -116,7 +116,7 @@ Marks Pending Automation Approval — pipeline.md §5.2 checkpoint
 ## Common Mistakes
 
 - **"Add the new sequencing rule to the Skill file."** No — sequencing, gates, and stage order belong exclusively in `workflows_and_pipelines/pipeline/pipeline.md`.
-- **"This repair pattern is proven now, just leave it growing inside `automation-execution-agent/SKILL.md`."** No — once a pattern is confirmed reusable across projects, it is promoted to `platform_core/knowledge/repair_patterns/`, cited from the Skill's `dependencies` line, not accumulated inline indefinitely.
+- **"This repair pattern is proven now, just leave it growing inside `automation-execution-skill/SKILL.md`."** No — once a pattern is confirmed reusable across projects, it is promoted to `platform_core/knowledge/repair_patterns/`, cited from the Skill's `dependencies` line, not accumulated inline indefinitely.
 - **"Note this project's specific screen name in the Skill spec so it's handled correctly."** No — a Skill file must stay project-agnostic; project specifics belong in `platform_core_data/`.
 - **"Log this revision at the top of the SKILL.md like before."** No — revision history was deliberately extracted to `docs/CHANGELOG.md`; a Skill file describes only its current behavior.
 

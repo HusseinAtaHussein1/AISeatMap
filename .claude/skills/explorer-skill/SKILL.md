@@ -1,5 +1,5 @@
 ---
-name: explorer-agent
+name: explorer-skill
 description: Stage 2 of 7 in the Agentic AI Testing Platform pipeline (Evidence-Driven QA Explorer). Validates the approved Project Context against the live application (or the best available fallback Discovery Mode), producing evidence-backed Findings, Timeline, Coverage Summary, and a QA Assessment Report. Use when running discovery/exploratory testing against a target application for an approved Project Context.
 inputs:
   - name: project_context
@@ -36,7 +36,7 @@ outputs:
     location: "platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/"
     description: Per-Finding `metadata.md` plus captured evidence files.
 dependencies:
-  - project-context-agent (upstream skill)
+  - project-context-skill (upstream skill)
   - Browser automation tool (e.g. Playwright MCP) when live Discovery Mode is available; file/Read tools only otherwise
 ---
 
@@ -46,26 +46,26 @@ dependencies:
 
 # 1. Skill Name
 
-**Explorer Agent** (Evidence-Driven QA Explorer) — v4
+**Explorer skill** (Evidence-Driven QA Explorer) — v4
 
 # 2. Purpose
 
-The Explorer Agent performs hands-on exploratory testing of the running target application, strictly within the boundaries set by the Project Context, and produces an evidence-based record of what the application actually does. Its output — the Discovery Artifacts — feeds the Test Design Agent as validation and enrichment material, not as a competing source of requirements.
+The Explorer skill performs hands-on exploratory testing of the running target application, strictly within the boundaries set by the Project Context, and produces an evidence-based record of what the application actually does. Its output — the Discovery Artifacts — feeds the Test Design skill as validation and enrichment material, not as a competing source of requirements.
 
-**Discovery is this skill's responsibility; browser automation is only its preferred mechanism for it, not a precondition for its existence.** When live browser automation is unavailable, the agent does not stop — it falls back to the best available alternative Discovery Mode (§8.1–§8.3) and proceeds, disclosing which mode it used and what that implies for achievable Confidence.
+**Discovery is this skill's responsibility; browser automation is only its preferred mechanism for it, not a precondition for its existence.** When live browser automation is unavailable, this skill does not stop — it falls back to the best available alternative Discovery Mode (§8.1–§8.3) and proceeds, disclosing which mode it used and what that implies for achievable Confidence.
 
-**As of v2, the Explorer Agent's responsibility is no longer only discovering the application.** It investigates, validates, collects evidence, assesses risk in both business and technical terms, and produces reusable knowledge for every downstream agent — not just a list of screens and a list of defects. Discovery (screens, workflows, structure) remains part of its job, but it is now the floor, not the ceiling, of what this skill produces.
+**As of v2, the Explorer skill's responsibility is no longer only discovering the application.** It investigates, validates, collects evidence, assesses risk in both business and technical terms, and produces reusable knowledge for every downstream skill — not just a list of screens and a list of defects. Discovery (screens, workflows, structure) remains part of its job, but it is now the floor, not the ceiling, of what this skill produces.
 
-**The Project Context is this skill's source of truth for what the application is supposed to do.** The Explorer Agent's job is to hold the running application up against that expectation, note where reality matches, where it diverges, and where it reveals more than the Project Context documented — never to define or redefine what the requirements should be. It does not write test cases or automation code; its job is disciplined, well-documented, in-scope discovery and investigation.
+**The Project Context is this skill's source of truth for what the application is supposed to do.** The Explorer skill's job is to hold the running application up against that expectation, note where reality matches, where it diverges, and where it reveals more than the Project Context documented — never to define or redefine what the requirements should be. It does not write test cases or automation code; its job is disciplined, well-documented, in-scope discovery and investigation.
 
-**This skill must never assume that unexpected behavior is a bug**, and it must never finalize a Finding from a single, unvalidated symptom. Every observation that surprises, concerns, or falls outside what the Project Context describes — whether noticed narratively or captured automatically via Event-Driven Capture (§5.2) — is treated as a *candidate* that must pass through the full Investigation Workflow (§5.1): validated, subjected to bounded recovery attempts (§5.7), investigated for related boundary conditions, and checked for duplicates, before it becomes a classified, evidence-backed **Finding** that may require human validation. The Explorer Agent proposes well-investigated candidates for human attention; it does not adjudicate them.
+**This skill must never assume that unexpected behavior is a bug**, and it must never finalize a Finding from a single, unvalidated symptom. Every observation that surprises, concerns, or falls outside what the Project Context describes — whether noticed narratively or captured automatically via Event-Driven Capture (§5.2) — is treated as a *candidate* that must pass through the full Investigation Workflow (§5.1): validated, subjected to bounded recovery attempts (§5.7), investigated for related boundary conditions, and checked for duplicates, before it becomes a classified, evidence-backed **Finding** that may require human validation. The Explorer skill proposes well-investigated candidates for human attention; it does not adjudicate them.
 
 # 3. Responsibilities
 
 1. **Validate the application against the Project Context** — for each in-scope module, confirm whether the live application behaves as the Project Context describes (screens exist, workflows function, business rules and constraints hold as documented).
 2. **Discover additional UI information** — capture structural (accessibility-tree) detail of each distinct in-scope screen or UI state, including elements, components, and behaviors the Project Context did not call out at that level of detail.
 3. **Identify gaps between the application and the documented requirements** — explicitly record any place where observed behavior contradicts, extends, or is simply absent from the Project Context, without deciding which one is "correct." A gap is reported, not resolved, by this skill.
-4. **Automatically capture evidence the instant a defined failure signal occurs** (§5.2, Event-Driven Capture) — the agent does not wait to narratively notice an HTTP 500, a console exception, a broken image, or any other listed trigger; capture happens immediately, and the candidate enters the Investigation Workflow (§5.1) from that capture.
+4. **Automatically capture evidence the instant a defined failure signal occurs** (§5.2, Event-Driven Capture) — this skill does not wait to narratively notice an HTTP 500, a console exception, a broken image, or any other listed trigger; capture happens immediately, and the candidate enters the Investigation Workflow (§5.1) from that capture.
 5. **Run every candidate Finding through the full Investigation Workflow** (§5.1) — explore/capture, validate, attempt bounded recovery (§5.7), collect evidence, investigate surrounding boundary conditions (§5.8), classify, check for duplicates (§5.9), form a disclosed root-cause hypothesis (§5.13) where one is warranted, and only then generate artifacts. Never publish a Finding straight from a first, unvalidated symptom, and never publish a Finding without first attempting the recovery steps applicable to its failure category.
 6. **Collect the full Evidence Package for every Finding** (§5.10–§5.12), tailored to its category via Smart Evidence Collection (§5.11), using the full evidence inventory (§5.10) wherever technically possible.
 7. **Assess both Business Risk and Technical Risk for every Finding** — two distinct framings of impact (§5.14): what this means for the business/user, and what this means for the system/architecture — never conflated into a single "severity" number alone.
@@ -76,11 +76,11 @@ The Explorer Agent performs hands-on exploratory testing of the running target a
 12. **Never stop exploring because a Finding was created.** Finding a bug, security concern, or any other classified issue is never, by itself, a reason to end exploration early — exploration continues through the full in-scope surface regardless of what has already been found, unless the Project Context's Environment Constraints or scope boundaries dictate otherwise.
 13. **Produce Discovery Artifacts** — synthesize all of the above into raw screen snapshots, a structured QA Assessment Report, a Findings Summary, a Timeline, a Coverage Summary, and a per-Finding Evidence Package.
 14. **Select and disclose the Discovery Mode used** (§8.1–§8.3) — attempt Discovery Modes in priority order, fall back automatically when a higher-priority mode is unavailable rather than halting the run, and state explicitly, per discovery snapshot/Finding/Coverage entry, which mode produced it.
-15. **Adapt exploration strategy to the run's Run Scope Type** (§16) — an Entire Project sweep, a single User Story's targeted verification, and a Bug's reproduction-first approach are not the same activity at the same depth; the agent selects the matching strategy rather than applying one default approach regardless of scope.
+15. **Adapt exploration strategy to the run's Run Scope Type** (§16) — an Entire Project sweep, a single User Story's targeted verification, and a Bug's reproduction-first approach are not the same activity at the same depth; this skill selects the matching strategy rather than applying one default approach regardless of scope.
 16. **Classify every Finding's supporting evidence by Evidence Category** (§17), independent of which Discovery Mode produced it, and let evidence quality — not tool choice — govern achievable Confidence (§18).
-17. **Produce output conforming to the Standard Output Contract** (§19) — every required section, in the required structure, so the Test Design Agent never has to parse free-form prose to extract what it needs.
+17. **Produce output conforming to the Standard Output Contract** (§19) — every required section, in the required structure, so the Test Design skill never has to parse free-form prose to extract what it needs.
 18. **Recognize named Stop Conditions** (§20) and respond with the specified action for each — including, where a per-area block occurs mid-run, recommending a fallback Discovery Mode for that specific area (§21) before giving up on it.
-19. **Verify handoff completeness before concluding a run** (§22) — confirm every input the Test Design Agent's own specification declares it needs is actually present and unambiguous in this run's Discovery Artifacts, not merely assume it is.
+19. **Verify handoff completeness before concluding a run** (§22) — confirm every input the Test Design skill's own specification declares it needs is actually present and unambiguous in this run's Discovery Artifacts, not merely assume it is.
 
 Supporting detail for responsibilities 1–3, for in-scope modules only:
 - Log into the target application using the credentials specified in the Project Context.
@@ -90,20 +90,20 @@ Supporting detail for responsibilities 1–3, for in-scope modules only:
 - Clearly separate confirmed observations from inferred behavior — flag anything not directly witnessed as an assumption, open question, or (where applicable) a labeled Root Cause Hypothesis (§5.13), never as fact.
 - Never perform destructive, irreversible, or persistent data-mutating actions unless the Project Context's Environment Constraints explicitly authorize it. This includes investigation probes (§5.8) and recovery attempts (§5.7): a probe or recovery step that would require an authorized-only action is skipped and the omission is noted in Investigation Notes, never performed anyway.
 
-**The Explorer Agent must NOT redefine business requirements.** If the running application appears to contradict the Project Context, the agent records this as a gap/discrepancy — and, per §5, as a Finding — for stakeholders and the Project Context Agent to resolve in a future revision. It never treats its own observation of the live app as a silent correction to what the requirement "really" is, and it never treats a deviation as a confirmed defect on its own authority.
+**The Explorer skill must NOT redefine business requirements.** If the running application appears to contradict the Project Context, this skill records this as a gap/discrepancy — and, per §5, as a Finding — for stakeholders and the Project Context skill to resolve in a future revision. It never treats its own observation of the live app as a silent correction to what the requirement "really" is, and it never treats a deviation as a confirmed defect on its own authority.
 
 # 4. Core Philosophy
 
 The Evidence-Driven QA Explorer operates on eight non-negotiable principles:
 
-1. **Unexpected is not the same as wrong.** Behavior that differs from what the agent anticipated, or that the Project Context does not mention, is *interesting*, not automatically *defective*. The agent's job is to observe and document precisely, not to render a verdict.
-2. **A symptom is a lead, not a conclusion.** The agent never finalizes a Finding from the first thing it notices. It validates the observation, attempts bounded recovery where the failure class calls for it, and investigates related boundary conditions before deciding the observation is worth reporting as-is.
-3. **Every claim is a Finding, and every Finding needs evidence.** The agent does not make assertions in prose that aren't backed by a captured, inspectable artifact (screenshot, log, recording, DOM/accessibility snapshot, etc.). If evidence cannot be captured, the Finding is recorded as incomplete and flagged accordingly rather than asserted as fact.
-4. **Ambiguity resolves to human judgment, not to agent judgment.** If the Project Context does not clearly define expected behavior for what was observed, the agent must not guess which interpretation is correct. It records the observation with status `Needs Human Review` (§5.6) and moves on.
+1. **Unexpected is not the same as wrong.** Behavior that differs from what this skill anticipated, or that the Project Context does not mention, is *interesting*, not automatically *defective*. This skill's job is to observe and document precisely, not to render a verdict.
+2. **A symptom is a lead, not a conclusion.** This skill never finalizes a Finding from the first thing it notices. It validates the observation, attempts bounded recovery where the failure class calls for it, and investigates related boundary conditions before deciding the observation is worth reporting as-is.
+3. **Every claim is a Finding, and every Finding needs evidence.** This skill does not make assertions in prose that aren't backed by a captured, inspectable artifact (screenshot, log, recording, DOM/accessibility snapshot, etc.). If evidence cannot be captured, the Finding is recorded as incomplete and flagged accordingly rather than asserted as fact.
+4. **Ambiguity resolves to human judgment, not to automated judgment.** If the Project Context does not clearly define expected behavior for what was observed, this skill must not guess which interpretation is correct. It records the observation with status `Needs Human Review` (§5.6) and moves on.
 5. **The Project Context remains the single source of truth.** This skill never invents, infers, or backfills an "expected behavior" that the Project Context does not actually state. Where the Project Context is silent, "the Project Context does not define this" is itself the correct, and only, expected-behavior statement.
-6. **Evidence first, conclusion second — always in that order.** No conclusion (a classification, a severity, a root-cause hypothesis, a recommendation) is formed before the evidence that supports it exists and is captured. Where evidence collection genuinely cannot precede a fleeting state (e.g., a dialog that must be dismissed to continue), the agent captures the earliest possible evidence and explicitly notes the sequencing gap rather than skipping evidence collection entirely.
-7. **A Finding is never a stopping point.** Discovering a bug, security concern, or any other issue is not, by itself, a reason to end exploration. The agent keeps exploring the full in-scope surface regardless of what has already been found, unless the Project Context's own scope or environment constraints say otherwise.
-8. **An unavailable discovery mechanism is never a stopping point either.** The absence of browser automation (or any other single Discovery Mode) is not a reason to halt the run — the agent falls back through the priority list in §8.1 and proceeds. What changes is disclosure and ceiling, not whether exploration happens: every artifact states which mode produced it (§8.3), and modes that cannot perform live reproduction cap what Status a Finding may reach, but they never block the run itself.
+6. **Evidence first, conclusion second — always in that order.** No conclusion (a classification, a severity, a root-cause hypothesis, a recommendation) is formed before the evidence that supports it exists and is captured. Where evidence collection genuinely cannot precede a fleeting state (e.g., a dialog that must be dismissed to continue), this skill captures the earliest possible evidence and explicitly notes the sequencing gap rather than skipping evidence collection entirely.
+7. **A Finding is never a stopping point.** Discovering a bug, security concern, or any other issue is not, by itself, a reason to end exploration. This skill keeps exploring the full in-scope surface regardless of what has already been found, unless the Project Context's own scope or environment constraints say otherwise.
+8. **An unavailable discovery mechanism is never a stopping point either.** The absence of browser automation (or any other single Discovery Mode) is not a reason to halt the run — this skill falls back through the priority list in §8.1 and proceeds. What changes is disclosure and ceiling, not whether exploration happens: every artifact states which mode produced it (§8.3), and modes that cannot perform live reproduction cap what Status a Finding may reach, but they never block the run itself.
 
 # 5. Finding Framework
 
@@ -127,7 +127,7 @@ A Finding is only "finalized" once step 9 completes. Nothing produced by steps 1
 
 ## 5.2 Event-Driven Capture
 
-The agent must automatically collect evidence the moment any of the following occurs during in-scope exploration, without waiting to notice it narratively:
+This skill must automatically collect evidence the moment any of the following occurs during in-scope exploration, without waiting to notice it narratively:
 
 - HTTP 500 (server error)
 - HTTP 403 (forbidden)
@@ -145,14 +145,14 @@ The agent must automatically collect evidence the moment any of the following oc
 When any of the above is detected:
 
 1. Capture the fullest evidence set technically possible at that instant (screenshot, console state, network state, current URL, DOM snapshot) — even before determining whether the trigger is significant. Evidence captured at trigger-time may exceed what Smart Evidence Collection (§5.11) later requires for the Finding's eventual Category; excess evidence is kept, not discarded.
-2. Feed the captured trigger into the Investigation Workflow (§5.1) at step 1, exactly as if the agent had narratively noticed it.
+2. Feed the captured trigger into the Investigation Workflow (§5.1) at step 1, exactly as if this skill had narratively noticed it.
 3. Continue exploration — an Event-Driven Capture trigger firing is not, by itself, a reason to halt or divert from the current in-scope task, beyond the time needed to capture evidence and log the trigger in the Timeline (§6).
 
 A trigger that fires repeatedly for the same underlying condition is subject to Duplicate Detection (§5.9) exactly as any other candidate.
 
 ## 5.3 Classification (Category)
 
-Every Finding must be classified as **exactly one** of the following Categories. The agent must pick the single best-fitting Category — never zero, never more than one:
+Every Finding must be classified as **exactly one** of the following Categories. This skill must pick the single best-fitting Category — never zero, never more than one:
 
 | Category | Use when... |
 |---|---|
@@ -162,10 +162,10 @@ Every Finding must be classified as **exactly one** of the following Categories.
 | **Accessibility** | Observed structural, semantic, or interaction behavior that may create a barrier for assistive technology or accessibility standards. |
 | **UI Issue** | A visual/rendering defect (layout breakage, broken image, clipped/overlapping content, styling inconsistency) independent of whether it affects usability enough to also warrant a UX Issue. |
 | **UX Issue** | Behavior is technically functional but confusing, inconsistent, or inconvenient for the user, independent of whether it matches the Project Context. |
-| **Requirement Gap** | The Project Context does not address a screen, workflow, or behavior the agent encountered — a gap in documentation coverage, not necessarily in the application. (Supersedes v1's "Missing Requirement" — same meaning, renamed for consistency with this Category set.) |
-| **Test Gap** | The agent identifies in-scope surface that exploration could not adequately cover (e.g., a workflow blocked by an environment constraint, a state requiring data the demo lacks) — a gap in this run's own coverage, to be handed to the Test Design Agent or a future run, not a claim about the application itself. |
+| **Requirement Gap** | The Project Context does not address a screen, workflow, or behavior this skill encountered — a gap in documentation coverage, not necessarily in the application. (Supersedes v1's "Missing Requirement" — same meaning, renamed for consistency with this Category set.) |
+| **Test Gap** | This skill identifies in-scope surface that exploration could not adequately cover (e.g., a workflow blocked by an environment constraint, a state requiring data the demo lacks) — a gap in this run's own coverage, to be handed to the Test Design skill or a future run, not a claim about the application itself. |
 | **Observation** | Something noteworthy was seen that isn't clearly a defect, question, or any other category — a neutral factual note for the record. |
-| **Recommendation** | The agent has a suggestion for improvement that is not itself a defect claim (e.g., "consider adding a visible password-strength meter") — distinct from the `Recommendation` *field* every Finding metadata carries (§5.14): a Finding of Category `Recommendation` is a suggestion-shaped observation with no underlying defect; the `Recommendation` field on any Finding (of any Category) is the suggested next step for a human reviewer of that specific Finding. |
+| **Recommendation** | This skill has a suggestion for improvement that is not itself a defect claim (e.g., "consider adding a visible password-strength meter") — distinct from the `Recommendation` *field* every Finding metadata carries (§5.14): a Finding of Category `Recommendation` is a suggestion-shaped observation with no underlying defect; the `Recommendation` field on any Finding (of any Category) is the suggested next step for a human reviewer of that specific Finding. |
 
 `Question` and `Unknown Behavior` (present in v1's Finding Type enum) are retired in v2: a candidate that would previously have been `Question` or `Unknown Behavior` is classified as `Observation` with Status `Needs Human Review` (§5.6) and its open question recorded in Investigation Notes — the ambiguity is preserved via Status and Confidence, not via a separate Category.
 
@@ -189,7 +189,7 @@ Rules:
 
 ## 5.5 Confidence Engine
 
-Every Finding must include a **confidence score from 0% to 100%**, representing how certain the agent is that the Finding accurately reflects reality (i.e., that what it says was observed really was observed, and the classification fits) — **not** how certain the agent is that the underlying behavior is intentional, acceptable, or a defect. Confidence about "what happened" and judgment about "whether it's a problem" are kept separate: the latter is exactly what `Needs Human Review` status (§5.6) exists for.
+Every Finding must include a **confidence score from 0% to 100%**, representing how certain this skill is that the Finding accurately reflects reality (i.e., that what it says was observed really was observed, and the classification fits) — **not** how certain this skill is that the underlying behavior is intentional, acceptable, or a defect. Confidence about "what happened" and judgment about "whether it's a problem" are kept separate: the latter is exactly what `Needs Human Review` status (§5.6) exists for.
 
 Bands:
 
@@ -202,7 +202,7 @@ Bands:
 
 **Governing rule: low-confidence Findings must never be marked `Confirmed`.** A Finding below 90% confidence must carry a Status of `Needs Human Review` (or, where genuinely resolved as a non-issue, `Rejected`) — never `Confirmed`. `Confirmed` requires both high confidence (≥90%, per the band above) *and* satisfying `Confirmed`'s own criteria in §5.6 — the two gates are independent and both must pass.
 
-**Confidence is governed by Evidence Category (§17–§18), not by Discovery Mode directly.** Discovery Mode (§8.1) determines what evidence is *achievable*; Evidence Category (§17) is what actually caps Confidence and Status, because two different Discovery Modes can produce the same category of evidence (e.g., Browser automation and an authorized API call can both yield a Direct Observation), while the same mode can sometimes yield weaker evidence than expected (e.g., a browser session that could only capture a Human Observation because the agent had to ask a bystander what happened on a screen that reloaded too fast to capture). Evidence Categories other than Direct Observation and (reproducible) System Response cannot satisfy `Confirmed`'s recovery-attempt criteria — see §18 for the full rule. This is a consequence of the existing gate, not a separate or looser one.
+**Confidence is governed by Evidence Category (§17–§18), not by Discovery Mode directly.** Discovery Mode (§8.1) determines what evidence is *achievable*; Evidence Category (§17) is what actually caps Confidence and Status, because two different Discovery Modes can produce the same category of evidence (e.g., Browser automation and an authorized API call can both yield a Direct Observation), while the same mode can sometimes yield weaker evidence than expected (e.g., a browser session that could only capture a Human Observation because this skill had to ask a bystander what happened on a screen that reloaded too fast to capture). Evidence Categories other than Direct Observation and (reproducible) System Response cannot satisfy `Confirmed`'s recovery-attempt criteria — see §18 for the full rule. This is a consequence of the existing gate, not a separate or looser one.
 
 ## 5.6 Status
 
@@ -213,13 +213,13 @@ Every Finding must include exactly one status:
 | **Confirmed** | Directly observed with clear evidence, unambiguous against a clearly documented Project Context requirement, applicable recovery attempts (§5.7) exhausted without resolving the condition, and Confidence ≥90% (§5.5) — reserved for cases with no reasonable doubt about what happened. |
 | **Needs Human Review** | Default status whenever the Project Context does not clearly define the expected behavior, whenever there is any reasonable doubt about interpretation, or whenever Confidence is below 90% regardless of how clear-cut the requirement contradiction appears. |
 | **Duplicate** | Materially the same underlying condition as a Finding already recorded, discovered to be equivalent only after the fact (e.g., during report synthesis). This is a fallback for retroactive discovery — the primary duplicate-avoidance mechanism is the proactive search in §5.9, which prevents most duplicates from being created at all. |
-| **Rejected** | Investigated further within the same session and determined to be a false read (e.g., a one-off environment glitch reproduced-and-explained away, or resolved entirely by a recovery attempt in §5.7) — not a status the agent applies to shut down inconvenient results, only to genuinely resolved non-issues. |
+| **Rejected** | Investigated further within the same session and determined to be a false read (e.g., a one-off environment glitch reproduced-and-explained away, or resolved entirely by a recovery attempt in §5.7) — not a status this skill applies to shut down inconvenient results, only to genuinely resolved non-issues. |
 
-**Governing rule:** If the Project Context does not clearly define the expected behavior for what was observed, **or** if Confidence is below 90%, the agent MUST assign `Needs Human Review`. It must never default to `Confirmed` (as a `Bug` or otherwise) by assuming what the requirement "probably" meant, and never as a shortcut around the confidence gate. When in doubt, the doubt itself is reported — not silently resolved.
+**Governing rule:** If the Project Context does not clearly define the expected behavior for what was observed, **or** if Confidence is below 90%, this skill MUST assign `Needs Human Review`. It must never default to `Confirmed` (as a `Bug` or otherwise) by assuming what the requirement "probably" meant, and never as a shortcut around the confidence gate. When in doubt, the doubt itself is reported — not silently resolved.
 
 ## 5.7 Investigation & Recovery Engine
 
-Some failures are worth attempting to recover from before they're trusted as real; others are deterministic and recovery adds nothing. The agent applies this configurable strategy during the Validate/Recovery steps of the Investigation Workflow (§5.1, steps 2–3). **A Finding may only be marked `Confirmed` after the recovery attempt(s) applicable to its failure category have been made and the condition still persists.**
+Some failures are worth attempting to recover from before they're trusted as real; others are deterministic and recovery adds nothing. This skill applies this configurable strategy during the Validate/Recovery steps of the Investigation Workflow (§5.1, steps 2–3). **A Finding may only be marked `Confirmed` after the recovery attempt(s) applicable to its failure category have been made and the condition still persists.**
 
 | Failure Category | Recovery Behavior |
 |---|---|
@@ -239,7 +239,7 @@ Notes:
 
 ## 5.8 Investigation Mode
 
-The agent must never stop at the first symptom. For candidates that touch Validation, Navigation, or Authorization behavior in particular, it investigates related boundary conditions before finalizing the Finding — a single passing or failing case rarely tells the whole story.
+This skill must never stop at the first symptom. For candidates that touch Validation, Navigation, or Authorization behavior in particular, it investigates related boundary conditions before finalizing the Finding — a single passing or failing case rarely tells the whole story.
 
 | Category | Boundary conditions to probe |
 |---|---|
@@ -261,7 +261,7 @@ Before creating a new Finding, search the current Findings Summary (the running 
 - **If no equivalent Finding exists:** proceed to create a new Finding with `Occurrence Count = 1`.
 - This proactive, search-before-create check is the primary duplicate-avoidance mechanism. The `Duplicate` status (§5.6) exists only as a fallback for the rarer case where equivalence is discovered retroactively (e.g., while writing the QA Assessment Report) after two Findings were already created independently.
 
-The Explorer Agent must never generate duplicate Findings for the same underlying condition.
+The Explorer skill must never generate duplicate Findings for the same underlying condition.
 
 ## 5.10 Evidence Collection (Full Inventory)
 
@@ -287,11 +287,11 @@ The complete set of evidence types available to this skill. Which subset is requ
 - Timestamp
 - Logged-in user (the role/account active at the time of observation)
 
-If a specific evidence item cannot be captured (tool limitation, environment restriction, transient state that has already passed, **or the limits of the selected Discovery Mode itself — e.g., no console log is obtainable from a static screenshot, §8.1–§8.3**), the agent records which item is missing and why in the Finding's metadata rather than omitting it silently or fabricating a substitute.
+If a specific evidence item cannot be captured (tool limitation, environment restriction, transient state that has already passed, **or the limits of the selected Discovery Mode itself — e.g., no console log is obtainable from a static screenshot, §8.1–§8.3**), this skill records which item is missing and why in the Finding's metadata rather than omitting it silently or fabricating a substitute.
 
 ## 5.11 Smart Evidence Collection (Per-Category Requirements)
 
-Rather than always collecting the full inventory, the agent tailors the minimum required evidence to the Finding's Category. This is the required floor — collecting more from §5.10 is always encouraged wherever technically possible:
+Rather than always collecting the full inventory, this skill tailors the minimum required evidence to the Finding's Category. This is the required floor — collecting more from §5.10 is always encouraged wherever technically possible:
 
 | Category | Minimum Required Evidence |
 |---|---|
@@ -336,7 +336,7 @@ platform_core_data/runs/{{RUN_FOLDER}}/discovery/
 
 ## 5.13 Root Cause Hypothesis
 
-Where the collected evidence supports a plausible explanation for *why* a Finding's condition occurs, the agent may record a Root Cause Hypothesis. This is an investigation aid for whoever picks up the Finding next — **it must never be presented as fact**, never used to justify a higher Confidence Score or a `Confirmed` status on its own, and never substituted for the Finding's own Actual Behavior/evidence.
+Where the collected evidence supports a plausible explanation for *why* a Finding's condition occurs, this skill may record a Root Cause Hypothesis. This is an investigation aid for whoever picks up the Finding next — **it must never be presented as fact**, never used to justify a higher Confidence Score or a `Confirmed` status on its own, and never substituted for the Finding's own Actual Behavior/evidence.
 
 Every Root Cause Hypothesis, when present, must include:
 
@@ -364,7 +364,7 @@ Every `metadata.md` must contain the following fields, in this order:
 - **Module** — the in-scope module this Finding belongs to
 - **Workflow** — the workflow/user journey the Finding was encountered within
 - **Description** — a plain-language statement of what was observed
-- **Expected Behavior** — exactly what the Project Context states (quoted or closely paraphrased with a citation to the relevant Project Context section), or explicitly "Not defined in Project Context" if it is silent — never a behavior the agent inferred on its own
+- **Expected Behavior** — exactly what the Project Context states (quoted or closely paraphrased with a citation to the relevant Project Context section), or explicitly "Not defined in Project Context" if it is silent — never a behavior this skill inferred on its own
 - **Actual Behavior** — exactly what was observed, described factually
 - **Steps to Reproduce** — the precise action sequence, from a known starting state, that produces the observed behavior
 - **Investigation/Recovery Result** — whether the Investigation & Recovery Engine (§5.7) applied, which recovery behavior(s) were attempted, how many attempts were made, and the outcome (resolved on recovery / persisted after max attempts / not applicable)
@@ -376,7 +376,7 @@ Every `metadata.md` must contain the following fields, in this order:
 
 # 6. Timeline
 
-The agent maintains a single, run-wide, chronologically ordered Timeline of significant actions and events, sufficient for a human to reconstruct what happened and when without replaying the session.
+This skill maintains a single, run-wide, chronologically ordered Timeline of significant actions and events, sufficient for a human to reconstruct what happened and when without replaying the session.
 
 Rules:
 - Every entry has a timestamp and a short, factual description of what occurred.
@@ -400,13 +400,13 @@ Saved as: `platform_core_data/workspace/discovery/Timeline.md`
 
 # 7. Coverage
 
-The agent maintains a running Coverage tracker for the entire run, reconciled against the Project Context's declared in-scope surface.
+This skill maintains a running Coverage tracker for the entire run, reconciled against the Project Context's declared in-scope surface.
 
 Track, at minimum:
 
 - **Visited Screens** — distinct screens/URLs actually explored
 - **Visited Components** — distinct reusable UI components exercised (e.g., a shared typeahead, a shared dropdown pattern) — noted once per component, not once per occurrence
-- **Skipped Areas** — in-scope areas the agent chose not to explore in this run and why (e.g., deprioritized within a time-bounded run)
+- **Skipped Areas** — in-scope areas this skill chose not to explore in this run and why (e.g., deprioritized within a time-bounded run)
 - **Blocked Areas** — in-scope areas exploration attempted but could not proceed past (e.g., a workflow requiring data the environment lacks)
 - **Unreachable Areas** — in-scope areas that could not be reached at all given the Environment Constraints or credentials available
 - **Coverage %** — a simple, stated ratio of Visited Screens against the Project Context's total declared in-scope screens/surface, with the ratio's basis shown (e.g., "6/6 Login-scope screens visited = 100%") — a mechanical count, not a judgment of whether that coverage was *sufficient*
@@ -419,35 +419,35 @@ Saved as: `platform_core_data/workspace/discovery/Coverage_Summary.md`, and summ
 | Input | Role | Required? | Description |
 |---|---|---|---|
 | Project Context | Primary | Required | `platform_core_data/workspace/context/ProjectContext.md` — supplies URL, credentials, in-scope modules, environment constraints, carried-forward assumptions, and the expected behavior to validate against |
-| Discovery Source | Secondary | Required | The best available source of truth about the running application's actual behavior. Browser automation against the live application is preferred; when unavailable, the agent falls back through the priority-ordered Discovery Modes in §8.1 rather than treating this input as unsatisfiable. |
+| Discovery Source | Secondary | Required | The best available source of truth about the running application's actual behavior. Browser automation against the live application is preferred; when unavailable, this skill falls back through the priority-ordered Discovery Modes in §8.1 rather than treating this input as unsatisfiable. |
 
-No other inputs are used. The Explorer Agent does not read the PRD directly — the Project Context is its complete brief on what is expected; the Discovery Source is the only other thing it looks at, in whichever Discovery Mode is actually available. The agent's own Timeline (§6) and Coverage tracker (§7) are maintained by the agent itself during the run, not supplied externally.
+No other inputs are used. The Explorer skill does not read the PRD directly — the Project Context is its complete brief on what is expected; the Discovery Source is the only other thing it looks at, in whichever Discovery Mode is actually available. This skill's own Timeline (§6) and Coverage tracker (§7) are maintained by this skill itself during the run, not supplied externally.
 
 ## 8.1 Discovery Modes (Priority Order)
 
-Discovery — validating and enriching the Project Context against actual application behavior — is this skill's responsibility. Browser automation is its preferred mechanism, because it is the only mode supporting live interaction, the Investigation & Recovery Engine (§5.7), and live boundary-condition probing (§5.8) in full — but it is not a precondition for this skill's existence. When the highest-priority mode is unavailable for a given run, the agent falls back to the next mode down this list rather than halting:
+Discovery — validating and enriching the Project Context against actual application behavior — is this skill's responsibility. Browser automation is its preferred mechanism, because it is the only mode supporting live interaction, the Investigation & Recovery Engine (§5.7), and live boundary-condition probing (§5.8) in full — but it is not a precondition for this skill's existence. When the highest-priority mode is unavailable for a given run, this skill falls back to the next mode down this list rather than halting:
 
 1. **Browser automation** — direct, live interaction with the running application via a browser automation tool (e.g., Playwright MCP): navigation, clicks, form input, and live screenshot/DOM/accessibility-tree/console/network capture.
 2. **Existing screenshots** — previously captured images of the application (e.g., supplied by the user, or already stored under a project's `resources/screenshots/`) — no live interaction, but direct visual evidence of real screens.
 3. **Existing recordings** — previously captured video/session recordings of the application in use — no live interaction, but direct behavioral evidence across a sequence of states.
-4. **User-guided exploration** — a human operator drives the live application themselves (because the agent cannot) and reports back, live and in conversation with the agent, what they did and observed — interactive, but mediated through the human rather than direct agent action.
+4. **User-guided exploration** — a human operator drives the live application themselves (because this skill cannot) and reports back, live and in conversation with this skill, what they did and observed — interactive, but mediated through the human rather than direct automated action.
 5. **Documentation** — architecture docs, onboarding notes, PRDs, or other written material describing intended/actual behavior (e.g., a project's `architecture.md`, `resources/requirements/`) — describes the system but is not itself observed behavior.
 6. **APIs** — direct calls to the application's own API (where read-only, authorized endpoints exist and a calling tool is available) to observe actual data/behavior without a browser.
 7. **Static artifacts** — any other static, already-existing record of the application (exported HTML, log files, read-only database exports, config dumps) not covered by 1–6.
 
 ## 8.2 Mode Selection & Fallback Rules
 
-- At the start of a run, the agent attempts Discovery Modes in the priority order above and selects the **highest-priority mode that is actually available** for this run's environment and tooling. It must not skip a higher-priority available mode in favor of a lower one out of convenience.
-- Unavailability of a higher-priority mode (e.g., no browser automation tool present) is never, by itself, a reason to halt the run or decline to produce Discovery Artifacts. The agent falls back to the next available mode and proceeds.
-- **More than one mode may be used within the same run**, for different in-scope areas (e.g., Browser automation for screens reachable live, User-guided exploration for a screen the human had to walk through manually, Documentation for a not-yet-built feature with no live surface at all). The agent is not restricted to exactly one mode per run. Each discovery snapshot, Finding, and Coverage entry records which mode produced it.
-- If **no mode at all** is available for a given in-scope area (e.g., a feature doesn't exist yet, and no documentation, screenshots, or other record of it exists either), the agent must not fabricate discovery. It records the area as **Unreachable** in Coverage (§7) and raises a `Test Gap` Finding (or an Open Question, if no Finding is warranted) stating plainly that no discovery mechanism was available.
-- The agent must never silently substitute a lower-priority mode's evidence for what a higher-priority mode would have produced without disclosing the substitution — every Finding and discovery snapshot states its Discovery Mode explicitly (§8.3).
+- At the start of a run, this skill attempts Discovery Modes in the priority order above and selects the **highest-priority mode that is actually available** for this run's environment and tooling. It must not skip a higher-priority available mode in favor of a lower one out of convenience.
+- Unavailability of a higher-priority mode (e.g., no browser automation tool present) is never, by itself, a reason to halt the run or decline to produce Discovery Artifacts. This skill falls back to the next available mode and proceeds.
+- **More than one mode may be used within the same run**, for different in-scope areas (e.g., Browser automation for screens reachable live, User-guided exploration for a screen the human had to walk through manually, Documentation for a not-yet-built feature with no live surface at all). This skill is not restricted to exactly one mode per run. Each discovery snapshot, Finding, and Coverage entry records which mode produced it.
+- If **no mode at all** is available for a given in-scope area (e.g., a feature doesn't exist yet, and no documentation, screenshots, or other record of it exists either), this skill must not fabricate discovery. It records the area as **Unreachable** in Coverage (§7) and raises a `Test Gap` Finding (or an Open Question, if no Finding is warranted) stating plainly that no discovery mechanism was available.
+- This skill must never silently substitute a lower-priority mode's evidence for what a higher-priority mode would have produced without disclosing the substitution — every Finding and discovery snapshot states its Discovery Mode explicitly (§8.3).
 
 ## 8.3 Reporting the Selected Mode and Its Confidence Implications
 
 - Every discovery snapshot, Finding, and Coverage entry must state which Discovery Mode (§8.1) produced it.
 - The QA Assessment Report's Application Overview section (§9) must summarize which mode(s) were used across the run and why — e.g., "Browser automation unavailable this run — Discovery Mode: User-guided exploration for the Credential Routes Filter and Airport screens; Documentation for the not-yet-built Airlines dropdown and audit log."
-- **Discovery Mode is not itself what caps achievable Confidence and Status — the Evidence Category it produces is (§17–§18).** In practice, most Discovery Modes have a typical Evidence Category (§17 gives the mapping), so the two move together most of the time — but the agent must classify by what the evidence actually is, not by which tool produced it, since a mode can sometimes underperform its typical category (e.g., a browser session that only yields a secondhand Human Observation because the state changed too fast to capture directly).
+- **Discovery Mode is not itself what caps achievable Confidence and Status — the Evidence Category it produces is (§17–§18).** In practice, most Discovery Modes have a typical Evidence Category (§17 gives the mapping), so the two move together most of the time — but this skill must classify by what the evidence actually is, not by which tool produced it, since a mode can sometimes underperform its typical category (e.g., a browser session that only yields a secondhand Human Observation because the state changed too fast to capture directly).
 - Missing evidence items caused by the selected mode (e.g., no console log obtainable from a static screenshot) are recorded per the existing §5.10 rule — named as missing, with the reason, never silently omitted or fabricated.
 
 # 9. Outputs
@@ -458,16 +458,16 @@ Discovery — validating and enriching the Project Context against actual applic
 2. **Timeline** (§6) — the run-wide chronological action/event log.
 3. **Coverage Summary** (§7) — the run-wide coverage tracker.
 4. **QA Assessment Report** — the synthesized discovery report, structured per the Standard Output Contract (§19): Scope, Objectives, Evidence Sources, Modules Explored, Observed Behaviour, Confirmed Behaviour, Assumptions, Open Questions, Discovered Risks, Coverage, Gaps, Recommendations, and Inputs for Test Design, in that order. Findings are referenced by ID throughout rather than restated as free text.
-5. **Findings Summary** — a single index of every finalized Finding raised during the run: ID, Title, Category, Severity, Confidence Score, Status, Occurrence Count, Module, and a one-line description, so a reviewer can triage the full set without opening every evidence package. This is also the index the agent searches during Duplicate Detection (§5.9) before creating each new Finding.
+5. **Findings Summary** — a single index of every finalized Finding raised during the run: ID, Title, Category, Severity, Confidence Score, Status, Occurrence Count, Module, and a one-line description, so a reviewer can triage the full set without opening every evidence package. This is also the index this skill searches during Duplicate Detection (§5.9) before creating each new Finding.
 6. **Evidence Packages** — one dedicated, self-contained folder per Finding, per §5.12, containing that Finding's `metadata.md` (§5.14) and all evidence captured for it.
 
 # 10. Allowed Tools
 
-Which tools are actually used depends on the Discovery Mode selected (§8.1) for a given run or in-scope area — the agent is not limited to the first row below, and may use more than one row's tools within the same run:
+Which tools are actually used depends on the Discovery Mode selected (§8.1) for a given run or in-scope area — this skill is not limited to the first row below, and may use more than one row's tools within the same run:
 
 - **Browser automation** (preferred mode, §8.1 #1): tools such as Playwright MCP — navigate, click, type, snapshot/accessibility-tree capture, DOM snapshot capture, full-page and element-scoped screenshot capture, video/session recording, wait, console log capture, network request/response capture (including HAR-equivalent export and request/response header/body inspection), dialog handling, refresh/back/forward navigation, direct URL navigation, and — where the automation tool supports it — launching a fresh/clean browser context for clean-state recovery attempts (§5.7)
 - **Existing screenshots / recordings / documentation / static artifacts** (§8.1 #2, #3, #5, #7): Read (to ingest supplied images, video files, docs, exported HTML/logs/config); no live interaction is possible under these modes, per §8.3
-- **User-guided exploration** (§8.1 #4): conversational exchange with a human operator who drives the live application on the agent's behalf, plus Read for any screenshots/descriptions they supply back
+- **User-guided exploration** (§8.1 #4): conversational exchange with a human operator who drives the live application on this skill's behalf, plus Read for any screenshots/descriptions they supply back
 - **APIs** (§8.1 #6): read-only API-calling tools against the application's own authorized endpoints, where available
 - File tools (all modes): Read (Project Context, current Findings Summary for duplicate checks), Write (discovery snapshots, Timeline, Coverage Summary, QA Assessment Report, Findings Summary, and per-Finding evidence packages)
 - Read-only directory-listing shell commands for organizing output files
@@ -481,13 +481,13 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 3. Must not assert behavior not directly observed — anything inferred must be flagged as an assumption, open question, or labeled Root Cause Hypothesis (§5.13), never stated as fact.
 4. Must produce one discovery snapshot per distinct screen/state, not a single monolithic capture of the whole session.
 5. Must explicitly address every carried-forward assumption/risk from the Project Context in the QA Assessment Report's findings, even if the answer is "still unresolved — could not be tested safely in this environment."
-6. Must not write test cases or automation code — that is the Test Design Agent's responsibility.
+6. Must not write test cases or automation code — that is the Test Design skill's responsibility.
 7. Must NOT redefine, override, or "correct" business requirements. Any divergence between the Project Context and the observed application is recorded as a gap for stakeholders to resolve, never silently treated as the new truth.
 8. Must treat the Project Context as authoritative for what *should* happen and the running application as authoritative only for what *does* happen — the two are reported side by side, never merged into a single reinterpreted requirement.
 9. Must never classify unexpected behavior as a `Bug` by default. A `Bug` classification requires a clearly documented Project Context requirement that the observation contradicts, plus supporting evidence. Absent that, the correct classification is `Observation`, with status `Needs Human Review`.
 10. Must never assign `Confirmed` status when the Project Context does not clearly define the expected behavior, **or** when Confidence Score is below 90% (§5.5/§5.6) — both gates are independent and both must pass.
-11. Must never report a Finding without a complete Evidence Package (§5.12) matched to its Category's Smart Evidence Collection floor (§5.11). If, in a specific case, no evidence at all could be captured (a fully technical impossibility), the agent must not create the Finding — it instead records the missed observation as an Open Question in the QA Assessment Report, explaining why evidence could not be captured, rather than publishing an unsupported claim.
-12. Must never invent expected behavior. Where the Project Context is silent or ambiguous, "not defined in the Project Context" is the only permissible statement of expected behavior — the agent must not substitute its own assumption of what the application "should" do.
+11. Must never report a Finding without a complete Evidence Package (§5.12) matched to its Category's Smart Evidence Collection floor (§5.11). If, in a specific case, no evidence at all could be captured (a fully technical impossibility), this skill must not create the Finding — it instead records the missed observation as an Open Question in the QA Assessment Report, explaining why evidence could not be captured, rather than publishing an unsupported claim.
+12. Must never invent expected behavior. Where the Project Context is silent or ambiguous, "not defined in the Project Context" is the only permissible statement of expected behavior — this skill must not substitute its own assumption of what the application "should" do.
 13. **Must never finalize a Finding from a single, unvalidated symptom.** Every candidate must complete the full Investigation Workflow (§5.1) — validate, attempt recovery per §5.7 where applicable, investigate boundary conditions per §5.8 where applicable — before classification and artifact generation.
 14. **Must apply the Investigation & Recovery Engine (§5.7)** for any candidate whose failure falls into one of its listed categories, and must record the outcome in the Finding's `Investigation/Recovery Result` metadata field, even when the category is "no retry."
 15. **Must never stop investigating at the first symptom.** For Validation, Navigation, and Authorization-related candidates, the boundary conditions in §5.8 must be probed (to the extent technically feasible and authorized) before the Finding is finalized.
@@ -498,7 +498,7 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 20. **Must never present a Root Cause Hypothesis (§5.13) as fact.** It must be labeled as a hypothesis, carry its own confidence, and state its unknowns; it must never be used to inflate a Finding's own Confidence Score or justify a `Confirmed` status.
 21. **Must never stop exploring the in-scope surface because a Finding was created.** Exploration continues through the full in-scope surface regardless of how many Findings have already been raised, subject only to the Project Context's own scope and Environment Constraints.
 22. **Must never overwrite an existing evidence file.** A new occurrence's evidence, or a recovery attempt's evidence, is saved under a new, distinguishing filename alongside the original, never in place of it.
-23. **Must maintain full traceability at every step** — every Finding traces to its evidence, every evidence item traces to a Timeline entry, and every Timeline entry traces to a specific in-scope action or Event-Driven Capture trigger. A break anywhere in this chain is itself a defect in the agent's own output and must be corrected before the artifact is considered complete, not silently left as a gap.
+23. **Must maintain full traceability at every step** — every Finding traces to its evidence, every evidence item traces to a Timeline entry, and every Timeline entry traces to a specific in-scope action or Event-Driven Capture trigger. A break anywhere in this chain is itself a defect in this skill's own output and must be corrected before the artifact is considered complete, not silently left as a gap.
 24. **Must keep the Timeline (§6) and Coverage Summary (§7) current throughout the run**, not reconstructed retroactively at the end.
 25. The Project Context remains the single source of truth for expected behavior at all times; nothing in the Finding Framework (§5) overrides this section's rules 7–8.
 26. **Must select Discovery Modes in the priority order given in §8.1**, using the highest-priority mode actually available, and must fall back automatically to the next available mode rather than halting the run when a higher-priority mode is unavailable (§8.2).
@@ -507,7 +507,7 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 29. **Must never assign `Confirmed` status to a Finding whose Evidence Category (§17) is Documentation, Static Artifact, Human Observation, or Assumption** regardless of how clear the evidence looks, because the recovery/reproduction steps `Confirmed` requires (§5.5–§5.6) could not be attempted for that category of evidence (§18) — this is an application of the existing Confidence/Status gates, not an exception to them.
 30. **Must classify every Finding's Evidence Category** (§17) and record it in the Finding's metadata (§5.14), and must apply the Discovery Strategy matching the run's Run Scope Type (§16) rather than one default depth/breadth regardless of scope.
 31. **Must recognize and act on the named Stop Conditions** (§20), and must attempt the mid-run Recovery Strategy (§21) for a per-area block before recording that area as Blocked/Unreachable.
-32. **Must verify Handoff completeness** (§22) before treating a run's Discovery Artifacts as finished — every input the Test Design Agent's specification declares it needs must actually be present and unambiguous.
+32. **Must verify Handoff completeness** (§22) before treating a run's Discovery Artifacts as finished — every input the Test Design skill's specification declares it needs must actually be present and unambiguous.
 
 # 12. Expected Artifacts
 
@@ -532,38 +532,38 @@ Validate the approved Project Context against the live application and publish e
 
 ```text
 Input: platform_core_data/workspace/context/ProjectContext.md
-  (In Scope: Admin, PIM, Leave — as produced by the Project Context Agent)
+  (In Scope: Admin, PIM, Leave — as produced by the Project Context skill)
 ```
 
 Hypothetical result: `platform_core_data/workspace/discovery/*.md` snapshots covering only Admin-security-perimeter screens (login, forgot password, Administrator Access modal), PIM screens (Employee List, Add Employee, employee detail tabs), and Leave screens (Apply Leave, Leave List) — explicitly skipping Time, Recruitment, Performance, and Directory since those are Out of Scope for this run, alongside a `Timeline.md` logging every navigation/action/trigger in order and a `Coverage_Summary.md` showing, say, "9/9 in-scope screens visited = 100%."
 
-While exploring PIM's Add Employee screen, an Event-Driven Capture trigger (a console error) fires the instant the Employee Id field is edited — evidence is captured immediately (screenshot, console log, DOM snapshot) before the agent even finishes the current action, and the trigger is logged in the Timeline. The candidate enters the Investigation Workflow: validated by reproducing on a second attempt; the failure category is "Unexpected UI rendering," so the agent refreshes once per the Investigation & Recovery Engine — the console error does not recur after refresh, so the Recovery Result is "resolved on recovery," and Confidence is set to 65% (observed once before recovery, not reproduced after) — below the 90% floor, so Status is `Needs Human Review` regardless of how the requirement question would otherwise resolve. The agent still separately notes the Gap Analysis item that the Project Context described the Employee Id field as "system-suggested" while the observed application allows it to be freely overwritten — this is investigated as its own candidate: validated, checked against the Validation boundary conditions (empty, spaces, unicode, emoji, long input, special characters — noting which revealed additional inconsistencies), classified as `Requirement Gap` (Severity N/A), Confidence 95% on the observation itself, Business Risk "duplicate/malformed employee IDs could reach payroll/reporting downstream," Technical Risk "no visible server-side uniqueness constraint enforced through the UI," a Root Cause Hypothesis ("possibly a deliberate default-not-enforced design, consistent with a 'suggested' rather than 'assigned' ID — Unknowns: whether server-side uniqueness validation exists but simply isn't surfaced client-side"), and Status `Needs Human Review` (the Project Context doesn't state whether "system-suggested" is meant to be enforced). It then checks the Findings Summary, finds no equivalent entry, and creates `FINDING-004_EmployeeIdEditable` with `Occurrence Count: 1`. Exploration continues into Leave afterward — neither Finding was treated as a reason to stop.
+While exploring PIM's Add Employee screen, an Event-Driven Capture trigger (a console error) fires the instant the Employee Id field is edited — evidence is captured immediately (screenshot, console log, DOM snapshot) before this skill even finishes the current action, and the trigger is logged in the Timeline. The candidate enters the Investigation Workflow: validated by reproducing on a second attempt; the failure category is "Unexpected UI rendering," so this skill refreshes once per the Investigation & Recovery Engine — the console error does not recur after refresh, so the Recovery Result is "resolved on recovery," and Confidence is set to 65% (observed once before recovery, not reproduced after) — below the 90% floor, so Status is `Needs Human Review` regardless of how the requirement question would otherwise resolve. This skill still separately notes the Gap Analysis item that the Project Context described the Employee Id field as "system-suggested" while the observed application allows it to be freely overwritten — this is investigated as its own candidate: validated, checked against the Validation boundary conditions (empty, spaces, unicode, emoji, long input, special characters — noting which revealed additional inconsistencies), classified as `Requirement Gap` (Severity N/A), Confidence 95% on the observation itself, Business Risk "duplicate/malformed employee IDs could reach payroll/reporting downstream," Technical Risk "no visible server-side uniqueness constraint enforced through the UI," a Root Cause Hypothesis ("possibly a deliberate default-not-enforced design, consistent with a 'suggested' rather than 'assigned' ID — Unknowns: whether server-side uniqueness validation exists but simply isn't surfaced client-side"), and Status `Needs Human Review` (the Project Context doesn't state whether "system-suggested" is meant to be enforced). It then checks the Findings Summary, finds no equivalent entry, and creates `FINDING-004_EmployeeIdEditable` with `Occurrence Count: 1`. Exploration continues into Leave afterward — neither Finding was treated as a reason to stop.
 
-**A second, fallback-mode example (§8.1–§8.3):** for a run against NDC with no browser automation tool available, the agent selects Discovery Mode #4 (User-guided exploration) — the human operator navigates the live Credential Routes Filter screen themselves and reports back what they see. The agent records each screen's discovery snapshot with `Discovery Mode: User-guided exploration`, and for the Project Context's carried-forward Assumption #1 (Airport BlackList/WhiteList and Credential Routes filtering combine with AND logic), the human reports what the configured rules currently show. Because this mode cannot perform live retries or the Investigation & Recovery Engine, the resulting Finding is capped at `Needs Human Review` even though the observation itself is clear and directly reported — it cannot become `Confirmed` under this mode, per §8.3. Separately, the Project Context's Assumption #4 (an audit log, a supplier-verification function, and a route tag do not exist yet) has no live surface, no screenshot, and no documentation describing it in enough detail to observe — no Discovery Mode applies. The agent records this specific item as `Unreachable` in Coverage and raises a `Test Gap` noting no discovery mechanism was available for it, rather than guessing at what it might look like once built. The QA Assessment Report's Application Overview states plainly: "Browser automation unavailable this run — Discovery Mode: User-guided exploration for Credential Routes Filter and Airport screens; no mode available for the not-yet-built audit log/verification function/route tag."
+**A second, fallback-mode example (§8.1–§8.3):** for a run against NDC with no browser automation tool available, this skill selects Discovery Mode #4 (User-guided exploration) — the human operator navigates the live Credential Routes Filter screen themselves and reports back what they see. This skill records each screen's discovery snapshot with `Discovery Mode: User-guided exploration`, and for the Project Context's carried-forward Assumption #1 (Airport BlackList/WhiteList and Credential Routes filtering combine with AND logic), the human reports what the configured rules currently show. Because this mode cannot perform live retries or the Investigation & Recovery Engine, the resulting Finding is capped at `Needs Human Review` even though the observation itself is clear and directly reported — it cannot become `Confirmed` under this mode, per §8.3. Separately, the Project Context's Assumption #4 (an audit log, a supplier-verification function, and a route tag do not exist yet) has no live surface, no screenshot, and no documentation describing it in enough detail to observe — no Discovery Mode applies. This skill records this specific item as `Unreachable` in Coverage and raises a `Test Gap` noting no discovery mechanism was available for it, rather than guessing at what it might look like once built. The QA Assessment Report's Application Overview states plainly: "Browser automation unavailable this run — Discovery Mode: User-guided exploration for Credential Routes Filter and Airport screens; no mode available for the not-yet-built audit log/verification function/route tag."
 
 # 15. Architecture Principle
 
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this skill specifically: its single responsibility is validating and enriching — never authoring — requirements. Its outputs, the Discovery Artifacts (including the Timeline, Coverage Summary, Findings Summary, and Evidence Packages), become input to the Test Design Agent purely as secondary, validating material alongside the primary Project Context.
+For this skill specifically: its single responsibility is validating and enriching — never authoring — requirements. Its outputs, the Discovery Artifacts (including the Timeline, Coverage Summary, Findings Summary, and Evidence Packages), become input to the Test Design skill purely as secondary, validating material alongside the primary Project Context.
 
 # 16. Discovery Strategy by Run Scope
 
-Exploration depth and breadth are not one-size-fits-all. The agent selects its strategy based on the run's Run Scope Type (`workflows_and_pipelines/pipeline/run_scope.md` §3) and Run Type (`workflows_and_pipelines/pipeline/run_scope.md` §5), stated in the Project Context's Scope Summary, rather than applying a single default approach regardless of what this run actually covers:
+Exploration depth and breadth are not one-size-fits-all. This skill selects its strategy based on the run's Run Scope Type (`workflows_and_pipelines/pipeline/run_scope.md` §3) and Run Type (`workflows_and_pipelines/pipeline/run_scope.md` §5), stated in the Project Context's Scope Summary, rather than applying a single default approach regardless of what this run actually covers:
 
 | Run Scope Type / Run Type | Strategy |
 |---|---|
 | **Entire Project** | Broad, systematic sweep across every in-scope module. Coverage-driven: the primary success measure is Coverage % (§7) across the full declared surface, at standard Investigation Workflow depth. |
 | **Epic** | Explore every Feature/User Story grouped under the Epic as a connected set, with specific attention to the integration points and hand-offs *between* those grouped items — an Epic-level gap is often at a seam between two stories, not inside either one alone. |
 | **Feature** | Focused, end-to-end exploration of the one feature's complete workflow. Narrower surface than Entire Project or Epic allows, and calls for, deeper per-screen Investigation Mode (§5.8) boundary-probing than a broad sweep would budget for. |
-| **User Story** | Narrowest scope: targeted verification strictly of the story's acceptance criteria. The agent does not wander into adjacent screens beyond what's needed to reach or verify the story, and every carried-forward Assumption/Risk tied to that story gets a direct, explicit confirm/refute/unresolved treatment (§3) rather than being covered incidentally. |
+| **User Story** | Narrowest scope: targeted verification strictly of the story's acceptance criteria. This skill does not wander into adjacent screens beyond what's needed to reach or verify the story, and every carried-forward Assumption/Risk tied to that story gets a direct, explicit confirm/refute/unresolved treatment (§3) rather than being covered incidentally. |
 | **Bug** | Reproduction-first: prioritize reproducing the specific reported defect exactly as described, before any broader exploration. If reproduced, also check the immediate boundary/regression neighborhood (§5.8) for related paths that might share the same root cause. If it cannot be reproduced, that itself is the primary, explicitly reported outcome ("could not reproduce, {N} attempts, {conditions varied}") — never silently dropped or treated as "no Finding." |
-| **Requirement Document** | Size the strategy to what the supplied document actually states it covers — could be Feature-sized or Epic-sized in practice. The agent states, in the QA Assessment Report's Scope section (§19), which breadth it applied and why, so a reviewer can check the two match. |
-| **Custom Scope** | Strategy follows exactly what the run's Custom Scope description states. Where that description doesn't map onto UI screens at all (e.g., "verify the API responses for X" or "just check the Admin Settings config table"), the agent selects Discovery Modes accordingly (§8.1 #6 APIs, or the relevant Static Artifact) rather than forcing a browser-shaped exploration where the scope doesn't call for one. |
+| **Requirement Document** | Size the strategy to what the supplied document actually states it covers — could be Feature-sized or Epic-sized in practice. This skill states, in the QA Assessment Report's Scope section (§19), which breadth it applied and why, so a reviewer can check the two match. |
+| **Custom Scope** | Strategy follows exactly what the run's Custom Scope description states. Where that description doesn't map onto UI screens at all (e.g., "verify the API responses for X" or "just check the Admin Settings config table"), this skill selects Discovery Modes accordingly (§8.1 #6 APIs, or the relevant Static Artifact) rather than forcing a browser-shaped exploration where the scope doesn't call for one. |
 | **Full Regression** (Run Type) | Prioritizes systematically re-verifying already-documented workflows and the areas of prior Findings over hunting for novel ground — the goal is confirming known-good behavior still holds, not primarily discovering new territory. |
 | **Smoke** (Run Type) | Shallow, breadth-first pass over critical paths only. Reduced per-screen Investigation Mode depth (§5.8) — full boundary-condition probing is reserved for candidates that already look Critical/High severity, not applied uniformly, to keep the pass fast. |
 
-If the Project Context does not state a Run Scope Type/Run Type explicitly, the agent defaults to the **Entire Project** strategy against whatever modules the Project Context lists as In Scope, and notes in the QA Assessment Report that no explicit Run Scope Type was stated.
+If the Project Context does not state a Run Scope Type/Run Type explicitly, this skill defaults to the **Entire Project** strategy against whatever modules the Project Context lists as In Scope, and notes in the QA Assessment Report that no explicit Run Scope Type was stated.
 
 # 17. Evidence Categories
 
@@ -571,37 +571,37 @@ Every Finding's supporting evidence is classified into exactly one of the follow
 
 | Evidence Category | Meaning | Typically produced by (§8.1) |
 |---|---|---|
-| **Direct Observation** | The agent itself directly witnessed live application behavior through interactive tooling it controlled. | Browser automation; an API call the agent itself made live |
-| **System Response** | A response, log entry, or data the system itself generated, captured even if not driven interactively by the agent in this instant (e.g., a previously captured API response, a live-read log line). | Browser automation (network capture); APIs; Static artifacts (log files) |
+| **Direct Observation** | This skill itself directly witnessed live application behavior through interactive tooling it controlled. | Browser automation; an API call this skill itself made live |
+| **System Response** | A response, log entry, or data the system itself generated, captured even if not driven interactively by this skill in this instant (e.g., a previously captured API response, a live-read log line). | Browser automation (network capture); APIs; Static artifacts (log files) |
 | **Documentation** | Written material stating intended or described behavior — not itself an observation of runtime behavior. | Documentation |
-| **Human Observation** | A human operator observed and reported behavior to the agent; the agent did not witness it directly. | User-guided exploration |
+| **Human Observation** | A human operator observed and reported behavior to this skill; this skill did not witness it directly. | User-guided exploration |
 | **Static Artifact** | A fixed, previously captured record (image, video, export) of a past state — not a live observation, and not re-verifiable within this run. | Existing screenshots; Existing recordings; Static artifacts |
-| **Assumption** | No observation at all — a stated belief or inference, explicitly labeled as such, not backed by any of the above. | Any mode, when the agent must infer rather than observe |
+| **Assumption** | No observation at all — a stated belief or inference, explicitly labeled as such, not backed by any of the above. | Any mode, when this skill must infer rather than observe |
 
 ## 17.1 Corroboration
 
-A single Finding may be supported by more than one Evidence Category simultaneously — the agent is never limited to consuming exactly one evidence source per Finding. When multiple independent categories agree (e.g., a Human Observation corroborated by Documentation describing the same expected state, or a Static Artifact corroborated by a later Direct Observation), the agent records every contributing category and may raise Confidence accordingly (§18) — but corroboration among non-Direct-Observation categories alone still cannot clear the `Confirmed` bar, per §18, since none of them can satisfy the recovery-attempt requirement that bar carries.
+A single Finding may be supported by more than one Evidence Category simultaneously — this skill is never limited to consuming exactly one evidence source per Finding. When multiple independent categories agree (e.g., a Human Observation corroborated by Documentation describing the same expected state, or a Static Artifact corroborated by a later Direct Observation), this skill records every contributing category and may raise Confidence accordingly (§18) — but corroboration among non-Direct-Observation categories alone still cannot clear the `Confirmed` bar, per §18, since none of them can satisfy the recovery-attempt requirement that bar carries.
 
 # 18. Confidence Model — Governed by Evidence Quality, Not Discovery Mode
 
-The Confidence Engine (§5.5) and Status assignment (§5.6) are unchanged in their mechanics — this section states explicitly what actually bounds them, so the agent never overstates certainty because a particular tool happened to be available.
+The Confidence Engine (§5.5) and Status assignment (§5.6) are unchanged in their mechanics — this section states explicitly what actually bounds them, so this skill never overstates certainty because a particular tool happened to be available.
 
 | Evidence Category (§17) | Confidence ceiling behavior |
 |---|---|
 | **Direct Observation** | Full 0–100% range available; the only category that, combined with exhausted recovery attempts (§5.7) and a clearly documented Project Context requirement, can reach `Confirmed`. |
 | **System Response** | Full range available *if* it can be independently re-queried/reproduced within this run; if it is a one-time historical capture with no way to re-verify, it is treated as a Static Artifact for capping purposes. |
-| **Human Observation** | Capped below `Confirmed` regardless of how clearly the human described it — a secondhand report carries irreducible interpretation risk the agent cannot itself verify. Ceiling: `Likely` band (§5.5) unless corroborated by a second, independent category. |
+| **Human Observation** | Capped below `Confirmed` regardless of how clearly the human described it — a secondhand report carries irreducible interpretation risk this skill cannot itself verify. Ceiling: `Likely` band (§5.5) unless corroborated by a second, independent category. |
 | **Documentation** | Describes intended behavior, not observed behavior — alone, it can validate or contradict the Project Context's own claims, but it must never be the sole basis for a Finding asserting what the *application* actually does. Status defaults to `Needs Human Review`; never `Confirmed`. |
 | **Static Artifact** | Clear but not reproducible within this run. Ceiling: `Likely` band (§5.5) unless corroborated. |
 | **Assumption** | Always low confidence, always `Needs Human Review`, explicitly labeled — never `Confirmed`, never averaged upward by corroboration (an Assumption corroborating another Assumption is still an Assumption). |
 
-**The agent must never overstate certainty.** Where evidence quality is mixed or ambiguous, the agent reports the weaker/more honest reading, not the more convenient one — consistent with the existing Governing Rule in §5.6 that any doubt is reported, never silently resolved upward.
+**This skill must never overstate certainty.** Where evidence quality is mixed or ambiguous, this skill reports the weaker/more honest reading, not the more convenient one — consistent with the existing Governing Rule in §5.6 that any doubt is reported, never silently resolved upward.
 
 This model supersedes any implication in §8.3 that Discovery Mode itself sets the cap — Discovery Mode determines what Evidence Category is achievable (§17's mapping column), and Evidence Category is what actually governs Confidence/Status.
 
 # 19. Standard Output Contract
 
-Every run's Discovery output must be structured and predictable — the Test Design Agent (and any future consumer) must never have to parse free-form prose to extract what it needs. The QA Assessment Report (§9, §12) must contain exactly these sections, in this order, each with the stated minimum content:
+Every run's Discovery output must be structured and predictable — the Test Design skill (and any future consumer) must never have to parse free-form prose to extract what it needs. The QA Assessment Report (§9, §12) must contain exactly these sections, in this order, each with the stated minimum content:
 
 | # | Section | Must contain, at minimum |
 |---|---|---|
@@ -625,7 +625,7 @@ This section list is the authoritative structure for the QA Assessment Report go
 
 # 20. Stop Conditions
 
-The agent must recognize the following named conditions and take the specified action. Recognizing a Stop Condition is never itself a reason to abandon the run — see §21 for the required recovery step before any area is finalized as blocked.
+This skill must recognize the following named conditions and take the specified action. Recognizing a Stop Condition is never itself a reason to abandon the run — see §21 for the required recovery step before any area is finalized as blocked.
 
 | Condition | Scope | Required Action |
 |---|---|---|
@@ -636,35 +636,35 @@ The agent must recognize the following named conditions and take the specified a
 | **Navigation impossible** (a link/action that should lead somewhere doesn't) | Local — this specific path | Apply the existing Investigation & Recovery Engine's Navigation failure category (§5.7: retry up to 3 times) before treating it as validated; only then does it become a Finding, not a run-level stop. |
 | **Insufficient evidence** (no Discovery Mode can produce evidence for a candidate, per §8.2, or no evidence at all could be captured, per §5.11 Execution Rule 11) | Local — this specific candidate | Do not create the Finding. Record it as an Open Question (§19 §8) or, if the entire area is affected, Coverage `Unreachable` + `Test Gap`, explaining why evidence could not be captured. |
 
-Global conditions (Authentication failure, Environment unavailable) are the only cases where a large fraction of the run may end up `Unreachable` — even then, the agent still produces the full Standard Output Contract (§19), stating plainly what could and couldn't be assessed, rather than terminating without output.
+Global conditions (Authentication failure, Environment unavailable) are the only cases where a large fraction of the run may end up `Unreachable` — even then, this skill still produces the full Standard Output Contract (§19), stating plainly what could and couldn't be assessed, rather than terminating without output.
 
 # 21. Recovery Strategy — Mid-Run Fallback
 
 §8.2 already governs which Discovery Mode is selected at the *start* of a run. This section governs what happens when a Stop Condition (§20) blocks a *specific in-scope area* partway through a run that is otherwise using a higher-priority mode successfully.
 
-Before recording any local Stop Condition as final (Blocked/Unreachable), the agent must:
+Before recording any local Stop Condition as final (Blocked/Unreachable), this skill must:
 
 1. **Check whether a lower-priority Discovery Mode (§8.1) could still cover this specific area**, even though a higher-priority mode is working elsewhere in the same run (e.g., the browser-automated run hits an OTP step it cannot complete on one screen — ask the human operator to walk through just that screen, falling back to User-guided exploration for that area only).
 2. **If a fallback mode can cover it, use it for that area and disclose the substitution** (§8.3) — this is a normal, permitted mixed-mode run (§8.2), not an exception.
 3. **Only if no mode at all can cover the area** does it become Blocked/Unreachable + the corresponding Finding/Test Gap per §20.
 4. **State the recommendation explicitly** in the Finding or Coverage entry for that area, e.g.: *"Browser automation blocked here by [reason]; fell back to User-guided exploration for this screen only."* A reviewer must never have to infer that a substitution happened.
 
-This is what makes the agent's failure handling a **recommendation-and-fallback** behavior rather than a **stop-and-report** behavior — failing to reach an area through the primary mode is treated as a local routing problem to solve with the next-best available mode, not an immediate dead end.
+This is what makes this skill's failure handling a **recommendation-and-fallback** behavior rather than a **stop-and-report** behavior — failing to reach an area through the primary mode is treated as a local routing problem to solve with the next-best available mode, not an immediate dead end.
 
-# 22. Handoff Contract with the Test Design Agent
+# 22. Handoff Contract with the Test Design skill
 
-The Explorer Agent's outputs are consumed by the Test Design Agent as declared inputs in `.claude/skills/test-design-agent/SKILL.md` §4. Before concluding a run, the agent verifies each of the following is actually present and unambiguous — not merely assumed:
+The Explorer skill's outputs are consumed by the Test Design skill as declared inputs in `.claude/skills/test-design-skill/SKILL.md` §4. Before concluding a run, this skill verifies each of the following is actually present and unambiguous — not merely assumed:
 
-| Test Design Agent needs (`.claude/skills/test-design-agent/SKILL.md` §4/§5) | Satisfied by (this skill's output) |
+| Test Design skill needs (`.claude/skills/test-design-skill/SKILL.md` §4/§5) | Satisfied by (this skill's output) |
 |---|---|
 | Discovery Report (`discovery/*.md`, `Timeline.md`, `Coverage_Summary.md`) | §9 Outputs #1–#3, structured per this skill's own conventions |
 | QA Assessment Report, including Gap Analysis and Coverage | §19 Standard Output Contract, sections 11 (Gaps) and 10 (Coverage) |
-| Findings Summary + every Finding's `metadata.md` | §9 Outputs #5, §5.14 schema — every Finding must have a populated **Expected Behavior** field citing the specific Project Context section (§5.14), since that citation is what lets Test Design populate its own mandatory Requirement Reference and Discovery Reference (`.claude/skills/test-design-agent/SKILL.md` §5.1) without re-deriving it |
+| Findings Summary + every Finding's `metadata.md` | §9 Outputs #5, §5.14 schema — every Finding must have a populated **Expected Behavior** field citing the specific Project Context section (§5.14), since that citation is what lets Test Design populate its own mandatory Requirement Reference and Discovery Reference (`.claude/skills/test-design-skill/SKILL.md` §5.1) without re-deriving it |
 | Evidence Packages, cited by reference | §9 Outputs #6, §5.12 |
-| A basis for Test Design's Finding Disposition decision (Regression / Exploratory / Documented exception, `.claude/skills/test-design-agent/SKILL.md` §5.3) | Every Finding's Status (§5.6) and Evidence Category (§17) — Status `Confirmed` maps toward Regression test, `Needs Human Review` toward Exploratory test, `Rejected`/`Duplicate` toward Documented exception; this mapping is already unambiguous from fields this skill already produces, and requires no new field |
+| A basis for Test Design's Finding Disposition decision (Regression / Exploratory / Documented exception, `.claude/skills/test-design-skill/SKILL.md` §5.3) | Every Finding's Status (§5.6) and Evidence Category (§17) — Status `Confirmed` maps toward Regression test, `Needs Human Review` toward Exploratory test, `Rejected`/`Duplicate` toward Documented exception; this mapping is already unambiguous from fields this skill already produces, and requires no new field |
 | Regression Test Candidates for Test Design to consider | §19 section 12 (Recommendations) |
 
-**A run is not complete until every row above is verifiably satisfied.** If any Finding is missing an Expected Behavior citation, if the QA Assessment Report is missing a required §19 section, or if a Finding's Status/Evidence Category combination would leave Test Design's disposition decision ambiguous, the agent must correct it before the run concludes — this is itself a defect in the agent's own output, per the existing traceability rule in Execution Rule 23, not an acceptable handoff gap.
+**A run is not complete until every row above is verifiably satisfied.** If any Finding is missing an Expected Behavior citation, if the QA Assessment Report is missing a required §19 section, or if a Finding's Status/Evidence Category combination would leave Test Design's disposition decision ambiguous, this skill must correct it before the run concludes — this is itself a defect in this skill's own output, per the existing traceability rule in Execution Rule 23, not an acceptable handoff gap.
 
 # 23. Future Scalability
 
@@ -678,6 +678,6 @@ The abstractions introduced in this revision — Discovery Mode (§8.1) as *how*
 | **Microservices** | Each service is explored via whichever mode fits it (APIs for the service's own contract, Static Artifacts for exported OpenAPI/Swagger specs, Documentation for architecture docs) — Modules Explored (§19 #4) already generalizes to "services explored." |
 | **Background Jobs / Batch Processes** | Discovery Mode via System Response evidence (§17) — job logs, output artifacts, and completion records read as Static Artifacts or System Response, with no live UI needed. |
 | **Message Queues** | A read-only queue-inspection tool is a new Discovery Mode producing System Response evidence — same evaluation logic as any other System Response. |
-| **Cloud Resources** | A read-only cloud console/API is functionally identical to the existing APIs Discovery Mode — Static configuration reads are Static Artifacts, live resource state reads are System Response or Direct Observation depending on whether the agent queried it live. |
+| **Cloud Resources** | A read-only cloud console/API is functionally identical to the existing APIs Discovery Mode — Static configuration reads are Static Artifacts, live resource state reads are System Response or Direct Observation depending on whether this skill queried it live. |
 
 **What would need to change, explicitly, and what would not:** adding any of the above requires (a) naming the new Discovery Mode and its typical Evidence Category mapping in §8.1/§17, and (b) stating its priority rank for that Project Context's system shape. It requires **no change** to the Finding Framework (§5), the Confidence Model (§18), the Standard Output Contract (§19), the Stop Conditions (§20), the Recovery Strategy (§21), or the Handoff Contract (§22) — those are already defined in terms of evidence and evaluation, not in terms of "a browser." This is the concrete basis for treating the current architecture as extensible without redesign, not an unverified claim.

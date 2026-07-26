@@ -208,13 +208,13 @@ agentic-ai-testing-platform/
 
 ├── .claude/
 │   └── skills/
-│       ├── project-context-agent/SKILL.md
-│       ├── explorer-agent/SKILL.md
-│       ├── test-design-agent/SKILL.md
-│       ├── manual-execution-agent/SKILL.md
-│       ├── automation-agent/SKILL.md
-│       ├── automation-execution-agent/SKILL.md
-│       └── reporting-agent/SKILL.md
+│       ├── project-context-skill/SKILL.md
+│       ├── explorer-skill/SKILL.md
+│       ├── test-design-skill/SKILL.md
+│       ├── manual-execution-skill/SKILL.md
+│       ├── automation-skill/SKILL.md
+│       ├── automation-execution-skill/SKILL.md
+│       └── reporting-skill/SKILL.md
 │
 ├── workflows_and_pipelines/
 │   ├── pipeline/

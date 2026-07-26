@@ -1,5 +1,5 @@
 ---
-name: reporting-agent
+name: reporting-skill
 description: Stage 7 of 7 (terminal stage) in the Agentic AI Testing Platform pipeline. Synthesizes raw Execution Results, the Traceability Matrix, and the Project Context into a stakeholder-facing Final QA Report — Requirement Coverage, Automation Coverage, defects, and resolved assumptions/risks. Use when producing the final QA report after an execution run.
 inputs:
   - name: execution_results
@@ -24,7 +24,7 @@ outputs:
     location: "platform_core_data/workspace/reporting/Final_QA_Report.md"
     description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations. NDC uses a `workspace/reporting/` variant of this path — see `platform_core_data/onboarding.md`."
 dependencies:
-  - automation-execution-agent, test-design-agent, project-context-agent (upstream skills)
+  - automation-execution-skill, test-design-skill, project-context-skill (upstream skills)
   - "platform_core/knowledge/reporting/ (Platform Knowledge patterns, if any promoted)"
 ---
 
@@ -34,11 +34,11 @@ dependencies:
 
 # 1. Skill Name
 
-**Reporting Agent**
+**Reporting skill**
 
 # 2. Purpose
 
-The Reporting Agent is the final stage of the pipeline. It synthesizes the raw Execution Results into a clear, accurate, stakeholder-facing QA report — computing requirement and automation coverage against the Manual Test Suites' Traceability Matrix, resolving the status of every carried-forward assumption/risk from the Project Context, and surfacing defects and recommendations. It reports what happened; it does not re-run tests, re-interpret code, or diagnose root cause.
+The Reporting skill is the final stage of the pipeline. It synthesizes the raw Execution Results into a clear, accurate, stakeholder-facing QA report — computing requirement and automation coverage against the Manual Test Suites' Traceability Matrix, resolving the status of every carried-forward assumption/risk from the Project Context, and surfacing defects and recommendations. It reports what happened; it does not re-run tests, re-interpret code, or diagnose root cause.
 
 # 3. Responsibilities
 
@@ -124,4 +124,4 @@ Hypothetical result: `platform_core_data/workspace/reporting/Final_QA_Report.md`
 
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this skill specifically: its single responsibility is synthesis and reporting — never re-testing or code diagnosis. It is the terminal node of the pipeline; its output is consumed by human stakeholders, not by another agent.
+For this skill specifically: its single responsibility is synthesis and reporting — never re-testing or code diagnosis. It is the terminal node of the pipeline; its output is consumed by human stakeholders, not by another skill.

@@ -19,7 +19,7 @@ This workflow validates that the platform is **operational** — that the Run Ma
 
 Only the Login module is included. No other module may be explored, tested, or referenced as in-scope by any stage of this workflow.
 
-This scope constraint is supplied to Stage 1 via the Run Configuration input (see `workflows_and_pipelines/pipeline/pipeline.md` §4, Stage 1) — the Project Context Agent's own specification is unmodified; this workflow simply instructs it, through its existing Run Configuration input, to declare Login as the only "In Scope" module and every other module "Out of Scope." Every downstream stage already respects that scope boundary as documented in its own specification (e.g., `.claude/skills/explorer-agent/SKILL.md` §9 Execution Rule 1: "Must not explore any module the Project Context marks 'Out of Scope.'").
+This scope constraint is supplied to Stage 1 via the Run Configuration input (see `workflows_and_pipelines/pipeline/pipeline.md` §4, Stage 1) — the Project Context Agent's own specification is unmodified; this workflow simply instructs it, through its existing Run Configuration input, to declare Login as the only "In Scope" module and every other module "Out of Scope." Every downstream stage already respects that scope boundary as documented in its own specification (e.g., `.claude/skills/explorer-skill/SKILL.md` §9 Execution Rule 1: "Must not explore any module the Project Context marks 'Out of Scope.'").
 
 # 4. Execution Flow
 
@@ -68,7 +68,7 @@ The Run Manager takes no further action of its own until a stage signals complet
 
 ## Step 2 — Project Context Agent *(Pipeline Stage 1)*
 
-**Spec:** `.claude/skills/project-context-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/project-context-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -82,7 +82,7 @@ The workflow does not proceed to Step 3 until this checkpoint is explicitly appr
 
 ## Step 3 — Explorer Agent *(Pipeline Stage 2)*
 
-**Spec:** `.claude/skills/explorer-agent/SKILL.md` — unmodified. See §5 below for the First-Run-specific objectives this workflow asks the (unchanged) Explorer Agent to apply.
+**Spec:** `.claude/skills/explorer-skill/SKILL.md` — unmodified. See §5 below for the First-Run-specific objectives this workflow asks the (unchanged) Explorer Agent to apply.
 
 | | |
 |---|---|
@@ -92,13 +92,13 @@ The workflow does not proceed to Step 3 until this checkpoint is explicitly appr
 | **Contract keys produced** | `qa_assessment_report`, `findings_summary`, `evidence_packages`, `discovery_snapshots`, `timeline`, `coverage_summary` |
 | **Checkpoint** | **Human Review Required** (QA Lead, per `workflows_and_pipelines/pipeline/pipeline.md` §5.1) |
 
-Note: `.claude/skills/explorer-agent/SKILL.md` also always produces per-screen discovery snapshots (`platform_core_data/workspace/discovery/*.md`) as a standing, non-optional part of its output (its own §9 Execution Rule 4) — that continues to happen as part of this step even though this workflow's artifact list in §6 groups them together with the Discovery Report rather than naming them separately.
+Note: `.claude/skills/explorer-skill/SKILL.md` also always produces per-screen discovery snapshots (`platform_core_data/workspace/discovery/*.md`) as a standing, non-optional part of its output (its own §9 Execution Rule 4) — that continues to happen as part of this step even though this workflow's artifact list in §6 groups them together with the Discovery Report rather than naming them separately.
 
 The workflow does not proceed to Step 4 until this checkpoint is explicitly approved.
 
 ## Step 4 — Test Design Agent *(Pipeline Stage 3)*
 
-**Spec:** `.claude/skills/test-design-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/test-design-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -121,16 +121,16 @@ Excluding these stages from *this workflow* does not remove them from the platfo
 
 # 5. Explorer Objectives (First-Run-Specific Direction)
 
-These are instructions this workflow gives to the unmodified Explorer Agent for its Step 3 invocation — they invoke existing Explorer Agent capabilities (`.claude/skills/explorer-agent/SKILL.md`) with a narrowed scope, not new behavior:
+These are instructions this workflow gives to the unmodified Explorer Agent for its Step 3 invocation — they invoke existing Explorer Agent capabilities (`.claude/skills/explorer-skill/SKILL.md`) with a narrowed scope, not new behavior:
 
 1. **Explore only the Login module.** No other module may be visited, per §3.
-2. **Capture screenshots whenever applicable**, per the Explorer Agent's existing Evidence Collection and Smart Evidence Collection rules (`.claude/skills/explorer-agent/SKILL.md` §5.9–§5.10).
+2. **Capture screenshots whenever applicable**, per the Explorer Agent's existing Evidence Collection and Smart Evidence Collection rules (`.claude/skills/explorer-skill/SKILL.md` §5.9–§5.10).
 3. **Capture video whenever supported**, per the same evidence rules.
 4. **Collect console logs whenever supported**, per the same evidence rules.
 5. **Collect network logs whenever supported**, per the same evidence rules.
-6. **Apply the Retry Policy** exactly as specified in `.claude/skills/explorer-agent/SKILL.md` §5.6 — no first-run-specific override of retry counts or categories.
-7. **Apply Investigation Mode** exactly as specified in `.claude/skills/explorer-agent/SKILL.md` §5.7 — boundary conditions for any Validation, Navigation, or Authorization candidate encountered within the Login module (e.g., empty/invalid credentials, session expiration on the login screen, direct URL access to a post-login route while unauthenticated).
-8. **Generate Findings only when supported by evidence.** Per `.claude/skills/explorer-agent/SKILL.md` §9 Execution Rule 11 and its Core Philosophy (§4): no Finding is published without a complete evidence package; an observation that cannot be backed by evidence is logged as an Open Question in the Discovery Report instead.
+6. **Apply the Retry Policy** exactly as specified in `.claude/skills/explorer-skill/SKILL.md` §5.6 — no first-run-specific override of retry counts or categories.
+7. **Apply Investigation Mode** exactly as specified in `.claude/skills/explorer-skill/SKILL.md` §5.7 — boundary conditions for any Validation, Navigation, or Authorization candidate encountered within the Login module (e.g., empty/invalid credentials, session expiration on the login screen, direct URL access to a post-login route while unauthenticated).
+8. **Generate Findings only when supported by evidence.** Per `.claude/skills/explorer-skill/SKILL.md` §9 Execution Rule 11 and its Core Philosophy (§4): no Finding is published without a complete evidence package; an observation that cannot be backed by evidence is logged as an Open Question in the Discovery Report instead.
 
 This workflow does not loosen, tighten, or otherwise alter any Explorer Agent rule — it only narrows *where* the agent looks (Login only) while leaving *how* it investigates and reports entirely governed by the Explorer Agent's own specification.
 

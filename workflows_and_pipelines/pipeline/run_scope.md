@@ -1,5 +1,5 @@
 > **Position:** Outside the 7-stage Agent pipeline defined in [`workflows_and_pipelines/pipeline/pipeline.md`](pipeline.md) and [`.claude/skills/`](../../.claude/skills/). Run Scope is a **configuration concept, not an Agent and not a pipeline stage** — it does not add a stage to `workflows_and_pipelines/pipeline/pipeline.md`'s Pipeline Overview, and this document does not alter that stage order, that count (still seven), or any agent's Inputs/Allowed-Tools/Execution-Rules tables.
-> **Relationship to existing concepts:** `.claude/skills/project-context-agent/SKILL.md` §4 already lists "Run configuration" as a required input to Stage 1, described there as "modules in scope for this run, target environment URL, credentials/roles available, environment safety constraints." Run Scope is the formal name and structure for the *scope* portion of that existing input — it does not add a new input the Project Context Agent didn't already declare, and it does not change that agent's Purpose, Responsibilities, Execution Rules, or Expected Artifacts. This document also does not alter `workflows_and_pipelines/pipeline/pipeline.md` §8's traceability chain; §6 below presents an extended, more granular view of the same Stage 1→3 handoff that document already describes, for use alongside it.
+> **Relationship to existing concepts:** `.claude/skills/project-context-skill/SKILL.md` §4 already lists "Run configuration" as a required input to Stage 1, described there as "modules in scope for this run, target environment URL, credentials/roles available, environment safety constraints." Run Scope is the formal name and structure for the *scope* portion of that existing input — it does not add a new input the Project Context Agent didn't already declare, and it does not change that agent's Purpose, Responsibilities, Execution Rules, or Expected Artifacts. This document also does not alter `workflows_and_pipelines/pipeline/pipeline.md` §8's traceability chain; §6 below presents an extended, more granular view of the same Stage 1→3 handoff that document already describes, for use alongside it.
 > **Scope of this revision:** This document defines the Run Scope concept only. No existing agent file, `workflows_and_pipelines/pipeline/pipeline.md`, or any project artifact has been modified or generated as part of authoring it.
 
 # 1. Concept Name
@@ -80,7 +80,7 @@ Example: a **Smoke** run type can still be paired with an **Entire Project** Run
 
 Per [`platform_core_data/README.md`](../../platform_core_data/README.md), `platform_core_data/` is the **canonical, standing knowledge base** for a project — `onboarding.md`, `architecture.md`, `glossary.md`, `run_configuration.md`, and `resources/`. This does not change: Project Knowledge remains the durable source of what the project *is*, independent of any single run.
 
-What changes conceptually is how the **Project Context** — the artifact `.claude/skills/project-context-agent/SKILL.md` produces at `platform_core_data/workspace/context/ProjectContext.md` — is described:
+What changes conceptually is how the **Project Context** — the artifact `.claude/skills/project-context-skill/SKILL.md` produces at `platform_core_data/workspace/context/ProjectContext.md` — is described:
 
 ```
 Project Context  =  Project Knowledge  +  Run Scope
@@ -88,7 +88,7 @@ Project Context  =  Project Knowledge  +  Run Scope
 
 - **Project Knowledge** (`platform_core_data/`) supplies the durable facts: what the application is, its architecture, its glossary, its available credentials/environments, and — via `run_configuration.md` — which Run Scope Sources are set up for this project at all.
 - **Run Scope** (this document) supplies the narrowing: *which* Epic/Feature/Story/Bug/Requirement Document/Custom Scope, or the Entire Project, this particular run is validating.
-- **Project Context** (`platform_core_data/workspace/context/`) is what the Project Context Agent produces by applying a specific Run Scope to the standing Project Knowledge for one run, exactly as it already does today — its existing "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `.claude/skills/project-context-agent/SKILL.md` §8) are precisely where a resolved Run Scope materializes. No change to that document structure is introduced by this concept.
+- **Project Context** (`platform_core_data/workspace/context/`) is what the Project Context Agent produces by applying a specific Run Scope to the standing Project Knowledge for one run, exactly as it already does today — its existing "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `.claude/skills/project-context-skill/SKILL.md` §8) are precisely where a resolved Run Scope materializes. No change to that document structure is introduced by this concept.
 
 This reframing does not change the Project Context Agent's Inputs table (§4 of its spec already names "Run configuration" as required) — it clarifies that the scope portion of that input is now a structured Run Scope (Type + Source) rather than free text, and that Project Knowledge is the other half of what the agent reconciles.
 
@@ -104,7 +104,7 @@ This reframing does not change the Project Context Agent's Inputs table (§4 of 
 
 # 8. Extended Traceability Model
 
-`workflows_and_pipelines/pipeline/pipeline.md` §8 already defines the traceability chain from PRD through to the Final QA Report. With Run Scope named explicitly, and Discovery's Findings shown as their own link (already an Explorer Agent output — see `.claude/skills/explorer-agent/SKILL.md` §5.11 and `workflows_and_pipelines/pipeline/run_manager.md` §6's `findings/` workspace folder, just not previously drawn as a distinct node in the pipeline-level diagram), the fuller chain reads:
+`workflows_and_pipelines/pipeline/pipeline.md` §8 already defines the traceability chain from PRD through to the Final QA Report. With Run Scope named explicitly, and Discovery's Findings shown as their own link (already an Explorer Agent output — see `.claude/skills/explorer-skill/SKILL.md` §5.11 and `workflows_and_pipelines/pipeline/run_manager.md` §6's `findings/` workspace folder, just not previously drawn as a distinct node in the pipeline-level diagram), the fuller chain reads:
 
 ```
 Project (Project Knowledge)

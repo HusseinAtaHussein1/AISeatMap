@@ -1,10 +1,10 @@
 # NDC — SHAFT Automation Package Structure
 
-> **Reframed 2026-07-12 (`.claude/skills/automation-agent/SKILL.md` v5):** This document specifies the structure for NDC's **SHAFT** Automation Package specifically — it is **not** a project-wide mandate binding every NDC automation effort to SHAFT. Per the platform's multi-package model, NDC may hold several independent Automation Packages (e.g. `tests_SHAFT/`, `tests_Playwright/`), each tracked in `platform_core_data/workspace/automation/AutomationPackages.md`. Which package (and therefore which framework) a given Stage 5 run targets is decided by the Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31) at the start of that run — this document is authoritative only for whichever run's answer is "SHAFT."
+> **Reframed 2026-07-12 (`.claude/skills/automation-skill/SKILL.md` v5):** This document specifies the structure for NDC's **SHAFT** Automation Package specifically — it is **not** a project-wide mandate binding every NDC automation effort to SHAFT. Per the platform's multi-package model, NDC may hold several independent Automation Packages (e.g. `tests_SHAFT/`, `tests_Playwright/`), each tracked in `platform_core_data/workspace/automation/AutomationPackages.md`. Which package (and therefore which framework) a given Stage 5 run targets is decided by the Framework Decision Gate (`.claude/skills/automation-skill/SKILL.md` §31) at the start of that run — this document is authoritative only for whichever run's answer is "SHAFT."
 
 This is the durable, versioned specification for the SHAFT package's own internal structure, referenced whenever a Stage 5 run's Framework Decision Gate answer is SHAFT.
 
-> Per `.claude/skills/automation-agent/SKILL.md` §7 Rule 1 ("If the Project Context explicitly specifies a framework, the agent must use it — no selection process overrides an explicit instruction... still requires running the Framework Decision Gate §31 first") and §6 ("SHAFT Engine [is] a first-class option"): this file is the structural specification for the SHAFT package whenever a run's Framework Decision Gate selects it. It must be read before generating any SHAFT-package code, and compared against the approved Test Design first — implementation gaps identified by that comparison are resolved before generation starts (see "Gap Resolution Rule" below).
+> Per `.claude/skills/automation-skill/SKILL.md` §7 Rule 1 ("If the Project Context explicitly specifies a framework, the agent must use it — no selection process overrides an explicit instruction... still requires running the Framework Decision Gate §31 first") and §6 ("SHAFT Engine [is] a first-class option"): this file is the structural specification for the SHAFT package whenever a run's Framework Decision Gate selects it. It must be read before generating any SHAFT-package code, and compared against the approved Test Design first — implementation gaps identified by that comparison are resolved before generation starts (see "Gap Resolution Rule" below).
 
 **Source:** SHAFT Automation Framework Structure Rules, supplied 2026-07-11.
 **Status:** Binding on the SHAFT package specifically, whenever a run selects it via the Framework Decision Gate — do not redesign or replace this package's internal architecture. Only extend it, and only when a real, discovered-during-implementation limitation requires it (see "Gap Resolution Rule"). Does not constrain any other package (e.g. `tests_Playwright/`) this project may also hold.
@@ -65,7 +65,7 @@ This is the durable, versioned specification for the SHAFT package's own interna
 
 ---
 
-## How this maps onto `.claude/skills/automation-agent/SKILL.md`
+## How this maps onto `.claude/skills/automation-skill/SKILL.md`
 
 | Automation Agent concept | SHAFT mapping |
 |---|---|
@@ -83,9 +83,9 @@ If, during Stage 5 implementation, the approved Test Design requires something t
 
 1. **Do not redesign or replace the framework.**
 2. Document the specific gap explicitly (what's needed, why the current structure doesn't cover it).
-3. Recommend the **smallest possible extension** (e.g., "add a new `Dtable_` prefix for data-table components" rather than a new locators pattern) — per `.claude/skills/automation-agent/SKILL.md` §26–§27's Stop Condition / Recovery Strategy model (mark the specific gap, continue generating everything else, never a bare halt).
+3. Recommend the **smallest possible extension** (e.g., "add a new `Dtable_` prefix for data-table components" rather than a new locators pattern) — per `.claude/skills/automation-skill/SKILL.md` §26–§27's Stop Condition / Recovery Strategy model (mark the specific gap, continue generating everything else, never a bare halt).
 4. Surface the recommended extension in the Automation Plan's "Assumptions"/"Risks" fields and the Automation Summary's "Known Limitations" section — never apply the extension silently.
 
 ## Required before Stage 5 code generation begins
 
-Per the user's explicit instruction (2026-07-11): before generating any automation code, compare the approved Test Design (Stage 3 output) against this framework and identify implementation gaps first. Resolve them (per the Gap Resolution Rule above), then generate the automation package. This precedes and supplements — but does not replace — the Automation Plan (`.claude/skills/automation-agent/SKILL.md` §5), which must still be written in full before any code generation, and must record this framework as the justified Target Framework (§5 "Target Framework") rather than running framework selection criteria (§7) from scratch.
+Per the user's explicit instruction (2026-07-11): before generating any automation code, compare the approved Test Design (Stage 3 output) against this framework and identify implementation gaps first. Resolve them (per the Gap Resolution Rule above), then generate the automation package. This precedes and supplements — but does not replace — the Automation Plan (`.claude/skills/automation-skill/SKILL.md` §5), which must still be written in full before any code generation, and must record this framework as the justified Target Framework (§5 "Target Framework") rather than running framework selection criteria (§7) from scratch.

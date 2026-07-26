@@ -16,7 +16,7 @@ This is the durable, versioned home for the "run configuration" that `agents/pro
 
 | Field | Value |
 |---|---|
-| Execution Mode | **Headed** — set 2026-07-12 for RUN-20260712-001's Stage 6 (Automation Execution Agent, renamed from Execution Agent), per `.claude/skills/automation-execution-agent/SKILL.md` §5.1 (no default assumed; asked explicitly since this field was previously undefined). Applies to future runs unless a run's own Project Context overrides it. |
+| Execution Mode | **Headed** — set 2026-07-12 for RUN-20260712-001's Stage 6 (Automation Execution Agent, renamed from Execution Agent), per `.claude/skills/automation-execution-skill/SKILL.md` §5.1 (no default assumed; asked explicitly since this field was previously undefined). Applies to future runs unless a run's own Project Context overrides it. |
 
 ## Credentials Available
 
@@ -49,13 +49,13 @@ Available for this project — engine is shared platform infrastructure (`tools/
 
 ## Automation Packages (per-package, not project-wide — updated 2026-07-12, `agents/automation_agent.md` v5)
 
-NDC does **not** bind every automation effort to one project-wide framework — the platform stores independent Automation Packages, and which one (and which framework) a given Stage 5 run targets is decided by that run's Framework Decision Gate (`.claude/skills/automation-agent/SKILL.md` §31), asked fresh every run. See `platform_core_data/workspace/automation/AutomationPackages.md` for the current registry of packages that exist.
+NDC does **not** bind every automation effort to one project-wide framework — the platform stores independent Automation Packages, and which one (and which framework) a given Stage 5 run targets is decided by that run's Framework Decision Gate (`.claude/skills/automation-skill/SKILL.md` §31), asked fresh every run. See `platform_core_data/workspace/automation/AutomationPackages.md` for the current registry of packages that exist.
 
 [`automation_framework.md`](automation_framework.md) documents the **SHAFT package's** own internal structure (Pages / Locators / Tests / Data layers, naming conventions, core rules) — binding whenever a run's Framework Decision Gate selects SHAFT, not a project-wide mandate. Not to be redesigned; only extended per that document's Gap Resolution Rule when a SHAFT-package run discovers a real implementation gap.
 
 ## Reference Automation Project (registered 2026-07-12)
 
-NDC has a registered **Reference Automation Project** — the company's real, external, production SHAFT codebase at `E:\Automation2\NDC-Uplift-Automation` (outside this repository; a live Git repo with remote `ahmedrefat-prog/NDC-Uplift-Automation`). See [`reference_automation_project.md`](reference_automation_project.md) for its full Architecture Summary. **Read-only by default** — per `.claude/skills/automation-agent/SKILL.md` §32, every Stage 5 run must detect it, state it plainly, and ask the Automation Target Decision Gate (generate inside the platform / export a compatible package / update the Reference Project directly) before generating or modifying anything; a prior run's answer is never carried forward as a default.
+NDC has a registered **Reference Automation Project** — the company's real, external, production SHAFT codebase at `E:\Automation2\NDC-Uplift-Automation` (outside this repository; a live Git repo with remote `ahmedrefat-prog/NDC-Uplift-Automation`). See [`reference_automation_project.md`](reference_automation_project.md) for its full Architecture Summary. **Read-only by default** — per `.claude/skills/automation-skill/SKILL.md` §32, every Stage 5 run must detect it, state it plainly, and ask the Automation Target Decision Gate (generate inside the platform / export a compatible package / update the Reference Project directly) before generating or modifying anything; a prior run's answer is never carried forward as a default.
 
 ⚠️ That reference project's `Environment.properties` and some Login-related Java files contain hardcoded plaintext NDC credentials, committed to Git history — a pre-existing condition, not introduced by this platform, flagged in `reference_automation_project.md` for the credential owner's attention (rotation / history scrub).
 

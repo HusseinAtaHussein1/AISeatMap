@@ -192,7 +192,7 @@ Maps every Requirement ID from Project Context v4 §2 to the Test Case ID(s) tha
 
 ## Test Case Reference (Risk, Acceptance Criteria, Run Scope)
 
-**Added 2026-07-25**, when `TestCases_Agency.md` was rewritten to the Canonical Test Case Writing Standard (`.claude/skills/test-design-agent/SKILL.md` §6.1) — Risk, Acceptance Criteria Reference, and Run Scope Reference moved here from inline test-case fields; Requirement/Discovery/Finding/Evidence References are unchanged above, keyed by Requirement ID.
+**Added 2026-07-25**, when `TestCases_Agency.md` was rewritten to the Canonical Test Case Writing Standard (`.claude/skills/test-design-skill/SKILL.md` §6.1) — Risk, Acceptance Criteria Reference, and Run Scope Reference moved here from inline test-case fields; Requirement/Discovery/Finding/Evidence References are unchanged above, keyed by Requirement ID.
 
 **Run Scope Reference (all 66 test cases, no exceptions):** User Story / Pasted text — four jointly-scoped User Stories (Create, Search, Actions, Update), RUN-20260718-001.
 

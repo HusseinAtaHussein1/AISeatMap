@@ -38,7 +38,7 @@
 
 ## Standing Rules for Future Stage 5 Runs Against This Project
 
-1. **Auto-detect this file at the start of every Stage 5 run for NDC.** State plainly: "Reference Project detected: `E:\Automation2\NDC-Uplift-Automation`" and ask whether to continue using it, change it, or remove it (never silently assume "yes"). See `.claude/skills/automation-agent/SKILL.md` §32.
+1. **Auto-detect this file at the start of every Stage 5 run for NDC.** State plainly: "Reference Project detected: `E:\Automation2\NDC-Uplift-Automation`" and ask whether to continue using it, change it, or remove it (never silently assume "yes"). See `.claude/skills/automation-skill/SKILL.md` §32.
 2. **Never recreate SHAFT infrastructure or framework boilerplate** (driver factory, base test classes, TestNG/Allure wiring) that already exists here — generate only the business/page-specific automation code that fits this existing architecture.
 3. **Reuse existing utilities and patterns whenever possible** (table above) rather than authoring parallel equivalents.
 4. **Read-only by default** — see "Status" above.

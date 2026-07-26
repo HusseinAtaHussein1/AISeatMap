@@ -4,8 +4,8 @@ category: reasoning
 title: Prefer Direct Observation over secondary/documentation sources for expected values
 status: confirmed
 tags: [evidence-sourcing, assertions, epistemics]
-producer: automation-execution-agent
-consumers: [automation-execution-agent, automation-agent, test-design-agent]
+producer: automation-execution-skill
+consumers: [automation-execution-skill, automation-skill, test-design-skill]
 promoted_from: NDC/REP-002
 confidence: "1 execution, 3 test cases, 1 project"
 related_knowledge: []

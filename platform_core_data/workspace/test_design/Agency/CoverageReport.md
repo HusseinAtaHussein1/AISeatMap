@@ -82,7 +82,7 @@ Plus every Create-Agency-only assumption already tagged in the original pass (Pr
 
 **Out-of-Scope Requirements:** WT1-T2919 (Track B) entirely; Branch/Staff CRUD (v3); Login (v2); Credential Routes Filter et al. (v1); Reflection-named modules (Rule Engine, Search & Booking, NDC Portal, Reports, Import PNR portal display, Region Module CRUD).
 
-**Granularity note (added 2026-07-25, `.claude/skills/test-design-agent/SKILL.md` §6.0.1):** this suite is 63 Atomic + 3 Scenario (`CREATE-001`, `UPDATE-002`, `ACTIONS-009`) + **0 End-to-End**. The one journey that would qualify as E2E — "Agency Creation → Approval → Availability for Booking" — crosses into the Search & Booking module, already Out-of-Scope above. Not a gap in this suite's own execution, but a real gap in end-to-end coverage of the Agency lifecycle's actual business purpose; worth a dedicated E2E run once Search & Booking is in scope.
+**Granularity note (added 2026-07-25, `.claude/skills/test-design-skill/SKILL.md` §6.0.1):** this suite is 63 Atomic + 3 Scenario (`CREATE-001`, `UPDATE-002`, `ACTIONS-009`) + **0 End-to-End**. The one journey that would qualify as E2E — "Agency Creation → Approval → Availability for Booking" — crosses into the Search & Booking module, already Out-of-Scope above. Not a gap in this suite's own execution, but a real gap in end-to-end coverage of the Agency lifecycle's actual business purpose; worth a dedicated E2E run once Search & Booking is in scope.
 
 **Unknown/Unassessed Requirements:** none.
 

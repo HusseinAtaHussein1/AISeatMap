@@ -1,5 +1,5 @@
 ---
-name: project-context-agent
+name: project-context-skill
 description: Stage 1 of 7 in the Agentic AI Testing Platform pipeline. Reads an approved PRD and a run configuration, and distills them into the single Project Context artifact — the source of truth every downstream stage (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) consumes. Use when starting a new pipeline run, onboarding a new project, or a PRD/run configuration needs to be reconciled into an approved Project Context.
 inputs:
   - name: prd
@@ -26,15 +26,15 @@ dependencies:
 
 # 1. Skill Name
 
-**Project Context Agent**
+**Project Context skill**
 
 # 2. Purpose
 
-The Project Context Agent is the entry point of the pipeline. It reads an already-approved Product Requirements Document (PRD) and a run configuration, and distills both into a single, compact **Project Context** artifact.
+The Project Context skill is the entry point of the pipeline. It reads an already-approved Product Requirements Document (PRD) and a run configuration, and distills both into a single, compact **Project Context** artifact.
 
-**The Project Context is the single source of truth (SSOT) for every downstream agent in this pipeline.** Once published, it — not the PRD — is the authoritative reference that the Explorer, Test Design, Manual Execution, Automation, Automation Execution, and Reporting Agents read. No downstream agent independently re-reads or reinterprets the original PRD; every one of them consumes the same, already-reconciled Project Context.
+**The Project Context is the single source of truth (SSOT) for every downstream skill in this pipeline.** Once published, it — not the PRD — is the authoritative reference that the Explorer, Test Design, Manual Execution, Automation, Automation Execution, and Reporting skills read. No downstream skill independently re-reads or reinterprets the original PRD; every one of them consumes the same, already-reconciled Project Context.
 
-Without this skill, each downstream agent would need to re-derive scope, credentials, environment constraints, and risk posture from the PRD on its own — inviting drift and inconsistent interpretation across a multi-agent run. The Project Context Agent exists so that scope and requirements are interpreted exactly once, in exactly one place, and every other agent inherits that single interpretation.
+Without this skill, each downstream skill would need to re-derive scope, credentials, environment constraints, and risk posture from the PRD on its own — inviting drift and inconsistent interpretation across a multi-stage run. The Project Context skill exists so that scope and requirements are interpreted exactly once, in exactly one place, and every other skill inherits that single interpretation.
 
 # 3. Responsibilities
 
@@ -45,7 +45,7 @@ Without this skill, each downstream agent would need to re-derive scope, credent
   - The explicit list of in-scope modules (and, equally important, out-of-scope modules)
   - Roles and credentials required, drawn from the PRD's User Roles section
   - Environment constraints (e.g., "shared public demo — no destructive actions" vs "isolated test environment — full CRUD permitted")
-  - Every `> Assumption` and Risk entry in the PRD relevant to the in-scope modules, carried forward so later agents don't have to re-discover them
+  - Every `> Assumption` and Risk entry in the PRD relevant to the in-scope modules, carried forward so later skills don't have to re-discover them
 - Never introduce scope, features, or constraints not present in the PRD or the run configuration.
 - Halt and clearly report any conflict or gap (e.g., PRD missing, run configuration referencing a module the PRD never mentions) rather than guessing.
 
@@ -62,7 +62,7 @@ There is no `PROJECT_NAME` key: the platform hosts one project, rooted at `platf
 
 # 5. Outputs
 
-A single **Project Context** document that becomes the sole source of truth for every downstream agent — the Explorer Agent, Test Design Agent, Manual Execution Agent, Automation Agent, Automation Execution Agent, and Reporting Agent. It is not a new PRD, not a rewrite of it, but a distilled, run-specific lens onto it. None of the downstream agents read the PRD file directly; they read this artifact instead.
+A single **Project Context** document that becomes the sole source of truth for every downstream skill — the Explorer skill, Test Design skill, Manual Execution skill, Automation skill, Automation Execution skill, and Reporting skill. It is not a new PRD, not a rewrite of it, but a distilled, run-specific lens onto it. None of the downstream skills read the PRD file directly; they read this artifact instead.
 
 # 6. Allowed Tools
 
@@ -80,7 +80,7 @@ A single **Project Context** document that becomes the sole source of truth for 
 4. Must carry forward every PRD `> Assumption` and Risk entry relevant to in-scope modules verbatim in meaning, not diluted or reworded away from its original caveat.
 5. Must cite the PRD section number each extracted item was drawn from, preserving traceability back to the source document.
 6. Must not alter, contradict, or "correct" the PRD — this skill summarizes and structures; it does not edit the source document.
-7. Once this skill publishes the Project Context, it becomes the single source of truth for the remainder of the pipeline. No downstream agent (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) may read the PRD directly or independently reinterpret it — any requirement change must flow through a new Project Context Agent run, not through a downstream agent going back to the PRD on its own.
+7. Once this skill publishes the Project Context, it becomes the single source of truth for the remainder of the pipeline. No downstream skill (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) may read the PRD directly or independently reinterpret it — any requirement change must flow through a new Project Context skill run, not through a downstream skill going back to the PRD on its own.
 
 # 8. Expected Artifacts
 
@@ -117,10 +117,10 @@ Run configuration:
                        platform_core_data/credentials/, never written here)
 ```
 
-Hypothetical result: `platform_core_data/workspace/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer Agent should specifically probe.
+Hypothetical result: `platform_core_data/workspace/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer skill should specifically probe.
 
 # 11. Architecture Principle
 
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this skill specifically: it is the sole reader of the PRD in the entire pipeline, and its sole output — the Project Context — is what every other agent's "single responsibility" is scoped against.
+For this skill specifically: it is the sole reader of the PRD in the entire pipeline, and its sole output — the Project Context — is what every other skill's "single responsibility" is scoped against.

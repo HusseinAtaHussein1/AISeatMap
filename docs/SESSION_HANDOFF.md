@@ -15,12 +15,12 @@ This document is the continuity anchor for the Agentic AI Testing Platform proje
 - No agent has been invoked under the new architecture yet. `workflows_and_pipelines/pipeline/pipeline.md` explicitly states it is "specification only — no stage, agent, or checkpoint in this document has been executed."
 
 **Files created/modified this session:**
-- `.claude/skills/project-context-agent/SKILL.md` (new — Stage 1 spec)
-- `.claude/skills/explorer-agent/SKILL.md` (new — Stage 2 spec)
-- `.claude/skills/test-design-agent/SKILL.md` (new — Stage 3 spec)
-- `.claude/skills/automation-agent/SKILL.md` (new — Stage 4 spec)
+- `.claude/skills/project-context-skill/SKILL.md` (new — Stage 1 spec)
+- `.claude/skills/explorer-skill/SKILL.md` (new — Stage 2 spec)
+- `.claude/skills/test-design-skill/SKILL.md` (new — Stage 3 spec)
+- `.claude/skills/automation-skill/SKILL.md` (new — Stage 4 spec)
 - `.claude/skills/execution-agent/SKILL.md` (new — Stage 5 spec)
-- `.claude/skills/reporting-agent/SKILL.md` (new — Stage 6 spec)
+- `.claude/skills/reporting-skill/SKILL.md` (new — Stage 6 spec)
 - `workflows_and_pipelines/pipeline/pipeline.md` (new — orchestration spec covering all 6 stages)
 
 **Pre-existing, unrelated to this session's edits (still present in the repo, produced earlier under the legacy `prompts/` pipeline):**
@@ -166,7 +166,7 @@ In priority order:
 
 # Recommended Next Step
 
-Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`.claude/skills/project-context-agent/SKILL.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
+Get an explicit decision from the user on Pending Task #1 before writing any more artifacts: should OrangeHRM's existing legacy-pipeline artifacts be treated as inputs to bootstrap the new pipeline (fastest path — e.g., feed the existing `PRD.md` into a first real run of the Project Context Agent), or should the new pipeline be exercised cleanly from Stage 1 with a fresh project to keep the two pipelines' outputs from being conflated? Once that's settled, the concrete next action is invoking the **Project Context Agent** (`.claude/skills/project-context-skill/SKILL.md`) with the chosen PRD and a run configuration (modules in scope, target URL, credentials, environment constraints) to produce the first `context/ProjectContext.md` artifact — this is the one artifact every other pending task depends on.
 
 ---
 

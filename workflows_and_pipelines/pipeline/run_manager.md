@@ -21,7 +21,7 @@ Where the seven Agents (Project Context, Explorer, Test Design, Manual Execution
 To keep this component's boundary unambiguous, the Run Manager explicitly must **not**:
 
 - Analyze, interpret, or judge application behavior.
-- Generate, classify, score, or triage Findings (that is the Explorer Agent's responsibility — see `.claude/skills/explorer-agent/SKILL.md`).
+- Generate, classify, score, or triage Findings (that is the Explorer Agent's responsibility — see `.claude/skills/explorer-skill/SKILL.md`).
 - Generate, design, or modify test cases (Test Design Agent) or automation scripts (Automation Agent).
 - Decide whether a run "passed" or "succeeded" in a quality sense — it records mechanical status (§8), not a verdict.
 - Modify the content of any artifact an Agent produces.
@@ -136,7 +136,7 @@ A run that only ever reaches Stage 2 (Explorer) has exactly `metadata/` and `dis
 - `metadata/` — `run.json` (§7) and `run_summary.md` (§9), plus any other run-bookkeeping file. The one folder every run has, always.
 - `context/` — the Project Context version(s) used by this run.
 - `discovery/` — Explorer Agent discovery snapshots, QA Assessment Report, and evidence (screenshots/videos/logs/network captures) produced during this run.
-- `discovery/findings/` — Explorer Agent Finding evidence packages produced during this run (see `.claude/skills/explorer-agent/SKILL.md` §5.11).
+- `discovery/findings/` — Explorer Agent Finding evidence packages produced during this run (see `.claude/skills/explorer-skill/SKILL.md` §5.11).
 - `test_design/` — Test Design Agent's Manual Test Suite, Traceability Matrix, and Coverage Report for this run.
 - `manual_execution/` — Manual Execution Agent's Manual Execution Results, Manual Execution Summary, Automation Candidate Package, and captured evidence (screenshots, videos, notes, logs) for this run.
 - `automation/` — Automation Agent's Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Summary for this run. Per the Automation Asset Lifecycle (`pipeline.md` §12, added 2026-07-24), the Automation Package here is a **temporary working copy** of the project's Workspace Automation Baseline, not the authoritative copy — once it clears Automation Approval and is merged back into that baseline, its source code is removed from this folder (Cleanup, `pipeline.md` §12.5), leaving a permanent `automation_promotion.md` (Promotion Status, Merge Date, Approved By, Source Run, Workspace Destination, file-level Added/Modified/Deleted/Renamed/Discarded-Untracked lists, Conflicts, Merge Result, Notes) alongside the unaffected Plan/Manifest/Decision Report/Coverage Report/Suite Manifest/Summary.
@@ -170,12 +170,12 @@ platform_core_data/runs/{{RUN_FOLDER}}/metadata/run.json
 | `workflow` | The workflow this run executes, if invoked via a named workflow in `workflows_and_pipelines/workflows/` (e.g. `first_run`, `user_story_run`, `bug_fix_run`); `unversioned` if run ad hoc, outside any named workflow |
 | `pipelineVersion` | The version identifier of `workflows_and_pipelines/pipeline/pipeline.md` in effect for this run |
 | `projectContextVersion` | The version suffix of the Project Context artifact this run used (e.g., `v1`), per `workflows_and_pipelines/pipeline/pipeline.md` §7 |
-| `explorerVersion` | The version identifier of `.claude/skills/explorer-agent/SKILL.md` in effect for this run |
-| `testDesignVersion` | The version identifier of `.claude/skills/test-design-agent/SKILL.md` in effect for this run |
-| `manualExecutionVersion` | The version identifier of `.claude/skills/manual-execution-agent/SKILL.md` in effect for this run |
-| `automationVersion` | The version identifier of `.claude/skills/automation-agent/SKILL.md` in effect for this run |
-| `executionVersion` | The version identifier of `.claude/skills/automation-execution-agent/SKILL.md` in effect for this run |
-| `reportingVersion` | The version identifier of `.claude/skills/reporting-agent/SKILL.md` in effect for this run |
+| `explorerVersion` | The version identifier of `.claude/skills/explorer-skill/SKILL.md` in effect for this run |
+| `testDesignVersion` | The version identifier of `.claude/skills/test-design-skill/SKILL.md` in effect for this run |
+| `manualExecutionVersion` | The version identifier of `.claude/skills/manual-execution-skill/SKILL.md` in effect for this run |
+| `automationVersion` | The version identifier of `.claude/skills/automation-skill/SKILL.md` in effect for this run |
+| `executionVersion` | The version identifier of `.claude/skills/automation-execution-skill/SKILL.md` in effect for this run |
+| `reportingVersion` | The version identifier of `.claude/skills/reporting-skill/SKILL.md` in effect for this run |
 | `browser` | The browser (name/version) used for browser-driven stages of this run |
 | `environment` | The target environment, per the Project Context's Environment Constraints |
 | `resolution` | The viewport/screen resolution used for browser-driven stages |

@@ -1,6 +1,6 @@
 # Browser Driver Layer
 
-The platform's shared, standard mechanism for live browser access — used by **Browser Automation** Discovery Mode (`.claude/skills/explorer-agent/SKILL.md` §8.1 #1), the Manual Execution Agent's execution of manually-designed test cases (`.claude/skills/manual-execution-agent/SKILL.md` §11), and any other stage needing a live, logged-in browser session (e.g. the Automation Agent's selector-verification use of browser tools, `.claude/skills/automation-agent/SKILL.md` §17).
+The platform's shared, standard mechanism for live browser access — used by **Browser Automation** Discovery Mode (`.claude/skills/explorer-skill/SKILL.md` §8.1 #1), the Manual Execution Agent's execution of manually-designed test cases (`.claude/skills/manual-execution-skill/SKILL.md` §11), and any other stage needing a live, logged-in browser session (e.g. the Automation Agent's selector-verification use of browser tools, `.claude/skills/automation-skill/SKILL.md` §17).
 
 **Design principle — four clearly separate responsibilities, never blurred:**
 
@@ -13,7 +13,7 @@ The platform's shared, standard mechanism for live browser access — used by **
 
 `platform_core/tools/browser_driver/` itself contains **only** the reusable engine (`driver.js`, `api.js`, this README) — zero project-specific data. Everything project-specific lives under `platform_core_data/`, so retargeting the platform at a different application means editing that folder's contents and never touching the engine.
 
-**`platform_core_data/browser/` is deliberately NOT named or nested under "automation".** `platform_core_data/workspace/automation/` is a completely different concept — the Automation Agent's Stage 5 output (the generated SHAFT automation package, per `.claude/skills/automation-agent/SKILL.md`). The Browser Driver is Stage 2 (Explorer) tooling, not automation-agent output; the repo must never have two unrelated folders both named "automation."
+**`platform_core_data/browser/` is deliberately NOT named or nested under "automation".** `platform_core_data/workspace/automation/` is a completely different concept — the Automation Agent's Stage 5 output (the generated SHAFT automation package, per `.claude/skills/automation-skill/SKILL.md`). The Browser Driver is Stage 2 (Explorer) tooling, not automation-skill output; the repo must never have two unrelated folders both named "automation."
 
 ```js
 const { BrowserDriver } = require('../../platform_core/tools/browser_driver/api');

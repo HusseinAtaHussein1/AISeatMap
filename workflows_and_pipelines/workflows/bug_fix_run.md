@@ -9,16 +9,16 @@
 
 This workflow reproduces a reported bug against the application's **current** state, gets the corresponding regression automation into a state that correctly asserts the fix, re-executes to confirm, and reports the outcome — **without re-running Stage 1 (Project Context), Stage 2 (Explorer), or Stage 3 (Test Design)**.
 
-It is deliberately narrow: it assumes the bug is **already a known Finding with a dispositioned regression test case** (`.claude/skills/test-design-agent/SKILL.md` §5.3, "Regression test" disposition) sitting in an already-Approved Manual Test Suite — i.e., Stage 3 has already done the work of deciding this defect gets a test case and writing its Expected Result to reflect the *corrected*, not the buggy, behavior. This workflow's job is purely to run that test case now, react to what it finds, and close the loop.
+It is deliberately narrow: it assumes the bug is **already a known Finding with a dispositioned regression test case** (`.claude/skills/test-design-skill/SKILL.md` §5.3, "Regression test" disposition) sitting in an already-Approved Manual Test Suite — i.e., Stage 3 has already done the work of deciding this defect gets a test case and writing its Expected Result to reflect the *corrected*, not the buggy, behavior. This workflow's job is purely to run that test case now, react to what it finds, and close the loop.
 
-**This is distinct from the Automation Repair Loop** already defined in `.claude/skills/automation-execution-agent/SKILL.md` §25, which repairs a *broken automation script* (selector drift, stale reference) when the application itself is not at fault, and which triggers automatically within a single Automation Execution Agent invocation. This workflow instead covers the case where the **application's behavior itself** is what's being validated across time — before a fix (bug confirmed) and after one (regression confirmed) — which is why it spans two separate Automation Execution Agent invocations around one Automation Agent invocation, rather than one Automation Execution Agent invocation's own internal repair loop.
+**This is distinct from the Automation Repair Loop** already defined in `.claude/skills/automation-execution-skill/SKILL.md` §25, which repairs a *broken automation script* (selector drift, stale reference) when the application itself is not at fault, and which triggers automatically within a single Automation Execution Agent invocation. This workflow instead covers the case where the **application's behavior itself** is what's being validated across time — before a fix (bug confirmed) and after one (regression confirmed) — which is why it spans two separate Automation Execution Agent invocations around one Automation Agent invocation, rather than one Automation Execution Agent invocation's own internal repair loop.
 
 # 3. Precondition (checked, never assumed)
 
 This workflow requires, already `Approved`, from a prior run:
 
 - A Project Context covering the affected module.
-- A Manual Test Suite / Traceability Matrix / Coverage Report containing the regression test case tied to this bug's Finding (`.claude/skills/test-design-agent/SKILL.md` §5.3).
+- A Manual Test Suite / Traceability Matrix / Coverage Report containing the regression test case tied to this bug's Finding (`.claude/skills/test-design-skill/SKILL.md` §5.3).
 - An Automation Package that has a Reuse/Generate decision recorded for that test case (it may be `Manual Only` or `Partially Automatable` from a prior run — see §4 Step 2 for what happens then). Since Stage 5 (Automation Agent) can only ever have generated that decision from a prior Stage 4 (Manual Execution Agent) Automation Candidate Package, this precondition implicitly assumes Stage 4 already ran for this test case in that prior pass — this workflow does not re-invoke it.
 
 **If no such test case exists yet** (this is a genuinely new bug report with no prior Test Design pass), this workflow does not apply. Step 1's Stage-State Check will surface that gap and ask how to proceed — e.g., routing to a Bug-scoped Stage 3 invocation first — rather than this workflow silently fabricating a test case (Test Design Agent's own exclusive responsibility, never Automation, Manual Execution, or Automation Execution Agent's).
@@ -78,22 +78,22 @@ Per the same mechanism as `workflows_and_pipelines/workflows/user_story_run.md` 
 
 ## Step 2 — Automation Execution Agent, Reproduction *(Pipeline Stage 6, 1st invocation)*
 
-**Spec:** `.claude/skills/automation-execution-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/automation-execution-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
 | **Input** | Existing Approved Automation Package (specifically the script for this bug's regression test case) · existing Approved Project Context |
 | **Contract keys consumed** | `automation_suite`, `automation_summary`, `project_context`, `execution_mode` (must still be explicitly resolved, never defaulted) |
-| **Execution scope** | Selective Re-run — only the test case(s) tied to this bug's Finding, per `.claude/skills/automation-execution-agent/SKILL.md` §13 ("Bug Validation" Run Scope Type: "the specific reproduction and regression test case(s) tied to the Finding first") |
+| **Execution scope** | Selective Re-run — only the test case(s) tied to this bug's Finding, per `.claude/skills/automation-execution-skill/SKILL.md` §13 ("Bug Validation" Run Scope Type: "the specific reproduction and regression test case(s) tied to the Finding first") |
 | **Output** | Execution Results, classified per the skill's own full Result Classification (§17) |
 | **Contract keys produced** | `execution_results`, `execution_artifacts` |
 | **Checkpoint** | *None — mechanical, gated by the Automation Approval already granted when this package was first generated* |
 
-The result's classification determines the branch taken next — see the diagram in §4. An `Automation Failure` here is handled entirely by Automation Execution Agent's own Automation Repair Loop (`.claude/skills/automation-execution-agent/SKILL.md` §25) within this same step; it does not invoke this workflow's Step 3.
+The result's classification determines the branch taken next — see the diagram in §4. An `Automation Failure` here is handled entirely by Automation Execution Agent's own Automation Repair Loop (`.claude/skills/automation-execution-skill/SKILL.md` §25) within this same step; it does not invoke this workflow's Step 3.
 
 ## Step 3 — Automation Agent, Conditional *(Pipeline Stage 5)*
 
-**Spec:** `.claude/skills/automation-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/automation-skill/SKILL.md` — unmodified.
 
 Invoked **only** when Step 2 shows the application now passing but the regression test case was not previously fully automated (its recorded decision was `Manual Only` or `Partially Automatable`). If the test case already had full automation and Step 2 already confirms the fix, this step is skipped and the workflow proceeds directly to Step 5 — there is nothing for Automation Agent to generate.
 
@@ -105,11 +105,11 @@ Invoked **only** when Step 2 shows the application now passing but the regressio
 | **Contract keys produced** | `automation_package`, `automation_decision_report`, `automation_summary` (and siblings, unchanged in shape) |
 | **Checkpoint** | **Automation Approval Required** (Automation Lead / Release Manager, per `pipeline/pipeline.md` §5.2) |
 
-Per `.claude/skills/automation-agent/SKILL.md`'s own rules: this step never modifies the Manual Test Case itself (its Expected Result was already written by Stage 3 to reflect the corrected behavior) and never invents business logic — it only generates the automation code the test case's Expected Result already specifies.
+Per `.claude/skills/automation-skill/SKILL.md`'s own rules: this step never modifies the Manual Test Case itself (its Expected Result was already written by Stage 3 to reflect the corrected behavior) and never invents business logic — it only generates the automation code the test case's Expected Result already specifies.
 
 ## Step 4 — Automation Execution Agent, Verification *(Pipeline Stage 6, 2nd invocation)*
 
-**Spec:** `.claude/skills/automation-execution-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/automation-execution-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -124,7 +124,7 @@ This step is skipped only in the branch where Step 3 itself was skipped (automat
 
 ## Step 5 — Reporting Agent *(Pipeline Stage 7)*
 
-**Spec:** `.claude/skills/reporting-agent/SKILL.md` — unmodified.
+**Spec:** `.claude/skills/reporting-skill/SKILL.md` — unmodified.
 
 | | |
 |---|---|
@@ -156,7 +156,7 @@ NDC uses its `workspace/` variant of these paths — see `platform_core_data/onb
 # 7. Failure Criteria
 
 - The precondition (§3) is not satisfied and the workflow proceeds anyway.
-- Step 3 modifies the Manual Test Case's Expected Result instead of only generating automation against the existing, already-correct expectation (a violation of `.claude/skills/automation-agent/SKILL.md`'s own rules).
+- Step 3 modifies the Manual Test Case's Expected Result instead of only generating automation against the existing, already-correct expectation (a violation of `.claude/skills/automation-skill/SKILL.md`'s own rules).
 - Automation Approval is bypassed before Step 4.
 
 # 8. Rules
@@ -164,7 +164,7 @@ NDC uses its `workspace/` variant of these paths — see `platform_core_data/onb
 1. **This workflow never re-runs Stages 1–3.** It consumes their existing Approved outputs unchanged; if any is missing, Step 1 stops and asks (§3).
 2. **The Stage-State Check (§4 Step 1) always runs first**, per the same rule as `workflows_and_pipelines/workflows/user_story_run.md` §9 Rule 2.
 3. **Step 3 (Automation Agent) is conditional, not automatic** — it runs only when Step 2's result requires new or extended automation; it is never invoked merely because this workflow was started.
-4. **This workflow never substitutes for the Automation Repair Loop** (`.claude/skills/automation-execution-agent/SKILL.md` §25) — a broken-script `Automation Failure` is handled inside Automation Execution Agent's own invocation, not by this workflow's Step 3.
+4. **This workflow never substitutes for the Automation Repair Loop** (`.claude/skills/automation-execution-skill/SKILL.md` §25) — a broken-script `Automation Failure` is handled inside Automation Execution Agent's own invocation, not by this workflow's Step 3.
 5. **All applicable checkpoints still apply in full** — Automation Approval before Step 4, whenever Step 3 runs.
 
 # 9. Relationship to the Platform Architecture

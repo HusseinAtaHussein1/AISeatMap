@@ -6,6 +6,18 @@ Each agent file now retains only its `Pipeline position` and `Traceability` line
 
 ---
 
+## 2026-07-26 — Skill conversion: `*-agent/` → `*-skill/`, and spec de-duplication
+
+User-mandated. The seven pipeline-stage specs are Skills, not Agents, and are now named and written that way. No stage's behavior, contract, or section numbering changed.
+
+- **Renamed** all seven skill folders and their frontmatter `name:` — `.claude/skills/{project-context,explorer,test-design,manual-execution,automation,automation-execution,reporting}-agent/` → `…-skill/`. Invocation identity changes accordingly (`/explorer-agent` → `/explorer-skill`). Every live cross-reference was updated across `.claude/`, `workflows_and_pipelines/`, `platform_core/`, `docs/`, and `platform_core_data/` (excluding run history, below).
+- **Removed the `Operational Prompt` section** from every spec (−1,189 lines, ~27%). Each was a fenced block restating the numbered sections above it in prose. A vocabulary diff of each block against its own file body confirmed no rule existed only there; each is now a short `Operational Contract` naming the role and citing the sections (`§N`) that specify execution. Section **numbers are unchanged** — roughly thirty files cite them by number.
+- **Purged agent framing from spec prose** — self-references became "this skill"; stage proper nouns became "the Automation skill (Stage 5)" and so on. Sibling references still name the producing stage, so handoff contracts remain unambiguous about who produces what.
+- **Preserved deliberately:** the platform axiom "Agents communicate through artifacts only…" is quoted from `workflows_and_pipelines/pipeline/pipeline.md` §1 and stays verbatim in each spec's Architecture Principle section; run artifacts under `platform_core_data/runs/` keep their original `*-agent` references, being records of what past runs actually invoked; and this changelog's own dated entries keep the paths that were current when written — only the per-file `##` headers track the current filename.
+- **Pre-existing drift left as-is** (predates this pass, unrelated to it): `docs/CHANGELOG.md` cites `automation-skill §10.7` and `docs/PLATFORM_VALIDATION_REPORT.md` cites `reporting-skill §12`; neither section exists in either spec at any point in this repo's history.
+
+---
+
 ## 2026-07-25 — Single-Project Restructure (`projects/{PROJECT}/` → `platform_core_data/`)
 
 Repository-wide, user-mandated. The platform now hosts **exactly one project at a time**.
@@ -29,7 +41,7 @@ The seven stages, their order, every checkpoint and approval gate, the Automatio
 
 ---
 
-## .claude/skills/project-context-agent/SKILL.md
+## .claude/skills/project-context-skill/SKILL.md
 
 > **Relationship to legacy prompts:** Replaces the data-flow direction of `prompts/knowledge/knowledge_agent.md`. The old Knowledge Agent *produced* a PRD from discovery. In this architecture the PRD is an upstream input (already approved/provided), and the Project Context Agent *consumes* it to produce the operating brief for every agent downstream.
 
@@ -37,7 +49,7 @@ The seven stages, their order, every checkpoint and approval gate, the Automatio
 
 ---
 
-## .claude/skills/explorer-agent/SKILL.md
+## .claude/skills/explorer-skill/SKILL.md
 
 > **Relationship to legacy prompts:** Evolves `prompts/exploration/explorer_agent.md`. The core exploration methodology is unchanged; the difference is that scope, credentials, and environment constraints now come from a single upstream **Project Context** artifact rather than being passed as loose parameters.
 
@@ -49,7 +61,7 @@ The seven stages, their order, every checkpoint and approval gate, the Automatio
 
 ---
 
-## .claude/skills/test-design-agent/SKILL.md
+## .claude/skills/test-design-skill/SKILL.md
 
 > **Relationship to legacy prompts:** Evolves `prompts/testing/test_design_agent.md`. **Architectural change (v1):** the primary/secondary source relationship was reversed from the initial version of this agent — test cases are derived primarily from the approved **Project Context**, with Discovery Artifacts consulted only to validate, enrich, and detect gaps.
 
@@ -67,7 +79,7 @@ The seven stages, their order, every checkpoint and approval gate, the Automatio
 
 ---
 
-## .claude/skills/automation-agent/SKILL.md
+## .claude/skills/automation-skill/SKILL.md
 
 > **Relationship to legacy prompts:** Evolves `prompts/automation/automation_agent.md`. **Architectural change (v1):** inputs were formally limited to two governance sources — the Approved Manual Test Suites (primary) and the Project Context (secondary) — reinforcing that this agent never goes back to the PRD or reinterprets business logic on its own.
 
@@ -87,7 +99,7 @@ The seven stages, their order, every checkpoint and approval gate, the Automatio
 
 ---
 
-## .claude/skills/manual-execution-agent/SKILL.md
+## .claude/skills/manual-execution-skill/SKILL.md
 
 > **New in this architecture, 2026-07-24:** No predecessor in `prompts/` or any prior revision — this agent did not exist before this revision. It is introduced to formally separate "validating a manually-designed test case actually holds against the live application" from "generating automation for it" (Automation Agent) and "running already-generated automation" (Automation Execution Agent). Inserted as **Stage 4**, between Test Design (Stage 3) and Automation (now Stage 5). It executes the approved Manual Test Suite against the target environment, classifies every result (Passed/Failed/Blocked/Skipped/Not Executed/Inconclusive), and identifies only successfully, stably executed test cases as an **Automation Candidate Package** — the Automation Agent's new primary, scope-determining input. It never writes or executes automation code, and it never makes the binding Automation Decision (Reuse/Generate/Partially Automatable/Manual Only) — that remains exclusively the Automation Agent's authority, now exercised only over the candidates this agent hands it.
 
@@ -95,7 +107,7 @@ The seven stages, their order, every checkpoint and approval gate, the Automatio
 
 ---
 
-## .claude/skills/automation-execution-agent/SKILL.md (renamed from `execution-agent`, 2026-07-24)
+## .claude/skills/automation-execution-skill/SKILL.md (renamed from `execution-agent`, 2026-07-24)
 
 > **New in this architecture:** No predecessor in `prompts/` — this agent did not exist in the standalone-prompt version of the project. It is introduced to formally separate "running the tests" from "writing the tests" (Automation Agent) and "interpreting the results" (Reporting Agent).
 
@@ -119,7 +131,7 @@ The seven stages, their order, every checkpoint and approval gate, the Automatio
 
 ---
 
-## .claude/skills/reporting-agent/SKILL.md
+## .claude/skills/reporting-skill/SKILL.md
 
 > **New in this architecture:** No predecessor in `prompts/` — this agent did not exist in the standalone-prompt version of the project. It closes the loop by turning raw execution data into a stakeholder-facing report, distinct from the exploration-stage `QA_Assessment_Report.md` produced by the Explorer Agent.
 

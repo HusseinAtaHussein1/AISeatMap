@@ -4,8 +4,8 @@ category: repair_patterns
 title: Bounded poll for post-submit redirect state, not an immediate assertion
 status: confirmed
 tags: [spa, redirect, authentication, synchronization]
-producer: automation-execution-agent
-consumers: [automation-execution-agent, automation-agent]
+producer: automation-execution-skill
+consumers: [automation-execution-skill, automation-skill]
 promoted_from: NDC/REP-001
 confidence: "1 execution, 1 project"
 related_knowledge: []

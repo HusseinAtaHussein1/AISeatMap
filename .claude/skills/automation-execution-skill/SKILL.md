@@ -1,5 +1,5 @@
 ---
-name: automation-execution-agent
+name: automation-execution-skill
 description: Stage 6 of 7 in the Agentic AI Testing Platform pipeline. Executes an approved automation suite against a target environment and records raw, structured Execution Results (pass/fail/evidence, full Result Classification, Health Summary) plus the Automation Repair Loop for automation-side failures. Use when running an approved automation package against an environment.
 inputs:
   - name: automation_suite
@@ -32,7 +32,7 @@ outputs:
     location: "platform_core_data/workspace/execution/artifacts/"
     description: Captured screenshots, traces, logs, HAR files, framework reports.
 dependencies:
-  - automation-agent (upstream skill)
+  - automation-skill (upstream skill)
   - The test runner/framework CLI named in the Automation Summary's Execution Instructions
   - "platform_core/knowledge/repair_patterns/, diagnosis_patterns/, execution_patterns/ (Platform Knowledge, consulted during the Automation Repair Loop)"
 ---
@@ -43,13 +43,13 @@ dependencies:
 
 # 1. Skill Name
 
-**Automation Execution Agent** — v3
+**Automation Execution skill** — v3
 
 # 2. Purpose
 
-The Automation Execution Agent runs the automated test suite produced by the Automation Agent against a specified environment and produces a raw, unedited, structured record of what happened — pass/fail/skip status, durations, failure messages, and captured artifacts (screenshots, traces, logs). It does not interpret, summarize narratively, or draw conclusions from the results; that synthesis is the Reporting Agent's job. Its only job is faithful execution and faithful recording.
+The Automation Execution skill runs the automated test suite produced by the Automation skill against a specified environment and produces a raw, unedited, structured record of what happened — pass/fail/skip status, durations, failure messages, and captured artifacts (screenshots, traces, logs). It does not interpret, summarize narratively, or draw conclusions from the results; that synthesis is the Reporting skill's job. Its only job is faithful execution and faithful recording.
 
-**As of v2, execution may not begin at all until an explicit Execution Mode is known.** This is a precondition alongside the existing environment-match check (§7 Rule 1) — the agent confirms both *where* it is about to run (target environment) and *how* (Headless/Headed/Debug) before invoking the test runner, and refuses to proceed on an assumed value for either.
+**As of v2, execution may not begin at all until an explicit Execution Mode is known.** This is a precondition alongside the existing environment-match check (§7 Rule 1) — this skill confirms both *where* it is about to run (target environment) and *how* (Headless/Headed/Debug) before invoking the test runner, and refuses to proceed on an assumed value for either.
 
 # 3. Responsibilities
 
@@ -71,12 +71,12 @@ The Automation Execution Agent runs the automated test suite produced by the Aut
 - Never run a test case against an environment the Project Context has not explicitly marked safe for that test's mutating actions.
 - Produce a single, timestamped Execution Results artifact per run — reruns must be clearly labeled, never silently overwritten without a run identifier.
 - **Adapt execution strategy to the run's Run Scope and Run Type** (§13) — an Entire Project run, a Bug's single-reproduction validation, and a Selective Re-run of only previously-failed tests are different activities, not one default "run everything" behavior.
-- **Invoke the test runner in a framework-agnostic way** (§15) — determine how to invoke the suite from the Automation Summary's own Execution Instructions (`.claude/skills/automation-agent/SKILL.md` §25), never by assuming Playwright or hardcoding one framework's flags.
-- **Classify every result using the full Result Classification set** (§17) — Passed/Failed alone is insufficient; the agent distinguishes Skipped, Blocked, Not Executed, Inconclusive, Flaky, and the four failure-cause categories (Infrastructure/Environment/Automation/Application/Configuration Failure).
+- **Invoke the test runner in a framework-agnostic way** (§15) — determine how to invoke the suite from the Automation Summary's own Execution Instructions (`.claude/skills/automation-skill/SKILL.md` §25), never by assuming Playwright or hardcoding one framework's flags.
+- **Classify every result using the full Result Classification set** (§17) — Passed/Failed alone is insufficient; this skill distinguishes Skipped, Blocked, Not Executed, Inconclusive, Flaky, and the four failure-cause categories (Infrastructure/Environment/Automation/Application/Configuration Failure).
 - **Produce a structured Evidence Inventory** (§16) covering every evidence type actually captured (and naming what wasn't, and why), not only screenshots and logs.
-- **Produce output conforming to the Standard Output Contract** (§18) so the Reporting Agent never has to interpret free-form prose.
-- **Recognize named Stop Conditions** (§19) and, rather than failing outright, recommend the smallest corrective action (§20) — retry, resume, switch mode, validate environment, re-run only the affected subset, or recommend Automation Agent regeneration where the fault is in the generated automation itself, not the environment.
-- **Verify handoff completeness in both directions** (§21) — confirm every input the Automation Agent's output actually provides is used correctly, and confirm every input the Reporting Agent's own specification declares it needs is present in the Execution Results.
+- **Produce output conforming to the Standard Output Contract** (§18) so the Reporting skill never has to interpret free-form prose.
+- **Recognize named Stop Conditions** (§19) and, rather than failing outright, recommend the smallest corrective action (§20) — retry, resume, switch mode, validate environment, re-run only the affected subset, or recommend Automation skill regeneration where the fault is in the generated automation itself, not the environment.
+- **Verify handoff completeness in both directions** (§21) — confirm every input the Automation skill's output actually provides is used correctly, and confirm every input the Reporting skill's own specification declares it needs is present in the Execution Results.
 - **Track and report execution Metrics** (§22) — duration, pass/fail/skip rates, retry count, evidence count, flaky test count, and execution stability — as part of the Standard Output Contract, not as an afterthought.
 - **Execute reliably and deterministically** (§23) — stable test ordering, idempotent reruns, isolated failures that don't cascade into unrelated tests reporting false failures.
 
@@ -85,13 +85,13 @@ The Automation Execution Agent runs the automated test suite produced by the Aut
 | Input | Required? | Description |
 |---|---|---|
 | Automation Suite | Required | `platform_core_data/workspace/automation/tests/` — the generated/reused project itself |
-| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `platform_core_data/workspace/automation/AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-agent/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this skill — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this skill assuming a framework itself |
+| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `platform_core_data/workspace/automation/AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-skill/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this skill — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this skill assuming a framework itself |
 | Run Scope | Required (embedded) | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4), plus the Run Type (Full Regression/Smoke/etc., §5 there). Drives §13's strategy selection. |
 | Project Context | Required | `platform_core_data/workspace/context/ProjectContext.md` — environment, credentials, safety constraints |
 | Execution Configuration | Required, composite | Not a single file — the set of run-time execution parameters this skill must resolve before running anything: Execution Mode (§5.1), Concurrency Mode (§5.3), Retry Policy (§5.4), and Resume state (§5.5). Named explicitly here so none of these is a silent default — each has its own determination rule below. |
 | Execution Mode | Required, but not necessarily pre-supplied — see §5.1 | Sourced from the approved Run Configuration if it defines one; otherwise obtained by pausing and asking the user before execution begins. One of: `Headless`, `Headed`, `Debug` — no other value is valid. |
 | Framework Configuration | Required, not assumed | Not this skill's decision — sourced from the Automation Summary's Framework Used / Execution Instructions sections (§15). This skill never independently selects or assumes a framework; it only reads what Stage 5 already decided and justified. |
-| Environment Configuration | Required (embedded) | The named environment (§14) this run targets, drawn from the Project Context's Environment Constraints — not a hidden default, and never inferred from where the agent itself happens to be running. |
+| Environment Configuration | Required (embedded) | The named environment (§14) this run targets, drawn from the Project Context's Environment Constraints — not a hidden default, and never inferred from where this skill itself happens to be running. |
 | Execution scope / Execution Parameters | Optional | Which subset of the suite to run (defaults to the full suite); for a Selective Re-run or Failed Test Re-run (§13), this is the specific test case ID list or "previously Failed" filter. |
 | Evidence Locations | Required (fixed convention) | `platform_core_data/workspace/execution/artifacts/` — not configurable per run; named explicitly here so it's a stated input/convention rather than an implicit assumption. |
 | Execution History | Optional — required only for Resume/Selective Re-run/Failed Test Re-run (§5.5, §13) | Prior Execution Results artifact(s) for this run (`ExecutionResults_{Execution ID}.md`), consulted only to determine what to resume or re-run — never edited, never treated as this run's own result. |
@@ -100,7 +100,7 @@ The Automation Execution Agent runs the automated test suite produced by the Aut
 
 ## 5.1 Determining the Mode
 
-Before invoking the test runner on any test, the agent must determine exactly one Execution Mode:
+Before invoking the test runner on any test, this skill must determine exactly one Execution Mode:
 
 1. **Check the approved Run Configuration** for an explicit Execution Mode value. If it defines one of `Headless`, `Headed`, or `Debug`, use it. No further confirmation is needed — an explicitly configured mode is treated as already authorized.
 2. **If the Run Configuration does not define an Execution Mode, halt.** Do not proceed with any default, and do not infer a mode from the environment (e.g., "CI implies Headless"). Ask the user directly which of the three supported modes to use, and wait for an explicit answer before taking any further action.
@@ -114,7 +114,7 @@ Before invoking the test runner on any test, the agent must determine exactly on
 | **Headed** | A visible, on-screen UI for every test. |
 | **Debug** | Interactive step-through execution, for diagnosing a specific failure rather than a full unattended run. |
 
-**How each mode maps to an actual invocation is never assumed by this skill — it is read from the Automation Summary's Execution Instructions** (`.claude/skills/automation-agent/SKILL.md` §25, and see §15 below), which state the concrete command/flag for whichever framework Stage 5 selected. This table previously hardcoded Playwright-specific flags (`--headed`, `PWDEBUG=1`); that was itself a framework assumption this revision removes — see §15 for the corrected, framework-agnostic mechanism.
+**How each mode maps to an actual invocation is never assumed by this skill — it is read from the Automation Summary's Execution Instructions** (`.claude/skills/automation-skill/SKILL.md` §25, and see §15 below), which state the concrete command/flag for whichever framework Stage 5 selected. This table previously hardcoded Playwright-specific flags (`--headed`, `PWDEBUG=1`); that was itself a framework assumption this revision removes — see §15 for the corrected, framework-agnostic mechanism.
 
 ## 5.2 Recording the Mode
 
@@ -125,18 +125,18 @@ The determined Execution Mode is recorded as a distinct, run-level field in the 
 A separate axis from Execution Mode (§5.1) — concurrency determines *how many* tests run at once, not *how visibly*.
 
 - **Sequential** — one test at a time. Default when the Run Configuration/Automation Summary does not specify otherwise, since it is the safest choice against a shared, non-isolated environment (per the Environment Constraints already carried in every Project Context this platform has produced to date).
-- **Parallel** — multiple tests run concurrently, worker count sourced from the Run Configuration if stated. **Must not be assumed available or safe** — a shared staging environment's Environment Constraints (§14) may prohibit concurrent mutating actions; the agent checks this before enabling Parallel, and falls back to Sequential with a stated reason if Parallel is requested but not safe for this environment.
+- **Parallel** — multiple tests run concurrently, worker count sourced from the Run Configuration if stated. **Must not be assumed available or safe** — a shared staging environment's Environment Constraints (§14) may prohibit concurrent mutating actions; this skill checks this before enabling Parallel, and falls back to Sequential with a stated reason if Parallel is requested but not safe for this environment.
 - Recorded in Execution Metadata alongside Execution Mode, e.g., `"Concurrency Mode": "Sequential"` or `"Concurrency Mode": "Parallel (4 workers)"`.
 
 ## 5.4 Retry Policy
 
 - Sourced from the Run Configuration if it defines one (e.g., "retry failed tests up to 2 times"); if absent, defaults to **no automatic retry** — a Failed result is reported as Failed, not silently retried into a false Passed.
 - Where a retry is configured and used, every attempt is recorded (per §22's Retry Count metric), and the final recorded Status reflects the last attempt — **but if any attempt failed, the Result Classification (§17) records this as `Flaky` rather than a clean `Passed`** if a later attempt succeeded, so a reviewer never mistakes "passed on retry" for "passed cleanly."
-- Never conflated with the Investigation & Recovery Engine's retry logic (`.claude/skills/explorer-agent/SKILL.md` §5.7) — that is Explorer's exploration-time recovery; this is Execution's run-time retry of an already-generated, already-approved automated test.
+- Never conflated with the Investigation & Recovery Engine's retry logic (`.claude/skills/explorer-skill/SKILL.md` §5.7) — that is Explorer's exploration-time recovery; this is Execution's run-time retry of an already-generated, already-approved automated test.
 
 ## 5.5 Resume Capability
 
-- Where a prior execution was interrupted (environment failure, timeout, manual stop) before completing the full suite/scope, the agent may **Resume** rather than restart from zero — reading Execution History (§4) to determine which tests already have a recorded outcome and running only the remainder.
+- Where a prior execution was interrupted (environment failure, timeout, manual stop) before completing the full suite/scope, this skill may **Resume** rather than restart from zero — reading Execution History (§4) to determine which tests already have a recorded outcome and running only the remainder.
 - A Resume is still a distinct Execution ID (§8 Rule 9) whose Execution Metadata states `"Resumed From": "{prior Execution ID}"` and whose final Execution Results for the full logical run is the union of the prior recorded outcomes plus this session's — never a silent merge that loses which outcomes came from which execution.
 - Resume is only valid within the same Run — it never carries results forward across a new Run Scope or a new Automation Package version (§21).
 
@@ -146,7 +146,7 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 
 # 6. Outputs
 
-**Execution Results** — a raw, structured record of a single test run, structured per the Standard Output Contract (§18): Execution Metadata, Execution Summary, per-test Execution Results, Evidence Inventory (§16), Execution Statistics/Metrics (§22), Failure Summary, Known Limitations, Execution Recommendations, and Inputs for Reporting Agent. Every recorded result explicitly references: the Executed Test Case ID, the Automation Script ID, Status (per the full Result Classification, §17), Execution Time, and its Evidence Inventory entries — plus failure detail and an environment/run-identity header that includes the Execution Mode, Concurrency Mode, and Retry Policy used. No narrative interpretation. This remains a single artifact (§9) — the Standard Output Contract defines required internal sections, not new files.
+**Execution Results** — a raw, structured record of a single test run, structured per the Standard Output Contract (§18): Execution Metadata, Execution Summary, per-test Execution Results, Evidence Inventory (§16), Execution Statistics/Metrics (§22), Failure Summary, Known Limitations, Execution Recommendations, and Inputs for Reporting skill. Every recorded result explicitly references: the Executed Test Case ID, the Automation Script ID, Status (per the full Result Classification, §17), Execution Time, and its Evidence Inventory entries — plus failure detail and an environment/run-identity header that includes the Execution Mode, Concurrency Mode, and Retry Policy used. No narrative interpretation. This remains a single artifact (§9) — the Standard Output Contract defines required internal sections, not new files.
 
 # 7. Allowed Tools
 
@@ -161,7 +161,7 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 
 1. Must confirm the target environment matches the Project Context before running anything; halt and report on mismatch.
 2. **Must determine an explicit Execution Mode before running anything** (§5.1) — Headless, Headed, or Debug, sourced only from the approved Run Configuration.
-3. **Must never assume a default Execution Mode.** If the Run Configuration does not define one, the agent must halt and request it from the user, and must not proceed until an explicit answer is given.
+3. **Must never assume a default Execution Mode.** If the Run Configuration does not define one, this skill must halt and request it from the user, and must not proceed until an explicit answer is given.
 4. **Must record the determined Execution Mode in the Execution Metadata** (§5.2, §9) on every Execution Results artifact — an artifact missing this field is incomplete, per the same standard already applied to the other required fields in Rule 8 below.
 5. Must not modify automation scripts to force a pass or hide a failure.
 6. Must not execute any test case against an environment not explicitly marked safe for that test's mutating actions.
@@ -169,12 +169,12 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 8. Must not interpret, summarize, or draw narrative conclusions from the results — report raw outcomes only, verbatim.
 9. Must timestamp and uniquely identify each run so results are never ambiguous about which execution they came from.
 10. Must include, for every executed test, its Test Case ID, Automation Script ID, Screenshots, Logs, and Execution Time as distinct fields — a result missing any of these (where applicable/captured) is incomplete and must be flagged as such rather than submitted silently.
-11. **Must never assume, hardcode, or default to a specific framework's invocation syntax.** The test runner command and flags come from the Automation Summary's Execution Instructions (§15) — a framework-specific assumption here (e.g., Playwright flags) is a specification violation, the same category of defect §8 of `.claude/skills/automation-agent/SKILL.md` names for generating unwrapped Selenium under SHAFT.
+11. **Must never assume, hardcode, or default to a specific framework's invocation syntax.** The test runner command and flags come from the Automation Summary's Execution Instructions (§15) — a framework-specific assumption here (e.g., Playwright flags) is a specification violation, the same category of defect §8 of `.claude/skills/automation-skill/SKILL.md` names for generating unwrapped Selenium under SHAFT.
 12. **Must select the Execution Strategy matching this run's Run Scope and Run Type** (§13) — never apply one default "run everything" behavior regardless of scope.
 13. **Must classify every result using the full Result Classification set** (§17) — never collapse Blocked/Not Executed/Inconclusive/Flaky/the four failure-cause categories into a bare Passed/Failed/Skipped/Error.
 14. **Must produce a structured Evidence Inventory** (§16) naming every evidence type captured and every one that could not be, with a reason for the latter — never silently omitted.
 15. **Must recognize the named Stop Conditions** (§19) and, for any condition with a Local scope, continue executing every other unaffected test rather than halting the whole run — and must recommend the smallest corrective action for every blocked/failed item (§20), never a bare failure with no next step.
-16. **Must verify Handoff completeness in both directions** (§21) before treating a run's Execution Results as finished — confirm the Automation Summary's Execution Instructions were actually followed, and confirm every input `.claude/skills/reporting-agent/SKILL.md` §4 declares it needs is present in the Execution Results.
+16. **Must verify Handoff completeness in both directions** (§21) before treating a run's Execution Results as finished — confirm the Automation Summary's Execution Instructions were actually followed, and confirm every input `.claude/skills/reporting-skill/SKILL.md` §4 declares it needs is present in the Execution Results.
 17. **Must record execution Metrics** (§22) — duration, pass/fail/skip rates, retry count, evidence count, flaky count, execution stability — as part of every Execution Results artifact.
 18. **Must execute deterministically and idempotently** (§23) — a rerun of the same suite against the same environment state must not itself be a source of divergent results; where non-determinism is observed, it is reported as `Flaky` (§17), never silently re-run until it passes.
 19. **Must trigger the Automation Repair Loop (§25) whenever at least one result classifies as `Automation Failure`** — inspect for repairability, present a Repair Summary per test case, and ask the human once (§25.2) before repairing or rerunning anything. Must never repair automatically without that question, and must never modify Discovery artifacts, Project Context, or approved Test Cases as part of a repair (§25.3).
@@ -187,7 +187,7 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 | Execution Results | `platform_core_data/workspace/execution/ExecutionResults.md` |
 | Captured screenshots / traces / logs / HAR / framework reports | `platform_core_data/workspace/execution/artifacts/` |
 
-No new artifact paths are introduced by this revision — the Standard Output Contract (§18) defines required sections *within* the existing `ExecutionResults.md` file, preserving the Reporting Agent's existing single-file input expectation (`.claude/skills/reporting-agent/SKILL.md` §4) without requiring any change on that agent's side.
+No new artifact paths are introduced by this revision — the Standard Output Contract (§18) defines required sections *within* the existing `ExecutionResults.md` file, preserving the Reporting skill's existing single-file input expectation (`.claude/skills/reporting-skill/SKILL.md` §4) without requiring any change on that skill's side.
 
 The Execution Results document's run-identity header must include the Execution Mode, Concurrency Mode, and Retry Policy used, alongside the existing run-identity fields (Execution ID, environment, timestamps).
 
@@ -212,13 +212,13 @@ Input:
   EXECUTION_MODE   = (not defined in Run Configuration)
 ```
 
-Hypothetical result: the agent confirms the target environment matches the Project Context, then checks the Run Configuration for an Execution Mode — finds none defined — and halts, asking: *"No Execution Mode is defined in the Run Configuration. Please choose one: Headless, Headed, or Debug."* Only after the user answers, say, "Headed," does the agent proceed to run `npx playwright test --headed`, and the resulting `platform_core_data/workspace/execution/ExecutionResults.md` records `"Execution Mode": "Headed"` in its run-identity header alongside the usual per-test outcomes — e.g., "36 tests executed — 31 Passed, 3 Failed (TC-PIM-013 → `pim.spec.ts::AddEmployee_MissingName`, TC-PIM-014, TC-LEA-013 — validation messages not shown as expected), 2 Skipped (destructive Maintenance actions not authorized against the shared demo)," with each row showing its Test Case ID, Automation Script ID, Execution Time, and linked Screenshots/Logs under `platform_core_data/workspace/execution/artifacts/`.
+Hypothetical result: this skill confirms the target environment matches the Project Context, then checks the Run Configuration for an Execution Mode — finds none defined — and halts, asking: *"No Execution Mode is defined in the Run Configuration. Please choose one: Headless, Headed, or Debug."* Only after the user answers, say, "Headed," does this skill proceed to run `npx playwright test --headed`, and the resulting `platform_core_data/workspace/execution/ExecutionResults.md` records `"Execution Mode": "Headed"` in its run-identity header alongside the usual per-test outcomes — e.g., "36 tests executed — 31 Passed, 3 Failed (TC-PIM-013 → `pim.spec.ts::AddEmployee_MissingName`, TC-PIM-014, TC-LEA-013 — validation messages not shown as expected), 2 Skipped (destructive Maintenance actions not authorized against the shared demo)," with each row showing its Test Case ID, Automation Script ID, Execution Time, and linked Screenshots/Logs under `platform_core_data/workspace/execution/artifacts/`.
 
 # 12. Architecture Principle
 
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this skill specifically: its single responsibility is faithful execution and faithful recording — never interpretation, and never silently deciding *how* to run on the user's behalf when that decision (Execution Mode) was left unspecified. Its output, the Execution Results, becomes the Reporting Agent's sole primary input in the final stage.
+For this skill specifically: its single responsibility is faithful execution and faithful recording — never interpretation, and never silently deciding *how* to run on the user's behalf when that decision (Execution Mode) was left unspecified. Its output, the Execution Results, becomes the Reporting skill's sole primary input in the final stage.
 
 # 13. Execution Strategy by Run Scope and Run Type
 
@@ -226,8 +226,8 @@ Execution scope and priority follow the run's Run Scope Type and Run Type (`work
 
 | Run Scope Type / Run Type | Strategy |
 |---|---|
-| **Entire Project** | Execute the full Automation Suite, every test case the Automation Agent produced a Reuse/Generate decision for. |
-| **Epic** | Execute the suites covering the Epic's constituent Features/Stories, plus any integration test cases designed at their seams (`.claude/skills/test-design-agent/SKILL.md` §16). |
+| **Entire Project** | Execute the full Automation Suite, every test case the Automation skill produced a Reuse/Generate decision for. |
+| **Epic** | Execute the suites covering the Epic's constituent Features/Stories, plus any integration test cases designed at their seams (`.claude/skills/test-design-skill/SKILL.md` §16). |
 | **Feature** | Execute only the one feature's suite. |
 | **User Story** | Execute only the test cases traceable to that story's acceptance criteria — never opportunistically run adjacent, unrelated suite content just because it shares a file. |
 | **Bug Validation** | Execute the specific reproduction and regression test case(s) tied to the Finding first; broader suite execution, if any, is a separate, explicitly scoped decision, not an automatic bundle. |
@@ -240,11 +240,11 @@ Execution scope and priority follow the run's Run Scope Type and Run Type (`work
 | **UI** | Baseline behavior, unchanged from the rest of this specification. |
 | **Mixed** (UI + API in the same suite) | Execute the suite as authored — a single test case combining UI and API steps runs as one unit; its Status reflects the whole case, not a per-step average. |
 
-If the Project Context/Run Scope does not state an explicit Type, the agent defaults to executing the full Automation Suite (Entire Project behavior) and states that default explicitly in the Execution Metadata.
+If the Project Context/Run Scope does not state an explicit Type, this skill defaults to executing the full Automation Suite (Entire Project behavior) and states that default explicitly in the Execution Metadata.
 
 # 14. Environment Awareness
 
-The agent must never assume a specific environment — every run states, in its Execution Metadata, exactly which named environment it targeted, drawn from the Project Context's Environment Constraints:
+This skill must never assume a specific environment — every run states, in its Execution Metadata, exactly which named environment it targeted, drawn from the Project Context's Environment Constraints:
 
 | Environment | Meaning | Execution implication |
 |---|---|---|
@@ -252,12 +252,12 @@ The agent must never assume a specific environment — every run states, in its 
 | **Development** | A shared dev environment, likely unstable/frequently changing. | Failures here may be Environment Failure (§17) rather than Application Failure — treat instability as expected, not automatically a defect. |
 | **QA / Testing** | A dedicated test environment. | The most common target for Full Regression/Smoke runs. |
 | **Staging / Pre-Production** | A production-like environment, often shared across teams. | Concurrency Mode (§5.3) defaults to Sequential here unless explicitly confirmed safe, per the existing shared-environment caution already carried in every Project Context this platform has produced. |
-| **Production Validation (read-only)** | The live production system, with execution strictly limited to non-mutating verification. | The agent must confirm the Project Context explicitly authorizes read-only production validation before running anything here — absent that explicit authorization, Production is never a valid execution target, full stop (this is a stricter, non-negotiable case of Rule 6's existing "not explicitly marked safe" check). |
+| **Production Validation (read-only)** | The live production system, with execution strictly limited to non-mutating verification. | This skill must confirm the Project Context explicitly authorizes read-only production validation before running anything here — absent that explicit authorization, Production is never a valid execution target, full stop (this is a stricter, non-negotiable case of Rule 6's existing "not explicitly marked safe" check). |
 | **CI/CD** | An automated pipeline runner, not a human-attended session. | Concurrency/Retry Policy is typically sourced from CI-specific Run Configuration; Debug mode is not meaningful here and should not be selected. |
 | **Container** | A containerized instance of the application/environment. | No different execution behavior from any other environment — named here so "container" is a recognized Environment Constraint value, not an unhandled case. |
 | **Cloud** | A cloud-hosted target (dev/staging/prod, per the categories above). | Same as Container — the deployment substrate doesn't change execution behavior; only the named environment tier (Dev/QA/Staging/Production) does. |
 
-**The agent must never infer the environment from where it itself happens to be running** (e.g., "I am running inside CI, therefore the target must be a CI-appropriate environment") — the target environment is always what the Project Context states, confirmed via Rule 1's existing environment-match check, regardless of the agent's own execution context.
+**This skill must never infer the environment from where it itself happens to be running** (e.g., "I am running inside CI, therefore the target must be a CI-appropriate environment") — the target environment is always what the Project Context states, confirmed via Rule 1's existing environment-match check, regardless of this skill's own execution context.
 
 # 15. Framework-Agnostic Execution
 
@@ -265,8 +265,8 @@ The agent must never assume a specific environment — every run states, in its 
 
 ## 15.1 How Invocation Is Actually Determined
 
-1. Read the Automation Summary's **Framework Used** section (`.claude/skills/automation-agent/SKILL.md` §25) to know which framework was selected and why.
-2. Read the Automation Summary's **Execution Instructions** section (same artifact) for the concrete command(s), required environment variables, and prerequisite setup — this is authored by the Automation Agent specifically so this skill never has to guess.
+1. Read the Automation Summary's **Framework Used** section (`.claude/skills/automation-skill/SKILL.md` §25) to know which framework was selected and why.
+2. Read the Automation Summary's **Execution Instructions** section (same artifact) for the concrete command(s), required environment variables, and prerequisite setup — this is authored by the Automation skill specifically so this skill never has to guess.
 3. Map the determined Execution Mode/Concurrency Mode/Retry Policy (§5) onto whatever flags/configuration the Execution Instructions state for those concepts in the selected framework — never onto a hardcoded, framework-specific flag this skill invented itself.
 
 ## 15.2 Framework Examples (illustrative only, never assumed)
@@ -284,7 +284,7 @@ This table is illustrative, not authoritative — the authoritative source is al
 
 # 16. Evidence Collection
 
-**Evidence Inventory** — the full set of evidence types this skill may capture during execution, structured and traceable per test result. Not every type applies to every framework/test; the agent records what was captured and explicitly names what wasn't, with a reason (mirroring the Explorer Agent's own evidence-gap discipline, `.claude/skills/explorer-agent/SKILL.md` §5.10):
+**Evidence Inventory** — the full set of evidence types this skill may capture during execution, structured and traceable per test result. Not every type applies to every framework/test; this skill records what was captured and explicitly names what wasn't, with a reason (mirroring the Explorer skill's own evidence-gap discipline, `.claude/skills/explorer-skill/SKILL.md` §5.10):
 
 | Evidence Type | When applicable |
 |---|---|
@@ -311,11 +311,11 @@ A binary Passed/Failed (or even the existing four-state Passed/Failed/Skipped/Er
 | **Skipped** | The test was deliberately not run (e.g., not authorized for this environment, per Rule 6) — a decision, not a failure. |
 | **Blocked** | The test could not run because a precondition (a prior test in a dependent chain, required test data, an environment state) was not met — distinct from Skipped, which is a deliberate decision, and from Failed, which means it ran and didn't pass. |
 | **Not Executed** | The test was in scope but the run ended (time limit, environment failure, manual stop) before reaching it — distinct from Blocked (a specific precondition failure) and Skipped (a deliberate decision). |
-| **Inconclusive** | The test ran but produced a result the agent cannot confidently classify as Passed or Failed (e.g., an assertion that itself errored rather than evaluated false) — reported as such, never forced into Passed or Failed. |
+| **Inconclusive** | The test ran but produced a result this skill cannot confidently classify as Passed or Failed (e.g., an assertion that itself errored rather than evaluated false) — reported as such, never forced into Passed or Failed. |
 | **Flaky** | The test's outcome was not consistent across attempts within this same execution (e.g., failed then passed on retry, per §5.4) — reported distinctly from a clean Passed so a reviewer knows reliability is in question even though the final attempt succeeded. |
 | **Infrastructure Failure** | The test could not run due to a failure in the execution infrastructure itself (test runner crash, out-of-memory, CI runner failure) — not the application or the environment under test. |
 | **Environment Failure** | The target environment was unreachable, degraded, or in an unexpected state not attributable to the application under test's own defects (e.g., a shared staging instance down for unrelated maintenance). |
-| **Automation Failure** | The generated automation itself is broken (a stale selector, a script referencing a removed page object) — distinct from Application Failure; the application may be working fine, but the automation asset needs fixing (a signal back to the Automation Agent, §20). |
+| **Automation Failure** | The generated automation itself is broken (a stale selector, a script referencing a removed page object) — distinct from Application Failure; the application may be working fine, but the automation asset needs fixing (a signal back to the Automation skill, §20). |
 | **Application Failure** | The application under test genuinely behaved incorrectly, and the automation/environment/infrastructure are confirmed not at fault — the closest match to a traditional "Failed" caused by a real defect. |
 | **Configuration Failure** | Execution could not proceed correctly due to a configuration problem (wrong environment URL, missing credential, invalid Execution Mode/framework config) — distinct from Environment Failure, which is about the target system's own state. |
 
@@ -326,7 +326,7 @@ A binary Passed/Failed (or even the existing four-state Passed/Failed/Skipped/Er
 
 # 18. Standard Output Contract
 
-The Execution Results artifact (§9 — same file, no new artifact path) must contain exactly these sections, in this order, so the Reporting Agent never has to interpret free-form prose to extract what it needs:
+The Execution Results artifact (§9 — same file, no new artifact path) must contain exactly these sections, in this order, so the Reporting skill never has to interpret free-form prose to extract what it needs:
 
 | # | Section | Must contain, at minimum |
 |---|---|---|
@@ -339,16 +339,16 @@ The Execution Results artifact (§9 — same file, no new artifact path) must co
 | 7 | **Automation Repair Loop Outcome (§25, when triggered)** | The Repair Summary (§25.1), the human's answer (§25.2), and — if repair was approved — the Before/After comparison (§25.4): Fixed (`Automation Repaired`), Remaining failures, New failures, Root cause, Confidence. Omitted entirely (not left as an empty section) when no `Automation Failure` occurred this run. |
 | 8 | **Known Limitations** | Anything this execution could not fully verify (e.g., a test marked Blocked, a Skipped mutating action) and why |
 | 9 | **Execution Recommendations** | The corrective actions recommended per §20 for any blocked/failed item — retry, resume, switch mode, validate environment, re-run subset, or flag for Automation regeneration |
-| 10 | **Inputs for Reporting Agent** | The explicit handoff package per §21 — confirmation that every input `.claude/skills/reporting-agent/SKILL.md` §4 declares it needs is present |
+| 10 | **Inputs for Reporting skill** | The explicit handoff package per §21 — confirmation that every input `.claude/skills/reporting-skill/SKILL.md` §4 declares it needs is present |
 
 # 19. Stop Conditions
 
-The agent recognizes the following named conditions. Recognizing one is never, by itself, a reason to halt the entire run — see §20 for the required corrective-action recommendation before any blocked item is left unresolved.
+This skill recognizes the following named conditions. Recognizing one is never, by itself, a reason to halt the entire run — see §20 for the required corrective-action recommendation before any blocked item is left unresolved.
 
 | Condition | Scope | Required Action |
 |---|---|---|
 | **Missing Automation Package** | Global | Halt — there is nothing to execute. Report the gap; recommend confirming Stage 5 completed and its output is `Approved`. |
-| **Missing Framework** (the Automation Summary doesn't state one, and none can be inferred) | Global | Halt — per §15, this skill never selects a framework itself. Recommend re-running the Automation Agent to produce a complete Automation Summary. |
+| **Missing Framework** (the Automation Summary doesn't state one, and none can be inferred) | Global | Halt — per §15, this skill never selects a framework itself. Recommend re-running the Automation skill to produce a complete Automation Summary. |
 | **Missing Execution Configuration** (no Execution Mode, and the Run Configuration provides no way to obtain one) | Global | Per existing Rule 3: halt and ask the user directly — never default. |
 | **Invalid Run Configuration** (e.g., an Execution Mode value other than Headless/Headed/Debug, or a Retry Policy that doesn't parse) | Global | Halt and report the specific invalid value — never silently coerce it to a nearest-guess valid value. |
 | **Environment Unavailable** (target URL unreachable, application down) | Global | Halt; recommend validating the environment (§20) before retrying — never repeatedly retry against a genuinely down target as if that were a flaky-test problem. |
@@ -358,7 +358,7 @@ The agent recognizes the following named conditions. Recognizing one is never, b
 
 # 20. Recovery Strategy — Smallest Corrective Action
 
-Like the Test Design and Automation Agents (`.claude/skills/test-design-agent/SKILL.md` §20, `.claude/skills/automation-agent/SKILL.md` §27), this skill's recovery behavior is: **never simply fail — recommend the smallest corrective action, and never let one blocked test stop the whole run.**
+Like the Test Design and Automation skills (`.claude/skills/test-design-skill/SKILL.md` §20, `.claude/skills/automation-skill/SKILL.md` §27), this skill's recovery behavior is: **never simply fail — recommend the smallest corrective action, and never let one blocked test stop the whole run.**
 
 1. For a Local Stop Condition (§19, e.g., Execution Dependency Failure), continue executing every other unaffected test — a single blocked test is never a reason to produce zero output for the run.
 2. For every failure/block, recommend the smallest corrective action from this list, matched to the Result Classification (§17) that caused it:
@@ -367,31 +367,31 @@ Like the Test Design and Automation Agents (`.claude/skills/test-design-agent/SK
    - **Switch execution mode** — e.g., recommend Debug mode specifically for re-diagnosing a single persistent Failed test, rather than re-running the whole suite Headless again.
    - **Validate environment** — for an Environment Failure or Authentication Failure, before any retry is attempted.
    - **Re-run affected subset only** — a Selective Re-run (§13) of just the failed/blocked test IDs, once the underlying cause is believed fixed.
-   - **Recommend Automation Package regeneration** — where the classification is `Automation Failure` (a broken selector/reference, not an application defect) — this skill cannot fix the automation itself; it flags the specific test case(s) for the Automation Agent to regenerate, per §21's upstream escalation path.
+   - **Recommend Automation Package regeneration** — where the classification is `Automation Failure` (a broken selector/reference, not an application defect) — this skill cannot fix the automation itself; it flags the specific test case(s) for the Automation skill to regenerate, per §21's upstream escalation path.
 3. Every recommendation is recorded in the Execution Results' Execution Recommendations section (§18) — never only in a narrative aside a reviewer could miss.
 
 # 21. Handoff Contracts
 
-## 21.1 Automation Agent → Automation Execution Agent
+## 21.1 Automation skill → Automation Execution skill
 
-| This skill needs (§4) | Satisfied by (`.claude/skills/automation-agent/SKILL.md` §16/§25) |
+| This skill needs (§4) | Satisfied by (`.claude/skills/automation-skill/SKILL.md` §16/§25) |
 |---|---|
 | Automation Suite | Automation Package (§16 #2) |
 | Automation Summary (Framework Used, Execution Instructions, Coverage, Known Limitations) | Automation Summary (§16 #7, §25) |
 | Project Context | Unchanged pass-through from Stage 1 |
 
-**Confirmed Contract Mismatch (identified during the Automation Agent's own v3 review, closed from this side):** this skill's §4 previously named the required input "Automation Coverage Summary" at path `AutomationSummary.md` — a filename that Automation Agent v2's actual six-artifact split never produced (verified against the real `platform_core_data/runs/RUN-20260706-002/Automation/` output). Automation Agent v3 closed this by adding an actual `AutomationSummary` artifact at exactly that path (`.claude/skills/automation-agent/SKILL.md` §16 #7, §25). This skill's §4 row is now renamed "Automation Summary" and its description corrected to match what that artifact actually contains — the mismatch is resolved on both ends as of this pair of revisions. `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 5's artifact path list still references the same pre-v2 filename in its own prose; that file is out of scope for both this revision and the Automation Agent's ("do not modify the pipeline"), so it remains a known, harmless label lag (the actual filename it names now happens to be correct again, by coincidence of the v3 fix, even though the document itself was never updated).
+**Confirmed Contract Mismatch (identified during the Automation skill's own v3 review, closed from this side):** this skill's §4 previously named the required input "Automation Coverage Summary" at path `AutomationSummary.md` — a filename that Automation skill v2's actual six-artifact split never produced (verified against the real `platform_core_data/runs/RUN-20260706-002/Automation/` output). Automation skill v3 closed this by adding an actual `AutomationSummary` artifact at exactly that path (`.claude/skills/automation-skill/SKILL.md` §16 #7, §25). This skill's §4 row is now renamed "Automation Summary" and its description corrected to match what that artifact actually contains — the mismatch is resolved on both ends as of this pair of revisions. `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 5's artifact path list still references the same pre-v2 filename in its own prose; that file is out of scope for both this revision and the Automation skill's ("do not modify the pipeline"), so it remains a known, harmless label lag (the actual filename it names now happens to be correct again, by coincidence of the v3 fix, even though the document itself was never updated).
 
-## 21.2 Automation Execution Agent → Reporting Agent
+## 21.2 Automation Execution skill → Reporting skill
 
-| Reporting Agent needs (`.claude/skills/reporting-agent/SKILL.md` §4) | Satisfied by (this skill's output) |
+| Reporting skill needs (`.claude/skills/reporting-skill/SKILL.md` §4) | Satisfied by (this skill's output) |
 |---|---|
 | Execution Results (`ExecutionResults.md`) | §9 — unchanged path, now internally structured per the Standard Output Contract (§18) |
 | Manual Test Suites | Not produced by this skill — unchanged pass-through from Stage 3 |
 | Traceability Matrix | Not produced by this skill — unchanged pass-through from Stage 3 |
 | Project Context | Unchanged pass-through from Stage 1 |
 
-**No contract mismatch found on this side.** Reporting Agent's own spec expects exactly one Execution Results file (not a separate Evidence Inventory/Metrics file) — this revision deliberately keeps the Standard Output Contract's nine sections (§18) *inside* that single existing artifact rather than splitting them into new files, specifically to avoid creating a second instance of the same category of drift just closed in §21.1. Reporting Agent's existing per-test read of "Test Case ID, Automation Script ID, Execution Time, Screenshots/Logs references" (its own §4/§9) remains satisfied by this skill's Execution Results section (§18 #3) and Evidence Inventory (§18 #4) — no change required on Reporting's side, and none is made here.
+**No contract mismatch found on this side.** Reporting skill's own spec expects exactly one Execution Results file (not a separate Evidence Inventory/Metrics file) — this revision deliberately keeps the Standard Output Contract's nine sections (§18) *inside* that single existing artifact rather than splitting them into new files, specifically to avoid creating a second instance of the same category of drift just closed in §21.1. Reporting skill's existing per-test read of "Test Case ID, Automation Script ID, Execution Time, Screenshots/Logs references" (its own §4/§9) remains satisfied by this skill's Execution Results section (§18 #3) and Evidence Inventory (§18 #4) — no change required on Reporting's side, and none is made here.
 
 # 22. Metrics
 
@@ -408,17 +408,17 @@ Every Execution Results artifact reports the following, consolidated in its Exec
 | **Framework** | The framework actually used (from the Automation Summary, §15). |
 | **Execution Mode** | Headless/Headed/Debug, per §5.1. |
 | **Environment** | The named environment, per §14. |
-| **Coverage Summary** | A restated pointer to the Automation Coverage Report's figures (`.claude/skills/automation-agent/SKILL.md` §16 #5) — this skill does not recompute coverage, only cites it for a reader who wants the figure alongside execution results. |
+| **Coverage Summary** | A restated pointer to the Automation Coverage Report's figures (`.claude/skills/automation-skill/SKILL.md` §16 #5) — this skill does not recompute coverage, only cites it for a reader who wants the figure alongside execution results. |
 | **Flaky Test Count** | Count of results classified `Flaky` (§17). |
 | **Execution Stability** | Flaky Test Count ÷ total executed — a simple, stated ratio, not a subjective judgment of "how stable" the suite is. |
 
 # 23. Execution Reliability
 
 - **Deterministic execution** — given the same Automation Suite, environment state, and configuration, a rerun produces the same classifications for the same tests; where it doesn't, the divergence is itself reported as `Flaky` (§17), never silently absorbed by re-running until a clean pass appears.
-- **Stable ordering** — tests execute in a consistent, recorded order run-to-run (per the suite's own configured order, per `.claude/skills/automation-agent/SKILL.md` §10) unless Parallel execution (§5.3) is explicitly in effect, in which case the non-deterministic ordering itself is noted in Execution Metadata.
+- **Stable ordering** — tests execute in a consistent, recorded order run-to-run (per the suite's own configured order, per `.claude/skills/automation-skill/SKILL.md` §10) unless Parallel execution (§5.3) is explicitly in effect, in which case the non-deterministic ordering itself is noted in Execution Metadata.
 - **Repeatability** — a Selective Re-run or Failed Test Re-run (§13) of the same test IDs against an unchanged environment/automation version is expected to reproduce the same outcome; a case that doesn't is flagged `Flaky`.
 - **Retry policies** — per §5.4, bounded and recorded, never silent or unbounded.
-- **Failure isolation** — one test's failure must not cause unrelated tests to report false failures (e.g., leaked session state, uncleaned test data) — where the Automation Agent's own idempotency rule (`.claude/skills/automation-agent/SKILL.md` §14, Execution Rule 20) was followed, this should not occur; where it is observed anyway, it is itself an `Automation Failure` classification (§17), not an application defect.
+- **Failure isolation** — one test's failure must not cause unrelated tests to report false failures (e.g., leaked session state, uncleaned test data) — where the Automation skill's own idempotency rule (`.claude/skills/automation-skill/SKILL.md` §14, Execution Rule 20) was followed, this should not occur; where it is observed anyway, it is itself an `Automation Failure` classification (§17), not an application defect.
 - **Partial reruns** — Selective Re-run/Resume (§13, §5.5) never silently discard or overwrite the prior execution's recorded outcomes for tests not included in the partial rerun — the full logical picture is always the union, clearly attributed by Execution ID.
 - **Idempotent execution** — running the same test twice without an intervening state change produces the same result; where the application itself is not idempotent-safe for a given mutating test, that is a `Skipped`/environment-constraint case (Rule 6), not something this skill works around by suppressing the second run's evidence.
 
@@ -432,7 +432,7 @@ The abstractions this revision relies on — framework-agnostic invocation (§15
 | **API** | REST Assured/Postman (already listed, §15.2) as framework; Evidence Inventory's Network Logs/HAR rows already cover request/response capture; no browser-mode concept applies (Execution Mode may be `N/A`). |
 | **Mobile** | Appium (already listed) as framework; Evidence Inventory extends with device logs/screen recordings under the existing Videos/Console Logs rows. |
 | **Desktop** | A desktop-automation framework slots into §15's extensible framework list the same way SHAFT/Appium already do. |
-| **Microservices** | Execution Strategy (§13) already treats a workflow spanning services as one suite, matching the Automation Agent's own Suite Planning; Result Classification's Infrastructure/Environment Failure rows already distinguish a downstream service outage from an application defect. |
+| **Microservices** | Execution Strategy (§13) already treats a workflow spanning services as one suite, matching the Automation skill's own Suite Planning; Result Classification's Infrastructure/Environment Failure rows already distinguish a downstream service outage from an application defect. |
 | **Batch Jobs** | A "test" becomes a job-trigger-and-verify cycle; Evidence Inventory's Execution Logs/Attachments rows already cover job output artifacts. |
 | **Queues** | Same pattern — Evidence Inventory covers published/consumed message payloads as Attachments. |
 | **Cloud Resources** | Environment Awareness (§14) already names Cloud as a deployment substrate; Framework Detection extends to a cloud provider's SDK/CLI. |
@@ -468,7 +468,7 @@ Repair automation and rerun ONLY affected tests?
 3. Skip repair
 ```
 
-This is asked once for the whole batch of Automation Failures from this execution, not once per test case, and the agent does not proceed with any repair before this question is answered — even though the individual fixes (a missing wait, a corrected assertion string) would ordinarily be exactly the kind of Engineering Decision `workflows_and_pipelines/pipeline/pipeline.md` §5.5 says to make automatically. The distinction: those rules govern Test Design–time authoring; this gate governs *re-executing against a real (often shared) environment*, which is why it stays a Human Decision.
+This is asked once for the whole batch of Automation Failures from this execution, not once per test case, and this skill does not proceed with any repair before this question is answered — even though the individual fixes (a missing wait, a corrected assertion string) would ordinarily be exactly the kind of Engineering Decision `workflows_and_pipelines/pipeline/pipeline.md` §5.5 says to make automatically. The distinction: those rules govern Test Design–time authoring; this gate governs *re-executing against a real (often shared) environment*, which is why it stays a Human Decision.
 
 ## 25.3 Step 3 — Repair scope (if approved)
 
@@ -512,7 +512,7 @@ The final Execution Results (§18) never reports one merged "Failed" count. It r
 
 ## 26.0 Root Cause Confidence gate — Diagnosis vs. Repair
 
-Before enumerating strategies, classify the current Root Cause Confidence for this specific failure — **High / Medium / Low** — and always state which state it's in, so the human always knows whether the agent is currently trying to *understand* the problem or *fix* it:
+Before enumerating strategies, classify the current Root Cause Confidence for this specific failure — **High / Medium / Low** — and always state which state it's in, so the human always knows whether this skill is currently trying to *understand* the problem or *fix* it:
 
 | Root Cause Confidence | Meaning | Required Action |
 |---|---|---|
@@ -525,7 +525,7 @@ Before enumerating strategies, classify the current Root Cause Confidence for th
 - **Diagnosis Strategies** (evidence-gathering, no code/behavior change): collect a DOM snapshot, capture network log, capture console errors, capture page source, record additional evidence.
 - **Repair Strategies** (an actual code change, per §26.1's format): update a locator, add synchronization, update an assertion, replace a brittle selector, refactor Page Object logic.
 
-**If a selected Diagnosis Strategy's evidence resolves the open question, the agent automatically returns to Repair Strategy selection (§26.1) using that new evidence** — this is not a second, separate human ask; the loop-back itself is expected and automatic once real evidence exists, only the *resulting* repair proposal goes through the normal §26.2/§25.2 gates again.
+**If a selected Diagnosis Strategy's evidence resolves the open question, this skill automatically returns to Repair Strategy selection (§26.1) using that new evidence** — this is not a second, separate human ask; the loop-back itself is expected and automatic once real evidence exists, only the *resulting* repair proposal goes through the normal §26.2/§25.2 gates again.
 
 ## 26.1 Enumerate strategies
 
@@ -561,10 +561,10 @@ Which repair strategy should be used?
 ```
 
 - Options 1–3 apply mechanically per failure (whichever listed option scores best on that axis) — no further back-and-forth per test case.
-- **Custom**: the human specifies which option to use, potentially differing per failure; the agent asks follow-up only for the specific failures where the human's custom instruction is ambiguous, never for every failure by default.
-- **Let platform recommend**: the agent picks per failure and states, in one line, why (e.g., "Option A — highest confidence and lowest risk, no tradeoff to weigh").
+- **Custom**: the human specifies which option to use, potentially differing per failure; this skill asks follow-up only for the specific failures where the human's custom instruction is ambiguous, never for every failure by default.
+- **Let platform recommend**: this skill picks per failure and states, in one line, why (e.g., "Option A — highest confidence and lowest risk, no tradeoff to weigh").
 
-This question may be asked in the same exchange as §25.2's repair-and-rerun gate (a single consolidated ask, per the established pattern at `.claude/skills/automation-agent/SKILL.md` §33.1) — but it is a distinct decision, never inferred from the other.
+This question may be asked in the same exchange as §25.2's repair-and-rerun gate (a single consolidated ask, per the established pattern at `.claude/skills/automation-skill/SKILL.md` §33.1) — but it is a distinct decision, never inferred from the other.
 
 # 27. Repair Confidence Engine
 
@@ -619,7 +619,7 @@ A report is never issued above 95% before the repair is actually rerun and confi
 
 # 28. Automation Repair Knowledge Base
 
-**A two-layer, cross-run store of repair patterns, per the Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10) — distinct from `.claude/skills/automation-agent/SKILL.md` §11's "Automation Knowledge Base," which is reusable *code assets* within one project's package.** This one is reusable *repair reasoning*: what failure pattern, what fix worked, under what conditions.
+**A two-layer, cross-run store of repair patterns, per the Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10) — distinct from `.claude/skills/automation-skill/SKILL.md` §11's "Automation Knowledge Base," which is reusable *code assets* within one project's package.** This one is reusable *repair reasoning*: what failure pattern, what fix worked, under what conditions.
 
 - **Project Knowledge (default write target):** `platform_core_data/knowledge_base/repair/REP-{NNN}.md` — this project's own execution-confirmed repair records.
 - **Platform Knowledge (read always; written only via Promotion):** `platform_core/knowledge/repair_patterns/REPAIR-{NNN}.md` and `platform_core/knowledge/reasoning/REASON-{NNN}.md` — generalized, cross-project repair/reasoning patterns.
@@ -679,8 +679,8 @@ A second project independently confirming the same Platform pattern increments i
 
 ## 28.3 Read rule — consult before creating something new
 
-- **Automation Execution Agent (§25.1)**: before proposing a new repair strategy, check both layers — Platform Knowledge (`platform_core/knowledge/repair_patterns/`, `platform_core/knowledge/reasoning/`) first, then the current project's `knowledge_base/repair/` — for a matching rule; if found, include it as a candidate option (§26.1), explicitly cited by ID.
-- **Automation Agent**: before generating any new automation (`.claude/skills/automation-agent/SKILL.md` §5, §11), consult both layers for patterns relevant to the flows being automated (e.g., a Login suite consults any rule tagged "Authentication flows") and applies a matching rule's approach proactively, rather than waiting to discover the same failure via execution again.
+- **Automation Execution skill (§25.1)**: before proposing a new repair strategy, check both layers — Platform Knowledge (`platform_core/knowledge/repair_patterns/`, `platform_core/knowledge/reasoning/`) first, then the current project's `knowledge_base/repair/` — for a matching rule; if found, include it as a candidate option (§26.1), explicitly cited by ID.
+- **Automation skill**: before generating any new automation (`.claude/skills/automation-skill/SKILL.md` §5, §11), consult both layers for patterns relevant to the flows being automated (e.g., a Login suite consults any rule tagged "Authentication flows") and applies a matching rule's approach proactively, rather than waiting to discover the same failure via execution again.
 
 ## 28.4 Explainability
 
@@ -699,7 +699,7 @@ Hard constraints, restated explicitly (all already established individually acro
 
 1. Never hide a failure — every classification, repaired or not, is reported (§18, §25.6).
 2. Never silently rewrite a Test Case — §25.3 rule 4.
-3. Never silently overwrite a Reference Automation Project — `.claude/skills/automation-agent/SKILL.md` §32.2.
+3. Never silently overwrite a Reference Automation Project — `.claude/skills/automation-skill/SKILL.md` §32.2.
 4. Never update Test Cases automatically — §25.3 rule 4 (only on a separate, explicit request).
 5. Never update Discovery artifacts automatically — §25.3 rule 2.
 6. Never learn from a failed repair — §28.1.

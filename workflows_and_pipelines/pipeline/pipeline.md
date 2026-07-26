@@ -2,7 +2,7 @@
 
 **Type:** Reusable pipeline orchestration specification
 **Status:** Specification only — no stage, agent, or checkpoint in this document has been executed.
-**Governs:** The seven skills defined in [`.claude/skills/`](../../.claude/skills/) — `project-context-agent`, `explorer-agent`, `test-design-agent`, `manual-execution-agent`, `automation-agent`, `automation-execution-agent`, `reporting-agent`.
+**Governs:** The seven skills defined in [`.claude/skills/`](../../.claude/skills/) — `project-context-skill`, `explorer-skill`, `test-design-skill`, `manual-execution-skill`, `automation-skill`, `automation-execution-skill`, `reporting-skill`.
 
 ---
 
@@ -98,7 +98,7 @@ The pipeline exists to enforce this principle mechanically: no stage may reach i
 
 ### Stage 1 — Project Context Agent
 
-**Spec:** [`.claude/skills/project-context-agent/SKILL.md`](../../.claude/skills/project-context-agent/SKILL.md)
+**Spec:** [`.claude/skills/project-context-skill/SKILL.md`](../../.claude/skills/project-context-skill/SKILL.md)
 
 | | |
 |---|---|
@@ -113,7 +113,7 @@ Notes:
 
 ### Stage 2 — Explorer Agent
 
-**Spec:** [`.claude/skills/explorer-agent/SKILL.md`](../../.claude/skills/explorer-agent/SKILL.md)
+**Spec:** [`.claude/skills/explorer-skill/SKILL.md`](../../.claude/skills/explorer-skill/SKILL.md)
 
 | | |
 |---|---|
@@ -128,7 +128,7 @@ Notes:
 
 ### Stage 3 — Test Design Agent
 
-**Spec:** [`.claude/skills/test-design-agent/SKILL.md`](../../.claude/skills/test-design-agent/SKILL.md)
+**Spec:** [`.claude/skills/test-design-skill/SKILL.md`](../../.claude/skills/test-design-skill/SKILL.md)
 
 | | |
 |---|---|
@@ -143,7 +143,7 @@ Notes:
 
 ### Stage 4 — Manual Execution Agent
 
-**Spec:** [`.claude/skills/manual-execution-agent/SKILL.md`](../../.claude/skills/manual-execution-agent/SKILL.md)
+**Spec:** [`.claude/skills/manual-execution-skill/SKILL.md`](../../.claude/skills/manual-execution-skill/SKILL.md)
 
 | | |
 |---|---|
@@ -160,7 +160,7 @@ Notes:
 
 ### Stage 5 — Automation Agent
 
-**Spec:** [`.claude/skills/automation-agent/SKILL.md`](../../.claude/skills/automation-agent/SKILL.md)
+**Spec:** [`.claude/skills/automation-skill/SKILL.md`](../../.claude/skills/automation-skill/SKILL.md)
 
 | | |
 |---|---|
@@ -176,7 +176,7 @@ Notes:
 
 ### Stage 6 — Automation Execution Agent
 
-**Spec:** [`.claude/skills/automation-execution-agent/SKILL.md`](../../.claude/skills/automation-execution-agent/SKILL.md)
+**Spec:** [`.claude/skills/automation-execution-skill/SKILL.md`](../../.claude/skills/automation-execution-skill/SKILL.md)
 
 | | |
 |---|---|
@@ -193,7 +193,7 @@ Notes:
 
 ### Stage 7 — Reporting Agent
 
-**Spec:** [`.claude/skills/reporting-agent/SKILL.md`](../../.claude/skills/reporting-agent/SKILL.md)
+**Spec:** [`.claude/skills/reporting-skill/SKILL.md`](../../.claude/skills/reporting-skill/SKILL.md)
 
 | | |
 |---|---|
@@ -212,16 +212,16 @@ Each skill under `.claude/skills/` now declares a strict `inputs`/`outputs`/`dep
 
 | Upstream skill | Output key(s) (contract) | → | Downstream skill | Input key(s) (contract) satisfied |
 |---|---|---|---|---|
-| *(none — first stage)* | — | → | `project-context-agent` | `prd`, `run_configuration` (supplied at invocation) |
-| `project-context-agent` | `project_context` | → | `explorer-agent` | `project_context` |
-| `explorer-agent` | `qa_assessment_report`, `findings_summary`, `evidence_packages`, `discovery_snapshots` | → | `test-design-agent` | `discovery_artifacts` (`project_context` is re-supplied from Stage 1's output, not re-derived) |
-| `test-design-agent` | `manual_test_suite_md`, `manual_test_suite_xlsx`, `traceability_matrix`, `coverage_report` | → | `manual-execution-agent` | `manual_test_suite`, `traceability_matrix`, `coverage_report` |
-| `manual-execution-agent` | `automation_candidate_package`, `manual_execution_summary` | → | `automation-agent` | `automation_candidate_package`, `manual_execution_summary` |
-| `test-design-agent` (pass-through) | `manual_test_suite_md`/`.xlsx`, `traceability_matrix`, `coverage_report` | → | `automation-agent` | `manual_test_suite`, `traceability_matrix`, `coverage_report` — content source only; scope comes from `manual-execution-agent`'s output above |
-| `automation-agent` | `automation_package`, `automation_summary` | → | `automation-execution-agent` | `automation_suite`, `automation_summary` |
-| `automation-execution-agent` | `execution_results` | → | `reporting-agent` | `execution_results` |
-| `test-design-agent` (pass-through) | `traceability_matrix`, `manual_test_suite_md`/`.xlsx` | → | `reporting-agent` | `traceability_matrix`, `manual_test_suites` |
-| `project-context-agent` (pass-through) | `project_context` | → | *every stage 2–7* | `project_context` — re-supplied unchanged at each stage, per §6 Rule 5 (Single Source of Truth), never re-derived |
+| *(none — first stage)* | — | → | `project-context-skill` | `prd`, `run_configuration` (supplied at invocation) |
+| `project-context-skill` | `project_context` | → | `explorer-skill` | `project_context` |
+| `explorer-skill` | `qa_assessment_report`, `findings_summary`, `evidence_packages`, `discovery_snapshots` | → | `test-design-skill` | `discovery_artifacts` (`project_context` is re-supplied from Stage 1's output, not re-derived) |
+| `test-design-skill` | `manual_test_suite_md`, `manual_test_suite_xlsx`, `traceability_matrix`, `coverage_report` | → | `manual-execution-skill` | `manual_test_suite`, `traceability_matrix`, `coverage_report` |
+| `manual-execution-skill` | `automation_candidate_package`, `manual_execution_summary` | → | `automation-skill` | `automation_candidate_package`, `manual_execution_summary` |
+| `test-design-skill` (pass-through) | `manual_test_suite_md`/`.xlsx`, `traceability_matrix`, `coverage_report` | → | `automation-skill` | `manual_test_suite`, `traceability_matrix`, `coverage_report` — content source only; scope comes from `manual-execution-skill`'s output above |
+| `automation-skill` | `automation_package`, `automation_summary` | → | `automation-execution-skill` | `automation_suite`, `automation_summary` |
+| `automation-execution-skill` | `execution_results` | → | `reporting-skill` | `execution_results` |
+| `test-design-skill` (pass-through) | `traceability_matrix`, `manual_test_suite_md`/`.xlsx` | → | `reporting-skill` | `traceability_matrix`, `manual_test_suites` |
+| `project-context-skill` (pass-through) | `project_context` | → | *every stage 2–7* | `project_context` — re-supplied unchanged at each stage, per §6 Rule 5 (Single Source of Truth), never re-derived |
 
 Notes:
 - A downstream skill's input key name does not need to match the upstream skill's output key name verbatim (each contract is written independently, like a function's own parameter names) — this table is what reconciles them for orchestration purposes.
@@ -283,12 +283,12 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 
 ### 5.5 Human Decisions vs. Engineering Decisions (added 2026-07-12, user-mandated — applies to every stage, not only Stage 5)
 
-**Not every judgment call an agent makes is a Human Decision.** §5.4 and `.claude/skills/automation-agent/SKILL.md` §31–§33 added several legitimate human-in-the-loop gates; this section exists so those gates don't over-fire into ordinary engineering work that no stage's own spec requires a human to approve mid-flight (the Checkpoint & Approval Gates in §5.1–§5.2 already provide the real review point — this section is about what happens *before* that checkpoint, while an agent is still doing its own work).
+**Not every judgment call an agent makes is a Human Decision.** §5.4 and `.claude/skills/automation-skill/SKILL.md` §31–§33 added several legitimate human-in-the-loop gates; this section exists so those gates don't over-fire into ordinary engineering work that no stage's own spec requires a human to approve mid-flight (the Checkpoint & Approval Gates in §5.1–§5.2 already provide the real review point — this section is about what happens *before* that checkpoint, while an agent is still doing its own work).
 
 **Human Decisions — always ask, never infer:**
 - Which automation framework to use (§31)
-- Extend the existing project for a framework, start a project for a framework with none yet, or (rare, explicit) reset one from scratch (§31, §33) — never a coexisting second package for a framework that already has a project (`.claude/skills/automation-agent/SKILL.md` §31.5)
-- **Automation merge destination and repository structure** (added 2026-07-24) — which project a run's automation is merged into, and any other repository-structure question the Automation Asset Lifecycle (§12) surfaces; governed by the explicit gather → analyze → recommend → wait procedure in `.claude/skills/automation-agent/SKILL.md` §31.6
+- Extend the existing project for a framework, start a project for a framework with none yet, or (rare, explicit) reset one from scratch (§31, §33) — never a coexisting second package for a framework that already has a project (`.claude/skills/automation-skill/SKILL.md` §31.5)
+- **Automation merge destination and repository structure** (added 2026-07-24) — which project a run's automation is merged into, and any other repository-structure question the Automation Asset Lifecycle (§12) surfaces; governed by the explicit gather → analyze → recommend → wait procedure in `.claude/skills/automation-skill/SKILL.md` §31.6
 - Which project/repository to target — including whether to generate inside the platform, export a compatible package, or modify an external Reference Automation Project directly (§32)
 - Environment selection, when more than one is genuinely available for a run
 - Executing any destructive or irreversible operation
@@ -300,7 +300,7 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 - Risk annotations, traceability updates, coverage-gap documentation
 - Whether an adjacent, unrequested feature stays out of the current run's scope (e.g. Logout when only Login was asked for) — document it as "Out of Current Scope / potential future module" in the relevant artifact and continue; never pause execution to ask whether to fold an adjacent feature into scope unless doing so would change the run's business objective (a Human Decision, above)
 
-**The "can't safely execute" rule:** when Discovery or Test Design identifies a scenario that cannot safely run against the current environment (e.g. a lockout/brute-force risk on shared staging), the agent does not ask what to do — it automatically creates the test case, marks it `Deferred` / `Requires Dedicated Environment`, states the reason, and continues with everything else. This extends the existing Coverage Gap / Stop Condition disclosure rules already present in `.claude/skills/explorer-agent/SKILL.md` and `.claude/skills/test-design-agent/SKILL.md` — it does not relax them, it clarifies that disclosure, not a question, is the correct response.
+**The "can't safely execute" rule:** when Discovery or Test Design identifies a scenario that cannot safely run against the current environment (e.g. a lockout/brute-force risk on shared staging), the agent does not ask what to do — it automatically creates the test case, marks it `Deferred` / `Requires Dedicated Environment`, states the reason, and continues with everything else. This extends the existing Coverage Gap / Stop Condition disclosure rules already present in `.claude/skills/explorer-skill/SKILL.md` and `.claude/skills/test-design-skill/SKILL.md` — it does not relax them, it clarifies that disclosure, not a question, is the correct response.
 
 **Why:** the same day these gates were introduced, the user drew this line explicitly: "The platform should stop interrupting the workflow for engineering decisions. Reserve questions only for real human decisions." Confirmed concretely against an anti-enumeration test-case addition and an adjacent-scope (Logout) question — both are Engineering Decisions and should never have been asked about.
 
@@ -375,7 +375,7 @@ Note (2026-07-25): this section previously justified the split by cross-project 
 
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
-| **Platform Knowledge** | `platform_core/knowledge/` | Reusable, application-agnostic engineering knowledge: automation strategies, repair strategies, diagnosis strategies, proven exceptions to Execution Engine defaults (not the engine's core retry/concurrency/stop-condition mechanics — fixed capability logic in `.claude/skills/automation-execution-agent/SKILL.md` §5, §19–§20), framework best practices, synchronization patterns, locator recovery strategies, reporting conventions, AI reasoning patterns, pipeline decision patterns, shared engineering lessons | Anything application-specific (a named screen, a specific business rule, a specific app's redirect behavior); anything that is Capability rather than Knowledge (agent skill definitions, orchestration/engine mechanics, runtime configuration) — those belong in `.claude/skills/` or `workflows_and_pipelines/`, never here |
+| **Platform Knowledge** | `platform_core/knowledge/` | Reusable, application-agnostic engineering knowledge: automation strategies, repair strategies, diagnosis strategies, proven exceptions to Execution Engine defaults (not the engine's core retry/concurrency/stop-condition mechanics — fixed capability logic in `.claude/skills/automation-execution-skill/SKILL.md` §5, §19–§20), framework best practices, synchronization patterns, locator recovery strategies, reporting conventions, AI reasoning patterns, pipeline decision patterns, shared engineering lessons | Anything application-specific (a named screen, a specific business rule, a specific app's redirect behavior); anything that is Capability rather than Knowledge (agent skill definitions, orchestration/engine mechanics, runtime configuration) — those belong in `.claude/skills/` or `workflows_and_pipelines/`, never here |
 | **Project Knowledge** | `platform_core_data/knowledge_base/` | Knowledge discovered from the hosted application only: business rules, UI observations, application findings, known behaviors, module relationships, navigation knowledge, screen inventory, discovery artifacts, execution history, automation history, repair history, known workarounds, application-specific locator rules, lessons learned | Anything that would still be true after the platform is retargeted at a different application — that belongs in Platform Knowledge instead, via Promotion (§10.5) |
 
 ### 10.2 Knowledge Resolution
@@ -409,7 +409,7 @@ Each top-level knowledge directory carries an `INDEX.md` (ID · Category · Titl
 
 ### 10.5 Promotion Workflow — explicit human approval only
 
-Not every lesson learned becomes Platform Knowledge. Whichever agent writes a new piece of knowledge (e.g. the Automation Execution Agent writing a confirmed repair rule, per `.claude/skills/automation-execution-agent/SKILL.md` §28) writes it **only into `platform_core_data/knowledge_base/`** by default. When that agent recognizes the lesson as one that would still hold against a *different* application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "the dashboard redirects after login"), it proposes promotion and asks exactly once:
+Not every lesson learned becomes Platform Knowledge. Whichever agent writes a new piece of knowledge (e.g. the Automation Execution Agent writing a confirmed repair rule, per `.claude/skills/automation-execution-skill/SKILL.md` §28) writes it **only into `platform_core_data/knowledge_base/`** by default. When that agent recognizes the lesson as one that would still hold against a *different* application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "the dashboard redirects after login"), it proposes promotion and asks exactly once:
 
 > "This lesson looks application-independent. Promote it to Platform Knowledge?"
 
@@ -430,8 +430,8 @@ Application-specific knowledge must never end up in `platform_core/knowledge/` �
 | Explorer Agent (Stage 2) | Platform Knowledge + Project Knowledge | Project Knowledge (`findings/`, `ui/`, `application/`) |
 | Test Design Agent (Stage 3) | Platform Knowledge + Project Knowledge | Project Knowledge (`findings/`, `lessons_learned/`) where a design decision surfaces one |
 | Manual Execution Agent (Stage 4) | Platform Knowledge + Project Knowledge | Project Knowledge (`execution/`, `lessons_learned/`) where a manual execution surfaces one |
-| Automation Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + Project Knowledge (`automation/`), per `.claude/skills/automation-agent/SKILL.md` §11 | Project Knowledge (`automation/`) |
-| Automation Execution Agent (Stage 6) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + Project Knowledge (`repair/`, `diagnosis/`, `execution/`), per `.claude/skills/automation-execution-agent/SKILL.md` §28 | Project Knowledge (`repair/`, `diagnosis/`, `execution/`) by default; Platform Knowledge only via §10.5 Promotion |
+| Automation Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + Project Knowledge (`automation/`), per `.claude/skills/automation-skill/SKILL.md` §11 | Project Knowledge (`automation/`) |
+| Automation Execution Agent (Stage 6) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + Project Knowledge (`repair/`, `diagnosis/`, `execution/`), per `.claude/skills/automation-execution-skill/SKILL.md` §28 | Project Knowledge (`repair/`, `diagnosis/`, `execution/`) by default; Platform Knowledge only via §10.5 Promotion |
 | Reporting Agent (Stage 7) | Platform Knowledge (`reporting/`) + Project Knowledge | — (terminal stage) |
 | Pipeline Orchestrator (tooling) | *(none — no read dependency on `pipeline_decision_patterns/` is defined yet)* | — |
 
@@ -471,7 +471,7 @@ This must remain a permanent platform capability, not a habit built around the c
 
 The framework subfolder appears in the baseline path but not the run path, and that asymmetry is deliberate: the baseline holds every framework's package side by side and needs them separated, while a run works on exactly one package (resolved by §33.1's gate) and has nothing to separate it from.
 
-This composes with, and does not replace, `.claude/skills/automation-agent/SKILL.md` §30–§33.1's existing consolidated Decision Gate — that gate decides *which* package (Target/Framework/Strategy) a run works on; this section governs what happens to that package's *files* before, during, and after the run.
+This composes with, and does not replace, `.claude/skills/automation-skill/SKILL.md` §30–§33.1's existing consolidated Decision Gate — that gate decides *which* package (Target/Framework/Strategy) a run works on; this section governs what happens to that package's *files* before, during, and after the run.
 
 ### 12.2 The four steps
 
@@ -509,7 +509,7 @@ Once §33.1's consolidated gate has resolved which package this run targets:
 
 - If a Workspace Automation Baseline already exists for that package, copy it wholesale into the run's working automation folder before any generation begins. Record a **baseline snapshot** — the baseline's path-scoped git commit hash at that moment (`git log -1 --format=%H -- <baseline-path>`, never a bare repo `HEAD`, since this is a monorepo and an unrelated commit elsewhere must never look like a baseline change) — in a small per-run file, `.lifecycle_snapshot.json`, alongside the working copy. This is what Step 3's conflict check compares against later.
 - If no baseline exists yet (a brand-new package), the run starts empty, exactly as today.
-- **Generation happens only inside the run's working copy.** The Automation Agent must never edit the Workspace Automation Baseline directly (see the corresponding Execution Rule added to `.claude/skills/automation-agent/SKILL.md` §18).
+- **Generation happens only inside the run's working copy.** The Automation Agent must never edit the Workspace Automation Baseline directly (see the corresponding Execution Rule added to `.claude/skills/automation-skill/SKILL.md` §18).
 - Implemented by `platform_core/tools/automation_lifecycle/baselineCopy.js` (`copyBaselineIntoRun`) — no agent or script hand-rolls this copy step, the same discipline already established for run folder naming (`workflows_and_pipelines/pipeline/run_manager.md` §5.5).
 
 ### 12.4 Step 3 — Workspace Merge
@@ -532,7 +532,7 @@ Implemented by `platform_core/tools/automation_lifecycle/mergePlan.js` (plan com
 Only for files the Merge Summary actually accounted for (added/modified/deleted/renamed-from/discarded-untracked) — anything still held back for an unresolved conflict stays in the run until a follow-up merge resolves it.
 
 - Deletes the run's working copy of the merged package's source/build content (its `src/`, page objects, components, utilities, `pom.xml`/`build.gradle`/`package.json`/`playwright.config.*`/`testng.xml`/other framework source, and any build/IDE artifacts already logged as Discarded Untracked).
-- **Never touches anything outside the package directory** — every one of the following is permanent run history and is never deleted by this step: the Automation Plan/Manifest/Decision Report/Coverage Report/Suite Manifest/Summary (`.claude/skills/automation-agent/SKILL.md` §19), Automation Review notes, Stage 6 Execution Results and all evidence (screenshots/videos/logs/traces/network captures), Automation Repair Loop reports, and `automation_promotion.md` itself.
+- **Never touches anything outside the package directory** — every one of the following is permanent run history and is never deleted by this step: the Automation Plan/Manifest/Decision Report/Coverage Report/Suite Manifest/Summary (`.claude/skills/automation-skill/SKILL.md` §19), Automation Review notes, Stage 6 Execution Results and all evidence (screenshots/videos/logs/traces/network captures), Automation Repair Loop reports, and `automation_promotion.md` itself.
 - Implemented by `platform_core/tools/automation_lifecycle/cleanup.js` (`cleanupRunPackage`) — deletion is always driven by the Merge Summary's own accounted-for file list, never a blind recursive directory delete, so nothing can vanish from a run without a corresponding line in that run's Merge Summary.
 
 ### 12.6 `automation_promotion.md`
@@ -543,7 +543,7 @@ A **Bootstrap Migration** — lifting pre-existing, not-yet-lifecycle-managed au
 
 ### 12.7 Registry cross-reference
 
-`AutomationPackages.md` (`.claude/skills/automation-agent/SKILL.md` §19/§31) is extended with a Baseline Ref / Last Merged Run column per package, so the next Stage 5 run's registry summary (§31.1) can state not just which packages exist, but whether their Workspace Automation Baseline is current.
+`AutomationPackages.md` (`.claude/skills/automation-skill/SKILL.md` §19/§31) is extended with a Baseline Ref / Last Merged Run column per package, so the next Stage 5 run's registry summary (§31.1) can state not just which packages exist, but whether their Workspace Automation Baseline is current.
 
 ---
 

@@ -1,19 +1,56 @@
 {
-  "name": "agentic-ai-projects",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "node --test \"platform_core/tools/**/__tests__/*.test.js\""
-  },
-  "keywords": [],
-  "author": "",
+  "name": "agentic-ai-testing-platform",
+  "version": "2.0.0",
+  "description": "Spec-driven agentic QA pipeline — seven Claude Code skills you install into your own repository.",
+  "keywords": [
+    "testing",
+    "qa",
+    "automation",
+    "playwright",
+    "claude",
+    "agentic",
+    "test-generation"
+  ],
   "license": "ISC",
   "type": "commonjs",
   "engines": {
     "node": ">=18.17"
   },
+  "bin": {
+    "agentic-testing": "bin/agentic-testing.js"
+  },
+  "main": "platform_core/tools/init/index.js",
+  "exports": {
+    ".": "./platform_core/tools/init/index.js",
+    "./paths": "./platform_core/tools/platform_paths/paths.js",
+    "./detect": "./platform_core/tools/mcp/stack_docs/detectProject.js",
+    "./lifecycle": "./platform_core/tools/automation_lifecycle/index.js",
+    "./run-manager": "./platform_core/tools/run_manager/index.js",
+    "./init": "./platform_core/tools/init/index.js"
+  },
+  "files": [
+    "bin/",
+    "scripts/init.sh",
+    "scripts/init.ps1",
+    "platform_core/",
+    "workflows_and_pipelines/",
+    ".claude/skills/",
+    "platform_core_data/knowledge_base/patterns/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test \"platform_core/tools/**/__tests__/*.test.js\"",
+    "selftest": "node bin/agentic-testing.js doctor",
+    "detect": "node bin/agentic-testing.js detect",
+    "test:e2e": "bash scripts/e2e/verify-install.sh . .e2e-workdir",
+    "prepack": "node scripts/verifyPackable.js"
+  },
   "devDependencies": {
     "playwright": "^1.61.1"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
   }
 }

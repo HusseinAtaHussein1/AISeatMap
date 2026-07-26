@@ -95,3 +95,7 @@ __pycache__/
 *.pid
 *.pid.lock
 *.seed
+
+# End-to-end install verification (scripts/e2e/verify-install.sh) — throwaway target repos.
+# The tarball it installs from is already covered by the *.tgz rule above.
+.e2e-workdir/

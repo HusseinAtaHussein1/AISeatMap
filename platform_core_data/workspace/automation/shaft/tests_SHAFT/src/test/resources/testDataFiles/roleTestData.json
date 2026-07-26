@@ -1,7 +1,0 @@
-{
-  "validName": "QA Spike Test Role",
-  "invalidFormatName": "QA123!@#",
-  "duplicateName": "Admin Role",
-  "unsavedCancelName": "QA Spike Unsaved",
-  "note": "validName ('QA Spike Test Role') is alphabetic + spaces only, per FR-ROLECRT-NAME-01 — never actually submitted to a completed save in automation this run (mutation not authorized, Project Context §5); every test using it deliberately pairs it with a condition that keeps the overall submission blocked (e.g. zero permissions selected), so no real Role record is ever persisted. invalidFormatName / duplicateName reproduce this run's own Discovery cases (Timeline.md #16/#17, FINDING-002) — duplicateName ('Admin Role') is a real, pre-existing role confirmed live in the 115-row Role list, not invented. unsavedCancelName is used only with Cancel, never Send For Approval."
-}

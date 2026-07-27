@@ -26,16 +26,20 @@ The platform now has **two** mechanisms for live browser access. They are peers,
 | Locator knowledge | Reuses `platform_core_data/browser/screens/` + `components/` via `useScreen()`/`useComponent()` | Accessibility-tree snapshots; no stored locator knowledge |
 | Repeatability | High — deterministic, re-runnable, diff-friendly | Lower — exploratory, sequence depends on what the agent sees |
 | Best at | Authenticated flows, known screens, repeated execution of designed test cases | First-contact exploration of an unknown screen, ad-hoc selector verification, reading the accessibility tree |
-| Display mode | **Headless by default** — `browser.headless: true` in `platform_core_data/browser/profile.json` | **Headless by default** — `--headless` in the repo-root `.mcp.json` |
+| Display mode | **Headless by default** — `browser.headless: true` in `platform_core_data/browser/profile.json`; **except Stage 4 (Manual Execution), which is headed** via `browser.headlessByStage` (§1.1.1) | **Headless by default** — `--headless` in the repo-root `.mcp.json` |
 
-### 1.1.1 Headless is the default for both mechanisms
+### 1.1.1 Headless is the default for both mechanisms — except Stage 4
 
-Neither mechanism opens a visible browser window unless a human explicitly asks for one. A Skill never needs to request headless — it is already the configured default on both paths:
+Neither mechanism opens a visible browser window unless something explicitly asks for one. A Skill never needs to request headless — it is already the configured default on both paths:
 
-- **Browser Driver** — `platform_core_data/browser/profile.json` sets `browser.headless: true`. `BrowserDriver.authenticate()` uses that default whenever the `headless` argument is omitted, which is how Skills should call it.
+- **Browser Driver** — `platform_core_data/browser/profile.json` sets `browser.headless: true`. `BrowserDriver.authenticate()` uses that default whenever neither the `headless` argument nor a per-stage override applies.
 - **Playwright MCP** — the server is registered in `.mcp.json` with `--headless` (the server is *headed* by default without it, so the flag is required, not cosmetic).
 
-Headed mode is a **local debugging opt-in for a human operator**, never a Skill's autonomous choice: pass `BrowserDriver.authenticate({ headless: false })` for a one-off driver run, or drop the `--headless` flag from `.mcp.json` and restart the MCP server. Because a headless run captures screenshots, DOM, accessibility tree, console, and network exactly as a headed one does, running headless costs no evidence and changes no Evidence Category or Confidence ceiling under `explorer-skill/SKILL.md` §17–§18.
+**The one standing exception: Stage 4, Manual Execution, runs headed as its normal behaviour** (`.claude/skills/manual-execution-skill/SKILL.md` §11.1). That stage exists so a human can watch each authored Step execute against the live application and judge timing, transient, and visual-state behaviour in real time — observation a post-hoc screenshot does not preserve. It is expressed as configuration, not skill discipline: `browser.headlessByStage` in the profile maps `manual_execution` to `false`, and the stage selects it by passing `stage: 'manual_execution'` to `authenticate()`. **Resolution precedence: explicit `headless` argument > `headlessByStage[stage]` > `browser.headless`.** A stage not named in the map is unaffected and stays headless.
+
+Because the Playwright MCP server's `--headless` is fixed at process start, the Stage 4 exception applies to the Browser Driver only — which is that stage's default and strongly-preferred mechanism anyway. Making the MCP fallback headed requires a human to drop the flag from `.mcp.json` and restart the server.
+
+Outside that exception, headed mode remains a **local debugging opt-in for a human operator**: pass `BrowserDriver.authenticate({ headless: false })` for a one-off driver run, or drop `--headless` from `.mcp.json` and restart the MCP server. Because a headless run captures screenshots, DOM, accessibility tree, console, and network exactly as a headed one does, running headless costs no evidence and changes no Evidence Category or Confidence ceiling under `explorer-skill/SKILL.md` §17–§18 — what a headed Stage 4 adds is live human observation, not richer artifacts.
 
 ### 1.2 Mode Selection Rule
 

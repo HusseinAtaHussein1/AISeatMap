@@ -20,9 +20,10 @@ const { BrowserDriver } = require('../../platform_core/tools/browser_driver/api'
 
 const driver = await BrowserDriver.authenticate({
   env: 'STG',        // optional — omit to let the credentials file's activeEnvironment/environment decide
-  // headless: false, // optional — ONLY to force a headed window for local debugging.
-  //                  // Omit it: the profile's browser.headless default is `true`, and
-  //                  // headless is the platform-wide default for both browser mechanisms.
+  // stage: 'manual_execution', // optional — selects that stage's display-mode default from
+  //                             // the profile's browser.headlessByStage. Stage 4 maps to headed.
+  // headless: false,          // optional — forces a headed window regardless of stage/profile.
+  //                           // Omit both: the profile's browser.headless default is `true`.
 });
 
 driver.useComponent('GlobalNavigation');    // load shared nav locators
@@ -65,7 +66,7 @@ platform_core_data/
 
 A profile contains **only**:
 - `defaultBaseUrl`
-- `browser` — launch/context settings (`channel`, `headless` default, `viewport`, anything else Playwright's launch/context options need)
+- `browser` — launch/context settings (`channel`, `headless` default, `headlessByStage` per-stage display-mode overrides, `viewport`, anything else Playwright's launch/context options need)
 - `login` — username/password/submit selectors, and a post-login success signal
 - `notes` (optional, human-readable)
 
@@ -123,7 +124,7 @@ platform_core_data/
    { "username": "...", "password": "..." }
    ```
    `env` passed to `authenticate()` overrides whatever the file names itself (`environment`/`activeEnvironment`); omit it to let the file decide. `baseUrl` is optional in every shape — falls back to the profile's `defaultBaseUrl`.
-5. **Resolved automatically from the single project root** — `BrowserDriver.authenticate({env, headless})` resolves `platform_core_data/credentials/credentials.json` itself; an explicit `credentialsPath` override exists only for edge cases (e.g. tests) and should not be needed in normal use.
+5. **Resolved automatically from the single project root** — `BrowserDriver.authenticate({env, stage, headless})` resolves `platform_core_data/credentials/credentials.json` itself; an explicit `credentialsPath` override exists only for edge cases (e.g. tests) and should not be needed in normal use.
 6. **In-memory only, at runtime only.** `driver.js` reads the file once per call, uses the values only to fill the login form, and drops the in-memory reference immediately after submitting login.
 7. **Never logged, never echoed, never copied into artifacts.** No console output, discovery snapshot, Finding, or report may contain a credential value. (One diagnostic `cat` of the file happened during initial setup while debugging a "file doesn't exist" report that turned out to mean "real values ended up in the template" — see Revision history. That's a standing lesson, not a repeatable exception.)
 8. **No temporary copies.** If a future change needs an intermediate file, it must be deleted (`fs.unlink`) before the function returns or throws — never left on disk.
@@ -135,7 +136,7 @@ platform_core_data/
 
 | Method | Purpose |
 |---|---|
-| `BrowserDriver.authenticate({env, headless, credentialsPath?})` | Static — loads the profile, loads credentials (both auto-resolved under `platform_core_data/`), launches, logs in, returns a session. Every argument is optional. |
+| `BrowserDriver.authenticate({env, stage, headless, credentialsPath?})` | Static — loads the profile, loads credentials (both auto-resolved under `platform_core_data/`), launches, logs in, returns a session. Every argument is optional. `stage` (e.g. `'manual_execution'`) picks that stage's display mode from `browser.headlessByStage`; precedence is `headless` > `headlessByStage[stage]` > `browser.headless`. |
 | `useScreen(name)` / `useComponent(name)` | Loads that screen's/component's locators into the active set. |
 | `navigate(pathOrUrl)` | Absolute URL or a path relative to the profile's `defaultBaseUrl`. |
 | `click(keyOrSelector)` | Dotted key (from loaded Screen/Component knowledge) or a literal selector. |

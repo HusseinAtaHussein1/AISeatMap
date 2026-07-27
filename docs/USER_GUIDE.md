@@ -148,7 +148,7 @@ The Browser Driver is the scripted, credential-aware engine. Set it up per [`pla
 
 `credentials.json` is git-ignored by two overlapping rules. **Never commit it.** Only the template, with placeholder values, is ever committed.
 
-Both browser mechanisms default to **headless**. Headed is an explicit opt-in — useful when you're debugging a locator, not something a run should depend on.
+Both browser mechanisms default to **headless** — with one deliberate exception: **Stage 4 (Manual Execution) runs headed**, so you can watch each test step execute against the live app in real time. That is configured, not opt-in: `browser.headlessByStage` in `platform_core_data/browser/profile.json` maps `manual_execution` to `false`. Everywhere else, headed is an explicit opt-in — useful when you're debugging a locator, not something a run should depend on.
 
 ### 4.2 The two MCP servers
 
@@ -352,7 +352,7 @@ Every stage resolves **Platform Knowledge first, then Project Knowledge**, and m
 | Stage 5 generates inside `platform_core_data/` instead of your test dir | `writeAllowlist` is empty — it is **fail-closed** | add your test globs to `target.writeAllowlist` in `platform.config.json` |
 | `configVersion mismatch` | tool and config are different generations | the error names whether to upgrade the platform or migrate the config; it is deliberately a hard error, never a best-effort read |
 | MCP tools unavailable | project-scoped `.mcp.json` not yet approved | run `/mcp` once per machine |
-| Browser opens when you expected none | headed was explicitly opted into | headless is the default for both mechanisms; check `profile.json` and the `.mcp.json` `--headless` flag |
+| Browser opens when you expected none | Stage 4 (Manual Execution) is headed by design, or headed was explicitly opted into | Stage 4 runs headed on purpose — see `browser.headlessByStage` in `profile.json`. For any other stage, headless is the default; check `profile.json` and the `.mcp.json` `--headless` flag |
 | `.env` or credentials unreadable | the built-in read denylist | working as designed. `readDenylist` **merges with**, never replaces, a non-overridable list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/credentials/credentials.json` |
 | A stage halts citing a missing input | upstream artifact absent | either produce it, or invoke the skill directly to run degraded — see [§6](#6-calling-a-single-skill-directly) |
 | Machine-specific paths need overriding | shared config is committed | use `platform.config.local.json` — gitignored, shallow-merges over the base |

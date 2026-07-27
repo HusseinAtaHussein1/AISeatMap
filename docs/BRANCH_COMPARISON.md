@@ -214,7 +214,7 @@ The base branch had no `.mcp.json`. This branch registers two servers with a doc
 | | Before | After |
 |---|---|---|
 | Playwright MCP | n/a | `--headless` in `.mcp.json` |
-| Browser Driver | `headless: false` | `headless: true` in `profile.json` |
+| Browser Driver | `headless: false` | `headless: true` in `profile.json`; since 2026-07-27, `headlessByStage.manual_execution: false` makes Stage 4 headed |
 
 Both mechanisms flipped together. A default that holds for only one of two mechanisms isn't a default — it's decided by whichever mode a stage happens to select. Headed is now an explicit opt-in.
 
@@ -293,7 +293,7 @@ The offered-and-declined alternative was to treat the direct call as implicit au
 | **Skill invocation** | pipeline order only | direct call, with degraded-run and approve-and-recommend semantics |
 | **Knowledge layer** | `platform_core/knowledge/` | `platform_core_data/knowledge_base/patterns/` |
 | **MCP servers** | none | `playwright` + `context7` |
-| **Browser default** | headed | **headless**, both mechanisms |
+| **Browser default** | headed | **headless**, both mechanisms — except Stage 4 (Manual Execution), headed since 2026-07-27 |
 | **Stack awareness** | none | detects stack, pinned versions, test dirs, conventions |
 | **Doc currency** | model's training data | Context7, pinned per dependency version |
 | **Greenfield** | unsupported | test infrastructure scaffolding |

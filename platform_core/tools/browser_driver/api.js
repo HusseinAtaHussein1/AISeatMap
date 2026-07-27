@@ -71,10 +71,17 @@ class BrowserDriver {
     this._wireGuardrails();
   }
 
-  /** The only way to obtain a session. Never construct BrowserDriver directly. */
-  static async authenticate({ env, credentialsPath, headless } = {}) {
+  /**
+   * The only way to obtain a session. Never construct BrowserDriver directly.
+   *
+   * Pass `stage` (e.g. `'manual_execution'`) to pick up that stage's display-mode default from
+   * the profile's `browser.headlessByStage` — the mechanism by which Stage 4 runs headed without
+   * every call site having to remember to ask for it. An explicit `headless` still wins over both
+   * the per-stage and the global default.
+   */
+  static async authenticate({ env, credentialsPath, headless, stage } = {}) {
     const { browser, context, page, profile, env: resolvedEnv } = await launchAuthenticated({
-      env, credentialsPath, headless,
+      env, credentialsPath, headless, stage,
     });
     return new BrowserDriver({ browser, context, page, profile, env: resolvedEnv });
   }

@@ -150,14 +150,24 @@ function loadCredentials(envOverride, credentialsPathOverride) {
  *   whatever the credentials file names itself; omit to let the credentials file decide.
  * @param {string} [opts.credentialsPath] - override the auto-resolved
  *   platform_core_data/credentials/credentials.json path; only needed for edge cases (e.g. tests).
- * @param {boolean} [opts.headless] - overrides the profile's browser.headless default when given
+ * @param {boolean} [opts.headless] - overrides both the per-stage and global defaults when given
+ * @param {string} [opts.stage] - pipeline stage label, e.g. "manual_execution". Selects a
+ *   per-stage display-mode default from the profile's `browser.headlessByStage` map, so a stage
+ *   whose purpose requires a visible browser gets one without every call site remembering to ask.
+ *   Precedence: explicit `headless` argument > `headlessByStage[stage]` > `browser.headless`.
  */
-async function launchAuthenticated({ env, credentialsPath, headless } = {}) {
+async function launchAuthenticated({ env, credentialsPath, headless, stage } = {}) {
   const profile = loadProfile();
   let { creds, env: resolvedEnv } = loadCredentials(env, credentialsPath);
 
   const browserSettings = profile.browser || {};
-  const isHeadless = typeof headless === 'boolean' ? headless : !!browserSettings.headless;
+  const byStage = browserSettings.headlessByStage || {};
+  const stageDefault = stage && typeof byStage[stage] === 'boolean' ? byStage[stage] : undefined;
+  const isHeadless = typeof headless === 'boolean'
+    ? headless
+    : typeof stageDefault === 'boolean'
+      ? stageDefault
+      : !!browserSettings.headless;
 
   const browser = await chromium.launch({
     channel: browserSettings.channel || 'chrome',

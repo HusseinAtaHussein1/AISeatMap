@@ -77,7 +77,8 @@ your-project/
   tests/e2e/                    ← generated automation lands HERE, in your conventions
   agentic-testing-tool/         ← the platform; gitignored, with its own nested git repo
     platform_core/                 the shared tools
-    platform_core_data/            every process artifact: PRD, workspace/, runs/, knowledge_base/
+    platform_core_data/            every process artifact: knowledge_base/ (PRD, config), runs/,
+                                   automation_baseline/
     workflows_and_pipelines/       the pipeline specification
     platform.config.json           the two-root wiring
   .claude/skills/               ← the seven skills, so Claude Code can find them
@@ -181,6 +182,30 @@ At Stage 5, before generating anything, the platform extracts your project's sta
 
 Seven stages, fixed order, each one gated.
 
+### Create and activate a run first
+
+Every stage writes into **the active run**, so a run has to exist and be active before you invoke any skill:
+
+```bash
+cd agentic-testing-tool
+node platform_core/tools/run_manager/cli.js new --scope <Scope> --target <Target>
+node platform_core/tools/run_manager/cli.js active     # confirm which run is active
+```
+
+`new` is the only supported way to create a run — it allocates the folder name, anchors the run to your project's current code state, writes the Run Manifest, and activates the run in one step. Never hand-create a run folder; the metadata a stage depends on would be missing.
+
+The active-run pointer lives at `platform_core_data/runs/current_active_run.json` and is **sticky** — it stays put until you change it. It never silently falls back to "the newest run": with no pointer a stage asks which run to use, and if the pointer names a run that no longer exists the stage stops and reports rather than guessing.
+
+```bash
+node platform_core/tools/run_manager/cli.js list      # every run, newest first, active marked *
+node platform_core/tools/run_manager/cli.js use <run> # switch runs (sticky)
+node platform_core/tools/run_manager/cli.js clear     # remove the pointer
+```
+
+To override the active run for a single command without changing what's on disk, set `AGENTIC_TESTING_RUN_FOLDER=<run-folder-name>`.
+
+Full verb list in [§12 CLI Reference](#12-cli-reference).
+
 ```mermaid
 flowchart LR
     A["/project-context-skill"] --> B{{"Approve<br/>Project Context?"}}
@@ -266,11 +291,29 @@ Only `metadata/` is created up front. Every other folder appears the moment a st
 
 `platform_core_data/runs/run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target/`
 
-Folder names are self-descriptive, e.g. `run-003__2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter`. `run-NNN` is the run's ordinal (1-based, zero-padded to three digits, one past the highest already present). `Scope` is always one of `FullRun`, `Regression`, `Smoke`, `Sanity`, `Targeted`, `Module`, `UserStory` — a run that executed only specific tests is always `Targeted`, never something that reads as a full run. The name is generated once, deterministically, by [`platform_core/tools/run_manager/`](../platform_core/tools/run_manager/).
+Folder names are self-descriptive, e.g. `run-003__2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter`. `run-NNN` is the run's ordinal (1-based, zero-padded to three digits, one past the highest already present). The `Scope` token is the shape of the *execution* — `FullRun`, `Regression`, `Smoke`, `Sanity`, `Targeted`, `Module`, `UserStory` — and a run that executed only specific tests is always `Targeted`, never something that reads as a full run. That token is a naming label, distinct from the run's declared **Run Scope** (what the run is allowed to validate, [§8](#run-scope)). The name is generated once, deterministically, by [`platform_core/tools/run_manager/`](../platform_core/tools/run_manager/) — never hand-formatted.
 
 ### Generated automation
 
-Automation code goes into **your** repository, in your own test directory and conventions (`tests/e2e/`, or whatever `detect` found). The authoritative copy is the Workspace Automation Baseline; a run's own `automation/` folder is only ever a temporary working copy, per the Automation Asset Lifecycle ([`pipeline.md` §12](../workflows_and_pipelines/pipeline/pipeline.md)). Merges back into the baseline are three-way and hash-verified — see [`platform_core/tools/automation_lifecycle/`](../platform_core/tools/automation_lifecycle/).
+Automation code goes into **your** repository, in your own test directory and conventions (`tests/e2e/`, or whatever `detect` found). The authoritative copy is the Automation Baseline at `platform_core_data/automation_baseline/{framework}/tests_{Framework}/`; a run's own `automation/` folder is only ever a temporary working copy, per the Automation Asset Lifecycle ([`pipeline.md` §12](../workflows_and_pipelines/pipeline/pipeline.md)). Merges back into the baseline are three-way and hash-verified — see [`platform_core/tools/automation_lifecycle/`](../platform_core/tools/automation_lifecycle/).
+
+### Refining a run, and code drift
+
+A run is a record of what was concluded on a given day, so you never edit an old one to redo its work. Create a successor instead:
+
+```bash
+node platform_core/tools/run_manager/cli.js refine <prior-run> --reason "PRD updated for US-245"
+```
+
+That creates a **new** run which inherits the prior run's artifacts by reference, supersedes it, and re-anchors to your project's current code state. The prior run is left untouched. Add `--dry-run` first to see what would be inherited.
+
+Each run records the code state of your project at the moment it was created, so you can ask what has moved since:
+
+```bash
+node platform_core/tools/run_manager/cli.js drift [--run <r>]
+```
+
+This matters when a stage reuses an earlier run's artifact: where drift reports changes, those conclusions were reached against different code and are *unverified* against what you have now. A run created before anchoring existed can be backfilled with `cli.js anchor`, but the anchor then reflects backfill time, not execution time — so drift measured from it understates real change.
 
 ---
 
@@ -325,7 +368,7 @@ No gate ever times out into approval. Silence is not consent ([`pipeline.md` §5
 
 ### Rejection
 
-A rejected artifact is re-produced by the **same** stage, with your feedback, as a **new version**. Artifacts are never edited in place ([`pipeline.md` §7](../workflows_and_pipelines/pipeline/pipeline.md)).
+A rejected artifact is revised **in place** by the **same** stage, with your feedback — no `.v2` or `_final` sibling appears beside it. The Run Manifest records the rejection and its revision count, and git holds the prior state. A rejected artifact is copied aside only if you explicitly ask for it to be preserved ([`pipeline.md` §7](../workflows_and_pipelines/pipeline/pipeline.md)).
 
 ---
 
@@ -383,6 +426,7 @@ npx agentic-testing <command> [flags]
 | `init` | install into a target project (plan-then-apply) |
 | `detect` | read-only stack and test-layout report; writes nothing |
 | `doctor` | validate an installation, print resolved roots and the decision trace |
+| `roots` | print the resolved Tool Root and Target Root as JSON |
 | `upgrade` | refresh tool code and skills — **never** your artifacts |
 | `uninstall` | remove tool code; keeps `platform_core_data/` unless `--purge-data` |
 
@@ -396,7 +440,10 @@ npx agentic-testing <command> [flags]
 | `--framework <name>` | override the detected framework |
 | `--git-mode <mode>` | `tool-repo` (default) · `host-repo` · `off` — see [`pipeline.md` §13.9](../workflows_and_pipelines/pipeline/pipeline.md) |
 | `--no-mcp` | skip MCP server registration |
-| `--skills none` | skip installing skills into `.claude/skills/` |
+| `--skills <s>` | `all` (default) · `none` · a comma-separated skill list |
+| `--tool-dir <name>` | name of the folder created inside your project (default `agentic-testing-tool`) |
+| `--mode <m>` | `auto` (default) · `brownfield` · `greenfield` |
+| `--no-context7` | register the `playwright` MCP server only |
 | `--yes` | skip the confirmation prompt (required in a non-interactive shell) |
 
 ### git modes
@@ -406,6 +453,34 @@ npx agentic-testing <command> [flags]
 | `tool-repo` *(default)* | `agentic-testing-tool/` gets its own nested git repo; your `.gitignore` ignores it. Baseline merge protection always works, and **zero commits ever land in your history** |
 | `host-repo` | artifacts are versioned in your repo, visible in PRs — writes restricted to paths under `platform_core_data/` |
 | `off` | no git operations; merge protection is unavailable |
+
+### `run_manager` CLI
+
+Run from inside the tool folder. This is the CLI you use during a run:
+
+```bash
+node platform_core/tools/run_manager/cli.js <verb> [flags]
+```
+
+| Verb | What it does |
+|---|---|
+| `new --scope <S> --target <T> [--workflow W] [--scope-paths a,b] [--no-activate]` | create a run — name, code-state anchor, Run Manifest, activation |
+| `active [--json]` | print the active run's folder name, or the whole pointer |
+| `use <run-folder-or-RunID>` | switch the active run (sticky) |
+| `list [--json]` | every run on disk, newest first, active marked `*` |
+| `refresh` | re-cache status and stage state for the active run |
+| `clear` | remove the active-run pointer |
+| `refine <prior-run> [--scope S] [--target T] [--reason "…"] [--dry-run]` | create a new run inheriting from and superseding an earlier one |
+| `drift [--run <r>] [--json]` | what changed in your project since a run was anchored |
+| `anchor [--run <r>] [--force]` | backfill a missing code-state anchor |
+| `stage "<Stage>" --status <…> [--reviewer R] [--revisions N]` | record a stage checkpoint in the Run Manifest |
+| `manifest [--json]` | read the stage ledger — "where are we right now?" |
+| `manifest --gap "…" --why "…"` | declare a coverage gap |
+| `manifest --reuse <artifact> --from <run> [--mode Referenced\|Copied]` | record cross-run artifact reuse |
+
+With no verb, bare flags generate a run folder name only (`--scope`, `--target`, `--started`, `--existing-dir`, `--index` / `--no-index`, `--runs-dir`, `--json`).
+
+**Environment overrides:** `AGENTIC_TESTING_RUN_FOLDER` (active run, per-process), `AGENTIC_TESTING_TOOL_ROOT` / `AGENTIC_TESTING_TARGET_ROOT` (the two roots).
 
 ---
 
@@ -418,6 +493,8 @@ npx agentic-testing <command> [flags]
 | [`BRANCH_COMPARISON.md`](BRANCH_COMPARISON.md) | before/after comparison against the source branch |
 | [`pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md) | the canonical pipeline specification |
 | [`platform_paths/README.md`](../platform_core/tools/platform_paths/README.md) | the two-root contract, in full |
+| [`run_manager.md`](../workflows_and_pipelines/pipeline/run_manager.md) | run identity, the Active Run pointer, code-state anchoring, lineage |
+| [`platform_core/templates/`](../platform_core/templates/) | the output templates every stage fills — the shape of each artifact before it's written |
 | [`mcp/README.md`](../platform_core/tools/mcp/README.md) | both MCP servers and their usage contract |
 | [`CHANGELOG.md`](CHANGELOG.md) | specification revision history |
 | [`LESSONS_LEARNED.md`](LESSONS_LEARNED.md) | architectural lessons from past redesigns |

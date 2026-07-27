@@ -95,7 +95,7 @@ Guards: `targetRoot` must not equal the Tool Root (that's `mode: "self-hosted"`)
 
 ## 5. Self-hosted mode
 
-`mode: "self-hosted"` means `targetRoot === toolRoot`: the platform is testing its own repository. This repo uses it for the `examples/` fixture, so the pipeline stays self-testable. It is a degenerate case of installed mode, not a separate code path — the only difference is that the `targetRoot === toolRoot` assertion is permitted instead of rejected.
+`mode: "self-hosted"` means `targetRoot === toolRoot`: the platform is testing its own repository. It is a degenerate case of installed mode, not a separate code path — the only difference is that the `targetRoot === toolRoot` assertion is permitted instead of rejected.
 
 ## 6. `classifyPath`
 
@@ -115,10 +115,11 @@ Glob matching supports `**`, `*` and `?`, and a bare directory pattern covers it
 
 | File | Purpose |
 |---|---|
-| `paths.js` | the resolver — `resolveRoots`, `classifyPath`, `canRead`, `canWrite`, `assertValidInstall` |
+| `paths.js` | the resolver — `resolveRoots`, `classifyPath`, `canRead`, `canWrite`, `assertValidInstall`, `findToolRoot`, `clearCache`, plus `ConfigError` and the `MARKERS` / `CONFIG_FILENAME` / `LOCAL_CONFIG_FILENAME` / `SUPPORTED_CONFIG_VERSION` / `DEFAULT_DATA_DIRNAME` / `BUILTIN_READ_DENYLIST` / `GIT_MODES` / `ENV_KEYS` constants |
 | `cli.js` | `roots` · `classify <path>` · `doctor` |
 | `platform.config.schema.json` | the configuration contract |
 | `__tests__/paths.test.js` | precedence, guards, classification, denylist, glob semantics |
+| `__tests__/pathConvention.test.js` | path-convention enforcement across the repo |
 
 ## 8. Related
 

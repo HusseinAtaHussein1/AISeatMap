@@ -424,7 +424,7 @@ When a project designates an external, real automation codebase (e.g. NDC's prod
 - **Read-only by default.** The agent inspects it, learns its architecture (framework/version, Page Object pattern, driver init, naming conventions), and generates *compatible* code — it never edits the reference project's files unless a human explicitly chooses to, for that run, every time.
 - **A separate Target decision** — generate inside the platform, export a platform-generated package structured to drop into the reference project, or (only if explicitly chosen) update the reference project directly.
 
-See [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) and the project-level registration this produces, e.g. [`platform_core_data/knowledge_base/reference_automation_project.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/reference_automation_project.md).
+See [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) and the project-level registration this produces, e.g. [`platform_core_data/knowledge_base/reference_automation_project.md`](platform_core_data/knowledge_base/reference_automation_project.md).
 
 ---
 
@@ -448,22 +448,31 @@ agentic-ai-testing-platform/
 ├── workflows_and_pipelines/          # Orchestrators and flow definitions
 │   ├── pipeline/                       # How the seven agents are wired together into one governed process
 │   │   ├── pipeline.md                   # Stage order, artifact contracts, gates, Knowledge Architecture (§10)
-│   │   ├── run_manager.md                # Run ID allocation, workspace structure, metadata, run summaries
+│   │   ├── run_manager.md                # Run identity: naming, Active Run pointer, anchor, lineage, Manifest
 │   │   └── run_scope.md                  # Run Scope Types/Sources — what a run is allowed to validate
 │   └── workflows/
-│       └── first_run.md                # Smoke-test workflow: Stages 1–3 only, Login module
+│       ├── first_run.md                # Smoke-test workflow: Stages 1–3 only, one module
+│       ├── user_story_run.md           # Stages 3–7 for one User Story, reusing Context + Discovery
+│       └── bug_fix_run.md              # Bug regression: Stage 6 → (conditional) 5 → 6 → 7
 │
 ├── platform_core/                     # Shared source code — zero project-specific data
+│   ├── README.md                       # This layer's own contract
+│   ├── templates/                      # Output artifact templates — the authoritative structure of
+│   │   ├── README.md                   #   everything the pipeline writes (26 templates)
+│   │   ├── metadata/                   #   RunManifest — run-wide, not owned by one stage
+│   │   └── stage_1_context/ … stage_7_reporting/   # One template per artifact per stage
 │   └── tools/
+│       ├── automation_lifecycle/     # Baseline copy, merge plan/apply, promotion record, cleanup
 │       ├── browser_driver/          # Shared browser automation engine — zero project-specific data
 │       │   ├── driver.js              # Resolves platform_core_data/ paths, loads profile + credentials, logs in
 │       │   ├── api.js                 # BrowserDriver — the only surface agents/scripts use directly
 │       │   └── README.md
+│       ├── init/                    # `agentic-testing init/upgrade/uninstall` — plan-then-apply installer
 │       ├── mcp/                      # MCP servers layer — registration + usage contract, no server code
 │       │   ├── stack_docs/            # Extracts a project's stack + pinned versions; plans Context7 lookups
 │       │   └── README.md              # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
-│       ├── run_manager/              # Run folder naming/indexing — the only place a run name is formatted
-│       └── automation_lifecycle/     # Baseline copy, merge plan/apply, promotion record, cleanup
+│       ├── platform_paths/          # The two-root resolver (Tool Root / Target Root) + config schema
+│       └── run_manager/             # Run naming/indexing, Active Run pointer, Manifest, lineage, anchor
 │
 ├── platform_core_data/               # Process artifacts for the Target Project under test (§9.1)
 │   ├── README.md                       # This folder's own layout contract
@@ -496,10 +505,16 @@ agentic-ai-testing-platform/
 │   └── automation_baseline/             # Persistent automation source code — see §10, §12
 │
 ├── docs/                             # Supplementary and historical platform documentation — see §18
+│   ├── USER_GUIDE.md                   # The task-oriented guide — recommended entry point for operators
 │   ├── README.md · CHANGELOG.md · LESSONS_LEARNED.md
-│   ├── PLATFORM_VALIDATION_REPORT.md · SESSION_HANDOFF.md · MIGRATION_REPORT_2026-07-17.md
+│   ├── PROMPT_HISTORY.md · BRANCH_COMPARISON.md
+│   └── PLATFORM_VALIDATION_REPORT.md · SESSION_HANDOFF.md · MIGRATION_REPORT_2026-07-17.md
 │
-├── package.json                      # Node dependency manifest (Playwright, for browser-driven stages)
+├── bin/agentic-testing.js            # CLI entry point — init · doctor · roots · detect · upgrade · uninstall
+├── scripts/                          # init.sh · init.ps1 · verifyPackable.js · e2e/
+├── platform.config.json              # Tool Root / Target Root wiring — read by platform_paths
+├── .mcp.json                         # Project-scoped MCP registration: playwright + context7
+├── package.json                      # Node manifest — CLI bin, npm scripts; Playwright optional
 └── README.md                         # This document — the platform's primary entry point
 ```
 
@@ -563,6 +578,20 @@ Every run is at all times exactly one of: **Preparing → Running → Paused / W
 
 Opens with the run's descriptive identity — Folder Name, Workflow, Project, Run Scope, Target, Execution Purpose, Description, Status, Duration — then continues with the factual roll-up: Visited Screens, Executed Agents, Generated Artifacts count, Findings/Evidence/Screenshots/Videos/Logs counts, Coverage (a mechanical ratio, not a quality judgment), and Overall Status. The Run Manager never writes a quality verdict here — that belongs exclusively to the Reporting Agent's Final QA Report.
 
+### Run Manager CLI
+
+The Run Manager is the only component that creates a run, names it, or decides which run the pipeline is working in. Skills and agents call it rather than formatting a folder name or picking a run themselves.
+
+| Command | Effect |
+|---|---|
+| `cli.js --scope <S> --target <T> [--json]` | generate a run folder name (default verb — never hand-format one) |
+| `cli.js new --scope <S> --target <T> [--workflow W] [--no-activate]` | create a run: name + code-state anchor + Run Manifest + activation |
+| `cli.js active [--json]` · `use <run>` · `list [--json]` · `refresh` · `clear` | read, switch, refresh, or remove the Active Run pointer |
+| `cli.js stage "<Stage>" --status <Approved\|…>` · `manifest [--json]` | record and read the Run Manifest stage ledger |
+| `cli.js refine <prior-run> [--dry-run]` · `drift [--run <r>]` · `anchor [--run <r>]` | run lineage, code drift since a run was anchored, anchor backfill |
+
+The Active Run pointer (`platform_core_data/runs/current_active_run.json`) is sticky and fails loudly: with no pointer a stage asks which run to use, and a pointer naming a missing run stops the stage rather than falling back to the newest one. `AGENTIC_TESTING_RUN_FOLDER` overrides it for a single process without persisting; `AGENTIC_TESTING_TOOL_ROOT` / `AGENTIC_TESTING_TARGET_ROOT` override the two roots resolved from `platform.config.json`.
+
 Full specification: [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md).
 
 ---
@@ -591,9 +620,8 @@ flowchart LR
             OTH["automation_patterns/ · diagnosis_patterns/ · execution_patterns/ · framework_patterns/ · reporting/ · pipeline_decision_patterns/"]
         end
         subgraph ProjA["Project Knowledge (application-scoped)"]
-            A1["business_rules/ · application/ · ui/"]
-            A2["repair/ · automation/ · execution/"]
-            A3["findings/ · lessons_learned/"]
+            A1["business_rules/"]
+            A3["lessons_learned/"]
         end
     end
 
@@ -623,7 +651,7 @@ The category folders for `automation_patterns/`, `diagnosis_patterns/`, `executi
 
 - **Discovery technology ≠ Automation technology.** The tool used to explore an application in Stage 2 (e.g. Playwright, for browser-driven discovery) has no bearing on which framework Stage 5 selects — this is enforced explicitly, because it has previously been the exact mistake an early agent revision made.
 - **Framework choice is scoped to one package, one run's decision** — never inferred as a standing project default. Every Stage 5 invocation asks again.
-- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/knowledge_base/automation_framework.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/automation_framework.md) — and is binding only for runs that select SHAFT.
+- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/knowledge_base/automation_framework.md`](platform_core_data/knowledge_base/automation_framework.md) — and is binding only for runs that select SHAFT.
 - **Currently supported:** Playwright, SHAFT Engine. **Named as first-class candidates whenever a project's needs call for them:** Selenium, Cypress, Appium, REST Assured — the Automation Agent's framework detection/selection model already treats these as standard options ([`.claude/skills/automation-skill/SKILL.md` §6–§8](.claude/skills/automation-skill/SKILL.md)); onboarding one for a real project is a per-project decision, not a platform-level gap.
 
 ```mermaid
@@ -653,7 +681,7 @@ flowchart TD
 | **Reuse Before Generation** | Every stage that could generate something new inspects what already exists first — an existing automation package, a confirmed repair rule, a promoted knowledge document |
 | **Extensibility** | The Automation Agent's abstractions (Locator Strategy, Suite Planning, Traceability Model) are already framed generically enough to extend to API, Mobile, Desktop, Microservices, Message Queue, Batch Job, and Cloud Resource automation without redesigning the core contracts ([`.claude/skills/automation-skill/SKILL.md` §29](.claude/skills/automation-skill/SKILL.md)) |
 | **Portability** | The same seven-agent, one-pipeline architecture carries over to any application: retargeting replaces `platform_core_data/`'s contents and touches no specification, agent, or tool |
-| **No Debug Artifacts in the Project Tree** | Throwaway reconnaissance scripts and raw tool-output dumps are never persisted into `artifacts/` — only the synthesized, human-readable deliverable a stage is actually specified to produce ([`workflows_and_pipelines/pipeline/pipeline.md` §11](workflows_and_pipelines/pipeline/pipeline.md)) |
+| **No Debug Artifacts in the Project Tree** | Throwaway reconnaissance scripts and raw tool-output dumps are never persisted into `platform_core_data/runs/` — only the synthesized, human-readable deliverable a stage is actually specified to produce ([`workflows_and_pipelines/pipeline/pipeline.md` §11](workflows_and_pipelines/pipeline/pipeline.md)) |
 
 ---
 
@@ -662,7 +690,7 @@ flowchart TD
 Short, direct answers to "why does the platform work this way," each pointing back to the section that shows the decision in practice.
 
 **ADR-001 — Immutable Runs**
-Every run's snapshot is written once and never edited afterward; a correction is always a new run. This makes run history genuinely auditable — a reviewer can trust that what's in `artifacts/runs/{{RUN_FOLDER}}/` today is exactly what that run produced on the day it ran. See [§10](#10-run-architecture).
+Every run's snapshot is written once and never edited afterward; a correction is always a new run. This makes run history genuinely auditable — a reviewer can trust that what's in `platform_core_data/runs/{{RUN_FOLDER}}/` today is exactly what that run produced on the day it ran. See [§10](#10-run-architecture).
 
 **ADR-002 — Workspace vs. Runs** *(superseded 2026-07-27)*
 This ADR originally kept "what's authoritative right now" (`platform_core_data/workspace/{stage}/`) and "what actually happened on a specific date" (`platform_core_data/runs/`) as two distinct trees, arguing the platform needed both simultaneously. **Real runs disproved it:** maintaining both meant every approval copied a stage's Markdown into a second location, so the same document existed as a `.v1` file, an unsuffixed approved duplicate, and a `.v2` as soon as a reviewer asked for a refinement instead of an edit. `workspace/` is removed; the run folder is now the sole artifact location, each artifact is one file edited in place, and git supplies the history the second tree was meant to protect. The single genuine exception is automation *code*, which must outlive its run — that is `platform_core_data/automation_baseline/{framework}/`. See [§10](#10-run-architecture).
@@ -691,7 +719,7 @@ The platform's specifications describe *what* runs, not a fixed proprietary runt
 | **Knowledge storage** | Small, individually-versioned Markdown documents, one concern per file, stable IDs (`REPAIR-NNN`, `REASON-NNN`, `REP-NNN`) — no database |
 | **Artifact storage** | Plain file-system tree (`platform_core_data/runs/` and `platform_core_data/automation_baseline/`) — no external artifact server or object store |
 | **Execution model** | Human-gated, stage-sequential pipeline orchestrated by the Run Manager — no autonomous or parallel stage execution |
-| **Package management** | npm ([`package.json`](package.json)) — Playwright is currently the platform's one declared runtime dependency |
+| **Package management** | npm ([`package.json`](package.json)) — zero runtime dependencies; Playwright is a devDependency and an *optional* peer, needed only for the browser-driven stages |
 
 ---
 
@@ -711,7 +739,7 @@ your-project/
   src/                          ← untouched
   tests/e2e/                    ← generated automation lands HERE, in your own conventions
   agentic-testing-tool/         ← the platform; gitignored, with its own nested git repo
-    platform_core_data/         ← every process artifact: PRD, workspace/, runs/, knowledge_base/
+    platform_core_data/         ← every process artifact: knowledge_base/ (PRD, config), runs/, automation_baseline/
   .claude/skills/               ← the seven skills, so Claude Code can find them
 ```
 
@@ -762,10 +790,14 @@ Useful flags:
 | `--framework <name>` | override the detected framework |
 | `--git-mode <mode>` | `tool-repo` (default) · `host-repo` · `off` — see [§13.9](workflows_and_pipelines/pipeline/pipeline.md) |
 | `--no-mcp` | skip MCP server registration |
-| `--skills none` | skip installing the skills into `.claude/skills/` |
+| `--skills <s>` | `all` (default) · `none` · a comma-separated skill list |
+| `--tool-dir <name>` | name of the folder created inside the target project (default `agentic-testing-tool`) |
+| `--mode <m>` | `auto` (default) · `brownfield` · `greenfield` |
+| `--no-context7` | register the `playwright` MCP server only |
+| `--force` | overwrite differing skills (never `platform_core_data/`) |
 | `--yes` | skip the confirmation prompt (required in a non-interactive shell) |
 
-Other commands: `doctor` (validate an installation and print its resolved roots), `detect` (read-only stack report), `upgrade` (refresh tool code and skills, never your artifacts), `uninstall` (remove tool code; keeps `platform_core_data/` unless `--purge-data`).
+Other commands: `doctor` (validate an installation and print its resolved roots), `roots` (print the resolved Tool/Target roots as JSON), `detect` (read-only stack report), `upgrade` (refresh tool code and skills, never your artifacts), `uninstall` (remove tool code; keeps `platform_core_data/` unless `--purge-data`).
 
 ### 2. Fill in the inputs
 
@@ -820,7 +852,7 @@ Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/w
 | [`platform_core_data/knowledge_base/patterns/README.md`](platform_core_data/knowledge_base/patterns/README.md) | Platform Knowledge layer — structure and promotion rules |
 | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) | Shared browser automation engine, Browser Profile, Screen/Component knowledge, credentials handling |
 | [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md) | The two registered MCP servers: `playwright` as a second, selectable browser mode alongside the Browser Driver (and the hard rule against credential values in MCP tool calls), and `context7` for version-accurate documentation of a project's own extracted stack |
-| [`platform_core_data/README.md`](platform_core_data/README.md) | The layout of the hosted project's inputs, workspace, and run history |
+| [`platform_core_data/README.md`](platform_core_data/README.md) | The layout of the hosted project's knowledge base, run history, and automation baseline |
 | [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/workflows/first_run.md) | The Stages 1–3 smoke-test workflow |
 | [`workflows_and_pipelines/workflows/user_story_run.md`](workflows_and_pipelines/workflows/user_story_run.md) | Stages 3–7 for one User Story, reusing an existing Project Context + Discovery baseline |
 | [`workflows_and_pipelines/workflows/bug_fix_run.md`](workflows_and_pipelines/workflows/bug_fix_run.md) | Reproduce/verify a known bug's regression test case — Stage 6 → (conditional) Stage 5 → Stage 6 → Stage 7 |
@@ -855,4 +887,4 @@ Everything above this section is implemented or fully specified today (see [§4 
 - **Autonomous Test Planning** — proposing Run Scope and coverage priorities from a backlog, subject to the same human approval gates that already govern every other stage.
 - **Enterprise Dashboard** — a single operational view across all projects' run health, automation package registries, and knowledge base growth.
 
-None of these change the six-stage pipeline, the agent boundaries, or the human-approval model described above — every future capability is designed to slot into the existing architecture, not replace it.
+None of these change the seven-stage pipeline, the agent boundaries, or the human-approval model described above — every future capability is designed to slot into the existing architecture, not replace it.

@@ -39,7 +39,7 @@ if (dialog) { /* stop and ask the human — see project constraints */ }
 await driver.close();
 ```
 
-Credentials are loaded **automatically** from `platform_core_data/knowledge_base/credentials/credentials.json` by project name — you never pass a credentials path in normal use.
+Credentials are loaded **automatically** from `platform_core_data/knowledge_base/credentials/credentials.json` — you never pass a credentials path in normal use.
 
 ## 1. Shared execution engine — `platform_core/tools/browser_driver/`
 
@@ -51,17 +51,16 @@ tools/
     └── README.md   # this file
 ```
 
-Contains no project names, no selectors, no URLs, no credentials — purely the reusable engine. `driver.js` computes every project-specific path (`platform_core_data/knowledge_base/browser/...`, `platform_core_data/knowledge_base/credentials/...`) dynamically from the `project` argument at call time.
+Contains no project names, no selectors, no URLs, no credentials — purely the reusable engine. `driver.js` computes every project-specific path (`platform_core_data/knowledge_base/browser/...`, `platform_core_data/knowledge_base/credentials/...`) dynamically from the resolved data root at call time.
 
 ## 2. Browser Profile — inside the repo, small, stable, never secret
 
 ```
-platform_core_data/
+platform_core_data/knowledge_base/
 └── browser/
     ├── profile.json   # <- Browser Profile: auth + browser init ONLY
     ├── screens/       # <- Screen Knowledge (see §3)
-    ├── components/    # <- Component Knowledge (see §3)
-    └── pages/         # <- reserved for future higher-level Page Object modules
+    └── components/    # <- Component Knowledge (see §3)
 ```
 
 A profile contains **only**:
@@ -93,7 +92,7 @@ As the platform discovers new screens, locators go **here**, one small file per 
 ## 4. Credentials — inside the repo's working tree, but never in Git
 
 ```
-platform_core_data/
+platform_core_data/knowledge_base/
 └── credentials/
     ├── credentials.template.json   # committed — non-secret placeholder (schema only, empty strings)
     ├── .gitignore                  # blocks everything except this file, README.md, and the template
@@ -143,6 +142,7 @@ platform_core_data/
 | `type(keyOrSelector, text)` | Fills a field. |
 | `select(keyOrSelector, optionLabel)` | Picks a `<select>` option by visible label. |
 | `screenshot(name, {dir, fullPage})` | Saves a PNG, returns its path. |
+| `captureBaseline(screenName, {navigationPath, accessRoles, refresh})` | Captures the canonical baseline screenshot for a screen into `platform_core_data/knowledge_base/ui/screenshots/{screenName}.png` (created on demand) and records its metadata in that screen's knowledge file. Idempotent — an existing baseline is left alone unless `refresh: true`. |
 | `extractText(keyOrSelector)` | Returns trimmed inner text. |
 | `extractTable(keyOrSelector)` | Returns `string[][]` (rows × cells, header row included). |
 | `waitFor(keyOrSelector, opts)` | Waits for an element/state. |
@@ -155,7 +155,7 @@ platform_core_data/
 1. Inspect the project's login page once (selectors for username/password fields, submit button, a reliable post-login success signal).
 2. Create `platform_core_data/knowledge_base/browser/profile.json` with `defaultBaseUrl` + `browser` + `login` — nothing more.
 3. Create `screens/` and `components/` subfolders as you explore, one file per screen/shared component.
-4. Create `platform_core_data/knowledge_base/credentials/` with `credentials.template.json` (schema only) + `.gitignore` + `README.md` (mirror `platform_core_data/knowledge_base/credentials/` — the platform scaffolds these automatically), then have a human copy the template to `credentials.json` and fill in real values.
+4. Create `platform_core_data/knowledge_base/credentials/` with `credentials.template.json` (schema only) + `.gitignore` + `README.md` — the platform scaffolds these automatically — then have a human copy the template to `credentials.json` and fill in real values.
 5. Document the above briefly in the project's own `run_configuration.md` — without ever storing actual secret values there.
 
 ## Revision history
@@ -165,6 +165,6 @@ platform_core_data/
 - **v3:** Locator knowledge split out of the profile entirely into `screens/`/`components/`, loaded on demand via `useScreen()`/`useComponent()`. Profile reduced to strictly auth + browser init.
 - **v4:** All project-specific assets (profile, screens, components) moved out of `platform_core/tools/browser_driver/` entirely, into `platform_core_data/automation/browser/` — the shared engine folder now contained only `driver.js`/`api.js`/this README.
 - **v5:** Credentials moved from the session scratchpad into `platform_core_data/knowledge_base/credentials/credentials.json` — real, git-ignored (two overlapping `.gitignore` rules), loaded automatically by project name (no more explicit `credentialsPath` in normal use). Traded session-scoping for one-time-setup convenience, per explicit user decision. During this transition, real credentials briefly ended up inside the tracked `credentials.template.json` by mistake (a human filled in the wrong file) — caught before anything was committed (`git log`/`git diff --cached` confirmed no history), corrected by moving the real values to `credentials.json` and restoring the template to placeholders. Lesson: the platform scaffolds `credentials.template.json` itself (non-secret, so this is ordinary repo setup, not something to defer to a human) — a human should never need to hand-author it, only copy it to `credentials.json`.
-- **v6 (current):** `platform_core_data/automation/browser/` renamed to `platform_core_data/knowledge_base/browser/` — "automation" was already the name of Stage 4's own output folder (`platform_core_data/workspace/automation/`, the Automation Agent's generated SHAFT package), and the repo must never have two unrelated folders sharing that name. The Browser Driver is Stage 2 (Explorer) tooling, not Automation Agent output.
+- **v6 (current):** `platform_core_data/automation/browser/` renamed to `platform_core_data/knowledge_base/browser/` — "automation" was already the name of the Automation Agent's own generated-package folder (Stage 5; today `platform_core_data/automation_baseline/`, with each run's working copy under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`), and the repo must never have two unrelated folders sharing that name. The Browser Driver is Stage 2 (Explorer) tooling, not Automation Agent output.
 
 No real credentials file was ever committed under any prior convention.

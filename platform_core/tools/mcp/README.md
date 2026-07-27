@@ -1,6 +1,6 @@
 # MCP Tools Layer
 
-The platform's registration point and usage contract for the **MCP servers** that Skills may drive at runtime, alongside the in-repo JS engines (`browser_driver/`, `run_manager/`, `automation_lifecycle/`).
+The platform's registration point and usage contract for the **MCP servers** that Skills may drive at runtime, alongside the in-repo JS engines (`platform_paths/`, `browser_driver/`, `run_manager/`, `automation_lifecycle/`, `init/`).
 
 Two servers are registered, for two unrelated purposes:
 
@@ -92,7 +92,7 @@ The libraries queried are **not** a fixed list and **not** inferred from what th
 
 **The lockfile wins on version.** A manifest range (`^1.61.1`) is a constraint; the lockfile's resolved version is the fact. Where both exist, the pinned lockfile version is what gets documented — querying docs for a version the suite will not run against defeats the purpose. Where only a range exists, the resolved-version field records the range and flags it as unpinned.
 
-The shared extractor for step 1 is [`stack_docs/`](stack_docs/) — a `platform_core/tools/` engine with zero project data, which walks a given root and emits the `{ ecosystem, library, version, source, pinned }` list. Step 2 is a read of `platform_core_data/`, performed by the Skill.
+The shared extractor for step 1 is [`stack_docs/`](stack_docs/) — a `platform_core/tools/` engine with zero project data, which walks a given root and emits the `{ ecosystem, library, version, source, pinned }` list (`detectStack.js`), plus the project and test-directory detection and the planned Context7 query set (`detectProject.js`, `detectTestDirs.js`, `detectCli.js`, `planQueries.js`), all exposed via `cli.js`. Step 2 is a read of `platform_core_data/`, performed by the Skill.
 
 ### 2.3 The lookup contract
 
@@ -160,7 +160,7 @@ Approve both servers once per machine (`claude mcp` / `/mcp` in an interactive s
 
 - **Server implementations or vendored packages** — both servers are fetched at launch; this folder is registration plus contract only.
 - **Project-specific URLs, selectors, credentials, or stack facts** — `platform_core_data/` owns all of those (`platform_core/README.md`, "Zero Project-Specific Data").
-- **Fetched documentation content.** Doc text belongs in the run's Stack Documentation Context artifact under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`, never cached into `platform_core/`. Promoting a durable, cross-project framework lesson learned this way goes through the normal Promotion Workflow into `knowledge/framework_patterns/` — human-approved, never automatic.
+- **Fetched documentation content.** Doc text belongs in the run's Stack Documentation Context artifact under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`, never cached into `platform_core/`. Promoting a durable, cross-project framework lesson learned this way goes through the normal Promotion Workflow into `platform_core_data/knowledge_base/patterns/framework_patterns/` — human-approved, never automatic.
 
 ## 5. Related
 

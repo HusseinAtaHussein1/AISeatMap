@@ -2,7 +2,8 @@
 
 The single home for the **structure of every artifact the pipeline writes**. One template per
 artifact, per stage. A skill renders its output by copying the matching template and filling the
-`{{PLACEHOLDER}}` tokens — it does not re-derive the section list from prose.
+`{{PLACEHOLDER}}` tokens — it does not re-derive the section list from prose. The set is 26 templates:
+`metadata/` (run-wide) plus `stage_1_context/` … `stage_7_reporting/`.
 
 ## Why this folder exists
 

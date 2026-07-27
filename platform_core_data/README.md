@@ -83,7 +83,8 @@ platform_core_data/
       framework_patterns/ · reporting/ · pipeline_decision_patterns/      # empty until promoted
       INDEX.md · README.md             # catalog of promoted documents + the layer's own spec
   runs/                           # ── PER RUN — RUN FOLDERS IMMUTABLE ────────────────────────────────
-    current_active_run.json         # which run the pipeline is working in (§5.7) — mutable pointer
+    current_active_run.json         # which run the pipeline is working in (§5.7) — mutable pointer;
+                                    #   overridden per-process by AGENTIC_TESTING_RUN_FOLDER
     .run_folder_index.json          # legacy-name compatibility index (§5.6) — mutable
     run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target/   # current convention (run_manager.md §5)
     RUN-YYYYMMDD-XXX[-slug]/                       # pre-existing runs — never renamed (§5.6)
@@ -107,7 +108,7 @@ platform_core_data/
 
 ## Getting a fresh project running
 
-The nine documents at `knowledge_base/`'s root ship as blank scaffolds — headings and inline guidance, no invented content. `init` writes them on install and **never overwrites them afterwards**, so a filled-in `PRD.md` survives every upgrade. Fill them in this order:
+The nine hand-authored documents at `knowledge_base/`'s root — every root `.md` except the generated `stack.md` — ship as blank scaffolds: headings and inline guidance, no invented content. `init` writes them on install and **never overwrites them afterwards**, so a filled-in `PRD.md` survives every upgrade. Fill them in this order:
 
 | Order | File | Why it comes here |
 |---|---|---|

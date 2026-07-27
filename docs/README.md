@@ -24,7 +24,7 @@
 
 > ## ⚠️ This is an archived overview
 >
-> **This document describes the pre-2.0 architecture, in which projects were hosted *inside* the platform under `projects/`.** That model no longer exists — the platform is now installed **into** the repository it tests. Sections below that reference `projects/<name>/`, `*-agent` skill names, or `platform_core/knowledge/` are historical.
+> **This document describes the pre-2.0 architecture, in which projects were hosted *inside* the platform under `projects/`.** That model no longer exists — the platform is now installed **into** the repository it tests. Sections below that reference `projects/<name>/`, `*-agent` skill names, `platform_core/knowledge/`, `workspace/`, or **Multi-Project support** are historical. The platform hosts exactly one application at a time; you retarget it by running `init` in another repository, never by adding a second project directory.
 >
 > It is retained for the additional narrative detail it carries. For anything current, use:
 >
@@ -237,20 +237,25 @@ agentic-ai-testing-platform/
 │   │   ├── run_manager.md
 │   │   └── run_scope.md
 │   └── workflows/
-│       └── first_run.md
+│       ├── bug_fix_run.md
+│       ├── first_run.md
+│       └── user_story_run.md
 │
 ├── platform_core_data/         (THE hosted project — one at a time, no project-name segment)
 │   ├── README.md
 │   ├── knowledge_base/         (shared across runs: PRD.md, run_configuration.md, stack.md,
 │   │                            architecture.md, glossary.md, onboarding.md, requirements/,
-│   │                            browser/, credentials/, ui/, patterns/, and the knowledge categories)
+│   │                            browser/, credentials/, business_rules/, lessons_learned/, patterns/)
 │   ├── runs/                   (immutable per-run snapshots — every stage artifact)
 │   └── automation_baseline/     (persistent generated automation code)
 │
 ├── docs/
 │   ├── README.md
+│   ├── USER_GUIDE.md
 │   ├── CHANGELOG.md
 │   ├── LESSONS_LEARNED.md
+│   ├── PROMPT_HISTORY.md
+│   ├── BRANCH_COMPARISON.md
 │   ├── PLATFORM_VALIDATION_REPORT.md
 │   └── SESSION_HANDOFF.md
 │
@@ -270,13 +275,13 @@ Platform["Platform<br/>.claude/ · workflows_and_pipelines/ · platform_core/"]
 
 Data["platform_core_data/<br/>the one hosted application"]
 
-Work["workspace/<br/>current-approved state"]
+Runs["runs/<br/>every run's artifacts, immutable"]
 
-Runs["runs/<br/>immutable history"]
+Baseline["automation_baseline/<br/>generated automation code"]
 
 Platform --> Data
-Data --> Work
 Data --> Runs
+Data --> Baseline
 ```
 
 The hosted project owns, and is the only place that holds:
@@ -287,7 +292,7 @@ The hosted project owns, and is the only place that holds:
 - Generated Artifacts
 - Execution History
 
-Retargeting the platform at a different application means replacing `platform_core_data/`'s contents — see the root [`README.md`](../README.md) §17.2. It never means adding a second project directory.
+Retargeting the platform at a different application means running `init` in that repository — see the root [`README.md` §17 Getting Started](../README.md) and [`USER_GUIDE.md` §10 Retargeting](USER_GUIDE.md). It never means adding a second project directory.
 
 ---
 
@@ -302,10 +307,10 @@ platform_core_data/
     ├── onboarding.md · architecture.md · glossary.md
     ├── automation_framework.md · reference_automation_project.md
     ├── stack.md                        (written by Stage 5, durable)
-    ├── requirements/ · api/ · diagrams/ · notes/
-    ├── browser/ · credentials/ · ui/screenshots/
-    ├── repair/ · execution/ · automation/ · application/ · ui/
-    ├── findings/ · lessons_learned/ · business_rules/
+    ├── INDEX.md                        (start here — maps the whole tree)
+    ├── requirements/ · api/ · diagrams/
+    ├── browser/ · credentials/           (Browser Driver assets; ui/screenshots/ on demand)
+    ├── business_rules/ · lessons_learned/   (the two Project Knowledge categories)
     └── patterns/                       (Platform Knowledge — separate layer)
 ```
 
@@ -480,31 +485,33 @@ This ensures engineers remain in full control of the testing lifecycle.
 
 # 🚀 Quick Start
 
-Clone the repository.
+Install the platform into the repository you want to test — you do not clone it into place:
 
 ```bash
-git clone https://github.com/ayman2911/agentic-ai-testing-platform.git
+cd /path/to/your-project
 
-cd agentic-ai-testing-platform
+npx agentic-testing init
 ```
+
+Full walkthrough, including prerequisites and what `init` changes: [`USER_GUIDE.md`](USER_GUIDE.md).
 
 ## Retarget the Platform
 
-```text
-platform_core_data/
+Retargeting means running `init` in a different repository. If instead you are reusing an installation in place, clearing `platform_core_data/runs/` is your decision — and clear the Active Run pointer with it, or the next stage stops on a pointer naming a run that no longer exists:
+
+```bash
+node platform_core/tools/run_manager/cli.js clear
 ```
 
-Clear `workspace/` and `runs/`, then populate the project knowledge.
+Then:
 
-Configure the Run Scope.
-
-Generate the Project Context.
-
-Approve the generated context.
-
-Run the platform pipeline.
-
-Review the generated QA Report.
+1. Populate `platform_core_data/knowledge_base/` — `PRD.md` at minimum; Stage 1 halts without it.
+2. Configure the Run Scope (`workflows_and_pipelines/pipeline/run_scope.md`).
+3. Create and activate a run: `node platform_core/tools/run_manager/cli.js new --scope <Scope> --target <Target>`.
+4. Generate the Project Context with `/project-context-skill`.
+5. Approve the generated context at its checkpoint.
+6. Run the remaining pipeline stages in order.
+7. Review the generated Final QA Report.
 
 ---
 

@@ -29,7 +29,7 @@ An agent that needs an absolute root runs `node platform_core/tools/platform_pat
 
 When the platform is *self-hosted* (`mode: "self-hosted"`, the two roots being the same directory) it is testing its own repository. That is a degenerate case of the same model, not a second one.
 
-Every path written in this specification and in the seven skills — `platform_core_data/PRD.md`, `platform_core_data/workspace/…`, `platform_core_data/runs/…` — is **relative to the Tool Root**. Those paths are correct as written whether the platform is self-hosted or installed as a folder inside a host project; only the resolved prefix differs.
+Every path written in this specification and in the seven skills — `platform_core_data/PRD.md`, `platform_core_data/runs/…`, `platform_core_data/automation_baseline/…` — is **relative to the Tool Root**. Those paths are correct as written whether the platform is self-hosted or installed as a folder inside a host project; only the resolved prefix differs.
 
 ## 2. Architecture Principle
 
@@ -124,7 +124,7 @@ The pipeline exists to enforce this principle mechanically: no stage may reach i
 | **Input** | PRD · Supporting Documents · Run Configuration |
 | **Output** | Project Context |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `platform_core_data/workspace/context/ProjectContext.md` |
+| **Artifact path** | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
 
 Notes:
 - "Supporting Documents" (optional) covers any material that informs scope but is not itself the PRD — e.g., prior audit/QA reports, compliance policies, org-specific testing standards. These are folded into the Project Context alongside the PRD; they are never treated as a substitute source of requirements.
@@ -139,7 +139,7 @@ Notes:
 | **Input** | Project Context · Running Application |
 | **Output** | Discovery Artifacts |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `platform_core_data/workspace/discovery/*.md`, `platform_core_data/workspace/discovery/QA_Assessment_Report.md` |
+| **Artifact path** | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md`, `platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md` |
 
 Notes:
 - "Running Application" is the live target system, reached through browser automation — it is data to be observed, not a source of requirements.
@@ -154,7 +154,7 @@ Notes:
 | **Input** | Project Context (primary) · Discovery Artifacts (secondary) |
 | **Output** | Manual Test Suites (Markdown) · Manual Test Suites (Excel) · Requirement Traceability Matrix |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `platform_core_data/workspace/test_design/TestCases_{Module}.md`, `...{Module}.xlsx`, `platform_core_data/workspace/test_design/TraceabilityMatrix.md` |
+| **Artifact path** | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md`, `...{Module}.xlsx`, `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` |
 
 Notes:
 - Project Context governs *what* is tested; Discovery Artifacts only validate, enrich, and surface gaps — per the reversed primary/secondary relationship established in the Agent Framework.
@@ -169,7 +169,7 @@ Notes:
 | **Input** | Approved Manual Test Suites · Requirement Traceability Matrix · Coverage Report · Project Context |
 | **Output** | Manual Execution Results · Manual Execution Summary · Automation Candidate Package · Evidence |
 | **Checkpoint** | **Human Review Required** |
-| **Artifact path** | `platform_core_data/workspace/manual_execution/ManualExecutionResults.md`, `platform_core_data/workspace/manual_execution/ManualExecutionSummary.md`, `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md`, `platform_core_data/workspace/manual_execution/artifacts/` |
+| **Artifact path** | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md`, `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md`, `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md`, `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/artifacts/` |
 
 Notes:
 - The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 3 artifacts *after* they have cleared the Stage 3 checkpoint, never a draft or in-progress test suite.
@@ -186,7 +186,7 @@ Notes:
 | **Input** | Approved Automation Candidate Package · Manual Execution Summary · Manual Test Suites (content source) · Traceability Matrix · Coverage Report · Project Context |
 | **Output** | Automation Scripts |
 | **Checkpoint** | **Automation Approval Required** |
-| **Artifact path** | `platform_core_data/workspace/automation/tests/`, `platform_core_data/workspace/automation/AutomationSummary.md` |
+| **Artifact path** | `platform_core_data/automation_baseline/tests/`, `platform_core_data/automation_baseline/AutomationSummary.md` |
 
 Notes:
 - The word "Approved" in the Input is load-bearing: this stage may only consume the Stage 4 Automation Candidate Package *after* it has cleared the Stage 4 checkpoint, never a draft or in-progress result set.
@@ -202,7 +202,7 @@ Notes:
 | **Input** | Automation Scripts |
 | **Output** | Execution Results · Screenshots · Logs · Execution Metadata |
 | **Checkpoint** | *None — mechanical run, gated only by the Stage 5 Automation Approval that already occurred* |
-| **Artifact path** | `platform_core_data/workspace/execution/ExecutionResults.md`, `platform_core_data/workspace/execution/artifacts/` |
+| **Artifact path** | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md`, `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/` |
 
 Notes:
 - Project Context remains a standing reference for this stage (target environment, credentials, safety constraints) even though it is not re-listed as a primary artifact input here — see §6, Rule 5. The Automation Execution Agent's own specification requires it to confirm the target environment against the Project Context before running anything.
@@ -219,7 +219,7 @@ Notes:
 | **Input** | Execution Results · Traceability Matrix · Project Context |
 | **Output** | Final QA Report |
 | **Checkpoint** | *None — terminal stage, delivered to human stakeholders outside the pipeline* |
-| **Artifact path** | `platform_core_data/workspace/reporting/Final_QA_Report.md` |
+| **Artifact path** | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` |
 
 Notes:
 - The Traceability Matrix is consulted here specifically to compute Requirement Coverage and Automation Coverage, and to carry forward every Manual Test Suite "Assumption-based test" tag into a resolved (confirmed/refuted/unverified) status.
@@ -298,7 +298,7 @@ This gate is named distinctly from "Human Review Required" because approving it 
 Cannot start Stage 3 yet — an upstream checkpoint is open.
 
   Stage 2 — Discovery Artifacts ....... Pending Review
-    platform_core_data/workspace/discovery/QA_Assessment_Report.v1.md
+    platform_core_data/runs/run-004__2026-07-27_14-30-05__Smoke__Login/discovery/QA_Assessment_Report.md
 
 Next step — either:
   1. Approve it, then run this stage:   "approved"  →  /test-design-skill
@@ -382,13 +382,26 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 
 ## 7. Artifact & Versioning Conventions
 
-Every artifact produced by this pipeline lives under `platform_core_data/workspace/` in the subdirectory conventions established in the Agent Framework (`context/`, `discovery/`, `Reports/`, `testcases/`, `manual_execution/`, `Automation/`, `execution/`).
+> **Revision note (2026-07-27, user-mandated):** this section previously (a) rooted every artifact at `platform_core_data/workspace/` and (b) mandated version-suffixed files plus an unsuffixed "current approved" copy. Both are replaced below. Real runs showed the two rules producing redundant copies of the same Markdown: a `.v1` file, an unsuffixed approved duplicate of it, and a fresh `.v2` whenever the reviewer asked for a refinement rather than an edit of the file they had just reviewed. **`platform_core_data/workspace/` is removed** — every artifact now lives in its own Run Folder — and **each artifact is now a single file, edited in place**, with git as the version history.
 
-To satisfy Rule 7 (versionable artifacts) and Rule 6 (gates that truly stop the pipeline), each stage's artifact is versioned as follows:
+**Every artifact produced by this pipeline lives under that run's own Run Folder:**
 
-- **Version-suffixed files:** each artifact is written with a version suffix, e.g. `ProjectContext.v1.md`, `.v2.md`, etc. A rejected-and-revised artifact is a new version, never an in-place edit of the rejected one — the rejected version remains on record.
-- **A "current approved" pointer:** the unsuffixed filename referenced throughout the Agent Framework (e.g., `ProjectContext.md`) always refers to the **latest approved** version. It is only updated at the moment a reviewer approves a version — never before.
-- **Run Manifest:** a single tracking artifact, `platform_core_data/workspace/pipeline/RunManifest.md`, records for every stage: version number produced, timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, the **Invocation Path** (`Pipeline` / `Direct` / `Direct (degraded)`, per §5.3.1 #7) together with any run-scoped instruction given at invocation, and a direct link to that version's artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
+```
+platform_core_data/runs/{{RUN_FOLDER}}/{stage}/
+```
+
+where `{{RUN_FOLDER}}` is generated by `platform_core/tools/run_manager` (`run_manager.md` §5) and `{stage}` is one of `metadata/`, `context/`, `discovery/`, `test_design/`, `manual_execution/`, `automation/`, `execution/`, `reporting/`. There is no second location: a stage writes its artifact once, in its own run, and never mirrors it anywhere else.
+
+To satisfy Rule 7 (versionable artifacts) and Rule 6 (gates that truly stop the pipeline):
+
+- **One file per artifact, edited in place.** An artifact has exactly one path for the life of its run — `ProjectContext.md`, not `ProjectContext.v1.md`. No version suffix is ever appended, and no copy is ever made.
+- **Approval changes status, never location.** Approving an artifact updates the `status:` field in its own header (`Draft` → `Pending Review` → `Approved`) and records the approval in the Run Manifest. **A stage must never, on approval, write a "final" copy of its Markdown outputs** — the file the reviewer read *is* the approved artifact.
+- **Refinement edits the reviewed file.** When a reviewer requests changes — whether the artifact is `Pending Review`, `Approved`, or was rejected — the producing stage re-opens that same file and edits it in place. It must never create a `.v2`, `_final`, `_revised`, or otherwise-suffixed sibling.
+- **Git is the version history.** Prior states of every artifact are recoverable from version control, which is why an in-place edit loses nothing. Each stage's write and each approval is a commit-worthy change; the Run Manifest records the sequence.
+- **A rejected artifact is preserved only when the reviewer asks for it.** The default is an in-place revision. If a reviewer explicitly wants the rejected text kept alongside the revision for audit, it is written once to `{artifact}.rejected-{N}.md` in the same folder and never touched again.
+- **Run Manifest:** a single tracking artifact, `platform_core_data/runs/{{RUN_FOLDER}}/metadata/RunManifest.md`, records for every stage: timestamp, checkpoint status (`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`), the approving reviewer, the revision count (how many times the artifact has been edited in place — replacing the old version number), the **Invocation Path** (`Pipeline` / `Direct` / `Direct (degraded)`, per §5.3.1 #7) together with any run-scoped instruction given at invocation, and a direct link to the artifact file. This manifest is the pipeline orchestrator's own source of truth for "where are we right now" and is what a human or orchestration tool consults before invoking the next stage.
+
+**Cross-run reuse.** A run that reuses an upstream artifact from an earlier run (e.g. an already-approved Project Context) references that run's file by path — `platform_core_data/runs/{{PRIOR_RUN_FOLDER}}/context/ProjectContext.md` — and records the source run in its own Run Manifest. It does not copy the file into the current run. When a stage does need to evolve a reused artifact, it copies it into the current run *once*, at that point, and the Run Manifest records that the copy's origin was the prior run.
 
 ## 8. Traceability Chain
 
@@ -508,7 +521,7 @@ Note that `knowledge_base/patterns/` contains both a `diagnosis/` and a `diagnos
 
 ## 11. Debug Mode & Temporary Execution Artifacts (added 2026-07-12, user-mandated)
 
-Stages that drive a live browser or write throwaway scripts to accomplish their work (chiefly Stage 2 Explorer, Stage 4 Manual Execution, Stage 5 Automation's selector verification, Stage 6 Automation Execution) must not let that internal tooling leak into a project's permanent artifact tree. Only the **outputs** those stages are actually specified to produce (§4's Expected Artifacts per agent — Discovery snapshots/Findings/Coverage/QA Assessment Report, Automation packages, Execution Results/Evidence, Reports) belong under `platform_core_data/workspace/`.
+Stages that drive a live browser or write throwaway scripts to accomplish their work (chiefly Stage 2 Explorer, Stage 4 Manual Execution, Stage 5 Automation's selector verification, Stage 6 Automation Execution) must not let that internal tooling leak into a project's permanent artifact tree. Only the **outputs** those stages are actually specified to produce (§4's Expected Artifacts per agent — Discovery snapshots/Findings/Coverage/QA Assessment Report, Automation packages, Execution Results/Evidence, Reports) belong under `platform_core_data/runs/{{RUN_FOLDER}}/`.
 
 ### 11.1 Debug Mode flag
 
@@ -531,13 +544,15 @@ This must remain a permanent platform capability, not a habit built around the c
 
 ## 12. Automation Asset Lifecycle (added 2026-07-24, user-mandated)
 
-**The platform generates automation inside a Run, but a Run is temporary — without a persistent baseline, generated automation is either lost to a growing pile of per-run folders, or, as happened here prior to this section, the process quietly reverses course and starts hand-editing one run folder's files in place across several later runs, defeating the "immutable run" model this pipeline otherwise enforces.** This section makes explicit what the Folder Structure diagram in [`platform_core_data/README.md`](../../platform_core_data/README.md) already implied but never operationalized: `platform_core_data/workspace/automation/{Framework}/` is the **Workspace Automation Baseline** — the single authoritative, persistent copy of the project's automation code — and every Run works from a **temporary working copy** of it, never the baseline directly.
+> **Path revision (2026-07-27):** the baseline moved from `platform_core_data/workspace/automation/{framework}/` to `platform_core_data/automation_baseline/{framework}/` when §7 removed `workspace/`. **Only the path changed — every rule in this section is unchanged.** The baseline is deliberately *not* relocated into a Run Folder: it is long-lived automation *source code* under a three-way-merge lifecycle that must outlive any single run, which is the exact opposite of the per-run, single-file-in-place discipline §7 applies to a stage's Markdown artifacts. Keeping it a sibling of `runs/` preserves that distinction, and the "Workspace Automation Baseline" term is retained throughout for continuity with §12.2–§12.6 and `automation-skill` §30–§33.
+
+**The platform generates automation inside a Run, but a Run is temporary — without a persistent baseline, generated automation is either lost to a growing pile of per-run folders, or, as happened here prior to this section, the process quietly reverses course and starts hand-editing one run folder's files in place across several later runs, defeating the "immutable run" model this pipeline otherwise enforces.** This section makes explicit what the Folder Structure diagram in [`platform_core_data/README.md`](../../platform_core_data/README.md) already implied but never operationalized: `platform_core_data/automation_baseline/{Framework}/` is the **Workspace Automation Baseline** — the single authoritative, persistent copy of the project's automation code — and every Run works from a **temporary working copy** of it, never the baseline directly.
 
 ### 12.1 Two locations
 
 | Location | Path | Role |
 |---|---|---|
-| **Workspace Automation Baseline** | `platform_core_data/workspace/automation/{framework}/tests_{Framework}/` — e.g. `.../automation/shaft/tests_SHAFT/` | The authoritative, persistent copy of one Automation Package. Never edited directly during generation — only ever written by the Workspace Merge (§12.4). |
+| **Workspace Automation Baseline** | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` — e.g. `.../automation/shaft/tests_SHAFT/` | The authoritative, persistent copy of one Automation Package. Never edited directly during generation — only ever written by the Workspace Merge (§12.4). |
 | **Run Automation Working Copy** | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` | Temporary. Where Stage 5 (Automation Agent) actually generates/extends code for this run, and where Stage 6 (Automation Execution Agent) actually runs it. Deleted (source only — see §12.5) once its content has been merged back into the baseline. |
 
 The framework subfolder appears in the baseline path but not the run path, and that asymmetry is deliberate: the baseline holds every framework's package side by side and needs them separated, while a run works on exactly one package (resolved by §33.1's gate) and has nothing to separate it from.
@@ -658,8 +673,8 @@ Every write obeys these rules:
 - **Filesystem writes only. The platform never runs `git add`, `git commit`, `git mv`, `git rm`, or any other history-modifying git command against the Target Project.** Generated automation is left in the working tree for the host team to review and commit with their own conventions, hooks, and review process. Enforced by `assertSameRepo` in `platform_core/tools/automation_lifecycle/gitUtils.js` — the lifecycle only ever holds the repository handle governing `platform_core_data/`, so a Target Project path passed to any git write raises `RepoBoundaryError`.
 - **Every write is preceded by a Target Write Plan** — the full list of files to be created, modified, or deleted, with a one-line reason each — presented at the Automation Approval gate (§5.2). No file is written to the Target Project before that gate clears.
 - **An existing Target Project file is never modified without being named in the Write Plan and individually approved.** Creating a new file in an allowlisted directory is covered by the gate's blanket approval; modifying a file the team already owns is not.
-- **No deletions**, other than a file this platform itself created in a prior run and recorded in `platform_core_data/workspace/automation/TargetWriteLedger.md`.
-- **Every write is recorded in the Target Write Ledger** (`platform_core_data/workspace/automation/TargetWriteLedger.md`): path, run folder, operation, sha256 after writing. This is the platform's record of what it owns inside someone else's repository, and it is what makes uninstall and drift-detection possible.
+- **No deletions**, other than a file this platform itself created in a prior run and recorded in `platform_core_data/automation_baseline/TargetWriteLedger.md`.
+- **Every write is recorded in the Target Write Ledger** (`platform_core_data/automation_baseline/TargetWriteLedger.md`): path, run folder, operation, sha256 after writing. This is the platform's record of what it owns inside someone else's repository, and it is what makes uninstall and drift-detection possible.
 
 ### 13.4 What must NEVER be touched
 
@@ -675,7 +690,7 @@ When no stack is detected, the platform scaffolds **test infrastructure only** �
 
 ### 13.7 Relationship to §12 and to §32.3
 
-§12's Automation Asset Lifecycle is unchanged and continues to govern the **baseline** under `platform_core_data/workspace/automation/{framework}/`, which remains the platform's authoritative, lifecycle-managed, three-way-merge-protected copy. §13 governs the **projection** of an approved baseline into the Target Project's test directories.
+§12's Automation Asset Lifecycle is unchanged and continues to govern the **baseline** under `platform_core_data/automation_baseline/{framework}/`, which remains the platform's authoritative, lifecycle-managed, three-way-merge-protected copy. §13 governs the **projection** of an approved baseline into the Target Project's test directories.
 
 Ordering is fixed: generate in the run's working copy (§12.3) → Automation Approval (§5.2) → Workspace Merge into the baseline (§12.4) → **then** project into the Target Project (§13.3). The Target Project is never written before the baseline is updated, so the baseline is always the reproducible source and the Target Project's copy is always reconstructible from it.
 

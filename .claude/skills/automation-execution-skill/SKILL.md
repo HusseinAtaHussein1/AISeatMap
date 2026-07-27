@@ -5,7 +5,7 @@ inputs:
   - name: automation_suite
     type: file_path
     required: true
-    description: Approved Automation Package at `platform_core_data/workspace/automation/tests_{Framework}/`.
+    description: Approved Automation Package at `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`.
   - name: automation_summary
     type: file_path
     required: true
@@ -25,11 +25,11 @@ inputs:
 outputs:
   - name: execution_results
     type: file_path
-    location: "platform_core_data/workspace/execution/ExecutionResults.md"
-    description: "Structured per-test results, Evidence Inventory, Metrics, and separated Application/Automation/Environment Health figures. NDC uses a `workspace/execution/` variant of this path — see `platform_core_data/onboarding.md`."
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md"
+    description: "Structured per-test results, Evidence Inventory, Metrics, and separated Application/Automation/Environment Health figures."
   - name: execution_artifacts
     type: file_path
-    location: "platform_core_data/workspace/execution/artifacts/"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/"
     description: Captured screenshots, traces, logs, HAR files, framework reports.
 dependencies:
   - automation-skill (upstream skill)
@@ -41,6 +41,8 @@ dependencies:
 > **Pipeline position:** Stage 6 of 7 — consumes the Automation Suite, produces raw Execution Results.
 > **Traceability:** `Automation → Execution`.
 > **Revision history:** see `docs/CHANGELOG.md`.
+
+> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
 
 # 1. Skill Name
 
@@ -85,16 +87,16 @@ The Automation Execution skill runs the automated test suite produced by the Aut
 
 | Input | Required? | Description |
 |---|---|---|
-| Automation Suite | Required | `platform_core_data/workspace/automation/tests/` — the generated/reused project itself |
-| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `platform_core_data/workspace/automation/AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-skill/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this skill — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this skill assuming a framework itself |
+| Automation Suite | Required | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests/` — the generated/reused project itself |
+| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-skill/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this skill — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this skill assuming a framework itself |
 | Run Scope | Required (embedded) | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4), plus the Run Type (Full Regression/Smoke/etc., §5 there). Drives §13's strategy selection. |
-| Project Context | Required | `platform_core_data/workspace/context/ProjectContext.md` — environment, credentials, safety constraints |
+| Project Context | Required | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — environment, credentials, safety constraints |
 | Execution Configuration | Required, composite | Not a single file — the set of run-time execution parameters this skill must resolve before running anything: Execution Mode (§5.1), Concurrency Mode (§5.3), Retry Policy (§5.4), and Resume state (§5.5). Named explicitly here so none of these is a silent default — each has its own determination rule below. |
 | Execution Mode | Required, but not necessarily pre-supplied — see §5.1 | Sourced from the approved Run Configuration if it defines one; otherwise obtained by pausing and asking the user before execution begins. One of: `Headless`, `Headed`, `Debug` — no other value is valid. |
 | Framework Configuration | Required, not assumed | Not this skill's decision — sourced from the Automation Summary's Framework Used / Execution Instructions sections (§15). This skill never independently selects or assumes a framework; it only reads what Stage 5 already decided and justified. |
 | Environment Configuration | Required (embedded) | The named environment (§14) this run targets, drawn from the Project Context's Environment Constraints — not a hidden default, and never inferred from where this skill itself happens to be running. |
 | Execution scope / Execution Parameters | Optional | Which subset of the suite to run (defaults to the full suite); for a Selective Re-run or Failed Test Re-run (§13), this is the specific test case ID list or "previously Failed" filter. |
-| Evidence Locations | Required (fixed convention) | `platform_core_data/workspace/execution/artifacts/` — not configurable per run; named explicitly here so it's a stated input/convention rather than an implicit assumption. |
+| Evidence Locations | Required (fixed convention) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/` — not configurable per run; named explicitly here so it's a stated input/convention rather than an implicit assumption. |
 | Execution History | Optional — required only for Resume/Selective Re-run/Failed Test Re-run (§5.5, §13) | Prior Execution Results artifact(s) for this run (`ExecutionResults_{Execution ID}.md`), consulted only to determine what to resume or re-run — never edited, never treated as this run's own result. |
 
 # 5. Execution Mode
@@ -186,8 +188,8 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 
 | Artifact | Path |
 |---|---|
-| Execution Results | `platform_core_data/workspace/execution/ExecutionResults.md` |
-| Captured screenshots / traces / logs / HAR / framework reports | `platform_core_data/workspace/execution/artifacts/` |
+| Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` |
+| Captured screenshots / traces / logs / HAR / framework reports | `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/` |
 
 No new artifact paths are introduced by this revision — the Standard Output Contract (§18) defines required sections *within* the existing `ExecutionResults.md` file, preserving the Reporting skill's existing single-file input expectation (`.claude/skills/reporting-skill/SKILL.md` §4) without requiring any change on that skill's side.
 
@@ -207,14 +209,14 @@ Execute the approved Automation Package against the target environment and recor
 
 ```text
 Input:
-  platform_core_data/workspace/automation/tests/
-  platform_core_data/workspace/context/ProjectContext.md
+  platform_core_data/runs/{{RUN_FOLDER}}/automation/tests/
+  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
   APP_URL          = https://opensource-demo.orangehrmlive.com/
   TEST_SCOPE       = all
   EXECUTION_MODE   = (not defined in Run Configuration)
 ```
 
-Hypothetical result: this skill confirms the target environment matches the Project Context, then checks the Run Configuration for an Execution Mode — finds none defined — and halts, asking: *"No Execution Mode is defined in the Run Configuration. Please choose one: Headless, Headed, or Debug."* Only after the user answers, say, "Headed," does this skill proceed to run `npx playwright test --headed`, and the resulting `platform_core_data/workspace/execution/ExecutionResults.md` records `"Execution Mode": "Headed"` in its run-identity header alongside the usual per-test outcomes — e.g., "36 tests executed — 31 Passed, 3 Failed (TC-PIM-013 → `pim.spec.ts::AddEmployee_MissingName`, TC-PIM-014, TC-LEA-013 — validation messages not shown as expected), 2 Skipped (destructive Maintenance actions not authorized against the shared demo)," with each row showing its Test Case ID, Automation Script ID, Execution Time, and linked Screenshots/Logs under `platform_core_data/workspace/execution/artifacts/`.
+Hypothetical result: this skill confirms the target environment matches the Project Context, then checks the Run Configuration for an Execution Mode — finds none defined — and halts, asking: *"No Execution Mode is defined in the Run Configuration. Please choose one: Headless, Headed, or Debug."* Only after the user answers, say, "Headed," does this skill proceed to run `npx playwright test --headed`, and the resulting `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` records `"Execution Mode": "Headed"` in its run-identity header alongside the usual per-test outcomes — e.g., "36 tests executed — 31 Passed, 3 Failed (TC-PIM-013 → `pim.spec.ts::AddEmployee_MissingName`, TC-PIM-014, TC-LEA-013 — validation messages not shown as expected), 2 Skipped (destructive Maintenance actions not authorized against the shared demo)," with each row showing its Test Case ID, Automation Script ID, Execution Time, and linked Screenshots/Logs under `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/`.
 
 # 12. Architecture Principle
 
@@ -300,7 +302,7 @@ This table is illustrative, not authoritative — the authoritative source is al
 | Attachments | Any other framework-specific artifact (e.g., a downloaded file a test verified) |
 | Failure Artifacts | Anything captured specifically because a test failed — stack trace, failure screenshot, failure-state DOM/response |
 
-**Evidence Inventory as a required Execution Results section** (§18) lists, per test, exactly which of the above were captured, their file paths under `platform_core_data/workspace/execution/artifacts/`, and — for anything not captured — the reason (e.g., "Videos: not supported by REST Assured for this API-only suite," not silently absent).
+**Evidence Inventory as a required Execution Results section** (§18) lists, per test, exactly which of the above were captured, their file paths under `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/`, and — for anything not captured — the reason (e.g., "Videos: not supported by REST Assured for this API-only suite," not silently absent).
 
 # 17. Result Classification
 
@@ -720,8 +722,8 @@ This skill is independently invocable — `/automation-execution-skill`, optiona
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 6 complete — Execution Results v{N}
-  platform_core_data/workspace/execution/ExecutionResults.v{N}.md
+Stage 6 complete — Execution Results
+  platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md
   {P} Passed | {F} Failed | {S} Skipped | {B} Blocked
   Application {a} / Automation {b} / Environment {c} failures
   Execution Mode: {mode}

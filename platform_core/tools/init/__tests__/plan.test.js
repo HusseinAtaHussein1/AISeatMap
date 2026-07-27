@@ -221,18 +221,18 @@ test('missing folders are added to an existing data root without disturbing it',
   const t = makeTarget(PLAYWRIGHT_APP);
   try {
     const dataRoot = path.join(t.root, 'agentic-testing-tool', 'platform_core_data');
-    fs.mkdirSync(path.join(dataRoot, 'workspace', 'context'), { recursive: true });
-    fs.writeFileSync(path.join(dataRoot, 'workspace', 'context', 'ProjectContext.md'), 'approved');
+    fs.mkdirSync(path.join(dataRoot, 'runs'), { recursive: true });
+    fs.writeFileSync(path.join(dataRoot, 'runs', 'ProjectContext.md'), 'approved');
 
     const p = plan(t.root);
     const dirs = opPaths(p, 'mkdir');
 
-    assert.ok(!dirs.some((d) => d.endsWith('workspace/context')), 'existing folders are skipped');
-    assert.ok(dirs.some((d) => d.endsWith('workspace/discovery')), 'missing folders are added');
+    assert.ok(!dirs.some((d) => d.endsWith('platform_core_data/runs')), 'existing folders are skipped');
+    assert.ok(dirs.some((d) => d.endsWith('automation_baseline')), 'missing folders are added');
 
     applyPlan(p, { now: NOW });
     assert.equal(
-      fs.readFileSync(path.join(dataRoot, 'workspace', 'context', 'ProjectContext.md'), 'utf8'),
+      fs.readFileSync(path.join(dataRoot, 'runs', 'ProjectContext.md'), 'utf8'),
       'approved',
     );
   } finally {

@@ -250,7 +250,7 @@ test('discoverRepo returns unavailable, with a remedy, when no repository govern
 test('discoverRepo detects a gitignored dataRoot and degrades instead of reporting vacuous cleanliness', () => {
   // The trap: `git status --porcelain -- <ignored path>` is empty, so an untracked baseline reads
   // as CLEAN, and `git log -1 -- <path>` is empty, so every merge looks like a first promotion.
-  const repo = discoverRepo('/my-app/tool/platform_core_data/workspace', {
+  const repo = discoverRepo('/my-app/tool/platform_core_data/runs', {
     dataRoot: '/my-app/tool/platform_core_data',
     execFileSync: (cmd, args) => {
       if (args[0] === 'rev-parse') return '/my-app\n';

@@ -132,15 +132,61 @@ function formatTimestampUTC(date) {
   return `${y}-${mo}-${d}_${h}-${mi}-${s}`;
 }
 
+/** Width of the zero-padded run index prefix (`run-001__…`). */
+const RUN_INDEX_PAD = 3;
+
+/** Matches the `run-NNN__` prefix at the head of a folder name. */
+const RUN_INDEX_RE = /^run-(\d+)__/i;
+
+/**
+ * Formats a 1-based run index as the folder-name prefix segment: 1 -> "run-001".
+ * Indexes past the pad width keep their full width rather than being truncated
+ * (run 1000 becomes "run-1000"), so the prefix never collides or loses information.
+ * @param {number} index
+ * @returns {string}
+ */
+function formatRunIndex(index) {
+  if (!Number.isInteger(index) || index < 1) {
+    throw new TypeError(`formatRunIndex requires a positive integer, received ${JSON.stringify(index)}`);
+  }
+  return `run-${String(index).padStart(RUN_INDEX_PAD, '0')}`;
+}
+
+/**
+ * Determines the index a new run should take: one past the highest index already present in
+ * `existingNames`. Folder names without a parseable `run-NNN__` prefix (legacy runs, and runs
+ * created before the index convention) are ignored rather than guessed at, so a directory holding
+ * only legacy folders still starts a fresh sequence at 1.
+ *
+ * @param {string[]} [existingNames]
+ * @returns {number} the next 1-based run index
+ */
+function nextRunIndex(existingNames = []) {
+  let highest = 0;
+  for (const name of existingNames) {
+    const match = String(name).match(RUN_INDEX_RE);
+    if (!match) continue;
+    const value = Number(match[1]);
+    if (Number.isFinite(value) && value > highest) highest = value;
+  }
+  return highest + 1;
+}
+
 /**
  * Builds the folder name from already-resolved parts. Does not sanitize `timestamp` (callers
  * should pass the output of formatTimestamp) but does sanitize scope/target.
- * @param {{timestamp: string, scope: string, target: string}} parts
+ *
+ * When `index` is supplied, the name is prefixed with `run-NNN__` so a run's ordinal is visible
+ * without opening it; the timestamp still follows immediately, so names remain chronologically
+ * sortable within a single index sequence.
+ *
+ * @param {{timestamp: string, scope: string, target: string, index?: number}} parts
  * @returns {string}
  */
-function buildRunFolderName({ timestamp, scope, target }) {
+function buildRunFolderName({ timestamp, scope, target, index }) {
   if (!timestamp) throw new TypeError('buildRunFolderName requires a timestamp');
-  return `${timestamp}__${sanitizeSegment(scope)}__${sanitizeSegment(target)}`;
+  const body = `${timestamp}__${sanitizeSegment(scope)}__${sanitizeSegment(target)}`;
+  return index === undefined || index === null ? body : `${formatRunIndex(index)}__${body}`;
 }
 
 /**
@@ -167,16 +213,24 @@ function pickTarget(metadata = {}) {
  * Top-level generator: given run metadata, produces the full run folder name, resolving
  * collisions against `existingNames` with a deterministic numeric suffix.
  *
+ * By default the name carries a `run-NNN__` index prefix (one past the highest index already
+ * present in `existingNames`), so every run folder states its ordinal, start time, scope, and
+ * target: `run-001__2026-07-27_14-30-05__Smoke__Login`.
+ *
  * @param {object} metadata
  * @param {string} [metadata.scope] - raw scope/run-type string, normalized via normalizeScope()
  * @param {string} [metadata.target] - explicit target label; if omitted, derived via pickTarget()
  * @param {object} [options]
  * @param {string[]} [options.existingNames] - folder names already present, to avoid collisions
+ *   and to derive the next run index
  * @param {Date} [options.now] - the run's start time; required (never defaults to `new Date()`
  *   internally so callers/tests stay deterministic)
+ * @param {number} [options.index] - explicit run index; defaults to nextRunIndex(existingNames)
+ * @param {boolean} [options.withIndex=true] - set false to omit the `run-NNN__` prefix entirely
+ *   (used by the legacy-migration path, which infers names for folders that predate the prefix)
  * @returns {string}
  */
-function generateRunFolderName(metadata = {}, { existingNames = [], now } = {}) {
+function generateRunFolderName(metadata = {}, { existingNames = [], now, index, withIndex = true } = {}) {
   if (!(now instanceof Date)) {
     throw new TypeError('generateRunFolderName requires options.now (a Date) — pass the run\'s start time explicitly');
   }
@@ -186,7 +240,11 @@ function generateRunFolderName(metadata = {}, { existingNames = [], now } = {}) 
     ? metadata.target
     : pickTarget(metadata);
 
-  let name = buildRunFolderName({ timestamp, scope, target });
+  const resolvedIndex = withIndex === false
+    ? undefined
+    : (index !== undefined && index !== null ? index : nextRunIndex(existingNames));
+
+  let name = buildRunFolderName({ timestamp, scope, target, index: resolvedIndex });
 
   const existing = new Set(existingNames);
   if (existing.has(name)) {
@@ -200,12 +258,12 @@ function generateRunFolderName(metadata = {}, { existingNames = [], now } = {}) 
 const LEGACY_RE = /^RUN-(\d{8})-(\d{3})(?:-([a-z0-9-]+))?$/i;
 
 /**
- * Parses a run folder name, recognizing both the new convention and the legacy
- * `RUN-YYYYMMDD-XXX(-slug)?` form.
+ * Parses a run folder name, recognizing the current convention (with or without the `run-NNN__`
+ * index prefix) and the legacy `RUN-YYYYMMDD-XXX(-slug)?` form.
  *
  * @param {string} name
- * @returns {{format: 'new'|'legacy'|'unknown', timestamp?: string, scope?: string, target?: string,
- *   dedupeSuffix?: number, runId?: string, sequence?: string, slug?: string}}
+ * @returns {{format: 'new'|'legacy'|'unknown', index?: number, timestamp?: string, scope?: string,
+ *   target?: string, dedupeSuffix?: number, runId?: string, sequence?: string, slug?: string}}
  */
 function parseRunFolderName(name) {
   if (typeof name !== 'string' || !name) {
@@ -224,7 +282,17 @@ function parseRunFolderName(name) {
     };
   }
 
-  const parts = name.split('__');
+  // The `run-NNN__` prefix is optional: folders created before the index convention parse exactly
+  // as they did before, just without an `index` field.
+  let rest0 = name;
+  let index;
+  const indexMatch = name.match(RUN_INDEX_RE);
+  if (indexMatch) {
+    index = Number(indexMatch[1]);
+    rest0 = name.slice(indexMatch[0].length);
+  }
+
+  const parts = rest0.split('__');
   const tsRe = /^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/;
   if (parts.length >= 3 && tsRe.test(parts[0])) {
     const [timestamp, scope, ...rest] = parts;
@@ -236,7 +304,14 @@ function parseRunFolderName(name) {
       dedupeSuffix = Number(rest[rest.length - 1]);
       target = rest.slice(0, -1).join('__');
     }
-    return { format: 'new', timestamp, scope, target, ...(dedupeSuffix ? { dedupeSuffix } : {}) };
+    return {
+      format: 'new',
+      ...(index !== undefined ? { index } : {}),
+      timestamp,
+      scope,
+      target,
+      ...(dedupeSuffix ? { dedupeSuffix } : {}),
+    };
   }
 
   return { format: 'unknown' };
@@ -244,6 +319,10 @@ function parseRunFolderName(name) {
 
 module.exports = {
   CANONICAL_SCOPES,
+  RUN_INDEX_PAD,
+  RUN_INDEX_RE,
+  formatRunIndex,
+  nextRunIndex,
   sanitizeSegment,
   normalizeScope,
   formatTimestamp,

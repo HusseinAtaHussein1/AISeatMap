@@ -9,6 +9,8 @@ const {
   buildRunFolderName,
   generateRunFolderName,
   parseRunFolderName,
+  formatRunIndex,
+  nextRunIndex,
 } = require('../runFolderName');
 
 test('sanitizeSegment removes filesystem-unsafe characters', () => {
@@ -96,32 +98,66 @@ test('buildRunFolderName matches the required convention exactly', () => {
 
 test('generateRunFolderName reproduces every example from the requirements', () => {
   const cases = [
-    { now: new Date(2026, 6, 23, 10, 35, 18), metadata: { scope: 'FullRun', target: 'FlightSearch' }, expected: '2026-07-23_10-35-18__FullRun__FlightSearch' },
-    { now: new Date(2026, 6, 23, 11, 2, 41), metadata: { scope: 'Smoke', target: 'Login' }, expected: '2026-07-23_11-02-41__Smoke__Login' },
-    { now: new Date(2026, 6, 23, 14, 20, 5), metadata: { scope: 'Regression', target: 'BookingFlow' }, expected: '2026-07-23_14-20-05__Regression__BookingFlow' },
-    { now: new Date(2026, 6, 23, 15, 48, 55), metadata: { scope: 'Targeted', target: 'US-245_AddCabinClassFilter' }, expected: '2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter' },
-    { now: new Date(2026, 6, 23, 16, 10, 32), metadata: { scope: 'Targeted', target: 'AgencyManagement' }, expected: '2026-07-23_16-10-32__Targeted__AgencyManagement' },
+    { now: new Date(2026, 6, 23, 10, 35, 18), metadata: { scope: 'FullRun', target: 'FlightSearch' }, expected: 'run-001__2026-07-23_10-35-18__FullRun__FlightSearch' },
+    { now: new Date(2026, 6, 23, 11, 2, 41), metadata: { scope: 'Smoke', target: 'Login' }, expected: 'run-001__2026-07-23_11-02-41__Smoke__Login' },
+    { now: new Date(2026, 6, 23, 14, 20, 5), metadata: { scope: 'Regression', target: 'BookingFlow' }, expected: 'run-001__2026-07-23_14-20-05__Regression__BookingFlow' },
+    { now: new Date(2026, 6, 23, 15, 48, 55), metadata: { scope: 'Targeted', target: 'US-245_AddCabinClassFilter' }, expected: 'run-001__2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter' },
+    { now: new Date(2026, 6, 23, 16, 10, 32), metadata: { scope: 'Targeted', target: 'AgencyManagement' }, expected: 'run-001__2026-07-23_16-10-32__Targeted__AgencyManagement' },
   ];
   for (const c of cases) {
     assert.equal(generateRunFolderName(c.metadata, { now: c.now }), c.expected);
   }
 });
 
-test('generateRunFolderName derives target from userStory/module/feature priority order', () => {
-  const now = new Date(2026, 6, 23, 9, 0, 0);
+test('generateRunFolderName omits the index prefix when withIndex is false', () => {
+  const now = new Date(2026, 6, 23, 10, 35, 18);
   assert.equal(
-    generateRunFolderName({ scope: 'UserStory', userStory: 'AddCabinClassFilter', module: 'FlightSearch' }, { now }),
-    '2026-07-23_09-00-00__UserStory__AddCabinClassFilter'
-  );
-  assert.equal(
-    generateRunFolderName({ scope: 'Module', module: 'FlightSearch' }, { now }),
-    '2026-07-23_09-00-00__Module__FlightSearch'
+    generateRunFolderName({ scope: 'FullRun', target: 'FlightSearch' }, { now, withIndex: false }),
+    '2026-07-23_10-35-18__FullRun__FlightSearch'
   );
 });
 
-test('generateRunFolderName falls back to Unknown scope/target when metadata is empty', () => {
-  const now = new Date(2026, 6, 23, 9, 0, 0);
-  assert.equal(generateRunFolderName({}, { now }), '2026-07-23_09-00-00__Unknown__Unknown');
+test('generateRunFolderName advances the run index past the highest existing one', () => {
+  const now = new Date(2026, 6, 23, 12, 0, 0);
+  const metadata = { scope: 'Smoke', target: 'Login' };
+
+  assert.equal(
+    generateRunFolderName(metadata, { now, existingNames: [] }),
+    'run-001__2026-07-23_12-00-00__Smoke__Login'
+  );
+  assert.equal(
+    generateRunFolderName(metadata, {
+      now,
+      existingNames: ['run-001__2026-07-22_09-00-00__FullRun__A', 'run-002__2026-07-22_10-00-00__Smoke__B'],
+    }),
+    'run-003__2026-07-23_12-00-00__Smoke__Login'
+  );
+});
+
+test('generateRunFolderName ignores unindexed/legacy folders when deriving the next index', () => {
+  const now = new Date(2026, 6, 23, 12, 0, 0);
+  assert.equal(
+    generateRunFolderName({ scope: 'Smoke', target: 'Login' }, {
+      now,
+      existingNames: ['RUN-20260706-001', '2026-07-22_09-00-00__FullRun__Legacy'],
+    }),
+    'run-001__2026-07-23_12-00-00__Smoke__Login'
+  );
+});
+
+test('nextRunIndex / formatRunIndex behave predictably', () => {
+  assert.equal(nextRunIndex([]), 1);
+  assert.equal(nextRunIndex(['run-007__2026-07-23_09-00-00__Smoke__A']), 8);
+  assert.equal(nextRunIndex(['run-002__x', 'run-011__y', 'run-004__z']), 12);
+  assert.equal(nextRunIndex(['not-a-run', 'RUN-20260706-001']), 1);
+
+  assert.equal(formatRunIndex(1), 'run-001');
+  assert.equal(formatRunIndex(42), 'run-042');
+  // Past the pad width the index keeps its full width rather than being truncated.
+  assert.equal(formatRunIndex(1000), 'run-1000');
+  assert.throws(() => formatRunIndex(0), TypeError);
+  assert.throws(() => formatRunIndex(-1), TypeError);
+  assert.throws(() => formatRunIndex(1.5), TypeError);
 });
 
 test('generateRunFolderName requires an explicit now (never defaults internally)', () => {
@@ -130,25 +166,64 @@ test('generateRunFolderName requires an explicit now (never defaults internally)
 
 test('generateRunFolderName resolves collisions with a deterministic numeric suffix', () => {
   const now = new Date(2026, 6, 23, 10, 35, 18);
-  const base = '2026-07-23_10-35-18__FullRun__FlightSearch';
+  const base = 'run-001__2026-07-23_10-35-18__FullRun__FlightSearch';
   const metadata = { scope: 'FullRun', target: 'FlightSearch' };
 
-  assert.equal(generateRunFolderName(metadata, { now, existingNames: [base] }), `${base}__2`);
-  assert.equal(generateRunFolderName(metadata, { now, existingNames: [base, `${base}__2`] }), `${base}__3`);
+  // An identical name can only recur when the index is pinned explicitly — otherwise the index
+  // itself advances and no collision is possible.
+  assert.equal(
+    generateRunFolderName(metadata, { now, index: 1, existingNames: [base] }),
+    `${base}__2`
+  );
+  assert.equal(
+    generateRunFolderName(metadata, { now, index: 1, existingNames: [base, `${base}__2`] }),
+    `${base}__3`
+  );
 });
 
-test('folder names sort chronologically as plain strings', () => {
+test('generateRunFolderName derives target from userStory/module/feature priority order', () => {
+  const now = new Date(2026, 6, 23, 9, 0, 0);
+  assert.equal(
+    generateRunFolderName({ scope: 'UserStory', userStory: 'AddCabinClassFilter', module: 'FlightSearch' }, { now }),
+    'run-001__2026-07-23_09-00-00__UserStory__AddCabinClassFilter'
+  );
+  assert.equal(
+    generateRunFolderName({ scope: 'Module', module: 'FlightSearch' }, { now }),
+    'run-001__2026-07-23_09-00-00__Module__FlightSearch'
+  );
+});
+
+test('generateRunFolderName falls back to Unknown scope/target when metadata is empty', () => {
+  const now = new Date(2026, 6, 23, 9, 0, 0);
+  assert.equal(generateRunFolderName({}, { now }), 'run-001__2026-07-23_09-00-00__Unknown__Unknown');
+});
+
+test('folder names sort chronologically within one index sequence', () => {
+  // Within a fixed index the timestamp still orders the names.
   const names = [
-    generateRunFolderName({ scope: 'Smoke', target: 'A' }, { now: new Date(2026, 6, 23, 9, 0, 0) }),
-    generateRunFolderName({ scope: 'Smoke', target: 'B' }, { now: new Date(2026, 6, 23, 8, 0, 0) }),
-    generateRunFolderName({ scope: 'Smoke', target: 'C' }, { now: new Date(2026, 6, 22, 23, 59, 59) }),
+    generateRunFolderName({ scope: 'Smoke', target: 'A' }, { now: new Date(2026, 6, 23, 9, 0, 0), index: 1 }),
+    generateRunFolderName({ scope: 'Smoke', target: 'B' }, { now: new Date(2026, 6, 23, 8, 0, 0), index: 1 }),
+    generateRunFolderName({ scope: 'Smoke', target: 'C' }, { now: new Date(2026, 6, 22, 23, 59, 59), index: 1 }),
   ];
   const sorted = [...names].sort();
-  assert.deepEqual(sorted.map((n) => n.split('__')[0]), [
+  assert.deepEqual(sorted.map((n) => parseRunFolderName(n).timestamp), [
     '2026-07-22_23-59-59',
     '2026-07-23_08-00-00',
     '2026-07-23_09-00-00',
   ]);
+});
+
+test('run folders sort by index in creation order', () => {
+  const existing = [];
+  for (const [target, now] of [
+    ['A', new Date(2026, 6, 23, 9, 0, 0)],
+    ['B', new Date(2026, 6, 24, 8, 0, 0)],
+    ['C', new Date(2026, 6, 25, 7, 0, 0)],
+  ]) {
+    existing.push(generateRunFolderName({ scope: 'Smoke', target }, { now, existingNames: existing }));
+  }
+  assert.deepEqual([...existing].sort(), existing);
+  assert.deepEqual(existing.map((n) => parseRunFolderName(n).index), [1, 2, 3]);
 });
 
 test('parseRunFolderName round-trips new-format names', () => {
@@ -157,6 +232,29 @@ test('parseRunFolderName round-trips new-format names', () => {
   assert.equal(parsed.timestamp, '2026-07-23_15-48-55');
   assert.equal(parsed.scope, 'Targeted');
   assert.equal(parsed.target, 'US-245_AddCabinClassFilter');
+});
+
+test('parseRunFolderName round-trips index-prefixed names', () => {
+  const parsed = parseRunFolderName('run-007__2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter');
+  assert.equal(parsed.format, 'new');
+  assert.equal(parsed.index, 7);
+  assert.equal(parsed.timestamp, '2026-07-23_15-48-55');
+  assert.equal(parsed.scope, 'Targeted');
+  assert.equal(parsed.target, 'US-245_AddCabinClassFilter');
+});
+
+test('parseRunFolderName omits index for names without the prefix', () => {
+  const parsed = parseRunFolderName('2026-07-23_15-48-55__Targeted__Login');
+  assert.equal(parsed.format, 'new');
+  assert.equal(parsed.index, undefined);
+});
+
+test('parseRunFolderName handles an index-prefixed, deduplicated folder', () => {
+  const parsed = parseRunFolderName('run-002__2026-07-23_10-35-18__FullRun__FlightSearch__2');
+  assert.equal(parsed.format, 'new');
+  assert.equal(parsed.index, 2);
+  assert.equal(parsed.target, 'FlightSearch');
+  assert.equal(parsed.dedupeSuffix, 2);
 });
 
 test('parseRunFolderName recovers the base name and suffix for a deduplicated folder', () => {

@@ -9,23 +9,23 @@ inputs:
   - name: discovery_artifacts
     type: file_path
     required: true
-    description: Approved Discovery Report, QA Assessment Report, Findings Summary, and per-Finding Evidence Packages at `platform_core_data/workspace/discovery/` — secondary inputs used only to validate, enrich, and surface gaps against the Project Context.
+    description: Approved Discovery Report, QA Assessment Report, Findings Summary, and per-Finding Evidence Packages at `platform_core_data/runs/{{RUN_FOLDER}}/discovery/` — secondary inputs used only to validate, enrich, and surface gaps against the Project Context.
 outputs:
   - name: manual_test_suite_md
     type: file_path
-    location: "platform_core_data/workspace/test_design/TestCases_{Module}.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md"
     description: Human-readable manual test cases, grouped by module.
   - name: manual_test_suite_xlsx
     type: file_path
-    location: "platform_core_data/workspace/test_design/TestCases_{Module}.xlsx"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx"
     description: Identical test case set, spreadsheet form. Must never diverge from the Markdown rendering.
   - name: traceability_matrix
     type: file_path
-    location: "platform_core_data/workspace/test_design/TraceabilityMatrix.md"
-    description: "Project Context requirement ID → Test Case ID mapping, annotated with Discovery/Finding/Evidence references. NDC uses a `workspace/test_design/` variant of these paths — see `platform_core_data/onboarding.md`."
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md"
+    description: "Project Context requirement ID → Test Case ID mapping, annotated with Discovery/Finding/Evidence references."
   - name: coverage_report
     type: file_path
-    location: "platform_core_data/workspace/test_design/CoverageReport.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md"
     description: Requirement Coverage and Finding Coverage accounting, structured per the Standard Output Contract (§18).
 dependencies:
   - project-context-skill (upstream skill)
@@ -36,6 +36,8 @@ dependencies:
 > **Pipeline position:** Stage 3 of 7 — consumes the Project Context (primary) and Discovery Artifacts, Findings, Evidence Packages, and the QA Assessment Report (secondary), produces Manual Test Suites.
 > **Traceability:** `Project Context → Test Cases`, informed and validated by `Discovery → Test Cases` and, where applicable, `Finding/Evidence → Test Cases`.
 > **Revision history:** see `docs/CHANGELOG.md`.
+>
+> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
 
 # 1. Skill Name
 
@@ -85,12 +87,12 @@ The Test Design skill transforms validated project knowledge — the approved Pr
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/context/ProjectContext.md` — the sole source of requirements, scope, roles, and business rules for test design |
+| Project Context | **Primary** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — the sole source of requirements, scope, roles, and business rules for test design |
 | Run Scope | Primary (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Called out here explicitly, not left an implicit read of prose, because it is what §16's strategy selection keys off of. |
-| Discovery Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/discovery/*.md` (including `Timeline.md` and `Coverage_Summary.md` where the Explorer skill version in use produces them) — raw structural/behavioral observation, used only to validate, enrich, and identify gaps against the Project Context |
-| QA Assessment Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/discovery/QA_Assessment_Report.md` — the Explorer skill's synthesized report (Application Overview, Workflows, Risk Analysis, Gap Analysis, Coverage) |
-| Findings | Secondary | Required if any exist for this run, must be `Approved` | `platform_core_data/workspace/discovery/findings/Findings_Summary.md` plus each individual `FINDING-{ID}_{ShortName}/metadata.md` — every Finding must be read and dispositioned (§5.3), not merely skimmed |
-| Evidence Packages | Secondary | Required wherever a Finding or negative test cites specific evidence, must be `Approved` alongside its parent Finding | `platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/` — the captured evidence files backing each Finding, cited by reference (§5.1), never copied wholesale into a test case |
+| Discovery Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` (including `Timeline.md` and `Coverage_Summary.md` where the Explorer skill version in use produces them) — raw structural/behavioral observation, used only to validate, enrich, and identify gaps against the Project Context |
+| QA Assessment Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md` — the Explorer skill's synthesized report (Application Overview, Workflows, Risk Analysis, Gap Analysis, Coverage) |
+| Findings | Secondary | Required if any exist for this run, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` plus each individual `FINDING-{ID}_{ShortName}/metadata.md` — every Finding must be read and dispositioned (§5.3), not merely skimmed |
+| Evidence Packages | Secondary | Required wherever a Finding or negative test cites specific evidence, must be `Approved` alongside its parent Finding | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — the captured evidence files backing each Finding, cited by reference (§5.1), never copied wholesale into a test case |
 
 **This skill must never read the PRD directly** (`platform_core_data/PRD.md` or equivalent) — only Stage 1 (Project Context skill) is permitted to do so, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. Any requirement question this skill cannot resolve from the Project Context is a gap to log, not a reason to open the PRD.
 
@@ -354,10 +356,10 @@ Any future integration that maps these canonical artifacts into a third-party AL
 
 | Artifact | Path |
 |---|---|
-| Manual Test Suite — Markdown (per module) | `platform_core_data/workspace/test_design/TestCases_{Module}.md` |
-| Manual Test Suite — Excel (per module) | `platform_core_data/workspace/test_design/TestCases_{Module}.xlsx` |
-| Requirement Traceability Matrix | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` |
-| Coverage Report | `platform_core_data/workspace/test_design/CoverageReport.md` |
+| Manual Test Suite — Markdown (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md` |
+| Manual Test Suite — Excel (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` |
+| Requirement Traceability Matrix | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` |
+| Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` |
 
 # 13. Operational Contract
 
@@ -371,14 +373,14 @@ Transform validated project knowledge into a complete, structured, fully traceab
 
 ```text
 Input:
-  platform_core_data/workspace/context/ProjectContext.md        (primary; scope: Login / Authentication & Access)
-  platform_core_data/workspace/discovery/*.md                              (secondary)
-  platform_core_data/workspace/discovery/QA_Assessment_Report.md             (secondary)
-  platform_core_data/workspace/discovery/findings/Findings_Summary.md                (secondary)
-  platform_core_data/workspace/discovery/findings/FINDING-001.../metadata.md ... FINDING-004.../metadata.md  (secondary)
+  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md        (primary; scope: Login / Authentication & Access)
+  platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md                              (secondary)
+  platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md             (secondary)
+  platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md                (secondary)
+  platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-001.../metadata.md ... FINDING-004.../metadata.md  (secondary)
 ```
 
-Hypothetical result: `TestCases_Login.md` / `.xlsx`, `TraceabilityMatrix.md`, and `CoverageReport.md` under `platform_core_data/workspace/test_design/`. `TC-LOGIN-004`'s own entry in the Manual Test Suite is lean — Title ("Forgot Password does not time out for a valid, existing username"), Objective, Preconditions, Steps, Expected Result stating the *corrected* behavior ("A generic success message is returned within a reasonable time"), Priority, and Tags (`Regression`) — while the Traceability Matrix carries its Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, and Risk `High — inherited from FINDING-003's Technical Risk` — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this skill does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
+Hypothetical result: `TestCases_Login.md` / `.xlsx`, `TraceabilityMatrix.md`, and `CoverageReport.md` under `platform_core_data/runs/{{RUN_FOLDER}}/test_design/`. `TC-LOGIN-004`'s own entry in the Manual Test Suite is lean — Title ("Forgot Password does not time out for a valid, existing username"), Objective, Preconditions, Steps, Expected Result stating the *corrected* behavior ("A generic success message is returned within a reasonable time"), Priority, and Tags (`Regression`) — while the Traceability Matrix carries its Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, and Risk `High — inherited from FINDING-003's Technical Risk` — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this skill does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
 
 # 15. Architecture Principle
 
@@ -451,7 +453,7 @@ This skill recognizes the following named conditions. Recognizing one is never, 
 |---|---|---|
 | **Missing approved Project Context** | Global | Halt entirely — there is no primary source of requirements without it (already governed by Execution Rule 1/4; named here for completeness of the Stop Condition taxonomy). |
 | **Missing Discovery** (Discovery Report/QA Assessment Report/Findings not yet `Approved`, where required) | Global | Halt and report the specific blocking artifact (Execution Rule 4) — never draft against a `Pending Review` secondary input. |
-| **Conflicting requirements** (the Project Context contradicts itself between two sections, as opposed to a secondary source conflicting with it, which §3/Execution Rule 2 already governs) | Local — the specific conflicting requirements | Design the test case against neither side unilaterally; log the internal contradiction as a discrepancy for the Project Context skill to resolve (a new Project Context version), and mark the affected requirement's coverage as Unknown/Unassessed (§8.3) until resolved. |
+| **Conflicting requirements** (the Project Context contradicts itself between two sections, as opposed to a secondary source conflicting with it, which §3/Execution Rule 2 already governs) | Local — the specific conflicting requirements | Design the test case against neither side unilaterally; log the internal contradiction as a discrepancy for the Project Context skill to resolve (a re-run of Stage 1 editing the same `ProjectContext.md` in place), and mark the affected requirement's coverage as Unknown/Unassessed (§8.3) until resolved. |
 | **Insufficient evidence** (Discovery genuinely never exercised this requirement) | Local | Populate Discovery Reference as `"Not independently verified in Discovery"` (§5.1's existing rule) — this is not a halt, it is a documented, permitted gap. |
 | **Incomplete acceptance criteria** (a User Story's Project Context entry doesn't preserve individual, testable acceptance criteria) | Local — that requirement only | Do not reconstruct or guess the missing criteria. Design what can be tested from what *is* stated, mark the requirement Partially Covered (§8.3), and recommend the minimal fix (§20) — re-running Stage 1 with the full acceptance criteria preserved. |
 | **Ambiguous business rules** (a `BR-` requirement's stated behavior admits more than one reasonable reading) | Local — that requirement only | Do not pick an interpretation unilaterally. Design the test case(s) that hold under either reading where possible; where they cannot both be satisfied, log the ambiguity as a Coverage Gap (§18) and recommend the minimal clarification needed (§20). |
@@ -510,8 +512,8 @@ This skill is independently invocable — `/test-design-skill`, optionally with 
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 3 complete — Manual Test Suite v{N} → Pending Review
-  platform_core_data/workspace/test_design/TestCases_{Module}.v{N}.md (+ .xlsx)
+Stage 3 complete — Manual Test Suite → Pending Review
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md (+ .xlsx)
   {T} test cases | Requirement coverage {P}%
 
 Next step — either:

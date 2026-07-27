@@ -10,7 +10,7 @@
 
 Run Scope defines **exactly what a given pipeline run is allowed to validate** — the boundary the Project Context Agent narrows the approved Project Knowledge down to when producing that run's Project Context.
 
-Without a named Run Scope concept, "what does this run cover" is answered ad hoc, differently, every time (as it already is today in each Project Context's free-text "Scope Summary" section — see `platform_core_data/workspace/context/ProjectContext_Agency.md` §1 for an example of this being worked out in prose per run). Run Scope exists so that the platform can support running against something narrower than "the entire project" — a single Epic, Feature, User Story, Bug, or an ad hoc requirement document — **without changing the pipeline, without adding an agent, and without changing how many stages exist.** The 6-stage pipeline already treats "what's in scope" as data it consumes (via the Project Context); Run Scope simply gives that data a name, a fixed set of Types, and a documented set of Sources.
+Without a named Run Scope concept, "what does this run cover" is answered ad hoc, differently, every time (as it already is today in each Project Context's free-text "Scope Summary" section — see any run's `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` §1 for an example of this being worked out in prose per run). Run Scope exists so that the platform can support running against something narrower than "the entire project" — a single Epic, Feature, User Story, Bug, or an ad hoc requirement document — **without changing the pipeline, without adding an agent, and without changing how many stages exist.** The 6-stage pipeline already treats "what's in scope" as data it consumes (via the Project Context); Run Scope simply gives that data a name, a fixed set of Types, and a documented set of Sources.
 
 # 3. Run Scope Types
 
@@ -80,7 +80,7 @@ Example: a **Smoke** run type can still be paired with an **Entire Project** Run
 
 Per [`platform_core_data/README.md`](../../platform_core_data/README.md), `platform_core_data/` is the **canonical, standing knowledge base** for a project — `onboarding.md`, `architecture.md`, `glossary.md`, `run_configuration.md`, and `resources/`. This does not change: Project Knowledge remains the durable source of what the project *is*, independent of any single run.
 
-What changes conceptually is how the **Project Context** — the artifact `.claude/skills/project-context-skill/SKILL.md` produces at `platform_core_data/workspace/context/ProjectContext.md` — is described:
+What changes conceptually is how the **Project Context** — the artifact `.claude/skills/project-context-skill/SKILL.md` produces at `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — is described:
 
 ```
 Project Context  =  Project Knowledge  +  Run Scope
@@ -88,18 +88,18 @@ Project Context  =  Project Knowledge  +  Run Scope
 
 - **Project Knowledge** (`platform_core_data/`) supplies the durable facts: what the application is, its architecture, its glossary, its available credentials/environments, and — via `run_configuration.md` — which Run Scope Sources are set up for this project at all.
 - **Run Scope** (this document) supplies the narrowing: *which* Epic/Feature/Story/Bug/Requirement Document/Custom Scope, or the Entire Project, this particular run is validating.
-- **Project Context** (`platform_core_data/workspace/context/`) is what the Project Context Agent produces by applying a specific Run Scope to the standing Project Knowledge for one run, exactly as it already does today — its existing "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `.claude/skills/project-context-skill/SKILL.md` §8) are precisely where a resolved Run Scope materializes. No change to that document structure is introduced by this concept.
+- **Project Context** (`platform_core_data/runs/{{RUN_FOLDER}}/context/`) is what the Project Context Agent produces by applying a specific Run Scope to the standing Project Knowledge for one run, exactly as it already does today — its existing "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `.claude/skills/project-context-skill/SKILL.md` §8) are precisely where a resolved Run Scope materializes. No change to that document structure is introduced by this concept.
 
 This reframing does not change the Project Context Agent's Inputs table (§4 of its spec already names "Run configuration" as required) — it clarifies that the scope portion of that input is now a structured Run Scope (Type + Source) rather than free text, and that Project Knowledge is the other half of what the agent reconciles.
 
-**The approved Project Context remains the operational source of truth for the current run only** — per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 5, every downstream stage reads only the approved Project Context, never the PRD or Project Knowledge directly. A new Run Scope means a new Project Context version; it does not retroactively change any prior run's approved Project Context.
+**The approved Project Context remains the operational source of truth for the current run only** — per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 5, every downstream stage reads only the approved Project Context, never the PRD or Project Knowledge directly. A new Run Scope means a new run with its own Project Context in its own Run Folder; it does not retroactively change any prior run's approved Project Context.
 
 # 7. Where Run Scope Is Recorded
 
 | What | Where | Persists across runs? |
 |---|---|---|
 | Which Run Scope Sources are available/set up for this project (e.g., "ADO not yet integrated," "requirement docs are pasted-text based") | `platform_core_data/run_configuration.md` | Yes — durable, project-wide |
-| Which specific Run Scope (Type + Source + resolved content) a given run actually used | That run's approved Project Context, `platform_core_data/workspace/context/ProjectContext.md` (its existing Scope Summary / Modules In Scope sections) | No — scoped to that run/version, per `workflows_and_pipelines/pipeline/pipeline.md` §7 versioning rules |
+| Which specific Run Scope (Type + Source + resolved content) a given run actually used | That run's approved Project Context, `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` (its existing Scope Summary / Modules In Scope sections) | No — scoped to that run, which is the only place its Project Context lives, per `workflows_and_pipelines/pipeline/pipeline.md` §7 |
 | A quick-reference history of past runs' scope choices | `platform_core_data/run_configuration.md` → "History of scope choices" table | Yes — an append-only log |
 
 # 8. Extended Traceability Model
@@ -142,7 +142,7 @@ To keep this concept's boundary unambiguous, Run Scope explicitly does **not**:
 - Add a new agent. Resolving a Run Scope into a Project Context remains the Project Context Agent's job, per its existing spec.
 - Change any agent's Inputs, Allowed Tools, Execution Rules, or Expected Artifacts tables.
 - Implement Azure DevOps, Jira, Xray, or TestRail connectivity — §9 is documentation of future intent only.
-- Change how an already-approved Project Context version is treated — `workflows_and_pipelines/pipeline/pipeline.md` §7's versioning rules apply unchanged.
+- Change how an already-approved Project Context is treated — `workflows_and_pipelines/pipeline/pipeline.md` §7's artifact rules (one file per artifact, edited in place; approval flips `status:` and is recorded in the Run Manifest) apply unchanged.
 
 # 11. Example
 
@@ -158,6 +158,6 @@ Run Scope:
                agencies."
 ```
 
-Hypothetical result: the Project Context Agent reconciles this Run Scope against the standing Project Knowledge (`platform_core_data/`) and the existing approved PRD, producing a new Project Context version scoped narrowly to the Agency list's Status filter behavior — rather than the broader Agency create/search/update scope of the current `ProjectContext_Agency.md`. No such run has actually occurred; this is shown only to make the Type/Source/Content shape concrete.
+Hypothetical result: the Project Context Agent reconciles this Run Scope against the standing Project Knowledge (`platform_core_data/`) and the existing approved PRD, producing that run's own `ProjectContext.md` scoped narrowly to the Agency list's Status filter behavior — rather than the broader Agency create/search/update scope of a prior run's Project Context. No such run has actually occurred; this is shown only to make the Type/Source/Content shape concrete.
 
 Note that no `Project:` line appears above: the platform hosts one project at a time (`pipeline.md` §1), so a run identifies its scope, never which project it belongs to.

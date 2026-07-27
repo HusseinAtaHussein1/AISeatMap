@@ -5,24 +5,24 @@ inputs:
   - name: execution_results
     type: file_path
     required: true
-    description: "`platform_core_data/workspace/execution/ExecutionResults.md` — sole source of pass/fail/skip outcomes."
+    description: "`platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` — sole source of pass/fail/skip outcomes."
   - name: manual_test_suites
     type: file_path
     required: true
-    description: "`platform_core_data/workspace/test_design/TestCases_*.md`."
+    description: "`platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md`."
   - name: traceability_matrix
     type: file_path
     required: true
-    description: "`platform_core_data/workspace/test_design/TraceabilityMatrix.md`."
+    description: "`platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md`."
   - name: project_context
     type: file_path
     required: true
-    description: "`platform_core_data/workspace/context/ProjectContext.md` — for resolving carried-forward assumptions/risks."
+    description: "`platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — for resolving carried-forward assumptions/risks."
 outputs:
   - name: final_qa_report
     type: file_path
-    location: "platform_core_data/workspace/reporting/Final_QA_Report.md"
-    description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations. NDC uses a `workspace/reporting/` variant of this path — see `platform_core_data/onboarding.md`."
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md"
+    description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations."
 dependencies:
   - automation-execution-skill, test-design-skill, project-context-skill (upstream skills)
   - "platform_core_data/knowledge_base/patterns/reporting/ (Platform Knowledge patterns, if any promoted)"
@@ -31,6 +31,8 @@ dependencies:
 > **Pipeline position:** Stage 7 of 7 — final stage, consumes Execution Results, produces the Final QA Report.
 > **Traceability:** `Execution → Reports`.
 > **Revision history:** see `docs/CHANGELOG.md`.
+
+> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
 
 # 1. Skill Name
 
@@ -56,10 +58,10 @@ The Reporting skill is the final stage of the pipeline. It synthesizes the raw E
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Execution Results | Primary | Required | `platform_core_data/workspace/execution/ExecutionResults.md` |
-| Manual Test Suites | Required | Required | `platform_core_data/workspace/test_design/TestCases_*.md` (Markdown and/or Excel) |
-| Traceability Matrix | Required | Required | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` |
-| Project Context | Required | Required | `platform_core_data/workspace/context/ProjectContext.md` |
+| Execution Results | Primary | Required | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` |
+| Manual Test Suites | Required | Required | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` (Markdown and/or Excel) |
+| Traceability Matrix | Required | Required | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` |
+| Project Context | Required | Required | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
 
 # 5. Outputs
 
@@ -86,7 +88,7 @@ The Reporting skill is the final stage of the pipeline. It synthesizes the raw E
 
 | Artifact | Path |
 |---|---|
-| Final QA Report | `platform_core_data/workspace/reporting/Final_QA_Report.md` |
+| Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` |
 
 Document structure:
 1. Executive Summary
@@ -110,15 +112,15 @@ Synthesize raw execution results into a clear, accurate, stakeholder-facing QA r
 
 ```text
 Input:
-  platform_core_data/workspace/execution/ExecutionResults.md
-  platform_core_data/workspace/test_design/TestCases_Admin.md
-  platform_core_data/workspace/test_design/TestCases_PIM.md
-  platform_core_data/workspace/test_design/TestCases_Leave.md
-  platform_core_data/workspace/test_design/TraceabilityMatrix.md
-  platform_core_data/workspace/context/ProjectContext.md
+  platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Admin.md
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_PIM.md
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Leave.md
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md
+  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
 ```
 
-Hypothetical result: `platform_core_data/workspace/reporting/Final_QA_Report.md` stating, e.g., an Executive Summary of overall run health; a Detailed Execution Report listing each of the 36 executed tests with its Test Case ID and Automation Script ID; Passed/Failed Statistics showing 31 passed / 3 failed / 2 skipped; a Defect Summary describing TC-PIM-013, TC-PIM-014, and TC-LEA-013; Requirement Coverage showing, e.g., 47 of 52 traced Project Context requirements have an executed test; Automation Coverage showing 36 of 56 manual test cases were automated; and a Risks section noting that SR-5 (brute-force protection) remains unverified because the corresponding test was never authorized to run against the shared demo environment.
+Hypothetical result: `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` stating, e.g., an Executive Summary of overall run health; a Detailed Execution Report listing each of the 36 executed tests with its Test Case ID and Automation Script ID; Passed/Failed Statistics showing 31 passed / 3 failed / 2 skipped; a Defect Summary describing TC-PIM-013, TC-PIM-014, and TC-LEA-013; Requirement Coverage showing, e.g., 47 of 52 traced Project Context requirements have an executed test; Automation Coverage showing 36 of 56 manual test cases were automated; and a Risks section noting that SR-5 (brute-force protection) remains unverified because the corresponding test was never authorized to run against the shared demo environment.
 
 # 11. Architecture Principle
 
@@ -140,8 +142,8 @@ This skill is independently invocable — `/reporting-skill`, optionally with a 
 - **Closing message must state the report's basis** (§5.3.1 #6):
 
 ```
-Stage 7 complete — Final QA Report v{N}
-  platform_core_data/workspace/reporting/Final_QA_Report.v{N}.md
+Stage 7 complete — Final QA Report
+  platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md
   Basis: {inputs present} | Declared gaps: {inputs absent}
 
 Next step — either:

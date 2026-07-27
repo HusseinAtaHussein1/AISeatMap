@@ -3,7 +3,7 @@
 // Context7 lookups Stage 5 should perform before generating automation.
 //
 // Usage:
-//   node platform_core/tools/mcp/stack_docs/cli.js --root platform_core_data/workspace/automation/tests_Playwright
+//   node platform_core/tools/mcp/stack_docs/cli.js --root platform_core_data/automation_baseline/playwright/tests_Playwright
 //   node platform_core/tools/mcp/stack_docs/cli.js --root . --json
 //   node platform_core/tools/mcp/stack_docs/cli.js --root . --all --max-libraries 8
 //

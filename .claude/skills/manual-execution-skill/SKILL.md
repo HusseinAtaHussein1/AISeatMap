@@ -21,19 +21,19 @@ inputs:
 outputs:
   - name: manual_execution_results
     type: file_path
-    location: "platform_core_data/workspace/manual_execution/ManualExecutionResults.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md"
     description: Structured per-test-case results, Evidence Inventory, and full Result Classification.
   - name: manual_execution_summary
     type: file_path
-    location: "platform_core_data/workspace/manual_execution/ManualExecutionSummary.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md"
     description: Consolidated run-level summary — what was executed, headline outcome figures, Known Limitations.
   - name: automation_candidate_package
     type: file_path
-    location: "platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md"
     description: The specific, execution-confirmed test case IDs judged successful and stable enough to hand to the Automation skill, each cited back to its Manual Test Suite/Traceability Matrix entry.
   - name: manual_execution_artifacts
     type: file_path
-    location: "platform_core_data/workspace/manual_execution/artifacts/"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/artifacts/"
     description: Captured screenshots, videos, notes, and logs.
 dependencies:
   - test-design-skill (upstream skill)
@@ -43,6 +43,8 @@ dependencies:
 > **Pipeline position:** Stage 4 of 7 — consumes the approved Manual Test Suite, Requirement Traceability Matrix, and Coverage Report, produces raw Manual Execution Results and the Automation Candidate Package.
 > **Traceability:** `Manual Test Case → Manual Execution Result → Automation Candidate`.
 > **Revision history:** see `docs/CHANGELOG.md`.
+>
+> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
 
 # 1. Skill Name
 
@@ -80,10 +82,10 @@ The Manual Execution skill runs the approved Manual Test Suite — exactly as th
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case |
-| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` — carried through unmodified onto every Manual Execution Result and the Automation Candidate Package |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`) and advisory Automation Candidates (§18 #11 there), which this skill treats only as a starting hint to prioritize, never as a substitute for this skill's own execution-based confirmation |
-| Project Context | Governing | Required, must be `Approved` | `platform_core_data/workspace/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
+| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case |
+| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` — carried through unmodified onto every Manual Execution Result and the Automation Candidate Package |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`) and advisory Automation Candidates (§18 #11 there), which this skill treats only as a starting hint to prioritize, never as a substitute for this skill's own execution-based confirmation |
+| Project Context | Governing | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Drives §17's strategy selection. |
 
 **Every input above must be in an `Approved` checkpoint state before this skill consumes it.** If any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, this skill halts and reports the blocking artifact rather than executing against a draft.
@@ -112,7 +114,7 @@ For every executed test case, this skill captures, wherever applicable, and name
 | Notes | Free-text observations a screenshot alone doesn't capture — e.g., a subjective UI judgment, timing behavior, or an ambiguity worth flagging to Test Design |
 | Logs | Console/network logs, where the target application and tooling expose them |
 
-Evidence is stored under `platform_core_data/workspace/manual_execution/artifacts/` and referenced by path from the Manual Execution Results' Evidence Inventory (§10).
+Evidence is stored under `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/artifacts/` and referenced by path from the Manual Execution Results' Evidence Inventory (§10).
 
 # 8. Result Classification
 
@@ -270,10 +272,10 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 
 | Artifact | Path |
 |---|---|
-| Manual Execution Results | `platform_core_data/workspace/manual_execution/ManualExecutionResults.md` |
-| Manual Execution Summary | `platform_core_data/workspace/manual_execution/ManualExecutionSummary.md` |
-| Automation Candidate Package | `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md` |
-| Captured screenshots / videos / notes / logs | `platform_core_data/workspace/manual_execution/artifacts/` |
+| Manual Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md` |
+| Manual Execution Summary | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md` |
+| Automation Candidate Package | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md` |
+| Captured screenshots / videos / notes / logs | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/artifacts/` |
 
 # 14. Operational Contract
 
@@ -287,10 +289,10 @@ Execute the approved Manual Test Suite exactly as authored, record a raw unedite
 
 ```text
 Input:
-  platform_core_data/workspace/test_design/TestCases_Login.md / .xlsx
-  platform_core_data/workspace/test_design/TraceabilityMatrix.md
-  platform_core_data/workspace/test_design/CoverageReport.md
-  platform_core_data/workspace/context/ProjectContext.md
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Login.md / .xlsx
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md
+  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
 ```
 
 Hypothetical result: this skill confirms the target environment matches the Project Context, then executes all 12 Login test cases. `TC-LOGIN-001` (valid login) and `TC-LOGIN-002` (invalid password) both Pass with deterministic, objectively verifiable outcomes and are included in the Automation Candidate Package. `TC-LOGIN-004` (the Forgot Password regression case tied to `FINDING-003`) Fails — the observed response still times out — and is excluded, with the failure detail and screenshot cited in the Manual Execution Results. `TC-LOGIN-007` (an exploratory test case dispositioned against `FINDING-004`, the anti-enumeration concern) Passes but is excluded from the Automation Candidate Package per §9.1 rule 4, since its resolution still depends on a pending human policy call. The resulting `AutomationCandidatePackage.md` lists 9 of the 12 test cases, and the Summary states the 3 exclusions and their reasons.
@@ -380,8 +382,8 @@ This skill is independently invocable — `/manual-execution-skill`, optionally 
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 4 complete — Manual Execution Results v{N} → Pending Review
-  platform_core_data/workspace/manual_execution/ManualExecutionResults.v{N}.md
+Stage 4 complete — Manual Execution Results → Pending Review
+  platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md
   {P} Passed | {F} Failed | {B} Blocked | {C} Automation Candidates
 
 Next step — either:

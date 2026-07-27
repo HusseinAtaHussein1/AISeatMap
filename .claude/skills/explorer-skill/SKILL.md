@@ -5,7 +5,7 @@ inputs:
   - name: project_context
     type: file_path
     required: true
-    description: Approved Project Context at `platform_core_data/workspace/context/ProjectContext.md`.
+    description: Approved Project Context at `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md`.
   - name: discovery_source
     type: environment_var
     required: true
@@ -13,27 +13,27 @@ inputs:
 outputs:
   - name: discovery_snapshots
     type: file_path
-    location: "platform_core_data/workspace/discovery/*.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md"
     description: One structural/accessibility snapshot per distinct in-scope screen or UI state.
   - name: timeline
     type: file_path
-    location: "platform_core_data/workspace/discovery/Timeline.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md"
     description: Chronological, timestamped log of actions/events for the run.
   - name: coverage_summary
     type: file_path
-    location: "platform_core_data/workspace/discovery/Coverage_Summary.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/Coverage_Summary.md"
     description: Visited/Skipped/Blocked/Unreachable areas and computed coverage percentage.
   - name: qa_assessment_report
     type: file_path
-    location: "platform_core_data/workspace/discovery/QA_Assessment_Report.md"
-    description: Synthesized discovery report structured per the Standard Output Contract (§19). NDC uses a `workspace/discovery/` variant of these paths — see `platform_core_data/onboarding.md`.
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md"
+    description: Synthesized discovery report structured per the Standard Output Contract (§19).
   - name: findings_summary
     type: file_path
-    location: "platform_core_data/workspace/discovery/findings/Findings_Summary.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md"
     description: Index of every finalized Finding raised during the run.
   - name: evidence_packages
     type: file_path
-    location: "platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/"
     description: Per-Finding `metadata.md` plus captured evidence files.
 dependencies:
   - project-context-skill (upstream skill)
@@ -43,6 +43,8 @@ dependencies:
 > **Pipeline position:** Stage 2 of 7 — consumes the Project Context, produces Discovery Artifacts.
 > **Traceability:** `Project Context → Discovery`.
 > **Revision history:** see `docs/CHANGELOG.md`.
+>
+> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
 
 # 1. Skill Name
 
@@ -396,7 +398,7 @@ Example:
 10:18  FINDING-001 created (Category: Security Concern)
 ```
 
-Saved as: `platform_core_data/workspace/discovery/Timeline.md`
+Saved as: `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md`
 
 # 7. Coverage
 
@@ -412,13 +414,13 @@ Track, at minimum:
 - **Coverage %** — a simple, stated ratio of Visited Screens against the Project Context's total declared in-scope screens/surface, with the ratio's basis shown (e.g., "6/6 Login-scope screens visited = 100%") — a mechanical count, not a judgment of whether that coverage was *sufficient*
 - **Discovery Mode per entry** — each Visited/Skipped/Blocked/Unreachable entry additionally records which Discovery Mode (§8.1) covered it, so a reviewer can see at a glance which parts of the run were live-verified versus covered by a fallback mode.
 
-Saved as: `platform_core_data/workspace/discovery/Coverage_Summary.md`, and summarized in the QA Assessment Report (§12).
+Saved as: `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Coverage_Summary.md`, and summarized in the QA Assessment Report (§12).
 
 # 8. Inputs
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | Primary | Required | `platform_core_data/workspace/context/ProjectContext.md` — supplies URL, credentials, in-scope modules, environment constraints, carried-forward assumptions, and the expected behavior to validate against |
+| Project Context | Primary | Required | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — supplies URL, credentials, in-scope modules, environment constraints, carried-forward assumptions, and the expected behavior to validate against |
 | Discovery Source | Secondary | Required | The best available source of truth about the running application's actual behavior. Browser automation against the live application is preferred; when unavailable, this skill falls back through the priority-ordered Discovery Modes in §8.1 rather than treating this input as unsatisfiable. |
 
 No other inputs are used. The Explorer skill does not read the PRD directly — the Project Context is its complete brief on what is expected; the Discovery Source is the only other thing it looks at, in whichever Discovery Mode is actually available. This skill's own Timeline (§6) and Coverage tracker (§7) are maintained by this skill itself during the run, not supplied externally.
@@ -515,12 +517,12 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 
 | Artifact | Path |
 |---|---|
-| Discovery snapshots | `platform_core_data/workspace/discovery/*.md` — one file per distinct screen/state explored, limited to in-scope modules |
-| Timeline | `platform_core_data/workspace/discovery/Timeline.md` |
-| Coverage Summary | `platform_core_data/workspace/discovery/Coverage_Summary.md` |
-| QA Assessment Report | `platform_core_data/workspace/discovery/QA_Assessment_Report.md` |
-| Findings Summary | `platform_core_data/workspace/discovery/findings/Findings_Summary.md` |
-| Evidence Packages | `platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/` — containing `metadata.md` and the evidence files captured per §5.10–5.12 |
+| Discovery snapshots | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` — one file per distinct screen/state explored, limited to in-scope modules |
+| Timeline | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md` |
+| Coverage Summary | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Coverage_Summary.md` |
+| QA Assessment Report | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md` |
+| Findings Summary | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` |
+| Evidence Packages | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — containing `metadata.md` and the evidence files captured per §5.10–5.12 |
 
 # 13. Operational Contract
 
@@ -533,11 +535,11 @@ Validate the approved Project Context against the live application and publish e
 *Illustrative only — not executed as part of this task.*
 
 ```text
-Input: platform_core_data/workspace/context/ProjectContext.md
+Input: platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
   (In Scope: Admin, PIM, Leave — as produced by the Project Context skill)
 ```
 
-Hypothetical result: `platform_core_data/workspace/discovery/*.md` snapshots covering only Admin-security-perimeter screens (login, forgot password, Administrator Access modal), PIM screens (Employee List, Add Employee, employee detail tabs), and Leave screens (Apply Leave, Leave List) — explicitly skipping Time, Recruitment, Performance, and Directory since those are Out of Scope for this run, alongside a `Timeline.md` logging every navigation/action/trigger in order and a `Coverage_Summary.md` showing, say, "9/9 in-scope screens visited = 100%."
+Hypothetical result: `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` snapshots covering only Admin-security-perimeter screens (login, forgot password, Administrator Access modal), PIM screens (Employee List, Add Employee, employee detail tabs), and Leave screens (Apply Leave, Leave List) — explicitly skipping Time, Recruitment, Performance, and Directory since those are Out of Scope for this run, alongside a `Timeline.md` logging every navigation/action/trigger in order and a `Coverage_Summary.md` showing, say, "9/9 in-scope screens visited = 100%."
 
 While exploring PIM's Add Employee screen, an Event-Driven Capture trigger (a console error) fires the instant the Employee Id field is edited — evidence is captured immediately (screenshot, console log, DOM snapshot) before this skill even finishes the current action, and the trigger is logged in the Timeline. The candidate enters the Investigation Workflow: validated by reproducing on a second attempt; the failure category is "Unexpected UI rendering," so this skill refreshes once per the Investigation & Recovery Engine — the console error does not recur after refresh, so the Recovery Result is "resolved on recovery," and Confidence is set to 65% (observed once before recovery, not reproduced after) — below the 90% floor, so Status is `Needs Human Review` regardless of how the requirement question would otherwise resolve. This skill still separately notes the Gap Analysis item that the Project Context described the Employee Id field as "system-suggested" while the observed application allows it to be freely overwritten — this is investigated as its own candidate: validated, checked against the Validation boundary conditions (empty, spaces, unicode, emoji, long input, special characters — noting which revealed additional inconsistencies), classified as `Requirement Gap` (Severity N/A), Confidence 95% on the observation itself, Business Risk "duplicate/malformed employee IDs could reach payroll/reporting downstream," Technical Risk "no visible server-side uniqueness constraint enforced through the UI," a Root Cause Hypothesis ("possibly a deliberate default-not-enforced design, consistent with a 'suggested' rather than 'assigned' ID — Unknowns: whether server-side uniqueness validation exists but simply isn't surfaced client-side"), and Status `Needs Human Review` (the Project Context doesn't state whether "system-suggested" is meant to be enforced). It then checks the Findings Summary, finds no equivalent entry, and creates `FINDING-004_EmployeeIdEditable` with `Occurrence Count: 1`. Exploration continues into Leave afterward — neither Finding was treated as a reason to stop.
 
@@ -694,8 +696,8 @@ This skill is independently invocable — `/explorer-skill`, optionally with a r
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 2 complete — Discovery Artifacts v{N} → Pending Review
-  platform_core_data/workspace/discovery/QA_Assessment_Report.v{N}.md
+Stage 2 complete — Discovery Artifacts → Pending Review
+  platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md
   {F} Findings | Coverage {P}% | Discovery Mode: {mode}
 
 Next step — either:

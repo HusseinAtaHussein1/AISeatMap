@@ -27,7 +27,7 @@ NDC has four screenshot locations, each with a different owner and purpose — n
 |---|---|---|
 | `platform_core_data/resources/screenshots/` | Human-maintained | General onboarding/context captures — currently empty. Use for anything informal that doesn't fit the other three. |
 | `platform_core_data/ui/screenshots/` | Browser Driver Layer | One reference baseline image per screen defined in `platform_core_data/browser/screens/*.json` — paired 1:1 by screen name (e.g. `Dashboard.json` ↔ `Dashboard.png`). |
-| `platform_core_data/workspace/discovery/UI Baseline/` | Explorer Agent, current state | The full, latest-approved UI baseline capture set across every in-scope module, organized by module/category — see `UI_Baseline_Screen_Inventory.md` in the same folder. |
+| `platform_core_data/runs/{{RUN_FOLDER}}/discovery/UI Baseline/` | Explorer Agent, current state | The full, latest-approved UI baseline capture set across every in-scope module, organized by module/category — see `UI_Baseline_Screen_Inventory.md` in the same folder. |
 | `platform_core_data/runs/RUN-YYYYMMDD-XXX-{slug}/discovery/*.png` | Explorer Agent, per run | Run-scoped discovery/evidence screenshots captured during that specific run (e.g. login flow states, Finding evidence). Immutable once the run completes. |
 
 ### `requirements/` breakdown

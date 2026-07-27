@@ -36,15 +36,8 @@ const SKILL_NAMES = [
  * missing category folder reads as "this category does not apply" rather than "nothing found yet".
  */
 const DATA_DIRS = [
-  'workspace/context',
-  'workspace/discovery',
-  'workspace/test_design',
-  'workspace/manual_execution',
-  'workspace/automation',
-  'workspace/execution',
-  'workspace/reporting',
-  'workspace/pipeline',
   'runs',
+  'automation_baseline',
   'knowledge_base/application',
   'knowledge_base/automation',
   'knowledge_base/business_rules',

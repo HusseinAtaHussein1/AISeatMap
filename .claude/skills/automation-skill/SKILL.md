@@ -33,39 +33,39 @@ inputs:
   - name: existing_automation_package
     type: file_path
     required: false
-    description: "The project's one authoritative automation project for the resolved framework, if one exists (`platform_core_data/workspace/automation/tests_{Framework}/`), copied wholesale into this run's own working copy at Working Copy Creation (`workflows_and_pipelines/pipeline/pipeline.md` §12.3) before any generation begins — inspected and reused per §9/§11, never edited at its baseline location directly."
+    description: "The project's one authoritative automation project for the resolved framework, if one exists (`platform_core_data/automation_baseline/{framework}/tests_{Framework}/`), copied wholesale into this run's own working copy at Working Copy Creation (`workflows_and_pipelines/pipeline/pipeline.md` §12.3) before any generation begins — inspected and reused per §9/§11, never edited at its baseline location directly."
 outputs:
   - name: automation_plan
     type: file_path
-    location: "platform_core_data/workspace/automation/AutomationPlan_{Framework}.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md"
     description: Target framework/language/architecture, planned suites, existing vs. new assets, estimated coverage.
   - name: automation_package
     type: file_path
-    location: "platform_core_data/workspace/automation/tests_{Framework}/"
+    location: "platform_core_data/automation_baseline/{framework}/tests_{Framework}/"
     description: The generated/reused automation project — scripts, page objects, fixtures, configuration.
   - name: automation_manifest
     type: file_path
-    location: "platform_core_data/workspace/automation/AutomationManifest_{Framework}.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md"
     description: File inventory plus Self Review findings.
   - name: automation_decision_report
     type: file_path
-    location: "platform_core_data/workspace/automation/AutomationDecisionReport_{Framework}.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md"
     description: Per-test-case Reuse/Generate/Partially Automatable/Manual Only decision.
   - name: automation_coverage_report
     type: file_path
-    location: "platform_core_data/workspace/automation/AutomationCoverageReport_{Framework}.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md"
     description: Aggregate automation coverage percentage and named reasons for every gap.
   - name: automation_suite_manifest
     type: file_path
-    location: "platform_core_data/workspace/automation/AutomationSuiteManifest_{Framework}.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md"
     description: Realized suite structure and shared fixtures/utilities per suite.
   - name: automation_summary
     type: file_path
-    location: "platform_core_data/workspace/automation/AutomationSummary_{Framework}.md"
-    description: "Consolidated handoff document (Framework Used, Execution Instructions, Coverage, Known Limitations) for the automation-execution-skill. NDC uses a `workspace/automation/` variant of these paths — see `platform_core_data/onboarding.md`."
+    location: "platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md"
+    description: "Consolidated handoff document (Framework Used, Execution Instructions, Coverage, Known Limitations) for the automation-execution-skill."
   - name: stack_documentation_context
     type: file_path
-    location: "platform_core_data/workspace/automation/StackDocumentationContext_{Framework}.md"
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md"
     description: "Detected stack, pinned dependency versions, Context7 queries performed, version-specific guidelines extracted, conflicts, and documentation gaps (§34) — written before any code generation begins."
 dependencies:
   - project-context-skill, explorer-skill, test-design-skill, manual-execution-skill (upstream skills)
@@ -78,6 +78,8 @@ dependencies:
 > **Pipeline position:** Stage 5 of 7 — consumes the Approved Project Context, the Manual Execution skill's Automation Candidate Package and Manual Execution Summary, the Manual Test Suite (content source), Requirement Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, and Evidence Packages, produces a production-quality Automation Package.
 > **Traceability:** `Requirement → Discovery → Finding → Evidence → Manual Test Case → Manual Execution Result → Automation Candidate → Automation Script` (§12).
 > **Revision history:** see `docs/CHANGELOG.md`.
+
+> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
 
 # 1. Skill Name
 
@@ -120,19 +122,19 @@ The Automation skill consumes only approved artifacts. Every input below must be
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | Governing | Required, must be `Approved` | `platform_core_data/workspace/context/ProjectContext.md` — target environment URL, credentials, business rules, and safety constraints that govern what may be automated |
+| Project Context | Governing | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — target environment URL, credentials, business rules, and safety constraints that govern what may be automated |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Called out explicitly because it drives §23's strategy selection, not left an implicit read of prose. |
 | Framework Configuration | Governing (embedded, may be absent) | Conditionally required — see §6 | **Hidden-assumption check:** the Project Context's own required document structure (`.claude/skills/project-context-skill/SKILL.md` §8) has no dedicated "Framework" field — a framework preference, if one exists, currently surfaces only informally, inside Environment Constraints prose or an existing automation project (§9). This skill must not assume this field exists or is populated; if no framework is stated anywhere and no existing automation project exists to infer one from, §6's existing halt-and-report rule applies. |
 | Project Configuration | Governing (embedded) | Required | Target environment, credentials, and safety constraints — already covered by the Project Context row above; named separately here only to confirm no *additional*, undeclared configuration source is silently assumed. |
-| Automation Candidate Package | **Primary** | Required, must be `Approved` | `platform_core_data/workspace/manual_execution/AutomationCandidatePackage.md` — from the Manual Execution skill (Stage 4). The sole source of *which* test case IDs are in scope for this run: only test cases the Manual Execution skill actually executed, confirmed `Passed`, and judged deterministic and stable (`.claude/skills/manual-execution-skill/SKILL.md` §9) may receive an automation decision (§13). This skill no longer determines automation scope directly from the raw Manual Test Suite — a test case absent from this package is out of scope for this run, full stop, regardless of how it reads in the Manual Test Suite. |
-| Manual Execution Summary | Secondary | Required, must be `Approved` | `platform_core_data/workspace/manual_execution/ManualExecutionSummary.md` — the execution evidence and exclusion reasoning backing the Automation Candidate Package; consulted for context, never re-litigated |
-| Manual Test Suite | Secondary — content source | Required, must be `Approved` | `platform_core_data/workspace/test_design/TestCases_*.md` and `.xlsx` — read directly for the full test case content (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-skill/SKILL.md`) of exactly the test case IDs named in the Automation Candidate Package. This skill's entire "Automation Requirements" input is the combination of the Automation Candidate Package (which IDs) and this artifact (their full content) — there is no separate requirements artifact to consult beyond them. |
-| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/TraceabilityMatrix.md` — carries the Requirement/Discovery/Finding/Evidence references this skill must propagate onto each Automation Script (§12) |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/workspace/test_design/CoverageReport.md` — informs which test cases and Findings are already known to be Uncovered/exceptions, so this skill doesn't attempt to automate what Stage 3 already excluded |
-| Discovery Artifacts | Secondary | Required, must be `Approved` | `platform_core_data/workspace/discovery/*.md` — used only to resolve UI/selector detail a test case under-specifies, never as a source of business logic |
-| Findings | Secondary | Required if any exist, must be `Approved` | `platform_core_data/workspace/discovery/findings/Findings_Summary.md` and each `FINDING-{ID}_{ShortName}/metadata.md` — used to carry Finding Reference through to the Automation Script that regress-tests or exploratory-tests it |
-| Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `platform_core_data/workspace/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
-| Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/workspace/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This skill reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
+| Automation Candidate Package | **Primary** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md` — from the Manual Execution skill (Stage 4). The sole source of *which* test case IDs are in scope for this run: only test cases the Manual Execution skill actually executed, confirmed `Passed`, and judged deterministic and stable (`.claude/skills/manual-execution-skill/SKILL.md` §9) may receive an automation decision (§13). This skill no longer determines automation scope directly from the raw Manual Test Suite — a test case absent from this package is out of scope for this run, full stop, regardless of how it reads in the Manual Test Suite. |
+| Manual Execution Summary | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md` — the execution evidence and exclusion reasoning backing the Automation Candidate Package; consulted for context, never re-litigated |
+| Manual Test Suite | Secondary — content source | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` and `.xlsx` — read directly for the full test case content (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-skill/SKILL.md`) of exactly the test case IDs named in the Automation Candidate Package. This skill's entire "Automation Requirements" input is the combination of the Automation Candidate Package (which IDs) and this artifact (their full content) — there is no separate requirements artifact to consult beyond them. |
+| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` — carries the Requirement/Discovery/Finding/Evidence references this skill must propagate onto each Automation Script (§12) |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` — informs which test cases and Findings are already known to be Uncovered/exceptions, so this skill doesn't attempt to automate what Stage 3 already excluded |
+| Discovery Artifacts | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` — used only to resolve UI/selector detail a test case under-specifies, never as a source of business logic |
+| Findings | Secondary | Required if any exist, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` and each `FINDING-{ID}_{ShortName}/metadata.md` — used to carry Finding Reference through to the Automation Script that regress-tests or exploratory-tests it |
+| Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
+| Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This skill reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
 
 **This skill must never read the PRD directly** (`platform_core_data/PRD.md` or equivalent) — only Stage 1 is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
 
@@ -443,15 +445,15 @@ No other artifact is produced by this skill. It does not execute the Automation 
 
 | Artifact | Path |
 |---|---|
-| Automation Package Registry | `platform_core_data/workspace/automation/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. |
-| Automation Plan | `platform_core_data/workspace/automation/AutomationPlan_{Framework}.md` |
-| Automation Package (Workspace Automation Baseline) | `platform_core_data/workspace/automation/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this skill never writes here directly (§33.2, Execution Rule 35) |
-| Automation Manifest | `platform_core_data/workspace/automation/AutomationManifest_{Framework}.md` |
-| Automation Decision Report | `platform_core_data/workspace/automation/AutomationDecisionReport_{Framework}.md` |
-| Automation Coverage Report | `platform_core_data/workspace/automation/AutomationCoverageReport_{Framework}.md` |
-| Stack Documentation Context (§34) | `platform_core_data/workspace/automation/StackDocumentationContext_{Framework}.md` |
-| Automation Suite Manifest | `platform_core_data/workspace/automation/AutomationSuiteManifest_{Framework}.md` |
-| Automation Summary | `platform_core_data/workspace/automation/AutomationSummary_{Framework}.md` |
+| Automation Package Registry | `platform_core_data/automation_baseline/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. |
+| Automation Plan | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md` |
+| Automation Package (Workspace Automation Baseline) | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this skill never writes here directly (§33.2, Execution Rule 35) |
+| Automation Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md` |
+| Automation Decision Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md` |
+| Automation Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md` |
+| Stack Documentation Context (§34) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` |
+| Automation Suite Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md` |
+| Automation Summary | `platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md` |
 
 **Where this skill actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage 6, its Execution Results and evidence.
 
@@ -467,12 +469,12 @@ Turn the execution-confirmed Automation Candidate Package into a reviewable auto
 
 ```text
 Input:
-  platform_core_data/workspace/context/ProjectContext.md          (Approved)
-  platform_core_data/workspace/test_design/TestCases_Login.md/.xlsx (Approved)
-  platform_core_data/workspace/test_design/TraceabilityMatrix.md    (Approved)
-  platform_core_data/workspace/test_design/CoverageReport.md        (Approved)
-  platform_core_data/workspace/discovery/*.md                                (Approved)
-  platform_core_data/workspace/discovery/findings/Findings_Summary.md, FINDING-001..004 (Approved)
+  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md          (Approved)
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Login.md/.xlsx (Approved)
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md    (Approved)
+  platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md        (Approved)
+  platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md                                (Approved)
+  platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md, FINDING-001..004 (Approved)
   Existing automation project: none found
 ```
 
@@ -655,7 +657,7 @@ This is not a new category of judgment call — it is the existing discipline §
 
 # 32. Reference Automation Project
 
-**A project may designate an external, real, human-owned automation codebase as its Reference Automation Project** — e.g. a company's production SHAFT repository living outside this platform's own repository entirely (`E:\...` on local disk, or any path outside `platform_core_data/workspace/automation/`). This is distinct from the platform's own generated Automation Packages (§19, §31): it is not generated by this skill, is not one of the `tests_{Framework}/` packages in the registry, and is never assumed to be the same thing as "an existing automation package" in the §9/§31.1 sense — it gets its own handling.
+**A project may designate an external, real, human-owned automation codebase as its Reference Automation Project** — e.g. a company's production SHAFT repository living outside this platform's own repository entirely (`E:\...` on local disk, or any path outside `platform_core_data/runs/{{RUN_FOLDER}}/automation/`). This is distinct from the platform's own generated Automation Packages (§19, §31): it is not generated by this skill, is not one of the `tests_{Framework}/` packages in the registry, and is never assumed to be the same thing as "an existing automation package" in the §9/§31.1 sense — it gets its own handling.
 
 ## 32.1 Registration
 
@@ -749,7 +751,7 @@ Per material library (§2.4 of `mcp/README.md` — what the generated code actua
 
 ## 34.4 Output
 
-One artifact per run, before generation: `platform_core_data/workspace/automation/StackDocumentationContext_{Framework}.md`, containing Detected Stack, Dependency Table (library · resolved version · pinned? · source file · Context7 ID · queried?), Queries Performed, Guidelines Extracted, Conflicts, and Documentation Gaps — per `mcp/README.md` §2.5.
+One artifact per run, before generation: `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md`, containing Detected Stack, Dependency Table (library · resolved version · pinned? · source file · Context7 ID · queried?), Queries Performed, Guidelines Extracted, Conflicts, and Documentation Gaps — per `mcp/README.md` §2.5.
 
 The Automation Plan (§5) cites this artifact and records the version-specific guidelines that shaped generation. **A run against a pinned-version stack with zero queries performed and no recorded documentation gap is an incomplete Automation Plan** — the same standard §7 applies to an unjustified framework choice.
 
@@ -786,7 +788,7 @@ This skill is independently invocable — `/automation-skill`, optionally with a
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 5 complete — Automation Package v{N} → Pending Automation Approval
+Stage 5 complete — Automation Package → Pending Automation Approval
   {run working copy}/automation/tests_{Framework}/
   {S} scripts | {A} automated | {P} partial | {M} manual-only
   Not executed — this skill never runs what it generates.

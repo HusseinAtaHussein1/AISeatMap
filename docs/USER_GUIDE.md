@@ -236,30 +236,36 @@ This is the escape hatch for real work — re-running just Test Design after a r
 
 ## 7. Where Your Artifacts Live
 
-Two trees live side by side under `platform_core_data/`, and they are **not** the same concept.
+Everything a run produces lives in **that run's own folder**. There is no second copy anywhere.
 
-### Workspace — current-approved state
+### Runs — where every artifact lives
 
-`platform_core_data/workspace/{stage}/` holds the latest approved output of each stage. Updated only at the moment a reviewer approves a new version.
+`platform_core_data/runs/{{RUN_FOLDER}}/` holds the complete output of one run:
 
-| Artifact | Path |
+| Artifact | Path (inside the run folder) |
 |---|---|
-| Project Context | `workspace/context/ProjectContext_{Scope}.md` |
-| Discovery Artifacts | `workspace/discovery/*.md` (+ `findings/`) |
-| Manual Test Suite, Traceability Matrix | `workspace/test_design/` |
-| Manual Execution Results, Candidate Package | `workspace/manual_execution/` |
-| **Automation Baseline** | `workspace/automation/{framework}/tests_{Framework}/` |
-| Execution Results | `workspace/execution/` |
-| Final QA Report | `workspace/reporting/` |
-| Run Manifest | `workspace/pipeline/RunManifest.md` |
+| Project Context | `context/ProjectContext.md` |
+| Discovery Artifacts | `discovery/*.md` (+ `findings/`) |
+| Manual Test Suite, Traceability Matrix | `test_design/` |
+| Manual Execution Results, Candidate Package | `manual_execution/` |
+| Automation working copy | `automation/tests_{Framework}/` |
+| Execution Results | `execution/` |
+| Final QA Report | `reporting/` |
+| Run Metadata + Run Manifest | `metadata/run.json`, `metadata/RunManifest.md` |
 
-### Runs — immutable history
+**Each artifact is one file, edited in place.** Approving it flips a `status:` field in that file's own header — it does **not** produce a second "final" copy. If you ask for a refinement, the stage edits the same file you just reviewed rather than writing a `.v2` beside it. Previous states are recoverable from git.
 
-`platform_core_data/runs/YYYY-MM-DD_HH-mm-ss__Scope__Target/` is a timestamped snapshot of exactly what one run produced. A run is **never** edited after the fact — a correction is a new run.
+Only `metadata/` is created up front. Every other folder appears the moment a stage actually writes its first output, so a run that stopped after Discovery has just `metadata/` and `discovery/`.
 
-Folder names are self-descriptive, e.g. `2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter`. `Scope` is always one of `FullRun`, `Regression`, `Smoke`, `Sanity`, `Targeted`, `Module`, `UserStory` — a run that executed only specific tests is always `Targeted`, never something that reads as a full run. The name is generated once, deterministically, by [`platform_core/tools/run_manager/`](../platform_core/tools/run_manager/).
+### Automation Baseline — the one thing that outlives a run
 
-Only `metadata/` is created up front. Every other stage folder appears the moment that stage first writes — a run that reached Stage 2 has exactly `metadata/` and `discovery/` on disk.
+`platform_core_data/automation_baseline/{framework}/tests_{Framework}/` is the persistent home of generated automation *code*. A run generates into its own `automation/` working copy, and that gets merged into this baseline once it clears Automation Approval — so test code survives across runs while every report stays with the run that produced it.
+
+### Run folder names
+
+`platform_core_data/runs/run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target/`
+
+Folder names are self-descriptive, e.g. `run-003__2026-07-23_15-48-55__Targeted__US-245_AddCabinClassFilter`. `run-NNN` is the run's ordinal (1-based, zero-padded to three digits, one past the highest already present). `Scope` is always one of `FullRun`, `Regression`, `Smoke`, `Sanity`, `Targeted`, `Module`, `UserStory` — a run that executed only specific tests is always `Targeted`, never something that reads as a full run. The name is generated once, deterministically, by [`platform_core/tools/run_manager/`](../platform_core/tools/run_manager/).
 
 ### Generated automation
 

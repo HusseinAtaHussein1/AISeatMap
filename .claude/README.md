@@ -22,7 +22,7 @@ It does **not** own *when* or *in what order* agents run (that is `workflows_and
 - **Orchestration or sequencing logic.** Stage order, checkpoints, approval gates, and run identity/workspace management belong in `workflows_and_pipelines/` — a Skill file never declares when it runs relative to another Skill.
 - **Reusable, cross-project engineering knowledge.** A pattern, heuristic, or repair strategy proven across projects belongs in `platform_core_data/knowledge_base/patterns/`, cited from a Skill's `dependencies` line — never restated or grown in place inside the Skill spec itself.
 - **Project-specific business rules, findings, or credentials.** Anything true of one application only belongs under `platform_core_data/`.
-- **Generated artifacts, execution results, or reports.** A Skill's *output* always lands under `platform_core_data/workspace/` — never inside `.claude/` itself.
+- **Generated artifacts, execution results, or reports.** A Skill's *output* always lands under that run's Run Folder, `platform_core_data/runs/{{RUN_FOLDER}}/{stage}/` (`pipeline.md` §7) — never inside `.claude/` itself.
 - **Revision history.** A Skill's own change log is not recorded inline in the `SKILL.md` file — it lives in `docs/CHANGELOG.md`, so each spec describes only its current behavior.
 
 ## Folder Structure
@@ -57,7 +57,7 @@ workflows_and_pipelines/pipeline/pipeline.md
 
 - **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven skills; it invokes them in a fixed order and enforces checkpoints. A Skill never reads `pipeline.md` to decide its own behavior — it only needs to already conform to the contract that document describes.
 - **`.claude/` → `platform_core_data/knowledge_base/patterns/` and `platform_core/tools/`:** each Skill's `dependencies` line names exactly which Platform Knowledge subfolders it consults (e.g. `automation-skill` reads `repair_patterns/`, `automation_patterns/`, `framework_patterns/`) and, where relevant, which shared tool it uses (e.g. the Browser Driver, `platform_core/tools/browser_driver/`).
-- **`.claude/` → `platform_core_data/`:** every Skill's actual Inputs and Outputs at runtime resolve to files under `platform_core_data/workspace/` (and, for knowledge writes, `platform_core_data/knowledge_base/`). A Skill file names those paths literally — there is no project-name segment to substitute, because the platform hosts one project (`pipeline.md` §1).
+- **`.claude/` → `platform_core_data/`:** every Skill's actual Inputs and Outputs at runtime resolve to files under that run's Run Folder, `platform_core_data/runs/{{RUN_FOLDER}}/{stage}/` (and, for knowledge writes, `platform_core_data/knowledge_base/`). A Skill file names those paths literally — the only placeholder is `{{RUN_FOLDER}}`, resolved per run by the Run Manager (`run_manager.md` §5.1); there is no project-name segment to substitute, because the platform hosts one project (`pipeline.md` §1).
 
 ## Lifecycle
 
@@ -70,7 +70,7 @@ Pipeline Orchestrator invokes Stage N's Skill
         ↓
 Skill resolves Platform Knowledge + Project Knowledge (pipeline.md §10.2)
         ↓
-Skill reads its declared Inputs from platform_core_data/workspace/
+Skill reads its declared Inputs from platform_core_data/runs/{{RUN_FOLDER}}/{stage}/
         ↓
 Skill produces its declared Outputs, marks itself Pending Review/Approval
         ↓
@@ -106,9 +106,9 @@ Pipeline Orchestrator (workflows_and_pipelines/pipeline/pipeline.md)
         ↓
 Resolves platform_core_data/knowledge_base/patterns/repair_patterns/, automation_patterns/, framework_patterns/
         ↓
-Reads platform_core_data/workspace/manual_execution/ (Automation Candidate Package — its declared primary Input) and artifacts/test_design/ (content source)
+Reads platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ (Automation Candidate Package — its declared primary Input) and .../test_design/ (content source)
         ↓
-Writes platform_core_data/workspace/automation/ (its declared Output)
+Writes platform_core_data/runs/{{RUN_FOLDER}}/automation/ (its declared Output)
         ↓
 Marks Pending Automation Approval — pipeline.md §5.2 checkpoint
 ```

@@ -78,7 +78,7 @@ check "tool folder created"                       "[ -d '$APP/agentic-testing-to
 check "platform_core copied"                      "[ -f '$APP/agentic-testing-tool/platform_core/tools/platform_paths/paths.js' ]"
 check "pipeline spec copied"                      "[ -f '$APP/agentic-testing-tool/workflows_and_pipelines/pipeline/pipeline.md' ]"
 check "blank PRD scaffolded"                      "[ -f '$APP/agentic-testing-tool/platform_core_data/PRD.md' ]"
-check "workspace shape scaffolded"                "[ -d '$APP/agentic-testing-tool/platform_core_data/workspace/discovery' ]"
+check "runs shape scaffolded"                     "[ -d '$APP/agentic-testing-tool/platform_core_data/runs' ]"
 check "Platform Knowledge installed"              "[ -d '$APP/agentic-testing-tool/platform_core_data/knowledge_base/patterns' ]"
 check "7 skills installed for Claude Code"        "[ \$(ls '$APP/.claude/skills' | wc -l) -eq 7 ]"
 check ".mcp.json created"                         "[ -f '$APP/.mcp.json' ]"

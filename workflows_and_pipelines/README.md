@@ -53,12 +53,12 @@ workflows/{name}.md  ──layers on top of──▶  pipeline/pipeline.md
                                                     │
                                      resolves ──────┼────── governs the rules of
                                                     ▼                  ▼
-                                     platform_core_data/knowledge_base/patterns/   platform_core_data/workspace/
+                                     platform_core_data/knowledge_base/patterns/   platform_core_data/runs/{{RUN_FOLDER}}/
 ```
 
 - **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven Skills — it invokes each in sequence and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
 - **`workflows_and_pipelines/` → `platform_core_data/knowledge_base/patterns/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core_data/knowledge_base/patterns/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
-- **`workflows_and_pipelines/` → `platform_core_data/`:** this folder defines every artifact path convention, versioning rule, Run Workspace layout, and Run Scope concept that governs how `platform_core_data/workspace/` (current-approved state) and `platform_core_data/runs/` (per-run snapshots) are organized — but it never contains the generated content itself.
+- **`workflows_and_pipelines/` → `platform_core_data/`:** this folder defines every artifact path convention, artifact-lifecycle rule, Run Workspace layout, and Run Scope concept that governs how `platform_core_data/runs/` (the Run Folders that are now the sole home of every stage artifact, per `pipeline.md` §7) is organized — but it never contains the generated content itself.
 - **`.claude/` never depends back on this folder.** The dependency direction is strictly one-way: orchestration invokes behavior, behavior never invokes orchestration.
 
 ## Lifecycle
@@ -68,14 +68,14 @@ This folder isn't a participant with a "before/after" role the way Knowledge is 
 ```
 Run requested (optionally via a named workflows/{name}.md)
         ↓
-Run Manager (run_manager.md) allocates Run ID + Display Name, creates the Run Workspace
+Run Manager (run_manager.md) generates the run folder name (run-NNN__…, §5.1), creates the Run Workspace
         ↓
 pipeline.md invokes Stage 1 → checkpoint (§5.1) → Stage 2 → checkpoint → Stage 3 → checkpoint
         → Stage 4 → checkpoint (§5.1) → Stage 5 → checkpoint (§5.2) → Stage 6 (mechanical, no gate) → Stage 7
         ↓
 Each stage resolves Knowledge (platform_core_data/knowledge_base/patterns/ + platform_core_data/knowledge_base/, §10)
         ↓
-Each stage reads/writes platform_core_data/workspace/, per pipeline.md §7's versioning rules
+Each stage reads/writes platform_core_data/runs/{{RUN_FOLDER}}/{stage}/, per pipeline.md §7's artifact rules
         ↓
 Run reaches a terminal status (§8 of run_manager.md) — Run Manager publishes run_summary.md
 ```
@@ -91,18 +91,18 @@ Run reaches a terminal status (§8 of run_manager.md) — Run Manager publishes 
 ## Rules
 
 - **Always** stop at a Human Review or Automation Approval checkpoint (`pipeline.md` §5.1–§5.2) — never infer approval, time out into it, or proceed on silence.
-- **Always** version every artifact; a rejected-and-revised artifact is a new version, never an in-place edit (`pipeline.md` §7).
+- **Always** keep one file per artifact, edited in place — a rejected-and-revised artifact is an edit to that same file, never a `.vN`/`_final` sibling or an extra "approved" copy; git is the version history (`pipeline.md` §7).
 - **Never** let a named workflow under `workflows/` add a pipeline stage, remove one, or edit `pipeline.md`/`run_manager.md`/a Skill spec — it only selects and narrows what already exists.
 - **Never** let the Run Manager act as an Agent — no judgment, no Finding, no test case, no report content (`run_manager.md` §3, §10).
 - **Only** Stage 1 (Project Context Agent) may read the PRD — enforced structurally by this folder's own stage-order rule (`pipeline.md` §6 Rule 4), not merely by convention.
-- **Must** allocate a unique, immutable Run ID for every run and never rename or migrate a pre-existing run's workspace when the naming convention changes (`run_manager.md` §5.4 Backward Compatibility).
+- **Must** generate every run's folder name through `platform_core/tools/run_manager` — a unique, index-prefixed `run-NNN__…` name (`run_manager.md` §5.1, §5.5) — and never rename or migrate a pre-existing run's workspace when the naming convention changes (`run_manager.md` §5.4, §5.6 Backward Compatibility).
 
 ## Typical Flow
 
 ```
 Named Workflow (workflows/first_run.md)
         ↓
-Run Manager creates Run Workspace, allocates Run ID
+Run Manager creates Run Workspace, generates the run-NNN__… folder name
         ↓
 pipeline.md Stage 1 (Project Context) → ⛔ checkpoint → Stage 2 (Explorer) → ⛔ checkpoint
         → Stage 3 (Test Design) → ⛔ checkpoint → Stop (this workflow excludes Stages 4–7)

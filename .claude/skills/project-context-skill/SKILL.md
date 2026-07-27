@@ -13,8 +13,8 @@ inputs:
 outputs:
   - name: project_context
     type: file_path
-    location: "platform_core_data/workspace/context/ProjectContext.md"
-    description: Single source-of-truth artifact (Scope Summary, Modules In/Out of Scope, Roles & Credentials, Environment Constraints, Carried-Forward Assumptions & Risks, Traceability Anchor) every downstream skill consumes. NDC uses a `workspace/context/` variant of this path — see `platform_core_data/onboarding.md`.
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md"
+    description: Single source-of-truth artifact (Scope Summary, Modules In/Out of Scope, Roles & Credentials, Environment Constraints, Carried-Forward Assumptions & Risks, Traceability Anchor) every downstream skill consumes.
 dependencies:
   - Read, Write, Glob (file tools only — no browser automation, no code execution)
   - none upstream (first stage in the pipeline)
@@ -23,6 +23,8 @@ dependencies:
 > **Pipeline position:** Stage 1 of 7 — first stage in the pipeline, consumes the PRD.
 > **Traceability:** `PRD → Project Context`. This is the only stage permitted to read the PRD directly.
 > **Revision history:** see `docs/CHANGELOG.md`.
+>
+> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
 
 # 1. Skill Name
 
@@ -86,7 +88,7 @@ A single **Project Context** document that becomes the sole source of truth for 
 
 | Artifact | Path |
 |---|---|
-| Project Context document | `platform_core_data/workspace/context/ProjectContext.md` |
+| Project Context document | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
 
 Document structure:
 1. Scope Summary
@@ -117,7 +119,7 @@ Run configuration:
                        platform_core_data/credentials/, never written here)
 ```
 
-Hypothetical result: `platform_core_data/workspace/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer skill should specifically probe.
+Hypothetical result: `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer skill should specifically probe.
 
 # 11. Architecture Principle
 
@@ -135,8 +137,8 @@ This skill is independently invocable — `/project-context-skill`, optionally w
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 1 complete — Project Context v{N} → Pending Review
-  platform_core_data/workspace/context/ProjectContext.v{N}.md
+Stage 1 complete — Project Context → Pending Review
+  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
 
 Next step — either:
   1. Approve, then continue:   "approved"  →  /explorer-skill

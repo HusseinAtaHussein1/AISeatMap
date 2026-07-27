@@ -64,7 +64,7 @@ test('a schemaVersion 1 snapshot is normalized rather than rejected', () => {
   try {
     const p = path.join(dir, '.lifecycle_snapshot.json');
     fs.writeFileSync(p, JSON.stringify({
-      baselinePath: 'platform_core_data/workspace/automation/tests_SHAFT',
+      baselinePath: 'platform_core_data/automation_baseline/tests_SHAFT',
       baselineRef: 'oldref',
       copiedAt: FIXED_NOW.toISOString(),
     }));

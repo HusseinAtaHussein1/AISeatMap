@@ -7,10 +7,11 @@
 //     --started 2026-07-23T10:35:18 --existing-dir platform_core_data/runs [--json]
 //
 // --started defaults to now if omitted. --existing-dir, if given, is scanned for existing folder
-// names so collisions get a deterministic __2/__3 suffix.
+// names so the run index advances past the highest one present and collisions get a deterministic
+// __2/__3 suffix. --index pins the run index explicitly; --no-index omits the run-NNN__ prefix.
 
 const fs = require('fs');
-const { generateRunFolderName } = require('./runFolderName');
+const { generateRunFolderName, parseRunFolderName } = require('./runFolderName');
 
 function parseArgs(argv) {
   const out = {};
@@ -49,11 +50,23 @@ function main() {
 
   const folderName = generateRunFolderName(
     { scope: args.scope, target: args.target },
-    { existingNames, now }
+    {
+      existingNames,
+      now,
+      ...(args.index !== undefined && args.index !== true ? { index: Number(args.index) } : {}),
+      ...(args['no-index'] ? { withIndex: false } : {}),
+    }
   );
 
   if (args.json) {
-    console.log(JSON.stringify({ folderName, scope: args.scope, target: args.target, started: now.toISOString() }, null, 2));
+    const parsed = parseRunFolderName(folderName);
+    console.log(JSON.stringify({
+      folderName,
+      index: parsed.index ?? null,
+      scope: args.scope,
+      target: args.target,
+      started: now.toISOString(),
+    }, null, 2));
   } else {
     console.log(folderName);
   }

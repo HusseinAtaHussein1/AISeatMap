@@ -138,13 +138,13 @@ This step is skipped only in the branch where Step 3 itself was skipped (automat
 
 | Artifact | Path | Produced By |
 |---|---|---|
-| Execution Results (reproduction) | `platform_core_data/workspace/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 2) |
-| Updated Automation Package (if Step 3 ran) | `platform_core_data/workspace/automation/tests_{Framework}/` | Automation Agent |
-| Execution Results (verification, if Step 4 ran) | `platform_core_data/workspace/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 4) |
-| Final QA Report | `platform_core_data/workspace/reporting/Final_QA_Report.md` | Reporting Agent |
-| Run Summary | `platform_core_data/runs/RUN-YYYYMMDD-XXX-{ai_generated_slug}/metadata/run_summary.md` | Run Manager |
+| Execution Results (reproduction) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 2) |
+| Updated Automation Package (if Step 3 ran) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` | Automation Agent |
+| Execution Results (verification, if Step 4 ran) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 4) |
+| Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | Reporting Agent |
+| Run Summary | `platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md` | Run Manager |
 
-NDC uses its `workspace/` variant of these paths — see `platform_core_data/onboarding.md`.
+`{{RUN_FOLDER}}` resolves to this run's own folder name, per `workflows_and_pipelines/pipeline/run_manager.md` §5.1 (e.g. `run-012__2026-07-27_13-05-44__Targeted__BUG-118_SeatMapCrash`) — see `platform_core_data/onboarding.md`.
 
 # 6. Success Criteria
 

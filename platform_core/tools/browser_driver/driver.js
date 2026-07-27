@@ -6,8 +6,13 @@
 // (see tools/browser_driver/README.md):
 //   Shared execution engine  -> platform_core/tools/
 //   Project knowledge        -> platform_core_data/
-//   Generated outputs        -> platform_core_data/workspace/     (includes the SHAFT automation
-//                                                                  package, under workspace/automation/)
+//   Generated run outputs    -> platform_core_data/runs/{{RUN_FOLDER}}/  (that run's per-stage
+//                                                                  artifacts, including the generated
+//                                                                  automation package under
+//                                                                  runs/{{RUN_FOLDER}}/automation/)
+//   Automation baseline      -> platform_core_data/automation_baseline/  (the persistent Workspace
+//                                                                  Automation Baseline, per framework —
+//                                                                  it outlives any single run)
 //   Browser Driver config    -> platform_core_data/browser/       (Stage 2 exploration tooling —
 //                                                                  NOT Stage 5 output; kept out of any
 //                                                                  "automation" folder to avoid two
@@ -68,7 +73,7 @@ function projectCredentialsPath() {
 }
 
 // UI Knowledge Base — canonical, versioned baseline screenshots + screen metadata. Distinct from
-// Discovery run evidence (platform_core_data/workspace/discovery/...), which stays per-run/temporary.
+// Discovery run evidence (platform_core_data/runs/{{RUN_FOLDER}}/discovery/...), which stays per-run/temporary.
 function projectUiScreenshotsDir() {
   return path.join(dataRoot(), 'ui', 'screenshots');
 }

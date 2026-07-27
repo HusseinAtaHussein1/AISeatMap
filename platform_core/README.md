@@ -24,7 +24,7 @@ Population is deliberate: this layer does not grow by accretion during ordinary 
 
 - **Project-specific business rules, findings, credentials, or screen locators.** All of that belongs under `platform_core_data/` — never here, no matter how "generic" it looks on first observation.
 - **Reusable engineering knowledge documents.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core_data/knowledge_base/patterns/`, cited from a Skill's `dependencies` line — not here.
-- **Generated artifacts, execution results, or reports.** Those are per-project, per-run outputs under `platform_core_data/workspace/`.
+- **Generated artifacts, execution results, or reports.** Those are per-project, per-run outputs under `platform_core_data/runs/`.
 - **Orchestration or sequencing logic.** Stage order, checkpoints, and run identity belong in `workflows_and_pipelines/`.
 - **Agent behavioral specifications.** What an agent *does* is `.claude/skills/`'s responsibility, not this folder's.
 

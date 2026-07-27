@@ -10,11 +10,10 @@ web_modules/
 !.env.example
 
 # Browser Driver Layer credentials — must never be committed (see tools/browser_driver/README.md).
-# The real credential file lives at platform_core_data/credentials/credentials.json — this
-# repo-root rule is the primary enforcement, backed by a second, local .gitignore inside that
-# credentials/ folder. Scoped to the literal filename only — does not match
-# platform_core_data/resources/credentials/ (a directory of *documentation about*
-# credentials, not a secret file itself) or any *.template.json.
+# The real credential file lives at platform_core_data/knowledge_base/credentials/credentials.json
+# — this repo-root rule is the primary enforcement, backed by a second, local .gitignore inside
+# that credentials/ folder. Scoped to the literal filename only, so it never matches a
+# *.template.json (committed deliberately, placeholders only).
 **/credentials.json
 *.creds.json
 .creds.json

@@ -32,4 +32,6 @@ Confirmed by 1 execution, across 3 test cases, across 1 project.
 
 ## Confirmed In
 
-- [[NDC/REP-002]] — `platform_core_data/knowledge_base/repair/REP-002.md`
+- `REP-002` — the NDC-era project-scoped repair record this was promoted from. That layer
+  (`knowledge_base/repair/`) was removed on 2026-07-27; a confirmed repair now lives in its own
+  run's Repair Summary, and this document is the only durable form of the pattern.

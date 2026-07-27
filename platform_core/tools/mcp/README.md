@@ -22,17 +22,17 @@ The platform now has **two** mechanisms for live browser access. They are peers,
 | | **Browser Driver** (`platform_core/tools/browser_driver/`) | **Playwright MCP** (`playwright` server) |
 |---|---|---|
 | Shape | Scripted — a JS `BrowserDriver` session called from a script | Interactive — the Skill calls `browser_*` tools turn by turn |
-| Auth | **Automatic** — loads `platform_core_data/credentials/credentials.json` by itself, never echoing values | **None built in** — see §1.3; must never be handed credential values |
-| Locator knowledge | Reuses `platform_core_data/browser/screens/` + `components/` via `useScreen()`/`useComponent()` | Accessibility-tree snapshots; no stored locator knowledge |
+| Auth | **Automatic** — loads `platform_core_data/knowledge_base/credentials/credentials.json` by itself, never echoing values | **None built in** — see §1.3; must never be handed credential values |
+| Locator knowledge | Reuses `platform_core_data/knowledge_base/browser/screens/` + `components/` via `useScreen()`/`useComponent()` | Accessibility-tree snapshots; no stored locator knowledge |
 | Repeatability | High — deterministic, re-runnable, diff-friendly | Lower — exploratory, sequence depends on what the agent sees |
 | Best at | Authenticated flows, known screens, repeated execution of designed test cases | First-contact exploration of an unknown screen, ad-hoc selector verification, reading the accessibility tree |
-| Display mode | **Headless by default** — `browser.headless: true` in `platform_core_data/browser/profile.json`; **except Stage 4 (Manual Execution), which is headed** via `browser.headlessByStage` (§1.1.1) | **Headless by default** — `--headless` in the repo-root `.mcp.json` |
+| Display mode | **Headless by default** — `browser.headless: true` in `platform_core_data/knowledge_base/browser/profile.json`; **except Stage 4 (Manual Execution), which is headed** via `browser.headlessByStage` (§1.1.1) | **Headless by default** — `--headless` in the repo-root `.mcp.json` |
 
 ### 1.1.1 Headless is the default for both mechanisms — except Stage 4
 
 Neither mechanism opens a visible browser window unless something explicitly asks for one. A Skill never needs to request headless — it is already the configured default on both paths:
 
-- **Browser Driver** — `platform_core_data/browser/profile.json` sets `browser.headless: true`. `BrowserDriver.authenticate()` uses that default whenever neither the `headless` argument nor a per-stage override applies.
+- **Browser Driver** — `platform_core_data/knowledge_base/browser/profile.json` sets `browser.headless: true`. `BrowserDriver.authenticate()` uses that default whenever neither the `headless` argument nor a per-stage override applies.
 - **Playwright MCP** — the server is registered in `.mcp.json` with `--headless` (the server is *headed* by default without it, so the flag is required, not cosmetic).
 
 **The one standing exception: Stage 4, Manual Execution, runs headed as its normal behaviour** (`.claude/skills/manual-execution-skill/SKILL.md` §11.1). That stage exists so a human can watch each authored Step execute against the live application and judge timing, transient, and visual-state behaviour in real time — observation a post-hoc screenshot does not preserve. It is expressed as configuration, not skill discipline: `browser.headlessByStage` in the profile maps `manual_execution` to `false`, and the stage selects it by passing `stage: 'manual_execution'` to `authenticate()`. **Resolution precedence: explicit `headless` argument > `headlessByStage[stage]` > `browser.headless`.** A stage not named in the map is unaffected and stays headless.
@@ -88,7 +88,7 @@ Automation code generated from model memory drifts from the stack it must actual
 The libraries queried are **not** a fixed list and **not** inferred from what the platform itself happens to use. They are extracted, per run, from the application-under-test and its automation project:
 
 1. **Source code** — dependency manifests and lockfiles in the resolved automation project and, where available, in the application under test: `package.json` + `package-lock.json`/`yarn.lock`/`pnpm-lock.yaml`, `pom.xml`, `build.gradle`(`.kts`), `requirements.txt`, `Pipfile.lock`, `pyproject.toml`/`poetry.lock`, `*.csproj`/`packages.lock.json`, `Gemfile.lock`, `go.mod`, `composer.lock`, plus framework config files (`playwright.config.*`, `testng.xml`, `cypress.config.*`, `pytest.ini`, SHAFT's `src/main/resources/properties/`).
-2. **Documentation** — the project's own stated stack: `platform_core_data/architecture.md` ("Technology Stack"), `automation_framework.md`, `run_configuration.md`, `onboarding.md`, and the approved Project Context's Technology Stack section.
+2. **Documentation** — the project's own stated stack: `platform_core_data/knowledge_base/architecture.md` ("Technology Stack"), `automation_framework.md`, `run_configuration.md`, `onboarding.md`, and the approved Project Context's Technology Stack section.
 
 **The lockfile wins on version.** A manifest range (`^1.61.1`) is a constraint; the lockfile's resolved version is the fact. Where both exist, the pinned lockfile version is what gets documented — querying docs for a version the suite will not run against defeats the purpose. Where only a range exists, the resolved-version field records the range and flags it as unpinned.
 
@@ -133,7 +133,7 @@ It records, at minimum:
 | Conflicts | Where fetched documentation contradicts an existing convention in `automation_framework.md` or the existing automation project — surfaced, never silently resolved |
 | Documentation Gaps | Libraries with no credible Context7 match or no docs for the pinned version |
 
-**This artifact is a guideline input, not an authority that overrides approved project standards.** Where fetched docs and `platform_core_data/automation_framework.md` disagree (e.g. Context7 shows an idiomatic Playwright layout that contradicts the SHAFT Pages/Locators/Tests/Data layering), the **approved project framework governs** and the conflict is recorded in the Conflicts row and surfaced in the Automation Plan's Assumptions/Risks — resolved by a human, exactly as `automation_framework.md`'s Gap Resolution Rule requires. Context7 never licenses redesigning an approved framework.
+**This artifact is a guideline input, not an authority that overrides approved project standards.** Where fetched docs and `platform_core_data/knowledge_base/automation_framework.md` disagree (e.g. Context7 shows an idiomatic Playwright layout that contradicts the SHAFT Pages/Locators/Tests/Data layering), the **approved project framework governs** and the conflict is recorded in the Conflicts row and surfaced in the Automation Plan's Assumptions/Risks — resolved by a human, exactly as `automation_framework.md`'s Gap Resolution Rule requires. Context7 never licenses redesigning an approved framework.
 
 ### 2.6 When it runs
 

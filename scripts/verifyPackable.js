@@ -91,16 +91,23 @@ if (!initPs1.includes('agentic-testing.js')) {
 // --- Nothing project-specific may ship ----------------------------------------------------------
 // A published package carrying one application's PRD would install somebody else's requirements as
 // though they were the new host's.
+//
+// "Is this a template?" is decided by comparing against templates.js — the same source init writes
+// from — rather than by looking for template-ish phrasing. Prose sniffing gave both false positives
+// (a real template whose wording didn't match the regex) and false negatives (a real PRD that
+// happened to quote one of those phrases).
+const { getTemplate } = require('../platform_core/tools/init/templates.js');
+
 for (const leaked of ['PRD.md', 'run_configuration.md', 'PRD_UserStories.md']) {
-  const abs = path.join(ROOT, 'platform_core_data', leaked);
+  const abs = path.join(ROOT, 'platform_core_data', 'knowledge_base', leaked);
   if (!fs.existsSync(abs)) continue;
   const content = fs.readFileSync(abs, 'utf8');
-  // A template is fine; real content is not. Templates say so in their own first lines.
-  const looksLikeTemplate = /_Replace|replace every section|_What the product is|not registered/i.test(content);
-  if (!looksLikeTemplate && content.trim().length > 400) {
+  const pristine = content.replace(/\r\n/g, '\n') === getTemplate(leaked).replace(/\r\n/g, '\n');
+  if (!pristine) {
     problems.push(
-      `platform_core_data/${leaked} contains project-specific content and must not be published — ` +
-        'add it to .npmignore or blank it to a template',
+      `platform_core_data/knowledge_base/${leaked} differs from its blank template in ` +
+        'platform_core/tools/init/templates.js — it may hold one project\'s real content, which ' +
+        'must not be published. Restore the template, or add the file to .npmignore.',
     );
   }
 }

@@ -94,7 +94,7 @@ test('host-repo mode ignores only local state, with a fully-qualified credential
   const r = mergeGitignore(null, { toolDir: 'tool', gitMode: 'host-repo' });
 
   assert.ok(!r.content.includes('\ntool/\n'), 'the tool folder itself must be tracked in host-repo mode');
-  assert.ok(r.content.includes('tool/platform_core_data/credentials/credentials.json'));
+  assert.ok(r.content.includes('tool/platform_core_data/knowledge_base/credentials/credentials.json'));
   // The repo-wide pattern would silently ignore a host application's own credentials.json elsewhere.
   assert.ok(!r.content.includes('**/credentials.json'), 'never write a repo-wide credentials rule');
 });

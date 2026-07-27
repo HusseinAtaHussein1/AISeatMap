@@ -6,7 +6,7 @@ Reusable, application-agnostic engineering knowledge — automation/repair/diagn
 
 Project-specific knowledge (business rules, UI observations, findings, execution/repair history for one application) lives instead in the folders *surrounding* this one — `../repair/`, `../execution/`, `../automation/`, `../application/`, `../ui/`, `../findings/`, `../business_rules/`, `../lessons_learned/` — never here.
 
-**On the nesting:** this folder sits inside `platform_core_data/knowledge_base/` as of 2026-07-26 (it moved here from `platform_core/knowledge/` via `platform_core_data/patterns/`). That is a structural location only — it does **not** make Platform Knowledge a category of Project Knowledge. This layer still resolves first (`pipeline.md` §10.2), still accepts documents only through the human-gated Promotion Workflow (§10.5), and still admits nothing application-specific (§10.6). Its parent's `INDEX.md` deliberately does not catalog this folder; `INDEX.md` here does. The same change relocated `diagnosis/` in from the project layer, so it now sits alongside `diagnosis_patterns/` below.
+**On the nesting:** this folder sits inside `platform_core_data/knowledge_base/` as of 2026-07-26 (it moved here from `platform_core/knowledge/` via `platform_core_data/patterns/`). That is a structural location only — it does **not** make Platform Knowledge a category of Project Knowledge. This layer still resolves first (`pipeline.md` §10.2), still accepts documents only through the human-gated Promotion Workflow (§10.5), and still admits nothing application-specific (§10.6). Its parent's `INDEX.md` deliberately does not catalog this folder; `INDEX.md` here does. That change also relocated an empty `diagnosis/` folder in from the project layer; it was folded into `diagnosis_patterns/` on 2026-07-27, so this layer has one diagnosis category, not two.
 
 ## Structure
 
@@ -16,7 +16,6 @@ One concern per document, one stable ID per document (e.g. `REPAIR-001`), groupe
 |---|---|
 | `automation_patterns/` | Reusable automation-generation strategies |
 | `diagnosis_patterns/` | Evidence-gathering strategies specific to root-causing an automation/execution failure (no code/behavior change) |
-| `diagnosis/` | **Held empty, and distinct from `diagnosis_patterns/` above.** Relocated into this layer from the project-scoped `knowledge_base/diagnosis/` on 2026-07-26 by user-mandated change; it arrived empty. It has no defined producer or reader in `pipeline.md` §10.7 and no project-level counterpart left to promote from, so — like `pipeline_decision_patterns/` — it cannot legally receive a document under the Promotion Workflow yet. Put cross-project evidence-gathering strategies in `diagnosis_patterns/`, which does have a defined reader. |
 | `repair_patterns/` | Confirmed, cross-project repair strategies |
 | `execution_patterns/` | Proven, empirically-derived exceptions to Execution Engine defaults (e.g. an environment class where a default concurrency/retry setting needs overriding) — never the engine's core retry/concurrency/stop-condition mechanics, which are fixed capability logic in `.claude/skills/automation-execution-skill/SKILL.md` §5, §19–§20 |
 | `framework_patterns/` | Framework best practices (SHAFT, Playwright, etc.) |
@@ -56,4 +55,4 @@ version: 1
 
 ## Promotion
 
-Nothing is written here automatically. A pattern arrives here only via the Promotion Workflow (`workflows_and_pipelines/pipeline/pipeline.md` §10.5) — explicit human approval, after the project first proves the pattern out in one of the project-scoped folders around this one (`../repair/`, `../findings/`, and the rest). A category with no project-level counterpart folder and no named reader in `pipeline.md` §10.7 cannot legally receive a document under this workflow — see `pipeline_decision_patterns/` and `diagnosis/` above.
+Nothing is written here automatically. A pattern arrives here only via the Promotion Workflow (`workflows_and_pipelines/pipeline/pipeline.md` §10.5) — explicit human approval, after the project first proves the pattern out in one of the project-scoped folders around this one (`../repair/`, `../findings/`, and the rest). A category with no project-level counterpart folder and no named reader in `pipeline.md` §10.7 cannot legally receive a document under this workflow — see `pipeline_decision_patterns/` above.

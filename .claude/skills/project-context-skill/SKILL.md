@@ -5,7 +5,7 @@ inputs:
   - name: prd
     type: file_path
     required: true
-    description: Approved Product Requirements Document at `platform_core_data/PRD.md`. This is the only skill in the pipeline permitted to read it directly.
+    description: Approved Product Requirements Document at `platform_core_data/knowledge_base/PRD.md`. This is the only skill in the pipeline permitted to read it directly.
   - name: run_configuration
     type: markdown
     required: true
@@ -55,7 +55,7 @@ Without this skill, each downstream skill would need to re-derive scope, credent
 
 | Input | Required? | Description |
 |---|---|---|
-| Product Requirements Document | Required | `platform_core_data/PRD.md` |
+| Product Requirements Document | Required | `platform_core_data/knowledge_base/PRD.md` |
 | Run configuration | Required | Modules in scope for this run, target environment URL, environment constraints, available credentials/roles |
 
 Run configuration keys, supplied alongside the invocation: `{{MODULES_IN_SCOPE}}`, `{{APP_URL}}`, `{{ENVIRONMENT_NOTES}}`, and credentials `{{ROLE}}` / `{{USERNAME}}` / `{{PASSWORD}}`.
@@ -112,11 +112,11 @@ Convert an approved PRD into a single, structured Project Context that every dow
 ```text
 Run configuration:
   MODULES_IN_SCOPE   = Agency, Branch, Staff
-  APP_URL            = (per platform_core_data/run_configuration.md — STG)
+  APP_URL            = (per platform_core_data/knowledge_base/run_configuration.md — STG)
   ENVIRONMENT_NOTES  = "Shared environment — no destructive or persistent
                         data-mutating actions without explicit authorization"
   ROLE               = Admin  (credentials resolved at runtime from
-                       platform_core_data/credentials/, never written here)
+                       platform_core_data/knowledge_base/credentials/, never written here)
 ```
 
 Hypothetical result: `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer skill should specifically probe.

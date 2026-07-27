@@ -75,7 +75,7 @@ platform_core/tools/      ◀── resolves platform_core_data/ at runtime
 
 - **Never** write a project-specific fact, business rule, or credential here — no exception for something that "seems like it'll apply everywhere."
 - **Never** add a reusable-knowledge document here; it belongs in `platform_core_data/knowledge_base/patterns/`, arriving only via the Promotion Workflow (`pipeline.md` §10.5).
-- **Only** `tools/browser_driver/` may contain the shared automation engine's code; project-specific profiles, screens, components, and credentials live under `platform_core_data/browser/` and `platform_core_data/credentials/` instead.
+- **Only** `tools/browser_driver/` may contain the shared automation engine's code; project-specific profiles, screens, components, and credentials live under `platform_core_data/knowledge_base/browser/` and `platform_core_data/knowledge_base/credentials/` instead.
 - **Must not** duplicate a Skill's own fixed Capability logic as tooling (e.g. the Confidence Engine's base scoring rubric stays in `automation-execution-skill/SKILL.md` §27.2).
 
 ## Typical Flow
@@ -83,8 +83,8 @@ platform_core/tools/      ◀── resolves platform_core_data/ at runtime
 ```
 Skill                                   Platform Core
 manual-execution-skill invoked  ──▶   BrowserDriver.authenticate()
-                                       │  resolves platform_core_data/browser/ profile
-                                       │  + platform_core_data/credentials/ (never echoed)
+                                       │  resolves platform_core_data/knowledge_base/browser/ profile
+                                       │  + platform_core_data/knowledge_base/credentials/ (never echoed)
                                        ▼
                                       authenticated session returned
         │
@@ -94,7 +94,7 @@ executes the authored Steps against that session
 
 ## Common Mistakes
 
-- **"Add this project's login selectors to `platform_core/tools/browser_driver/`."** No — the shared engine holds zero project data by design; selectors belong in `platform_core_data/browser/screens/`.
+- **"Add this project's login selectors to `platform_core/tools/browser_driver/`."** No — the shared engine holds zero project data by design; selectors belong in `platform_core_data/knowledge_base/browser/screens/`.
 - **"This repair pattern is reusable, put it in `platform_core/`."** No — Platform Knowledge lives in `platform_core_data/knowledge_base/patterns/`, and only via the Promotion Workflow after proving itself in `platform_core_data/knowledge_base/`.
 - **"Pass the password to the Playwright MCP tool so it can log in."** No — `tools/mcp/README.md` §1.3 prohibits a credential value in any MCP tool call; authenticate with the Browser Driver first.
 - **"Format the run folder name inline here, it's just a string."** No — `run_manager/` owns that format; duplicating it lets run identity drift.

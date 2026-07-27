@@ -40,7 +40,7 @@ check "the package contains all 7 skills"                  "[ \$(ls '$PKG/.claud
 check "the package contains platform_core/tools"           "[ -d '$PKG/platform_core/tools' ]"
 check "the package contains the pipeline spec"             "[ -f '$PKG/workflows_and_pipelines/pipeline/pipeline.md' ]"
 check "the package contains Platform Knowledge patterns"   "[ -d '$PKG/platform_core_data/knowledge_base/patterns' ]"
-check "the package does NOT contain a project PRD"         "[ ! -f '$PKG/platform_core_data/PRD.md' ]"
+check "the package does NOT contain a project PRD"         "[ ! -f '$PKG/platform_core_data/knowledge_base/PRD.md' ]"
 check "the package does NOT contain runs/ history"         "[ ! -d '$PKG/platform_core_data/runs' ]"
 check "the package does NOT contain node_modules"          "[ ! -d '$PKG/node_modules' ]"
 
@@ -77,7 +77,7 @@ run_install "2. BROWNFIELD — Playwright app" "$APP" ""
 check "tool folder created"                       "[ -d '$APP/agentic-testing-tool' ]"
 check "platform_core copied"                      "[ -f '$APP/agentic-testing-tool/platform_core/tools/platform_paths/paths.js' ]"
 check "pipeline spec copied"                      "[ -f '$APP/agentic-testing-tool/workflows_and_pipelines/pipeline/pipeline.md' ]"
-check "blank PRD scaffolded"                      "[ -f '$APP/agentic-testing-tool/platform_core_data/PRD.md' ]"
+check "blank PRD scaffolded"                      "[ -f '$APP/agentic-testing-tool/platform_core_data/knowledge_base/PRD.md' ]"
 check "runs shape scaffolded"                     "[ -d '$APP/agentic-testing-tool/platform_core_data/runs' ]"
 check "Platform Knowledge installed"              "[ -d '$APP/agentic-testing-tool/platform_core_data/knowledge_base/patterns' ]"
 check "7 skills installed for Claude Code"        "[ \$(ls '$APP/.claude/skills' | wc -l) -eq 7 ]"
@@ -141,13 +141,13 @@ echo ""
 echo "  -- idempotency --"
 GI_BEFORE=$(sha1sum "$APP/.gitignore" | cut -d' ' -f1)
 MCP_BEFORE=$(sha1sum "$APP/.mcp.json" | cut -d' ' -f1)
-PRD_BEFORE=$(sha1sum "$APP/agentic-testing-tool/platform_core_data/PRD.md" | cut -d' ' -f1)
-echo "# OUR REAL REQUIREMENTS" > "$APP/agentic-testing-tool/platform_core_data/PRD.md"
-PRD_EDITED=$(sha1sum "$APP/agentic-testing-tool/platform_core_data/PRD.md" | cut -d' ' -f1)
+PRD_BEFORE=$(sha1sum "$APP/agentic-testing-tool/platform_core_data/knowledge_base/PRD.md" | cut -d' ' -f1)
+echo "# OUR REAL REQUIREMENTS" > "$APP/agentic-testing-tool/platform_core_data/knowledge_base/PRD.md"
+PRD_EDITED=$(sha1sum "$APP/agentic-testing-tool/platform_core_data/knowledge_base/PRD.md" | cut -d' ' -f1)
 ( cd "$APP" && eval "$CLI init --target '$APP' --yes" ) >/dev/null 2>&1
 check "re-install leaves .gitignore identical"    "[ \$(sha1sum '$APP/.gitignore' | cut -d' ' -f1) = '$GI_BEFORE' ]"
 check "re-install leaves .mcp.json identical"     "[ \$(sha1sum '$APP/.mcp.json' | cut -d' ' -f1) = '$MCP_BEFORE' ]"
-check "re-install NEVER overwrites your PRD"      "[ \$(sha1sum '$APP/agentic-testing-tool/platform_core_data/PRD.md' | cut -d' ' -f1) = '$PRD_EDITED' ]"
+check "re-install NEVER overwrites your PRD"      "[ \$(sha1sum '$APP/agentic-testing-tool/platform_core_data/knowledge_base/PRD.md' | cut -d' ' -f1) = '$PRD_EDITED' ]"
 
 # =============================================================================================
 # 3. BROWNFIELD — Maven/SHAFT, tests at depth 6

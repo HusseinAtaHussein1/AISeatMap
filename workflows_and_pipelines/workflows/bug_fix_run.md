@@ -144,7 +144,7 @@ This step is skipped only in the branch where Step 3 itself was skipped (automat
 | Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | Reporting Agent |
 | Run Summary | `platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md` | Run Manager |
 
-`{{RUN_FOLDER}}` resolves to this run's own folder name, per `workflows_and_pipelines/pipeline/run_manager.md` §5.1 (e.g. `run-012__2026-07-27_13-05-44__Targeted__BUG-118_SeatMapCrash`) — see `platform_core_data/onboarding.md`.
+`{{RUN_FOLDER}}` resolves to this run's own folder name, per `workflows_and_pipelines/pipeline/run_manager.md` §5.1 (e.g. `run-012__2026-07-27_13-05-44__Targeted__BUG-118_SeatMapCrash`) — see `platform_core_data/knowledge_base/onboarding.md`.
 
 # 6. Success Criteria
 

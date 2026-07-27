@@ -49,7 +49,7 @@ function gitignoreLines({ toolDir, gitMode }) {
     // credentials.json somewhere else in the tree.
     lines.push(
       '# Testing platform — local state and secrets (artifacts are committed deliberately).',
-      `${toolDir}/platform_core_data/credentials/credentials.json`,
+      `${toolDir}/platform_core_data/knowledge_base/credentials/credentials.json`,
       `${toolDir}/platform.config.local.json`,
       `${toolDir}/node_modules/`,
       '.playwright-mcp/',

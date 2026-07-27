@@ -424,7 +424,7 @@ When a project designates an external, real automation codebase (e.g. NDC's prod
 - **Read-only by default.** The agent inspects it, learns its architecture (framework/version, Page Object pattern, driver init, naming conventions), and generates *compatible* code — it never edits the reference project's files unless a human explicitly chooses to, for that run, every time.
 - **A separate Target decision** — generate inside the platform, export a platform-generated package structured to drop into the reference project, or (only if explicitly chosen) update the reference project directly.
 
-See [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) and the project-level registration this produces, e.g. [`platform_core_data/reference_automation_project.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/reference_automation_project.md).
+See [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) and the project-level registration this produces, e.g. [`platform_core_data/knowledge_base/reference_automation_project.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/reference_automation_project.md).
 
 ---
 
@@ -467,21 +467,23 @@ agentic-ai-testing-platform/
 │
 ├── platform_core_data/               # Process artifacts for the Target Project under test (§9.1)
 │   ├── README.md                       # This folder's own layout contract
-│   ├── PRD.md · PRD_UserStories.md      # Stage 1's only requirements input
-│   ├── onboarding.md · architecture.md · glossary.md · run_configuration.md
-│   ├── automation_framework.md          # Binding SHAFT package structure — Stage 5 must comply
-│   ├── reference_automation_project.md  # Registration of the external production SHAFT repo
-│   ├── browser/                         # Browser Driver profile + screen/component locators
-│   ├── credentials/                     # credentials.json (git-ignored) + template + README
-│   ├── knowledge_base/                  # Project Knowledge — see §11
-│   │   ├── repair/ · execution/ · automation/        # this application's own history
-│   │   ├── application/ · ui/ · findings/            # observations and Explorer-surfaced knowledge
-│   │   ├── business_rules/ · lessons_learned/        # this application's rules and lessons
+│   ├── knowledge_base/                  # EVERYTHING SHARED ACROSS RUNS — inputs, reference, knowledge
+│   │   ├── PRD.md · PRD_UserStories.md  # Stage 1's only requirements input
+│   │   ├── run_configuration.md         # Target URL, environment, modules in scope — Stage 1 input
+│   │   ├── onboarding.md · architecture.md · glossary.md
+│   │   ├── automation_framework.md      # Binding framework structure — Stage 5 must comply
+│   │   ├── reference_automation_project.md  # Registration of an external reference automation repo
+│   │   ├── stack.md                     # Detected stack + pinned deps — written by Stage 5, durable
+│   │   ├── requirements/                # By Type: epics/, features/, user_stories/, bugs/, specifications/
+│   │   ├── api/{swagger,postman}/ · diagrams/    # Supporting reference material
+│   │   ├── browser/                     # Browser Driver profile + screen/component locators
+│   │   ├── credentials/                 # credentials.json (git-ignored) + template + README
+│   │   ├── ui/screenshots/              # Canonical baseline screenshot per screen
+│   │   ├── business_rules/ · lessons_learned/        # the only two knowledge categories (§11)
 │   │   ├── INDEX.md                     # Catalog of Project Knowledge only (not patterns/)
 │   │   └── patterns/                    # Platform Knowledge — application-agnostic, nested here but a
 │   │       │                            #   SEPARATE layer: resolved first, Promotion-only (see §11)
 │   │       ├── automation_patterns/     # (empty until promoted)
-│   │       ├── diagnosis/               # (empty; moved in from the Project layer 2026-07-26)
 │   │       ├── diagnosis_patterns/      # (empty until promoted)
 │   │       ├── repair_patterns/         # Confirmed, application-agnostic repair strategies (REPAIR-NNN)
 │   │       ├── execution_patterns/      # (empty until promoted)
@@ -490,10 +492,8 @@ agentic-ai-testing-platform/
 │   │       ├── reporting/               # (empty until promoted)
 │   │       ├── pipeline_decision_patterns/  # (held empty — no defined reader or promotion source yet)
 │   │       └── INDEX.md                 # Catalog of every promoted document
-│   ├── resources/                       # requirements/, api/, diagrams/, screenshots/, sample_data/, notes/, ...
-│   ├── ui/                              # Reference screenshots captured during onboarding/discovery
-│   ├── workspace/                       # Current-approved state per stage — see §10
-│   └── runs/                            # Immutable per-run snapshots — see §10
+│   ├── runs/                            # Immutable per-run snapshots — see §10
+│   └── automation_baseline/             # Persistent automation source code — see §10, §12
 │
 ├── docs/                             # Supplementary and historical platform documentation — see §18
 │   ├── README.md · CHANGELOG.md · LESSONS_LEARNED.md
@@ -503,7 +503,9 @@ agentic-ai-testing-platform/
 └── README.md                         # This document — the platform's primary entry point
 ```
 
-There is deliberately no `credentials/` or `ui/` folder at the repository root — both live under the project root (`platform_core_data/credentials/`, `platform_core_data/ui/`), and `credentials.json` is git-ignored, never committed.
+There is deliberately no `credentials/` or `ui/` folder at the repository root — both live inside the project's shared knowledge layer (`platform_core_data/knowledge_base/credentials/`, `platform_core_data/knowledge_base/ui/`), and `credentials.json` is git-ignored, never committed.
+
+**`platform_core_data/` has exactly three top-level members**, and which one a file belongs to is decided by lifetime, not by kind: `knowledge_base/` (durable, shared across every run), `runs/` (per-run, immutable), and `automation_baseline/` (long-lived automation source code). Anything that would still be correct at the start of the next run goes in `knowledge_base/`. Prior to 2026-07-27 the shared material was split across the folder root, `resources/`, `browser/`, `credentials/`, and `ui/`; consolidating it removed the ambiguity of two plausible homes for one file.
 
 ---
 
@@ -574,7 +576,7 @@ The platform tests one project at a time, but splits what it learns into two lay
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
 | **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | Reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting, pipeline decisions | Anything application-specific |
-| **Project Knowledge** | `platform_core_data/knowledge_base/` | Business rules, UI observations, findings, execution/repair/automation history for the hosted application | Anything that would still be true after retargeting — that belongs at the Platform layer instead |
+| **Project Knowledge** | `platform_core_data/knowledge_base/business_rules/`, `lessons_learned/` | This application's own business rules and cross-run lessons | Anything that would still be true after retargeting — that belongs at the Platform layer instead |
 
 ### Resolution order
 
@@ -586,7 +588,7 @@ flowchart LR
         subgraph Platform["patterns/ — Platform Knowledge (application-agnostic, nested but SEPARATE)"]
             RP["repair_patterns/"]
             RS["reasoning/"]
-            OTH["automation_patterns/ · diagnosis/ · diagnosis_patterns/ · execution_patterns/ · framework_patterns/ · reporting/ · pipeline_decision_patterns/"]
+            OTH["automation_patterns/ · diagnosis_patterns/ · execution_patterns/ · framework_patterns/ · reporting/ · pipeline_decision_patterns/"]
         end
         subgraph ProjA["Project Knowledge (application-scoped)"]
             A1["business_rules/ · application/ · ui/"]
@@ -599,7 +601,7 @@ flowchart LR
     ProjA -. "promotion — human-gated, §10.5" .-> Platform
 ```
 
-**The nesting is structural, not semantic.** `patterns/` lives inside `knowledge_base/` as of 2026-07-26, but it is not a Project Knowledge category: it resolves first, holds nothing application-specific, and is written to only through Promotion ([`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)). The same change moved `diagnosis/` from the Project layer into `patterns/`, so application-specific diagnosis notes now belong in the `repair/` record that consumed them, or in `findings/`.
+**The nesting is structural, not semantic.** `patterns/` lives inside `knowledge_base/` as of 2026-07-26, but it is not a Project Knowledge category: it resolves first, holds nothing application-specific, and is written to only through Promotion ([`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)). The same change moved `diagnosis/` out of the Project layer (it was folded into `patterns/diagnosis_patterns/` on 2026-07-27), so application-specific diagnosis notes now belong in the Repair Summary of the run that consumed them.
 
 ### Promotion — explicit human approval only
 
@@ -607,7 +609,7 @@ Knowledge is written project-scoped by default. When an agent recognizes a lesso
 
 ### Repair Knowledge Base
 
-A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): confirmed repairs are written to `platform_core_data/knowledge_base/repair/REP-NNN.md` at the moment a repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-NNN.md` or `platform_core_data/knowledge_base/patterns/reasoning/REASON-NNN.md`. See the current catalog in [`platform_core_data/knowledge_base/patterns/INDEX.md`](platform_core_data/knowledge_base/patterns/INDEX.md).
+A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): a confirmed repair is recorded in its own run's Repair Summary (`platform_core_data/runs/{{RUN_FOLDER}}/execution/`) at the moment the repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-NNN.md` or `platform_core_data/knowledge_base/patterns/reasoning/REASON-NNN.md`. The project-scoped `knowledge_base/repair/` folder this used to write to was removed on 2026-07-27, so **Promotion is now the only path for a repair to outlive its run**. See the current catalog in [`platform_core_data/knowledge_base/patterns/INDEX.md`](platform_core_data/knowledge_base/patterns/INDEX.md).
 
 ### Future expansion
 
@@ -621,7 +623,7 @@ The category folders for `automation_patterns/`, `diagnosis_patterns/`, `executi
 
 - **Discovery technology ≠ Automation technology.** The tool used to explore an application in Stage 2 (e.g. Playwright, for browser-driven discovery) has no bearing on which framework Stage 5 selects — this is enforced explicitly, because it has previously been the exact mistake an early agent revision made.
 - **Framework choice is scoped to one package, one run's decision** — never inferred as a standing project default. Every Stage 5 invocation asks again.
-- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/automation_framework.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/automation_framework.md) — and is binding only for runs that select SHAFT.
+- **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/knowledge_base/automation_framework.md`](platform_core_data/NDC_Previous_used_helper_docs_tobe_delete/automation_framework.md) — and is binding only for runs that select SHAFT.
 - **Currently supported:** Playwright, SHAFT Engine. **Named as first-class candidates whenever a project's needs call for them:** Selenium, Cypress, Appium, REST Assured — the Automation Agent's framework detection/selection model already treats these as standard options ([`.claude/skills/automation-skill/SKILL.md` §6–§8](.claude/skills/automation-skill/SKILL.md)); onboarding one for a real project is a per-project decision, not a platform-level gap.
 
 ```mermaid
@@ -684,7 +686,7 @@ The platform's specifications describe *what* runs, not a fixed proprietary runt
 |---|---|
 | **Specification format** | Markdown — every agent, pipeline stage, gate, and knowledge document is a versioned `.md` contract, not code |
 | **Supported automation frameworks** | SHAFT Engine (Java/TestNG) and Playwright (JavaScript), live side by side; Selenium/Cypress/Appium/REST Assured designed as first-class options (§4), not yet onboarded against a real application |
-| **Browser automation** | Playwright, via the shared [`platform_core/tools/browser_driver/`](platform_core/tools/browser_driver/) engine — one `BrowserDriver` API surface, with the profile and screen/component locators resolved from `platform_core_data/browser/` |
+| **Browser automation** | Playwright, via the shared [`platform_core/tools/browser_driver/`](platform_core/tools/browser_driver/) engine — one `BrowserDriver` API surface, with the profile and screen/component locators resolved from `platform_core_data/knowledge_base/browser/` |
 | **Documentation format** | Markdown + Mermaid diagrams throughout — every diagram renders natively in the repository, no external diagramming tool required |
 | **Knowledge storage** | Small, individually-versioned Markdown documents, one concern per file, stable IDs (`REPAIR-NNN`, `REASON-NNN`, `REP-NNN`) — no database |
 | **Artifact storage** | Plain file-system tree (`platform_core_data/runs/` and `platform_core_data/automation_baseline/`) — no external artifact server or object store |
@@ -715,8 +717,8 @@ your-project/
 
 Then:
 
-1. Fill in `agentic-testing-tool/platform_core_data/PRD.md` — the approved requirements.
-2. Fill in `agentic-testing-tool/platform_core_data/run_configuration.md` — environment and in-scope modules.
+1. Fill in `agentic-testing-tool/platform_core_data/knowledge_base/PRD.md` — the approved requirements.
+2. Fill in `agentic-testing-tool/platform_core_data/knowledge_base/run_configuration.md` — environment and in-scope modules.
 3. Run `/project-context-skill` to produce the Project Context, then review and approve it — every later stage depends on that approval.
 
 Run `npx agentic-testing init --dry-run` first to see exactly what would change, or `npx agentic-testing detect` to see what the platform makes of your project without writing anything.
@@ -778,7 +780,7 @@ These are deliberately blank rather than pre-filled with samples: Stage 1 reads 
 
 ### 3. Set up the Browser Driver (if the application needs live browser access)
 
-Follow [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md): create `platform_core_data/browser/profile.json` (login selectors + a post-login success signal), then create `platform_core_data/credentials/credentials.json` from the provided template — this file is git-ignored and must never be committed.
+Follow [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md): create `platform_core_data/knowledge_base/browser/profile.json` (login selectors + a post-login success signal), then create `platform_core_data/knowledge_base/credentials/credentials.json` from the provided template — this file is git-ignored and must never be committed.
 
 **Then approve the two MCP servers.** The repo ships a project-scoped [`.mcp.json`](.mcp.json) registering `playwright` (a second, selectable browser mode alongside the Browser Driver) and `context7` (version-accurate documentation for the stack Stage 5 generates against). Both are launched by `npx`, so there is nothing to install — but a project-scoped `.mcp.json` requires explicit approval before its servers start: run `/mcp` (or `claude mcp`) once per machine. Also run `npx playwright install chromium` for the browsers, and optionally export `CONTEXT7_API_KEY` for higher rate limits — set it in your environment, never in the committed `.mcp.json`. Full contract, including the rule that a credential value is never typed into an MCP tool call: [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md).
 

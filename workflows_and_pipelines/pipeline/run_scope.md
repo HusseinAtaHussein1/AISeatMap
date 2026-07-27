@@ -36,7 +36,7 @@ A Run Scope Source is **how the content of a given Type is actually delivered** 
 |---|---|---|
 | **Entire Project** | No specific item supplied; the Project Context Agent scopes to the full approved Project Knowledge. | Entire Project |
 | **Pasted text** | The Epic/Feature/Story/Bug description is pasted directly into the run configuration or the prompt given to the Project Context Agent. | Epic, Feature, User Story, Bug, Custom Scope |
-| **Markdown file** | A `.md` file — e.g. under `platform_core_data/resources/requirements/` (in the Type-specific subfolder: `epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/` — see that folder's own README) or `resources/notes/` — is referenced as the scope definition. The file's own `Source:` metadata line (not its folder) records that its Source was Markdown file — see §4.3 below. | Feature, User Story, Bug, Requirement Document, Custom Scope |
+| **Markdown file** | A `.md` file — e.g. under `platform_core_data/knowledge_base/requirements/` (in the Type-specific subfolder: `epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/` — see that folder's own README) or `resources/notes/` — is referenced as the scope definition. The file's own `Source:` metadata line (not its folder) records that its Source was Markdown file — see §4.3 below. | Feature, User Story, Bug, Requirement Document, Custom Scope |
 | **Uploaded document** | A non-Markdown file (Word, PDF, etc.) is supplied out of band and referenced by path or attachment. | Requirement Document, Feature, Epic |
 | **Requirement document reference** | A pointer to an existing document already in the project's knowledge (e.g., a specific section of the PRD, or a file under `resources/requirements/specifications/`), rather than a newly pasted/uploaded one. | Requirement Document |
 | **Custom scope description** | A free-form scope statement that doesn't reference any tracked item or document at all. | Custom Scope |
@@ -54,7 +54,7 @@ These are documented as supported future input sources only. No Azure DevOps or 
 
 ## 4.3 Source Is Recorded as Metadata, Not Folder Structure
 
-`platform_core_data/resources/requirements/` is organized by **Type only** (`epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/`), mirroring the Types in §3. **Source** is deliberately not a subfolder — a User Story delivered via pasted text, a Markdown file, or (once integrated) Azure DevOps all live in the same `user_stories/` folder. Each requirement file instead carries its own Source as a metadata line near its top, e.g. `**Type:** User Story · **Source:** Plain Text (pasted)`.
+`platform_core_data/knowledge_base/requirements/` is organized by **Type only** (`epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/`), mirroring the Types in §3. **Source** is deliberately not a subfolder — a User Story delivered via pasted text, a Markdown file, or (once integrated) Azure DevOps all live in the same `user_stories/` folder. Each requirement file instead carries its own Source as a metadata line near its top, e.g. `**Type:** User Story · **Source:** Plain Text (pasted)`.
 
 This is because Type is stable (the five subfolders above are not expected to grow often) while Source keeps expanding as new integrations are added (Azure DevOps, Jira, Confluence, GitHub, PDF, Word, Markdown, Plain Text, Figma, Email, TestRail, Xray, and others) — encoding Source into the directory tree would mean creating a new subfolder every time a new intake channel is supported. Recording it as in-file metadata instead keeps the folder layout stable regardless of where a requirement came from.
 
@@ -98,9 +98,9 @@ This reframing does not change the Project Context Agent's Inputs table (§4 of 
 
 | What | Where | Persists across runs? |
 |---|---|---|
-| Which Run Scope Sources are available/set up for this project (e.g., "ADO not yet integrated," "requirement docs are pasted-text based") | `platform_core_data/run_configuration.md` | Yes — durable, project-wide |
+| Which Run Scope Sources are available/set up for this project (e.g., "ADO not yet integrated," "requirement docs are pasted-text based") | `platform_core_data/knowledge_base/run_configuration.md` | Yes — durable, project-wide |
 | Which specific Run Scope (Type + Source + resolved content) a given run actually used | That run's approved Project Context, `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` (its existing Scope Summary / Modules In Scope sections) | No — scoped to that run, which is the only place its Project Context lives, per `workflows_and_pipelines/pipeline/pipeline.md` §7 |
-| A quick-reference history of past runs' scope choices | `platform_core_data/run_configuration.md` → "History of scope choices" table | Yes — an append-only log |
+| A quick-reference history of past runs' scope choices | `platform_core_data/knowledge_base/run_configuration.md` → "History of scope choices" table | Yes — an append-only log |
 
 # 8. Extended Traceability Model
 

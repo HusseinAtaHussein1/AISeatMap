@@ -67,7 +67,7 @@ node platform_core/tools/platform_paths/cli.js doctor
 
 - **`targetRoot` is relative to this file's own directory**, so a tool folder can be moved without rewriting it. Usually `".."`.
 - **`writeAllowlist` is fail-closed.** Empty or absent means the platform writes *nothing* to the Target Project, and Stage 5 generates inside `platform_core_data/` instead (the `automation-skill` §32.3 Option 1 behavior). Enabling target writes is an explicit act.
-- **`readDenylist` is merged with, never replaces,** a non-overridable built-in list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/credentials/credentials.json`.
+- **`readDenylist` is merged with, never replaces,** a non-overridable built-in list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/knowledge_base/credentials/credentials.json`.
 - **`configVersion` mismatch is a hard error**, never a best-effort read — it names whether to upgrade the platform or migrate the config.
 
 `platform.config.local.json` sits beside it, is gitignored, and shallow-merges over the base (one level deep for `target` and `git`). Use it for machine-specific overrides.

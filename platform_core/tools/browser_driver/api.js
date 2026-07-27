@@ -8,8 +8,8 @@
 // project-specific data itself. Locator knowledge is deliberately kept OUT of the Browser
 // Profile (which stays small and stable — auth/browser-init only, see driver.js) and lives
 // instead under the single project root, loaded on demand:
-//   platform_core_data/browser/screens/{ScreenName}.json      — one screen's locators
-//   platform_core_data/browser/components/{ComponentName}.json — shared/reusable locators
+//   platform_core_data/knowledge_base/browser/screens/{ScreenName}.json      — one screen's locators
+//   platform_core_data/knowledge_base/browser/components/{ComponentName}.json — shared/reusable locators
 // Call `useScreen('ScreenName')` / `useComponent('ComponentName')` to load one into the active
 // locator set; `click()`/`type()`/etc. then accept either a dotted key into that set (e.g.
 // "nav.master", "addButton") or a literal Playwright selector as a fallback.
@@ -34,7 +34,7 @@ function readKnowledgeFile(kind, name) {
   if (!fs.existsSync(filePath)) {
     throw new Error(
       `No ${kind.slice(0, -1)} definition "${name}". Expected: ${filePath}\n` +
-      `Add it under platform_core_data/browser/${kind}/ — see platform_core/tools/browser_driver/README.md.`
+      `Add it under platform_core_data/knowledge_base/browser/${kind}/ — see platform_core/tools/browser_driver/README.md.`
     );
   }
   const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -179,11 +179,11 @@ class BrowserDriver {
    * UI Knowledge Base baseline capture — ONE canonical, versioned screenshot per screen, distinct
    * from Discovery run evidence (which stays under artifacts/discovery/, per-run/temporary).
    *
-   * Idempotent: if platform_core_data/ui/screenshots/{screenName}.png already exists, this is a
+   * Idempotent: if platform_core_data/knowledge_base/ui/screenshots/{screenName}.png already exists, this is a
    * no-op (never overwrites) unless `opts.refresh` is explicitly true — refreshing is a deliberate,
    * human-approved action, never automatic.
    *
-   * Also creates/updates platform_core_data/browser/screens/{screenName}.json's `meta` block
+   * Also creates/updates platform_core_data/knowledge_base/browser/screens/{screenName}.json's `meta` block
    * (screenName, navigationPath, lastVerified, screenshot, accessRoles, pageTitle) without
    * touching any existing `locators` in that file.
    *

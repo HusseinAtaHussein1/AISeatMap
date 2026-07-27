@@ -18,7 +18,7 @@ It exists for the common case where a project has already been onboarded and exp
 | | |
 |---|---|
 | **Run Scope Type** | `User Story` (per `pipeline/run_scope.md` §3) |
-| **Run Scope Source** | Whatever this story is supplied as — pasted text, a Markdown file under `platform_core_data/resources/requirements/user_stories/`, or (once integrated) a tracked work item ID (`pipeline/run_scope.md` §4) |
+| **Run Scope Source** | Whatever this story is supplied as — pasted text, a Markdown file under `platform_core_data/knowledge_base/requirements/user_stories/`, or (once integrated) a tracked work item ID (`pipeline/run_scope.md` §4) |
 | **Module(s)** | Whatever module(s) the story's acceptance criteria touch — named explicitly in the story content, not assumed |
 
 Only this story's acceptance criteria are in scope for Stage 3's test design (`.claude/skills/test-design-skill/SKILL.md` §16, "User Story" strategy: "narrowest and most literal... no broader wandering into adjacent feature coverage the story didn't ask for"). This workflow does not widen that scope.
@@ -157,7 +157,7 @@ Per `workflows_and_pipelines/pipeline/pipeline.md` §7 ("Cross-run reuse"), this
 | Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | Reporting Agent |
 | Run Summary | `platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md` | Run Manager |
 
-`{{RUN_FOLDER}}` resolves to this run's own folder name, per `workflows_and_pipelines/pipeline/run_manager.md` §5.1 (e.g. `run-007__2026-07-27_11-20-33__UserStory__US-245_AddCabinClassFilter`) — see `platform_core_data/onboarding.md`.
+`{{RUN_FOLDER}}` resolves to this run's own folder name, per `workflows_and_pipelines/pipeline/run_manager.md` §5.1 (e.g. `run-007__2026-07-27_11-20-33__UserStory__US-245_AddCabinClassFilter`) — see `platform_core_data/knowledge_base/onboarding.md`.
 
 # 7. Success Criteria
 

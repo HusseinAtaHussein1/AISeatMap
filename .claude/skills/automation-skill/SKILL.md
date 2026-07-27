@@ -67,6 +67,10 @@ outputs:
     type: file_path
     location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md"
     description: "Detected stack, pinned dependency versions, Context7 queries performed, version-specific guidelines extracted, conflicts, and documentation gaps (§34) — written before any code generation begins."
+  - name: project_stack
+    type: file_path
+    location: "platform_core_data/knowledge_base/stack.md"
+    description: "The project's durable stack record — ecosystems, framework/version, pinned dependency table, and observed conventions (§34.4). Shared across runs and updated in place, unlike the per-run stack_documentation_context above."
 dependencies:
   - project-context-skill, explorer-skill, test-design-skill, manual-execution-skill (upstream skills)
   - Detected automation framework toolchain (Playwright, SHAFT/TestNG/Allure, Selenium, Cypress, Appium, REST Assured, or equivalent)
@@ -136,7 +140,7 @@ The Automation skill consumes only approved artifacts. Every input below must be
 | Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
 | Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This skill reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
 
-**This skill must never read the PRD directly** (`platform_core_data/PRD.md` or equivalent) — only Stage 1 is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
+**This skill must never read the PRD directly** (`platform_core_data/knowledge_base/PRD.md` or equivalent) — only Stage 1 is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
 
 # 5. Automation Planning Engine
 
@@ -452,6 +456,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 | Automation Decision Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md` |
 | Automation Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md` |
 | Stack Documentation Context (§34) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` |
+| Project Stack record (§34.4) | `platform_core_data/knowledge_base/stack.md` — durable, shared across runs, updated in place |
 | Automation Suite Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md` |
 | Automation Summary | `platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md` |
 
@@ -661,7 +666,7 @@ This is not a new category of judgment call — it is the existing discipline §
 
 ## 32.1 Registration
 
-Once a human designates a Reference Automation Project (path + a brief description of what it is), this skill persists it as durable project knowledge — e.g. `platform_core_data/reference_automation_project.md` — recording: the path, a one-time Architecture Summary (§32.4), and the standing read-only default (§32.2). This registration is a one-time analysis, not repeated every run — subsequent runs read the persisted file rather than re-inspecting the reference project's entire codebase from scratch, unless the human explicitly asks for a re-analysis.
+Once a human designates a Reference Automation Project (path + a brief description of what it is), this skill persists it as durable project knowledge — e.g. `platform_core_data/knowledge_base/reference_automation_project.md` — recording: the path, a one-time Architecture Summary (§32.4), and the standing read-only default (§32.2). This registration is a one-time analysis, not repeated every run — subsequent runs read the persisted file rather than re-inspecting the reference project's entire codebase from scratch, unless the human explicitly asks for a re-analysis.
 
 ## 32.2 Read-Only by Default
 
@@ -739,7 +744,7 @@ Automation written from model memory drifts from the stack it must actually run 
 The stack is discovered from the project under test and its resolved automation project, in both of the forms the project actually records it:
 
 1. **Source code** — dependency manifests and lockfiles (`package.json`/lockfiles, `pom.xml`, `build.gradle(.kts)`, `requirements.txt`, `pyproject.toml`/`poetry.lock`, `Pipfile.lock`, `*.csproj`, `Gemfile.lock`, `go.mod`, `composer.lock`) plus framework config (`playwright.config.*`, `testng.xml`, `cypress.config.*`, `pytest.ini`, SHAFT's `src/main/resources/properties/`). Run `node platform_core/tools/mcp/stack_docs/cli.js --root <resolved automation project> --json` for this — the shared extractor is the single source of truth for detection, exactly as `run_manager` is for run folder names. Never hand-assemble the dependency list when the tool can produce it.
-2. **Documentation** — the project's own stated stack: the approved Project Context's Technology Stack section, `platform_core_data/architecture.md`, `automation_framework.md`, `run_configuration.md`, `onboarding.md`.
+2. **Documentation** — the project's own stated stack: the approved Project Context's Technology Stack section, `platform_core_data/knowledge_base/architecture.md`, `automation_framework.md`, `run_configuration.md`, `onboarding.md`, and `stack.md` (what a prior run already detected, plus any Human Corrections recorded against it — read this before re-detecting, per §34.4).
 
 **The lockfile wins on version.** A manifest range (`^1.61.1`) is a constraint; the lockfile's resolved version is the fact, and it is the version documented. Where only a range exists, the artifact records it **as a range, flagged unpinned** — never presented as a resolved version.
 
@@ -749,15 +754,22 @@ Where the two sources disagree (documentation says Selenium, the manifests say P
 
 Per material library (§2.4 of `mcp/README.md` — what the generated code actually imports, not transitive dependencies): `resolve-library-id` with the name **plus the concrete question**, preferring a **version-specific library ID** whenever the version is pinned, then `query-docs` scoped to **one concept per call**. `stack_docs/planQueries.js` produces the concept list and the exact questions; a combined multi-concept query returns shallow results for each and is not how this step is performed.
 
-## 34.4 Output
+## 34.4 Output — one per-run artifact, one durable record
 
-One artifact per run, before generation: `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md`, containing Detected Stack, Dependency Table (library · resolved version · pinned? · source file · Context7 ID · queried?), Queries Performed, Guidelines Extracted, Conflicts, and Documentation Gaps — per `mcp/README.md` §2.5.
+**Per run, before generation:** `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md`, containing Detected Stack, Dependency Table (library · resolved version · pinned? · source file · Context7 ID · queried?), Queries Performed, Guidelines Extracted, Conflicts, and Documentation Gaps — per `mcp/README.md` §2.5.
+
+**Durable, shared across runs:** the same detection also updates `platform_core_data/knowledge_base/stack.md` **in place** — Detected At, Ecosystems, Automation Framework, Dependency Table, and Conventions Observed. The split follows the §10.4 rule that a run folder holds what happened *in that run* while `knowledge_base/` holds what is true of the *project*: which Context7 queries this run made is run history, whereas the stack those queries were about outlives the run. A later run reads `stack.md` first and re-detects to confirm rather than starting blind.
+
+Two rules govern writing it:
+
+- **Never silently overwrite a human correction.** `stack.md`'s Human Corrections section is authored by people. Where detection contradicts an entry there, the conflict is surfaced in the Automation Plan's Assumptions/Risks and at the §31 gate — the detected value does not replace the correction.
+- **Never write business logic, requirements, or application behavior into it.** It records the *toolchain*, and nothing that belongs in the Project Context or a Finding.
 
 The Automation Plan (§5) cites this artifact and records the version-specific guidelines that shaped generation. **A run against a pinned-version stack with zero queries performed and no recorded documentation gap is an incomplete Automation Plan** — the same standard §7 applies to an unjustified framework choice.
 
 ## 34.5 The approved project framework governs
 
-Fetched documentation is a **guideline input, never an authority over approved project standards.** Where Context7's idiomatic layout contradicts `platform_core_data/automation_framework.md` (e.g. an idiomatic Playwright structure against SHAFT's Pages/Locators/Tests/Data layering, or accessibility-first locators against the `Btn_`/`Txt_` prefix convention), the **approved framework wins**; the conflict goes in the artifact's Conflicts row and the Plan's Assumptions/Risks, resolved by a human exactly as that document's Gap Resolution Rule requires. Fetched docs never license redesigning an approved framework, and never appear as justification for a coverage decision, a Finding, or a test case's existence — they are outside the traceability chain (§12).
+Fetched documentation is a **guideline input, never an authority over approved project standards.** Where Context7's idiomatic layout contradicts `platform_core_data/knowledge_base/automation_framework.md` (e.g. an idiomatic Playwright structure against SHAFT's Pages/Locators/Tests/Data layering, or accessibility-first locators against the `Btn_`/`Txt_` prefix convention), the **approved framework wins**; the conflict goes in the artifact's Conflicts row and the Plan's Assumptions/Risks, resolved by a human exactly as that document's Gap Resolution Rule requires. Fetched docs never license redesigning an approved framework, and never appear as justification for a coverage decision, a Finding, or a test case's existence — they are outside the traceability chain (§12).
 
 ## 34.6 Stop conditions
 

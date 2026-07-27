@@ -201,17 +201,20 @@ test('an existing platform_core_data is never overwritten, even with --force', (
   const t = makeTarget(PLAYWRIGHT_APP);
   try {
     const dataRoot = path.join(t.root, 'agentic-testing-tool', 'platform_core_data');
-    fs.mkdirSync(dataRoot, { recursive: true });
-    fs.writeFileSync(path.join(dataRoot, 'PRD.md'), '# OUR REAL REQUIREMENTS\n');
+    fs.mkdirSync(path.join(dataRoot, 'knowledge_base'), { recursive: true });
+    fs.writeFileSync(path.join(dataRoot, 'knowledge_base', 'PRD.md'), '# OUR REAL REQUIREMENTS\n');
 
     const p = plan(t.root, { force: true });
 
-    const touchesPrd = p.operations.some((o) => (o.to || '').endsWith('platform_core_data/PRD.md'));
+    const touchesPrd = p.operations.some((o) => (o.to || '').endsWith('platform_core_data/knowledge_base/PRD.md'));
     assert.equal(touchesPrd, false, 'an existing PRD must never be planned for a write');
     assert.ok(p.notes.some((n) => n.includes('will not be touched')));
 
     applyPlan(p, { now: NOW });
-    assert.equal(fs.readFileSync(path.join(dataRoot, 'PRD.md'), 'utf8'), '# OUR REAL REQUIREMENTS\n');
+    assert.equal(
+      fs.readFileSync(path.join(dataRoot, 'knowledge_base', 'PRD.md'), 'utf8'),
+      '# OUR REAL REQUIREMENTS\n',
+    );
   } finally {
     t.cleanup();
   }
@@ -255,7 +258,7 @@ test('a full install produces a working, resolvable installation', () => {
     assert.ok(fs.existsSync(path.join(tool, 'platform.config.json')));
     assert.ok(fs.existsSync(path.join(tool, 'platform_core', 'tools', 'platform_paths', 'paths.js')));
     assert.ok(fs.existsSync(path.join(tool, 'workflows_and_pipelines', 'pipeline', 'pipeline.md')));
-    assert.ok(fs.existsSync(path.join(tool, 'platform_core_data', 'PRD.md')));
+    assert.ok(fs.existsSync(path.join(tool, 'platform_core_data', 'knowledge_base', 'PRD.md')));
     assert.ok(fs.existsSync(path.join(t.root, '.claude', 'skills', 'explorer-skill', 'SKILL.md')));
     assert.ok(fs.existsSync(path.join(t.root, '.mcp.json')));
 
@@ -321,7 +324,7 @@ test('a re-install is a no-op for content: the second run changes nothing', () =
     const before = {
       gitignore: snapshot('.gitignore'),
       mcp: snapshot('.mcp.json'),
-      prd: snapshot('agentic-testing-tool/platform_core_data/PRD.md'),
+      prd: snapshot('agentic-testing-tool/platform_core_data/knowledge_base/PRD.md'),
       config: snapshot('agentic-testing-tool/platform.config.json'),
     };
 
@@ -330,7 +333,7 @@ test('a re-install is a no-op for content: the second run changes nothing', () =
     assert.equal(second.plan.reinstall, true, 'the prior manifest is detected');
     assert.equal(snapshot('.gitignore'), before.gitignore, '.gitignore must not drift on re-install');
     assert.equal(snapshot('.mcp.json'), before.mcp);
-    assert.equal(snapshot('agentic-testing-tool/platform_core_data/PRD.md'), before.prd);
+    assert.equal(snapshot('agentic-testing-tool/platform_core_data/knowledge_base/PRD.md'), before.prd);
     assert.equal(snapshot('agentic-testing-tool/platform.config.json'), before.config);
   } finally {
     t.cleanup();

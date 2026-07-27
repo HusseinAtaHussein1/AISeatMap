@@ -38,38 +38,35 @@ const SKILL_NAMES = [
 const DATA_DIRS = [
   'runs',
   'automation_baseline',
-  'knowledge_base/application',
-  'knowledge_base/automation',
+  // Everything shared across runs lives under knowledge_base/ (pipeline.md §10.4). A run folder is
+  // immutable and scoped to one execution, so anything true of the *project* — inputs, locator
+  // knowledge, credentials, supporting requirements — belongs here instead.
+  // Knowledge categories. Seven of the original nine (`execution/`, `findings/`, `repair/`, `ui/`,
+  // `application/`, `automation/`, plus the supporting `notes/`) were removed on 2026-07-27: each
+  // had stood empty since the platform's inception, and the writes that named them now stay in the
+  // producing run's own folder (see pipeline.md §10.3). Only the two categories that hold knowledge
+  // no run folder can carry remain.
   'knowledge_base/business_rules',
-  'knowledge_base/execution',
-  'knowledge_base/findings',
   'knowledge_base/lessons_learned',
-  'knowledge_base/repair',
-  'knowledge_base/ui',
-  'browser/screens',
-  'browser/components',
-  'browser/pages',
-  'credentials',
-  'ui/screenshots',
-  'resources/requirements/user_stories',
-  'resources/requirements/features',
-  'resources/requirements/epics',
-  'resources/requirements/bugs',
-  'resources/requirements/specifications',
-  'resources/api/postman',
-  'resources/api/swagger',
-  'resources/TestData',
-  'resources/Documents',
-  'resources/Records',
-  'resources/diagrams',
-  'resources/external_links',
-  'resources/notes',
-  'resources/sample_data',
-  'resources/screenshots',
-  'resources/credentials',
-];
+  'knowledge_base/browser/screens',
+  'knowledge_base/browser/components',
+  'knowledge_base/credentials',
+  'knowledge_base/requirements/user_stories',
+  'knowledge_base/requirements/features',
+  'knowledge_base/requirements/epics',
+  'knowledge_base/requirements/bugs',
+  'knowledge_base/requirements/specifications',
+  'knowledge_base/api/postman',
+  'knowledge_base/api/swagger',
+  'knowledge_base/diagrams',
+  ];
 
-/** Input documents scaffolded blank at install; the human fills them in. */
+/**
+ * Documents scaffolded at install under knowledge_base/, the shared-across-runs layer.
+ *
+ * All but `stack.md` are human-authored inputs. `stack.md` is scaffolded blank and then written by
+ * Stage 5 — it is generated, but durable across runs, so it lives here rather than in a run folder.
+ */
 const DATA_TEMPLATES = [
   'PRD.md',
   'PRD_UserStories.md',
@@ -79,6 +76,7 @@ const DATA_TEMPLATES = [
   'onboarding.md',
   'automation_framework.md',
   'reference_automation_project.md',
+  'stack.md',
 ];
 
 class InitError extends Error {
@@ -236,17 +234,22 @@ function buildPlan(opts) {
   }
 
   for (const file of DATA_TEMPLATES) {
-    const abs = path.join(dataRoot, file);
+    const abs = path.join(dataRoot, 'knowledge_base', file);
     if (fsImpl.existsSync(abs)) continue;
     operations.push({
       op: 'write-template',
       template: file,
       to: toPosix(abs),
-      reason: 'blank input document for the team to fill in',
+      reason:
+        file === 'stack.md'
+          ? 'blank stack record — written by Stage 5, shared across every run'
+          : 'blank input document for the team to fill in',
     });
   }
 
-  const credentialsTemplate = path.join(dataRoot, 'credentials', 'credentials.template.json');
+  const credentialsTemplate = path.join(
+    dataRoot, 'knowledge_base', 'credentials', 'credentials.template.json',
+  );
   if (!fsImpl.existsSync(credentialsTemplate)) {
     operations.push({
       op: 'write-template',

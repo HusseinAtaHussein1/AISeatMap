@@ -8,6 +8,6 @@
 
 Empty categories (`automation_patterns/`, `diagnosis_patterns/`, `execution_patterns/`, `framework_patterns/`, `reporting/`) have no promoted documents yet — see `workflows_and_pipelines/pipeline/pipeline.md` §10.5 for how a document arrives here.
 
-`pipeline_decision_patterns/` and `diagnosis/` are intentionally excluded from that list: neither has a defined reader in `pipeline.md` §10.7 nor a project-level counterpart folder to promote from, so neither can yet participate in the Promotion Workflow at all — see `README.md`. (`diagnosis/` was relocated into this layer from the project-scoped `knowledge_base/diagnosis/` on 2026-07-26, arriving empty.)
+`pipeline_decision_patterns/` is intentionally excluded from that list: it has no defined reader in `pipeline.md` §10.7 and no project-level counterpart folder to promote from, so it cannot yet participate in the Promotion Workflow at all — see `README.md`. (A separate, empty `diagnosis/` folder was relocated into this layer on 2026-07-26 and folded into `diagnosis_patterns/` on 2026-07-27.)
 
 This index catalogs the **Platform Knowledge** layer only. Although this folder is nested inside `platform_core_data/knowledge_base/` as of 2026-07-26, the surrounding project-scoped folders are a separate layer with their own `../INDEX.md` — see `pipeline.md` §10.1 and §10.6.

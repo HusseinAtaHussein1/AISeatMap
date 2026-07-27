@@ -625,23 +625,24 @@ A report is never issued above 95% before the repair is actually rerun and confi
 
 **A two-layer, cross-run store of repair patterns, per the Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10) — distinct from `.claude/skills/automation-skill/SKILL.md` §11's "Automation Knowledge Base," which is reusable *code assets* within one project's package.** This one is reusable *repair reasoning*: what failure pattern, what fix worked, under what conditions.
 
-- **Project Knowledge (default write target):** `platform_core_data/knowledge_base/repair/REP-{NNN}.md` — this project's own execution-confirmed repair records.
+- **This run's record (always written):** the Repair Summary in `platform_core_data/runs/{{RUN_FOLDER}}/execution/` — the full per-execution narrative of what failed, what was tried, and what worked.
 - **Platform Knowledge (read always; written only via Promotion):** `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-{NNN}.md` and `platform_core_data/knowledge_base/patterns/reasoning/REASON-{NNN}.md` — generalized, cross-project repair/reasoning patterns.
 
-Every read consults both layers, in the fixed order of `workflows_and_pipelines/pipeline/pipeline.md` §10.2 (Platform Knowledge, then the current project's Knowledge). Every write, by default, targets only the current project's `knowledge_base/repair/` — never `platform_core_data/knowledge_base/patterns/` directly, per §10.5's Promotion Workflow below.
+> **Revision (2026-07-27, user-mandated):** there is no longer a project-scoped `knowledge_base/repair/` layer. It was removed along with `execution/`, `findings/`, and `ui/` — all four had stood empty since the platform's inception, and a write target that is never read is a place for knowledge to go and be forgotten. A confirmed repair is now recorded **once**, in the producing run's Repair Summary, and carried across runs only by passing the §28.2 Promotion gate into `patterns/`. The trade-off is deliberate and worth stating plainly: an unpromoted repair is no longer discoverable from a later run, so **Promotion is now the only mechanism for cross-run repair memory** — §28.2's question matters more than it did when a project-scoped fallback existed.
+
+Every read consults Platform Knowledge (`pipeline.md` §10.2) plus the Repair Summaries of prior runs. Writes never touch `platform_core_data/knowledge_base/patterns/` directly, per §10.5's Promotion Workflow below.
 
 ## 28.1 Write rule — confirmed repairs only
 
 **A rule is written or updated at exactly one point: §25.4, for a test in the Fixed column.** Never for a proposed-but-unexecuted repair, never for a repair attempt that remained in Remaining Failures or introduced a New Failure. "Do not learn from failed repairs" is absolute — a repair that looked high-confidence and still didn't work contributes nothing to the Knowledge Base, however plausible the original Reasoning was.
 
-The rule is written into the current project's `knowledge_base/repair/` (schema, §28.2). Once written, evaluate whether it also qualifies for Promotion (§28.2a) — that is a separate, explicit step, never bundled silently into the same write.
+The confirmed repair is recorded in this run's Repair Summary (schema, §28.2). Once recorded, evaluate whether it qualifies for Promotion to Platform Knowledge (§28.2) — a separate, explicit step, never bundled silently into the same write.
 
-## 28.2 Project-level rule schema
+## 28.2 Recording a confirmed repair, and Promotion to Platform Knowledge
+
+Each confirmed repair is recorded in this run's Repair Summary with enough detail to stand alone:
 
 ```
-ID:
-REP-{NNN}
-
 Implements Platform Pattern:
 {Platform Pattern ID, e.g. REPAIR-{NNN} or REASON-{NNN} — or "none yet" if this is a
 new, not-yet-generalized pattern}
@@ -650,14 +651,12 @@ Execution Context:
 {Execution ID(s), suite, Test Case ID(s)}
 
 What Happened:
-{the failure pattern this rule addresses and the fix that worked, in this project's own terms}
+{the failure pattern addressed and the fix that worked, in this project's own terms}
 ```
 
-A second, later execution within the same project confirming the same pattern updates the existing project-level rule's Execution Context rather than creating a duplicate.
+Then propose promotion (per `workflows_and_pipelines/pipeline/pipeline.md` §10.5) when the pattern is genuinely reusable beyond this one application (e.g., a synchronization strategy, a locator-recovery technique, a framework-level hazard) — never for something tied to this application's own specific behavior. Ask exactly once, per §10.5's exact question.
 
-### 28.2a Promotion to Platform Knowledge
-
-After writing a project-level rule, propose promotion (per `workflows_and_pipelines/pipeline/pipeline.md` §10.5) when the pattern is genuinely reusable beyond this one application (e.g., a synchronization strategy, a locator-recovery technique, a framework-level hazard) — never for something tied to this application's own specific behavior. Ask exactly once, per §10.5's exact question. If approved:
+**Because the project-scoped layer is gone, a declined promotion means the repair lives only in this run's Repair Summary.** That is the intended behavior, not an oversight — but it makes the judgment call real: a genuinely reusable pattern left unpromoted will be rediscovered the hard way, by failing again in a later run. If approved:
 
 ```
 ID:
@@ -676,26 +675,27 @@ Confidence:
 Confirmed by {N} execution(s), across {M} project(s)
 
 Confirmed In:
-{project-level rule ID(s) backing this, e.g. "[[NDC/REP-001]]"}
+{the run folder(s) and Execution ID(s) whose Repair Summary backs this,
+e.g. "run-004__2026-07-27_14-30-05__Smoke__Login / EXEC-002"}
 ```
 
-A second project independently confirming the same Platform pattern increments its confirmation count and appends its own project-level rule as an additional "Confirmed In" entry — it does not create a duplicate Platform document, and the detailed per-execution narrative stays in the project-level record, never copied into the Platform document (avoiding duplication across layers).
+A later run independently confirming the same Platform pattern increments its confirmation count and appends its own run reference as an additional "Confirmed In" entry — it does not create a duplicate Platform document, and the detailed per-execution narrative stays in that run's Repair Summary, never copied into the Platform document (avoiding duplication across layers).
 
 ## 28.3 Read rule — consult before creating something new
 
-- **Automation Execution skill (§25.1)**: before proposing a new repair strategy, check both layers — Platform Knowledge (`platform_core_data/knowledge_base/patterns/repair_patterns/`, `platform_core_data/knowledge_base/patterns/reasoning/`) first, then the current project's `knowledge_base/repair/` — for a matching rule; if found, include it as a candidate option (§26.1), explicitly cited by ID.
-- **Automation skill**: before generating any new automation (`.claude/skills/automation-skill/SKILL.md` §5, §11), consult both layers for patterns relevant to the flows being automated (e.g., a Login suite consults any rule tagged "Authentication flows") and applies a matching rule's approach proactively, rather than waiting to discover the same failure via execution again.
+- **Automation Execution skill (§25.1)**: before proposing a new repair strategy, check Platform Knowledge (`platform_core_data/knowledge_base/patterns/repair_patterns/`, `platform_core_data/knowledge_base/patterns/reasoning/`) for a matching rule, then this project's prior-run Repair Summaries under `platform_core_data/runs/*/execution/`; if found, include it as a candidate option (§26.1), explicitly cited by ID or by run reference.
+- **Automation skill**: before generating any new automation (`.claude/skills/automation-skill/SKILL.md` §5, §11), consult Platform Knowledge for patterns relevant to the flows being automated (e.g., a Login suite consults any rule tagged "Authentication flows") and applies a matching rule's approach proactively, rather than waiting to discover the same failure via execution again.
 
 ## 28.4 Explainability
 
-Every rule, at either layer, must remain independently reviewable — a human reading one entry, with no other context, can tell what problem it solves, what fix worked, where it generalizes, and which real executions back it. A rule that can't be explained this plainly is not ready to be written. A Platform-layer rule must additionally be reviewable *without* opening the project-level record it came from — its Problem/Strategy/Applicable Conditions must stand on their own, generalized, with the project record cited only as supporting evidence, not as required context.
+Every recorded repair and every Platform rule must remain independently reviewable — a human reading one entry, with no other context, can tell what problem it solves, what fix worked, where it generalizes, and which real executions back it. A rule that can't be explained this plainly is not ready to be written. A Platform-layer rule must additionally be reviewable *without* opening the run whose Repair Summary it came from — its Problem/Strategy/Applicable Conditions must stand on their own, generalized, with the run cited only as supporting evidence, not as required context.
 
 # 29. Explainability & Platform Rules
 
 The platform must always be able to answer, for any repair, past or present:
 
 - **Why was this repair chosen?** — the Repair Confidence Report's Root Cause + Reasoning (§27.1).
-- **Which previous executions support it?** — the Knowledge Base rule's Source Executions (§28.2), if one was reused, or "none — first occurrence" if not.
+- **Which previous executions support it?** — the Platform pattern's Confirmed In entries (§28.2), if one was reused, or "none — first occurrence" if not.
 - **What confidence does it have?** — the Repair Confidence Report's Confidence field, always a percentage traceable to §27.2's factors.
 - **Which rule was reused?** — the cited Rule ID (§26.1), or "none — new pattern" if this repair created new knowledge rather than reusing it.
 

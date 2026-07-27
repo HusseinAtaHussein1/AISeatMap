@@ -118,7 +118,7 @@ npx agentic-testing doctor       # resolved roots + an ordered trace of every de
 
 ## 3. Prepare Your Inputs
 
-`init` scaffolds blank input documents under `agentic-testing-tool/platform_core_data/`. Fill them in this order:
+`init` scaffolds blank input documents under `agentic-testing-tool/platform_core_data/knowledge_base/` — the single home for everything shared across runs. Fill them in this order:
 
 | # | File | What it holds | Required by |
 |---|---|---|---|
@@ -126,10 +126,11 @@ npx agentic-testing doctor       # resolved roots + an ordered trace of every de
 | 2 | `run_configuration.md` | target URL, environment, credentials location, in-scope modules | Stage 1 |
 | 3 | `architecture.md` | architecture of the application under test | optional context |
 | 4 | `glossary.md` | domain terminology | optional context |
+| — | `stack.md` | detected framework + pinned dependency versions | **written for you** by Stage 5 — edit only to correct it |
 
 They ship **blank rather than pre-filled** on purpose: Stage 1 reads the PRD as approved truth and cannot tell a real requirement from a plausible-looking placeholder.
 
-Supporting material goes under `platform_core_data/resources/` — requirements organized by type (`epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/`), plus `api/`, `diagrams/`, `screenshots/`, `sample_data/`, and `notes/`.
+Supporting material goes under `platform_core_data/knowledge_base/` alongside the inputs — `requirements/` organized by type (`epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/`), plus `api/{swagger,postman}/` and `diagrams/`.
 
 > **Only Stage 1 reads the PRD.** Once the Project Context is approved, every downstream stage treats *that* — not the requirements document — as the source of truth for what the product should do. If the PRD changes, you re-run Stage 1; you don't hand the PRD to Stage 3.
 
@@ -143,12 +144,12 @@ Skip this section if your target has no live browser to explore.
 
 The Browser Driver is the scripted, credential-aware engine. Set it up per [`platform_core/tools/browser_driver/README.md`](../platform_core/tools/browser_driver/README.md):
 
-1. Create `platform_core_data/browser/profile.json` — login selectors plus a post-login success signal.
-2. Copy `platform_core_data/credentials/credentials.template.json` → `credentials.json` and fill in real values.
+1. Create `platform_core_data/knowledge_base/browser/profile.json` — login selectors plus a post-login success signal.
+2. Copy `platform_core_data/knowledge_base/credentials/credentials.template.json` → `credentials.json` and fill in real values.
 
 `credentials.json` is git-ignored by two overlapping rules. **Never commit it.** Only the template, with placeholder values, is ever committed.
 
-Both browser mechanisms default to **headless** — with one deliberate exception: **Stage 4 (Manual Execution) runs headed**, so you can watch each test step execute against the live app in real time. That is configured, not opt-in: `browser.headlessByStage` in `platform_core_data/browser/profile.json` maps `manual_execution` to `false`. Everywhere else, headed is an explicit opt-in — useful when you're debugging a locator, not something a run should depend on.
+Both browser mechanisms default to **headless** — with one deliberate exception: **Stage 4 (Manual Execution) runs headed**, so you can watch each test step execute against the live app in real time. That is configured, not opt-in: `browser.headlessByStage` in `platform_core_data/knowledge_base/browser/profile.json` maps `manual_execution` to `false`. Everywhere else, headed is an explicit opt-in — useful when you're debugging a locator, not something a run should depend on.
 
 ### 4.2 The two MCP servers
 
@@ -334,7 +335,7 @@ Pointing the platform at a different application means running `init` in that re
 
 If you reuse an installation in place, two things matter:
 
-- **`platform_core_data/` is never overwritten** by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far. Clearing `workspace/` and `runs/` is your decision, not the installer's.
+- **`platform_core_data/` is never overwritten** by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far. Clearing `runs/` is your decision, not the installer's.
 - **`knowledge_base/patterns/` survives retargeting by design.** It is Platform Knowledge — accumulated engineering knowledge, application-agnostic. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you're leaving behind.
 
 ### The two knowledge layers
@@ -342,7 +343,7 @@ If you reuse an installation in place, two things matter:
 | Layer | Location | Contains |
 |---|---|---|
 | **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting |
-| **Project Knowledge** | `platform_core_data/knowledge_base/` | business rules, UI observations, findings, and execution/repair history for *this* application |
+| **Project Knowledge** | `platform_core_data/knowledge_base/business_rules/`, `lessons_learned/` | this application's own business rules and cross-run lessons — the other seven categories were removed 2026-07-27; that output stays in each run's own folder |
 
 Every stage resolves **Platform Knowledge first, then Project Knowledge**, and merges both. Knowledge is written project-scoped by default; moving something to the Platform layer is a **Promotion**, and requires your explicit approval — asked exactly once, and not re-proposed on every subsequent run if you decline.
 
@@ -359,7 +360,7 @@ Every stage resolves **Platform Knowledge first, then Project Knowledge**, and m
 | `configVersion mismatch` | tool and config are different generations | the error names whether to upgrade the platform or migrate the config; it is deliberately a hard error, never a best-effort read |
 | MCP tools unavailable | project-scoped `.mcp.json` not yet approved | run `/mcp` once per machine |
 | Browser opens when you expected none | Stage 4 (Manual Execution) is headed by design, or headed was explicitly opted into | Stage 4 runs headed on purpose — see `browser.headlessByStage` in `profile.json`. For any other stage, headless is the default; check `profile.json` and the `.mcp.json` `--headless` flag |
-| `.env` or credentials unreadable | the built-in read denylist | working as designed. `readDenylist` **merges with**, never replaces, a non-overridable list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/credentials/credentials.json` |
+| `.env` or credentials unreadable | the built-in read denylist | working as designed. `readDenylist` **merges with**, never replaces, a non-overridable list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/knowledge_base/credentials/credentials.json` |
 | A stage halts citing a missing input | upstream artifact absent | either produce it, or invoke the skill directly to run degraded — see [§6](#6-calling-a-single-skill-directly) |
 | Machine-specific paths need overriding | shared config is committed | use `platform.config.local.json` — gitignored, shallow-merges over the base |
 

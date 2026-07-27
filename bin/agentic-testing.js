@@ -192,8 +192,8 @@ async function cmdInit(args) {
   console.log(`Installed into ${plan.toolRoot}`);
   console.log('');
   console.log('Next steps:');
-  console.log(`  1. Fill in ${plan.toolDir}/platform_core_data/PRD.md — the approved requirements.`);
-  console.log(`  2. Fill in ${plan.toolDir}/platform_core_data/run_configuration.md — environment and scope.`);
+  console.log(`  1. Fill in ${plan.toolDir}/platform_core_data/knowledge_base/PRD.md — the approved requirements.`);
+  console.log(`  2. Fill in ${plan.toolDir}/platform_core_data/knowledge_base/run_configuration.md — environment and scope.`);
   console.log('  3. Run /project-context-skill to produce the Project Context, then review it.');
   console.log('');
   console.log(`Approve the MCP servers once per machine with /mcp, and run \`npx playwright install chromium\`.`);

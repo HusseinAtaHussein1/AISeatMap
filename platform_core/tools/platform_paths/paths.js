@@ -33,7 +33,7 @@ const MODES = ['installed', 'self-hosted'];
 /**
  * Secret-bearing patterns the platform must never read out of the Target Project. Merged with —
  * never replaced by — `target.readDenylist` from config (pipeline.md §13.2). Credentials reach the
- * platform only via platform_core_data/credentials/credentials.json.
+ * platform only via platform_core_data/knowledge_base/credentials/credentials.json.
  */
 const BUILTIN_READ_DENYLIST = Object.freeze([
   '.env',

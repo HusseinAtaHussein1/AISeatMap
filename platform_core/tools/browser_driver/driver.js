@@ -13,11 +13,11 @@
 //   Automation baseline      -> platform_core_data/automation_baseline/  (the persistent Workspace
 //                                                                  Automation Baseline, per framework —
 //                                                                  it outlives any single run)
-//   Browser Driver config    -> platform_core_data/browser/       (Stage 2 exploration tooling —
+//   Browser Driver config    -> platform_core_data/knowledge_base/browser/       (Stage 2 exploration tooling —
 //                                                                  NOT Stage 5 output; kept out of any
 //                                                                  "automation" folder to avoid two
 //                                                                  unrelated concepts sharing a name)
-//   Credentials              -> platform_core_data/credentials/   (git-ignored, never committed)
+//   Credentials              -> platform_core_data/knowledge_base/credentials/   (git-ignored, never committed)
 //
 // This module is intentionally low-level and intentionally narrow: it knows how to load the
 // Browser Profile (browser init + login mechanics ONLY — see profile.json's own
@@ -31,15 +31,15 @@
 // touch the Playwright API surface directly.
 //
 // SECURITY CONTRACT (do not weaken without updating tools/browser_driver/README.md):
-//   - The Browser Profile (platform_core_data/browser/profile.json) contains ONLY
+//   - The Browser Profile (platform_core_data/knowledge_base/browser/profile.json) contains ONLY
 //     non-secret structural configuration — defaultBaseUrl, browser settings, login
 //     selectors/flow — and is versioned in this repo. It must stay small and stable; it is NOT a
 //     place to accumulate screen/menu/table/dialog locators (see api.js) — those live in
-//     platform_core_data/browser/screens/ and .../components/.
-//   - Credentials live at platform_core_data/credentials/credentials.json, resolved from the
+//     platform_core_data/knowledge_base/browser/screens/ and .../components/.
+//   - Credentials live at platform_core_data/knowledge_base/credentials/credentials.json, resolved from the
 //     single project root — callers never need to pass a path. That file is real, secret, and
-//     git-ignored (both a repo-root rule and a local platform_core_data/credentials/.gitignore)
-//     — it is NEVER committed. A non-secret platform_core_data/credentials/credentials.template.json
+//     git-ignored (both a repo-root rule and a local platform_core_data/knowledge_base/credentials/.gitignore)
+//     — it is NEVER committed. A non-secret platform_core_data/knowledge_base/credentials/credentials.template.json
 //     is committed and shows the expected shape; a human copies it and fills in real values.
 //   - The agent must not create or read this file itself — only this module (a plain Node
 //     script the agent runs) reads it, and only at runtime.
@@ -64,18 +64,24 @@ function dataRoot() {
   return resolveRoots().dataRoot;
 }
 
+// Everything this driver resolves is shared across runs, so all of it sits under knowledge_base/
+// rather than at the data root (pipeline.md §10.4).
+function knowledgeBase() {
+  return path.join(dataRoot(), 'knowledge_base');
+}
+
 function projectBrowserDir() {
-  return path.join(dataRoot(), 'browser');
+  return path.join(knowledgeBase(), 'browser');
 }
 
 function projectCredentialsPath() {
-  return path.join(dataRoot(), 'credentials', 'credentials.json');
+  return path.join(knowledgeBase(), 'credentials', 'credentials.json');
 }
 
 // UI Knowledge Base — canonical, versioned baseline screenshots + screen metadata. Distinct from
 // Discovery run evidence (platform_core_data/runs/{{RUN_FOLDER}}/discovery/...), which stays per-run/temporary.
 function projectUiScreenshotsDir() {
-  return path.join(dataRoot(), 'ui', 'screenshots');
+  return path.join(knowledgeBase(), 'ui', 'screenshots');
 }
 
 function loadProfile() {
@@ -83,7 +89,7 @@ function loadProfile() {
   if (!fs.existsSync(profilePath)) {
     throw new Error(
       `No browser profile found. Expected: ${profilePath}\n` +
-      `Create it at platform_core_data/browser/profile.json — see ` +
+      `Create it at platform_core_data/knowledge_base/browser/profile.json — see ` +
       `platform_core/tools/browser_driver/README.md.`
     );
   }
@@ -91,7 +97,7 @@ function loadProfile() {
 }
 
 /**
- * Loads the credentials file (platform_core_data/credentials/credentials.json, unless
+ * Loads the credentials file (platform_core_data/knowledge_base/credentials/credentials.json, unless
  * `credentialsPathOverride` is given) and resolves which environment block to use.
  * Supported shapes (see tools/browser_driver/README.md):
  *   1. { "environment": "STG", "username": "...", "password": "...", "baseUrl": "..." }
@@ -108,9 +114,9 @@ function loadCredentials(envOverride, credentialsPathOverride) {
     throw new Error(
       `Credentials file not found: ${credentialsPath}\n` +
       `Create it yourself (not via the agent) by copying ` +
-      `platform_core_data/credentials/credentials.template.json to credentials.json in that ` +
+      `platform_core_data/knowledge_base/credentials/credentials.template.json to credentials.json in that ` +
       `same folder and filling in real values — see tools/browser_driver/README.md and ` +
-      `platform_core_data/credentials/README.md.`
+      `platform_core_data/knowledge_base/credentials/README.md.`
     );
   }
   const parsed = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
@@ -154,7 +160,7 @@ function loadCredentials(envOverride, credentialsPathOverride) {
  * @param {string} [opts.env] - environment label, e.g. "STG" | "PREPROD" | "PROD" — overrides
  *   whatever the credentials file names itself; omit to let the credentials file decide.
  * @param {string} [opts.credentialsPath] - override the auto-resolved
- *   platform_core_data/credentials/credentials.json path; only needed for edge cases (e.g. tests).
+ *   platform_core_data/knowledge_base/credentials/credentials.json path; only needed for edge cases (e.g. tests).
  * @param {boolean} [opts.headless] - overrides both the per-stage and global defaults when given
  * @param {string} [opts.stage] - pipeline stage label, e.g. "manual_execution". Selects a
  *   per-stage display-mode default from the profile's `browser.headlessByStage` map, so a stage

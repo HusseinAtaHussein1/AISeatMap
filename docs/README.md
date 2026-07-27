@@ -241,10 +241,11 @@ agentic-ai-testing-platform/
 │
 ├── platform_core_data/         (THE hosted project — one at a time, no project-name segment)
 │   ├── README.md
-│   ├── PRD.md · run_configuration.md · architecture.md · glossary.md · onboarding.md
-│   ├── resources/ · knowledge_base/ · browser/ · credentials/ · ui/
-│   ├── workspace/              (current-approved state, one folder per stage)
-│   └── runs/                   (immutable per-run snapshots)
+│   ├── knowledge_base/         (shared across runs: PRD.md, run_configuration.md, stack.md,
+│   │                            architecture.md, glossary.md, onboarding.md, requirements/,
+│   │                            browser/, credentials/, ui/, patterns/, and the knowledge categories)
+│   ├── runs/                   (immutable per-run snapshots — every stage artifact)
+│   └── automation_baseline/     (persistent generated automation code)
 │
 ├── docs/
 │   ├── README.md
@@ -296,15 +297,16 @@ The platform hosts one application at a time, and everything known about it live
 
 ```text
 platform_core_data/
-├── PRD.md
-├── onboarding.md
-├── architecture.md
-├── glossary.md
-├── run_configuration.md
-├── resources/
-├── knowledge_base/
-├── workspace/          (generated outputs live here — see below)
-└── runs/
+└── knowledge_base/     (everything shared across runs)
+    ├── PRD.md · PRD_UserStories.md · run_configuration.md   (Stage 1 inputs)
+    ├── onboarding.md · architecture.md · glossary.md
+    ├── automation_framework.md · reference_automation_project.md
+    ├── stack.md                        (written by Stage 5, durable)
+    ├── requirements/ · api/ · diagrams/ · notes/
+    ├── browser/ · credentials/ · ui/screenshots/
+    ├── repair/ · execution/ · automation/ · application/ · ui/
+    ├── findings/ · lessons_learned/ · business_rules/
+    └── patterns/                       (Platform Knowledge — separate layer)
 ```
 
 Project Knowledge represents the permanent understanding of an application.
@@ -320,23 +322,24 @@ Generated outputs never modify the original project knowledge. The hosted projec
 ```text
 platform_core_data/
 
-    ├── PRD.md              # Project Knowledge — a Stage 1 input, not a generated artifact
+    ├── knowledge_base/         # shared across runs — inputs and knowledge, never per-run output
+    │   └── PRD.md              #   a Stage 1 input, not a generated artifact
 
-    └── workspace/          # pipeline-stage outputs only — nothing here duplicates project knowledge
+    ├── runs/                   # every stage artifact lives in its own run folder
+    │   ├── run-001__2026-07-27_09-15-00__UserStory__Login/
+    │   │   ├── metadata/       #   run.json · run_summary.md · RunManifest.md
+    │   │   ├── context/        #   ProjectContext.md
+    │   │   ├── discovery/      #   QA_Assessment_Report.md · Timeline.md · findings/
+    │   │   ├── test_design/    #   TestCases_*.md/.xlsx · TraceabilityMatrix.md
+    │   │   ├── manual_execution/
+    │   │   ├── automation/     #   plans/manifests/reports (temporary working copy of the code)
+    │   │   ├── execution/
+    │   │   └── reporting/      #   Final_QA_Report.md
+    │   ├── run-002__.../
+    │   └── run-003__.../
 
-        ├── context/
-        ├── discovery/
-        ├── test_design/
-        ├── automation/
-        ├── execution/
-        ├── reporting/
-        ├── pipeline/       # Run Manifest — approval/checkpoint state only
-
-        └── runs/
-
-            ├── RUN-001/
-            ├── RUN-002/
-            └── RUN-003/
+    └── automation_baseline/    # generated automation CODE — outlives the run that produced it
+        └── {framework}/tests_{Framework}/
 ```
 
 Each run is fully isolated and versioned.

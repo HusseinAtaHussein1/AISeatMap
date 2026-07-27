@@ -104,7 +104,7 @@ _The modules this run covers. Everything else is out of scope for this run._
 
 ## Credentials
 
-Credentials live in \`platform_core_data/credentials/credentials.json\`, created by a human from
+Credentials live in \`platform_core_data/knowledge_base/credentials/credentials.json\`, created by a human from
 \`credentials.template.json\`. That file is git-ignored and its values are never written into any
 artifact, never typed into a tool call, and never echoed in a report.
 
@@ -219,6 +219,66 @@ structure, Page Object pattern, base classes, driver initialization, test data s
 management, reporting solution, naming conventions, reusable utilities._
 `;
 
+const STACK = `# Detected Stack
+
+> **Generated, then durable.** Unlike every other document in this folder, this one is written by the
+> platform rather than by a human — Stage 5 (Automation) resolves the project's stack and its
+> **pinned** dependency versions via \`platform_core/tools/mcp/stack_docs/\` and records the result
+> here, so later runs reuse it instead of re-detecting from scratch.
+>
+> It lives in \`knowledge_base/\` because it is true of the project across runs, not of one run. The
+> per-run companion artifact — which Context7 queries were made and what they returned — stays inside
+> the run folder as \`StackDocumentationContext_{Framework}.md\` (\`automation-skill\` §34).
+>
+> Safe to edit by hand: where a human correction and mechanical detection disagree, record the
+> correction plus the reason, and Stage 5 surfaces the conflict rather than silently overwriting it.
+
+## Detected At
+
+_ISO timestamp of the last detection run — left blank until Stage 5 first writes here._
+
+## Ecosystems
+
+| Ecosystem | Detected From |
+|---|---|
+| | |
+
+## Automation Framework
+
+| Key | Value |
+|---|---|
+| Framework | |
+| Version | |
+| Pinned? | |
+| Language | |
+| Automation root | |
+
+## Dependency Table
+
+_Material libraries only — what the generated code actually imports, not transitive dependencies._
+
+| Library | Resolved Version | Pinned? | Source File | Context7 ID |
+|---|---|---|---|---|
+| | | | | |
+
+## Conventions Observed
+
+| Aspect | Convention |
+|---|---|
+| File naming | |
+| Page object pattern | |
+| Fixture strategy | |
+
+## Human Corrections
+
+_Anything detection got wrong or cannot see. Each entry: what was detected, what is actually true,
+and why — Stage 5 reads this before trusting its own detection._
+
+## Detection Gaps
+
+_What could not be resolved mechanically and still needs a human answer._
+`;
+
 const CREDENTIALS_TEMPLATE = `{
   "_comment": "Copy this file to credentials.json in the same folder and fill in real values. credentials.json is git-ignored and must never be committed. The platform reads it directly; credential values are never written into artifacts, never typed into tool calls, and never echoed in reports.",
   "activeEnvironment": "STG",
@@ -241,10 +301,11 @@ const TEMPLATES = {
   'onboarding.md': ONBOARDING,
   'automation_framework.md': AUTOMATION_FRAMEWORK,
   'reference_automation_project.md': REFERENCE_AUTOMATION_PROJECT,
+  'stack.md': STACK,
   'credentials.template.json': CREDENTIALS_TEMPLATE,
 };
 
-/** The .gitignore written inside platform_core_data/credentials/ as a second line of defence. */
+/** The .gitignore written inside platform_core_data/knowledge_base/credentials/ as a second line of defence. */
 const CREDENTIALS_GITIGNORE = `# Never commit real credentials. The repository-root .gitignore is the primary rule; this is a
 # local backstop so the secret stays ignored even if the tool folder is moved or copied elsewhere.
 credentials.json

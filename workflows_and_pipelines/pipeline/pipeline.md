@@ -29,7 +29,7 @@ An agent that needs an absolute root runs `node platform_core/tools/platform_pat
 
 When the platform is *self-hosted* (`mode: "self-hosted"`, the two roots being the same directory) it is testing its own repository. That is a degenerate case of the same model, not a second one.
 
-Every path written in this specification and in the seven skills — `platform_core_data/PRD.md`, `platform_core_data/runs/…`, `platform_core_data/automation_baseline/…` — is **relative to the Tool Root**. Those paths are correct as written whether the platform is self-hosted or installed as a folder inside a host project; only the resolved prefix differs.
+Every path written in this specification and in the seven skills — `platform_core_data/knowledge_base/PRD.md`, `platform_core_data/runs/…`, `platform_core_data/automation_baseline/…` — is **relative to the Tool Root**. Those paths are correct as written whether the platform is self-hosted or installed as a folder inside a host project; only the resolved prefix differs.
 
 ## 2. Architecture Principle
 
@@ -378,7 +378,7 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 
     **Requirements, business rules, acceptance criteria, and test cases are never sourced from the Target Project.** A source file, a comment, an existing test's assertions, or a commit message found in the Target Project is evidence of *what the code currently does* — never evidence of what it *should* do. A discrepancy between the Target Project's code and the approved Project Context is a **Finding to report**, never a requirement to adopt. This is the same discipline §32 already applies to a Reference Automation Project, generalized: read for structure and style, never for intent.
 
-    Nothing outside these two roots may be read or written, with one registered exception: a **Reference Automation Project** (`platform_core_data/reference_automation_project.md`) — a read-only structural reference for automation *style*, never a source of functional requirements, business rules, test cases, or domain knowledge, and never modified except via the explicit gate at `.claude/skills/automation-skill/SKILL.md` §32.3.
+    Nothing outside these two roots may be read or written, with one registered exception: a **Reference Automation Project** (`platform_core_data/knowledge_base/reference_automation_project.md`) — a read-only structural reference for automation *style*, never a source of functional requirements, business rules, test cases, or domain knowledge, and never modified except via the explicit gate at `.claude/skills/automation-skill/SKILL.md` §32.3.
 
 ## 7. Artifact & Versioning Conventions
 
@@ -468,7 +468,9 @@ Project Knowledge *extends* Platform Knowledge; it never overrides or contradict
 
 Both layers are organized as small, individually-versioned documents, one concern per file — never a single growing markdown file. Each document carries a stable ID (e.g. `REPAIR-001` at the Platform layer, `REP-001` within a project's `repair/`) so it can be cited from other artifacts without re-stating its content.
 
-Platform Knowledge subfolders: `automation_patterns/`, `diagnosis_patterns/`, `repair_patterns/`, `execution_patterns/`, `framework_patterns/`, `reasoning/`, `reporting/`, `pipeline_decision_patterns/`, plus `diagnosis/` (relocated in from the project layer 2026-07-26 and held empty — see §10.6).
+Platform Knowledge subfolders: `automation_patterns/`, `diagnosis_patterns/`, `repair_patterns/`, `execution_patterns/`, `framework_patterns/`, `reasoning/`, `reporting/`, `pipeline_decision_patterns/`.
+
+**Revision (2026-07-27):** the separate `diagnosis/` folder is removed. It was relocated into this layer empty on 2026-07-26 and then sat alongside `diagnosis_patterns/` — two folders for one category, with no rule distinguishing them and nothing in either. `diagnosis_patterns/` is the surviving name, consistent with every other `*_patterns/` sibling.
 
 `pipeline_decision_patterns/` (renamed from `pipeline/`, 2026-07-21 governance review — the old name collided with this file's own layer, `workflows_and_pipelines/pipeline/`) is held deliberately empty: no agent or workflow is yet named as a reader in §10.7, and no Project Knowledge subfolder exists to promote a pattern from. Do not write into it until both exist.
 
@@ -476,13 +478,42 @@ There is no `skills/` subfolder here (removed, 2026-07-21 governance review). Cr
 
 There is no `confidence_patterns/` subfolder here (removed, 2026-07-21). The Confidence Engine's scoring rubric (§27.2 of the Automation Execution Agent spec) is fixed Capability logic, not a promotable Knowledge category — the rubric has never needed a calibration-adjustment layer in practice, and keeping an empty category open for one invited exactly the scope ambiguity flagged in that review.
 
-Project Knowledge subfolders (the fixed shape §10.4 scaffolds): `automation/`, `repair/`, `execution/`, `application/`, `ui/`, `findings/`, `business_rules/`, `lessons_learned/`. As of 2026-07-26, `diagnosis/` is no longer among them — it was relocated to the Platform layer at `knowledge_base/patterns/diagnosis/` by user-mandated change, alongside that layer's existing `diagnosis_patterns/`. Diagnosis notes specific to *this* application therefore have no dedicated project-scoped folder; record them in the `repair/` record that consumed the diagnosis, or in `findings/`.
+Project Knowledge subfolders (the fixed shape §10.4 scaffolds): `business_rules/` and `lessons_learned/`.
+
+**Revision (2026-07-27, user-mandated): seven categories were removed** — `application/`, `automation/`, `execution/`, `findings/`, `repair/`, `ui/`, and the supporting `notes/`. Every one had stood empty since the platform's inception. The reason they stayed empty is structural, not accidental: each named a kind of output that a **run folder already holds in full** — discovery findings live in `runs/{{RUN_FOLDER}}/discovery/findings/`, execution history in `runs/{{RUN_FOLDER}}/execution/`, repair records in that run's Repair Summary, generated automation in `automation_baseline/`. Writing a second copy into a knowledge folder duplicated the run's own record and created a place for knowledge to go and be forgotten.
+
+The two survivors are the categories a run folder genuinely cannot carry:
+
+| Folder | Why it survives |
+|---|---|
+| `business_rules/` | A rule the application enforces is true between runs and is never promoted to the Platform layer (it is application-specific by definition). No single run owns it. |
+| `lessons_learned/` | A cross-run observation about working with *this* application — by construction not scoped to the run that noticed it. |
+
+**Where the removed categories' writes go now:** into the producing run's own folder, and — when the lesson generalizes beyond this application — into `patterns/` via the §10.5 Promotion gate. Promotion is therefore now the *only* mechanism for carrying engineering knowledge across runs; see `.claude/skills/automation-execution-skill/SKILL.md` §28 for the consequence that has for repair records specifically.
+
+**`knowledge_base/` also holds everything else that is shared across runs** (revision 2026-07-27, user-mandated). Beyond the knowledge categories above, this folder is the single home for every document and asset that is true of the *project* rather than of one execution:
+
+| Group | Contents | Written by |
+|---|---|---|
+| Stage 1 inputs | `PRD.md`, `PRD_UserStories.md`, `run_configuration.md` | Humans |
+| Project reference | `architecture.md`, `glossary.md`, `onboarding.md`, `automation_framework.md`, `reference_automation_project.md` | Humans |
+| Detected stack | `stack.md` | Stage 5 (§34.4 of `automation-skill`), correctable by humans |
+| Supporting material | `requirements/{epics,features,user_stories,bugs,specifications}/`, `api/{swagger,postman}/`, `diagrams/` | Humans |
+| Browser Driver assets | `browser/profile.json`, `browser/screens/`, `browser/components/` | Stage 2 tooling + humans |
+| Credentials | `credentials/credentials.template.json` (committed), `credentials/credentials.json` (git-ignored) | Humans only |
+| Baseline screenshots | `ui/screenshots/` — created on demand by the Browser Driver, not scaffolded | Browser Driver |
+
+**The rule that decides the location:** if a document would still be correct at the start of the *next* run, it belongs in `knowledge_base/`; if it records what happened during one run, it belongs in that run's folder (§7). `stack.md` and its per-run companion `StackDocumentationContext_{Framework}.md` are the clearest illustration — the stack is durable, the record of which queries were made about it is not.
+
+A previous layout scattered these across `platform_core_data/` root (the input documents), `platform_core_data/resources/` (supporting material), `platform_core_data/browser/`, `platform_core_data/credentials/`, and `platform_core_data/ui/`. Consolidating them removed the ambiguity of two plausible homes for the same kind of file, and left `platform_core_data/` with three top-level members whose distinction is real: `knowledge_base/` (shared, durable), `runs/` (per-run, immutable), and `automation_baseline/` (long-lived automation source code, §12).
 
 Each top-level knowledge directory carries an `INDEX.md` (ID · Category · Title · Status · Producer · Consumers · Path) so an agent can locate relevant knowledge without scanning every file's full content.
 
 ### 10.4 Automatic Scaffolding
 
 `platform_core_data/knowledge_base/` always carries §10.3's full subfolder list, each with its own `INDEX.md` — including folders currently holding nothing. An empty, indexed folder tells an agent "this category exists and has no entries yet"; a missing folder tells it nothing, and invites each agent to invent its own place to write. Whenever the platform is retargeted at a new application, that tree is scaffolded as part of setup — no manual step, no exceptions, the same shape every time.
+
+**The scaffold is code, not prose.** `platform_core/tools/init/plan.js` holds the authoritative list as `DATA_DIRS` (folders) and `DATA_TEMPLATES` (the documents from §10.3's table, written blank from `templates.js`). This specification and that array must agree; when they disagree, the array is what actually runs, and the mismatch is a defect in whichever was updated without the other. `init` creates missing folders on re-install but **never overwrites an existing document** — the team's filled-in `PRD.md` survives every upgrade, `--force` included.
 
 ### 10.5 Promotion Workflow — explicit human approval only
 
@@ -499,23 +530,23 @@ This is a Human Decision (`§5.5`), never inferred, never defaulted to "yes" bec
 
 Application-specific knowledge must never end up in `platform_core_data/knowledge_base/patterns/` — this extends §6 Rule 9 (Two Roots, One Project) to the knowledge layer explicitly. An agent writes to Platform Knowledge only by passing the §10.5 Promotion Workflow's explicit human gate; it never writes there directly, and never "generalizes on the way in" to justify skipping the gate. The failure this prevents: a Platform layer quietly accumulating this application's screens and business rules, so that retargeting the platform carries the old application's assumptions along with it.
 
-Note (2026-07-26): the Platform layer now sits **nested inside** the Project layer — Platform Knowledge at `platform_core_data/knowledge_base/patterns/`, Project Knowledge in the folders surrounding it (`knowledge_base/repair/`, `execution/`, `automation/`, `application/`, `ui/`, `findings/`, `business_rules/`, `lessons_learned/`). It reached this location in two steps, from `platform_core/knowledge/` via `platform_core_data/patterns/`. **The nesting is structural only and confers nothing semantically:** `patterns/` is not a category of Project Knowledge and does not inherit its application scope. Two consequences follow, and both are unchanged in force:
+Note (2026-07-26): the Platform layer now sits **nested inside** the Project layer — Platform Knowledge at `platform_core_data/knowledge_base/patterns/`, Project Knowledge in the folders surrounding it (`knowledge_base/business_rules/` and `lessons_learned/`, after the 2026-07-27 removal of the seven empty categories — see §10.3). It reached this location in two steps, from `platform_core/knowledge/` via `platform_core_data/patterns/`. **The nesting is structural only and confers nothing semantically:** `patterns/` is not a category of Project Knowledge and does not inherit its application scope. Two consequences follow, and both are unchanged in force:
 
 - **§10.2 resolution order is unaffected.** `knowledge_base/patterns/` still resolves *first*, then the project-scoped folders around it. An agent walking `knowledge_base/` must treat `patterns/` as a separate layer, not as one more project category to merge in at the same precedence.
 - **This §10.6 rule binds regardless of parent folder.** `patterns/` is application-agnostic and Promotion-only wherever it lives. Because it now sits inside the folder that gets emptied on retarget, the isolation guarantee is *more* dependent on convention than before, not less — see `README.md` §16 step 4/5, where `patterns/` is the one subtree inside `knowledge_base/` that is deliberately **not** cleared.
 
-Note that `knowledge_base/patterns/` contains both a `diagnosis/` and a `diagnosis_patterns/` folder as of this move; `diagnosis/` was relocated in from the project layer by the same user-mandated change.
+The duplicate `diagnosis/` folder this move created alongside `diagnosis_patterns/` was removed on 2026-07-27 (§10.3) — the category has one folder, `diagnosis_patterns/`.
 
 ### 10.7 Agent read/write map
 
 | Agent | Reads | Writes |
 |---|---|---|
-| Project Context Agent (Stage 1) | Platform Knowledge + Project Knowledge | Project Knowledge (`business_rules/`, `application/`) as it establishes scope |
-| Explorer Agent (Stage 2) | Platform Knowledge + Project Knowledge | Project Knowledge (`findings/`, `ui/`, `application/`) |
-| Test Design Agent (Stage 3) | Platform Knowledge + Project Knowledge | Project Knowledge (`findings/`, `lessons_learned/`) where a design decision surfaces one |
-| Manual Execution Agent (Stage 4) | Platform Knowledge + Project Knowledge | Project Knowledge (`execution/`, `lessons_learned/`) where a manual execution surfaces one |
-| Automation Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + Project Knowledge (`automation/`), per `.claude/skills/automation-skill/SKILL.md` §11 | Project Knowledge (`automation/`) |
-| Automation Execution Agent (Stage 6) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + Project Knowledge (`repair/`, `execution/`), per `.claude/skills/automation-execution-skill/SKILL.md` §28 | Project Knowledge (`repair/`, `execution/`) by default; Platform Knowledge only via §10.5 Promotion. **Note:** the project-scoped `diagnosis/` folder this row previously named was relocated into the Platform layer on 2026-07-26 (§10.6), so diagnosis findings are recorded inside the `repair/` record that consumed them, or in `findings/` — never written to `patterns/diagnosis/` directly. |
+| Project Context Agent (Stage 1) | Platform Knowledge + Project Knowledge | Project Knowledge (`business_rules/`) as it establishes scope |
+| Explorer Agent (Stage 2) | Platform Knowledge + Project Knowledge | This run's `discovery/` folder (`findings/`, evidence, UI observations) — the `findings/`, `ui/`, and `application/` knowledge categories were removed 2026-07-27 (§10.3); Project Knowledge only for a `business_rules/` or `lessons_learned/` entry |
+| Test Design Agent (Stage 3) | Platform Knowledge + Project Knowledge | Project Knowledge (`lessons_learned/`) where a design decision surfaces one; a design-surfaced finding goes in this run's `test_design/` artifacts |
+| Manual Execution Agent (Stage 4) | Platform Knowledge + Project Knowledge | Project Knowledge (`lessons_learned/`) where a manual execution surfaces one; the execution record itself stays in this run's `manual_execution/` |
+| Automation Agent (Stage 5) | Platform Knowledge (`repair_patterns/`, `automation_patterns/`, `framework_patterns/`) + `knowledge_base/stack.md`, per `.claude/skills/automation-skill/SKILL.md` §11 | Project Knowledge (`automation/`) |
+| Automation Execution Agent (Stage 6) | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `execution_patterns/`) + prior runs' Repair Summaries, per `.claude/skills/automation-execution-skill/SKILL.md` §28 | This run's `execution/` folder (Execution Results, evidence, Repair Summary). The project-scoped `repair/` and `execution/` categories were removed 2026-07-27 (§10.3), so a confirmed repair is recorded once in this run's Repair Summary and carried forward only via §10.5 Promotion — never written to `patterns/` directly. |
 | Reporting Agent (Stage 7) | Platform Knowledge (`reporting/`) + Project Knowledge | — (terminal stage) |
 | Pipeline Orchestrator (tooling) | *(none — no read dependency on `pipeline_decision_patterns/` is defined yet)* | — |
 
@@ -656,7 +687,7 @@ Permitted, for **technical fact-finding only**:
 
 **Not permitted as a source of intent, under any circumstances:** application source code, database schemas, API implementations, comments, commit history, issue trackers, or existing tests' assertions, used to derive requirements, business rules, acceptance criteria, or expected behavior. Reading application source to *understand a selector or a route* is permitted and is a technical fact. Reading it to decide *what the correct output should be* is a §6 Rule 9 violation. When the two are hard to separate, the agent stops and asks (§26 Stop Conditions) rather than deciding.
 
-**A read denylist is enforced mechanically**, not by convention: `target.readDenylist` in `platform.config.json`, merged with a non-overridable built-in list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/credentials/credentials.json` (the Browser Driver contract), never by reading the Target Project.
+**A read denylist is enforced mechanically**, not by convention: `target.readDenylist` in `platform.config.json`, merged with a non-overridable built-in list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/knowledge_base/credentials/credentials.json` (the Browser Driver contract), never by reading the Target Project.
 
 ### 13.3 What may be WRITTEN to the Target Project
 

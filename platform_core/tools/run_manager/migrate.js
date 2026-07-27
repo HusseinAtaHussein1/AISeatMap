@@ -19,6 +19,7 @@ const { execFileSync } = require('child_process');
 
 const { normalizeScope, sanitizeSegment, buildRunFolderName, formatTimestampUTC } = require('./runFolderName');
 const { isRenameSafe, buildIndexEntry, saveIndex, loadIndex } = require('./runFolderIndex');
+const { readActiveRun, setActiveRun } = require('./activeRun');
 
 // Roots come from platform_paths, never from this file's own location: once the platform is
 // installed inside a host project, `__dirname/../../..` is the host's repository, not the tool
@@ -298,6 +299,7 @@ function migrateRuns({ apply = false, dataRoot, gitRoot } = {}) {
 
   const runsDirs = findRunsDirs(effectiveDataRoot);
   const report = [];
+  const pointerWarnings = [];
 
   for (const runsDir of runsDirs) {
     const entries = fs.readdirSync(runsDir, { withFileTypes: true })
@@ -339,6 +341,29 @@ function migrateRuns({ apply = false, dataRoot, gitRoot } = {}) {
         const target = path.join(runsDir, inferredNewName);
         execFileSync('git', ['mv', folderAbs, target], { cwd: effectiveGitRoot });
         renamed = true;
+
+        // Follow the Active Run pointer across the rename (run_manager.md §5.7).
+        // Without this the pointer is left naming a folder that no longer exists, and — because
+        // the compatibility index only maps inferredNewName -> legacyName, never the reverse — the
+        // old name becomes unresolvable, so the pointer is not merely stale but UNRECOVERABLE:
+        // every subsequent stage hard-stops until a human re-runs `cli.js use`. The rename is the
+        // one moment both names are known, so this is the only place the fix is cheap.
+        try {
+          const pointer = readActiveRun(runsDir);
+          if (pointer && pointer.activeRun && pointer.activeRun.folderName === folderName) {
+            setActiveRun(runsDir, inferredNewName, {
+              now: new Date(),
+              setBy: 'Run Manager (migrate)',
+              note: `followed rename ${folderName} -> ${inferredNewName}`,
+            });
+          }
+        } catch (err) {
+          // Pointer bookkeeping must never fail an otherwise-successful migration — surface it.
+          pointerWarnings.push(
+            `Renamed ${folderName} -> ${inferredNewName}, but the active-run pointer could not be ` +
+            `updated (${err.message}). Run \`cli.js use ${inferredNewName}\` to repoint it.`
+          );
+        }
       }
 
       report.push({ runsDir: path.relative(effectiveDataRoot, runsDir), ...entry, renamed });
@@ -347,6 +372,9 @@ function migrateRuns({ apply = false, dataRoot, gitRoot } = {}) {
     saveIndex(runsDir, newIndex);
   }
 
+  // Attached rather than thrown: a migration that renamed folders successfully but could not
+  // repoint the pointer still succeeded at its job; the caller needs to see the follow-up action.
+  if (pointerWarnings.length) report.pointerWarnings = pointerWarnings;
   return report;
 }
 

@@ -40,6 +40,7 @@ The Run Manager must:
 4. **Prevent duplicate folder names** — confirm the resulting Run Workspace folder name does not already exist before creating it; the utility appends a deterministic numeric suffix on collision (§5.5).
 5. **Create the Run Workspace** — the directory structure in §6 — before any Agent begins work for that run.
 6. **Generate Run Metadata** (`run.json`, §7) at the start of the run and keep it current as the run progresses.
+6a. **Maintain the Active Run pointer** (`current_active_run.json`, §5.7), the per-run code-state anchor (`targetRef`, §5.8), and run lineage (`lineage.json`, §5.9) — the Run Manager is the only writer of all three.
 7. **Provide workspace paths to downstream agents** — the concrete, run-scoped paths each Agent should treat as its working directory for that run's artifacts.
 8. **Track execution status** — maintaining the run's current state from the Execution Status enum (§8) as the run moves through the pipeline.
 9. **Maintain artifact organization** — ensuring every artifact produced during the run lands in the correct subdirectory of the Run Workspace (§6), without altering the content of any artifact.
@@ -95,6 +96,11 @@ All of the above is implemented once, as code, at `platform_core/tools/run_manag
 - `runFolderName.js` — `generateRunFolderName(metadata, { existingNames, now, index, withIndex })` is the function every agent/skill/script must call to obtain a new run's folder name. By default it prefixes the name with `run-NNN__` (§5.1), taking the index one past the highest already present in `existingNames`; passing an explicit `index` pins it, and passing `{ withIndex: false }` omits the prefix entirely (used only by legacy migration, §5.6). It also exports `formatRunIndex(index)` (formats a 1-based index as the `run-NNN` prefix segment), `nextRunIndex(existingNames)` (computes the next index, ignoring unindexed/legacy folders), `parseRunFolderName()` (recognizes this convention with or without the index prefix — returning an `index` field when one is present — and the legacy `RUN-YYYYMMDD-XXX[-slug]` form), `normalizeScope()`, and `sanitizeSegment()`.
 - `cli.js` — a thin CLI wrapper (`node platform_core/tools/run_manager/cli.js --scope <Scope> --target <Target> --started <ISO time>`) for agents/humans that aren't calling the module directly from JS. It also accepts `--index <N>` to pin the run index explicitly and `--no-index` to omit the `run-NNN__` prefix.
 - `runFolderIndex.js` / `migrate.js` — the Legacy Run Folder Compatibility layer (§5.6).
+- `activeRun.js` — the Active Run pointer (§5.7): `resolveActiveRunFolder()` is what a stage calls to resolve `{{RUN_FOLDER}}`, and `setActiveRun()` is the only writer of `platform_core_data/runs/current_active_run.json`.
+- `targetRef.js` — the Target Project code-state anchor (§5.8): `captureTargetRef()` at run creation, `computeDrift()` to report what moved since. Read-only against the target, and a staleness marker only — never a source of requirements (§5.8 scope boundary).
+- `runLineage.js` — run refinement (§5.9): `planRefinement()`/`writeLineage()` create a new run that inherits and supersedes an earlier one, and `resolvePriorRunFolder()` is the first actual resolver for `{{PRIOR_RUN_FOLDER}}`.
+- `createRun.js` — the single run-creation path (§5.10): `createRun()` always attempts the code-state anchor, always writes `metadata/` + `RunManifest.md`, and activates only when asked. `backfillTargetRef()` anchors a run that never had one, flagged as backfilled.
+- `runManifest.js` — the Run Manifest writer (§5.11): `renderRunManifest()`, `recordStage()`, `recordReuse()`, `recordGap()`, `readManifest()`. Append-only, with validated checkpoint/Invocation-Path vocabularies.
 
 No agent, skill, or script may hand-format a run folder name inline — doing so is exactly the duplicated-string-formatting problem this module exists to eliminate. See `platform_core/tools/run_manager/__tests__/` for the behavioral test suite covering sanitization, scope normalization, collision handling, and parsing.
 
@@ -109,6 +115,313 @@ platform_core_data/runs/.run_folder_index.json   (or platform_core_data/runs/.ru
 Each entry records `{ legacyName, inferredNewName, confidence, source }` — `source` names exactly which document the Scope/Target were inferred from (`metadata/run.json`, that project's `run_configuration.md` history table, or its `*_RunManifest.md`), and `confidence` is `low` whenever no metadata could be found at all (in which case `inferredNewName` uses `Unknown` segments rather than a guess). `runFolderIndex.js`'s `resolveRunFolder(runsDir, identifier)` looks up either a legacy Run ID/folder name or a new-convention name and returns the real on-disk folder — this is what keeps history lookups, dashboards, and manifests working under either naming style without rewriting any of them.
 
 Running the migration (`node platform_core/tools/run_manager/migrate.js --project <Name>`) is non-destructive (dry-run by default; writes only the index file), idempotent (re-running produces an unchanged index for folders already indexed), and reversible (an `--apply`-driven rename, on the rare folder that passes the safety check, is a plain `git mv` and trivially reverted). Backward compatibility takes priority over forcing a rename — a folder never gets renamed just because it would be convenient.
+
+## 5.7 Active Run Pointer — which run is the pipeline working on?
+
+**Added 2026-07-27 (user-mandated).** §5.1–§5.6 answer *what a run is called*. This section answers a
+separate question that nothing previously owned: **of the many runs under `platform_core_data/runs/`,
+which one is the pipeline currently writing to?**
+
+A project accumulates runs. Before this revision every stage resolved `{{RUN_FOLDER}}` from
+conversational context, so "continue the Leave run" and "start a new run" were indistinguishable to
+the tooling — and Stage 5 output could land in a run whose Stage 3 belonged to something else. The
+pointer makes the current run an explicit, inspectable fact on disk:
+
+```
+platform_core_data/runs/current_active_run.json
+```
+
+### The pointer is sticky
+
+`setActiveRun()` rewrites the pointer, and **every subsequent stage targets that run until it is
+switched again.** Switching to an older run is therefore a normal, first-class operation: point at it,
+then invoke whichever stage needs to run or re-run. There is no per-command run argument to forget.
+
+### It is a pointer, never a second copy of run state
+
+The run's own `metadata/run.json` (§7) stays authoritative for status, scope, and target. Fields
+duplicated into the pointer (`status`, `title`, `startedTime`) are a **display cache**, refreshed on
+every `use` and by `refresh`. Where the two disagree, `run.json` wins — the pointer is a bookmark,
+not a source of truth, and no stage may branch on its cached copy of a value `run.json` also carries.
+
+### Schema
+
+| JSON key | Description |
+|---|---|
+| `schemaVersion` | Pointer format version (currently `1`). A reader that encounters a **higher** version fails loudly rather than misreading an older shape |
+| `activeRun.folderName` | The run folder this pipeline is currently working in — the value `{{RUN_FOLDER}}` resolves to |
+| `activeRun.index` | The run's 1-based ordinal from its `run-NNN` prefix (§5.1); `null` for legacy/unindexed runs (§5.6) |
+| `activeRun.scope` / `activeRun.target` | Parsed from the folder name, falling back to `run.json`; `null` when neither carries them |
+| `activeRun.status` | Cached from the run's `run.json` `status` (§8 enum) — display only |
+| `activeRun.title` / `activeRun.startedTime` | Cached from `run.json` — display only |
+| `activeRun.stagesPresent` | Which stage folders actually exist for this run, in pipeline order — how "where did this run get to?" is answered without trusting a possibly-stale status field (§6) |
+| `activeRun.path` | The run folder's repo-relative path, for direct use in messages and artifact headers |
+| `switchedAt` | ISO timestamp the pointer was last changed |
+| `setBy` | Who/what switched it — a human's identifier if known, else `"Run Manager"` |
+| `previousRun` | The folder name this pointer replaced, so a mis-switch is one command to undo. `null` on the first switch. Re-setting the already-active run **carries the prior value forward** rather than recording the run as its own predecessor |
+| `note` | Optional free-text reason for the switch; omitted entirely when absent |
+
+### Rules
+
+1. **A stage never invents a run folder.** It resolves `{{RUN_FOLDER}}` via `resolveActiveRunFolder()`
+   (or `cli.js active`). When that returns `null`, the stage **asks which run to use** — it does not
+   guess, and it does not create a new run as a fallback. Guessing is what scatters one logical run's
+   artifacts across several folders.
+2. **A pointer naming a folder that no longer exists is an error, not a prompt to fall back.**
+   `isActiveRunStale()` reports it and `cli.js active` exits non-zero, so a deleted/renamed run
+   surfaces immediately instead of silently redirecting writes into an unrelated run.
+3. **Only the Run Manager writes this file.** Stages read it. A stage that needs a different run asks
+   for the switch; it does not edit the pointer to redirect its own output mid-stage.
+4. **Creating a run and activating it are distinct steps.** `generateRunFolderName()` (§5.5) produces a
+   name; `setActiveRun()` points at a folder that already exists. `setActiveRun()` **refuses a
+   nonexistent folder**, so a typo fails at the switch rather than at some later stage's write.
+5. **Legacy runs are switchable by bare Run ID.** The pointer resolves identifiers through
+   `resolveRunFolder()` (§5.6), so `use RUN-20260706-001` works without anyone typing the full
+   legacy folder name, and legacy folders are still never renamed.
+6. **The pointer is committed, not ignored.** Which run a project is working on is shared state a
+   teammate or a later session needs; git history of this file is also a usable audit trail of when
+   attention moved between runs.
+
+### Tooling
+
+Implemented at `platform_core/tools/run_manager/activeRun.js`, exported through the module barrel, and
+covered by `__tests__/activeRun.test.js`:
+
+- `resolveActiveRunFolder(runsDir)` — **the accessor a stage uses to resolve `{{RUN_FOLDER}}`.** Returns
+  `null` rather than guessing when there is no pointer or the pointed-at folder is gone.
+- `setActiveRun(runsDir, identifier, { now, setBy, note })` — switch. Requires an explicit `now`
+  (never defaulted internally, matching `generateRunFolderName`'s contract) so callers stay
+  deterministic and testable.
+- `readActiveRun` / `isActiveRunStale` / `clearActiveRun` / `refreshActiveRun` / `listRuns`.
+
+CLI verbs (the naming form in §5.5 is unchanged and still the default, so existing callers are
+unaffected):
+
+```bash
+node platform_core/tools/run_manager/cli.js list                # every run, newest first, active marked *
+node platform_core/tools/run_manager/cli.js use <run-or-RunID>  # switch (sticky)
+node platform_core/tools/run_manager/cli.js active              # bare folder name -> {{RUN_FOLDER}}
+node platform_core/tools/run_manager/cli.js active --json       # the whole pointer
+node platform_core/tools/run_manager/cli.js refresh             # re-cache status/stages
+node platform_core/tools/run_manager/cli.js clear               # remove the pointer
+```
+
+
+## 5.8 Target Project Code-State Anchor (`targetRef`)
+
+**Added 2026-07-27 (user-mandated).** A run's artifacts describe the application *as it was when the
+run executed*. Revisit that run months later and its Findings may describe code that no longer
+exists. Before this revision `run.json` carried 26 fields and **not one anchored the application's
+code state** — every `*Version` field is a *platform spec* version — so "is this run still current?"
+could only be asked of a human (`workflows_and_pipelines/workflows/user_story_run.md` Step 1 does
+exactly that). This section makes it computable.
+
+### Fields added to `run.json` (§7)
+
+| JSON key | Description |
+|---|---|
+| `targetRef` | The Target Project's **path-scoped** git commit at run creation — the code state this run's conclusions are about. `null` when the target has no resolvable git repository, which is recorded, never guessed around |
+| `targetRefScope` | The repo-relative paths `targetRef` was scoped to (the in-scope surface). Empty means repo-wide — coarser, still usable |
+| `targetRefCapturedAt` | ISO timestamp the anchor was taken |
+| `targetRepoRoot` | The resolved target repository root, so a later reader can tell *which* repo the ref belongs to |
+| `targetRefReason` | Why the ref is what it is — including why it is `null`. An unversioned target is not an unchanged one, and the distinction is stated rather than implied |
+
+Path-scoping matters for the same reason the automation baseline's Baseline Ref is path-scoped
+(§12.3 of `pipeline.md`): in a monorepo an unrelated commit elsewhere must never look like a change
+to the code under test.
+
+### The drift report
+
+`computeDrift()` compares a run's recorded anchor against the target's current state and returns
+exactly one status. **Every "unknown" is its own answer** — collapsing any of them into "unchanged"
+is how a stale run's findings get silently trusted:
+
+| Status | Meaning |
+|---|---|
+| `unchanged` | No commits touched the scoped paths since this run was created |
+| `moved` | Commits landed; the report names the count and every changed file |
+| `unknown-no-git` | The Target Project has no resolvable git repository — drift is not computable |
+| `unknown-no-anchor` | This run recorded no `targetRef` (created before anchoring existed, or git was unavailable) |
+| `unknown-unresolvable` | The recorded ref is not in the target's current history (rewritten, shallow clone, different repo) |
+
+### Scope boundary — this is not requirements-from-code
+
+`pipeline.md` §6 Rule 9 / §13 forbid the Target Project's **commit history as a source of intent**:
+requirements, business rules, acceptance criteria, and expected behaviour never come from code or
+history. This anchor does not do that and must never be extended to. It reads commit identity **only
+as a staleness marker** — the same category as reading source to understand a selector or a route,
+which that section explicitly permits as "a technical fact". It answers *"did these paths change?"*,
+never *"what should the expected behaviour be?"*.
+
+It is strictly **read-only** against the Target Project (`git log`, `git rev-list`,
+`git diff --name-only`). It never stages, commits, or writes anything there; `pipeline.md` §13.3's
+prohibition is unaffected. Because the automation lifecycle's `discoverRepo` deliberately asserts
+every path lies inside the repository governing `platform_core_data/`, the target's repository is
+reached through its own separate, write-incapable handle in `platform_core/tools/run_manager/targetRef.js`.
+
+## 5.9 Run Lineage — refining an earlier run (`inherit + supersede`)
+
+**Added 2026-07-27 (user-mandated).** A user builds their automation project across many runs. Later
+they want to **enhance something an earlier run delivered** — but the result must apply to the
+project's **current** state, not the state when that run executed.
+
+### Refinement creates a new run; it never edits the old one
+
+Refining `run-002` creates a **new** run that:
+
+1. records `inheritsFrom: run-002` and `supersedes: run-002`,
+2. **references** run-002's approved artifacts by path rather than copying them wholesale
+   (`pipeline.md` §7 "Cross-run reuse"),
+3. anchors itself to the target's **current** code state (§5.8), so its scope is today's project,
+4. carries the **drift report** for run-002 → now, so stages know which inherited conclusions are
+   suspect instead of assuming all of them still hold.
+
+**run-002 is never written to.** Editing it in place would break the documented
+"`runs/` — per-run, immutable once written" contract *and* destroy the record of what that run
+actually concluded, which is the only evidence its Final QA Report was ever true. run-002 stays valid
+*as of its own `targetRef`*; the new run is what is true now. (spec-kit calls this convention
+"flow-forward" and contrasts it with amend-in-place; the immutability argument is why this platform
+takes the same side.)
+
+### `metadata/lineage.json`
+
+| JSON key | Description |
+|---|---|
+| `inheritsFrom` | The prior run this refinement derives from — **the resolver `{{PRIOR_RUN_FOLDER}}` never had** |
+| `supersedes` | The run whose conclusions this one replaces, for the scope they share |
+| `priorRunPath` | Repo-relative path to the prior run, for direct use in artifact headers |
+| `inheritedArtifacts[]` | Per stage: `{stage, approved, path, files}` — referenced, not copied. `approved` is read from each artifact's own `status:` field (§7 of `pipeline.md`); a Pending artifact is **listed, not hidden**, because inheriting one is a legitimate declared choice |
+| `drift` | The §5.8 drift report for prior-run → now, frozen at refinement time |
+| `recordedAt`, `setBy`, `reason` | Provenance of the refinement decision |
+
+`{{PRIOR_RUN_FOLDER}}` now resolves: `resolvePriorRunFolder(runsDir, folderName)`. It appears in
+`pipeline.md` §7, `user_story_run.md`, and `README.md`, and until this revision **nothing resolved
+it** — it was a placeholder a human filled in. `lineageChain()` walks the full ancestry
+newest-first and is cycle-guarded, since a hand-edited `lineage.json` could otherwise loop.
+
+### Rules
+
+1. **A refinement never mutates the run it inherits from.** Not its artifacts, not its `run.json`,
+   not its status. The only write is into the *new* run.
+2. **Inherited artifacts are referenced, not copied** (`pipeline.md` §7). A stage that needs to
+   *evolve* one copies it into the new run once, at that point, and records the origin.
+3. **A refinement is anchored to today**, never to the prior run's `targetRef` — that is the whole
+   point: the enhancement applies to the project's current state.
+4. **Drift is reported, never silently tolerated.** A `moved` or any `unknown-*` status means
+   inherited findings covering the changed paths need re-verification before reuse. A stage must not
+   present an inherited conclusion as current when drift says otherwise.
+5. **`supersedes` is a claim about conclusions, not a deletion.** The prior run remains readable,
+   valid for its own anchor, and part of the audit trail.
+
+### Tooling
+
+`platform_core/tools/run_manager/runLineage.js` (plan/apply split, mirroring the automation
+lifecycle's merge plan): `planRefinement()` computes and returns without writing;
+`writeLineage()` records it into an already-created run folder; `readLineage()`,
+`resolvePriorRunFolder()`, `lineageChain()`, `inspectInheritable()` read.
+
+```bash
+node platform_core/tools/run_manager/cli.js refine <prior-run> --dry-run   # inspect the plan
+node platform_core/tools/run_manager/cli.js refine <prior-run> --reason "..." --scope-paths src/leave
+node platform_core/tools/run_manager/cli.js drift [--run <r>] [--json]     # exit 2 when not unchanged
+```
+
+`refine` creates the run folder, writes `run.json` (with today's anchor) and `lineage.json`, then
+makes the new run active. `--dry-run` shows the plan — including what would be inherited and the
+drift — and creates nothing.
+
+
+## 5.10 Run Creation (single code path)
+
+**Added 2026-07-27 (user-mandated).** §5.1–§5.6 name a run; §5.7–§5.9 track, anchor, and relate runs.
+This section covers **bringing one into existence**, which until now was a *prose checklist* repeated in
+each workflow's Step 1.
+
+That mattered because the code-state anchor (§5.8) was written only if someone followed the spec line
+saying to. `cli.js refine` was the only path that actually wrote one, with inline logic nothing else
+could reuse — so a run created any other way silently lost the ability to answer "has the application
+moved since?", the very question §5.8 exists to make answerable.
+
+`platform_core/tools/run_manager/createRun.js` makes the invariants **structural rather than
+remembered**:
+
+| Invariant | Why it cannot be skipped |
+|---|---|
+| **The anchor is always attempted** | `captureTargetRef()` runs on every creation. Where there is no target root or no git, `targetRef` is `null` **with `targetRefReason` stating why** — an unversioned target is not an unchanged one (§5.8), and that distinction only survives if the reason is recorded at creation, not inferred later |
+| **`metadata/` and `RunManifest.md` always exist** | §6 makes `metadata/` the one folder every run has, and §5.11's Manifest is the orchestrator's own source of truth. A run without one was invisible to "where are we right now?" |
+| **A missing anchor is declared as a gap** | The Manifest's Declared Gaps section records it, so drift reading `unknown-no-anchor` later is explained rather than mysterious |
+| **Stage folders are NOT created** | A run only has folders for stages it reached (§6). Pre-creating them was the behaviour the 2026-07-17 revision removed, and creating a run must not reintroduce it |
+| **Activation is separate and explicit** | `activate: true` writes the pointer. Creation and switching stay distinct (§5.7 Rule 3, §5.9), so creating a run for later never silently steals focus from the one in progress |
+| **An existing folder is never overwritten** | A run folder is immutable once written (§6); `createRun` refuses rather than merging into it |
+
+```bash
+node platform_core/tools/run_manager/cli.js new --scope <Scope> --target <Target> \
+  [--workflow first_run] [--scope-paths src/leave,src/shared] [--no-activate]
+```
+
+`cli.js refine` (§5.9) now routes through the same creator, so a refinement run gets identical
+guarantees rather than a parallel implementation.
+
+### Backfilling an anchor
+
+A run created before §5.8 — or while git was unavailable — carries no `targetRef`, so drift reads
+`unknown-no-anchor` forever. `backfillTargetRef()` (`cli.js anchor`) anchors it to *now* and records
+`targetRefBackfilled: true` plus a reason stating that **the anchor is the code state at backfill time,
+not at execution time**. That caveat is mandatory: drift measured from a backfilled anchor *understates*
+what actually changed since the run, and without the flag a reader would mistake it for evidence the run
+was verified against that commit. Backfill refuses to overwrite a real anchor unless explicitly forced.
+
+## 5.11 Run Manifest Writer
+
+**Added 2026-07-27 (user-mandated).** `pipeline.md` §7 has always required a Run Manifest at
+`runs/{{RUN_FOLDER}}/metadata/RunManifest.md` recording, per stage: timestamp, checkpoint status,
+approving reviewer, revision count, Invocation Path, and a link to the artifact. **Nothing wrote it.**
+`migrate.js` only ever *read* legacy `*_RunManifest.md` files for metadata inference, and the sole
+creation instruction was prose in each workflow's Step 1 — so the pipeline's own source of truth for run
+state was maintained by hand, if at all.
+
+`platform_core/tools/run_manager/runManifest.js` writes it. The rendered shape is authoritative in
+[`platform_core/templates/metadata/RunManifest.md`](../../platform_core/templates/metadata/RunManifest.md);
+the module is its renderer, and where the two disagree the template is the spec.
+
+### Append-only, like the artifacts it tracks
+
+- A **stage row** is added, or updated in place for a stage already present — one row per stage.
+- **Checkpoint History is only ever appended to.** A `Rejected` entry keeps its feedback, because the
+  revision that followed is what the reviewer asked for and losing the reason makes that revision
+  unreviewable.
+- **Re-recording an unchanged status appends nothing.** Bookkeeping is not a decision, and padding
+  history with it buries the real transitions.
+- Nothing rewrites history. (This mirrors spec-kit's `/converge`, whose only write is an appended
+  section and which leaves its file byte-identical when there is nothing to add.)
+
+### Validated vocabularies
+
+`recordStage()` rejects any checkpoint status outside `pipeline.md` §7's four
+(`Pending Review` / `Pending Automation Approval` / `Approved` / `Rejected`) and any Invocation Path
+outside §5.3.1 #7's three (`Pipeline` / `Direct` / `Direct (degraded)`). A typo fails loudly instead of
+entering the orchestrator's source of truth as an unrecognized state.
+
+### Cross-run reuse gets a writer, not just a slot
+
+`recordReuse()` writes the Cross-Run Reuse row `pipeline.md` §7 requires — source run, `Referenced`
+vs `Copied`, whether it was approved there, and the drift since. **When drift is anything but
+`unchanged`, a Drift Implication note is added stating that inherited conclusions covering changed paths
+are unverified against current code** (§5.9 Rule 4) — stated once per manifest, not repeated per row.
+`cli.js refine` calls this for every inherited artifact, so the §7 obligation is discharged
+mechanically.
+
+```bash
+node platform_core/tools/run_manager/cli.js stage "Stage 1 — Project Context" \
+  --status Approved --reviewer <name> --revisions 2 --invocation Pipeline
+node platform_core/tools/run_manager/cli.js manifest            # the stage ledger, as data
+node platform_core/tools/run_manager/cli.js manifest --gap "..." --why "..."
+node platform_core/tools/run_manager/cli.js manifest --reuse <artifact> --from <run>
+```
+
+`readManifest()` returns the ledger as structured data, so an orchestrator can answer "where are we
+right now?" without parsing prose — the question §7 says this artifact exists to answer.
+
 
 # 6. Workspace Structure
 
@@ -256,7 +569,7 @@ platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md
 
 1. The Run Manager never performs testing of any kind — it does not drive a browser, does not call an application, and does not execute test cases.
 2. The Run Manager never interprets results — it counts and records what Agents produced; it does not decide whether those results are correct, acceptable, or a defect.
-3. The Run Manager never changes the content of any project artifact produced by an Agent. It may organize where artifacts live within the Run Workspace (§6) and it may create/update its own metadata files (`run.json`, `run_summary.md`), but it must never edit, rewrite, or delete an Agent-produced artifact.
+3. The Run Manager never changes the content of any project artifact produced by an Agent. It may organize where artifacts live within the Run Workspace (§6) and it may create/update its own metadata files (`run.json`, `run_summary.md`, the Active Run pointer (`current_active_run.json`, §5.7), and each refinement run's `lineage.json` (§5.9) — see those sections for their schemas; `run_summary.md`), but it must never edit, rewrite, or delete an Agent-produced artifact.
 4. The Run Manager only prepares and coordinates execution — folder-name generation (§5, via `platform_core/tools/run_manager`), Title/Description generation (§7), workspace creation, metadata tracking, status tracking, and summary publication are its entire mandate.
 5. The Run Manager must not bypass, shortcut, or auto-resolve any Human Review or Automation Approval checkpoint defined in `workflows_and_pipelines/pipeline/pipeline.md` §5 — reaching `Waiting For Approval` status is as far as it goes; only a human decision moves the run past that point.
 6. The Run Manager must not read the PRD — per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4, only Stage 1 (Project Context Agent) is permitted to do so, and the Run Manager is not a stage.
@@ -266,13 +579,13 @@ platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md
 | | |
 |---|---|
 | **Inputs** | Project Name · Run Configuration (target environment, browser, resolution) · signals from each Agent stage marking start/completion/error · checkpoint state from `workflows_and_pipelines/pipeline/pipeline.md` §5.3 |
-| **Outputs** | Run Workspace (§6) · `run.json` (§7) · `run_summary.md` (§9) |
+| **Outputs** | Run Workspace (§6) · `run.json` (§7, incl. the `targetRef` code-state anchor, §5.8) · `run_summary.md` (§9) · `current_active_run.json` (the Active Run pointer, §5.7) · `lineage.json` for a refinement run (§5.9) |
 
 The Run Manager does not consume the PRD, the Project Context's business content, or any Agent's analytical output as *input to a decision* — it only observes that those artifacts exist, where they are, and what stage produced them.
 
 # 12. Allowed Operations
 
-- File system: create directories (Run Workspace), create/update the Run Manager's own metadata files (`run.json`, `run_summary.md`), read (not write) Agent-produced artifacts strictly to count/organize them.
+- File system: create directories (Run Workspace), create/update the Run Manager's own metadata files (`run.json`, `run_summary.md`, `current_active_run.json` §5.7, `lineage.json` §5.9), read (not write) Agent-produced artifacts strictly to count/organize them.
 - Read-only directory-listing and file-counting operations for compiling the Run Summary (§9).
 
 **Not permitted:** browser automation tools, any tool that edits or deletes an Agent-produced artifact's content, any tool that mutates application data, and any tool that would let it act as an Agent (e.g., generating a Finding, test case, or report section).

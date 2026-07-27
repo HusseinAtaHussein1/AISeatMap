@@ -15,7 +15,7 @@ Everything here is one of exactly three things, and the distinction is what deci
 | Folder | Lifetime | Holds |
 |---|---|---|
 | [`knowledge_base/`](knowledge_base/) | **Durable — shared across every run** | Inputs, project reference docs, detected stack, supporting material, browser/credential assets, accumulated knowledge |
-| [`runs/`](runs/) | **Per-run — immutable once written** | One folder per pipeline execution, holding that run's stage artifacts and evidence |
+| [`runs/`](runs/) | **Per-run — a run folder is immutable once written** | One folder per pipeline execution, holding that run's stage artifacts and evidence. Refining an earlier run creates a *new* run that inherits and supersedes it (`run_manager.md` §5.9) — the old run is never edited. Two bookkeeping files sit beside the run folders and are deliberately mutable: `current_active_run.json` (§5.7) and `.run_folder_index.json` (§5.6) |
 | [`automation_baseline/`](automation_baseline/) | **Long-lived source code** | The persistent Automation Package(s) under a three-way-merge lifecycle (`pipeline.md` §12) |
 
 **The rule that decides the location:** if a document would still be correct at the start of the *next* run, it belongs in `knowledge_base/`. If it records what happened *during* one run, it belongs in that run's folder. Generated automation *code* is the one thing that must outlive its run while still being code rather than a document — that is `automation_baseline/`.
@@ -82,10 +82,13 @@ platform_core_data/
       automation_patterns/ · diagnosis_patterns/ · execution_patterns/    # empty until promoted
       framework_patterns/ · reporting/ · pipeline_decision_patterns/      # empty until promoted
       INDEX.md · README.md             # catalog of promoted documents + the layer's own spec
-  runs/                           # ── PER RUN, IMMUTABLE ────────────────────────────────
+  runs/                           # ── PER RUN — RUN FOLDERS IMMUTABLE ────────────────────────────────
+    current_active_run.json         # which run the pipeline is working in (§5.7) — mutable pointer
+    .run_folder_index.json          # legacy-name compatibility index (§5.6) — mutable
     run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target/   # current convention (run_manager.md §5)
     RUN-YYYYMMDD-XXX[-slug]/                       # pre-existing runs — never renamed (§5.6)
-      metadata/                       # run.json + run_summary.md + RunManifest.md — always created
+      metadata/                       # run.json (+ targetRef, §5.8) + run_summary.md + RunManifest.md
+                                      #   + lineage.json on a refinement run (§5.9) — always created
       context/ · discovery/{findings/} · test_design/ · manual_execution/ · execution/ · reporting/
                                       # created only when that stage actually writes to it
       automation/                     # temporary working copy of the Automation Baseline

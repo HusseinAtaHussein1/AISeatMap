@@ -11,6 +11,13 @@ const path = require('path');
 
 const INDEX_FILENAME = '.run_folder_index.json';
 
+// Excluded from reference scanning for the same reason as INDEX_FILENAME below: the active-run
+// pointer records the active run's folder name by design, so counting it as an "outside reference"
+// would make every run permanently unsafe to rename the moment it was activated (run_manager.md §5.7).
+// Declared here rather than imported from activeRun.js to keep this module dependency-free — it is
+// required *by* activeRun.js, and a cycle would be gratuitous for one constant.
+const ACTIVE_RUN_FILENAME = 'current_active_run.json';
+
 /**
  * Recursively collects all file paths under `dir`, excluding `excludeDirAbs` (an absolute path
  * to skip entirely, typically the run folder itself — its own content legitimately contains its
@@ -33,7 +40,7 @@ function collectFiles(dir, excludeDirAbs) {
     if (entry.name === '.git' || entry.name === 'node_modules') continue;
     if (entry.isDirectory()) {
       results.push(...collectFiles(full, excludeDirAbs));
-    } else if (entry.name !== INDEX_FILENAME) {
+    } else if (entry.name !== INDEX_FILENAME && entry.name !== ACTIVE_RUN_FILENAME) {
       // The compatibility index itself necessarily records every legacy name it maps — that's
       // our own bookkeeping, not a real external dependency, and must not count as a reference
       // that would make a folder look unsafe to rename (it would also self-pollute run over run).
@@ -129,10 +136,46 @@ function resolveRunFolder(runsDir, identifier) {
   const byNewName = index.find((e) => e.inferredNewName === identifier);
   if (byNewName && onDisk.includes(byNewName.legacyName)) return byNewName.legacyName;
 
-  const byRunIdPrefix = onDisk.find((name) => name === identifier || name.startsWith(`${identifier}-`));
-  if (byRunIdPrefix) return byRunIdPrefix;
+  // Bare-Run-ID convenience lookup (e.g. "RUN-20260706-001" -> "RUN-20260706-001-login").
+  //
+  // AMBIGUITY IS AN ERROR, NOT A COIN FLIP. This previously used find(), returning the first
+  // readdir match — so with both RUN-20260706-001-login and RUN-20260706-001-logout on disk, the
+  // resolved run depended on directory order. That reintroduced exactly the scan-order
+  // nondeterminism the Active Run pointer (run_manager.md §5.7) exists to eliminate, silently
+  // pointing the pipeline at whichever run the filesystem happened to list first.
+  // Callers needing the reason use resolveRunFolderStrict().
+  const prefixMatches = onDisk.filter((name) => name === identifier || name.startsWith(`${identifier}-`));
+  if (prefixMatches.length === 1) return prefixMatches[0];
+  if (prefixMatches.length > 1) return null; // ambiguous — the caller must disambiguate
 
   return null;
+}
+
+/**
+ * Same resolution as resolveRunFolder(), but distinguishes "no match" from "ambiguous" so a caller
+ * can report the real reason rather than a misleading "not found".
+ *
+ * @param {string} runsDir
+ * @param {string} identifier
+ * @returns {{folderName: string|null, ambiguous: boolean, candidates: string[]}}
+ */
+function resolveRunFolderStrict(runsDir, identifier) {
+  const exact = resolveRunFolder(runsDir, identifier);
+  if (exact) return { folderName: exact, ambiguous: false, candidates: [exact] };
+
+  let onDisk = [];
+  try {
+    onDisk = fs.readdirSync(runsDir, { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name);
+  } catch {
+    return { folderName: null, ambiguous: false, candidates: [] };
+  }
+
+  const candidates = onDisk
+    .filter((name) => name === identifier || name.startsWith(`${identifier}-`))
+    .sort();
+  return { folderName: null, ambiguous: candidates.length > 1, candidates };
 }
 
 module.exports = {
@@ -142,4 +185,5 @@ module.exports = {
   loadIndex,
   saveIndex,
   resolveRunFolder,
+  resolveRunFolderStrict,
 };

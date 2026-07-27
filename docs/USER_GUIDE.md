@@ -335,7 +335,7 @@ Pointing the platform at a different application means running `init` in that re
 
 If you reuse an installation in place, two things matter:
 
-- **`platform_core_data/` is never overwritten** by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far. Clearing `runs/` is your decision, not the installer's.
+- **`platform_core_data/` is never overwritten** by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far. Clearing `runs/` is your decision, not the installer's — but clear the Active Run pointer too (`node platform_core/tools/run_manager/cli.js clear`), or the next stage will stop and report a pointer naming a run that no longer exists (`run_manager.md` §5.7 Rule 2).
 - **`knowledge_base/patterns/` survives retargeting by design.** It is Platform Knowledge — accumulated engineering knowledge, application-agnostic. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you're leaving behind.
 
 ### The two knowledge layers

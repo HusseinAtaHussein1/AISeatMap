@@ -447,18 +447,20 @@ No other artifact is produced by this skill. It does not execute the Automation 
 
 **(v8) Every path below is per-framework, not project-singular** — `{Framework}` is the human's Framework Decision Gate (§31) answer (e.g. `SHAFT`, `Playwright`), so a project can accumulate a complete, independent artifact set per framework it uses, without one framework's project overwriting another's. Within one framework, there is exactly one such artifact set — never several competing ones.
 
-| Artifact | Path |
-|---|---|
-| Automation Package Registry | `platform_core_data/automation_baseline/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. |
-| Automation Plan | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md` |
-| Automation Package (Workspace Automation Baseline) | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this skill never writes here directly (§33.2, Execution Rule 35) |
-| Automation Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md` |
-| Automation Decision Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md` |
-| Automation Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md` |
-| Stack Documentation Context (§34) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` |
-| Project Stack record (§34.4) | `platform_core_data/knowledge_base/stack.md` — durable, shared across runs, updated in place |
-| Automation Suite Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md` |
-| Automation Summary | `platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md` |
+| Artifact | Path | Template |
+|---|---|---|
+| Automation Package Registry | `platform_core_data/automation_baseline/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. | [`AutomationPackages.md`](../../../platform_core/templates/stage_5_automation/AutomationPackages.md) |
+| Automation Plan | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md` | [`AutomationPlan.md`](../../../platform_core/templates/stage_5_automation/AutomationPlan.md) |
+| Automation Package (Workspace Automation Baseline) | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this skill never writes here directly (§33.2, Execution Rule 35) | — (generated source code, not a document) |
+| Automation Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md` | [`AutomationManifest.md`](../../../platform_core/templates/stage_5_automation/AutomationManifest.md) |
+| Automation Decision Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md` | [`AutomationDecisionReport.md`](../../../platform_core/templates/stage_5_automation/AutomationDecisionReport.md) |
+| Automation Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md` | [`AutomationCoverageReport.md`](../../../platform_core/templates/stage_5_automation/AutomationCoverageReport.md) |
+| Stack Documentation Context (§34) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` | [`StackDocumentationContext.md`](../../../platform_core/templates/stage_5_automation/StackDocumentationContext.md) |
+| Project Stack record (§34.4) | `platform_core_data/knowledge_base/stack.md` — durable, shared across runs, updated in place | — (durable knowledge_base record, not a run artifact) |
+| Automation Suite Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md` | [`AutomationSuiteManifest.md`](../../../platform_core/templates/stage_5_automation/AutomationSuiteManifest.md) |
+| Automation Summary | `platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md` | [`AutomationSummary.md`](../../../platform_core/templates/stage_5_automation/AutomationSummary.md) |
+
+**Every document artifact's structure is defined by its template** in `platform_core/templates/stage_5_automation/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. `AutomationSummary.md` encodes §25's 8-section contract, `AutomationDecisionReport.md` encodes §13's four decisions and six mandatory per-decision fields, and `AutomationPlan.md` encodes §5's required plan fields. `platform_core/templates/README.md` states the shared conventions.
 
 **Where this skill actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage 6, its Execution Results and evidence.
 
@@ -810,3 +812,45 @@ Next step — either:
   2. Revise this stage:        /automation-skill <your feedback>
   3. Extend coverage first:    /automation-skill also automate {IDs}
 ```
+
+# 36. Resolving `{{RUN_FOLDER}}`
+
+Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
+at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's
+many runs the pipeline is currently working in (`workflows_and_pipelines/pipeline/run_manager.md` §5.7).
+
+```bash
+node platform_core/tools/run_manager/cli.js active   # -> the run folder name to write into
+node platform_core/tools/run_manager/cli.js list     # every run, newest first, active marked *
+```
+
+- **Never hand-pick, guess, or infer a run folder.** Resolve it from the pointer (`resolveActiveRunFolder()` in JS, or the `active` verb). A stage that writes into a run it guessed at is exactly how one logical run's artifacts end up scattered across several folders.
+- **No active run → ask, never assume.** If the pointer is absent, stop and ask which run to use, listing what exists. Never fall back to "the newest run" or create one silently.
+- **A pointer naming a missing folder → report it and stop.** A stale pointer means the run was deleted or renamed; redirecting this stage's output into some other run would corrupt both.
+- **The pointer is sticky.** It stays on the same run across invocations until someone switches it, so a multi-stage session keeps writing into one run without restating which.
+- **Switching runs is the human's call.** This stage never rewrites the pointer to redirect its own output. Working on a different run means the switch happens first, as an explicit step (`cli.js use <run>`).
+
+This stage never creates a run. Its working copy (`runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`) and every report it writes belong to the active run. The Workspace Automation Baseline (`automation_baseline/{framework}/`) and the Automation Package Registry are deliberately **not** run-scoped, and are unaffected by which run is active.
+
+## Inherited artifacts and code drift
+
+A run may be a **refinement** of an earlier one (`run_manager.md` §5.9). Such a run carries
+`metadata/lineage.json` recording `inheritsFrom` / `supersedes`, and its inherited artifacts live in
+the prior run and are **referenced by path, never copied** (`pipeline.md` §7 "Cross-run reuse").
+
+```bash
+node platform_core/tools/run_manager/cli.js drift          # what moved in the app since this run was anchored
+node platform_core/tools/run_manager/cli.js drift --json    # machine-readable, exit 2 when not "unchanged"
+```
+
+- **Resolve `{{PRIOR_RUN_FOLDER}}` from the lineage record**, via `resolvePriorRunFolder()` — never by
+  picking a plausible-looking earlier run. A run with no lineage record inherits nothing.
+- **An inherited artifact is an input, not a conclusion this run has re-established.** Cite it by its
+  prior-run path so a reader can see it was inherited rather than produced here.
+- **Drift decides what may be reused as-is.** When `drift` reports `moved`, every inherited finding,
+  test case, or locator touching a changed path is **unverified against current code** until this run
+  re-checks it. Say so explicitly rather than presenting it as still current.
+- **`unknown-*` is not `unchanged`.** No anchor, no git, or an unresolvable ref all mean drift could
+  not be computed — treat inherited conclusions as unverified, never as confirmed.
+- **A refinement targets today's project state.** The prior run described the app at its own
+  `targetRef`; this run describes it now. Never carry forward a conclusion that drift contradicts.

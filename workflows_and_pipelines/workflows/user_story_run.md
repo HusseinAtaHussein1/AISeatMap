@@ -61,9 +61,17 @@ Only this story's acceptance criteria are in scope for Stage 3's test design (`.
 Before Stage 3 is invoked, the Run Manager performs the Automation Start Decision Gate check (`pipeline/pipeline.md` §5.4) — **extended here to any downstream entry point, not only Stage 4** — because this workflow is itself a request to begin at a stage other than Stage 1:
 
 1. Inspect the project's Run Manifest and report, plainly, the actual current state of Stages 1–2 (Approved / Pending / not started).
-2. If Stage 1 and Stage 2 both show `Approved`: confirm with whoever invoked this workflow that the existing Project Context and Discovery Artifacts are still expected to be current for the module(s) this story touches, then proceed to Step 2.
+2. If Stage 1 and Stage 2 both show `Approved`: confirm with whoever invoked this workflow that the existing Project Context and Discovery Artifacts are still expected to be current for the module(s) this story touches. **Bring the computed answer to that conversation, not just the question** — `cli.js drift --run <prior-run>` (`run_manager.md` §5.8) reports whether the application actually moved in those paths since that run was anchored, so "are these still current?" is answered with evidence where an anchor exists, and explicitly as *unknown* where it does not.
 3. If either stage is missing or not `Approved`: **do not proceed and do not assume.** Ask explicitly — per §5.4's existing options (continue from latest approved stage, run the full pipeline from Stage 1, or other) — this workflow never silently substitutes a full pipeline run for its own narrower scope, and never silently proceeds against a missing/unapproved Project Context or Discovery baseline.
-4. Once confirmed, the Run Manager allocates a Run ID + AI-generated Display Name and workspace exactly as it would for any run (`pipeline/run_manager.md` §5–§6) — for this workflow, the Display Name is derived from the `user_story_run` workflow name and the story's Run Scope — and Step 2 launches with `test_design/` as the first subfolder created for this run (`context/` and `discovery/` are not recreated — the existing approved artifacts are referenced, not duplicated).
+4. Once confirmed, **create the run as a refinement of the run whose artifacts it reuses** — a single command (`run_manager.md` §5.9, §5.10):
+
+   ```bash
+   node platform_core/tools/run_manager/cli.js refine <prior-run> \
+     --scope UserStory --target "<story>" --reason "<what this story adds>" --scope-paths <paths>
+   ```
+
+   This creates a **new** run (never editing the prior one), records `inheritsFrom`/`supersedes` and every inherited artifact in `metadata/lineage.json` **and** in the Run Manifest's Cross-Run Reuse section (§5.11, discharging `pipeline.md` §7's "records the source run" obligation), anchors the new run to the application's **current** code state (§5.8), writes its Run Manifest, and activates it. `--dry-run` first shows what would be inherited and the drift, creating nothing.
+5. **Act on the drift the refinement reports.** Where it says the application moved in the paths this story touches, the inherited Discovery findings covering those paths are *unverified against current code* — Step 2 treats them as such rather than as current (§5.9 Rule 4). The Manifest carries that implication in writing, so it is not left to memory.
 
 ## Step 2 — Test Design Agent *(Pipeline Stage 3)*
 

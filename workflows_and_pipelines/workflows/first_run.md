@@ -58,11 +58,15 @@ This workflow runs exactly three Agent stages, orchestrated by the Run Manager, 
 
 Per `workflows_and_pipelines/pipeline/run_manager.md`, before any Agent runs:
 
-1. **Allocate Run ID + Display Name** — allocate the immutable Run ID and generate the AI-generated Display Name (`workflows_and_pipelines/pipeline/run_manager.md` §5) — for this workflow, the Display Name is derived from the `first_run` workflow name and its Login-module Run Scope (e.g. `first-run-login`).
-2. **Prepare Workspace** — create the Run Workspace (`workflows_and_pipelines/pipeline/run_manager.md` §6) at `platform_core_data/runs/{{RUN_FOLDER}}/` (e.g. `platform_core_data/runs/run-001__2026-07-27_09-15-00__UserStory__Login/`, per `run_manager.md` §5.1).
-3. **Generate Run Metadata** — write the initial `run.json` (`workflows_and_pipelines/pipeline/run_manager.md` §7) with `status: "Preparing"`.
-4. **Create Run Manifest** — initialize the pipeline's Run Manifest at `platform_core_data/runs/{{RUN_FOLDER}}/metadata/RunManifest.md` (`workflows_and_pipelines/pipeline/pipeline.md` §7), which will track revision count, checkpoint status, and reviewer for each of the three stages this workflow runs.
-5. **Launch Stage 1** — hand off to the Project Context Agent, having set run Status to `Running`.
+1. **Create the run** — one command does the whole of what used to be four manual steps (`run_manager.md` §5.10):
+
+   ```bash
+   node platform_core/tools/run_manager/cli.js new \
+     --scope UserStory --target Login --workflow first_run --scope-paths <in-scope paths>
+   ```
+
+   It generates the folder name (§5.5 — never hand-formatted; the pre-2026-07-27 "Run ID + AI-generated Display Name" pair is retired, §5), creates the Run Workspace (§6), writes `run.json` **with the Target Project code-state anchor** (`targetRef`, §5.8), creates `metadata/RunManifest.md` from its template (§5.11), and **activates the run** (§5.7) so Stage 1 knows where to write. Where the anchor cannot be captured, that is recorded as a declared gap rather than left silent.
+2. **Launch Stage 1** — hand off to the Project Context Agent, having set run Status to `Running`. As each stage completes or a checkpoint resolves, record it: `cli.js stage "<Stage>" --status <status> --reviewer <who>` (§5.11).
 
 The Run Manager takes no further action of its own until a stage signals completion, error, or a checkpoint is reached (`workflows_and_pipelines/pipeline/run_manager.md` §8) — it does not analyze, and does not influence, what any Agent produces.
 

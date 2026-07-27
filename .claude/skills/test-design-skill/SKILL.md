@@ -354,12 +354,14 @@ Any future integration that maps these canonical artifacts into a third-party AL
 
 # 12. Expected Artifacts
 
-| Artifact | Path |
-|---|---|
-| Manual Test Suite — Markdown (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md` |
-| Manual Test Suite — Excel (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` |
-| Requirement Traceability Matrix | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` |
-| Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` |
+| Artifact | Path | Template |
+|---|---|---|
+| Manual Test Suite — Markdown (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md` | [`stage_3_test_design/TestCases_Module.md`](../../../platform_core/templates/stage_3_test_design/TestCases_Module.md) (per-case block: [`TestCase_entry.md`](../../../platform_core/templates/stage_3_test_design/TestCase_entry.md)) |
+| Manual Test Suite — Excel (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` | same as above — two renderings of one test case set, never divergent |
+| Requirement Traceability Matrix | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` | [`stage_3_test_design/TraceabilityMatrix.md`](../../../platform_core/templates/stage_3_test_design/TraceabilityMatrix.md) |
+| Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` | [`stage_3_test_design/CoverageReport.md`](../../../platform_core/templates/stage_3_test_design/CoverageReport.md) |
+
+**Every artifact's document structure is defined by its template** in `platform_core/templates/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. `TestCase_entry.md` encodes §6.1's exact field list ("no more") and §6.0/§6.0.1's lean-case rules; `CoverageReport.md` encodes §18's 12-section contract. `platform_core/templates/README.md` states the shared conventions.
 
 # 13. Operational Contract
 
@@ -521,3 +523,45 @@ Next step — either:
   2. Revise this stage:        /test-design-skill <your feedback>
   3. Skip manual execution:    /automation-skill   (requires the §5.4 gate + declares gaps)
 ```
+
+# 24. Resolving `{{RUN_FOLDER}}`
+
+Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
+at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's
+many runs the pipeline is currently working in (`workflows_and_pipelines/pipeline/run_manager.md` §5.7).
+
+```bash
+node platform_core/tools/run_manager/cli.js active   # -> the run folder name to write into
+node platform_core/tools/run_manager/cli.js list     # every run, newest first, active marked *
+```
+
+- **Never hand-pick, guess, or infer a run folder.** Resolve it from the pointer (`resolveActiveRunFolder()` in JS, or the `active` verb). A stage that writes into a run it guessed at is exactly how one logical run's artifacts end up scattered across several folders.
+- **No active run → ask, never assume.** If the pointer is absent, stop and ask which run to use, listing what exists. Never fall back to "the newest run" or create one silently.
+- **A pointer naming a missing folder → report it and stop.** A stale pointer means the run was deleted or renamed; redirecting this stage's output into some other run would corrupt both.
+- **The pointer is sticky.** It stays on the same run across invocations until someone switches it, so a multi-stage session keeps writing into one run without restating which.
+- **Switching runs is the human's call.** This stage never rewrites the pointer to redirect its own output. Working on a different run means the switch happens first, as an explicit step (`cli.js use <run>`).
+
+This stage never creates a run. Its inputs (Project Context, Discovery Artifacts) and its outputs all belong to the active run.
+
+## Inherited artifacts and code drift
+
+A run may be a **refinement** of an earlier one (`run_manager.md` §5.9). Such a run carries
+`metadata/lineage.json` recording `inheritsFrom` / `supersedes`, and its inherited artifacts live in
+the prior run and are **referenced by path, never copied** (`pipeline.md` §7 "Cross-run reuse").
+
+```bash
+node platform_core/tools/run_manager/cli.js drift          # what moved in the app since this run was anchored
+node platform_core/tools/run_manager/cli.js drift --json    # machine-readable, exit 2 when not "unchanged"
+```
+
+- **Resolve `{{PRIOR_RUN_FOLDER}}` from the lineage record**, via `resolvePriorRunFolder()` — never by
+  picking a plausible-looking earlier run. A run with no lineage record inherits nothing.
+- **An inherited artifact is an input, not a conclusion this run has re-established.** Cite it by its
+  prior-run path so a reader can see it was inherited rather than produced here.
+- **Drift decides what may be reused as-is.** When `drift` reports `moved`, every inherited finding,
+  test case, or locator touching a changed path is **unverified against current code** until this run
+  re-checks it. Say so explicitly rather than presenting it as still current.
+- **`unknown-*` is not `unchanged`.** No anchor, no git, or an unresolvable ref all mean drift could
+  not be computed — treat inherited conclusions as unverified, never as confirmed.
+- **A refinement targets today's project state.** The prior run described the app at its own
+  `targetRef`; this run describes it now. Never carry forward a conclusion that drift contradicts.

@@ -3,4 +3,9 @@
 module.exports = {
   ...require('./runFolderName'),
   ...require('./runFolderIndex'),
+  ...require('./activeRun'),
+  ...require('./targetRef'),
+  ...require('./runLineage'),
+  ...require('./runManifest'),
+  ...require('./createRun'),
 };

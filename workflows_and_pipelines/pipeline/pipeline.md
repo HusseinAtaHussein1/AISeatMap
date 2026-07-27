@@ -403,6 +403,8 @@ To satisfy Rule 7 (versionable artifacts) and Rule 6 (gates that truly stop the 
 
 **Cross-run reuse.** A run that reuses an upstream artifact from an earlier run (e.g. an already-approved Project Context) references that run's file by path — `platform_core_data/runs/{{PRIOR_RUN_FOLDER}}/context/ProjectContext.md` — and records the source run in its own Run Manifest. It does not copy the file into the current run. When a stage does need to evolve a reused artifact, it copies it into the current run *once*, at that point, and the Run Manifest records that the copy's origin was the prior run.
 
+`{{PRIOR_RUN_FOLDER}}` is **resolved, not filled in by hand**: `resolvePriorRunFolder()` reads it from the run's own `metadata/lineage.json` (`run_manager.md` §5.9), which records `inheritsFrom`/`supersedes` and every inherited artifact's path. The Run Manifest's **Cross-Run Reuse / Source Runs** section ([`platform_core/templates/metadata/RunManifest.md`](../../platform_core/templates/metadata/RunManifest.md)) is where the requirement above lands structurally — one row per reused artifact, recording the source run, whether it was `Referenced` or `Copied`, and the **drift** between that run's code-state anchor and now (`run_manager.md` §5.8). Where drift reports `moved` or any `unknown-*`, the reused artifact's conclusions are *unverified against current code* and the consuming stage says so rather than presenting them as current.
+
 ## 8. Traceability Chain
 
 Every artifact must be traceable, end to end, back through the chain that produced it:

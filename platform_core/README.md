@@ -6,7 +6,7 @@ This folder exists to hold the platform's **shared engineering tooling** — the
 
 It is the most upstream, most stable layer in the repository: it depends on nothing else here, and everything else may draw on it.
 
-> **Note (2026-07-26):** the Platform Knowledge layer that used to live here as `platform_core/knowledge/` now lives at [`../platform_core_data/knowledge_base/patterns/`](../platform_core_data/knowledge_base/patterns/). This folder is Tools only. The two-layer Knowledge Architecture itself is unchanged — see `workflows_and_pipelines/pipeline/pipeline.md` §10 and `docs/CHANGELOG.md`.
+> **Note (2026-07-26):** the Platform Knowledge layer that used to live here as `platform_core/knowledge/` now lives at [`../platform_core_data/knowledge_base/patterns/`](../platform_core_data/knowledge_base/patterns/). This folder holds Tools and, since 2026-07-27, `templates/` (output artifact structure — blank skeletons, no project content). The two-layer Knowledge Architecture itself is unchanged — see `workflows_and_pipelines/pipeline/pipeline.md` §10 and `docs/CHANGELOG.md`.
 
 ## Responsibility
 
@@ -17,6 +17,7 @@ It does not own agent behavior (`.claude/skills/`), stage sequencing (`workflows
 ## What Lives Here
 
 - **Shared Tools** (`tools/`) — reusable runtime engines callable identically for any project, with zero project-specific data baked in (the Browser Driver, the MCP tools layer, the Run Manager, the Automation Lifecycle tools). `tools/mcp/` is the one member that holds no engine code of its own: it registers the `playwright` and `context7` MCP servers (repo-root `.mcp.json`) and specifies the contract under which Skills may drive them — plus `stack_docs/`, the extractor that reads a project's manifests/lockfiles so documentation is fetched for the versions the suite actually runs against.
+- **Output Artifact Templates** (`templates/`) — the authoritative *structure* of every artifact the pipeline writes, one template per artifact per stage. Blank Markdown skeletons with `{{PLACEHOLDER}}` tokens and inline `<!-- -->` guidance; they hold no project content, which is exactly why they belong in this layer. Each `.claude/skills/*/SKILL.md` points at its templates rather than restating the structure inline, so an artifact's shape has one home. See [`templates/README.md`](templates/README.md).
 
 Population is deliberate: this layer does not grow by accretion during ordinary pipeline execution — see Rules below.
 
@@ -32,6 +33,15 @@ Population is deliberate: this layer does not grow by accretion during ordinary 
 
 ```
 platform_core/
+├── templates/                # output artifact templates — the structure of everything the
+│   ├── README.md             #   pipeline writes, one template per artifact per stage
+│   ├── stage_1_context/      #   ProjectContext
+│   ├── stage_2_discovery/    #   snapshots, Timeline, Coverage, QA Report, findings/
+│   ├── stage_3_test_design/  #   TestCases (+ per-case entry), Traceability, Coverage
+│   ├── stage_4_manual_execution/  # Results, Summary, Candidate Package, Defect entry
+│   ├── stage_5_automation/   #   Plan, Manifests, Decision/Coverage Reports, Summary
+│   ├── stage_6_execution/    #   ExecutionResults
+│   └── stage_7_reporting/    #   Final_QA_Report
 └── tools/
     ├── browser_driver/       # shared browser automation engine — zero project-specific data
     │   ├── driver.js          # resolves project paths, loads profile + credentials, launches, logs in

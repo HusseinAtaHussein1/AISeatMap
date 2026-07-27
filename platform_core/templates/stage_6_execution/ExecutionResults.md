@@ -1,0 +1,205 @@
+<!--
+TEMPLATE — Execution Results (Stage 6 of 7)
+Renders to: platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md
+Authority:  .claude/skills/automation-execution-skill/SKILL.md §18 (Standard Output Contract — these
+            10 sections, this order), §17 (Result Classification), §22 (Metrics),
+            §25 (Automation Repair Loop), §25.6 (three health figures), §9
+
+Section order is mandatory: the Reporting skill must never have to interpret free-form prose. This is
+a SINGLE-FILE input for Stage 7 by design (reporting-skill §4).
+
+The suite executed is ALWAYS this run's own WORKING COPY
+(runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/) — never the Workspace Automation Baseline.
+Execution happens strictly BEFORE the Workspace Merge.
+-->
+
+# Execution Results — {{RUN_FOLDER}}
+
+## 1. Execution Metadata
+
+<!-- §18 #1 — the run-identity header. Execution Mode, Concurrency Mode, and Retry Policy are
+     mandatory here alongside the other identity fields (§9). -->
+
+| Field | Value |
+|---|---|
+| Execution ID | {{EXECUTION_ID}} |
+| Run Folder | `{{RUN_FOLDER}}` |
+| Run Scope Type / Run Type | {{RUN_SCOPE_TYPE}} / {{RUN_TYPE}} <!-- §13 --> |
+| Environment | {{ENVIRONMENT}} <!-- §14 --> |
+| Target URL | {{APP_URL}} |
+| Framework | {{FRAMEWORK}} |
+| Suite executed | `runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/` |
+| Execution Mode | {{EXECUTION_MODE}} <!-- Headless / Headed / Debug — §5.1 --> |
+| Concurrency Mode | {{CONCURRENCY_MODE}} |
+| Retry Policy | {{RETRY_POLICY}} <!-- §5.4 --> |
+| Started | {{START_TIMESTAMP}} |
+| Ended | {{END_TIMESTAMP}} |
+
+## 2. Execution Summary
+
+<!-- §18 #2 — ONE PARAGRAPH: what was executed, the overall outcome, and headline pass/fail figures. -->
+
+{{EXECUTION_SUMMARY_NARRATIVE}}
+
+## 3. Execution Results
+
+<!-- §18 #3 — per-test detail. EXACTLY ONE classification per test (§17) — never zero, never more
+     than one:
+
+       Passed                 every assertion succeeded
+       Failed                 executed, at least one assertion did not succeed — a genuine,
+                              reproducible discrepancy in APPLICATION BEHAVIOUR
+       Skipped                deliberately not run (e.g. not authorized for this environment)
+       Blocked                a precondition was not met (prior test in a chain, test data,
+                              environment state) — distinct from Skipped and Failed
+       Not Executed           in scope, but the run ended before reaching it
+       Inconclusive           ran, but cannot be confidently classified Passed or Failed (e.g. an
+                              assertion that itself errored rather than evaluated false)
+       Flaky                  outcome not consistent across attempts within this same execution
+                              (§5.4) — reported distinctly from a clean Passed
+       Infrastructure Failure test runner crash, OOM, CI runner failure — not the app or environment
+       Environment Failure    target environment unreachable/degraded, not attributable to the app
+       Automation Failure     the generated automation itself is broken (stale selector, removed page
+                              object) — a signal back to the Automation skill (§20)
+       Application Failure    the app genuinely behaved incorrectly, and automation/environment/
+                              infrastructure are CONFIRMED not at fault
+       Configuration Failure  wrong environment URL, missing credential, invalid mode/framework config
+
+     `Failed` is RESERVED for genuine application-behaviour discrepancies. Where the cause is actually
+     Infrastructure / Environment / Automation / Configuration, the MORE SPECIFIC classification is
+     used — so a reviewer never mistakes an environment hiccup for a real defect, or vice versa.
+     Where the cause is genuinely ambiguous even after failure detail is captured, `Inconclusive` is
+     the honest answer — never force-fit into `Failed` for a cleaner-looking report. -->
+
+| Test Case ID | Automation Script ID | Status | Execution Time | Attempts | Failure Detail | Evidence Refs |
+|---|---|---|---|---|---|---|
+| {{TEST_CASE_ID}} | {{SCRIPT_ID}} | {{STATUS}} | {{EXECUTION_TIME}} | {{ATTEMPTS}} | {{FAILURE_DETAIL}} | {{EVIDENCE_REFS}} |
+
+## 4. Evidence Inventory
+
+<!-- §18 #4 — the consolidated list per §16: every evidence type captured, PER TEST, with paths, and
+     EVERY GAP WITH A REASON. A missing evidence item is named, never silently omitted. -->
+
+| Test Case ID | Evidence Type | Path | Captured? | Gap Reason |
+|---|---|---|---|---|
+| {{TEST_CASE_ID}} | {{EVIDENCE_TYPE}} <!-- screenshot / trace / log / HAR / framework report / video --> | `execution/artifacts/{{FILE}}` | {{CAPTURED}} | {{GAP_REASON}} |
+
+**Evidence root:** `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/`
+
+## 5. Execution Statistics
+
+<!-- §18 #5 — the Metrics from §22. Every rate states its DENOMINATOR explicitly. -->
+
+| Metric | Value | Definition / Basis |
+|---|---|---|
+| Execution Duration | {{DURATION}} | Total wall-clock, start to finish |
+| Pass Rate | {{PASS_RATE}}% | Passed ÷ total executed — Skipped/Blocked/Not Executed EXCLUDED from the denominator: {{PASS_RATE_BASIS}} |
+| Failure Rate | {{FAILURE_RATE}}% | (Failed + Application Failure) ÷ total executed — genuine application-behaviour failures, kept distinct from infrastructure-caused non-passes |
+| Skip Rate | {{SKIP_RATE}}% | Skipped ÷ total in scope |
+| Retry Count | {{RETRY_COUNT}} | Total retry attempts across the run (§5.4) |
+| Evidence Count | {{EVIDENCE_COUNT}} | Total evidence items captured (§16) |
+| Framework | {{FRAMEWORK}} | From the Automation Summary (§15) |
+| Execution Mode | {{EXECUTION_MODE}} | §5.1 |
+| Environment | {{ENVIRONMENT}} | §14 |
+| Coverage Summary | {{COVERAGE_POINTER}} | A restated POINTER to the Automation Coverage Report's figures — this stage does not recompute coverage, only cites it |
+| Flaky Test Count | {{FLAKY_COUNT}} | Results classified `Flaky` (§17) |
+| Execution Stability | {{STABILITY}} | Flaky Count ÷ total executed — a stated ratio, not a subjective judgment |
+
+## 6. Health Summary
+
+<!-- §18 #6 / §25.6 — THREE SEPARATE FIGURES. NEVER ONE MERGED "Failed" COUNTER.
+     Folding these together misrepresents which system is actually at fault. -->
+
+### Application Health
+
+<!-- Counted ONLY from `Application Failure` classifications plus genuine Passed results. This is the
+     ONLY figure that speaks to whether the application under test is actually working. -->
+
+| Metric | Value |
+|---|---|
+| Passed | {{APP_PASSED}} |
+| Application Failure | {{APP_FAILED}} |
+| Application Health | {{APP_HEALTH}} |
+
+### Automation Health
+
+<!-- `Automation Failure` — and, after the Repair Loop, `Automation Repaired` — counted separately.
+     Speaks to the quality/maintenance state of the generated suite, NOT the application. -->
+
+| Metric | Value |
+|---|---|
+| Automation Failure | {{AUTOMATION_FAILED}} |
+| Automation Repaired | {{AUTOMATION_REPAIRED}} |
+| Automation Health | {{AUTOMATION_HEALTH}} |
+
+### Environment Health
+
+<!-- `Environment Failure` / `Infrastructure Failure` / `Configuration Failure` counted separately.
+     Speaks to the target environment and execution infrastructure, not either of the above. -->
+
+| Metric | Value |
+|---|---|
+| Environment Failure | {{ENV_FAILED}} |
+| Infrastructure Failure | {{INFRA_FAILED}} |
+| Configuration Failure | {{CONFIG_FAILED}} |
+| Environment Health | {{ENV_HEALTH}} |
+
+### Inconclusive / Flaky
+
+<!-- Reported as THEIR OWN LINE — folded into NEITHER of the three health figures, in either
+     direction. -->
+
+| Status | Count |
+|---|---|
+| Inconclusive | {{INCONCLUSIVE_COUNT}} |
+| Flaky | {{FLAKY_COUNT}} |
+
+## 7. Automation Repair Loop Outcome
+
+<!-- §18 #7 — include ONLY when the Repair Loop was triggered (§25), i.e. an `Automation Failure`
+     occurred this run. OMITTED ENTIRELY — not left as an empty section — when none occurred. -->
+
+**Repair Summary (§25.1):** {{REPAIR_SUMMARY}}
+
+**Human decision (§25.2):** {{HUMAN_DECISION}}
+<!-- The human's answer to the repair gate. Repair is never applied without it. -->
+
+**Before / After comparison (§25.4)** — include only if repair was APPROVED:
+
+| Field | Value |
+|---|---|
+| Fixed (`Automation Repaired`) | {{FIXED}} |
+| Remaining failures | {{REMAINING_FAILURES}} |
+| New failures | {{NEW_FAILURES}} |
+| Root cause | {{ROOT_CAUSE}} |
+| Confidence | {{CONFIDENCE}} |
+
+## 8. Known Limitations
+
+<!-- §18 #8 — anything this execution could not fully verify (e.g. a test marked Blocked, a Skipped
+     mutating action) AND WHY. -->
+
+| Limitation | Affected Test(s) | Why |
+|---|---|---|
+| {{LIMITATION}} | {{TEST_CASE_IDS}} | {{REASON}} |
+
+## 9. Execution Recommendations
+
+<!-- §18 #9 — the corrective actions recommended per §20 for any blocked/failed item: retry, resume,
+     switch mode, validate environment, re-run subset, or flag for Automation regeneration.
+     Recommendations requiring follow-up — never a claim that a fix has been applied. -->
+
+| ID | Recommendation | Applies To | Rationale |
+|---|---|---|---|
+| {{REC_ID}} | {{RECOMMENDATION}} | {{APPLIES_TO}} | {{RATIONALE}} |
+
+## 10. Inputs for Reporting skill
+
+<!-- §18 #10 — the explicit handoff package (§21): confirmation that every input
+     .claude/skills/reporting-skill/SKILL.md §4 declares it needs is present. -->
+
+| Required Input (Reporting §4) | Present? | Location / Note |
+|---|---|---|
+| {{REQUIRED_INPUT}} | {{PRESENT}} | {{LOCATION}} |
+
+**Handoff confirmation:** {{HANDOFF_CONFIRMATION}}

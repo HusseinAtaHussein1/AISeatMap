@@ -775,7 +775,7 @@ These are deliberately blank rather than pre-filled with samples: Stage 1 reads 
 
 **Retargeting at a different application** means running `agentic-testing init` in that repository. There is no clear-and-repopulate ritual any more, and no second project directory ([`pipeline.md` §1](workflows_and_pipelines/pipeline/pipeline.md)). Two things are worth knowing if you do reuse an installation in place:
 
-- `platform_core_data/` is **never** overwritten by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far; clearing `workspace/` and `runs/` is your decision, not the installer's.
+- `platform_core_data/` is **never** overwritten by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far; clearing `runs/` is your decision, not the installer's. If you do clear it, also clear the Active Run pointer (`node platform_core/tools/run_manager/cli.js clear`) — a pointer left naming a deleted run makes every stage stop and ask, by design (`workflows_and_pipelines/pipeline/run_manager.md` §5.7 Rule 2).
 - `knowledge_base/patterns/` is **Platform Knowledge** and survives retargeting by design — it is the accumulated engineering knowledge, not the application's specifics. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you are leaving behind ([§11](#11-knowledge-base), [`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)).
 
 ### 3. Set up the Browser Driver (if the application needs live browser access)

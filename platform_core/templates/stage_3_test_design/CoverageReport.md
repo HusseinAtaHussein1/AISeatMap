@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Coverage Report (Stage 3 — shared, divergence point)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §18 (Standard Output Contract — these 12
             sections, this order), §8 (Coverage Tracking), §9 Outputs #4, §12
 
@@ -12,7 +12,9 @@ interpret free-form prose to extract what it needs.
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Generated | {{TIMESTAMP}} |
 | Status | {{STATUS}} <!-- Pending Review / Approved --> |
 
@@ -25,7 +27,7 @@ interpret free-form prose to extract what it needs.
 |---|---|
 | Run Scope Type / Source | {{RUN_SCOPE_TYPE}} / {{RUN_SCOPE_SOURCE}} |
 | Run Type | {{RUN_TYPE}} |
-| Project Context | `runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
+| Project Context | `modules/{{MODULE_SLUG}}/context/ProjectContext.md` |
 
 ## 2. Requirements Covered
 

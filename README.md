@@ -518,8 +518,18 @@ agentic-ai-testing-platform/
 │   │       ├── reporting/               # (empty until promoted)
 │   │       ├── pipeline_decision_patterns/  # (held empty — no defined reader or promotion source yet)
 │   │       └── INDEX.md                 # Catalog of every promoted document
-│   ├── runs/                            # Immutable per-run snapshots — see §10
-│   └── automation_baseline/             # Persistent automation source code — see §10, §12
+│   ├── modules/                         # PER MODULE, DURABLE — the design half of the output (§10)
+│   │   ├── modules.json                 #   the registry AND the active-module pointer
+│   │   └── {module}/                    #   one folder per module, e.g. login/, agency-management/
+│   │       ├── README.md · module.json  #     regenerated summary + authoritative state
+│   │       ├── context/                 #     Stage 1  — this module's ProjectContext.md
+│   │       ├── discovery/               #     Stage 2  — snapshot, findings/, evidence/
+│   │       ├── test_design/             #     Stage 3  — suite (MD + XLSX), matrix, coverage
+│   │       ├── automation/              #     Stage 4A — a STANDALONE, runnable project
+│   │       └── healing/                 #     Stage 5H — only if a human invoked self-healing
+│   ├── runs/                            # PER RUN, IMMUTABLE — the execution half (§10)
+│   │                                    #   manual_execution/ · execution/ · reporting/ · metadata/
+│   └── automation_baseline/             # Assembled whole-project automation + shared/ — §10, §12
 │
 ├── docs/                             # Supplementary and historical platform documentation — see §18
 │   ├── USER_GUIDE.md                   # The task-oriented guide — recommended entry point for operators
@@ -537,22 +547,32 @@ agentic-ai-testing-platform/
 
 There is deliberately no `credentials/` or `ui/` folder at the repository root — both live inside the project's shared knowledge layer (`platform_core_data/knowledge_base/credentials/`, `platform_core_data/knowledge_base/ui/`), and `credentials.json` is git-ignored, never committed.
 
-**`platform_core_data/` has exactly three top-level members**, and which one a file belongs to is decided by lifetime, not by kind: `knowledge_base/` (durable, shared across every run), `runs/` (per-run, immutable), and `automation_baseline/` (long-lived automation source code). Anything that would still be correct at the start of the next run goes in `knowledge_base/`. Prior to 2026-07-27 the shared material was split across the folder root, `resources/`, `browser/`, `credentials/`, and `ui/`; consolidating it removed the ambiguity of two plausible homes for one file.
+**`platform_core_data/` has exactly four top-level members**, and which one a file belongs to is decided by lifetime, not by kind:
+
+| Folder | Lifetime | Holds |
+|---|---|---|
+| `knowledge_base/` | durable, shared across every run and module | hand-authored inputs, project reference, detected stack, accumulated knowledge |
+| `modules/` | durable, **per module, evolves in place** | each module's Context, Discovery, Test Design, Automation, and Healing output |
+| `runs/` | per run, **immutable once written** | manual and automation execution results, the Final QA Report, run metadata |
+| `automation_baseline/` | long-lived source code | the assembled whole-project automation suite, plus its `shared/` assets |
+
+The rule in one line: **would the next run want to *start from* it (module), or is it *evidence of one execution* (run)?** Prior to 2026-07-29 every stage wrote into the run folder, which scattered a module's design across the runs that touched it; prior to 2026-07-27 the shared material was split across the folder root, `resources/`, `browser/`, `credentials/`, and `ui/`. Both consolidations removed the ambiguity of two plausible homes for one file.
 
 ---
 
 ## 10. Run Architecture
 
-### One run, one folder, one copy of each artifact
+### The module is the unit of design; the run is the unit of execution
 
-**Every artifact a stage produces lives in that run's own folder — there is no second location.**
+**Every artifact has exactly one home, and one question decides which** ([`module_architecture.md`](workflows_and_pipelines/pipeline/module_architecture.md)):
 
-- **Run artifacts** (`platform_core_data/runs/{{RUN_FOLDER}}/{context,discovery,test_design,manual_execution,automation,execution,reporting,metadata}/`) — everything the run produced. Each artifact is a single file, edited in place: approving it flips a `status:` field in its own header, and a refinement request edits the same file the reviewer read. No `.vN` suffixes, and **no duplicate "final" copy is ever written on approval** — git is the version history.
-- **Automation Baseline** (`platform_core_data/automation_baseline/{framework}/`) — the one deliberate exception. Generated automation *code* must outlive the run that produced it, so a run generates into a temporary working copy and merges into this persistent, lifecycle-managed baseline ([§12](workflows_and_pipelines/pipeline/pipeline.md)).
+- **Module artifacts** (`platform_core_data/modules/{module}/{context,discovery,test_design,automation,healing}/`) — what a module *is* and what should be tested in it. **Durable and refined in place across runs:** a suite revised six runs later is the same file at a higher revision, not a copy somewhere new. Each artifact is a single file: approving it flips a `status:` field in its own header, and a refinement edits the file the reviewer read. No `.vN` suffixes and **no duplicate "final" copy on approval** — git is the version history.
+- **Run artifacts** (`platform_core_data/runs/{{RUN_FOLDER}}/{manual_execution,execution,reporting,metadata}/`) — what happened when the suite was executed, on that date, at that code state. **Immutable once written**, because that is what makes it evidence.
+- **Automation Baseline** (`platform_core_data/automation_baseline/{framework}/`) — automation *code* that must outlive both. Stage `4A` generates a **standalone project per module**, and an approved module project is assembled into this persistent, three-way-merge-protected baseline ([§12](workflows_and_pipelines/pipeline/pipeline.md)).
 
-A run that needs an artifact an earlier run already approved references it by path (`platform_core_data/runs/{{PRIOR_RUN_FOLDER}}/context/ProjectContext.md`) and records the source run in its own Run Manifest, rather than copying it forward. Full rules: [`workflows_and_pipelines/pipeline/pipeline.md` §7](workflows_and_pipelines/pipeline/pipeline.md).
+**Reusing design output across runs needs no mechanism.** A later run reads `modules/login/test_design/` — the current suite, in the only place it has ever lived. What the run records instead is **which revision it consumed** (`run.json` → `moduleArtifactRefs[]`), so its results stay interpretable after the module moves on. Full rules: [`pipeline.md` §7](workflows_and_pipelines/pipeline/pipeline.md).
 
-> Prior to 2026-07-27 the platform also kept a `platform_core_data/workspace/{stage}/` tree holding a "current approved" copy of each stage's output. It was removed: in real runs it produced redundant duplicates of the same Markdown — a `.v1` file, an unsuffixed approved copy of it, and a fresh `.v2` whenever a reviewer asked for a refinement instead of an edit.
+> Two earlier shapes were removed for the same reason — each created a second plausible home for one artifact. Prior to 2026-07-27 a `platform_core_data/workspace/{stage}/` tree held a "current approved" copy of each output, which produced a `.v1`, an unsuffixed duplicate, and a `.v2` per refinement. Prior to 2026-07-29 *every* stage wrote into the run folder, so answering "what do we know about Login?" meant reading four run folders and knowing which superseded which. **A run folder created before 2026-07-29 keeps its `context/`, `discovery/`, and `test_design/` exactly as written** — it is that run's record, and it is never rewritten.
 
 ### Self-descriptive run naming
 

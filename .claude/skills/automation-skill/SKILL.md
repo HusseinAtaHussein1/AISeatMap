@@ -37,7 +37,7 @@ inputs:
 outputs:
   - name: automation_plan
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationPlan_{Framework}.md"
     description: Target framework/language/architecture, planned suites, existing vs. new assets, estimated coverage.
   - name: automation_package
     type: file_path
@@ -45,19 +45,19 @@ outputs:
     description: The generated/reused automation project — scripts, page objects, fixtures, configuration.
   - name: automation_manifest
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationManifest_{Framework}.md"
     description: File inventory plus Self Review findings.
   - name: automation_decision_report
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationDecisionReport_{Framework}.md"
     description: Per-test-case Reuse/Generate/Partially Automatable/Manual Only decision.
   - name: automation_coverage_report
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationCoverageReport_{Framework}.md"
     description: Aggregate automation coverage percentage and named reasons for every gap.
   - name: automation_suite_manifest
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationSuiteManifest_{Framework}.md"
     description: Realized suite structure and shared fixtures/utilities per suite.
   - name: automation_summary
     type: file_path
@@ -65,19 +65,19 @@ outputs:
     description: "Consolidated handoff document (Framework Used, Execution Instructions, Coverage, Known Limitations) for the automation-execution-skill."
   - name: selector_verification_records
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/SelectorVerificationReport_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/SelectorVerificationReport_{Framework}.md"
     description: "Per-locator live verification evidence (§11A) — what resolved, by which strategy, with which fallback, and what could not be verified. Every emitted locator traces to a row here; the durable copy is written to the shared Selector Verification KB."
   - name: target_write_plan
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/TargetWritePlan_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/TargetWritePlan_{Framework}.md"
     description: "Every file to be created/modified/deleted in the Target Project, with a one-line reason each, plus the brownfield/greenfield determination (§11C). Presented at the Automation Approval gate; no Target Project write happens before it clears (pipeline.md §13.3)."
   - name: self_review_report
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/SelfReviewReport_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/SelfReviewReport_{Framework}.md"
     description: "Each self-review iteration's findings and fixes, the iteration/time budget consumed, and every check left unsatisfied when the budget ended (§15A) — disclosed, never silently dropped."
   - name: stack_documentation_context
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/StackDocumentationContext_{Framework}.md"
     description: "Detected stack, pinned dependency versions, Context7 queries performed, version-specific guidelines extracted, conflicts, and documentation gaps (§34) — written before any code generation begins."
   - name: project_stack
     type: file_path
@@ -103,7 +103,17 @@ dependencies:
 > 3. **Both shared knowledge bases are mandatory reads before generation** (§11B), so known failure modes are pre-empted rather than rediscovered in Stage `5A`.
 > 4. **Brownfield/greenfield is detected automatically; the write decision is approved explicitly** via a Target Write Plan (§11C) — replacing the previous multi-gate prompting.
 
-> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
+> **Revision note (2026-07-27, user-mandated):** the persistent Workspace Automation Baseline lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
+
+> **Revision note (2026-07-29, user-mandated):** **where this stage generates has changed, and it is a substantive change, not a path rename.** The temporary per-run working copy is gone. Generation now happens in a **Module Automation Project** — `platform_core_data/modules/{module}/automation/tests_{Framework}/` — which is **durable and standalone**:
+>
+> 1. **Standalone is a hard requirement, not a description.** The project carries its own config and dependency manifest and **must run on its own** before it is approved, because Stage `5A` may execute one module before the others exist, Stage `5H` must heal and re-run it in isolation, and a reviewer must be able to run it themselves. An approval gate on code nobody can execute is a formality (§11D).
+> 2. **Shared assets are generated once, into `automation_baseline/{framework}/shared/`**, and referenced by relative path. This is the one direction in which a module project reads outside itself. A module needing a change to a shared asset **proposes** it in its Decision Report; the change lands at assembly time, through the whole-project gate (§11D.2).
+> 3. **The project is reused in place, never recreated.** A second Stage `4A` pass on the same module extends the project it already has — §7's in-place discipline, applied to code, with git as the history.
+> 4. **Approval is per module, and it authorizes assembly.** An approved module project is assembled into the baseline by the *unchanged* three-way merge (`pipeline.md` §12.4) — only the merge's *source* changed. Its lifecycle is tracked in `.module_automation_state.json`: `Generated` → `Executed` → `Healed` → `Approved`.
+> 5. **Cleanup no longer deletes the project.** It removes build/IDE output only; the source stays, because it is the module's automation home (`pipeline.md` §12.5).
+>
+> Nothing about mandatory headless selector verification (§11A), the two mandatory KB reads (§11B), the bounded self-review loop, the Target Write Plan (§11C), brownfield/greenfield detection, or the §5.2 gate's criteria changes. See [`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §7 and `pipeline.md` §12.
 
 # 1. Skill Name
 
@@ -154,19 +164,19 @@ The Automation skill consumes only approved artifacts. Every input below must be
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | Governing | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — target environment URL, credentials, business rules, and safety constraints that govern what may be automated |
+| Project Context | Governing | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — target environment URL, credentials, business rules, and safety constraints that govern what may be automated |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Called out explicitly because it drives §23's strategy selection, not left an implicit read of prose. |
 | Framework Configuration | Governing (embedded, may be absent) | Conditionally required — see §6 | **Hidden-assumption check:** the Project Context's own required document structure (`.claude/skills/project-context-skill/SKILL.md` §8) has no dedicated "Framework" field — a framework preference, if one exists, currently surfaces only informally, inside Environment Constraints prose or an existing automation project (§9). This skill must not assume this field exists or is populated; if no framework is stated anywhere and no existing automation project exists to infer one from, §6's existing halt-and-report rule applies. |
 | Project Configuration | Governing (embedded) | Required | Target environment, credentials, and safety constraints — already covered by the Project Context row above; named separately here only to confirm no *additional*, undeclared configuration source is silently assumed. |
-| Manual Test Suite | **Primary — scope *and* content** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` and `.xlsx` — **this stage's sole scope-determining input**, and its content source (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-skill/SKILL.md`). Every approved test case within the run's scope filter is eligible for an automation decision (§13). Narrowed only by the run's own Run Scope / module filter (§23) or an explicit run-scoped instruction (§35) — **never by a manual execution outcome** (`pipeline.md` §3.3). |
+| Manual Test Suite | **Primary — scope *and* content** | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` and `.xlsx` — **this stage's sole scope-determining input**, and its content source (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-skill/SKILL.md`). Every approved test case within the run's scope filter is eligible for an automation decision (§13). Narrowed only by the run's own Run Scope / module filter (§23) or an explicit run-scoped instruction (§35) — **never by a manual execution outcome** (`pipeline.md` §3.3). |
 | Selector Verification KB | Secondary — **mandatory read** | Required if present | `platform_core_data/knowledge_base/browser/screens/`, `.../components/` — locators this stage confirmed in earlier runs, with their code-state anchors (`pipeline.md` §10.8). Consulted **before** generation (§11B); a record whose anchor shows drift is re-verified live rather than trusted (§11A). This stage is the KB's **sole writer**. |
 | Repair KB | Secondary — **mandatory read** | Required if present | `platform_core_data/knowledge_base/patterns/repair_patterns/`, `.../diagnosis_patterns/`, `.../reasoning/` + prior runs' Repair Summaries (`pipeline.md` §10.8). Consulted **before** generation so a known failure mode is pre-empted in the first draft (§11B), rather than rediscovered by failing in Stage `5A` and repaired in Stage `5H`. |
-| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` — carries the Requirement/Discovery/Finding/Evidence references this skill must propagate onto each Automation Script (§12) |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` — informs which test cases and Findings are already known to be Uncovered/exceptions, so this skill doesn't attempt to automate what Stage 3 already excluded |
-| Discovery Artifacts | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` — **behavioural context only.** Discovery deliberately carries **no selectors and no DOM captures** (`pipeline.md` §3.5), so a selector is never sourced here: it is verified live against the running application in §11A. Never a source of business logic. |
-| Findings | Secondary | Required if any exist, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` and each `FINDING-{ID}_{ShortName}/metadata.md` — used to carry Finding Reference through to the Automation Script that regress-tests or exploratory-tests it |
-| Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
-| Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This skill reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
+| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` — carries the Requirement/Discovery/Finding/Evidence references this skill must propagate onto each Automation Script (§12) |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md` — informs which test cases and Findings are already known to be Uncovered/exceptions, so this skill doesn't attempt to automate what Stage 3 already excluded |
+| Discovery Artifacts | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md` — **behavioural context only.** Discovery deliberately carries **no selectors and no DOM captures** (`pipeline.md` §3.5), so a selector is never sourced here: it is verified live against the running application in §11A. Never a source of business logic. |
+| Findings | Secondary | Required if any exist, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md` and each `FINDING-{ID}_{ShortName}/metadata.md` — used to carry Finding Reference through to the Automation Script that regress-tests or exploratory-tests it |
+| Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
+| Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/modules/{{MODULE_SLUG}}/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This skill reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
 
 **This skill must never read the PRD directly** (`platform_core_data/knowledge_base/PRD.md` or equivalent) — only Stage 1 is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
 
@@ -478,6 +488,74 @@ Rules, all inherited from `pipeline.md` §13.3 rather than invented here:
 5. **Filesystem writes only** — the platform never runs `git add`/`commit`/`mv`/`rm` against the Target Project. Generated code is left in the working tree for the team to review and commit with their own conventions and hooks.
 6. **Every write is recorded in the Target Write Ledger** — path, run folder, operation, sha256 — the platform's record of what it owns inside someone else's repository.
 
+# 11D. The Module Automation Project — where this stage generates
+
+**This stage generates into `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/`, and nowhere else.** Not into the Workspace Automation Baseline (which only the Workspace Merge writes), not into a temporary run folder (that location is removed), and not directly into the Target Project (that is a projection of an approved baseline, §11C.4).
+
+## 11D.1 Standalone is a requirement, not a description
+
+**The module project must be independently runnable — its own config, its own dependency manifest — before it is approved.** Three concrete reasons, each of which fails if it is not:
+
+| Requirement | Why standalone is necessary |
+|---|---|
+| Stage `5A` executes one module | In a greenfield build the other modules' suites may not be written yet. A project that only runs as part of a whole cannot be executed at all until the whole exists. |
+| Stage `5H` heals one module in isolation | A repair's effect must be observable without whole-suite noise. Re-running 400 tests to see whether 3 repairs landed obscures the answer. |
+| A reviewer runs it before approving | An Automation Approval gate (`pipeline.md` §5.2) on code the reviewer cannot execute is a formality, not a review. |
+
+Concretely, the project ships whatever its framework needs to run alone — `playwright.config.*` / `pom.xml` / `testng.xml` / `package.json` or equivalent, a documented invocation command, and its own test data. **Standalone-ness is asserted in the Automation Suite Manifest** (`Runs standalone: Yes/No + why`), and a `No` blocks the gate rather than passing with a caveat.
+
+The framework itself is **not** re-selected here: it is bound by `knowledge_base/automation_framework.md`, and this stage complies (§31).
+
+## 11D.2 Shared assets — generated once, proposed never edited
+
+Standalone must not mean duplicated. Genuinely shared assets — base page objects, auth fixtures, common utilities, test-data factories — are generated **once**, into:
+
+```
+platform_core_data/automation_baseline/{{FRAMEWORK_LOWER}}/shared/
+```
+
+and referenced from each module project by a relative path recorded in that project's config. **This is the one direction in which a module project reads outside itself, and it is deliberate:** duplicating an auth fixture five ways guarantees five drifts.
+
+**A module project never edits a shared asset directly.** When it needs a change there:
+
+1. Record the proposed change in `AutomationDecisionReport.md` — what, why, and which modules it affects.
+2. Generate against the asset **as it currently is**, so the module project stays runnable.
+3. The change is applied to `shared/` **at assembly time** (`pipeline.md` §12.4 step 6), where it clears the whole-project gate.
+
+The reason is scope, not ceremony: a shared asset is whole-project surface. One module's reviewer approving a change to it would be approving on behalf of every other module's suite.
+
+Record the `shared/` folder's path-scoped commit as `baselineRef` in `.module_automation_state.json` at generation time — that anchor is what the assembly merge's conflict check compares against later.
+
+## 11D.3 Reuse the project in place; never recreate it
+
+A second Stage `4A` pass on the same module **extends the project that already exists**. This is `pipeline.md` §7's in-place-edit discipline applied to code, with git as the version history:
+
+- **Never create a parallel copy** — no `tests_PW_v2/`, no `tests_PW_new/`. Two projects claiming to be one module's suite leaves nothing able to say which Stage `5A` should run.
+- **Never delete a test to make room for a regenerated one.** A test case whose script is being replaced has its replacement written over the same file, and the change is recorded in the Automation Manifest.
+- **A test that is no longer in scope is not silently dropped.** Report it — a script for a retired test case is a decision for the reviewer, not a cleanup this stage performs unasked.
+
+## 11D.4 Lifecycle state — `.module_automation_state.json`
+
+Written alongside the project, tracking exactly four states (`pipeline.md` §12.3.1):
+
+| State | Set by | Meaning |
+|---|---|---|
+| `Generated` | **this stage** | Written; not yet executed |
+| `Executed` | Stage `5A` | Run; results referenced here by run folder |
+| `Healed` | Stage `5H` | Approved repairs applied and the affected tests re-run |
+| `Approved` | the §5.2 gate, recorded by the Module Manager | Eligible for assembly into the baseline |
+
+This stage sets **`Generated` only**. It never writes `Approved` — a stage that could record its own approval would make the gate advisory. It also never advances `Executed` or `Healed`, which belong to the stages that actually did those things.
+
+## 11D.5 Assembly is the merge's job, not this stage's
+
+On approval, the project is assembled into the whole-project baseline by the **unchanged** three-way merge (`pipeline.md` §12.4) — same hard pre-check, same base/theirs/ours classification, same lock guard, same untracked-file classification, same Merge Summary. Only the merge's *source* changed, from a run working copy to this module project.
+
+- **Greenfield:** every approved module project assembles into `automation_baseline/{framework}/tests_{Framework}/`, which is the deliverable, and is then projected into the Target Project per §11C.4.
+- **Brownfield:** the project is generated to match the **detected** layout from the start (§11C.1–§11C.2), so assembly is a merge into the team's existing structure rather than an imposition of the platform's own.
+
+**Ordering is fixed and this stage never shortcuts it:** generate → approve *this module* → assemble into the baseline → then project into the Target Project (`pipeline.md` §13.7). Writing to the Target Project before the baseline is updated would leave the baseline unable to reproduce what the team is looking at.
+
 # 12. Traceability
 
 
@@ -701,19 +779,19 @@ No other artifact is produced by this skill. It does not execute the Automation 
 | Artifact | Path | Template |
 |---|---|---|
 | Automation Package Registry | `platform_core_data/automation_baseline/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. | [`AutomationPackages.md`](../../../platform_core/templates/stage_4a_automation/AutomationPackages.md) |
-| Automation Plan | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md` | [`AutomationPlan.md`](../../../platform_core/templates/stage_4a_automation/AutomationPlan.md) |
+| Automation Plan | `platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationPlan_{Framework}.md` | [`AutomationPlan.md`](../../../platform_core/templates/stage_4a_automation/AutomationPlan.md) |
 | Automation Package (Workspace Automation Baseline) | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this skill never writes here directly (§33.2, Execution Rule 35) | — (generated source code, not a document) |
-| Automation Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md` | [`AutomationManifest.md`](../../../platform_core/templates/stage_4a_automation/AutomationManifest.md) |
-| Automation Decision Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md` | [`AutomationDecisionReport.md`](../../../platform_core/templates/stage_4a_automation/AutomationDecisionReport.md) |
-| Automation Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md` | [`AutomationCoverageReport.md`](../../../platform_core/templates/stage_4a_automation/AutomationCoverageReport.md) |
-| Stack Documentation Context (§34) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` | [`StackDocumentationContext.md`](../../../platform_core/templates/stage_4a_automation/StackDocumentationContext.md) |
+| Automation Manifest | `platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationManifest_{Framework}.md` | [`AutomationManifest.md`](../../../platform_core/templates/stage_4a_automation/AutomationManifest.md) |
+| Automation Decision Report | `platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationDecisionReport_{Framework}.md` | [`AutomationDecisionReport.md`](../../../platform_core/templates/stage_4a_automation/AutomationDecisionReport.md) |
+| Automation Coverage Report | `platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationCoverageReport_{Framework}.md` | [`AutomationCoverageReport.md`](../../../platform_core/templates/stage_4a_automation/AutomationCoverageReport.md) |
+| Stack Documentation Context (§34) | `platform_core_data/modules/{{MODULE_SLUG}}/automation/StackDocumentationContext_{Framework}.md` | [`StackDocumentationContext.md`](../../../platform_core/templates/stage_4a_automation/StackDocumentationContext.md) |
 | Project Stack record (§34.4) | `platform_core_data/knowledge_base/stack.md` — durable, shared across runs, updated in place | — (durable knowledge_base record, not a run artifact) |
-| Automation Suite Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md` | [`AutomationSuiteManifest.md`](../../../platform_core/templates/stage_4a_automation/AutomationSuiteManifest.md) |
+| Automation Suite Manifest | `platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationSuiteManifest_{Framework}.md` | [`AutomationSuiteManifest.md`](../../../platform_core/templates/stage_4a_automation/AutomationSuiteManifest.md) |
 | Automation Summary | `platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md` | [`AutomationSummary.md`](../../../platform_core/templates/stage_4a_automation/AutomationSummary.md) |
 
 **Every document artifact's structure is defined by its template** in `platform_core/templates/stage_4a_automation/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. `AutomationSummary.md` encodes §25's 8-section contract, `AutomationDecisionReport.md` encodes §13's four decisions and six mandatory per-decision fields, and `AutomationPlan.md` encodes §5's required plan fields. `platform_core/templates/README.md` states the shared conventions.
 
-**Where this skill actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage `5A`, its Execution Results and evidence.
+**Where this skill actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage `5A`, its Execution Results and evidence.
 
 # 20. Operational Contract
 
@@ -727,12 +805,12 @@ Turn the approved Stage 3 Manual Test Suite into a reviewable, live-verified aut
 
 ```text
 Input:
-  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md          (Approved)
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Login.md/.xlsx (Approved)
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md    (Approved)
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md        (Approved)
-  platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md                                (Approved)
-  platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md, FINDING-001..004 (Approved)
+  platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md          (Approved)
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_Login.md/.xlsx (Approved)
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md    (Approved)
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md        (Approved)
+  platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md                                (Approved)
+  platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md, FINDING-001..004 (Approved)
   Existing automation project: none found
 ```
 
@@ -916,7 +994,7 @@ This is not a new category of judgment call — it is the existing discipline §
 
 # 32. Reference Automation Project
 
-**A project may designate an external, real, human-owned automation codebase as its Reference Automation Project** — e.g. a company's production SHAFT repository living outside this platform's own repository entirely (`E:\...` on local disk, or any path outside `platform_core_data/runs/{{RUN_FOLDER}}/automation/`). This is distinct from the platform's own generated Automation Packages (§19, §31): it is not generated by this skill, is not one of the `tests_{Framework}/` packages in the registry, and is never assumed to be the same thing as "an existing automation package" in the §9/§31.1 sense — it gets its own handling.
+**A project may designate an external, real, human-owned automation codebase as its Reference Automation Project** — e.g. a company's production SHAFT repository living outside this platform's own repository entirely (`E:\...` on local disk, or any path outside `platform_core_data/modules/{{MODULE_SLUG}}/automation/`). This is distinct from the platform's own generated Automation Packages (§19, §31): it is not generated by this skill, is not one of the `tests_{Framework}/` packages in the registry, and is never assumed to be the same thing as "an existing automation package" in the §9/§31.1 sense — it gets its own handling.
 
 ## 32.1 Registration
 
@@ -1010,7 +1088,7 @@ Per material library (§2.4 of `mcp/README.md` — what the generated code actua
 
 ## 34.4 Output — one per-run artifact, one durable record
 
-**Per run, before generation:** `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md`, containing Detected Stack, Dependency Table (library · resolved version · pinned? · source file · Context7 ID · queried?), Queries Performed, Guidelines Extracted, Conflicts, and Documentation Gaps — per `mcp/README.md` §2.5.
+**Per run, before generation:** `platform_core_data/modules/{{MODULE_SLUG}}/automation/StackDocumentationContext_{Framework}.md`, containing Detected Stack, Dependency Table (library · resolved version · pinned? · source file · Context7 ID · queried?), Queries Performed, Guidelines Extracted, Conflicts, and Documentation Gaps — per `mcp/README.md` §2.5.
 
 **Durable, shared across runs:** the same detection also updates `platform_core_data/knowledge_base/stack.md` **in place** — Detected At, Ecosystems, Automation Framework, Dependency Table, and Conventions Observed. The split follows the §10.4 rule that a run folder holds what happened *in that run* while `knowledge_base/` holds what is true of the *project*: which Context7 queries this run made is run history, whereas the stack those queries were about outlives the run. A later run reads `stack.md` first and re-detects to confirm rather than starting blind.
 
@@ -1073,7 +1151,43 @@ Next step — either:
   3. Extend coverage first:    /automation-skill also automate {IDs}
 ```
 
-# 36. Resolving `{{RUN_FOLDER}}`
+# 36. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **writes into the module**: `modules/{{MODULE_SLUG}}/automation/`, a standalone project. Its one write outside the module is `automation_baseline/{framework}/shared/`, for genuinely shared assets (`pipeline.md` §12.1).
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
 at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's
@@ -1090,7 +1204,7 @@ node platform_core/tools/run_manager/cli.js list     # every run, newest first, 
 - **The pointer is sticky.** It stays on the same run across invocations until someone switches it, so a multi-stage session keeps writing into one run without restating which.
 - **Switching runs is the human's call.** This stage never rewrites the pointer to redirect its own output. Working on a different run means the switch happens first, as an explicit step (`cli.js use <run>`).
 
-This stage never creates a run. Its working copy (`runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`) and every report it writes belong to the active run. The Workspace Automation Baseline (`automation_baseline/{framework}/`) and the Automation Package Registry are deliberately **not** run-scoped, and are unaffected by which run is active.
+This stage never creates a run. Its working copy (`modules/{{MODULE_SLUG}}/automation/tests_{Framework}/`) and every report it writes belong to the active run. The Workspace Automation Baseline (`automation_baseline/{framework}/`) and the Automation Package Registry are deliberately **not** run-scoped, and are unaffected by which run is active.
 
 ## Inherited artifacts and code drift
 

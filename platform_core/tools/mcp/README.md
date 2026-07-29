@@ -118,9 +118,9 @@ Do **not** query transitive dependencies the generated code never imports, build
 
 ### 2.5 Output — the Stack Documentation Context artifact
 
-Stage 4A writes one artifact per run, before code generation begins:
+Stage 4A writes one artifact per module, before code generation begins:
 
-`platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md`
+`platform_core_data/modules/{module}/automation/StackDocumentationContext_{Framework}.md`
 
 It records, at minimum:
 
@@ -160,7 +160,7 @@ Approve both servers once per machine (`claude mcp` / `/mcp` in an interactive s
 
 - **Server implementations or vendored packages** — both servers are fetched at launch; this folder is registration plus contract only.
 - **Project-specific URLs, selectors, credentials, or stack facts** — `platform_core_data/` owns all of those (`platform_core/README.md`, "Zero Project-Specific Data").
-- **Fetched documentation content.** Doc text belongs in the run's Stack Documentation Context artifact under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`, never cached into `platform_core/`. Promoting a durable, cross-project framework lesson learned this way goes through the normal Promotion Workflow into `platform_core_data/knowledge_base/patterns/framework_patterns/` — human-approved, never automatic.
+- **Fetched documentation content.** Doc text belongs in the module's Stack Documentation Context artifact under `platform_core_data/modules/{module}/automation/`, never cached into `platform_core/`. Promoting a durable, cross-project framework lesson learned this way goes through the normal Promotion Workflow into `platform_core_data/knowledge_base/patterns/framework_patterns/` — human-approved, never automatic.
 
 ## 5. Related
 

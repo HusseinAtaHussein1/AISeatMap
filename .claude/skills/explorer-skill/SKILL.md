@@ -5,7 +5,7 @@ inputs:
   - name: project_context
     type: file_path
     required: true
-    description: Approved Project Context at `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md`.
+    description: Approved Project Context at `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md`.
   - name: discovery_source
     type: environment_var
     required: true
@@ -13,27 +13,27 @@ inputs:
 outputs:
   - name: discovery_snapshots
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md"
     description: One structural/accessibility snapshot per distinct in-scope screen or UI state.
   - name: timeline
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/discovery/Timeline.md"
     description: Chronological, timestamped log of actions/events for the run.
   - name: coverage_summary
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/Coverage_Summary.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/discovery/Coverage_Summary.md"
     description: Visited/Skipped/Blocked/Unreachable areas and computed coverage percentage.
   - name: qa_assessment_report
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md"
     description: Synthesized discovery report structured per the Standard Output Contract (§19).
   - name: findings_summary
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md"
     description: Index of every finalized Finding raised during the run.
   - name: evidence_packages
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-{ID}_{ShortName}/"
     description: Per-Finding `metadata.md` plus captured evidence files.
 dependencies:
   - project-context-skill (upstream skill)
@@ -45,7 +45,9 @@ dependencies:
 > **Scope boundary:** behavioural output only — **no selector or DOM catalogue for automation reuse** (§5.15, `workflows_and_pipelines/pipeline/pipeline.md` §3.5).
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
-> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+> **Revision note (2026-07-27, user-mandated):** each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+>
+> **Revision note (2026-07-29, user-mandated):** this stage's output moves to the **module workspace** — `platform_core_data/modules/{module}/discovery/` — and is **durable**: a later run exploring the same module refines these files in place rather than producing a second discovery record in a new run folder. Its input resolves the same way, from `modules/{module}/context/ProjectContext.md` at its current revision. A multi-module invocation explores and writes **once per module**, never one merged discovery document. Nothing about Discovery Modes, evidence rules, the selector-free boundary (§5.15), or the Stage 2 gate changes. See [`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) and `pipeline.md` §4 (Stage 2), §7.
 
 # 1. Skill Name
 
@@ -316,7 +318,7 @@ Any candidate touching Navigation (per §5.8) additionally requires video record
 Every Finding must generate its own dedicated evidence package, stored under a per-Finding directory:
 
 ```
-platform_core_data/runs/{{RUN_FOLDER}}/discovery/
+platform_core_data/modules/{{MODULE_SLUG}}/discovery/
   findings/
     FINDING-001_Login/
       metadata.md
@@ -430,7 +432,7 @@ Example:
 10:18  FINDING-001 created (Category: Security Concern)
 ```
 
-Saved as: `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md`
+Saved as: `platform_core_data/modules/{{MODULE_SLUG}}/discovery/Timeline.md`
 
 # 7. Coverage
 
@@ -446,13 +448,13 @@ Track, at minimum:
 - **Coverage %** — a simple, stated ratio of Visited Screens against the Project Context's total declared in-scope screens/surface, with the ratio's basis shown (e.g., "6/6 Login-scope screens visited = 100%") — a mechanical count, not a judgment of whether that coverage was *sufficient*
 - **Discovery Mode per entry** — each Visited/Skipped/Blocked/Unreachable entry additionally records which Discovery Mode (§8.1) covered it, so a reviewer can see at a glance which parts of the run were live-verified versus covered by a fallback mode.
 
-Saved as: `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Coverage_Summary.md`, and summarized in the QA Assessment Report (§12).
+Saved as: `platform_core_data/modules/{{MODULE_SLUG}}/discovery/Coverage_Summary.md`, and summarized in the QA Assessment Report (§12).
 
 # 8. Inputs
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | Primary | Required | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — supplies URL, credentials, in-scope modules, environment constraints, carried-forward assumptions, and the expected behavior to validate against |
+| Project Context | Primary | Required | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — supplies URL, credentials, in-scope modules, environment constraints, carried-forward assumptions, and the expected behavior to validate against |
 | Discovery Source | Secondary | Required | The best available source of truth about the running application's actual behavior. Browser automation against the live application is preferred; when unavailable, this skill falls back through the priority-ordered Discovery Modes in §8.1 rather than treating this input as unsatisfiable. |
 
 No other inputs are used. The Explorer skill does not read the PRD directly — the Project Context is its complete brief on what is expected; the Discovery Source is the only other thing it looks at, in whichever Discovery Mode is actually available. This skill's own Timeline (§6) and Coverage tracker (§7) are maintained by this skill itself during the run, not supplied externally.
@@ -549,12 +551,12 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 
 | Artifact | Path | Template |
 |---|---|---|
-| Discovery snapshots | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` — one file per distinct screen/state explored, limited to in-scope modules | [`stage_2_discovery/DiscoverySnapshot.md`](../../../platform_core/templates/stage_2_discovery/DiscoverySnapshot.md) |
-| Timeline | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md` | [`stage_2_discovery/Timeline.md`](../../../platform_core/templates/stage_2_discovery/Timeline.md) |
-| Coverage Summary | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/Coverage_Summary.md` | [`stage_2_discovery/Coverage_Summary.md`](../../../platform_core/templates/stage_2_discovery/Coverage_Summary.md) |
-| QA Assessment Report | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md` | [`stage_2_discovery/QA_Assessment_Report.md`](../../../platform_core/templates/stage_2_discovery/QA_Assessment_Report.md) |
-| Findings Summary | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` | [`stage_2_discovery/findings/Findings_Summary.md`](../../../platform_core/templates/stage_2_discovery/findings/Findings_Summary.md) |
-| Evidence Packages | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — containing `metadata.md` and the evidence files captured per §5.10–5.12 | [`stage_2_discovery/findings/FINDING_metadata.md`](../../../platform_core/templates/stage_2_discovery/findings/FINDING_metadata.md) |
+| Discovery snapshots | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md` — one file per distinct screen/state explored, limited to in-scope modules | [`stage_2_discovery/DiscoverySnapshot.md`](../../../platform_core/templates/stage_2_discovery/DiscoverySnapshot.md) |
+| Timeline | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/Timeline.md` | [`stage_2_discovery/Timeline.md`](../../../platform_core/templates/stage_2_discovery/Timeline.md) |
+| Coverage Summary | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/Coverage_Summary.md` | [`stage_2_discovery/Coverage_Summary.md`](../../../platform_core/templates/stage_2_discovery/Coverage_Summary.md) |
+| QA Assessment Report | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md` | [`stage_2_discovery/QA_Assessment_Report.md`](../../../platform_core/templates/stage_2_discovery/QA_Assessment_Report.md) |
+| Findings Summary | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md` | [`stage_2_discovery/findings/Findings_Summary.md`](../../../platform_core/templates/stage_2_discovery/findings/Findings_Summary.md) |
+| Evidence Packages | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-{ID}_{ShortName}/` — containing `metadata.md` and the evidence files captured per §5.10–5.12 | [`stage_2_discovery/findings/FINDING_metadata.md`](../../../platform_core/templates/stage_2_discovery/findings/FINDING_metadata.md) |
 
 **Every artifact's document structure is defined by its template** in `platform_core/templates/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. The QA Assessment Report template encodes §19's 13-section contract, and `FINDING_metadata.md` encodes §5.14's field order. `platform_core/templates/README.md` states the shared conventions.
 
@@ -569,11 +571,11 @@ Validate the approved Project Context against the live application and publish e
 *Illustrative only — not executed as part of this task.*
 
 ```text
-Input: platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
+Input: platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md
   (In Scope: Admin, PIM, Leave — as produced by the Project Context skill)
 ```
 
-Hypothetical result: `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` snapshots covering only Admin-security-perimeter screens (login, forgot password, Administrator Access modal), PIM screens (Employee List, Add Employee, employee detail tabs), and Leave screens (Apply Leave, Leave List) — explicitly skipping Time, Recruitment, Performance, and Directory since those are Out of Scope for this run, alongside a `Timeline.md` logging every navigation/action/trigger in order and a `Coverage_Summary.md` showing, say, "9/9 in-scope screens visited = 100%."
+Hypothetical result: `platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md` snapshots covering only Admin-security-perimeter screens (login, forgot password, Administrator Access modal), PIM screens (Employee List, Add Employee, employee detail tabs), and Leave screens (Apply Leave, Leave List) — explicitly skipping Time, Recruitment, Performance, and Directory since those are Out of Scope for this run, alongside a `Timeline.md` logging every navigation/action/trigger in order and a `Coverage_Summary.md` showing, say, "9/9 in-scope screens visited = 100%."
 
 While exploring PIM's Add Employee screen, an Event-Driven Capture trigger (a console error) fires the instant the Employee Id field is edited — evidence is captured immediately (screenshot, console log, DOM snapshot) before this skill even finishes the current action, and the trigger is logged in the Timeline. The candidate enters the Investigation Workflow: validated by reproducing on a second attempt; the failure category is "Unexpected UI rendering," so this skill refreshes once per the Investigation & Recovery Engine — the console error does not recur after refresh, so the Recovery Result is "resolved on recovery," and Confidence is set to 65% (observed once before recovery, not reproduced after) — below the 90% floor, so Status is `Needs Human Review` regardless of how the requirement question would otherwise resolve. This skill still separately notes the Gap Analysis item that the Project Context described the Employee Id field as "system-suggested" while the observed application allows it to be freely overwritten — this is investigated as its own candidate: validated, checked against the Validation boundary conditions (empty, spaces, unicode, emoji, long input, special characters — noting which revealed additional inconsistencies), classified as `Requirement Gap` (Severity N/A), Confidence 95% on the observation itself, Business Risk "duplicate/malformed employee IDs could reach payroll/reporting downstream," Technical Risk "no visible server-side uniqueness constraint enforced through the UI," a Root Cause Hypothesis ("possibly a deliberate default-not-enforced design, consistent with a 'suggested' rather than 'assigned' ID — Unknowns: whether server-side uniqueness validation exists but simply isn't surfaced client-side"), and Status `Needs Human Review` (the Project Context doesn't state whether "system-suggested" is meant to be enforced). It then checks the Findings Summary, finds no equivalent entry, and creates `FINDING-004_EmployeeIdEditable` with `Occurrence Count: 1`. Exploration continues into Leave afterward — neither Finding was treated as a reason to stop.
 
@@ -731,7 +733,7 @@ This skill is independently invocable — `/explorer-skill`, optionally with a r
 
 ```
 Stage 2 complete — Discovery Artifacts → Pending Review
-  platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md
+  platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md
   {F} Findings | Coverage {P}% | Discovery Mode: {mode}
 
 Next step — either:
@@ -740,7 +742,43 @@ Next step — either:
   3. Explore further first:    /explorer-skill <additional areas>
 ```
 
-# 25. Resolving `{{RUN_FOLDER}}`
+# 25. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **writes into the module**: `modules/{{MODULE_SLUG}}/discovery/`. It reads that module's `context/ProjectContext.md` and never writes there.
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
 at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's

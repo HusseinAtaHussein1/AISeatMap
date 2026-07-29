@@ -86,8 +86,9 @@ your-project/
   tests/e2e/                    ← generated automation lands HERE, in your conventions
   agentic-testing-tool/         ← the platform; gitignored, with its own nested git repo
     platform_core/                 the shared tools
-    platform_core_data/            every process artifact: knowledge_base/ (PRD, config), runs/,
-                                   automation_baseline/
+    platform_core_data/            every process artifact: knowledge_base/ (PRD, config),
+                                   modules/ (per-module design), runs/ (execution records),
+                                   automation_baseline/ (assembled automation code)
     workflows_and_pipelines/       the pipeline specification
     platform.config.json           the two-root wiring
   .claude/skills/               ← the eight skills, so Claude Code can find them
@@ -198,9 +199,16 @@ At Stage `4A`, before generating anything, the platform extracts your project's 
 
 Seven stages, fixed order, each one gated.
 
-### Create and activate a run first
+### Two things a stage needs: an active run, and an active module
 
-Every stage writes into **the active run**, so a run has to exist and be active before you invoke any skill:
+The platform tracks **which module** it is working on and **which run** it is working in. Both are explicit facts on disk, and a stage that cannot resolve one asks rather than guessing.
+
+| | Answers | Pointer | Set with |
+|---|---|---|---|
+| **Module** | *what part of the app?* | `platform_core_data/modules/modules.json` | `module_manager/cli.js use <slug>` |
+| **Run** | *which execution?* | `platform_core_data/runs/current_active_run.json` | `run_manager/cli.js new` / `use <run>` |
+
+**Create and activate a run:**
 
 ```bash
 cd agentic-testing-tool
@@ -210,7 +218,17 @@ node platform_core/tools/run_manager/cli.js active     # confirm which run is ac
 
 `new` is the only supported way to create a run — it allocates the folder name, anchors the run to your project's current code state, writes the Run Manifest, and activates the run in one step. Never hand-create a run folder; the metadata a stage depends on would be missing.
 
-The active-run pointer lives at `platform_core_data/runs/current_active_run.json` and is **sticky** — it stays put until you change it. It never silently falls back to "the newest run": with no pointer a stage asks which run to use, and if the pointer names a run that no longer exists the stage stops and reports rather than guessing.
+**Modules come from Stage 1, not from you directly.** On a fresh project you have no modules yet: run `/project-context-skill`, and it proposes a decomposition from your PRD — a list of modules, each with a scope statement and the PRD sections it derives from — for you to approve. Nothing is created until you do. Afterwards you choose what to work on:
+
+```bash
+node platform_core/tools/module_manager/cli.js list                # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js use login           # one module
+node platform_core/tools/module_manager/cli.js use login,booking    # several
+node platform_core/tools/module_manager/cli.js use --all            # the whole project
+node platform_core/tools/module_manager/cli.js active --json        # what is active, and the scope
+```
+
+**Both pointers are sticky** — they stay put until you change them, so a multi-stage session keeps working on the same module in the same run without you restating either. Neither falls back to a guess: with no pointer, a stage asks and lists what exists; with a pointer naming something that no longer exists, it stops and reports.
 
 ```bash
 node platform_core/tools/run_manager/cli.js list      # every run, newest first, active marked *
@@ -219,6 +237,8 @@ node platform_core/tools/run_manager/cli.js clear     # remove the pointer
 ```
 
 To override the active run for a single command without changing what's on disk, set `AGENTIC_TESTING_RUN_FOLDER=<run-folder-name>`.
+
+**Scope decides how much a stage produces.** With one module active, Stages 1–3 write that module's artifacts. With several, they write **once per module** — never one merged document. Execution stages are the mirror image: however many modules a run covers, it writes **one** result set, with every result citing its module.
 
 Full verb list in [§12 CLI Reference](#12-cli-reference).
 
@@ -232,16 +252,18 @@ flowchart LR
     J -->|yes| K["/automation-execution-skill"] --> L["/reporting-skill"] --> M["Final QA Report"]
 ```
 
-| Stage | Skill | Produces |
-|---|---|---|
-| 1 | [`/project-context-skill`](../.claude/skills/project-context-skill/SKILL.md) | Project Context |
-| 2 | [`/explorer-skill`](../.claude/skills/explorer-skill/SKILL.md) | Discovery Artifacts, Findings, Evidence |
-| 3 | [`/test-design-skill`](../.claude/skills/test-design-skill/SKILL.md) | Manual Test Suite (MD + Excel), Traceability Matrix, Coverage Report |
-| `4M` | [`/manual-execution-skill`](../.claude/skills/manual-execution-skill/SKILL.md) | Manual Execution Results, **ManualTestResults.csv**, **ManualQAReport.md**, evidence — *terminal: this branch self-reports* |
-| 5 | [`/automation-skill`](../.claude/skills/automation-skill/SKILL.md) | Automation Package |
-| 6 | [`/automation-execution-skill`](../.claude/skills/automation-execution-skill/SKILL.md) | Execution Results, Evidence |
-| `5H` | [`/self-healing-skill`](../.claude/skills/self-healing-skill/SKILL.md) | **OPTIONAL, opt-in only** — Repair Summary, Before/After Comparison, Quarantine Register, repaired suite |
-| `6A` | [`/reporting-skill`](../.claude/skills/reporting-skill/SKILL.md) | Final QA Report *(Automation branch only)* |
+| Stage | Skill | Produces | Written to |
+|---|---|---|---|
+| 1 | [`/project-context-skill`](../.claude/skills/project-context-skill/SKILL.md) | Project Context (one per module) + the **module decomposition** | the module |
+| 2 | [`/explorer-skill`](../.claude/skills/explorer-skill/SKILL.md) | Discovery Artifacts, Findings, Evidence | the module |
+| 3 | [`/test-design-skill`](../.claude/skills/test-design-skill/SKILL.md) | Manual Test Suite (MD + Excel), Traceability Matrix, Coverage Report | the module |
+| `4M` | [`/manual-execution-skill`](../.claude/skills/manual-execution-skill/SKILL.md) | Manual Execution Results, **ManualTestResults.csv**, **ManualQAReport.md**, evidence — *terminal: this branch self-reports* | the run |
+| `4A` | [`/automation-skill`](../.claude/skills/automation-skill/SKILL.md) | Automation Package — a **standalone project per module** | the module |
+| `5A` | [`/automation-execution-skill`](../.claude/skills/automation-execution-skill/SKILL.md) | Execution Results, Evidence | the run |
+| `5H` | [`/self-healing-skill`](../.claude/skills/self-healing-skill/SKILL.md) | **OPTIONAL, opt-in only** — Repair Summary, Before/After Comparison, Quarantine Register, repaired suite | the module *(rerun results to the run)* |
+| `6A` | [`/reporting-skill`](../.claude/skills/reporting-skill/SKILL.md) | Final QA Report *(Automation branch only)* | the run |
+
+The last column is the whole rule in one place: **design output goes to the module and lasts; execution output goes to the run and is frozen.** §7 spells out where each file lands.
 
 ### Your first run
 
@@ -279,31 +301,62 @@ This is the escape hatch for real work — re-running just Test Design after a r
 
 ## 7. Where Your Artifacts Live
 
-Everything a run produces lives in **that run's own folder**. There is no second copy anywhere.
+**There are two places, and one rule decides between them:**
 
-### Runs — where every artifact lives
+> Something a later run would want to **start from** → the **module**, and it lasts.
+> Evidence of what happened in **one execution** → the **run**, and it is frozen.
 
-`platform_core_data/runs/{{RUN_FOLDER}}/` holds the complete output of one run:
+There is no second copy of anything in either place.
+
+### Modules — what you know about each part of the app
+
+`platform_core_data/modules/{module}/` accumulates across runs. A suite refined six runs later is the *same file*, at a higher revision:
+
+| Artifact | Path (inside the module folder) |
+|---|---|
+| **Module summary** — start here | `README.md` *(regenerated — never hand-edit)* |
+| Project Context | `context/ProjectContext.md` |
+| Discovery Artifacts | `discovery/` (+ `findings/`, `evidence/`) |
+| Manual Test Suite, Traceability Matrix, Coverage Report | `test_design/` |
+| Automation suite — **a standalone, runnable project** | `automation/tests_{Framework}/` |
+| Repair Summary, Before/After, Quarantine Register | `healing/` *(only if Stage `5H` was invoked)* |
+| This module's own state | `module.json` |
+
+The registry and active-module pointer sit beside them, at `platform_core_data/modules/modules.json`.
+
+```bash
+node platform_core/tools/module_manager/cli.js show login       # one module's full state
+node platform_core/tools/module_manager/cli.js summary login    # regenerate its README.md
+```
+
+### Runs — what happened when you executed
+
+`platform_core_data/runs/{{RUN_FOLDER}}/` is immutable once written:
 
 | Artifact | Path (inside the run folder) |
 |---|---|
-| Project Context | `context/ProjectContext.md` |
-| Discovery Artifacts | `discovery/*.md` (+ `findings/`) |
-| Manual Test Suite, Traceability Matrix | `test_design/` |
 | Manual Execution Results, CSV, Manual QA Report | `manual_execution/` *(Manual branch)* |
-| Repair Summary, Before/After, Quarantine Register | `self_healing/` *(only if Stage `5H` was invoked)* |
-| Automation working copy | `automation/tests_{Framework}/` |
-| Execution Results | `execution/` |
+| Execution Results | `execution/ExecutionResults.md` |
+| Post-repair rerun cycles | `execution/ExecutionResults.rerun-N.md` *(only if Stage `5H` ran)* |
 | Final QA Report | `reporting/` |
 | Run Metadata + Run Manifest | `metadata/run.json`, `metadata/RunManifest.md` |
 
+`metadata/run.json` also records **which modules this run executed** and **which revision of each module artifact it consumed** — which is what keeps an old run interpretable after its modules have moved on.
+
 **Each artifact is one file, edited in place.** Approving it flips a `status:` field in that file's own header — it does **not** produce a second "final" copy. If you ask for a refinement, the stage edits the same file you just reviewed rather than writing a `.v2` beside it. Previous states are recoverable from git.
 
-Only `metadata/` is created up front. Every other folder appears the moment a stage actually writes its first output, so a run that stopped after Discovery has just `metadata/` and `discovery/`.
+**A folder's absence is information.** Only `metadata/` is created up front; every other folder appears when a stage actually writes to it. A run with no `execution/` delivered the Manual pipeline in full — it did not skip four stages. A module with no `healing/` never needed repair, which is the normal case.
 
-### Automation Baseline — the one thing that outlives a run
+> **If you have runs created before 2026-07-29**, they hold `context/`, `discovery/`, and `test_design/` inside the run folder. Those are left exactly as they are and stay readable — they are the record of what that run concluded. New work goes to the module workspace.
 
-`platform_core_data/automation_baseline/{framework}/tests_{Framework}/` is the persistent home of generated automation *code*. A run generates into its own `automation/` working copy, and that gets merged into this baseline once it clears Automation Approval — so test code survives across runs while every report stays with the run that produced it.
+### Automation Baseline — the assembled whole-project suite
+
+`platform_core_data/automation_baseline/{framework}/` holds two things:
+
+- `tests_{Framework}/` — the authoritative whole-project suite, **assembled from approved module projects**. Merges into it are three-way and hash-verified (see [`platform_core/tools/automation_lifecycle/`](../platform_core/tools/automation_lifecycle/)).
+- `shared/` — base page objects, auth fixtures, utilities, and test-data factories, generated **once** and referenced by every module project. A module that needs a change here *proposes* it rather than editing it, because shared code affects every module's suite.
+
+The path a module's automation takes is: **generate in the module → approve that module → assemble into the baseline → project into your repository.** Each step waits on the one before it, so the baseline can always reproduce what your team is looking at.
 
 ### Run folder names
 
@@ -313,25 +366,30 @@ Folder names are self-descriptive, e.g. `run-003__2026-07-23_15-48-55__Targeted_
 
 ### Generated automation
 
-Automation code goes into **your** repository, in your own test directory and conventions (`tests/e2e/`, or whatever `detect` found). The authoritative copy is the Automation Baseline at `platform_core_data/automation_baseline/{framework}/tests_{Framework}/`; a run's own `automation/` folder is only ever a temporary working copy, per the Automation Asset Lifecycle ([`pipeline.md` §12](../workflows_and_pipelines/pipeline/pipeline.md)). Merges back into the baseline are three-way and hash-verified — see [`platform_core/tools/automation_lifecycle/`](../platform_core/tools/automation_lifecycle/).
+Automation code goes into **your** repository, in your own test directory and conventions (`tests/e2e/`, or whatever `detect` found). It gets there by the four-step path above — never written directly from generation, so the Automation Baseline is always the reproducible source of whatever your team sees ([`pipeline.md` §12–§13](../workflows_and_pipelines/pipeline/pipeline.md)).
 
-### Refining a run, and code drift
+### Refining work, and code drift
 
-A run is a record of what was concluded on a given day, so you never edit an old one to redo its work. Create a successor instead:
+**To refine a module's design, just re-run the stage.** A module's Project Context, Discovery, and Test Design are durable: `/test-design-skill <your feedback>` edits the suite you already have and bumps its revision. There is nothing to copy forward and no "which version is current?" to resolve.
+
+**To relate one execution to another, create a successor run.** A run is a record of what was concluded on a given day, so you never edit an old one:
 
 ```bash
 node platform_core/tools/run_manager/cli.js refine <prior-run> --reason "PRD updated for US-245"
 ```
 
-That creates a **new** run which inherits the prior run's artifacts by reference, supersedes it, and re-anchors to your project's current code state. The prior run is left untouched. Add `--dry-run` first to see what would be inherited.
+That creates a **new** run which supersedes the prior one for the scope they share and re-anchors to your project's current code state. The prior run is left untouched. Add `--dry-run` first to see the plan.
 
-Each run records the code state of your project at the moment it was created, so you can ask what has moved since:
+**Drift answers "has the code moved since we designed this?"** — and you can ask it per run or per module:
 
 ```bash
-node platform_core/tools/run_manager/cli.js drift [--run <r>]
+node platform_core/tools/run_manager/cli.js drift [--run <r>]        # per run
+node platform_core/tools/module_manager/cli.js drift [<slug>]        # per module
 ```
 
-This matters when a stage reuses an earlier run's artifact: where drift reports changes, those conclusions were reached against different code and are *unverified* against what you have now. A run created before anchoring existed can be backfilled with `cli.js anchor`, but the anchor then reflects backfill time, not execution time — so drift measured from it understates real change.
+Per-module is usually the more useful question, because one run can span modules that have drifted very differently. Where drift reports changes, those conclusions were reached against different code and are *unverified* against what you have now. A run created before anchoring existed can be backfilled with `cli.js anchor`, but the anchor then reflects backfill time, not execution time — so drift measured from it understates real change.
+
+**Staleness is reported, never fixed for you.** If you refine a module's Discovery after its Test Design was written, the suite is flagged stale in the module's `README.md`. It is **not** regenerated automatically — whether to redesign is your call at that stage's gate.
 
 ---
 
@@ -398,7 +456,16 @@ Pointing the platform at a different application means running `init` in that re
 
 If you reuse an installation in place, two things matter:
 
-- **`platform_core_data/` is never overwritten** by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far. Clearing `runs/` is your decision, not the installer's — but clear the Active Run pointer too (`node platform_core/tools/run_manager/cli.js clear`), or the next stage will stop and report a pointer naming a run that no longer exists (`run_manager.md` §5.7 Rule 2).
+- **`platform_core_data/` is never overwritten** by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far.
+- **Clearing old data is your decision, not the installer's** — and if you clear either `modules/` or `runs/`, clear that pointer too, or the next stage will stop and report a pointer naming something that no longer exists:
+
+  ```bash
+  node platform_core/tools/run_manager/cli.js clear      # the active-run pointer
+  node platform_core/tools/module_manager/cli.js clear   # the active-module pointer
+  ```
+
+  Stopping is the correct behaviour, not a bug: silently redirecting a stage's output into some other module or run would corrupt both records.
+- **`modules/` belongs to the application you are leaving behind.** Its content is that app's decomposition, context, discovery, and suites — none of it is true of a different application. Retargeting means a fresh Stage 1 pass proposes a new decomposition.
 - **`knowledge_base/patterns/` survives retargeting by design.** It is Platform Knowledge — accumulated engineering knowledge, application-agnostic. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you're leaving behind.
 
 ### The two knowledge layers
@@ -406,7 +473,8 @@ If you reuse an installation in place, two things matter:
 | Layer | Location | Contains |
 |---|---|---|
 | **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting |
-| **Project Knowledge** | `platform_core_data/knowledge_base/business_rules/`, `lessons_learned/` | this application's own business rules and cross-run lessons — the other seven categories were removed 2026-07-27; that output stays in each run's own folder |
+| **Project Knowledge** | `platform_core_data/knowledge_base/business_rules/`, `lessons_learned/` | this application's own business rules and cross-run lessons — the things no single module or run owns. The other seven categories were removed 2026-07-27; that output lives with the module or run that produced it |
+| **Module output** | `platform_core_data/modules/{module}/` | what earlier stages established about *this module specifically*. Not a knowledge layer — per-module engineering output, which is why it resolves last |
 | **Shared execution KBs** | `knowledge_base/browser/screens/` + `.../patterns/repair_patterns/` | **read by both pipelines** (`pipeline.md` §10.8): verified locators (written by `4A`) and confirmed repair patterns (written by `5H`). This is the only thing the two branches share beyond Stages 1–3 — and it is knowledge, not a deliverable, which is why sharing it does not break branch isolation |
 
 Every stage resolves **Platform Knowledge first, then Project Knowledge**, and merges both. Knowledge is written project-scoped by default; moving something to the Platform layer is a **Promotion**, and requires your explicit approval — asked exactly once, and not re-proposed on every subsequent run if you decline.
@@ -504,6 +572,46 @@ node platform_core/tools/run_manager/cli.js <verb> [flags]
 With no verb, bare flags generate a run folder name only (`--scope`, `--target`, `--started`, `--existing-dir`, `--index` / `--no-index`, `--runs-dir`, `--json`).
 
 **Environment overrides:** `AGENTIC_TESTING_RUN_FOLDER` (active run, per-process), `AGENTIC_TESTING_TOOL_ROOT` / `AGENTIC_TESTING_TARGET_ROOT` (the two roots).
+
+### `module_manager` CLI
+
+Run from inside the tool folder. This is the CLI that answers *what part of the app are we working on, and where does it stand?*
+
+```bash
+node platform_core/tools/module_manager/cli.js <verb> [flags]
+```
+
+**Day to day — selecting and inspecting:**
+
+| Verb | What it does |
+|---|---|
+| `list [--json]` | every module, its status and stage progress, active marked `*` |
+| `use <slug>[,<slug>…]` | activate one or several modules (sticky) |
+| `use --all` | activate every approved module — a full-project scope |
+| `active [--json]` | the active module(s), and what the activation means (`single`/`multi`/`full-project`) |
+| `show <slug> [--json]` | one module's full state: stage statuses, revisions, automation lifecycle, runs that touched it |
+| `summary <slug>` | regenerate that module's `README.md` from what is actually on disk |
+| `drift [<slug>] [--json]` | has the code under this module changed since we designed it? |
+| `clear` | remove the active-module pointer |
+
+**Stage 1's decomposition — propose, then approve, then scaffold:**
+
+| Verb | What it does |
+|---|---|
+| `propose --name "Flight Search" [--description "…"] [--prd <path>]` | record a proposed module. **Creates no folder** — `status: Proposed` until approved |
+| `approve [<slug>…] --by "<reviewer>"` | the write side of Stage 1's gate. `--by` is **required**: an approval record naming no approver is not an approval |
+| `scaffold <slug> [--dry-run]` | create an approved module's folder skeleton |
+
+**Recording progress — called by the stages, not usually by you:**
+
+| Verb | What it does |
+|---|---|
+| `stage <slug> <context\|discovery\|test_design\|automation\|healing> --status <…> [--artifact P] [--run R] [--target-ref <sha>]` | record a stage's status, artifact, and revision against a module |
+| `automation <slug> --state <Generated\|Executed\|Healed\|Approved> [--by R] [--framework F] [--run R] [--baseline-ref <sha>]` | advance the module automation project's lifecycle |
+
+**Three verbs are deliberately absent from the "day to day" list.** `propose`, `approve`, and `scaffold` are separate steps because they are separate decisions: proposing is Stage 1's, approving is yours, and scaffolding a folder asserts that an approved module exists. Collapsing them would let a module appear on disk that nobody approved.
+
+`--modules-dir` overrides where `modules/` is looked for; it defaults to the conventional location.
 
 ### `test_suite_export` CLI
 

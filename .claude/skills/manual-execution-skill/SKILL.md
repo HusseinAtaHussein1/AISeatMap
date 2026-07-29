@@ -60,7 +60,9 @@ dependencies:
 > **Revision note (this revision, user-mandated):** the Manual and Automation pipelines now diverge completely after Stage 3. This stage is no longer Stage 4 of a single 7-stage chain feeding Automation: the **Automation Candidate Package is removed** along with its qualifying-criteria engine, because Automation (`4A`) now takes scope directly from the approved Stage 3 test cases and grounds its correctness in its own live selector verification (`pipeline.md` §3.3, §3.5). In exchange, this stage gained its own reporting: it **self-reports** a Manual QA Report and a Test Results CSV rather than handing off to the Reporting stage.
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
-> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+> **Revision note (2026-07-27, user-mandated):** each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+>
+> **Revision note (2026-07-29, user-mandated):** **input paths only — this stage's outputs are unchanged.** Its test suites now resolve from the module workspace (`platform_core_data/modules/{module}/test_design/`) rather than a run folder, and its results continue to land in `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/`, immutable once written. That asymmetry is the point: a test suite is something the next run starts from, and a result is evidence of one execution (`pipeline.md` §7). **A multi-module run reads each module's suite and writes one consolidated result set**, with every result citing its module — splitting results per module would break the run's single record of what happened. This stage writes nothing under `modules/`.
 
 # 1. Skill Name
 
@@ -104,10 +106,10 @@ Three prohibitions define this stage's boundary:
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case |
-| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` — carried unmodified onto every Manual Execution Result, and the basis for the QA Report's Requirement Coverage (§9.1) |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`), so this stage does not attempt to execute what Stage 3 already dispositioned out of scope. Its advisory *Automation Candidates* hint is **not** consumed here — it is a hint for Stage `4A`, in the other branch |
-| Project Context | Governing | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
+| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case |
+| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` — carried unmodified onto every Manual Execution Result, and the basis for the QA Report's Requirement Coverage (§9.1) |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`), so this stage does not attempt to execute what Stage 3 already dispositioned out of scope. Its advisory *Automation Candidates* hint is **not** consumed here — it is a hint for Stage `4A`, in the other branch |
+| Project Context | Governing | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Drives §17's strategy selection. |
 | Selector Verification KB | Secondary (read-only) | Optional | `platform_core_data/knowledge_base/browser/screens/`, `.../components/` — verified locators (`pipeline.md` §10.8). Used only to identify *which control* a step refers to when a screen offers several plausible candidates; never to change what a step does. Where its code-state anchor shows drift, it is treated as a hint, not a fact. |
 | Repair KB | Secondary (read-only) | Optional | `platform_core_data/knowledge_base/patterns/` + prior runs' Repair Summaries (`pipeline.md` §10.8). Used to recognize a **documented** application/environment quirk so it is not written up as a newly-discovered defect. A KB entry never suppresses a genuine finding — it is cited alongside it. |
@@ -367,10 +369,10 @@ Execute the approved Manual Test Suite exactly as authored, record a raw unedite
 
 ```text
 Input:
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Login.md / .xlsx
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md
-  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_Login.md / .xlsx
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md
+  platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md
 ```
 
 Hypothetical result: this skill confirms the target environment matches the Project Context, launches the browser **headed**, and executes all 12 Login test cases while a human watches.
@@ -493,7 +495,43 @@ Next step — either:
                                scope from Stage 3, not from this stage's results)
 ```
 
-# 24. Resolving `{{RUN_FOLDER}}`
+# 24. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **reads from the module** (`modules/{{MODULE_SLUG}}/test_design/`, approved) and **writes only into the run** (`runs/{{RUN_FOLDER}}/manual_execution/`). It writes nothing under `modules/` — a result is evidence of one execution.
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
 at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's

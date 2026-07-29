@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Automation Plan (Stage 4A — Automation branch)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{{FRAMEWORK}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationPlan_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §5 (Automation Planning Engine — these fields),
             §10 (Suite Planning), §34 (Stack Documentation), §16 Outputs #1, §19
 
@@ -17,10 +17,12 @@ unjustified framework choice.
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Framework Decision Gate answer (§31) | {{FRAMEWORK_GATE_ANSWER}} |
-| Scope source | `runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` (approved) — scope AND content |
-| Stack Documentation Context | `runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{{FRAMEWORK}}.md` |
+| Scope source | `modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` (approved) — scope AND content |
+| Stack Documentation Context | `modules/{{MODULE_SLUG}}/automation/StackDocumentationContext_{{FRAMEWORK}}.md` |
 | Generated | {{TIMESTAMP}} |
 | Status | {{STATUS}} <!-- Pending Review / Approved --> |
 

@@ -9,15 +9,15 @@ inputs:
   - name: manual_test_suites
     type: file_path
     required: true
-    description: "`platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md`."
+    description: "`platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_*.md`."
   - name: traceability_matrix
     type: file_path
     required: true
-    description: "`platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md`."
+    description: "`platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md`."
   - name: project_context
     type: file_path
     required: true
-    description: "`platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — for resolving carried-forward assumptions/risks."
+    description: "`platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — for resolving carried-forward assumptions/risks."
 outputs:
   - name: final_qa_report
     type: file_path
@@ -34,7 +34,16 @@ dependencies:
 > **Traceability:** `Execution → Reports`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
-> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
+> **Revision note (2026-07-27, user-mandated):** this stage's artifact lives in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/reporting/`), and the persistent Workspace Automation Baseline lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
+>
+> **Revision note (2026-07-29, user-mandated):** **input paths only — this stage's output is unchanged**, still `runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md`. Three of its inputs now resolve from the module workspace: the **Traceability Matrix** (`modules/{module}/test_design/`), the **Project Context** (`modules/{module}/context/`), and the **Repair Summary** where Stage `5H` ran (`modules/{module}/healing/`). Execution Results stay in the run.
+>
+> Two reporting consequences follow, and both are about not overstating what was verified:
+>
+> 1. **Coverage is attributed per module.** A run that executed three modules reports each module's requirement and automation coverage as its own figure, and any project-level roll-up states which modules it covers. A single figure averaged over three modules hides which one is thin.
+> 2. **A module in the project but not in this run's scope is reported as `Not In Scope For This Run`** — never as 0% coverage and never omitted. Those are three different facts, and only the first is true.
+>
+> Where a module-scoped execution ran, the report also states that **cross-module interaction was not exercised** — only a full-project execution runs the assembled baseline as one system (`module_architecture.md` §9.1). Presenting a single-module pass as whole-system verification is the specific overstatement this note exists to prevent.
 
 # 1. Skill Name
 
@@ -61,9 +70,9 @@ The Reporting skill is the final stage of the pipeline. It synthesizes the raw E
 | Input | Role | Required? | Description |
 |---|---|---|---|
 | Execution Results | Primary | Required | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` |
-| Manual Test Suites | Required | Required | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` (Markdown and/or Excel) |
-| Traceability Matrix | Required | Required | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` |
-| Project Context | Required | Required | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
+| Manual Test Suites | Required | Required | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` (Markdown and/or Excel) |
+| Traceability Matrix | Required | Required | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` |
+| Project Context | Required | Required | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` |
 
 # 5. Outputs
 
@@ -115,11 +124,11 @@ Synthesize raw execution results into a clear, accurate, stakeholder-facing QA r
 ```text
 Input:
   platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Admin.md
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_PIM.md
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Leave.md
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md
-  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_Admin.md
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_PIM.md
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_Leave.md
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md
+  platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md
 ```
 
 Hypothetical result: `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` stating, e.g., an Executive Summary of overall run health; a Detailed Execution Report listing each of the 36 executed tests with its Test Case ID and Automation Script ID; Passed/Failed Statistics showing 31 passed / 3 failed / 2 skipped; a Defect Summary describing TC-PIM-013, TC-PIM-014, and TC-LEA-013; Requirement Coverage showing, e.g., 47 of 52 traced Project Context requirements have an executed test; Automation Coverage showing 36 of 56 manual test cases were automated; and a Risks section noting that SR-5 (brute-force protection) remains unverified because the corresponding test was never authorized to run against the shared demo environment.
@@ -158,7 +167,43 @@ Next step — either:
   3. Heal remaining failures:             /self-healing-skill           (then re-report)
 ```
 
-# 13. Resolving `{{RUN_FOLDER}}`
+# 13. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **writes only into the run** (`runs/{{RUN_FOLDER}}/reporting/`). It reads each executed module's `test_design/TraceabilityMatrix.md` to compute coverage, and writes nothing under `modules/`.
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
 at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's

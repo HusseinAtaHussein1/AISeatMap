@@ -5,7 +5,7 @@ inputs:
   - name: automation_suite
     type: file_path
     required: true
-    description: Approved Automation Package at `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`.
+    description: Approved Automation Package at `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/`.
   - name: automation_summary
     type: file_path
     required: true
@@ -45,7 +45,18 @@ dependencies:
 >
 > **Revision note (this revision, user-mandated):** this stage is now a **pure mechanical runner**. The Automation Repair Loop and its engines (previously §25–§29) moved to the new Stage `5H` [`self-healing-skill`](../self-healing-skill/SKILL.md) — see §25 for what remains here and why.
 
-> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
+> **Revision note (2026-07-27, user-mandated):** this stage's artifacts live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/execution/`), and the persistent Workspace Automation Baseline lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
+>
+> **Revision note (2026-07-29, user-mandated):** **what this stage executes now depends on the run's module scope; where it writes does not change.**
+>
+> | Module scope | What is executed |
+> |---|---|
+> | `single` / `multi` | each named module's **standalone project**, `platform_core_data/modules/{module}/automation/tests_{Framework}/` |
+> | `full-project` | the **assembled baseline**, `platform_core_data/automation_baseline/{framework}/tests_{Framework}/`, as one system |
+>
+> Full-project execution running the assembled baseline is the *point* of assembly: it is the only way cross-module interaction is exercised at all. A module-scoped execution runs the module project directly, which is why that project is required to be standalone (`automation-skill` §11D.1).
+>
+> Results stay **per run and immutable** — `runs/{{RUN_FOLDER}}/execution/` — and a multi-module run writes **one** consolidated results file, with every result citing its module. This stage's only write under `modules/` is advancing that module project's `.module_automation_state.json` to `Executed` and recording this run in its `sourceRuns[]`. **It still never modifies automation code.** See [`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §9.1 and `pipeline.md` §4 (Stage 5A).
 
 # 1. Skill Name
 
@@ -97,10 +108,10 @@ The Automation Execution skill runs the automated test suite produced by Stage `
 
 | Input | Required? | Description |
 |---|---|---|
-| Automation Suite | Required | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests/` — the generated/reused project itself |
-| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-skill/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this skill — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this skill assuming a framework itself |
+| Automation Suite | Required | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests/` — the generated/reused project itself |
+| **Automation Summary** (renamed from "Automation Coverage Summary" — see §21's Confirmed Contract Mismatch) | Required | `platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationSummary.md` — the consolidated handoff document per `.claude/skills/automation-skill/SKILL.md` §25: Framework Used, Coverage, Automation Decisions, Known Limitations, and — critically for this skill — **Execution Instructions**, which is what makes framework-agnostic invocation (§15) possible without this skill assuming a framework itself |
 | Run Scope | Required (embedded) | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4), plus the Run Type (Full Regression/Smoke/etc., §5 there). Drives §13's strategy selection. |
-| Project Context | Required | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — environment, credentials, safety constraints |
+| Project Context | Required | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — environment, credentials, safety constraints |
 | Execution Configuration | Required, composite | Not a single file — the set of run-time execution parameters this skill must resolve before running anything: Execution Mode (§5.1), Concurrency Mode (§5.3), Retry Policy (§5.4), and Resume state (§5.5). Named explicitly here so none of these is a silent default — each has its own determination rule below. |
 | Execution Mode | Required, but not necessarily pre-supplied — see §5.1 | Sourced from the approved Run Configuration if it defines one; otherwise obtained by pausing and asking the user before execution begins. One of: `Headless`, `Headed`, `Debug` — no other value is valid. |
 | Framework Configuration | Required, not assumed | Not this skill's decision — sourced from the Automation Summary's Framework Used / Execution Instructions sections (§15). This skill never independently selects or assumes a framework; it only reads what Stage 4A already decided and justified. |
@@ -209,7 +220,7 @@ No new artifact paths are introduced by this revision — the Standard Output Co
 
 The Execution Results document's run-identity header must include the Execution Mode, Concurrency Mode, and Retry Policy used, alongside the existing run-identity fields (Execution ID, environment, timestamps).
 
-**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12, added 2026-07-24):** the Automation Suite this skill executes (§4) is always this run's own **working copy** (`platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`), never the Workspace Automation Baseline directly — this skill never reads from or writes to the baseline location. Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this skill produces — Execution Results and evidence — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
+**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12, added 2026-07-24):** the Automation Suite this skill executes (§4) is always this run's own **working copy** (`platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/`), never the Workspace Automation Baseline directly — this skill never reads from or writes to the baseline location. Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this skill produces — Execution Results and evidence — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
 
 # 10. Operational Contract
 
@@ -223,8 +234,8 @@ Execute the approved Automation Package against the target environment and recor
 
 ```text
 Input:
-  platform_core_data/runs/{{RUN_FOLDER}}/automation/tests/
-  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
+  platform_core_data/modules/{{MODULE_SLUG}}/automation/tests/
+  platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md
   APP_URL          = https://opensource-demo.orangehrmlive.com/
   TEST_SCOPE       = all
   EXECUTION_MODE   = (not defined in Run Configuration)
@@ -532,7 +543,43 @@ Next step — either:
   3. Re-run as-is, no changes:   /automation-execution-skill re-run failed
 ```
 
-# 31. Resolving `{{RUN_FOLDER}}`
+# 31. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **writes only into the run** (`runs/{{RUN_FOLDER}}/execution/`). Its one write under `modules/` is the module project's `.module_automation_state.json`, advanced to `Executed`. It never modifies automation code.
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
 at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's

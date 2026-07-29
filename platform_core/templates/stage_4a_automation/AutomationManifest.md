@@ -1,23 +1,30 @@
 <!--
 TEMPLATE — Automation Manifest (Stage 4A — Automation branch)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{{FRAMEWORK}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationManifest_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §16 Outputs #3, §15 (Self Review), §19
 
 A structured INVENTORY of the Automation Package: every file it contains, which were GENERATED versus
 REUSED, and the Self Review (§15) findings and recommendations.
 
-Files are inventoried at the run's WORKING COPY path — this stage never writes to the Workspace
-Automation Baseline directly (§33.2, Execution Rule 35). Promotion happens at Workspace Merge, after
-Automation Approval.
+Files are inventoried at the MODULE AUTOMATION PROJECT path — this stage never writes to the Workspace
+Automation Baseline directly (§33.2, Execution Rule 35). Assembly into the baseline happens at
+Workspace Merge, after this module's Automation Approval (pipeline.md §12.4).
+
+A file referenced from `automation_baseline/{{FRAMEWORK_LOWER}}/shared/` is inventoried with Origin
+`Shared` — it is neither Generated nor Reused by this module, and reporting it as either would claim
+ownership of whole-project surface this module does not own (pipeline.md §12.1).
 -->
 
-# Automation Manifest — {{FRAMEWORK}} — {{RUN_FOLDER}}
+# Automation Manifest — {{FRAMEWORK}} — {{MODULE}}
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
 | Framework | {{FRAMEWORK}} |
-| Working copy | `runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/` |
+| Module project | `modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/` |
+| Shared assets referenced | `automation_baseline/{{FRAMEWORK_LOWER}}/shared/` @ `{{BASELINE_REF}}` |
+| Lifecycle state | {{AUTOMATION_STATE}} <!-- Generated / Executed / Healed / Approved — pipeline.md §12.3.1 --> |
 | Total files | {{TOTAL_FILE_COUNT}} |
 | Generated | {{GENERATED_FILE_COUNT}} |
 | Reused | {{REUSED_FILE_COUNT}} |
@@ -30,7 +37,7 @@ Automation Approval.
 
 | File | Type | Origin | Suite | For Test Case(s) | Lines |
 |---|---|---|---|---|---|
-| `{{FILE_PATH}}` | {{FILE_TYPE}} <!-- test script / page object / locator / fixture / utility / config / test data --> | {{ORIGIN}} <!-- Generated / Reused --> | {{SUITE}} | {{TEST_CASE_IDS}} | {{LINES}} |
+| `{{FILE_PATH}}` | {{FILE_TYPE}} <!-- test script / page object / locator / fixture / utility / config / test data --> | {{ORIGIN}} <!-- Generated / Reused / Shared --> | {{SUITE}} | {{TEST_CASE_IDS}} | {{LINES}} |
 
 ## 2. By Type
 

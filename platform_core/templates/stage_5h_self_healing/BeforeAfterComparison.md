@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Before/After Comparison (Stage 5H — Self-Healing, OPTIONAL)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/self_healing/BeforeAfterComparison.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/healing/BeforeAfterComparison.md
 Authority:  .claude/skills/self-healing-skill/SKILL.md §13, §12 (Targeted Rerun), §10.2 (KB write rule)
 
 Only the REPAIRED tests are rerun — never the full suite unless every test in it was repaired (§12).
@@ -12,9 +12,14 @@ TWO RULES THIS DOCUMENT EXISTS TO ENFORCE:
      exactly that.
 -->
 
-# Before/After Comparison — {{RUN_FOLDER}}
+# Before/After Comparison — {{MODULE}}
 
-**Healing Pass:** {{HEALING_PASS_ID}} · **Source Execution:** {{EXECUTION_IDS}} · **Scope:** {{HEALING_SCOPE}}
+**Module:** `{{MODULE_SLUG}}` · **Healing Pass:** {{HEALING_PASS_ID}} · **Triggering run:** `{{RUN_FOLDER}}`
+**Source Execution:** {{EXECUTION_IDS}} · **Scope:** {{HEALING_SCOPE}} · **Rerun cycle:** `ExecutionResults.rerun-{{N}}.md`
+
+<!-- This document is the REVIEWABLE PROSE record of the change, not the mechanism by which it is
+     recoverable — the repair is applied in place to the module project, and git is the before/after
+     record (module_architecture.md §8.1). The rerun's raw results live in the triggering run above. -->
 
 ## 1. Headline
 

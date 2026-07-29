@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Automation Suite Manifest (Stage 4A — Automation branch)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{{FRAMEWORK}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationSuiteManifest_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §10 (Suite Planning Engine), §16 Outputs #6, §19
 
 The REALIZED suite structure — what the Automation Plan §5 planned, as it actually came out. Which
@@ -15,13 +15,15 @@ Where the realized structure diverges from the Plan, §4 records why — a silen
 plan and manifest is a defect in this stage's output.
 -->
 
-# Automation Suite Manifest — {{FRAMEWORK}} — {{RUN_FOLDER}}
+# Automation Suite Manifest — {{FRAMEWORK}} — {{MODULE}}
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
 | Framework | {{FRAMEWORK}} |
-| Working copy | `runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/` |
+| Module project | `modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/` |
+| Runs standalone | {{STANDALONE_VERIFIED}} <!-- Yes / No + why. "No" blocks the §5.2 gate: a reviewer must be able to run it (pipeline.md §4, Stage 4A) --> |
 | Suites | {{SUITE_COUNT}} |
 | Automated test cases | {{AUTOMATED_CASE_COUNT}} |
 | Generated | {{TIMESTAMP}} |

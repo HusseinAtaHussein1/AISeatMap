@@ -9,23 +9,23 @@ inputs:
   - name: discovery_artifacts
     type: file_path
     required: true
-    description: Approved Discovery Report, QA Assessment Report, Findings Summary, and per-Finding Evidence Packages at `platform_core_data/runs/{{RUN_FOLDER}}/discovery/` — secondary inputs used only to validate, enrich, and surface gaps against the Project Context.
+    description: Approved Discovery Report, QA Assessment Report, Findings Summary, and per-Finding Evidence Packages at `platform_core_data/modules/{{MODULE_SLUG}}/discovery/` — secondary inputs used only to validate, enrich, and surface gaps against the Project Context.
 outputs:
   - name: manual_test_suite_md
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_{Module}.md"
     description: Human-readable manual test cases, grouped by module.
   - name: manual_test_suite_xlsx
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_{Module}.xlsx"
     description: Identical test case set, spreadsheet form. GENERATED from the Markdown suite by platform_core/tools/test_suite_export (§9.1) — never authored or hand-edited, which is what makes it provably non-divergent.
   - name: traceability_matrix
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md"
     description: "Project Context requirement ID → Test Case ID mapping, annotated with Discovery/Finding/Evidence references."
   - name: coverage_report
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md"
     description: Requirement Coverage and Finding Coverage accounting, structured per the Standard Output Contract (§18).
 dependencies:
   - project-context-skill (upstream skill)
@@ -39,7 +39,15 @@ dependencies:
 > **Traceability:** `Project Context → Test Cases`, informed and validated by `Discovery → Test Cases` and, where applicable, `Finding/Evidence → Test Cases`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
-> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+> **Revision note (2026-07-27, user-mandated):** each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+>
+> **Revision note (2026-07-29, user-mandated):** this stage's output moves to the **module workspace** — `platform_core_data/modules/{module}/test_design/` — and is **durable**: a suite refined six runs later is the *same file*, at a higher revision, not a fresh copy in a new run folder. Three consequences follow, and they are the reason the move matters here more than anywhere else:
+>
+> 1. **Both branches read one suite per module, at its current revision.** Stage `4M` and Stage `4A` resolve `modules/{module}/test_design/` and read the artifact's own `status:` header to confirm approval — never a cached status (`module_architecture.md` §10.5).
+> 2. **A refinement does not invalidate an earlier execution.** The run that executed revision 2 recorded that it did (`run.json` → `moduleArtifactRefs[]`), so its results stay interpretable after this suite reaches revision 5.
+> 3. **Staleness is reported, never auto-resolved.** When a module's Discovery is refined after this suite was written, the suite is flagged stale — but it is **never silently regenerated**. Re-running this stage is a human decision at this stage's own gate (`module_architecture.md` §10.4).
+>
+> A multi-module invocation writes one suite (plus matrix and coverage report) **per module**, never one merged suite. Nothing about the Test Case Schema, the four traceability dimensions, Excel generation (§9.1), or the Stage 3 gate changes.
 
 # 1. Skill Name
 
@@ -91,12 +99,12 @@ The Test Design skill transforms validated project knowledge — the approved Pr
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Project Context | **Primary** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — the sole source of requirements, scope, roles, and business rules for test design |
+| Project Context | **Primary** | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — the sole source of requirements, scope, roles, and business rules for test design |
 | Run Scope | Primary (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Called out here explicitly, not left an implicit read of prose, because it is what §16's strategy selection keys off of. |
-| Discovery Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` (including `Timeline.md` and `Coverage_Summary.md` where the Explorer skill version in use produces them) — raw structural/behavioral observation, used only to validate, enrich, and identify gaps against the Project Context |
-| QA Assessment Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md` — the Explorer skill's synthesized report (Application Overview, Workflows, Risk Analysis, Gap Analysis, Coverage) |
-| Findings | Secondary | Required if any exist for this run, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` plus each individual `FINDING-{ID}_{ShortName}/metadata.md` — every Finding must be read and dispositioned (§5.3), not merely skimmed |
-| Evidence Packages | Secondary | Required wherever a Finding or negative test cites specific evidence, must be `Approved` alongside its parent Finding | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — the captured evidence files backing each Finding, cited by reference (§5.1), never copied wholesale into a test case |
+| Discovery Report | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md` (including `Timeline.md` and `Coverage_Summary.md` where the Explorer skill version in use produces them) — raw structural/behavioral observation, used only to validate, enrich, and identify gaps against the Project Context |
+| QA Assessment Report | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md` — the Explorer skill's synthesized report (Application Overview, Workflows, Risk Analysis, Gap Analysis, Coverage) |
+| Findings | Secondary | Required if any exist for this run, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md` plus each individual `FINDING-{ID}_{ShortName}/metadata.md` — every Finding must be read and dispositioned (§5.3), not merely skimmed |
+| Evidence Packages | Secondary | Required wherever a Finding or negative test cites specific evidence, must be `Approved` alongside its parent Finding | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-{ID}_{ShortName}/` — the captured evidence files backing each Finding, cited by reference (§5.1), never copied wholesale into a test case |
 
 **This skill must never read the PRD directly** (`platform_core_data/knowledge_base/PRD.md` or equivalent) — only Stage 1 (Project Context skill) is permitted to do so, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. Any requirement question this skill cannot resolve from the Project Context is a gap to log, not a reason to open the PRD.
 
@@ -389,10 +397,10 @@ The tool's full behaviour — accepted heading shapes, field markers, warning ta
 
 | Artifact | Path | Template |
 |---|---|---|
-| Manual Test Suite — Markdown (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md` | [`stage_3_test_design/TestCases_Module.md`](../../../platform_core/templates/stage_3_test_design/TestCases_Module.md) (per-case block: [`TestCase_entry.md`](../../../platform_core/templates/stage_3_test_design/TestCase_entry.md)) |
-| Manual Test Suite — Excel (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` | **generated, not authored** — rendered from the Markdown suite by [`test_suite_export`](../../../platform_core/tools/test_suite_export/) per §9.1; columns are §6.1's field list, in §6.1's order |
-| Requirement Traceability Matrix | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` | [`stage_3_test_design/TraceabilityMatrix.md`](../../../platform_core/templates/stage_3_test_design/TraceabilityMatrix.md) |
-| Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` | [`stage_3_test_design/CoverageReport.md`](../../../platform_core/templates/stage_3_test_design/CoverageReport.md) |
+| Manual Test Suite — Markdown (per module) | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_{Module}.md` | [`stage_3_test_design/TestCases_Module.md`](../../../platform_core/templates/stage_3_test_design/TestCases_Module.md) (per-case block: [`TestCase_entry.md`](../../../platform_core/templates/stage_3_test_design/TestCase_entry.md)) |
+| Manual Test Suite — Excel (per module) | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_{Module}.xlsx` | **generated, not authored** — rendered from the Markdown suite by [`test_suite_export`](../../../platform_core/tools/test_suite_export/) per §9.1; columns are §6.1's field list, in §6.1's order |
+| Requirement Traceability Matrix | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` | [`stage_3_test_design/TraceabilityMatrix.md`](../../../platform_core/templates/stage_3_test_design/TraceabilityMatrix.md) |
+| Coverage Report | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md` | [`stage_3_test_design/CoverageReport.md`](../../../platform_core/templates/stage_3_test_design/CoverageReport.md) |
 
 **Every artifact's document structure is defined by its template** in `platform_core/templates/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. `TestCase_entry.md` encodes §6.1's exact field list ("no more") and §6.0/§6.0.1's lean-case rules; `CoverageReport.md` encodes §18's 12-section contract. `platform_core/templates/README.md` states the shared conventions.
 
@@ -408,14 +416,14 @@ Transform validated project knowledge into a complete, structured, fully traceab
 
 ```text
 Input:
-  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md        (primary; scope: Login / Authentication & Access)
-  platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md                              (secondary)
-  platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md             (secondary)
-  platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md                (secondary)
-  platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-001.../metadata.md ... FINDING-004.../metadata.md  (secondary)
+  platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md        (primary; scope: Login / Authentication & Access)
+  platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md                              (secondary)
+  platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md             (secondary)
+  platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md                (secondary)
+  platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-001.../metadata.md ... FINDING-004.../metadata.md  (secondary)
 ```
 
-Hypothetical result: `TestCases_Login.md` / `.xlsx`, `TraceabilityMatrix.md`, and `CoverageReport.md` under `platform_core_data/runs/{{RUN_FOLDER}}/test_design/`. `TC-LOGIN-004`'s own entry in the Manual Test Suite is lean — Title ("Forgot Password does not time out for a valid, existing username"), Objective, Preconditions, Steps, Expected Result stating the *corrected* behavior ("A generic success message is returned within a reasonable time"), Priority, and Tags (`Regression`) — while the Traceability Matrix carries its Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, and Risk `High — inherited from FINDING-003's Technical Risk` — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this skill does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
+Hypothetical result: `TestCases_Login.md` / `.xlsx`, `TraceabilityMatrix.md`, and `CoverageReport.md` under `platform_core_data/modules/{{MODULE_SLUG}}/test_design/`. `TC-LOGIN-004`'s own entry in the Manual Test Suite is lean — Title ("Forgot Password does not time out for a valid, existing username"), Objective, Preconditions, Steps, Expected Result stating the *corrected* behavior ("A generic success message is returned within a reasonable time"), Priority, and Tags (`Regression`) — while the Traceability Matrix carries its Requirement Reference `PRD FR-3 / SR-3`, Discovery Reference `discovery/forgot_password_flow.md`, Finding Reference `FINDING-003`, Evidence Reference `FINDING-003/failure.png, FINDING-003/console.log`, and Risk `High — inherited from FINDING-003's Technical Risk` — dispositioned as a **regression test** per §5.3. `FINDING-004` (the enumeration-via-timeout Security Concern, Status `Needs Human Review`) is instead dispositioned as an **exploratory test**, its Expected Result asking the reviewer to confirm whether response-time parity is in-scope for the anti-enumeration requirement — a policy call this skill does not make unilaterally. The Coverage Report shows `4/4 Findings covered (2 regression, 1 exploratory, 1 documented exception)` and `6/6 in-scope Login requirements covered = 100%`.
 
 # 15. Architecture Principle
 
@@ -548,7 +556,7 @@ This skill is independently invocable — `/test-design-skill`, optionally with 
 
 ```
 Stage 3 complete — Manual Test Suite → Pending Review
-  platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md (+ .xlsx)
+  platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_{Module}.md (+ .xlsx)
   {T} test cases | Requirement coverage {P}%
 
 This is the divergence point — once approved, either branch may run, in any order,
@@ -566,7 +574,43 @@ Next step — approve, then choose a branch (or both):
   Or revise this stage:        /test-design-skill <your feedback>
 ```
 
-# 24. Resolving `{{RUN_FOLDER}}`
+# 24. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **writes into the module**: `modules/{{MODULE_SLUG}}/test_design/`. It reads that module's `context/` and `discovery/` and never writes to either.
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
 at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's

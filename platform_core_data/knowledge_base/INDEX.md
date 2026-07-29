@@ -15,7 +15,7 @@ Two categories exist, and both have no entries yet — an empty, indexed folder 
 | `business_rules/` | A rule this application enforces — true between runs, never promoted (application-specific by definition) |
 | `lessons_learned/` | A cross-run observation about working with this application |
 
-**Seven categories were removed on 2026-07-27** (`application/`, `automation/`, `execution/`, `findings/`, `repair/`, `ui/`, `notes/`). Each had stood empty because the run folder already held that output in full — findings in `runs/{{RUN_FOLDER}}/discovery/findings/`, execution history and repair records in `runs/{{RUN_FOLDER}}/execution/`, automation in `automation_baseline/`. Those writes now stay in the producing run, and cross-run reuse goes through the `patterns/` Promotion gate (`pipeline.md` §10.3, §10.5).
+**Seven categories were removed on 2026-07-27** (`application/`, `automation/`, `execution/`, `findings/`, `repair/`, `ui/`, `notes/`). Each had stood empty because the pipeline's own output folders already held that content in full — findings in `modules/{module}/discovery/findings/`, repair records in `modules/{module}/healing/`, automation in `modules/{module}/automation/` and the assembled `automation_baseline/`, execution history in `runs/{{RUN_FOLDER}}/execution/`. Those writes stay with the module or run that produced them, and cross-run reuse goes through the `patterns/` Promotion gate (`pipeline.md` §10.3, §10.5; `module_architecture.md` §4 for which of the two owns what).
 
 ## What to record here, and how
 

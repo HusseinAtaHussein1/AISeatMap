@@ -6,10 +6,12 @@
 // (see tools/browser_driver/README.md):
 //   Shared execution engine  -> platform_core/tools/
 //   Project knowledge        -> platform_core_data/
-//   Generated run outputs    -> platform_core_data/runs/{{RUN_FOLDER}}/  (that run's per-stage
-//                                                                  artifacts, including the generated
-//                                                                  automation package under
-//                                                                  runs/{{RUN_FOLDER}}/automation/)
+//   Module design output     -> platform_core_data/modules/{module}/  (that module's durable per-stage
+//                                                                  artifacts, including its standalone
+//                                                                  automation project under
+//                                                                  modules/{module}/automation/)
+//   Execution evidence       -> platform_core_data/runs/{{RUN_FOLDER}}/  (manual + automation execution
+//                                                                  results only — immutable once written)
 //   Automation baseline      -> platform_core_data/automation_baseline/  (the persistent Workspace
 //                                                                  Automation Baseline, per framework —
 //                                                                  it outlives any single run)
@@ -79,7 +81,8 @@ function projectCredentialsPath() {
 }
 
 // UI Knowledge Base — canonical, versioned baseline screenshots + screen metadata. Distinct from
-// Discovery run evidence (platform_core_data/runs/{{RUN_FOLDER}}/discovery/...), which stays per-run/temporary.
+// Discovery evidence (platform_core_data/modules/{module}/discovery/evidence/...), which documents one
+// module's in-scope screens at a point in time rather than serving as the canonical baseline.
 function projectUiScreenshotsDir() {
   return path.join(knowledgeBase(), 'ui', 'screenshots');
 }

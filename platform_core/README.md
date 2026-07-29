@@ -25,7 +25,7 @@ Population is deliberate: this layer does not grow by accretion during ordinary 
 
 - **Project-specific business rules, findings, credentials, or screen locators.** All of that belongs under `platform_core_data/` — never here, no matter how "generic" it looks on first observation.
 - **Reusable engineering knowledge documents.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core_data/knowledge_base/patterns/`, cited from a Skill's `dependencies` line — not here.
-- **Generated artifacts, execution results, or reports.** Those are per-project, per-run outputs under `platform_core_data/runs/`.
+- **Generated artifacts, execution results, or reports.** Those are project outputs: per-module design under `platform_core_data/modules/`, per-run execution evidence under `platform_core_data/runs/`.
 - **Orchestration or sequencing logic.** Stage order, checkpoints, and run identity belong in `workflows_and_pipelines/`.
 - **Agent behavioral specifications.** What an agent *does* is `.claude/skills/`'s responsibility, not this folder's.
 
@@ -35,16 +35,20 @@ Population is deliberate: this layer does not grow by accretion during ordinary 
 platform_core/
 ├── templates/                # output artifact templates — the structure of everything the
 │   ├── README.md             #   pipeline writes, one template per artifact per stage
+│   │                         #   → MODULE:  stage_1 · stage_2 · stage_3 · stage_4a · stage_5h
+│   │                         #   → RUN:     metadata · stage_4m · stage_5a · stage_6a
 │   ├── metadata/            #   RunManifest — run-wide, not owned by any one stage
-│   ├── stage_1_context/      #   ProjectContext
+│   ├── stage_1_context/      #   ProjectContext — one per module
 │   ├── stage_2_discovery/    #   snapshots, Timeline, Coverage, QA Report, findings/
 │   ├── stage_3_test_design/  #   TestCases (+ per-case entry), Traceability, Coverage
-│   ├── stage_4m_manual_execution/  # Results, Summary, Candidate Package, Defect entry
+│   ├── stage_4m_manual_execution/  # Results, Summary, QA Report, Defect entry
 │   ├── stage_4a_automation/   #   Plan, Manifests, Decision/Coverage Reports, Summary
 │   ├── stage_5a_execution/    #   ExecutionResults
+│   ├── stage_5h_self_healing/ #   RepairSummary, Confidence, Before/After, Quarantine
 │   └── stage_6a_reporting/    #   Final_QA_Report
 └── tools/
-    ├── automation_lifecycle/ # baseline copy, merge plan/apply, promotion record, cleanup
+    ├── automation_lifecycle/ # seeds a module project from the baseline, merge plan/apply,
+    │                         #   promotion record, scoped cleanup
     ├── browser_driver/       # shared browser automation engine — zero project-specific data
     │   ├── driver.js          # resolves project paths, loads profile + credentials, launches, logs in
     │   ├── api.js             # BrowserDriver — the only surface Skills/scripts use
@@ -53,12 +57,17 @@ platform_core/
     ├── mcp/                  # MCP servers layer — registration + usage contract (no server code)
     │   ├── stack_docs/        # stack + pinned-dependency extractor; plans the Context7 lookups
     │   └── README.md          # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
+    ├── module_manager/       # module identity — slug generation (the only place a module name is
+    │                         #   formatted), the registry, the Active Module pointer, per-module
+    │                         #   stage/automation state, per-module drift, the module README
     ├── platform_paths/       # the two-root resolver (Tool Root / Target Root) every tool here uses
     ├── run_manager/          # run identity — folder naming/indexing (the only place a run name is
     │                         #   formatted), the Active Run pointer, Run Manifest, lineage, targetRef
     └── test_suite_export/    # Stage 3's authored Markdown test suites -> the matching .xlsx;
                               #   dependency-free writer, workbook derived and never hand-authored
 ```
+
+**`module_manager/` and `run_manager/` are deliberate siblings with a hard boundary between them.** The Run Manager owns `runs/` and never writes under `modules/`; the Module Manager owns `modules/` and never writes under `runs/`. Two writers for one pointer is how a pointer stops being trustworthy — see `run_manager.md` §3 and `module_architecture.md` §6.5.
 
 `platform_core/tools/` and `platform_core_data/knowledge_base/patterns/` are peers, not a hierarchy — a Skill may depend on either or both independently. See `platform_core_data/knowledge_base/patterns/README.md` for the full Knowledge layer specification (structure, document metadata standard, promotion mechanics) and `platform_core/tools/browser_driver/README.md` for this layer's design (the four-way split between the shared engine, a project's Browser Profile, its Screen/Component Knowledge, and its Credentials). `platform_core/tools/mcp/README.md` specifies the two registered MCP servers: `playwright` as a second, selectable browser mode alongside the Browser Driver (§1.2's selection rule, §1.3's absolute prohibition on credential values in MCP tool calls), and `context7` as the source of version-accurate documentation for a project's own extracted stack (§2).
 

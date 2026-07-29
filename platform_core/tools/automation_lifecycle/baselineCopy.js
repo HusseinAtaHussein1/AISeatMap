@@ -1,7 +1,20 @@
-// Working Copy Creation — Step 1 of the Automation Asset Lifecycle (pipeline.md §12). Copies the
-// current Workspace Automation Baseline into a run's working automation folder before any
-// generation begins, and records the baseline's git ref at that moment (the "snapshot") so a later
-// merge can tell whether another run has since merged into the same baseline.
+// Step 1 of the Automation Asset Lifecycle (pipeline.md §12.3). Seeds a destination package from the
+// current Workspace Automation Baseline before any generation begins, and records the baseline's git
+// ref at that moment (the "snapshot") so a later merge can tell whether anything else has merged into
+// the same baseline since.
+//
+// AS OF 2026-07-29 the destination is a MODULE AUTOMATION PROJECT,
+// platform_core_data/modules/{slug}/automation/tests_{Framework}/ — durable, standalone, and reused in
+// place across runs (pipeline.md §12.1). Use copyBaselineIntoModule().
+//
+// The mechanism is destination-agnostic and always was: it copies a directory and records a
+// path-scoped ref. That is why this revision adds a name rather than a second implementation — two
+// copies of the ref-capture logic would be two things to keep in agreement about what a snapshot
+// means. copyBaselineIntoRun() is retained as a deprecated alias for pre-migration callers.
+//
+// NOTE ON STATE: for a module project, the authoritative lifecycle record is
+// .module_automation_state.json (module_manager/automationState.js), whose `baselineRef` carries the
+// same anchor this snapshot does. The snapshot file remains for callers that have no module.
 
 const fs = require('fs');
 const path = require('path');
@@ -31,19 +44,23 @@ function recordedBaselinePath(baselineAbsPath, dataRoot) {
 }
 
 /**
+ * Seeds `destPackageAbsPath` from the baseline and records the snapshot beside it.
+ *
  * @param {string} baselineAbsPath
- * @param {string} runPackageAbsPath - where this run's working copy of the package should live
+ * @param {string} destPackageAbsPath - where the package being worked on should live: a module
+ *   automation project (current) or a run working copy (pre-migration).
  * @param {{fs?: object, execFileSync: Function, now: Date, repo?: object, gitMode?: string,
  *          dataRoot?: string}} deps
  *   `repo` is the GitRepo governing the baseline; omitted, it is discovered from the baseline path.
  * @returns {{copied: boolean, baselineRef: string|null, snapshotPath: string, repo: object}}
  */
-function copyBaselineIntoRun(baselineAbsPath, runPackageAbsPath, deps) {
+function copyBaselineInto(baselineAbsPath, destPackageAbsPath, deps) {
   const fsImpl = deps.fs || fs;
   if (!(deps.now instanceof Date)) {
-    throw new TypeError('copyBaselineIntoRun requires deps.now (a Date) — pass it explicitly, never default to new Date() internally so callers/tests stay deterministic');
+    throw new TypeError('copyBaselineInto requires deps.now (a Date) — pass it explicitly, never default to new Date() internally so callers/tests stay deterministic');
   }
 
+  const runPackageAbsPath = destPackageAbsPath;
   const baselineExists = fsImpl.existsSync(baselineAbsPath);
   let baselineRef = null;
   // Discovered only when there is a baseline to inspect: a greenfield run must not shell out to git
@@ -77,7 +94,34 @@ function copyBaselineIntoRun(baselineAbsPath, runPackageAbsPath, deps) {
 }
 
 /**
- * Reads a previously-written snapshot file (see copyBaselineIntoRun above).
+ * Seeds a **Module Automation Project** from the baseline (pipeline.md §12.3) — the sanctioned entry
+ * point since 2026-07-29.
+ *
+ * Idempotence is the CALLER's responsibility, deliberately: a module project is reused in place
+ * across runs (`automation-skill` §11D.3), so a second Stage 4A pass must NOT re-seed over the
+ * project it already has. Check for an existing project first; seed only when there is none. Making
+ * that decision here would require this function to guess whether an existing directory is a
+ * half-finished seed or a suite someone has been working on for six runs.
+ *
+ * @param {string} baselineAbsPath
+ * @param {string} modulePackageAbsPath - modules/{slug}/automation/tests_{Framework}/
+ * @param {object} deps - as copyBaselineInto()
+ * @returns {{copied: boolean, baselineRef: string|null, snapshotPath: string, repo: object}}
+ */
+function copyBaselineIntoModule(baselineAbsPath, modulePackageAbsPath, deps) {
+  return copyBaselineInto(baselineAbsPath, modulePackageAbsPath, deps);
+}
+
+/**
+ * The pre-2026-07-29 entry point, retained so existing callers and in-flight runs keep working.
+ * @deprecated The run working copy is removed (pipeline.md §12.1). Use copyBaselineIntoModule().
+ */
+function copyBaselineIntoRun(baselineAbsPath, runPackageAbsPath, deps) {
+  return copyBaselineInto(baselineAbsPath, runPackageAbsPath, deps);
+}
+
+/**
+ * Reads a previously-written snapshot file (see copyBaselineInto above).
  *
  * A schemaVersion 1 snapshot (written before the two-root refactor) has no `schemaVersion`,
  * `gitAvailable`, `gitMode`, or `repoRoot`. It is normalized rather than rejected: an in-flight run
@@ -107,6 +151,8 @@ function loadSnapshot(snapshotPath, { fs: fsImpl = fs } = {}) {
 module.exports = {
   SNAPSHOT_FILENAME,
   SNAPSHOT_SCHEMA_VERSION,
+  copyBaselineInto,
+  copyBaselineIntoModule,
   copyBaselineIntoRun,
   loadSnapshot,
 };

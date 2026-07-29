@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Automation Decision Report (Stage 4A — Automation branch)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{{FRAMEWORK}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationDecisionReport_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §13 (Automation Decision Engine — the four
             decisions and the six mandatory fields per decision), §16 Outputs #4, §19
 
@@ -22,9 +22,11 @@ never pre-empts it.
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Framework | {{FRAMEWORK}} <!-- the human's Framework Decision Gate answer (§31) --> |
-| Scope source | `runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` (approved), narrowed by {{SCOPE_FILTER}} |
+| Scope source | `modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` (approved), narrowed by {{SCOPE_FILTER}} |
 | Candidates decided | {{DECIDED_COUNT}} of {{CANDIDATE_COUNT}} |
 | Generated | {{TIMESTAMP}} |
 

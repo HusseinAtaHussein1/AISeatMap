@@ -120,9 +120,9 @@ Pipeline Orchestrator (workflows_and_pipelines/pipeline/pipeline.md)
         ↓
 Resolves platform_core_data/knowledge_base/patterns/repair_patterns/, automation_patterns/, framework_patterns/
         ↓
-Reads platform_core_data/runs/{{RUN_FOLDER}}/test_design/ (its declared primary Input — scope AND content; never a Manual branch artifact, pipeline.md §3.3)
+Reads platform_core_data/modules/{{MODULE_SLUG}}/test_design/ (its declared primary Input — scope AND content; never a Manual branch artifact, pipeline.md §3.3)
         ↓
-Writes platform_core_data/runs/{{RUN_FOLDER}}/automation/ (its declared Output)
+Writes platform_core_data/modules/{{MODULE_SLUG}}/automation/ (its declared Output)
         ↓
 Marks Pending Automation Approval — pipeline.md §5.2 checkpoint
 ```

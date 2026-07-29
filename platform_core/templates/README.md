@@ -76,18 +76,46 @@ platform_core/templates/
     └── Final_QA_Report.md             # self-reports at 4M and never reaches here
 ```
 
-Sub-folders are named `stage_{N}_{stage-folder}` so a template's folder matches the run-folder
-segment its artifact lands in — `stage_6a_reporting/` → `runs/{{RUN_FOLDER}}/reporting/`.
+Sub-folders are named `stage_{N}_{stage-folder}` so a template's folder matches the destination folder
+segment its artifact lands in — `stage_6a_reporting/` → `runs/{{RUN_FOLDER}}/reporting/`,
+`stage_3_test_design/` → `modules/{{MODULE_SLUG}}/test_design/`.
 
-`metadata/` follows the same rule but is not a stage: it holds the run-wide artifacts every run has
-(`runs/{{RUN_FOLDER}}/metadata/`). `run.json` and `run_summary.md` have no template here because
+### Which of the two locations a template renders into
+
+Every template's own `Renders to:` line is authoritative. The pattern behind them is `pipeline.md`
+§7's two-location rule:
+
+| Template folder | Renders into | Because |
+|---|---|---|
+| `stage_1_context/` · `stage_2_discovery/` · `stage_3_test_design/` · `stage_4a_automation/` · `stage_5h_self_healing/` | `platform_core_data/modules/{{MODULE_SLUG}}/…` | A later run would want to **start from** it — durable, refined in place |
+| `stage_4m_manual_execution/` · `stage_5a_execution/` · `stage_6a_reporting/` · `metadata/` | `platform_core_data/runs/{{RUN_FOLDER}}/…` | It is the **evidence of one execution** — immutable once written |
+| `stage_4a_automation/AutomationPackages.md` · `AutomationSummary.md` | `platform_core_data/automation_baseline/…` | Whole-project registry/summary, not one module's |
+
+The one folder whose templates split across locations is `stage_4a_automation/`: the per-module Plan,
+Manifest, Decision Report, Coverage Report, Suite Manifest, and Stack Documentation Context render
+into the module; the whole-project `AutomationPackages.md` registry and `AutomationSummary_{FW}.md`
+render into the baseline. That split is the same rule applied to two different scopes, not an
+exception to it.
+
+`metadata/` follows the same naming rule but is not a stage: it holds the run-wide artifacts every run
+has (`runs/{{RUN_FOLDER}}/metadata/`). `run.json` and `run_summary.md` have no template here because
 `platform_core/tools/run_manager` generates them; `RunManifest.md` does, because nothing generates it —
 a workflow's Step 1 creates it by hand.
 
+**There are no `module/` templates for `README.md` or `module.json`**, and that is deliberate:
+`platform_core/tools/module_manager` generates both in full — `moduleSummary.js` renders the summary
+and `moduleRegistry.js` writes the state record. A template for a generated file would be a second
+shape to keep in sync by hand, which is exactly what convention 7 below forbids.
+
 ## Conventions every template follows
 
-1. **`{{TOKEN}}` marks a value the stage fills.** `{{RUN_FOLDER}}`, `{{MODULE}}`, `{{FRAMEWORK}}`
-   carry the same meaning as everywhere else in the platform.
+1. **`{{TOKEN}}` marks a value the stage fills.** `{{RUN_FOLDER}}`, `{{MODULE}}`, `{{MODULE_SLUG}}`,
+   `{{FRAMEWORK}}` carry the same meaning as everywhere else in the platform.
+
+   `{{MODULE}}` and `{{MODULE_SLUG}}` are **not interchangeable**: `{{MODULE}}` is the human-readable
+   name (`Flight Search`) used in headings and prose; `{{MODULE_SLUG}}` is the filesystem-safe folder
+   name (`flight-search`) used in every path. Using the name where a path is expected produces a path
+   that does not exist, so the two tokens are kept distinct rather than normalized at render time.
 2. **`<!-- HTML comments carry the rule -->`** — what belongs in the section, and the halt/degrade
    behaviour when the input for it is missing. Comments are guidance for the rendering agent and are
    **stripped from the rendered artifact**.
@@ -98,7 +126,18 @@ a workflow's Step 1 creates it by hand.
 5. **Optional sections say so.** A section marked optional is omitted whole when it doesn't apply —
    never left in place as an empty heading.
 6. **One file per artifact, edited in place.** No `.vN` suffixes, no duplicate "final" copy on
-   approval — git is the version history (`workflows_and_pipelines/pipeline/pipeline.md` §7).
+   approval — git is the version history (`workflows_and_pipelines/pipeline/pipeline.md` §7). For a
+   **module** artifact, "in place" spans runs: a later run refining Login's Test Design re-opens
+   `modules/login/test_design/TestCases_Login.md`, and `{{REVISION_COUNT}}` in its header is the
+   in-place-edit equivalent of a version number.
+6a. **A module artifact declares its module and what it consumed.** Its header carries
+   `{{MODULE_SLUG}}`, the run that produced the current revision, `{{REVISION_COUNT}}`, and — where the
+   artifact has upstream inputs — the revision of each input it read. That last field is what makes the
+   PRD → test case → script chain mechanically traceable and lets the platform flag a downstream
+   artifact **stale** when its input moves (`module_architecture.md` §10.1, §10.4).
+6b. **A `status:` field in a module artifact's own header is authoritative.** `module.json` and
+   `modules.json` cache it for fast listing; a stage that requires approved input reads the header,
+   never a cache (`pipeline.md` §7).
 7. **A template describes an *authored* artifact.** Where a stage also ships a non-Markdown rendering
    of the same content, that rendering is **generated from the authored file by a tool**, so there is
    no second template for it. The one case today is Stage 3's Manual Test Suite: `TestCases_Module.md`

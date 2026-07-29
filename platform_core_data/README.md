@@ -8,23 +8,31 @@ This folder holds **everything specific to the one application the platform is c
 
 **This folder always sits inside the Tool Root** — `agentic-testing-tool/platform_core_data/` once installed into a host repository. Every *process* artifact lives here; the Target Project receives generated automation code and nothing else. That split is the two-root contract ([`pipeline.md` §13](../workflows_and_pipelines/pipeline/pipeline.md), enforced by [`platform_core/tools/platform_paths/`](../platform_core/tools/platform_paths/)). `init` never overwrites this folder, even with `--force`.
 
-## The three top-level folders
+## The four top-level folders
 
-Everything here is one of exactly three things, and the distinction is what decides where a new file goes:
+Everything here is one of exactly four things, and the distinction is what decides where a new file goes:
 
 | Folder | Lifetime | Holds |
 |---|---|---|
-| [`knowledge_base/`](knowledge_base/) | **Durable — shared across every run** | Inputs, project reference docs, detected stack, supporting material, browser/credential assets, accumulated knowledge |
-| [`runs/`](runs/) | **Per-run — a run folder is immutable once written** | One folder per pipeline execution, holding that run's stage artifacts and evidence. Refining an earlier run creates a *new* run that inherits and supersedes it (`run_manager.md` §5.9) — the old run is never edited. Two bookkeeping files sit beside the run folders and are deliberately mutable: `current_active_run.json` (§5.7) and `.run_folder_index.json` (§5.6) |
-| [`automation_baseline/`](automation_baseline/) | **Long-lived source code** | The persistent Automation Package(s) under a three-way-merge lifecycle (`pipeline.md` §12) |
+| [`knowledge_base/`](knowledge_base/) | **Durable — shared across every run and every module** | Inputs, project reference docs, detected stack, supporting material, browser/credential assets, accumulated knowledge |
+| [`modules/`](modules/) | **Durable — per module, evolves in place across runs** | One subfolder per module, holding that module's Context, Discovery, Test Design, Automation, and Healing output, plus its `README.md` summary and `module.json` state. `modules.json` beside them is the registry *and* the active-module pointer (`module_architecture.md` §6) |
+| [`runs/`](runs/) | **Per-run — a run folder is immutable once written** | One folder per pipeline execution, holding that run's **execution** artifacts and evidence: manual execution results, automation execution results, the Final QA Report, and run metadata. Two bookkeeping files sit beside the run folders and are deliberately mutable: `current_active_run.json` (§5.7) and `.run_folder_index.json` (§5.6) |
+| [`automation_baseline/`](automation_baseline/) | **Long-lived source code** | The assembled whole-project Automation Package(s) under a three-way-merge lifecycle (`pipeline.md` §12), plus the `shared/` assets every module project references |
 
-**The rule that decides the location:** if a document would still be correct at the start of the *next* run, it belongs in `knowledge_base/`. If it records what happened *during* one run, it belongs in that run's folder. Generated automation *code* is the one thing that must outlive its run while still being code rather than a document — that is `automation_baseline/`.
+**The rule that decides the location, stated once:**
 
-The clearest illustration is the stack: `knowledge_base/stack.md` records what the project's toolchain *is* (durable), while `runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` records which documentation queries one run made about it (run history).
+- Hand-authored, true of the whole application → `knowledge_base/`
+- **Something a later run would want to *start from* → `modules/{module}/`**
+- **Evidence of what happened in *one* execution → `runs/{{RUN_FOLDER}}/`**
+- Assembled, whole-project automation source → `automation_baseline/`
+
+The clearest illustration is the stack: `knowledge_base/stack.md` records what the project's toolchain *is* (durable, whole-project), `modules/login/automation/StackDocumentationContext_{Framework}.md` records which documentation queries were made while automating Login (durable, per module), and `runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` records what happened when that suite ran on a given day (per run, immutable).
+
+> **Changed 2026-07-29 (user-mandated).** `modules/` is new, and the Run Folder is narrowed to execution artifacts. Before this change every stage wrote into the Run Folder, which made a run the unit of everything — identity, scope, location, and lifetime. Working a project module by module across many sessions broke that: a module's design ended up scattered across the runs that touched it, and `runs/`' immutability (right for *what happened*) fought a module's design, which legitimately accumulates. [`module_architecture.md`](../workflows_and_pipelines/pipeline/module_architecture.md) specifies the split; `pipeline.md` §7 states the rule. **A pre-existing run folder holding `context/`, `discovery/`, or `test_design/` is never rewritten.**
 
 > **Changed 2026-07-27.** Shared-across-runs material used to be scattered across four locations: input documents at this folder's root, supporting material under `resources/`, plus separate top-level `browser/`, `credentials/`, and `ui/` folders. It is now consolidated into `knowledge_base/`, because "is this shared or per-run?" is a question with one answer per file, while "root or `resources/`?" was a question with two plausible answers and no rule. Unused `resources/` subfolders (`TestData/`, `Documents/`, `Records/`, `sample_data/`, `external_links/`, `screenshots/`, `credentials/`), the empty `browser/pages/`, and the duplicate `patterns/diagnosis/` were removed in the same change — no stage read any of them.
 >
-> **Also 2026-07-27:** seven knowledge categories were removed — `application/`, `automation/`, `execution/`, `findings/`, `repair/`, `ui/`, and `notes/`. All had stood empty since the platform's inception, because each named output a **run folder already holds in full**: findings in `runs/{{RUN_FOLDER}}/discovery/findings/`, execution history and repair records in `runs/{{RUN_FOLDER}}/execution/`, generated automation in `automation_baseline/`. `business_rules/` and `lessons_learned/` survive because no single run owns their content. Cross-run engineering knowledge now travels one way only: through the `patterns/` Promotion gate (`pipeline.md` §10.3, §10.5).
+> **Also 2026-07-27:** seven knowledge categories were removed — `application/`, `automation/`, `execution/`, `findings/`, `repair/`, `ui/`, and `notes/`. All had stood empty since the platform's inception, because each named output the platform **already holds in full elsewhere**: findings in `modules/{module}/discovery/findings/`, execution history in `runs/{{RUN_FOLDER}}/execution/`, repair records in `modules/{module}/healing/`, generated automation in the module project and `automation_baseline/`. `business_rules/` and `lessons_learned/` survive because neither a single module nor a single run owns their content. Application-agnostic engineering knowledge travels one way only: through the `patterns/` Promotion gate (`pipeline.md` §10.3, §10.5).
 
 ## Responsibility
 
@@ -37,6 +45,8 @@ The clearest illustration is the stack: `knowledge_base/stack.md` records what t
 - **Orchestration or sequencing logic.** Stage order and checkpoint mechanics belong in `workflows_and_pipelines/`.
 - **A second project.** Adding one would reintroduce exactly the project-selection ambiguity the single-project model removes (`pipeline.md` §6 Rule 9).
 - **Real secrets committed to git.** `credentials.json` is git-ignored by design (two overlapping `.gitignore` rules); only `credentials.template.json`, placeholders only, is ever committed.
+- **Execution results inside a module, or design artifacts inside a run.** These are the two ways to undo the §"four top-level folders" split by hand. A module's `README.md` *links* to the runs that executed it; it never restates their results. A run *cites* the module artifacts it consumed; it never copies them.
+- **A copy of `knowledge_base/` content inside a module.** The PRD is read by Stage 1 and cited, never copied into a module.
 
 ## Folder Structure
 
@@ -82,22 +92,42 @@ platform_core_data/
       automation_patterns/ · diagnosis_patterns/ · execution_patterns/    # empty until promoted
       framework_patterns/ · reporting/ · pipeline_decision_patterns/      # empty until promoted
       INDEX.md · README.md             # catalog of promoted documents + the layer's own spec
-  runs/                           # ── PER RUN — RUN FOLDERS IMMUTABLE ────────────────────────────────
+  modules/                        # ── PER MODULE — DURABLE, EVOLVES IN PLACE ────────────
+    modules.json                    # the module registry AND the active-module pointer
+                                    #   (module_architecture.md §6) — mutable, committed
+    README.md                       # what this folder is, and how to work with it
+    {module}/                       # one folder per module — a slug: login, agency-management
+      README.md                       # THE MODULE SUMMARY — regenerated, never hand-authored
+      module.json                     # this module's authoritative state record
+      context/                        # Stage 1  — ProjectContext.md (this module's slice)
+      discovery/                      # Stage 2  — snapshot, QA assessment, coverage, timeline,
+                                      #            findings/, evidence/
+      test_design/                    # Stage 3  — TestCases_{Module}.md + .xlsx, matrix, coverage
+      automation/                     # Stage 4A — a STANDALONE, runnable project (pipeline.md §12.1)
+        tests_{Framework}/              #   its own config + dependency manifest
+        .module_automation_state.json   #   Generated → Executed → Healed → Approved
+      healing/                        # Stage 5H — created ONLY if a human invoked self-healing
+  runs/                           # ── PER RUN — EXECUTION ONLY, IMMUTABLE ONCE WRITTEN ──
     current_active_run.json         # which run the pipeline is working in (§5.7) — mutable pointer;
                                     #   overridden per-process by AGENTIC_TESTING_RUN_FOLDER
     .run_folder_index.json          # legacy-name compatibility index (§5.6) — mutable
     run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target/   # current convention (run_manager.md §5)
     RUN-YYYYMMDD-XXX[-slug]/                       # pre-existing runs — never renamed (§5.6)
-      metadata/                       # run.json (+ targetRef, §5.8) + run_summary.md + RunManifest.md
+      metadata/                       # run.json (+ targetRef §5.8, + modules[]/moduleScope/
+                                      #   moduleArtifactRefs[]) + run_summary.md + RunManifest.md
                                       #   + lineage.json on a refinement run (§5.9) — always created
-      context/ · discovery/{findings/} · test_design/ · manual_execution/ · execution/ · reporting/
-                                      # created only when that stage actually writes to it
-      automation/                     # temporary working copy of the Automation Baseline
-                                      #   (pipeline.md §12.1) — its source is removed after a
-                                      #   successful Workspace Merge; every Plan/Manifest/Report
-                                      #   and automation_promotion.md stay forever
+      manual_execution/               # Stage 4M — created only when it writes
+      execution/                      # Stage 5A — results + evidence, plus any 5H rerun cycle
+                                      #   (ExecutionResults.rerun-N.md, artifacts_rerun-N/)
+      reporting/                      # Stage 6A — Final_QA_Report.md
+                                      # NOTE: context/, discovery/, test_design/, automation/, and
+                                      #   self_healing/ are NO LONGER created here. Runs predating
+                                      #   2026-07-29 that hold them keep them, unchanged (§5.6)
   automation_baseline/            # ── LONG-LIVED AUTOMATION CODE ────────────────────────
-    {framework}/tests_{Framework}/  # the authoritative, persistent Automation Package
+    {framework}/tests_{Framework}/  # the authoritative, whole-project Automation Package, assembled
+                                    #   from APPROVED module projects (pipeline.md §12.4)
+    {framework}/shared/             # base page objects, auth fixtures, utilities, data factories —
+                                    #   generated once, referenced by every module project
     {framework}/AutomationSummary_{Framework}.md
     TargetWriteLedger.md
 ```
@@ -126,16 +156,29 @@ The nine hand-authored documents at `knowledge_base/`'s root — every root `.md
 |---|---|
 | Product Requirements Document | `knowledge_base/PRD.md` |
 | Detected stack | `knowledge_base/stack.md` |
-| Project Context | `runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
-| Discovery Artifacts | `runs/{{RUN_FOLDER}}/discovery/*.md` |
-| Manual Test Suites & Traceability Matrix | `runs/{{RUN_FOLDER}}/test_design/` |
+| **Module registry + active module** | `modules/modules.json` |
+| **Module summary** (what do we know about Login?) | `modules/{module}/README.md` |
+| Project Context | `modules/{module}/context/ProjectContext.md` |
+| Discovery Artifacts | `modules/{module}/discovery/` |
+| Manual Test Suites & Traceability Matrix | `modules/{module}/test_design/` |
+| Automation Suite *(per module, standalone)* | `modules/{module}/automation/tests_{Framework}/` |
+| Repair Summary *(only if Stage 5H ran)* | `modules/{module}/healing/` |
 | Manual Execution Results | `runs/{{RUN_FOLDER}}/manual_execution/` |
 | Execution Results | `runs/{{RUN_FOLDER}}/execution/` |
 | Final QA Report | `runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` |
 | Run Manifest | `runs/{{RUN_FOLDER}}/metadata/RunManifest.md` |
-| Automation Package | `automation_baseline/{framework}/tests_{Framework}/` |
+| Automation Package *(assembled, whole-project)* | `automation_baseline/{framework}/tests_{Framework}/` |
 
 Each artifact is **one file, edited in place** — no `.vN` suffixes and no separate "approved" copy. Approval flips a `status:` field and is recorded in the Run Manifest; git supplies the version history (`pipeline.md` §7).
+
+**Which module is active is a fact on disk, not something you remember:**
+
+```bash
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js active --json    # what is active, and the scope
+node platform_core/tools/module_manager/cli.js use login        # activate one (sticky)
+node platform_core/tools/module_manager/cli.js show login       # one module's full state
+```
 
 ## Related Layers
 

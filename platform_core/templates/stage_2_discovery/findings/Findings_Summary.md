@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Findings Summary (Stage 2 — shared)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §9 Outputs #5, §5.9 (Duplicate Detection)
 
 A single INDEX of every finalized Finding — so a reviewer can triage the full set without opening

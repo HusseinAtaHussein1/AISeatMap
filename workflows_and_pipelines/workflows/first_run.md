@@ -16,10 +16,18 @@ This workflow validates that the platform is **operational** — that the Run Ma
 | | |
 |---|---|
 | **Module** | Login |
+| **Module scope** | `single` — exactly one module active |
 
 Only the Login module is included. No other module may be explored, tested, or referenced as in-scope by any stage of this workflow.
 
-This scope constraint is supplied to Stage 1 via the Run Configuration input (see `workflows_and_pipelines/pipeline/pipeline.md` §4, Stage 1) — the Project Context Agent's own specification is unmodified; this workflow simply instructs it, through its existing Run Configuration input, to declare Login as the only "In Scope" module and every other module "Out of Scope." Every downstream stage already respects that scope boundary as documented in its own specification (e.g., `.claude/skills/explorer-skill/SKILL.md` §9 Execution Rule 1: "Must not explore any module the Project Context marks 'Out of Scope.'").
+The constraint is enforced in two places that agree with each other:
+
+1. **Mechanically — the active-module pointer.** `activeModules: ["login"]` with `activeScope: single` in `platform_core_data/modules/modules.json`. Every stage resolves the module it works in from that pointer, so "Login only" is a fact on disk rather than an instruction a stage has to remember (`module_architecture.md` §6).
+2. **Descriptively — the Run Configuration.** Stage 1 is told to declare Login's own in-scope areas, and to record what belongs to *other* modules in its Out of Scope section, naming the owning module (`project-context-skill` §3.1). The Project Context Agent's specification is unmodified; this workflow only supplies the input it already declares.
+
+Every downstream stage respects that boundary as documented in its own specification (e.g. `.claude/skills/explorer-skill/SKILL.md` §9 Execution Rule 1: "Must not explore any module the Project Context marks 'Out of Scope.'").
+
+**On a fresh install, `login` does not exist yet.** Stage 1 proposes it — along with every other module the PRD implies — and a human approves it at Stage 1's gate before it is scaffolded. This workflow's Step 1 covers activating it once it exists; Step 2 covers the first-time case.
 
 # 4. Execution Flow
 
@@ -54,9 +62,9 @@ This workflow runs exactly three Agent stages, orchestrated by the Run Manager, 
        Agents are intentionally excluded from this workflow)
 ```
 
-## Step 1 — Run Manager
+## Step 1 — Run Manager and Module selection
 
-Per `workflows_and_pipelines/pipeline/run_manager.md`, before any Agent runs:
+Before any Agent runs, two pointers must resolve: **which module** and **which run**.
 
 1. **Create the run** — one command does the whole of what used to be four manual steps (`run_manager.md` §5.10):
 
@@ -65,10 +73,28 @@ Per `workflows_and_pipelines/pipeline/run_manager.md`, before any Agent runs:
      --scope UserStory --target Login --workflow first_run --scope-paths <in-scope paths>
    ```
 
-   It generates the folder name (§5.5 — never hand-formatted; the pre-2026-07-27 "Run ID + AI-generated Display Name" pair is retired, §5), creates the Run Workspace (§6), writes `run.json` **with the Target Project code-state anchor** (`targetRef`, §5.8), creates `metadata/RunManifest.md` from its template (§5.11), and **activates the run** (§5.7) so Stage 1 knows where to write. Where the anchor cannot be captured, that is recorded as a declared gap rather than left silent.
-2. **Launch Stage 1** — hand off to the Project Context Agent, having set run Status to `Running`. As each stage completes or a checkpoint resolves, record it: `cli.js stage "<Stage>" --status <status> --reviewer <who>` (§5.11).
+   It generates the folder name (§5.5 — never hand-formatted), creates the Run Workspace (§6), writes `run.json` **with the Target Project code-state anchor** (`targetRef`, §5.8), creates `metadata/RunManifest.md` from its template (§5.11), and **activates the run** (§5.7). Where the anchor cannot be captured, that is recorded as a declared gap rather than left silent.
 
-The Run Manager takes no further action of its own until a stage signals completion, error, or a checkpoint is reached (`workflows_and_pipelines/pipeline/run_manager.md` §8) — it does not analyze, and does not influence, what any Agent produces.
+2. **Activate the module** — if `login` already exists:
+
+   ```bash
+   node platform_core/tools/module_manager/cli.js active --json   # what is active now?
+   node platform_core/tools/module_manager/cli.js use login       # activate it (sticky)
+   ```
+
+   **If it does not exist, do not create it here.** Proceed to Step 2 with nothing active: Stage 1 proposes the decomposition, the reviewer approves it at Stage 1's existing gate, and only then is `login` scaffolded and activated. The Run Manager is explicitly forbidden from creating a module (`run_manager.md` §3, §10 Rule 7), and so is this workflow — a module nobody approved would be a module nobody agreed should be tested.
+
+3. **Launch Stage 1** — hand off to the Project Context Agent, having set run Status to `Running`. As each stage completes or a checkpoint resolves, record it in **both** ledgers:
+
+   ```bash
+   node platform_core/tools/run_manager/cli.js stage "<Stage>" --status <status> --reviewer <who>
+   node platform_core/tools/module_manager/cli.js stage login <context|discovery|test_design> \
+     --status <status> --artifact <path> --run <run-folder>
+   ```
+
+   The two records answer different questions and are both needed: the Run Manifest answers *where is this run right now?*, and the module registry answers *where does Login stand, across every run?*
+
+The Run Manager takes no further action of its own until a stage signals completion, error, or a checkpoint is reached (`run_manager.md` §8) — it does not analyze, and does not influence, what any Agent produces. It also never writes under `modules/`: that is the Module Manager's mandate.
 
 ## Step 2 — Project Context Agent *(Pipeline Stage 1)*
 
@@ -78,7 +104,7 @@ The Run Manager takes no further action of its own until a stage signals complet
 |---|---|
 | **Input** | PRD · Supporting Documents · Run Configuration (declaring Login as the sole In Scope module, per §3 above) |
 | **Contract keys consumed** | `prd`, `run_configuration` (per the skill's own `inputs` contract) |
-| **Output** | Project Context — `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
+| **Output** | Project Context — `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` |
 | **Contract key produced** | `project_context` |
 | **Checkpoint** | **Human Review Required** (Business Analyst / Product Owner, per `workflows_and_pipelines/pipeline/pipeline.md` §5.1) |
 
@@ -92,11 +118,11 @@ The workflow does not proceed to Step 3 until this checkpoint is explicitly appr
 |---|---|
 | **Input** | Project Context · Running Application |
 | **Contract keys consumed** | `project_context` (Step 2's `project_context` output, re-supplied unchanged), `discovery_source` |
-| **Output** | Discovery Report (`platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md`) · Findings Summary (`platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md`) · Evidence Packages (`platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/`) |
+| **Output** | Discovery Report (`platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md`) · Findings Summary (`platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md`) · Evidence Packages (`platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-{ID}_{ShortName}/`) |
 | **Contract keys produced** | `qa_assessment_report`, `findings_summary`, `evidence_packages`, `discovery_snapshots`, `timeline`, `coverage_summary` |
 | **Checkpoint** | **Human Review Required** (QA Lead, per `workflows_and_pipelines/pipeline/pipeline.md` §5.1) |
 
-Note: `.claude/skills/explorer-skill/SKILL.md` also always produces per-screen discovery snapshots (`platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md`) as a standing, non-optional part of its output (its own §9 Execution Rule 4) — that continues to happen as part of this step even though this workflow's artifact list in §6 groups them together with the Discovery Report rather than naming them separately.
+Note: `.claude/skills/explorer-skill/SKILL.md` also always produces per-screen discovery snapshots (`platform_core_data/modules/{{MODULE_SLUG}}/discovery/*.md`) as a standing, non-optional part of its output (its own §9 Execution Rule 4) — that continues to happen as part of this step even though this workflow's artifact list in §6 groups them together with the Discovery Report rather than naming them separately.
 
 The workflow does not proceed to Step 4 until this checkpoint is explicitly approved.
 
@@ -143,13 +169,13 @@ This workflow does not loosen, tighten, or otherwise alter any Explorer Agent ru
 
 | Artifact | Path | Produced By |
 |---|---|---|
-| Project Context | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` | Project Context Agent |
-| Discovery Report | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md` | Explorer Agent |
-| Findings Summary | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` | Explorer Agent |
-| Evidence Packages | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` | Explorer Agent |
-| Manual Test Suites (Markdown) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Login.md` | Test Design Agent |
-| Manual Test Suites (Excel) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_Login.xlsx` | Test Design Agent |
-| Requirement Traceability Matrix | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` | Test Design Agent |
+| Project Context | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` | Project Context Agent |
+| Discovery Report | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md` | Explorer Agent |
+| Findings Summary | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/Findings_Summary.md` | Explorer Agent |
+| Evidence Packages | `platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-{ID}_{ShortName}/` | Explorer Agent |
+| Manual Test Suites (Markdown) | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_Login.md` | Test Design Agent |
+| Manual Test Suites (Excel) | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_Login.xlsx` | Test Design Agent |
+| Requirement Traceability Matrix | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` | Test Design Agent |
 | Run Summary | `platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md` | Run Manager |
 
 # 7. Success Criteria

@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Requirement Traceability Matrix (Stage 3 — shared, divergence point)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §5.1 (Four Dimensions), §5.2 (No Test Case
             Without Traceability), §5.3 (Finding disposition), §5.4 (Run Scope Reference),
             §6.2 (what lives here rather than on the test case), §9 Outputs #3, §12
@@ -21,8 +21,10 @@ must not be published — if a Finding is being tested, its evidence is what mak
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
-| Project Context | `runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
+| Project Context | `modules/{{MODULE_SLUG}}/context/ProjectContext.md` |
 | Run Scope Type / Run Type | {{RUN_SCOPE_TYPE}} / {{RUN_TYPE}} |
 | Test Cases Traced | {{TRACED_CASE_COUNT}} |
 | Generated | {{TIMESTAMP}} |

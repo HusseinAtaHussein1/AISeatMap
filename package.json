@@ -26,6 +26,7 @@
     "./detect": "./platform_core/tools/mcp/stack_docs/detectProject.js",
     "./lifecycle": "./platform_core/tools/automation_lifecycle/index.js",
     "./run-manager": "./platform_core/tools/run_manager/index.js",
+    "./module-manager": "./platform_core/tools/module_manager/index.js",
     "./test-suite-export": "./platform_core/tools/test_suite_export/index.js",
     "./init": "./platform_core/tools/init/index.js"
   },

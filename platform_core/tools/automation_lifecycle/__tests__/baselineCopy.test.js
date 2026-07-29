@@ -3,7 +3,9 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { copyBaselineIntoRun, loadSnapshot, SNAPSHOT_FILENAME } = require('../baselineCopy');
+const {
+  copyBaselineInto, copyBaselineIntoModule, copyBaselineIntoRun, loadSnapshot, SNAPSHOT_FILENAME,
+} = require('../baselineCopy');
 
 const FIXED_NOW = new Date('2026-07-24T12:00:00.000Z');
 
@@ -106,4 +108,47 @@ test('copyBaselineIntoRun with no existing baseline (greenfield) copies nothing 
 
 test('loadSnapshot returns null when no snapshot file exists yet', () => {
   assert.equal(loadSnapshot(path.join(os.tmpdir(), 'no-such-snapshot.json')), null);
+});
+
+test('copyBaselineIntoModule seeds a module automation project and records the baseline ref', () => {
+  // pipeline.md §12.3: generation happens in the module automation project, not a run working copy.
+  // Both the baseline and the module live under the data root, as they do in a real install — the
+  // lifecycle only ever holds the repository governing platform_core_data/ (pipeline.md §13.3).
+  const dataRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'data-'));
+  try {
+    const baselineDir = path.join(dataRoot, 'automation_baseline', 'playwright', 'shared');
+    fs.mkdirSync(baselineDir, { recursive: true });
+    fs.writeFileSync(path.join(baselineDir, 'BasePage.ts'), 'shared');
+    const modulePackagePath = path.join(dataRoot, 'modules', 'login', 'automation', 'tests_PW');
+    const repo = {
+      available: true, writable: true, mode: 'tool-repo', root: dataRoot, reason: 'test fixture',
+    };
+
+    const result = copyBaselineIntoModule(baselineDir, modulePackagePath, {
+      execFileSync: (cmd, args) => (args[0] === 'log' ? 'sharedref\n' : ''),
+      now: FIXED_NOW,
+      repo,
+    });
+
+    assert.equal(result.copied, true);
+    assert.equal(result.baselineRef, 'sharedref');
+    assert.equal(fs.readFileSync(path.join(modulePackagePath, 'BasePage.ts'), 'utf8'), 'shared');
+    // The snapshot sits beside the project, inside the module's own automation folder.
+    assert.equal(
+      path.basename(path.dirname(result.snapshotPath)),
+      'automation',
+    );
+    assert.equal(path.basename(result.snapshotPath), SNAPSHOT_FILENAME);
+  } finally {
+    fs.rmSync(dataRoot, { recursive: true, force: true });
+  }
+});
+
+test('the module, run, and generic entry points are one implementation, not three', () => {
+  // Two copies of the ref-capture logic would be two things to keep in agreement about what a
+  // snapshot means, which is why this revision added a name rather than an implementation.
+  assert.equal(typeof copyBaselineInto, 'function');
+  for (const fn of [copyBaselineIntoModule, copyBaselineIntoRun]) {
+    assert.throws(() => fn('/baseline', '/dest', { execFileSync: () => '' }), TypeError);
+  }
 });

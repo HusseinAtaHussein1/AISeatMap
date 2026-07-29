@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Repair Summary (Stage 5H — Self-Healing, OPTIONAL)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/self_healing/RepairSummary.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/healing/RepairSummary.md
 Authority:  .claude/skills/self-healing-skill/SKILL.md §19 (Standard Output Contract — these
             12 sections, this order), §5 (Eligibility), §7 (Reasoning Engine), §8 (Application-
             Defect Prohibition), §9 (Confidence Engine), §10 (Shared Repair KB), §13, §14
@@ -9,12 +9,22 @@ Authority:  .claude/skills/self-healing-skill/SKILL.md §19 (Standard Output Con
 Section order is mandatory. This stage NEVER runs automatically (pipeline.md §3.6) — it exists
 only because a human invoked it.
 
+ONE FILE PER MODULE. An invocation scoped to several modules produces one healing folder per module,
+each holding only that module's repairs. There is NO combined cross-module repair document, because a
+repair is always to one module's suite and a combined document would have to be split again to be
+actionable (module_architecture.md §8.3).
+
+WHERE THE PIECES GO: this reasoning record lives in the MODULE. The repair CODE is applied in place to
+modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/ with git as the before/after record. The
+RERUN's results go to the TRIGGERING RUN's execution/ folder, as ExecutionResults.rerun-N.md — a
+rerun is an execution, and it belongs with the execution it is a cycle of (§8.2).
+
 THE RULE THAT OVERRIDES EVERY OTHER: an Application Failure is NEVER healed (§8). If a repair pass
 reveals that a failure classified Automation Failure is in fact an application defect, work on that
 test STOPS, it is reclassified, and it is reported as a defect — recorded in section 6 below.
 -->
 
-# Repair Summary — {{RUN_FOLDER}}
+# Repair Summary — {{MODULE}}
 
 **Status:** {{STATUS}} <!-- Draft | Pending Automation Approval (for the repaired suite) | Approved -->
 
@@ -25,9 +35,13 @@ test STOPS, it is reclassified, and it is reported as a defect — recorded in s
 | Field | Value |
 |---|---|
 | Healing Pass ID | {{HEALING_PASS_ID}} |
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Triggering run | `{{RUN_FOLDER}}` <!-- the run whose failures prompted this pass, and whose execution/ folder receives the rerun --> |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Source Execution ID(s) | {{EXECUTION_IDS}} |
-| Scope | {{HEALING_SCOPE}} <!-- named modules/test IDs, or "all Automation Failures" (§4.1) --> |
+| Rerun cycle written | `runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-{{N}}.md` <!-- the original results file is NEVER edited --> |
+| Scope | {{HEALING_SCOPE}} <!-- the test IDs within THIS module, or "all Automation Failures in this module" (§4.1) --> |
+| Module lifecycle state after | {{AUTOMATION_STATE}} <!-- Healed on approval — then re-enters the §5.2 gate before assembly (pipeline.md §13.7) --> |
 | Environment | {{ENVIRONMENT}} |
 | Framework | {{FRAMEWORK}} |
 | Started / Completed | {{STARTED_AT}} / {{COMPLETED_AT}} |

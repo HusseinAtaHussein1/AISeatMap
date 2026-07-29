@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Automation Coverage Report (Stage 4A — Automation branch)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{{FRAMEWORK}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationCoverageReport_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §16 Outputs #5, §13 (the four decisions), §19
 
 The AGGREGATE view: how many test cases received each of the four decisions, an automation coverage
@@ -16,9 +16,11 @@ This is realized coverage. The Automation Plan §9's figure was an estimate; §4
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Framework | {{FRAMEWORK}} |
-| Decision Report | `runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{{FRAMEWORK}}.md` |
+| Decision Report | `modules/{{MODULE_SLUG}}/automation/AutomationDecisionReport_{{FRAMEWORK}}.md` |
 | Candidates decided | {{DECIDED_COUNT}} |
 | Generated | {{TIMESTAMP}} |
 

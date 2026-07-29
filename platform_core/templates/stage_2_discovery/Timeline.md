@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Timeline (Stage 2 — shared)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/discovery/Timeline.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §6
 
 A single, run-wide, chronologically ordered log of significant actions and events — sufficient for a
@@ -20,7 +20,9 @@ Rules (§6):
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Run Started | {{START_TIMESTAMP}} |
 | Run Ended | {{END_TIMESTAMP}} |
 

@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Stack Documentation Context (Stage 4A — Automation branch)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{{FRAMEWORK}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/automation/StackDocumentationContext_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §34 (Stack Documentation Step), §34.4 (this
             structure), §34.5, §34.6; platform_core/tools/mcp/README.md §2.5
 
@@ -23,7 +23,9 @@ TOOLCHAIN and nothing that belongs in the Project Context or a Finding.
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Framework | {{FRAMEWORK}} |
 | Detected At | {{TIMESTAMP}} |
 | Extractor | `platform_core/tools/mcp/stack_docs/` |

@@ -141,7 +141,7 @@ This step is skipped only in the branch where Step 3 itself was skipped (automat
 | Artifact | Path | Produced By |
 |---|---|---|
 | Execution Results (reproduction) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 2) |
-| Updated Automation Package (if Step 3 ran) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` | Automation Agent |
+| Updated Automation Package (if Step 3 ran) | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` | Automation Agent |
 | Execution Results (verification, if Step 4 ran) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 4) |
 | Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | Reporting Agent |
 | Run Summary | `platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md` | Run Manager |

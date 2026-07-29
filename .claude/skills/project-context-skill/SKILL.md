@@ -1,6 +1,6 @@
 ---
 name: project-context-skill
-description: Stage 1 (shared by both pipelines) in the Agentic AI Testing Platform. Reads an approved PRD and a run configuration, and distills them into the single Project Context artifact — the source of truth every downstream stage (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) consumes. Use when starting a new pipeline run, onboarding a new project, or a PRD/run configuration needs to be reconciled into an approved Project Context.
+description: Stage 1 (shared by both pipelines) in the Agentic AI Testing Platform. Reads an approved PRD and a run configuration, proposes the project's module decomposition for human approval, and distills the PRD into one Project Context artifact per module — the source of truth every downstream stage (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) consumes. Use when starting a new pipeline run, onboarding a new project, or a PRD/run configuration needs to be reconciled into an approved Project Context.
 inputs:
   - name: prd
     type: file_path
@@ -13,10 +13,15 @@ inputs:
 outputs:
   - name: project_context
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md"
-    description: Single source-of-truth artifact (Scope Summary, Modules In/Out of Scope, Roles & Credentials, Environment Constraints, Carried-Forward Assumptions & Risks, Traceability Anchor) every downstream skill consumes.
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md"
+    description: "Source-of-truth artifact (Scope Summary, In/Out of Scope, Module Boundaries, Roles & Credentials, Environment Constraints, Carried-Forward Assumptions & Risks, Traceability Anchor) every downstream skill consumes. ONE FILE PER MODULE in scope — a full-project or multi-module invocation writes several."
+  - name: module_decomposition
+    type: file_path
+    location: "platform_core_data/modules/modules.json"
+    description: The proposed list of modules derived from the PRD, each with a name, a one-line scope statement, and the PRD sections it derives from. Written via the Module Manager with `status: Proposed`; scaffolded only after a human approves it at this stage's gate.
 dependencies:
   - Read, Write, Glob (file tools only — no browser automation, no code execution)
+  - Bash, restricted to `platform_core/tools/module_manager/cli.js` and `platform_core/tools/run_manager/cli.js` (resolving and recording module/run state — never application code)
   - none upstream (first stage in the pipeline)
 ---
 
@@ -24,7 +29,9 @@ dependencies:
 > **Traceability:** `PRD → Project Context`. This is the only stage permitted to read the PRD directly.
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
-> **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+> **Revision note (2026-07-27, user-mandated):** each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
+>
+> **Revision note (2026-07-29, user-mandated):** two changes, both in this stage. (1) **This stage now proposes the project's module decomposition** — the list of modules the whole pipeline works in terms of — reviewed at this stage's *existing* gate alongside the context itself (§3.1). No new gate. (2) **Its output is one Project Context per module**, written to `platform_core_data/modules/{module}/context/ProjectContext.md` and refined in place by later runs rather than re-forked per run. There is no project-wide context document. See [`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §6.4 and `pipeline.md` §4 (Stage 1).
 
 # 1. Skill Name
 
@@ -32,7 +39,9 @@ dependencies:
 
 # 2. Purpose
 
-The Project Context skill is the entry point of the pipeline. It reads an already-approved Product Requirements Document (PRD) and a run configuration, and distills both into a single, compact **Project Context** artifact.
+The Project Context skill is the entry point of the pipeline. It reads an already-approved Product Requirements Document (PRD) and a run configuration, and produces two things: **the module decomposition** the whole pipeline is organized around, and **one compact Project Context artifact per module**.
+
+**Both come from the PRD, and that is why they are this stage's job and nobody else's.** This is the only stage permitted to read the PRD (`pipeline.md` §6 Rule 4), so anything *derived* from the PRD — including the answer to "what are this project's modules?" — is necessarily produced here. A later stage that decided a module should be split would be reinterpreting the PRD without reading it.
 
 **The Project Context is the single source of truth (SSOT) for every downstream skill in this pipeline.** Once published, it — not the PRD — is the authoritative reference that the Explorer, Test Design, Manual Execution, Automation, Automation Execution, and Reporting skills read. No downstream skill independently re-reads or reinterprets the original PRD; every one of them consumes the same, already-reconciled Project Context.
 
@@ -42,14 +51,37 @@ Without this skill, each downstream skill would need to re-derive scope, credent
 
 - Read the target PRD in full.
 - Read the run configuration (which modules are in scope for this pipeline execution, target environment URL, credentials/roles available, environment safety constraints).
-- Extract and structure:
-  - A concise scope summary of what this pipeline run covers
-  - The explicit list of in-scope modules (and, equally important, out-of-scope modules)
+- **Propose the module decomposition** (§3.1) and present it for approval alongside the context.
+- For **each module in scope**, extract and structure:
+  - A concise scope summary of what this module covers
+  - The explicit in-scope areas, and — equally important — what is out of scope, distinguishing "owned by another module" from "not tested at all"
+  - The module's boundaries: where its behaviour depends on, or is depended on by, another module
   - Roles and credentials required, drawn from the PRD's User Roles section
   - Environment constraints (e.g., "shared public demo — no destructive actions" vs "isolated test environment — full CRUD permitted")
-  - Every `> Assumption` and Risk entry in the PRD relevant to the in-scope modules, carried forward so later skills don't have to re-discover them
-- Never introduce scope, features, or constraints not present in the PRD or the run configuration.
+  - Every `> Assumption` and Risk entry in the PRD relevant to this module, carried forward so later skills don't have to re-discover them
+- Never introduce scope, features, constraints, or **modules** not present in the PRD or the run configuration.
 - Halt and clearly report any conflict or gap (e.g., PRD missing, run configuration referencing a module the PRD never mentions) rather than guessing.
+
+## 3.1 The module decomposition
+
+The pipeline works in terms of **modules** — coherent areas of the application under test, each with its own durable workspace at `platform_core_data/modules/{module}/` ([`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §6.4). This stage proposes that list; a human approves it; the Module Manager records it.
+
+**The sequence, and why each step is separate:**
+
+1. **Read the registry first.** `node platform_core/tools/module_manager/cli.js list` — an established project already has its modules, and re-proposing them wholesale would be noise. Only genuinely new PRD areas are proposed.
+2. **Propose, with provenance.** Each proposed module carries a human-readable name, a one-line scope statement, and **the PRD sections it derives from**. That last field is what makes the decomposition itself traceable rather than an unexplained partition of the application (`pipeline.md` §8).
+3. **Present it at this stage's existing gate.** The reviewer is already reviewing scope; the module list *is* scope, at a coarser grain. **No new gate is introduced** — §5.1 of `pipeline.md` extends the Stage 1 criteria rather than adding a checkpoint.
+4. **A proposed module is recorded, never scaffolded.** It lands in `modules.json` with `status: Proposed` and gets no folder on disk until approved, because **a folder reads as "this module exists."** After approval, the Module Manager scaffolds it and this stage writes its context.
+5. **Never hand-format a slug, and never hand-edit `modules.json`.** Both go through the Module Manager — the same discipline that forbids hand-formatting a run folder name (`run_manager.md` §5.5).
+
+**What this stage must not do:**
+
+- **Never create or activate a module silently.** A module the human has not approved does not exist, and an invocation that finds no active module **asks** rather than picking one.
+- **Never propose a module to hold a work item.** A User Story about cabin-class filtering belongs *in* `flight-search`; it is not a module of its own. Modules partition the application, not the backlog.
+- **Never reset an existing module's recorded progress.** Re-proposing an already-active module updates its description; it never returns its Test Design status to `Not Started`.
+- **Never rename a module.** Other artifacts cite its folder path. A module that must be re-identified is superseded via `module.json`'s `supersededBy`, and both stay readable.
+
+**Report a decomposition gap; do not act on it.** If the PRD's structure genuinely resists decomposition — overlapping areas, or one area large enough that a reviewer would likely want it split — say so in the proposal, with the options, and let the reviewer decide. Guessing at a boundary that later has to be undone is more expensive than asking.
 
 # 4. Inputs
 
@@ -64,15 +96,30 @@ There is no `PROJECT_NAME` key: the platform tests one Target Project at a time,
 
 # 5. Outputs
 
-A single **Project Context** document that becomes the sole source of truth for every downstream skill — the Explorer skill, Test Design skill, Manual Execution skill, Automation skill, Automation Execution skill, and Reporting skill. It is not a new PRD, not a rewrite of it, but a distilled, run-specific lens onto it. None of the downstream skills read the PRD file directly; they read this artifact instead.
+**One Project Context document per module in scope**, plus the module decomposition recorded in the registry. Each context becomes the sole source of truth about its module for every downstream skill — the Explorer skill, Test Design skill, Manual Execution skill, Automation skill, Automation Execution skill, and Reporting skill. It is not a new PRD, not a rewrite of it, but a distilled, module-scoped lens onto it. None of the downstream skills read the PRD file directly; they read these artifacts instead.
+
+**Scope determines how many are written, not whether they are combined:**
+
+| Invocation scope | Written |
+|---|---|
+| One module | exactly that module's `context/ProjectContext.md` |
+| Several modules | one file under **each** named module |
+| Full project | one file under **every** approved module |
+
+**There is no project-wide Project Context document.** The union of the per-module files *is* the project context, and `platform_core_data/modules/README.md` indexes them. A combined document would immediately begin to disagree with the per-module files it summarizes, and nothing would then say which is authoritative.
+
+**These files belong to their modules, not to the run.** A later invocation that refines a module's context re-opens that module's existing file and edits it in place (`pipeline.md` §7) — it never writes a second copy into a run folder or anywhere else.
 
 # 6. Allowed Tools
 
-- Read (PRD)
-- Write (Project Context document)
+- Read (PRD, run configuration, the module registry)
+- Write (Project Context documents — one per module)
 - Glob (to locate the PRD and any run-configuration files)
+- Bash, **restricted to** `platform_core/tools/module_manager/cli.js` and `platform_core/tools/run_manager/cli.js` — resolving the active module(s), proposing a decomposition, and recording this stage's progress
 
-**Not permitted:** browser automation tools, code execution tools, or any tool that mutates application data. This skill only reads and structures documents.
+**Not permitted:** browser automation tools, code execution tools against application code, or any tool that mutates application data. This skill only reads and structures documents, and invokes the two platform CLIs above.
+
+**`modules.json` is never written with Write.** Every registry change goes through the Module Manager CLI, which is the only sanctioned writer (`module_architecture.md` §6.5 Rule 3). Hand-writing the file would bypass its schema check, its atomic write, and the `module.json` refresh that keeps the authoritative copy and the display cache in agreement.
 
 # 7. Execution Rules
 
@@ -83,12 +130,19 @@ A single **Project Context** document that becomes the sole source of truth for 
 5. Must cite the PRD section number each extracted item was drawn from, preserving traceability back to the source document.
 6. Must not alter, contradict, or "correct" the PRD — this skill summarizes and structures; it does not edit the source document.
 7. Once this skill publishes the Project Context, it becomes the single source of truth for the remainder of the pipeline. No downstream skill (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) may read the PRD directly or independently reinterpret it — any requirement change must flow through a new Project Context skill run, not through a downstream skill going back to the PRD on its own.
+8. **Must resolve the module(s) to write, never guess them.** Read the active-module pointer (`cli.js active --json`). With nothing active and no decomposition to propose, **stop and ask** — listing what exists — rather than picking a module or creating one.
+9. **Must write one file per module, never a combined document** (§5). A multi-module invocation produces several artifacts, each complete on its own.
+10. **Must edit an existing module's context in place.** Never write a `.v2`, never fork a copy into a run folder, and never leave two files claiming to be the same module's context (`pipeline.md` §7).
+11. **Must record its progress through the Module Manager**, never by hand-editing `modules.json`: `cli.js` records the stage's status, artifact path, revision count, and the run that produced it (`module_architecture.md` §6.5 Rule 3).
+12. **Must not scaffold a module that has not been approved.** A `Proposed` module has no folder, and creating one would assert an approval no human gave.
 
 # 8. Expected Artifacts
 
 | Artifact | Path | Template |
 |---|---|---|
-| Project Context document | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` | [`platform_core/templates/stage_1_context/ProjectContext.md`](../../../platform_core/templates/stage_1_context/ProjectContext.md) |
+| Project Context document *(one per module in scope)* | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` | [`platform_core/templates/stage_1_context/ProjectContext.md`](../../../platform_core/templates/stage_1_context/ProjectContext.md) |
+| Module registry entry *(per proposed/approved module)* | `platform_core_data/modules/modules.json` | *— generated by the Module Manager; no template (`platform_core/templates/README.md`)* |
+| Module summary | `platform_core_data/modules/{{MODULE_SLUG}}/README.md` | *— regenerated by `cli.js summary <slug>`; never hand-authored* |
 
 **Document structure is defined by the template, not restated here.** Render the artifact by copying the template and filling its `{{PLACEHOLDER}}` tokens; its section order is mandatory and its inline `<!-- -->` guidance is stripped from the rendered output. `platform_core/templates/README.md` states the conventions every template follows.
 
@@ -112,7 +166,17 @@ Run configuration:
                        platform_core_data/knowledge_base/credentials/, never written here)
 ```
 
-Hypothetical result: `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md`, listing Agency/Branch/Staff as In Scope; every other module as Out of Scope for this run; carrying forward the PRD's open items (unverified RBAC, no visible brute-force protection, uniqueness rules unconfirmed) as assumptions the Explorer skill should specifically probe.
+Hypothetical result — **three** artifacts, one per module, plus the registry entries backing them:
+
+```text
+platform_core_data/modules/
+  modules.json                          # agency, branch, staff — Active; every other PRD area — Proposed
+  agency/context/ProjectContext.md      # Agency's scope, boundaries, roles, carried-forward assumptions
+  branch/context/ProjectContext.md      # Branch's — noting its dependency on agency (§3.1 Module Boundaries)
+  staff/context/ProjectContext.md       # Staff's
+```
+
+Each file carries forward only *its own module's* open items from the PRD — Agency's unverified RBAC, Staff's unconfirmed uniqueness rules — so the Explorer skill probing Agency reads Agency's assumptions and is not handed Staff's. Every other PRD area is recorded `Proposed` and gets no folder until a reviewer approves it.
 
 # 11. Architecture Principle
 
@@ -124,22 +188,64 @@ For this skill specifically: it is the sole reader of the PRD in the entire pipe
 
 This skill is independently invocable — `/project-context-skill`, optionally with a run-scoped instruction (e.g. `/project-context-skill scope this run to the Leave module only`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
 
-- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may narrow scope, focus on named modules, or set emphasis. It never authorizes violating §7's rules — most importantly, it never authorizes proceeding past a missing/unreadable PRD (Rule 1), and never authorizes inventing scope the PRD and run configuration don't support.
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may narrow scope, focus on named modules, or set emphasis. It never authorizes violating §7's rules — most importantly, it never authorizes proceeding past a missing/unreadable PRD (Rule 1), never authorizes inventing scope the PRD and run configuration don't support, and **never authorizes creating a module without approval** (Rule 12). `/project-context-skill add a Payments module` is a request to *propose* one, reviewed at the gate like any other.
 - **No upstream gate applies.** This is Stage 1; there is no predecessor checkpoint to wait on, so a direct call always runs immediately.
 - **Missing run configuration → run degraded** (§5.3.1 #5): produce the Project Context from the PRD alone, list every absent run-configuration key explicitly, and mark the affected sections (Environment Constraints, Roles & Credentials) as `Open Question — Requires Run Configuration` rather than guessing values. A missing *PRD* remains a halt (Rule 1) — it is this stage's only genuinely required input.
-- **Closing message must recommend the next step** (§5.3.1 #6):
+- **Closing message must recommend the next step** (§5.3.1 #6), and must name every module it wrote plus every module it proposed:
 
 ```
-Stage 1 complete — Project Context → Pending Review
-  platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
+Stage 1 complete — Project Context → Pending Review  (3 modules)
+  platform_core_data/modules/agency/context/ProjectContext.md      rev 1
+  platform_core_data/modules/branch/context/ProjectContext.md      rev 1
+  platform_core_data/modules/staff/context/ProjectContext.md       rev 3  (refined in place)
+
+Proposed — awaiting your approval before any folder is created:
+  payments    "Payment methods, gateways, and refunds"   PRD §7.1–7.4
 
 Next step — either:
   1. Approve, then continue:   "approved"  →  /explorer-skill
-  2. Revise this stage:        /project-context-skill <your feedback>
-  3. Jump to another stage:    /test-design-skill   (will declare Discovery gaps)
+  2. Approve some modules:     "approve agency, branch"
+  3. Revise this stage:        /project-context-skill <your feedback>
+  4. Jump to another stage:    /test-design-skill   (will declare Discovery gaps)
 ```
 
-# 13. Resolving `{{RUN_FOLDER}}`
+# 13. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **writes into the module**: `modules/{{MODULE_SLUG}}/context/`. It is also the only stage that may *propose* a module (§3.1) — proposing is not creating, and approval is a human's.
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path in this specification containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded
 at `platform_core_data/runs/current_active_run.json` — the single fact that says which of a project's

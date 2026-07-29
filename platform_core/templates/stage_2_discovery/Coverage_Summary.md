@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Coverage Summary (Stage 2 — shared)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/Coverage_Summary.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/discovery/Coverage_Summary.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §7
 
 The run-wide coverage tracker, reconciled against the Project Context's DECLARED in-scope surface —
@@ -14,7 +14,9 @@ see at a glance which parts of the run were live-verified versus covered by a fa
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | In-scope surface (from Project Context) | {{DECLARED_IN_SCOPE_SURFACE}} |
 | Generated | {{TIMESTAMP}} |
 

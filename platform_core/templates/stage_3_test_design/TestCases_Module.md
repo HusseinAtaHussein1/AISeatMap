@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Manual Test Suite, per module (Stage 3 — shared, divergence point)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{{MODULE}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_{{MODULE}}.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §9 Outputs #1–#2, §6 (Test Case Schema),
             §9.1 (Excel Rendering), §12
 
@@ -33,10 +33,11 @@ structured to match any external ALM, issue-tracking, or test-management system.
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
-| Module | {{MODULE}} |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Run Scope Type / Run Type | {{RUN_SCOPE_TYPE}} / {{RUN_TYPE}} |
-| Project Context | `runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
+| Project Context | `modules/{{MODULE_SLUG}}/context/ProjectContext.md` |
 | Total Test Cases | {{TOTAL_CASES}} |
 | Generated | {{TIMESTAMP}} |
 | Status | {{STATUS}} <!-- Pending Review / Approved --> |

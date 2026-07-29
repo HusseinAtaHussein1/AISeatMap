@@ -9,7 +9,7 @@ inputs:
   - name: automation_suite
     type: file_path
     required: true
-    description: The approved automation suite (run working copy) whose failing tests are to be repaired.
+    description: The module's standalone automation project at `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/`, whose failing tests are to be repaired. Repairs are applied here in place, with git as the before/after record.
   - name: project_context
     type: file_path
     required: true
@@ -25,24 +25,28 @@ inputs:
   - name: healing_scope
     type: string
     required: false
-    description: Optional module/test-ID scope for this healing pass (e.g. "Login, Agency" or "TC-LOGIN-004..009"). Absent means every Automation Failure in the Execution Results.
+    description: Optional module/test-ID scope for this healing pass (e.g. "Login, Agency" or "TC-LOGIN-004..009"). Absent means every Automation Failure in the Execution Results. A multi-module scope produces one healing folder per module.
 outputs:
   - name: repair_summary
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/self_healing/RepairSummary.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/healing/RepairSummary.md"
     description: Per-failure diagnosis, strategies considered, strategy selected, Repair Confidence Report, and outcome.
   - name: before_after_comparison
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/self_healing/BeforeAfterComparison.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/healing/BeforeAfterComparison.md"
     description: Fixed / Remaining / New-failure classification after the targeted rerun.
   - name: quarantine_register
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/self_healing/QuarantineRegister.md"
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/healing/QuarantineRegister.md"
     description: Tests withdrawn from healing after repeated failed repair attempts, with full attempt history.
   - name: repaired_automation_suite
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/"
-    description: The automation suite with approved repairs applied — requires fresh Automation Approval before it re-merges to the baseline.
+    location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/"
+    description: The module's automation project with approved repairs applied IN PLACE — there is no separate healed copy; git is the before/after record. Requires fresh Automation Approval before it assembles into the baseline.
+  - name: rerun_execution_results
+    type: file_path
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-{N}.md"
+    description: The post-repair rerun's results, APPENDED to the triggering run's execution folder as an additional cycle. The original ExecutionResults.md is never edited. This is the only write this skill makes outside the module.
 dependencies:
   - automation-execution-skill (upstream skill — supplies classified Execution Results)
   - automation-skill (owns the suite being repaired, and the Selector Verification KB this skill reads)
@@ -54,6 +58,16 @@ dependencies:
 > **Branch:** Automation only. This skill never touches a Manual Execution artifact (§3.3), and the Manual branch never invokes it.
 >
 > **Origin note:** this skill absorbs the **Automation Repair Loop, Repair Strategy Decision Engine, Repair Confidence Engine, and Automation Repair Knowledge Base** that were previously §25–§28 of `automation-execution-skill/SKILL.md`. Those sections are removed there and live here, and nowhere else — there is exactly one repair engine in the platform, so there is no boundary to police between a "tactical" and a "strategic" repairer. Stage `5A` reverted to a pure mechanical runner as a result.
+>
+> **Revision note (2026-07-29, user-mandated):** **output locations only — every behavioural rule in this skill is unchanged.** It is still optional, still opt-in only, still never triggered by a failing execution, still governed by the §5.6 Batch Repair Approval gate, and still forbidden from healing an Application Failure. What changed is where each kind of output lands, and the split follows one rule — durable design output to the module, execution evidence to the run:
+>
+> | Output | Goes to | Because |
+> |---|---|---|
+> | Repair Summary, Confidence Reports, Before/After Comparison, Quarantine Register | `modules/{module}/healing/` | It describes **that module's suite**, which is durable |
+> | Repair **code** | in place in `modules/{module}/automation/tests_{Framework}/` | The module project *is* the suite being healed; git is the before/after record |
+> | The **rerun's results** | `runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-N.md` | A rerun is an execution, and belongs with the execution it is a cycle of |
+>
+> Three consequences worth stating outright: **there is no separate healed copy** of the suite (§13); **the original `ExecutionResults.md` is never edited**, so run immutability holds and "12 failed, then 10 passed after repair and 2 quarantined" reads as one story in one folder; and a **multi-module invocation produces one healing folder per module**, never a combined cross-module repair document, because a repair is always to one module's suite. See [`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §8.
 
 # 1. Skill Name
 
@@ -97,7 +111,7 @@ Three prohibitions define this skill more sharply than its capabilities do:
 | Input | Role | Required? | Description |
 |---|---|---|---|
 | Execution Results | **Primary** | Required | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` — with full Result Classification and Evidence Inventory. At least one `Automation Failure` must be present, or there is nothing to heal (§16). |
-| Automation Suite | **Primary** | Required | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` — the run's working copy. **Never the baseline directly** (`pipeline.md` §12.3). |
+| Automation Suite | **Primary** | Required | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` — the run's working copy. **Never the baseline directly** (`pipeline.md` §12.3). |
 | Project Context | Governing | Required, must be `Approved` | Target environment, credentials, safety constraints governing the rerun. |
 | Repair KB | Secondary | Optional (read) | Platform `repair_patterns/`, `diagnosis_patterns/`, `reasoning/` + prior runs' Repair Summaries (`pipeline.md` §10.8). Absent means no prior art — reasoning proceeds from evidence alone, and every strategy's confidence is capped accordingly (§9.2). |
 | Selector Verification KB | Secondary | Optional (read) | `knowledge_base/browser/screens/`, `.../components/` — verified locators with their code-state anchors (`pipeline.md` §10.8). |
@@ -322,7 +336,7 @@ Confidence is built additively from **only** these observed-evidence factors, an
 
 Per `pipeline.md` §10.8, the Repair KB is **shared across both pipelines** — Stage `4A` reads it to pre-empt known failure modes at generation time, Stage `4M` reads it to recognize a known quirk during manual execution, and **this skill is its sole writer**.
 
-- **This run's record (always written):** the Repair Summary in `platform_core_data/runs/{{RUN_FOLDER}}/self_healing/` — the full per-pass narrative of what failed, what was considered, what was applied, and what happened.
+- **This run's record (always written):** the Repair Summary in `platform_core_data/modules/{{MODULE_SLUG}}/healing/` — the full per-pass narrative of what failed, what was considered, what was applied, and what happened.
 - **Platform Knowledge (read always; written only via Promotion):** `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-{NNN}.md`, `.../diagnosis_patterns/`, `.../reasoning/REASON-{NNN}.md`.
 
 ## 10.1 Read rule — consult before deriving
@@ -370,7 +384,7 @@ Every recorded repair and Platform rule must be independently reviewable: a huma
 
 If the human approves repairs:
 
-1. **Modify only the automation suite's own files** — the specific Page Objects, locators, wait logic, setup helpers, or assertion *mechanics* responsible for the diagnosed issue, in the **run's working copy** (`platform_core_data/runs/{{RUN_FOLDER}}/automation/`), never the baseline directly (`pipeline.md` §12.3).
+1. **Modify only the automation suite's own files** — the specific Page Objects, locators, wait logic, setup helpers, or assertion *mechanics* responsible for the diagnosed issue, in the **run's working copy** (`platform_core_data/modules/{{MODULE_SLUG}}/automation/`), never the baseline directly (`pipeline.md` §12.3).
 2. **Never modify approved Manual Test Cases.** A corrected value inside the automation is not an amendment to the test case document; where they disagree, disclose it (§8.3).
 3. **Never modify Discovery artifacts.** A repair may *reveal* something Discovery should re-verify — that is a recommendation in the Before/After report, never an in-place edit.
 4. **Never modify the Project Context, PRD, Traceability Matrix, Coverage Report, or any Stage 1–3 artifact.**
@@ -381,10 +395,30 @@ If the human approves repairs:
 # 12. Targeted Rerun
 
 - **Rerun only the repaired tests** — never the full suite, unless every test in it was repaired. A full-suite rerun after a two-test repair wastes environment time and obscures which change caused which outcome.
+- **Rerun from the module's own automation project**, `modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/` — the repaired code, in place. This is precisely what that project being standalone (`automation-skill` §11D.1) buys: one module's repairs are observable without the rest of the suite's noise.
 - **Confirm the target environment against the Project Context before rerunning anything** — the same environment-match discipline every execution-capable stage applies.
 - **Run headless** through the Playwright MCP server, consistent with the Automation branch (`pipeline.md` §3.4).
 - **Never execute a mutating action against an environment the Project Context has not marked safe for it.**
 - **Capture the same evidence classes Stage `5A` captures**, so a before/after comparison is genuinely comparable rather than comparing rich evidence against thin evidence.
+
+## 12.1 Where the rerun's results go — into the triggering run
+
+**The rerun's results are written to the run whose failures prompted this pass**, as an additional, clearly-marked cycle:
+
+```
+platform_core_data/runs/{{RUN_FOLDER}}/execution/
+  ExecutionResults.md              # cycle 1 — the failures that prompted healing (NEVER edited)
+  ExecutionResults.rerun-1.md      # cycle 2 — post-repair, scoped to the affected tests
+  artifacts/ · artifacts_rerun-1/  # evidence, per cycle
+```
+
+Three rules govern this, and each one closes a specific way the record could be corrupted:
+
+1. **The original results file is never touched.** `ExecutionResults.md` is cycle 1's record and stays exactly as Stage `5A` wrote it. Editing it to "update" a result would destroy the evidence that the failure ever happened — which is the evidence justifying this healing pass in the first place. Run immutability holds because this is an **append of a new file**, never a rewrite.
+2. **A rerun is an execution, so it belongs with the execution it is a cycle of.** This is the one place a Stage `5H` write lands outside the module (`module_architecture.md` §8.2). Keeping both cycles in one run folder is what makes "12 failed, then 10 passed after repair and 2 were quarantined" readable as one story rather than two disconnected records in two locations.
+3. **A multi-module healing pass writes one rerun file, not one per module.** The reruns were one execution; each result cites its module. The *reasoning* splits per module (§19); the *evidence* does not.
+
+`N` increments per healing pass against the same run — a second pass appends `ExecutionResults.rerun-2.md` beside the first, and never overwrites it.
 
 # 13. Before/After Comparison
 
@@ -406,7 +440,9 @@ For every test in **Fixed**, write the confirmed repair per §10.2–§10.3. Not
 
 # 14. Quarantine — bounded healing attempts
 
-**A test is not repaired indefinitely.** Each test carries a repair-attempt count across healing passes within the run (and, where lineage exists, across the runs it inherits from). When a test has been repaired and failed again across the configured attempt limit — **default 2 prior attempts, so the third failure quarantines it** — it is moved to the Quarantine Register instead of being repaired again.
+**A test is not repaired indefinitely.** Each test carries a repair-attempt count across **that module's whole history** — every healing pass ever run against it, not just this one. When a test has been repaired and failed again across the configured attempt limit — **default 2 prior attempts, so the third failure quarantines it** — it is moved to the Quarantine Register instead of being repaired again.
+
+**The count is cumulative because the register is per module and edited in place** (`modules/{{MODULE_SLUG}}/healing/QuarantineRegister.md`). A test that failed repair once in `run-004` and twice in `run-011` has **three** attempts. Resetting the count per run — which a per-run register would do implicitly — would let a test be patched indefinitely without ever reaching the limit this section exists to enforce.
 
 The Quarantine Register records, per test: Test Case ID, Automation Script ID, every attempt's strategy/confidence/outcome, the current classification, and a recommendation (redesign the test, re-verify with Discovery, investigate application stability, or accept as Known Automation Issue).
 
@@ -452,11 +488,11 @@ Treating the original approval as still covering repaired code is the most likel
 
 | Artifact | Path | Template |
 |---|---|---|
-| Repair Summary | `platform_core_data/runs/{{RUN_FOLDER}}/self_healing/RepairSummary.md` | [`stage_5h_self_healing/RepairSummary.md`](../../../platform_core/templates/stage_5h_self_healing/RepairSummary.md) |
+| Repair Summary | `platform_core_data/modules/{{MODULE_SLUG}}/healing/RepairSummary.md` | [`stage_5h_self_healing/RepairSummary.md`](../../../platform_core/templates/stage_5h_self_healing/RepairSummary.md) |
 | Repair Confidence Report *(block, embedded per failure)* | within the Repair Summary | [`stage_5h_self_healing/RepairConfidenceReport.md`](../../../platform_core/templates/stage_5h_self_healing/RepairConfidenceReport.md) |
-| Before/After Comparison | `platform_core_data/runs/{{RUN_FOLDER}}/self_healing/BeforeAfterComparison.md` | [`stage_5h_self_healing/BeforeAfterComparison.md`](../../../platform_core/templates/stage_5h_self_healing/BeforeAfterComparison.md) |
-| Quarantine Register | `platform_core_data/runs/{{RUN_FOLDER}}/self_healing/QuarantineRegister.md` | [`stage_5h_self_healing/QuarantineRegister.md`](../../../platform_core/templates/stage_5h_self_healing/QuarantineRegister.md) |
-| Repaired automation suite | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` | — (code, not a document) |
+| Before/After Comparison | `platform_core_data/modules/{{MODULE_SLUG}}/healing/BeforeAfterComparison.md` | [`stage_5h_self_healing/BeforeAfterComparison.md`](../../../platform_core/templates/stage_5h_self_healing/BeforeAfterComparison.md) |
+| Quarantine Register | `platform_core_data/modules/{{MODULE_SLUG}}/healing/QuarantineRegister.md` | [`stage_5h_self_healing/QuarantineRegister.md`](../../../platform_core/templates/stage_5h_self_healing/QuarantineRegister.md) |
+| Repaired automation suite | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` | — (code, not a document) |
 
 **Every artifact's document structure is defined by its template**; render by copying the template and filling `{{PLACEHOLDER}}` tokens. Section order is mandatory and inline `<!-- -->` guidance is stripped from rendered output.
 
@@ -523,7 +559,7 @@ For this skill: its single responsibility is **reasoning about why automation fa
 ```text
 Invocation:  /self-healing-skill Login
 Input:       runs/{{RUN_FOLDER}}/execution/ExecutionResults.md
-             runs/{{RUN_FOLDER}}/automation/tests_Playwright/
+             modules/{{MODULE_SLUG}}/automation/tests_Playwright/
 ```
 
 Hypothetical pass: the Execution Results carry 6 failures — 4 `Automation Failure`, 1 `Application Failure`, 1 `Environment Failure`. Scope `Login` covers 3 of the 4 automation failures; the fourth (`Agency`) is listed Out of Scope, untouched.
@@ -550,7 +586,7 @@ This skill is **only** ever directly invoked — it has no pipeline-driven entry
 
 ```
 Stage 5H complete — Repair Summary → repaired suite Pending Automation Approval
-  platform_core_data/runs/{{RUN_FOLDER}}/self_healing/RepairSummary.md
+  platform_core_data/modules/{{MODULE_SLUG}}/healing/RepairSummary.md
   {F} Repaired | {R} Remaining | {N} New failures | {Q} Quarantined | {D} Diagnosis only
   Application Health: unchanged   Automation Health: {before} → {after}
 
@@ -585,7 +621,43 @@ The reasoning model here is defined over *a classified failure with evidence*, n
 
 **What would need to change, explicitly:** a new failure class in Stage `5A`'s classification would need an eligibility row in §5. Nothing else — §7–§15 are defined in terms of evidence and confidence, not technology.
 
-# 27. Resolving `{{RUN_FOLDER}}`
+# 27. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+
+## The module: `{{MODULE_SLUG}}`
+
+Every path containing `{{MODULE_SLUG}}` resolves to a module in the **module registry**,
+`platform_core_data/modules/modules.json`, which is also the pointer recording which module(s) the
+pipeline is currently working on (`workflows_and_pipelines/pipeline/module_architecture.md` §6).
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json   # -> the slug(s), and the scope
+node platform_core/tools/module_manager/cli.js list            # every module, status, active marked *
+node platform_core/tools/module_manager/cli.js show <slug>     # one module's full state
+```
+
+- **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
+  hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+- **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
+  Never fall back to "the only module," "the newest," or the first alphabetically.
+- **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means
+  the module was never scaffolded or was removed; writing elsewhere would corrupt both records.
+- **Never create a module.** Only Stage 1 may *propose* one, and only a human may approve it
+  (`module_architecture.md` §6.4). A missing module is a question, never a thing to fix by creating it.
+- **The pointer is sticky, and switching it is the human's call.** It stays on the same module(s)
+  across invocations. This stage never rewrites it to redirect its own output.
+- **Multi-module scope means once per module, never one merged artifact.** When `activeScope` is
+  `multi` or `full-project`, produce this stage's output separately under each module in scope. The one
+  exception is an *execution* result, which is per run by definition (`pipeline.md` §7).
+- **Record progress through the Module Manager, never by hand-editing `modules.json`.** It is the only
+  sanctioned writer of the registry (`module_architecture.md` §6.5 Rule 3).
+
+This stage **writes into the module** (`modules/{{MODULE_SLUG}}/healing/`, plus the repair code in place in `modules/{{MODULE_SLUG}}/automation/`) and appends **one rerun file** to the triggering run's `execution/` folder. That append is its only write outside the module.
+
+**Staleness is reported, never silently resolved.** When an upstream module artifact has been revised
+since this stage last consumed it, say so — in this stage's own output and in the closing message. Re-
+running an upstream stage is a human decision at that stage's gate (`module_architecture.md` §10.4).
+
+## The run: `{{RUN_FOLDER}}`
 
 Every path containing `{{RUN_FOLDER}}` resolves to the **active run**, recorded at
 `platform_core_data/runs/current_active_run.json` (`workflows_and_pipelines/pipeline/run_manager.md` §5.7).

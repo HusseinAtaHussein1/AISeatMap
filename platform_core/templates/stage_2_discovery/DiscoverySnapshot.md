@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Discovery Snapshot (Stage 2 — shared)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/{{SCREEN_OR_STATE}}.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/discovery/{{SCREEN_OR_STATE}}.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §9 Outputs #1, §12 Artifacts
 
 ONE FILE PER DISTINCT SCREEN/STATE explored, scoped to exactly the modules the Project Context marked
@@ -18,9 +18,10 @@ mode (e.g. no console log obtainable from a static screenshot) are NAMED AS MISS
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Screen / State | {{SCREEN_NAME}} |
-| Module | {{MODULE}} |
 | URL / Route | {{URL}} |
 | Discovery Mode | {{DISCOVERY_MODE}} <!-- §8.1 --> |
 | Evidence Category | {{EVIDENCE_CATEGORY}} <!-- §17 --> |

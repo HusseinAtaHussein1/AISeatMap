@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Quarantine Register (Stage 5H — Self-Healing, OPTIONAL)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/self_healing/QuarantineRegister.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/healing/QuarantineRegister.md
 Authority:  .claude/skills/self-healing-skill/SKILL.md §14, §14.1 (flakiness), §10.2
 
 WHAT QUARANTINE IS: a test withdrawn from AUTOMATED REPAIR after repeated failed attempts, with its
@@ -15,10 +15,16 @@ or the application's stability that another patch will not fix. Continuing to pa
 a green suite and hides that evidence.
 -->
 
-# Quarantine Register — {{RUN_FOLDER}}
+# Quarantine Register — {{MODULE}}
 
+**Module:** `{{MODULE_SLUG}}` · **Last updated by run:** `{{RUN_FOLDER}}`
 **Attempt limit:** {{ATTEMPT_LIMIT}} <!-- default 2 prior attempts; the 3rd failure quarantines (§14) -->
-**Counted across:** this run, plus every run it inherits from via lineage (§27)
+**Counted across:** this module's whole history — every healing pass ever run against it
+
+<!-- THIS REGISTER IS CUMULATIVE AND PER MODULE. It is edited in place across runs, not re-created per
+     run, which is what makes "attempts" a meaningful count at all: a test that failed repair once in
+     run-004 and twice in run-011 has three attempts, and resetting the count per run would let it be
+     patched indefinitely without ever reaching the limit §14 exists to enforce. -->
 
 ## 1. Currently Quarantined
 

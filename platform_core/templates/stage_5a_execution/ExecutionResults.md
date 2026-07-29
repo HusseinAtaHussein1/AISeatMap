@@ -8,9 +8,20 @@ Authority:  .claude/skills/automation-execution-skill/SKILL.md §18 (Standard Ou
 Section order is mandatory: the Reporting skill must never have to interpret free-form prose. This is
 a SINGLE-FILE input for Stage 6A by design (reporting-skill §4).
 
-The suite executed is ALWAYS this run's own WORKING COPY
-(runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/) — never the Workspace Automation Baseline.
-Execution happens strictly BEFORE the Workspace Merge.
+WHAT IS EXECUTED depends on the run's module scope (pipeline.md §4 Stage 5A, module_architecture.md §9.1):
+  - single / multi — each named module's own STANDALONE PROJECT,
+                     modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/
+  - full-project   — the ASSEMBLED BASELINE, as one system:
+                     automation_baseline/{{FRAMEWORK_LOWER}}/tests_{{FRAMEWORK}}/
+A module-scoped execution happens strictly BEFORE that module's assembly into the baseline.
+
+RESULTS ARE PER RUN, NEVER PER MODULE. A multi-module execution writes ONE results file here, with
+every result citing the module it belongs to — splitting them per module would break the run's single
+record of what happened (pipeline.md §7).
+
+A Stage 5H post-repair rerun is appended as a SIBLING file, ExecutionResults.rerun-N.md, with its own
+artifacts_rerun-N/ folder. THIS FILE IS NEVER EDITED by a rerun: it is cycle 1's record, and run
+immutability depends on it staying that way (module_architecture.md §8.2).
 -->
 
 # Execution Results — {{RUN_FOLDER}}
@@ -24,11 +35,14 @@ Execution happens strictly BEFORE the Workspace Merge.
 |---|---|
 | Execution ID | {{EXECUTION_ID}} |
 | Run Folder | `{{RUN_FOLDER}}` |
+| Execution cycle | {{CYCLE}} <!-- 1 for this file; a Stage 5H rerun is cycle 2+ in ExecutionResults.rerun-N.md --> |
+| Modules executed | {{MODULES}} <!-- the slugs, from run.json → modules[] --> |
+| Module scope | {{MODULE_SCOPE}} <!-- single / multi / full-project --> |
 | Run Scope Type / Run Type | {{RUN_SCOPE_TYPE}} / {{RUN_TYPE}} <!-- §13 --> |
 | Environment | {{ENVIRONMENT}} <!-- §14 --> |
 | Target URL | {{APP_URL}} |
 | Framework | {{FRAMEWORK}} |
-| Suite executed | `runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/` |
+| Suite executed | {{SUITE_PATH}} <!-- the module project(s), or the assembled baseline for a full-project run --> |
 | Execution Mode | {{EXECUTION_MODE}} <!-- Headless / Headed / Debug — §5.1 --> |
 | Concurrency Mode | {{CONCURRENCY_MODE}} |
 | Retry Policy | {{RETRY_POLICY}} <!-- §5.4 --> |

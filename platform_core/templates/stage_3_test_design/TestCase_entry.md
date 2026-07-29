@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Single Test Case entry (Stage 3 — shared, divergence point)
-Used INSIDE: platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{{MODULE}}.md
+Used INSIDE: platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_{{MODULE}}.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §6.1 (these fields, this order — "no more"),
             §6.0 (Lean Test Case Philosophy), §6.0.1 (Granularity Tier), §6.2
 

@@ -72,7 +72,7 @@ to interpret free-form prose to extract what it needs.
 <!-- §25 #5 — a REFERENCE to the full Automation Decision Report. This section lists ONLY COUNTS PER
      DECISION TYPE, never every individual case. -->
 
-**Full report:** `runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{{FRAMEWORK}}.md`
+**Full report:** `modules/{{MODULE_SLUG}}/automation/AutomationDecisionReport_{{FRAMEWORK}}.md`
 
 {{DECISION_COUNT_SUMMARY}}
 
@@ -128,5 +128,5 @@ to interpret free-form prose to extract what it needs.
 
 **Handoff confirmation:** {{HANDOFF_CONFIRMATION}}
 
-**Suite to execute:** `runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/`
+**Suite to execute:** `modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/`
 <!-- Stage 5A executes this run's WORKING COPY, never the Workspace Automation Baseline directly. -->

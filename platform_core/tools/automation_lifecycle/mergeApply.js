@@ -46,14 +46,25 @@ function releaseLock(lockPath, { fs: fsImpl = fs } = {}) {
 }
 
 /**
+ * The commit message records **where the content came from** and **which run approved it**
+ * (pipeline.md §12.4 step 4).
+ *
+ * Since 2026-07-29 the source is a module automation project, so `module` is included when known:
+ * with several modules assembling into one baseline, "from run-007" alone no longer identifies which
+ * module's suite a commit carries. The module segment is OMITTED rather than filled with a
+ * placeholder when absent — a commit message claiming a module it does not know is worse than one
+ * that simply does not mention it.
+ *
  * @param {string} project
  * @param {string} packageName
  * @param {string} runFolder
  * @param {{added: string[], modified: string[], deleted: string[], renamed: object[]}} plan
+ * @param {string} [module] - the source module's slug
  * @returns {string}
  */
-function buildCommitMessage(project, packageName, runFolder, plan) {
-  return `Automation Merge: ${project}/${packageName} from ${runFolder} `
+function buildCommitMessage(project, packageName, runFolder, plan, module) {
+  const source = module ? `module ${module}, approved in ${runFolder}` : `${runFolder}`;
+  return `Automation Merge: ${project}/${packageName} from ${source} `
     + `(+${plan.added.length}/~${plan.modified.length}/-${plan.deleted.length}/`
     + `→${plan.renamed.length})`;
 }
@@ -74,7 +85,8 @@ function buildCommitMessage(project, packageName, runFolder, plan) {
  * @param {string} baselineAbsPath
  * @param {string} workingCopyAbsPath
  * @param {object} plan - from computeMergePlan()
- * @param {{project: string, packageName: string, runFolder: string}} identity
+ * @param {{project: string, packageName: string, runFolder: string, module?: string}} identity
+ *   `module` is the source module's slug (pipeline.md §12.1); optional for pre-migration callers.
  * @param {{fs?: object, execFileSync: Function, now: Date, apply?: boolean, repo?: object,
  *          gitMode?: string, dataRoot?: string, commitBaseline?: boolean}} deps
  * @returns {{applied: boolean, committed: boolean, commitMessage: string,
@@ -83,7 +95,9 @@ function buildCommitMessage(project, packageName, runFolder, plan) {
 function applyMerge(baselineAbsPath, workingCopyAbsPath, plan, identity, deps) {
   const fsImpl = deps.fs || fs;
   const apply = Boolean(deps.apply);
-  const commitMessage = buildCommitMessage(identity.project, identity.packageName, identity.runFolder, plan);
+  const commitMessage = buildCommitMessage(
+    identity.project, identity.packageName, identity.runFolder, plan, identity.module,
+  );
   const degradedMode = plan.degradedMode || null;
 
   if (!apply) {

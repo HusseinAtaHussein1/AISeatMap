@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Project Context (Stage 1 — shared)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md
 Authority:  .claude/skills/project-context-skill/SKILL.md §3 (what to extract), §7 (rules), §8 (this structure)
 
 Section order below is mandatory. Every extracted item cites the PRD section it came from (§7 rule 5).
@@ -8,19 +8,32 @@ Never introduce scope, features, or constraints absent from the PRD or run confi
 A missing/unreadable PRD is a HALT, not a degraded run (§7 rule 1).
 Missing run configuration → run degraded: mark affected sections
 `Open Question — Requires Run Configuration`, never guess values.
+
+ONE FILE PER MODULE. This template renders once for EACH module in scope, into that module's own
+folder — a full-project or multi-module invocation produces several of these, never one combined
+document. There is no project-wide Project Context; the union of these files IS the project context
+(pipeline.md §4, Stage 1).
+
+DURABLE, EDITED IN PLACE. This file belongs to its MODULE, not to the run that first wrote it. A
+later run refining this module's context re-opens THIS file and edits it; it never writes a second
+copy anywhere (pipeline.md §7). `revisionCount` below is the in-place-edit equivalent of a version.
 -->
 
-# Project Context — {{RUN_FOLDER}}
+# Project Context — {{MODULE}}
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
+| Module | `{{MODULE_SLUG}}` |
 | PRD Source | `platform_core_data/knowledge_base/PRD.md` |
+| PRD sections this module derives from | {{PRD_SECTIONS}} <!-- the decomposition's own traceability (pipeline.md §8) --> |
 | Run Scope Type | {{RUN_SCOPE_TYPE}} <!-- Entire Project / Epic / Feature / User Story / Bug — run_scope.md §3 --> |
 | Run Type | {{RUN_TYPE}} <!-- run_scope.md §5 --> |
 | Target Environment | {{APP_URL}} |
+| Produced by run | `{{RUN_FOLDER}}` <!-- the invocation that produced THIS revision --> |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation --> |
+| Target ref at write | `{{TARGET_REF}}` <!-- the Target Project commit this revision describes (run_manager.md §5.8) --> |
 | Generated | {{TIMESTAMP}} |
-| Status | {{STATUS}} <!-- Pending Review / Approved --> |
+| Status | {{STATUS}} <!-- Draft / Pending Review / Approved / Rejected — AUTHORITATIVE; modules.json only caches it --> |
 
 ## 1. Scope Summary
 
@@ -29,21 +42,40 @@ Missing run configuration → run degraded: mark affected sections
 
 {{SCOPE_SUMMARY}}
 
-## 2. Modules In Scope
+## 2. In Scope for This Module
 
-<!-- Explicit list. Silence about a module is NOT sufficient — every module appears here or in §3. -->
+<!-- The functional areas, screens, and flows THIS module covers. Explicit list — silence about an
+     area is NOT sufficient; every area the PRD attributes to this module appears here or in §3. -->
 
-| Module | Why in scope | PRD Reference |
+| Area / Screen / Flow | Why in scope | PRD Reference |
 |---|---|---|
-| {{MODULE}} | {{IN_SCOPE_REASON}} | {{PRD_SECTION}} |
+| {{AREA}} | {{IN_SCOPE_REASON}} | {{PRD_SECTION}} |
 
-## 3. Modules Out of Scope
+## 3. Out of Scope for This Module
 
-<!-- Equally mandatory (§7 rule 3). A module the PRD mentions but this run excludes belongs here. -->
+<!-- Equally mandatory (§7 rule 3). Two kinds of exclusion belong here, and they are DIFFERENT facts:
 
-| Module | Why out of scope | PRD Reference |
+     (a) Owned by ANOTHER module — name that module's slug. This is what defines the boundary
+         between two modules, and it is the only place that boundary is written down in prose.
+     (b) Out of scope for the PROJECT — not tested by anyone, per the PRD or run configuration.
+
+     Recording (a) as (b) would silently claim a behaviour is untested when another module covers it. -->
+
+| Area / Screen / Flow | Why out of scope | Covered by | PRD Reference |
+|---|---|---|---|
+| {{AREA}} | {{OUT_OF_SCOPE_REASON}} | {{OWNING_MODULE_SLUG}} <!-- another module's slug, or "Not tested — out of project scope" --> | {{PRD_SECTION}} |
+
+## 3.1 Module Boundaries
+
+<!-- OPTIONAL — omit whole when this module has no interaction with another.
+
+     Where this module's behaviour depends on, or is depended on by, another module. This is what a
+     full-project execution exercises and a module-scoped one cannot (module_architecture.md §9.1),
+     so naming the interaction here is how a reviewer knows what a single-module run leaves unverified. -->
+
+| Related module | Interaction | Verified by |
 |---|---|---|
-| {{MODULE}} | {{OUT_OF_SCOPE_REASON}} | {{PRD_SECTION}} |
+| {{RELATED_MODULE_SLUG}} | {{INTERACTION}} | {{VERIFIED_BY}} <!-- this module / the other module / full-project execution only --> |
 
 ## 4. Roles & Credentials Required
 

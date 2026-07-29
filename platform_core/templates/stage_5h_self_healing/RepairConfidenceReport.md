@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Repair Confidence Report (BLOCK, embedded per failure)
-Embedded in: platform_core_data/runs/{{RUN_FOLDER}}/self_healing/RepairSummary.md §3
+Embedded in: platform_core_data/modules/{{MODULE_SLUG}}/healing/RepairSummary.md §3
 Authority:   .claude/skills/self-healing-skill/SKILL.md §9.1 (format), §9.2 (deriving confidence),
              §7.1 (Root Cause Confidence gate)
 

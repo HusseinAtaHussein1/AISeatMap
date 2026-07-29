@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — Finding metadata (Stage 2 — shared)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{{ID}}_{{SHORT_NAME}}/metadata.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/discovery/findings/FINDING-{{ID}}_{{SHORT_NAME}}/metadata.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §5.14 (this exact field order), §5.12 (package layout)
 
 Every field below is MANDATORY and appears in this order, except `Root Cause Hypothesis`, which is

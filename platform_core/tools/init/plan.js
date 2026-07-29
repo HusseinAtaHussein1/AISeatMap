@@ -38,6 +38,12 @@ const SKILL_NAMES = [
  */
 const DATA_DIRS = [
   'runs',
+  // The Module Workspace — the durable half of the pipeline's output, one subfolder per module
+  // (module_architecture.md §4). Present at install with no modules in it yet, for the same reason
+  // every other folder here is: Stage 1 must never have to create its own output directory. The
+  // per-module folders themselves are scaffolded by the Module Manager, only after a human has
+  // approved the decomposition (module_architecture.md §6.4) — never by install.
+  'modules',
   'automation_baseline',
   // Everything shared across runs lives under knowledge_base/ (pipeline.md §10.4). A run folder is
   // immutable and scoped to one execution, so anything true of the *project* — inputs, locator

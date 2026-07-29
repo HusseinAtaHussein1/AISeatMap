@@ -1,6 +1,6 @@
 <!--
 TEMPLATE — QA Assessment Report (Stage 2 — shared)
-Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md
+Renders to: platform_core_data/modules/{{MODULE_SLUG}}/discovery/QA_Assessment_Report.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §19 (Standard Output Contract — this exact
             section order), §9 Outputs #4, §12 Artifacts
 
@@ -15,8 +15,10 @@ that Finding's own metadata.md (see findings/FINDING_metadata.md).
 
 | Field | Value |
 |---|---|
-| Run Folder | `{{RUN_FOLDER}}` |
-| Project Context validated against | `runs/{{RUN_FOLDER}}/context/ProjectContext.md` |
+| Module | `{{MODULE_SLUG}}` |
+| Produced by run | `{{RUN_FOLDER}}` |
+| Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
+| Project Context validated against | `modules/{{MODULE_SLUG}}/context/ProjectContext.md` |
 | Discovery Mode(s) used | {{DISCOVERY_MODES}} |
 | Generated | {{TIMESTAMP}} |
 | Status | {{STATUS}} <!-- Pending Review / Approved --> |

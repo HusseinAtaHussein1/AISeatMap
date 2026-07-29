@@ -21,6 +21,23 @@ Readability Check — apply before finalizing (§6.0):
 If any answer is "No", rewrite the case.
 
 GOLDEN RULE: if removing a sentence does not change how the test is executed, remove it.
+
+THIS BLOCK IS PARSED, NOT ONLY READ. `platform_core/tools/test_suite_export/` renders these blocks
+into TestCases_{{MODULE}}.xlsx (§9.1), so the field MARKERS below are a machine contract, not
+formatting preference:
+
+  - Every field starts at the beginning of a line as `**Label:**` — exactly the labels below, spelled
+    and cased as written. A renamed or reformatted marker is not read, and its content silently
+    lands in the previous field instead.
+  - The case heading may be either `### {{TEST_CASE_ID}} — {{TITLE}}` (this template's form) or
+    `## {{TEST_CASE_ID}}` with a separate `**Title:**` field. Both are supported; pick one per file.
+  - Prose emphasis that is not a field (`**Important:** …`) stays with the field it appears in, so it
+    is safe — but never invent a new `**Label:**` expecting it to become a column. The column list is
+    §6.1's, and only §6.1's.
+
+Run `cli.js --check` after authoring: it reports any case missing Title, Objective, Steps, Expected
+Result, Priority, or Tags, and exits non-zero. A case that reaches Stage 4 with a blank Expected
+Result is unexecutable, so that warning is never cosmetic.
 -->
 
 ### {{TEST_CASE_ID}} — {{TITLE}}
@@ -37,7 +54,12 @@ GOLDEN RULE: if removing a sentence does not change how the test is executed, re
 **Test Data:**
 <!-- The specific input values the steps actually reference, kept minimal — never values the steps
      never use. For a negative test, include the exact boundary/invalid value being exercised (§7).
-     OMIT THIS FIELD ENTIRELY when the case has no test data. -->
+     OMIT THIS FIELD ENTIRELY when the case has no test data.
+
+     Two forms, both exported correctly — pick by how many values there are:
+       inline, for one or two values:   **Test Data:** Query: `wireless mouse`
+       a table, for several:            the Field/Value table below
+     A table keeps its line structure in the exported cell, so the Field↔Value pairing survives. -->
 
 | Field | Value |
 |---|---|
@@ -51,7 +73,11 @@ GOLDEN RULE: if removing a sentence does not change how the test is executed, re
      Good: "1. Open the Agency page. 2. Click **Create Agency**. 3. Enter a valid Agency Name.
             4. Leave the Product Access section empty. 5. Click **Save**."
      Bad:  "Navigate to the Agency management module, ensuring all required prerequisites are
-            satisfied before attempting to initiate the creation workflow…" -->
+            satisfied before attempting to initiate the creation workflow…"
+
+     Write each step on its own line as a numbered Markdown list item. The exporter joins them into
+     one spreadsheet cell as `1. … | 2. …`, renumbering canonically — so one action per line is what
+     makes "failed at step 3" resolvable when Stage 4 records a per-step result. -->
 
 1. {{STEP}}
 

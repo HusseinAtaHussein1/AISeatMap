@@ -18,7 +18,7 @@ outputs:
   - name: manual_test_suite_xlsx
     type: file_path
     location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx"
-    description: Identical test case set, spreadsheet form. Must never diverge from the Markdown rendering.
+    description: Identical test case set, spreadsheet form. GENERATED from the Markdown suite by platform_core/tools/test_suite_export (§9.1) — never authored or hand-edited, which is what makes it provably non-divergent.
   - name: traceability_matrix
     type: file_path
     location: "platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md"
@@ -30,7 +30,7 @@ outputs:
 dependencies:
   - project-context-skill (upstream skill)
   - explorer-skill (upstream skill)
-  - Spreadsheet-writing library/tool for the Excel export
+  - platform_core/tools/test_suite_export (renders the authored Markdown suites to Excel — §9.1)
 ---
 
 > **Pipeline position:** Stage 3 of 7 — consumes the Project Context (primary) and Discovery Artifacts, Findings, Evidence Packages, and the QA Assessment Report (secondary), produces Manual Test Suites.
@@ -316,10 +316,38 @@ The Markdown and Excel test suites are two renderings of one underlying test cas
 
 Any future integration that maps these canonical artifacts into a third-party ALM/test-management/issue-tracking system's import format is out of scope for this skill and for the platform core generally — such integrations, if built, live in a separate layer that consumes these artifacts as input, not inside this specification.
 
+## 9.1 Excel Rendering — Generated, Never Authored
+
+**The Markdown suite is the authored artifact; the `.xlsx` is generated from it.** Every module's workbook is produced by the platform's Test Suite Export tool, never written by hand and never hand-edited afterwards:
+
+```bash
+node platform_core/tools/test_suite_export/cli.js            # every suite in the active run
+node platform_core/tools/test_suite_export/cli.js --check     # parse + report only; writes nothing
+```
+
+**Why derivation rather than two authored formats.** §9's "must never diverge" is only *guaranteed* if one format is derived from the other; authored twice, non-divergence is a matter of discipline, and the moment they drift, Stage 4 executes against whichever file the tester happened to open — a difference nothing downstream can detect. Deriving the workbook makes that failure mode unreachable rather than merely discouraged.
+
+**The rules this creates:**
+
+1. **Author Markdown, then export.** Run the export after *any* edit to a suite document — including a one-word correction during review. An `.xlsx` older than its `.md` is a stale artifact, not a minor lag.
+2. **Never hand-edit a generated workbook.** The next export discards the edit silently, and until it does, the two formats disagree — exactly what §9 prohibits.
+3. **Never hand-write an `.xlsx`, and never add a spreadsheet dependency to do it.** The tool is dependency-free by design (`platform_core/` must run on a clean install); a run-scoped script pulling in a spreadsheet library is how this behaviour was prototyped, not how it ships.
+4. **Treat a parse warning as a defect in the Markdown, never in the workbook.** `--check` exits non-zero when a case is missing Title, Objective, Steps, Expected Result, Priority, or Tags, or when a Test Case ID is duplicated. A case reaching Stage 4 with a blank Expected Result is unexecutable — fix the suite document, then re-export.
+5. **Run `--check` before requesting review.** Publishing a suite whose own cases do not parse means the reviewer is reading something Stage 4 cannot execute.
+6. **Reconcile the counts before publishing.** Each module's case count must agree across three places: the suite document's own Total Test Cases, that module's row count in `TraceabilityMatrix.md`, and the Coverage Report's Manual Test Cases table (§18 #6). The export's per-module count is the figure to check them against — count from the files, never carry a total over from a draft. A miscount here propagates into the Stage 4 and Stage 5 summaries, where it is far harder to notice.
+
+**The workbook's column contract is §6.1's field list, in §6.1's order, and nothing else** — one sheet per module workbook, tab named for the module. Traceability, Risk, and the Requirement/Discovery/Finding/Evidence references are deliberately absent from it, exactly as they are absent from the Markdown case block (§6.2): they live in `TraceabilityMatrix.md`, keyed by Test Case ID. Adding a traceability column to the workbook is the same spec violation as adding the field to the case block.
+
+Steps render into a single cell joined with ` | ` and renumbered canonically (`1. … | 2. …`). The numbering carries weight downstream: Stage 4 records a result per step and a defect cites "failed at step 3", so one action per authored line (§6.1) is what keeps that citation resolvable.
+
+Where a module's workbook should carry a sheet name different from the file's module — a file deliberately grouping several requirement groups, e.g. NAV + NFR + BR in `TestCases_Navigation.md` — pass `--sheet-name`, and state the grouping decision in the Coverage Report's Manual Test Cases section (§18 #6) rather than leaving a reader to notice the file name and the module list disagree.
+
+The tool's full behaviour — accepted heading shapes, field markers, warning taxonomy, exit codes — is specified in [`platform_core/tools/test_suite_export/README.md`](../../../platform_core/tools/test_suite_export/README.md) and is not restated here.
+
 # 10. Allowed Tools
 
 - File tools: Read (Project Context, Discovery Report, QA Assessment Report, Findings Summary, individual Finding metadata and Evidence Packages), Write (Markdown test case, traceability, and coverage documents)
-- Code-execution tools (e.g., Bash running a spreadsheet-writing script or library) strictly to generate the Excel export from the same structured test case data — not to run tests or touch a live environment
+- **The Test Suite Export tool** (`node platform_core/tools/test_suite_export/cli.js`) to render the authored Markdown suites into their `.xlsx` counterparts (§9.1). This is the only permitted way to produce the Excel output: writing a workbook by hand, or authoring a one-off spreadsheet script alongside the artifacts, is not permitted — it reintroduces the divergence §9.1 exists to prevent, and adds a dependency `platform_core/` deliberately does not carry. Not for running tests or touching a live environment.
 - Directory-listing shell commands (read-only)
 
 **Not permitted:** browser automation tools, code execution/editing tools that touch application code, or any tool that runs tests against a live environment.
@@ -338,7 +366,7 @@ Any future integration that maps these canonical artifacts into a third-party AL
 10. **Must systematically evaluate every applicable Negative Test Generation category** (§7) for each testable requirement/workflow, generating the test case or recording an explicit "Not Applicable" reason (in the Coverage Report, §18 #5/#8) — never silently skipping a category.
 11. Must cover, at minimum, one positive case and the applicable negative categories (§7) for every testable requirement; boundary and security cases wherever applicable.
 12. Every test case must include all fields in §6.1 (the lean, execution-facing schema) — no partial schema, no field silently omitted. Every test case must additionally have a corresponding, complete Traceability Matrix row per §6.2 — use `N/A` explicitly where a Matrix field genuinely does not apply, per §5.1's rule for Finding/Evidence References.
-13. **Must produce both canonical test suite formats — Markdown and Excel — from the same underlying test case set.** The two must never diverge in content.
+13. **Must produce both canonical test suite formats — Markdown and Excel — from the same underlying test case set.** The two must never diverge in content. Concretely (§9.1): author the Markdown, then generate the workbook from it with `platform_core/tools/test_suite_export/cli.js`. Never hand-write or hand-edit an `.xlsx`, and never leave one un-regenerated after editing its Markdown source.
 14. **Must produce a Requirement Traceability Matrix covering 100% of the test cases it generates** — no orphan test case without a traced Project Context requirement row in the Matrix (§6.2).
 15. **Must produce a Coverage Report** (§8–§9) quantifying Requirement Coverage and Finding Coverage, with an explicit accounting (not a silent omission) of every Uncovered Requirement and every Uncovered Finding.
 16. Must not write or suggest automation code, and must not execute any test.
@@ -357,7 +385,7 @@ Any future integration that maps these canonical artifacts into a third-party AL
 | Artifact | Path | Template |
 |---|---|---|
 | Manual Test Suite — Markdown (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md` | [`stage_3_test_design/TestCases_Module.md`](../../../platform_core/templates/stage_3_test_design/TestCases_Module.md) (per-case block: [`TestCase_entry.md`](../../../platform_core/templates/stage_3_test_design/TestCase_entry.md)) |
-| Manual Test Suite — Excel (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` | same as above — two renderings of one test case set, never divergent |
+| Manual Test Suite — Excel (per module) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` | **generated, not authored** — rendered from the Markdown suite by [`test_suite_export`](../../../platform_core/tools/test_suite_export/) per §9.1; columns are §6.1's field list, in §6.1's order |
 | Requirement Traceability Matrix | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` | [`stage_3_test_design/TraceabilityMatrix.md`](../../../platform_core/templates/stage_3_test_design/TraceabilityMatrix.md) |
 | Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` | [`stage_3_test_design/CoverageReport.md`](../../../platform_core/templates/stage_3_test_design/CoverageReport.md) |
 
@@ -367,7 +395,7 @@ Any future integration that maps these canonical artifacts into a third-party AL
 
 Role: requirement-driven test case design (Stage 3 of 7).
 
-Transform validated project knowledge into a complete, structured, fully traceable set of manual test assets. Design and track tests; do not execute them, write automation code, read the PRD, or shape output around any external ALM, issue-tracking, or test-management system — produce only the platform's own canonical artifacts. Execution is fully specified above — §4 (Inputs), §5 (Traceability Model, incl. Finding disposition §5.3 and Run Scope Reference §5.4), §6 (Test Case Schema), §7 (Negative Test Generation Engine), §8 (Coverage Tracking), §9 (Outputs), §11 (Execution Rules), §12 (Artifacts), §16 (Strategy by Run Scope), §17 (Required Dimensions), §18 (Standard Output Contract), §19–§20 (Stop Conditions and Recovery), §21 (Handoff Contract). This section adds no rules of its own; the contract is stated once above rather than restated here.
+Transform validated project knowledge into a complete, structured, fully traceable set of manual test assets. Design and track tests; do not execute them, write automation code, read the PRD, or shape output around any external ALM, issue-tracking, or test-management system — produce only the platform's own canonical artifacts. Execution is fully specified above — §4 (Inputs), §5 (Traceability Model, incl. Finding disposition §5.3 and Run Scope Reference §5.4), §6 (Test Case Schema), §7 (Negative Test Generation Engine), §8 (Coverage Tracking), §9 (Outputs, incl. Excel rendering §9.1), §11 (Execution Rules), §12 (Artifacts), §16 (Strategy by Run Scope), §17 (Required Dimensions), §18 (Standard Output Contract), §19–§20 (Stop Conditions and Recovery), §21 (Handoff Contract). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 14. Example Execution
 
@@ -439,7 +467,7 @@ The Coverage Report (§9 Outputs #4) must contain exactly these sections, in thi
 | 3 | **Coverage Matrix** | A cross-reference view — Requirement ID × Test Case ID(s) — consolidating what the Requirement Traceability Matrix (§9 Outputs #3) already states, presented here for at-a-glance review alongside the rest of this contract |
 | 4 | **Business Rules** | Every `BR-`prefixed requirement (§5.4) and its test case(s), listed separately from general Requirements Covered so business-rule coverage is auditable on its own |
 | 5 | **Test Scenarios** | A count/breakdown of designed scenarios by module and by dimension (§7, §17) |
-| 6 | **Manual Test Cases** | Reference to the Markdown/Excel Manual Test Suite files (§9 Outputs #1–#2) — full case content lives there, never restated here |
+| 6 | **Manual Test Cases** | Reference to the Markdown/Excel Manual Test Suite files (§9 Outputs #1–#2) — full case content lives there, never restated here — **plus each module's case count**, reconciled against the suite documents and the Traceability Matrix per §9.1 #6, and a note wherever one file deliberately groups several requirement groups |
 | 7 | **Assumptions** | Every assumption-based test case (§3) carried forward from the Project Context's Assumptions/Risks |
 | 8 | **Coverage Gaps** | Uncovered Requirements (§8.1), Uncovered Findings (§8.2), and Partially Covered / Unknown-Unassessed items (§8.3), each with its stated reason |
 | 9 | **Risks** | Every test case's Risk entry from the Traceability Matrix (§6.2) aggregated, with High/Critical items called out explicitly |

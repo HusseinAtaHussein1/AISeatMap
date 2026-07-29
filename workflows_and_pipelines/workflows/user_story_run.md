@@ -154,7 +154,7 @@ Per `workflows_and_pipelines/pipeline/pipeline.md` §7 ("Cross-run reuse"), this
 | Artifact | Path | Produced By |
 |---|---|---|
 | Manual Test Suite (Markdown) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md` | Test Design Agent |
-| Manual Test Suite (Excel) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` | Test Design Agent |
+| Manual Test Suite (Excel) | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.xlsx` | Test Design Agent — generated from the Markdown by `platform_core/tools/test_suite_export/cli.js` (`test-design-skill/SKILL.md` §9.1), never authored separately |
 | Requirement Traceability Matrix | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` | Test Design Agent |
 | Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` | Test Design Agent |
 | Manual Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md` | Manual Execution Agent |

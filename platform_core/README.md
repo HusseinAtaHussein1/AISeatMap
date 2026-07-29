@@ -16,7 +16,7 @@ It does not own agent behavior (`.claude/skills/`), stage sequencing (`workflows
 
 ## What Lives Here
 
-- **Shared Tools** (`tools/`) — reusable runtime engines callable identically for any project, with zero project-specific data baked in (the Platform Paths resolver, the Browser Driver, the MCP tools layer, the Run Manager, the Automation Lifecycle tools, and the `init` installer). `tools/mcp/` is the one member that holds no engine code of its own: it registers the `playwright` and `context7` MCP servers (repo-root `.mcp.json`) and specifies the contract under which Skills may drive them — plus `stack_docs/`, the extractor that reads a project's manifests/lockfiles so documentation is fetched for the versions the suite actually runs against.
+- **Shared Tools** (`tools/`) — reusable runtime engines callable identically for any project, with zero project-specific data baked in (the Platform Paths resolver, the Browser Driver, the MCP tools layer, the Run Manager, the Automation Lifecycle tools, the Test Suite Export renderer, and the `init` installer). `tools/mcp/` is the one member that holds no engine code of its own: it registers the `playwright` and `context7` MCP servers (repo-root `.mcp.json`) and specifies the contract under which Skills may drive them — plus `stack_docs/`, the extractor that reads a project's manifests/lockfiles so documentation is fetched for the versions the suite actually runs against.
 - **Output Artifact Templates** (`templates/`) — the authoritative *structure* of every artifact the pipeline writes, one template per artifact per stage. Blank Markdown skeletons with `{{PLACEHOLDER}}` tokens and inline `<!-- -->` guidance; they hold no project content, which is exactly why they belong in this layer. Each `.claude/skills/*/SKILL.md` points at its templates rather than restating the structure inline, so an artifact's shape has one home. See [`templates/README.md`](templates/README.md).
 
 Population is deliberate: this layer does not grow by accretion during ordinary pipeline execution — see Rules below.
@@ -54,8 +54,10 @@ platform_core/
     │   ├── stack_docs/        # stack + pinned-dependency extractor; plans the Context7 lookups
     │   └── README.md          # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
     ├── platform_paths/       # the two-root resolver (Tool Root / Target Root) every tool here uses
-    └── run_manager/          # run identity — folder naming/indexing (the only place a run name is
-                              #   formatted), the Active Run pointer, Run Manifest, lineage, targetRef
+    ├── run_manager/          # run identity — folder naming/indexing (the only place a run name is
+    │                         #   formatted), the Active Run pointer, Run Manifest, lineage, targetRef
+    └── test_suite_export/    # Stage 3's authored Markdown test suites -> the matching .xlsx;
+                              #   dependency-free writer, workbook derived and never hand-authored
 ```
 
 `platform_core/tools/` and `platform_core_data/knowledge_base/patterns/` are peers, not a hierarchy — a Skill may depend on either or both independently. See `platform_core_data/knowledge_base/patterns/README.md` for the full Knowledge layer specification (structure, document metadata standard, promotion mechanics) and `platform_core/tools/browser_driver/README.md` for this layer's design (the four-way split between the shared engine, a project's Browser Profile, its Screen/Component Knowledge, and its Credentials). `platform_core/tools/mcp/README.md` specifies the two registered MCP servers: `playwright` as a second, selectable browser mode alongside the Browser Driver (§1.2's selection rule, §1.3's absolute prohibition on credential values in MCP tool calls), and `context7` as the source of version-accurate documentation for a project's own extracted stack (§2).
@@ -119,4 +121,5 @@ executes the authored Steps against that session
 - [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — the orchestration layer that sequences the Skills which call into these engines.
 - [`../platform_core_data/`](../platform_core_data/) — the hosted application's content, resolved by these engines at runtime, and the home of the Platform Knowledge layer (`patterns/`) that used to live here.
 - [`tools/platform_paths/README.md`](tools/platform_paths/README.md) — the two-root resolver every other tool here depends on; start here to understand how Tool Root and Target Root are resolved and enforced.
+- [`tools/test_suite_export/README.md`](tools/test_suite_export/README.md) — why Stage 3's Excel suite is *derived* from its Markdown rather than authored beside it, and why the writer carries no dependencies.
 - [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md) — operating these tools from the CLI ([§12](../docs/USER_GUIDE.md#12-cli-reference)) and setting up the browser/MCP layers ([§4](../docs/USER_GUIDE.md#4-browser-and-mcp-setup)).

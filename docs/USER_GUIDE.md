@@ -482,6 +482,28 @@ With no verb, bare flags generate a run folder name only (`--scope`, `--target`,
 
 **Environment overrides:** `AGENTIC_TESTING_RUN_FOLDER` (active run, per-process), `AGENTIC_TESTING_TOOL_ROOT` / `AGENTIC_TESTING_TARGET_ROOT` (the two roots).
 
+### `test_suite_export` CLI
+
+Renders Stage 3's authored Markdown test suites into the matching Excel workbooks. Stage 3 runs this itself; you'd run it by hand after editing a suite document during review:
+
+```bash
+node platform_core/tools/test_suite_export/cli.js [flags]
+```
+
+| Flag | What it does |
+|---|---|
+| *(none)* | export every `TestCases_*.md` in the **active run**'s `test_design/` folder |
+| `--run <run-folder>` | a specific run instead of the active one |
+| `--dir <path>` | any folder holding `TestCases_*.md` |
+| `--file <path>` | a single suite document |
+| `--sheet-name <name>` | with `--file`, name the sheet tab (for a file grouping several requirement groups) |
+| `--check` | parse and report only — writes nothing; use as a review or CI gate |
+| `--json` | machine-readable result |
+
+Exit codes: `0` exported cleanly · `1` error (no active run, bad path, no suites found) · `2` parsed **with warnings**, e.g. a case missing its Expected Result — so a CI step can gate on it.
+
+**The Markdown is the authored artifact; the `.xlsx` is generated from it and never hand-edited.** Editing a workbook directly is silently discarded by the next export, and until then the two formats disagree — exactly what Stage 3's "must never diverge" rule exists to prevent. Fix the Markdown, then re-export. See [`test_suite_export/README.md`](../platform_core/tools/test_suite_export/README.md).
+
 ---
 
 ## Related Documents
@@ -495,6 +517,7 @@ With no verb, bare flags generate a run folder name only (`--scope`, `--target`,
 | [`platform_paths/README.md`](../platform_core/tools/platform_paths/README.md) | the two-root contract, in full |
 | [`run_manager.md`](../workflows_and_pipelines/pipeline/run_manager.md) | run identity, the Active Run pointer, code-state anchoring, lineage |
 | [`platform_core/templates/`](../platform_core/templates/) | the output templates every stage fills — the shape of each artifact before it's written |
+| [`test_suite_export/README.md`](../platform_core/tools/test_suite_export/README.md) | how Stage 3's Excel suites are generated from their Markdown, and why they're never authored separately |
 | [`mcp/README.md`](../platform_core/tools/mcp/README.md) | both MCP servers and their usage contract |
 | [`CHANGELOG.md`](CHANGELOG.md) | specification revision history |
 | [`LESSONS_LEARNED.md`](LESSONS_LEARNED.md) | architectural lessons from past redesigns |

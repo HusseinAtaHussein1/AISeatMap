@@ -86,11 +86,26 @@ interpret free-form prose to extract what it needs.
 ## 6. Manual Test Cases
 
 <!-- REFERENCE ONLY to the Markdown/Excel suites — full case content lives there, NEVER restated
-     here. -->
+     here.
 
-| Module | Markdown | Excel |
-|---|---|---|
-| {{MODULE}} | `test_design/TestCases_{{MODULE}}.md` | `test_design/TestCases_{{MODULE}}.xlsx` |
+     The Markdown is authored; the .xlsx is generated from it by
+     `platform_core/tools/test_suite_export/cli.js` (§9.1), which is what makes the two provably
+     non-divergent rather than merely intended to match.
+
+     Case Count is per module and must agree with the suite document's own Total Test Cases and with
+     that module's row count in TraceabilityMatrix.md §1. This is the reconciliation point where a
+     miscount gets caught — a wrong total here propagates into Stage 4 and Stage 5 summaries, where
+     it is much harder to notice. State the count you actually counted from the files, never one
+     carried over from a draft.
+
+     Where a single file deliberately groups several requirement groups (e.g. NAV + NFR + BR in
+     TestCases_Navigation.md), say so in a note under this table rather than leaving a reader to
+     notice the file name and the module list in §2 disagree. -->
+
+| Module | Markdown | Excel | Case Count |
+|---|---|---|---|
+| {{MODULE}} | `test_design/TestCases_{{MODULE}}.md` | `test_design/TestCases_{{MODULE}}.xlsx` | {{CASE_COUNT}} |
+| **Total** | | | **{{TOTAL_CASES}}** |
 
 ## 7. Assumptions
 

@@ -158,7 +158,7 @@ Notes:
 
 Notes:
 - Project Context governs *what* is tested; Discovery Artifacts only validate, enrich, and surface gaps — per the reversed primary/secondary relationship established in the Agent Framework.
-- The Markdown and Excel test suites must never diverge — they are two renderings of one underlying test case set.
+- The Markdown and Excel test suites must never diverge — they are two renderings of one underlying test case set. The Markdown is authored; the `.xlsx` is **generated from it** by `platform_core/tools/test_suite_export/cli.js` (`test-design-skill/SKILL.md` §9.1), which is what makes non-divergence structural rather than a matter of discipline. Re-run the export after any edit to a suite document, and never hand-edit a workbook.
 
 ### Stage 4 — Manual Execution Agent
 

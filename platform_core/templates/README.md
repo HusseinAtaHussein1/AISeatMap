@@ -92,6 +92,12 @@ a workflow's Step 1 creates it by hand.
    never left in place as an empty heading.
 6. **One file per artifact, edited in place.** No `.vN` suffixes, no duplicate "final" copy on
    approval — git is the version history (`workflows_and_pipelines/pipeline/pipeline.md` §7).
+7. **A template describes an *authored* artifact.** Where a stage also ships a non-Markdown rendering
+   of the same content, that rendering is **generated from the authored file by a tool**, so there is
+   no second template for it. The one case today is Stage 3's Manual Test Suite: `TestCases_Module.md`
+   is authored, and [`tools/test_suite_export`](../tools/test_suite_export/) renders the matching
+   `.xlsx` from it (`test-design-skill/SKILL.md` §9.1). Deriving it is what makes the two provably
+   non-divergent — a second template would just be two shapes to keep in sync by hand.
 
 ## Adding or changing a template
 

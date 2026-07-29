@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Automation Package Registry (Stage 5 of 7)
+TEMPLATE — Automation Package Registry (Stage 4A — Automation branch)
 Renders to: platform_core_data/automation_baseline/AutomationPackages.md
 Authority:  .claude/skills/automation-skill/SKILL.md §19 (Artifacts — the registry row), §31.1;
             workflows_and_pipelines/pipeline/pipeline.md §12.7

@@ -138,7 +138,7 @@ Adding any of these integrations in the future is expected to extend §4.2 (new 
 
 To keep this concept's boundary unambiguous, Run Scope explicitly does **not**:
 
-- Add a pipeline stage. The pipeline remains seven stages, per `workflows_and_pipelines/pipeline/pipeline.md` §3.
+- Add a pipeline stage. The two pipelines' stage sets are unchanged, per `workflows_and_pipelines/pipeline/pipeline.md` §3.
 - Add a new agent. Resolving a Run Scope into a Project Context remains the Project Context Agent's job, per its existing spec.
 - Change any agent's Inputs, Allowed Tools, Execution Rules, or Expected Artifacts tables.
 - Implement Azure DevOps, Jira, Xray, or TestRail connectivity — §9 is documentation of future intent only.

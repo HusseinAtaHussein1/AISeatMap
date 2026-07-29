@@ -6,8 +6,8 @@ Two servers are registered, for two unrelated purposes:
 
 | Server | Purpose | Consuming stages |
 |---|---|---|
-| **`playwright`** (`@playwright/mcp`) | Live, agent-driven browser interaction — a **second, selectable mode** alongside the Browser Driver engine | Stage 2 (Explorer), Stage 4 (Manual Execution), Stage 5 (Automation — selector verification only) |
-| **`context7`** (`@upstash/context7-mcp`) | Version-accurate, up-to-date documentation for the **application-under-test's own stack and its automation framework's dependencies**, used as an implementation guideline | Stage 5 (Automation), Stage 6 (Automation Execution — repair loop only) |
+| **`playwright`** (`@playwright/mcp`) | Live, agent-driven browser interaction — a **second, selectable mode** alongside the Browser Driver engine | Stage 2 (Explorer), Stage 4M (Manual Execution), Stage 5 (Automation — selector verification only) |
+| **`context7`** (`@upstash/context7-mcp`) | Version-accurate, up-to-date documentation for the **application-under-test's own stack and its automation framework's dependencies**, used as an implementation guideline | Stage 4A (Automation), Stage 6 (Automation Execution — repair loop only) |
 
 Registration lives in the repo-root [`.mcp.json`](../../../.mcp.json). This folder holds **no server code** — the servers are fetched by `npx` at launch. Like every other `platform_core/tools/` member it contains zero project-specific data: which URL is driven, which stack is looked up, and which libraries matter are all resolved from `platform_core_data/` at call time.
 
@@ -26,18 +26,18 @@ The platform now has **two** mechanisms for live browser access. They are peers,
 | Locator knowledge | Reuses `platform_core_data/knowledge_base/browser/screens/` + `components/` via `useScreen()`/`useComponent()` | Accessibility-tree snapshots; no stored locator knowledge |
 | Repeatability | High — deterministic, re-runnable, diff-friendly | Lower — exploratory, sequence depends on what the agent sees |
 | Best at | Authenticated flows, known screens, repeated execution of designed test cases | First-contact exploration of an unknown screen, ad-hoc selector verification, reading the accessibility tree |
-| Display mode | **Headless by default** — `browser.headless: true` in `platform_core_data/knowledge_base/browser/profile.json`; **except Stage 4 (Manual Execution), which is headed** via `browser.headlessByStage` (§1.1.1) | **Headless by default** — `--headless` in the repo-root `.mcp.json` |
+| Display mode | **Headless by default** — `browser.headless: true` in `platform_core_data/knowledge_base/browser/profile.json`; **except Stage 4M (Manual Execution), which is headed** via `browser.headlessByStage` (§1.1.1) | **Headless by default** — `--headless` in the repo-root `.mcp.json` |
 
-### 1.1.1 Headless is the default for both mechanisms — except Stage 4
+### 1.1.1 Headless is the default for both mechanisms — except Stage 4M
 
 Neither mechanism opens a visible browser window unless something explicitly asks for one. A Skill never needs to request headless — it is already the configured default on both paths:
 
 - **Browser Driver** — `platform_core_data/knowledge_base/browser/profile.json` sets `browser.headless: true`. `BrowserDriver.authenticate()` uses that default whenever neither the `headless` argument nor a per-stage override applies.
 - **Playwright MCP** — the server is registered in `.mcp.json` with `--headless` (the server is *headed* by default without it, so the flag is required, not cosmetic).
 
-**The one standing exception: Stage 4, Manual Execution, runs headed as its normal behaviour** (`.claude/skills/manual-execution-skill/SKILL.md` §11.1). That stage exists so a human can watch each authored Step execute against the live application and judge timing, transient, and visual-state behaviour in real time — observation a post-hoc screenshot does not preserve. It is expressed as configuration, not skill discipline: `browser.headlessByStage` in the profile maps `manual_execution` to `false`, and the stage selects it by passing `stage: 'manual_execution'` to `authenticate()`. **Resolution precedence: explicit `headless` argument > `headlessByStage[stage]` > `browser.headless`.** A stage not named in the map is unaffected and stays headless.
+**The one standing exception: Stage 4M, Manual Execution, runs headed as its normal behaviour** (`.claude/skills/manual-execution-skill/SKILL.md` §11.1). That stage exists so a human can watch each authored Step execute against the live application and judge timing, transient, and visual-state behaviour in real time — observation a post-hoc screenshot does not preserve. It is expressed as configuration, not skill discipline: `browser.headlessByStage` in the profile maps `manual_execution` to `false`, and the stage selects it by passing `stage: 'manual_execution'` to `authenticate()`. **Resolution precedence: explicit `headless` argument > `headlessByStage[stage]` > `browser.headless`.** A stage not named in the map is unaffected and stays headless.
 
-Because the Playwright MCP server's `--headless` is fixed at process start, the Stage 4 exception applies to the Browser Driver only — which is that stage's default and strongly-preferred mechanism anyway. Making the MCP fallback headed requires a human to drop the flag from `.mcp.json` and restart the server.
+Because the Playwright MCP server's `--headless` is fixed at process start, the Stage 4M exception applies to the Browser Driver only — which is that stage's default and strongly-preferred mechanism anyway. Making the MCP fallback headed requires a human to drop the flag from `.mcp.json` and restart the server.
 
 Outside that exception, headed mode remains a **local debugging opt-in for a human operator**: pass `BrowserDriver.authenticate({ headless: false })` for a one-off driver run, or drop `--headless` from `.mcp.json` and restart the MCP server. Because a headless run captures screenshots, DOM, accessibility tree, console, and network exactly as a headed one does, running headless costs no evidence and changes no Evidence Category or Confidence ceiling under `explorer-skill/SKILL.md` §17–§18 — what a headed Stage 4 adds is live human observation, not richer artifacts.
 
@@ -46,7 +46,7 @@ Outside that exception, headed mode remains a **local debugging opt-in for a hum
 **The Browser Driver remains the default for any authenticated flow and for any screen that already has Screen/Component Knowledge.** Playwright MCP is selected when:
 
 1. The screen is **unknown** — no `screens/{name}.json` exists yet, and the point of the visit is to discover its structure (Stage 2 first-contact exploration); or
-2. The need is a **one-off accessibility-tree or selector check** during generation (Stage 5 §17), where authoring a script would cost more than the check is worth; or
+2. The need is a **one-off accessibility-tree or selector check** during generation (Stage 4A §17), where authoring a script would cost more than the check is worth; or
 3. The Browser Driver is **unavailable or failing** for a reason unrelated to the application (e.g. no `profile.json` yet), and discovery would otherwise fall to a lower-priority Discovery Mode.
 
 A Skill must **never** choose Playwright MCP merely because it is more convenient than writing a driver script for a screen the driver already knows how to reach. Whichever mode is used is recorded on every discovery snapshot, Finding, and Coverage entry exactly as `explorer-skill/SKILL.md` §8.3 already requires — "Browser automation" is no longer a sufficient label by itself; the mode entry names **which** of the two.
@@ -69,7 +69,7 @@ Every constraint the consuming Skill already carries applies unchanged — the E
 
 - `browser_run_code_unsafe` and `browser_evaluate` are **not** used to mutate application state, only to read it — and `browser_run_code_unsafe` requires the same explicit authorization any destructive action would.
 - An unexpected dialog is reported and escalated, never blind-accepted — mirroring `takePendingDialog()`'s contract.
-- Stage 5 may drive this server **only** for selector verification. Executing a generated suite through it is a specification violation of `automation-skill/SKILL.md` §17's "never for running the suite."
+- Stage 4A may drive this server **only** for selector verification. Executing a generated suite through it is a specification violation of `automation-skill/SKILL.md` §17's "never for running the suite."
 
 ### 1.5 Discovery tooling is still not automation tooling
 
@@ -118,7 +118,7 @@ Do **not** query transitive dependencies the generated code never imports, build
 
 ### 2.5 Output — the Stack Documentation Context artifact
 
-Stage 5 writes one artifact per run, before code generation begins:
+Stage 4A writes one artifact per run, before code generation begins:
 
 `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md`
 
@@ -137,13 +137,13 @@ It records, at minimum:
 
 ### 2.6 When it runs
 
-- **Stage 5 (Automation)** — mandatory, after the Framework Decision Gate resolves the framework (so the right stack is looked up) and before any code generation. A pinned-version stack with zero queries performed is an incomplete Automation Plan.
-- **Stage 6 (Automation Execution)** — only inside the Automation Repair Loop, and only when a failure's diagnosis points at a **framework/dependency API question** ("is this locator API valid in the pinned version?"). Re-queries reuse this run's artifact rather than re-fetching what it already records.
+- **Stage 4A (Automation)** — mandatory, after the Framework Decision Gate resolves the framework (so the right stack is looked up) and before any code generation. A pinned-version stack with zero queries performed is an incomplete Automation Plan.
+- **Stage 5H (Self-Healing)** — only inside the repair reasoning loop, and only when a failure's diagnosis points at a **framework/dependency API question** ("is this locator API valid in the pinned version?"). Re-queries reuse this run's artifact rather than re-fetching what it already records.
 - **Never** in Stages 1–4 or 7. Requirement analysis, discovery, test design, manual execution, and reporting have no dependency-API questions to resolve; a doc lookup there is out of scope.
 
 ### 2.7 Determinism and cost
 
-Fetched documentation is **not** part of the traceability chain (`Requirement → … → Automation Script`) — it informs *how* a script is written, never *what* is tested or *why*. It therefore never appears as justification for a coverage decision, a Finding, or a test case's existence. Cache within the run: query once per library-concept pair, reuse the artifact, and let Stage 6's repair loop read it instead of re-fetching.
+Fetched documentation is **not** part of the traceability chain (`Requirement → … → Automation Script`) — it informs *how* a script is written, never *what* is tested or *why*. It therefore never appears as justification for a coverage decision, a Finding, or a test case's existence. Cache within the run: query once per library-concept pair, reuse the artifact, and let Stage 5A's repair loop read it instead of re-fetching.
 
 ---
 
@@ -169,4 +169,4 @@ Approve both servers once per machine (`claude mcp` / `/mcp` in an interactive s
 - [`../../README.md`](../../README.md) — the `platform_core/` layer contract this folder sits under.
 - `.claude/skills/explorer-skill/SKILL.md` §8.1, §10 — Discovery Modes and allowed tools.
 - `.claude/skills/automation-skill/SKILL.md` §6, §17, §34 — framework detection, allowed tools, and the Stack Documentation step.
-- [`../../../docs/USER_GUIDE.md` §4](../../../docs/USER_GUIDE.md#4-browser-and-mcp-setup) — the operator-facing setup: approving the project-scoped `.mcp.json`, installing browsers, the optional `CONTEXT7_API_KEY`, and how the version-pinned doc lookup is used at Stage 5.
+- [`../../../docs/USER_GUIDE.md` §4](../../../docs/USER_GUIDE.md#4-browser-and-mcp-setup) — the operator-facing setup: approving the project-scoped `.mcp.json`, installing browsers, the optional `CONTEXT7_API_KEY`, and how the version-pinned doc lookup is used at Stage 4A.

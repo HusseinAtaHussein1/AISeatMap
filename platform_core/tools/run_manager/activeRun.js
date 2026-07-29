@@ -70,6 +70,7 @@ const STAGE_FOLDERS = [
   'manual_execution',
   'automation',
   'execution',
+  'self_healing',
   'reporting',
 ];
 

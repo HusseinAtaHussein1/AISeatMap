@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Timeline (Stage 2 of 7)
+TEMPLATE — Timeline (Stage 2 — shared)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/Timeline.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §6
 

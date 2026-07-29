@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Single Test Case entry (Stage 3 of 7)
+TEMPLATE — Single Test Case entry (Stage 3 — shared, divergence point)
 Used INSIDE: platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{{MODULE}}.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §6.1 (these fields, this order — "no more"),
             §6.0 (Lean Test Case Philosophy), §6.0.1 (Granularity Tier), §6.2
@@ -36,7 +36,7 @@ formatting preference:
     §6.1's, and only §6.1's.
 
 Run `cli.js --check` after authoring: it reports any case missing Title, Objective, Steps, Expected
-Result, Priority, or Tags, and exits non-zero. A case that reaches Stage 4 with a blank Expected
+Result, Priority, or Tags, and exits non-zero. A case that reaches Stage 4M with a blank Expected
 Result is unexecutable, so that warning is never cosmetic.
 -->
 
@@ -77,7 +77,7 @@ Result is unexecutable, so that warning is never cosmetic.
 
      Write each step on its own line as a numbered Markdown list item. The exporter joins them into
      one spreadsheet cell as `1. … | 2. …`, renumbering canonically — so one action per line is what
-     makes "failed at step 3" resolvable when Stage 4 records a per-step result. -->
+     makes "failed at step 3" resolvable when Stage 4M records a per-step result. -->
 
 1. {{STEP}}
 

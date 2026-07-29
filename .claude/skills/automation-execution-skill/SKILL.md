@@ -1,6 +1,6 @@
 ---
 name: automation-execution-skill
-description: Stage 6 of 7 in the Agentic AI Testing Platform pipeline. Executes an approved automation suite against a target environment and records raw, structured Execution Results (pass/fail/evidence, full Result Classification, Health Summary) plus the Automation Repair Loop for automation-side failures. Use when running an approved automation package against an environment.
+description: Stage 5A of the Agentic AI Testing Platform's Automation Pipeline. A pure mechanical runner — executes an approved automation suite against a target environment and records raw, structured Execution Results (pass/fail/evidence, full cause-based Result Classification, and separated Application/Automation/Environment Health figures). It never diagnoses, repairs, or modifies automation code: that is the optional Stage 5H self-healing-skill's exclusive responsibility. Use when running an approved automation package against an environment.
 inputs:
   - name: automation_suite
     type: file_path
@@ -34,13 +34,16 @@ outputs:
 dependencies:
   - automation-skill (upstream skill)
   - The test runner/framework CLI named in the Automation Summary's Execution Instructions
-  - "platform_core_data/knowledge_base/patterns/repair_patterns/, diagnosis_patterns/, execution_patterns/ (Platform Knowledge, consulted during the Automation Repair Loop)"
-  - "platform_core/tools/mcp/ (MCP tools layer — the `context7` server, permitted only inside the Automation Repair Loop per §7 and that README's §2.6)"
+  - "platform_core_data/knowledge_base/patterns/execution_patterns/ (Platform Knowledge — execution/runner patterns only; repair_patterns/ and diagnosis_patterns/ moved to self-healing-skill with the repair engine)"
+  - "self-healing-skill (OPTIONAL downstream skill, Stage 5H — human-invoked only, never auto-chained)"
 ---
 
-> **Pipeline position:** Stage 6 of 7 — consumes the Automation Suite, produces raw Execution Results.
-> **Traceability:** `Automation → Execution`.
+> **Pipeline position:** Stage `5A` of the **Automation Pipeline** — consumes the approved Automation Suite, produces raw Execution Results. Followed by the **optional** Stage `5H` (`self-healing-skill`, human-invoked only) and then Stage `6A` (Reporting).
+> **Traceability:** `Automation Script → Execution Result`.
+> **Branch:** Automation only. It never executes a manually-designed test case — that is Stage `4M`'s responsibility, in the other branch (`workflows_and_pipelines/pipeline/pipeline.md` §3.3).
 > **Revision history:** see `docs/CHANGELOG.md`.
+>
+> **Revision note (this revision, user-mandated):** this stage is now a **pure mechanical runner**. The Automation Repair Loop and its engines (previously §25–§29) moved to the new Stage `5H` [`self-healing-skill`](../self-healing-skill/SKILL.md) — see §25 for what remains here and why.
 
 > **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
 
@@ -50,7 +53,14 @@ dependencies:
 
 # 2. Purpose
 
-The Automation Execution skill runs the automated test suite produced by the Automation skill against a specified environment and produces a raw, unedited, structured record of what happened — pass/fail/skip status, durations, failure messages, and captured artifacts (screenshots, traces, logs). It does not interpret, summarize narratively, or draw conclusions from the results; that synthesis is the Reporting skill's job. Its only job is faithful execution and faithful recording.
+The Automation Execution skill runs the automated test suite produced by Stage `4A` against a specified environment and produces a raw, unedited, structured record of what happened — pass/fail/skip status, durations, failure messages, cause-based classification, and captured artifacts (screenshots, traces, logs). It does not interpret, summarize narratively, or draw conclusions; that synthesis is the Reporting skill's job. Its only job is **faithful execution, faithful classification, and faithful recording**.
+
+**It is deliberately a mechanical stage.** It has no checkpoint of its own because running an already-approved suite is deterministic rather than a judgment call — which is exactly why it must not also hold the authority to *change* that suite. Two things follow, and they are absolute:
+
+- **It never modifies automation code**, for any reason, including an obvious one-line fix.
+- **It never repairs, re-runs-after-fixing, or proposes a repair.** Diagnosing and fixing a failure belongs to the optional Stage `5H` (§25), on explicit human invocation only.
+
+**Its most consequential output is an honest cause classification** (§17), because that classification is what decides whether a failure is even eligible for healing later — and it is what protects a genuine application defect from ever being "repaired" into silence (§25.2).
 
 **As of v2, execution may not begin at all until an explicit Execution Mode is known.** This is a precondition alongside the existing environment-match check (§7 Rule 1) — this skill confirms both *where* it is about to run (target environment) and *how* (Headless/Headed/Debug) before invoking the test runner, and refuses to proceed on an assumed value for either.
 
@@ -93,7 +103,7 @@ The Automation Execution skill runs the automated test suite produced by the Aut
 | Project Context | Required | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — environment, credentials, safety constraints |
 | Execution Configuration | Required, composite | Not a single file — the set of run-time execution parameters this skill must resolve before running anything: Execution Mode (§5.1), Concurrency Mode (§5.3), Retry Policy (§5.4), and Resume state (§5.5). Named explicitly here so none of these is a silent default — each has its own determination rule below. |
 | Execution Mode | Required, but not necessarily pre-supplied — see §5.1 | Sourced from the approved Run Configuration if it defines one; otherwise obtained by pausing and asking the user before execution begins. One of: `Headless`, `Headed`, `Debug` — no other value is valid. |
-| Framework Configuration | Required, not assumed | Not this skill's decision — sourced from the Automation Summary's Framework Used / Execution Instructions sections (§15). This skill never independently selects or assumes a framework; it only reads what Stage 5 already decided and justified. |
+| Framework Configuration | Required, not assumed | Not this skill's decision — sourced from the Automation Summary's Framework Used / Execution Instructions sections (§15). This skill never independently selects or assumes a framework; it only reads what Stage 4A already decided and justified. |
 | Environment Configuration | Required (embedded) | The named environment (§14) this run targets, drawn from the Project Context's Environment Constraints — not a hidden default, and never inferred from where this skill itself happens to be running. |
 | Execution scope / Execution Parameters | Optional | Which subset of the suite to run (defaults to the full suite); for a Selective Re-run or Failed Test Re-run (§13), this is the specific test case ID list or "previously Failed" filter. |
 | Evidence Locations | Required (fixed convention) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/` — not configurable per run; named explicitly here so it's a stated input/convention rather than an implicit assumption. |
@@ -117,7 +127,7 @@ Before invoking the test runner on any test, this skill must determine exactly o
 | **Headed** | A visible, on-screen UI for every test. |
 | **Debug** | Interactive step-through execution, for diagnosing a specific failure rather than a full unattended run. |
 
-**How each mode maps to an actual invocation is never assumed by this skill — it is read from the Automation Summary's Execution Instructions** (`.claude/skills/automation-skill/SKILL.md` §25, and see §15 below), which state the concrete command/flag for whichever framework Stage 5 selected. This table previously hardcoded Playwright-specific flags (`--headed`, `PWDEBUG=1`); that was itself a framework assumption this revision removes — see §15 for the corrected, framework-agnostic mechanism.
+**How each mode maps to an actual invocation is never assumed by this skill — it is read from the Automation Summary's Execution Instructions** (`.claude/skills/automation-skill/SKILL.md` §25, and see §15 below), which state the concrete command/flag for whichever framework Stage 4A selected. This table previously hardcoded Playwright-specific flags (`--headed`, `PWDEBUG=1`); that was itself a framework assumption this revision removes — see §15 for the corrected, framework-agnostic mechanism.
 
 ## 5.2 Recording the Mode
 
@@ -155,9 +165,9 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 
 - Shell/Bash (to install dependencies and invoke the test runner using whatever command the Automation Summary's Execution Instructions state, per §15 — never a hardcoded assumption of a specific framework's CLI)
 - File tools: Read (automation suite, Automation Summary, Project Context), Write (execution results, logs)
-- The test framework's own automation layer (browser, API client, mobile driver, or other, per whichever framework Stage 5 selected), as invoked by the test runner itself — not ad hoc manual interaction
+- The test framework's own automation layer (browser, API client, mobile driver, or other, per whichever framework Stage 4A selected), as invoked by the test runner itself — not ad hoc manual interaction
 - A direct means of asking the user a question and waiting for their answer, used strictly for the Execution Mode determination in §5.1 when the Run Configuration does not already define one — not used to ask about anything else within this skill's scope
-- **`context7` MCP server** (`resolve-library-id`, `query-docs`) — permitted **only inside the Automation Repair Loop (§25)**, and only when a failure's diagnosis turns on a framework/dependency API question ("is this locator API valid at the pinned version this suite runs against?"). Read this run's `StackDocumentationContext_{Framework}.md` (written by Stage 5, `automation-skill/SKILL.md` §34) **first** and reuse what it already records rather than re-querying; query only for the specific question that artifact does not answer, and record the answer in the Repair Summary (§25.1). Never used to change what a test asserts, and never a source of business logic — a repair needing new business logic is out of the loop's scope regardless of what documentation says. See `platform_core/tools/mcp/README.md` §2.6.
+- **`context7` MCP server** — **not used by this stage.** It was previously permitted here only inside the Automation Repair Loop; with the repair engine moved to Stage `5H` (§25), diagnosis-time documentation lookup moved with it. A pure runner has no question to ask a documentation server: it runs the suite as the Automation Summary's Execution Instructions specify, and records what happened.
 
 **Not permitted:** editing test scripts to change their logic or expected assertions, editing the PRD/Project Context/test cases, or running any test the Project Context has not authorized for the target environment.
 
@@ -181,29 +191,31 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 16. **Must verify Handoff completeness in both directions** (§21) before treating a run's Execution Results as finished — confirm the Automation Summary's Execution Instructions were actually followed, and confirm every input `.claude/skills/reporting-skill/SKILL.md` §4 declares it needs is present in the Execution Results.
 17. **Must record execution Metrics** (§22) — duration, pass/fail/skip rates, retry count, evidence count, flaky count, execution stability — as part of every Execution Results artifact.
 18. **Must execute deterministically and idempotently** (§23) — a rerun of the same suite against the same environment state must not itself be a source of divergent results; where non-determinism is observed, it is reported as `Flaky` (§17), never silently re-run until it passes.
-19. **Must trigger the Automation Repair Loop (§25) whenever at least one result classifies as `Automation Failure`** — inspect for repairability, present a Repair Summary per test case, and ask the human once (§25.2) before repairing or rerunning anything. Must never repair automatically without that question, and must never modify Discovery artifacts, Project Context, or approved Test Cases as part of a repair (§25.3).
-20. **Must always report Application Health, Automation Health, and Environment Health as three separate figures** (§25.6) — never a single merged "Failed" count that would let a genuine application defect hide behind (or be mistaken for) an automation-authoring gap, or vice versa.
+19. **Must never diagnose, repair, or modify automation code** (§25) — for any reason, including an obvious one-line fix. Where at least one result classifies as `Automation Failure`, it **states that Stage `5H` self-healing is available and stops** (§25.3); it never invokes it, never proposes a repair, and never reruns after a fix.
+20. **Must always report Application Health, Automation Health, and Environment Health as three separate figures** (§25.2) — never a single merged "Failed" count that would let a genuine application defect hide behind (or be mistaken for) an automation-authoring gap, or vice versa.
+20a. **Must classify `Inconclusive` rather than guess `Automation Failure`** when the evidence does not clearly separate an automation fault from an application fault (§25.2) — a misclassification here is what could later expose a genuine application defect to a repair pass.
+20b. **Must capture failure evidence rich enough to reason from** (§16, §25.1) — an exit code alone forces a Stage `5H` diagnosis pass that adequate evidence would have made unnecessary.
 
 # 9. Expected Artifacts
 
 | Artifact | Path | Template |
 |---|---|---|
-| Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` | [`stage_6_execution/ExecutionResults.md`](../../../platform_core/templates/stage_6_execution/ExecutionResults.md) |
+| Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` | [`stage_5a_execution/ExecutionResults.md`](../../../platform_core/templates/stage_5a_execution/ExecutionResults.md) |
 | Captured screenshots / traces / logs / HAR / framework reports | `platform_core_data/runs/{{RUN_FOLDER}}/execution/artifacts/` | — (evidence files, not a document) |
 
-**The Execution Results document structure is defined by its template**, not restated here. Render it by copying the template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. The template encodes §18's 10-section contract, §17's 12 result classifications, §22's Metrics, and §25.6's three separated health figures. `platform_core/templates/README.md` states the shared conventions.
+**The Execution Results document structure is defined by its template**, not restated here. Render it by copying the template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. The template encodes §18's 10-section contract, §17's 12 result classifications, §22's Metrics, and §25.2's three separated health figures. `platform_core/templates/README.md` states the shared conventions.
 
 No new artifact paths are introduced by this revision — the Standard Output Contract (§18) defines required sections *within* the existing `ExecutionResults.md` file, preserving the Reporting skill's existing single-file input expectation (`.claude/skills/reporting-skill/SKILL.md` §4) without requiring any change on that skill's side.
 
 The Execution Results document's run-identity header must include the Execution Mode, Concurrency Mode, and Retry Policy used, alongside the existing run-identity fields (Execution ID, environment, timestamps).
 
-**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12, added 2026-07-24):** the Automation Suite this skill executes (§4) is always this run's own **working copy** (`platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`), never the Workspace Automation Baseline directly — this skill never reads from or writes to the baseline location. Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this skill produces — Execution Results, evidence, and any Automation Repair Loop output (§25) — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
+**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12, added 2026-07-24):** the Automation Suite this skill executes (§4) is always this run's own **working copy** (`platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/`), never the Workspace Automation Baseline directly — this skill never reads from or writes to the baseline location. Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this skill produces — Execution Results and evidence — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
 
 # 10. Operational Contract
 
-Role: automation suite execution and result recording (Stage 6 of 7).
+Role: automation suite execution and result recording (Stage `5A` of the Automation Pipeline) — a pure mechanical runner.
 
-Execute the approved Automation Package against the target environment and record raw, structured Execution Results. Execution is fully specified above — §4 (Inputs), §5 (Execution Mode, incl. concurrency §5.3, retry policy §5.4, resume §5.5), §6 (Outputs), §8 (Execution Rules), §9 (Artifacts), §13 (Execution Strategy by Run Scope and Run Type), §14 (Environment Awareness), §15 (Framework-Agnostic Execution), §16 (Evidence Collection), §17 (Result Classification), §18 (Standard Output Contract), §19–§20 (Stop Conditions and Recovery), §21 (Handoff Contracts), §22 (Metrics), §23 (Execution Reliability), and the Automation Repair Loop in §25–§29. This section adds no rules of its own; the contract is stated once above rather than restated here.
+Execute the approved Automation Package against the target environment and record raw, structured Execution Results. Execution is fully specified above — §4 (Inputs), §5 (Execution Mode, incl. concurrency §5.3, retry policy §5.4, resume §5.5), §6 (Outputs), §8 (Execution Rules), §9 (Artifacts), §13 (Execution Strategy by Run Scope and Run Type), §14 (Environment Awareness), §15 (Framework-Agnostic Execution), §16 (Evidence Collection), §17 (Result Classification), §18 (Standard Output Contract), §19–§20 (Stop Conditions and Recovery), §21 (Handoff Contracts), §22 (Metrics), §23 (Execution Reliability), and §25 (Failure Handling — classify and hand off, never repair). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 11. Example Execution
 
@@ -224,7 +236,7 @@ Hypothetical result: this skill confirms the target environment matches the Proj
 
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this skill specifically: its single responsibility is faithful execution and faithful recording — never interpretation, and never silently deciding *how* to run on the user's behalf when that decision (Execution Mode) was left unspecified. Its output, the Execution Results, becomes the Reporting skill's sole primary input in the final stage.
+For this skill specifically: its single responsibility is faithful execution, faithful classification, and faithful recording — never interpretation, never repair (§25), and never silently deciding *how* to run on the user's behalf when that decision (Execution Mode) was left unspecified. Its output, the Execution Results, is the Reporting skill's (`6A`) primary input, and — only where a human explicitly invokes it — Stage `5H`'s input as well.
 
 # 13. Execution Strategy by Run Scope and Run Type
 
@@ -341,8 +353,8 @@ The Execution Results artifact (§9 — same file, no new artifact path) must co
 | 3 | **Execution Results** | Per-test detail: Test Case ID, Automation Script ID, Status (§17), Execution Time, Evidence Inventory references, failure detail where applicable |
 | 4 | **Evidence Inventory** | The consolidated list per §16 — every evidence type captured, per test, with paths, and every gap with a reason |
 | 5 | **Execution Statistics** | The Metrics from §22 — duration, pass/fail/skip rates, retry count, evidence count, flaky count, stability |
-| 6 | **Health Summary (§25.6)** | **Application Health, Automation Health, and Environment Health reported as three separate figures — never one merged "Failed" counter.** `Inconclusive`/`Flaky` reported as their own line, folded into neither. |
-| 7 | **Automation Repair Loop Outcome (§25, when triggered)** | The Repair Summary (§25.1), the human's answer (§25.2), and — if repair was approved — the Before/After comparison (§25.4): Fixed (`Automation Repaired`), Remaining failures, New failures, Root cause, Confidence. Omitted entirely (not left as an empty section) when no `Automation Failure` occurred this run. |
+| 6 | **Health Summary (§25.2)** | **Application Health, Automation Health, and Environment Health reported as three separate figures — never one merged "Failed" counter.** `Inconclusive`/`Flaky` reported as their own line, folded into neither. |
+| 7 | **Self-Healing Availability (§25.3, when any `Automation Failure` occurred)** | The count of `Automation Failure` results and the literal `/self-healing-skill` commands available — a statement of availability only. **This stage never records a repair outcome**: any repair, and its Before/After comparison, is Stage `5H`'s artifact in `self_healing/`. Omitted entirely (not left empty) when no `Automation Failure` occurred. |
 | 8 | **Known Limitations** | Anything this execution could not fully verify (e.g., a test marked Blocked, a Skipped mutating action) and why |
 | 9 | **Execution Recommendations** | The corrective actions recommended per §20 for any blocked/failed item — retry, resume, switch mode, validate environment, re-run subset, or flag for Automation regeneration |
 | 10 | **Inputs for Reporting skill** | The explicit handoff package per §21 — confirmation that every input `.claude/skills/reporting-skill/SKILL.md` §4 declares it needs is present |
@@ -353,7 +365,7 @@ This skill recognizes the following named conditions. Recognizing one is never, 
 
 | Condition | Scope | Required Action |
 |---|---|---|
-| **Missing Automation Package** | Global | Halt — there is nothing to execute. Report the gap; recommend confirming Stage 5 completed and its output is `Approved`. |
+| **Missing Automation Package** | Global | Halt — there is nothing to execute. Report the gap; recommend confirming Stage 4A completed and its output is `Approved`. |
 | **Missing Framework** (the Automation Summary doesn't state one, and none can be inferred) | Global | Halt — per §15, this skill never selects a framework itself. Recommend re-running the Automation skill to produce a complete Automation Summary. |
 | **Missing Execution Configuration** (no Execution Mode, and the Run Configuration provides no way to obtain one) | Global | Per existing Rule 3: halt and ask the user directly — never default. |
 | **Invalid Run Configuration** (e.g., an Execution Mode value other than Headless/Headed/Debug, or a Retry Policy that doesn't parse) | Global | Halt and report the specific invalid value — never silently coerce it to a nearest-guess valid value. |
@@ -386,7 +398,7 @@ Like the Test Design and Automation skills (`.claude/skills/test-design-skill/SK
 | Automation Summary (Framework Used, Execution Instructions, Coverage, Known Limitations) | Automation Summary (§16 #7, §25) |
 | Project Context | Unchanged pass-through from Stage 1 |
 
-**Confirmed Contract Mismatch (identified during the Automation skill's own v3 review, closed from this side):** this skill's §4 previously named the required input "Automation Coverage Summary" at path `AutomationSummary.md` — a filename that Automation skill v2's actual six-artifact split never produced (verified against the real `platform_core_data/runs/RUN-20260706-002/Automation/` output). Automation skill v3 closed this by adding an actual `AutomationSummary` artifact at exactly that path (`.claude/skills/automation-skill/SKILL.md` §16 #7, §25). This skill's §4 row is now renamed "Automation Summary" and its description corrected to match what that artifact actually contains — the mismatch is resolved on both ends as of this pair of revisions. `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 5's artifact path list still references the same pre-v2 filename in its own prose; that file is out of scope for both this revision and the Automation skill's ("do not modify the pipeline"), so it remains a known, harmless label lag (the actual filename it names now happens to be correct again, by coincidence of the v3 fix, even though the document itself was never updated).
+**Confirmed Contract Mismatch (identified during the Automation skill's own v3 review, closed from this side):** this skill's §4 previously named the required input "Automation Coverage Summary" at path `AutomationSummary.md` — a filename that Automation skill v2's actual six-artifact split never produced (verified against the real `platform_core_data/runs/RUN-20260706-002/Automation/` output). Automation skill v3 closed this by adding an actual `AutomationSummary` artifact at exactly that path (`.claude/skills/automation-skill/SKILL.md` §16 #7, §25). This skill's §4 row is now renamed "Automation Summary" and its description corrected to match what that artifact actually contains — the mismatch is resolved on both ends as of this pair of revisions. `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 4A's artifact path list still references the same pre-v2 filename in its own prose; that file is out of scope for both this revision and the Automation skill's ("do not modify the pipeline"), so it remains a known, harmless label lag (the actual filename it names now happens to be correct again, by coincidence of the v3 fix, even though the document itself was never updated).
 
 ## 21.2 Automation Execution skill → Reporting skill
 
@@ -449,291 +461,75 @@ The abstractions this revision relies on — framework-agnostic invocation (§15
 
 **What would need to change, explicitly, and what would not:** supporting any of the above requires naming a new framework (§15) and/or a new Evidence Inventory row (§16) — it requires **no change** to the Result Classification's cause-based structure (§17), the Standard Output Contract (§18), the Stop Conditions/Recovery Strategy (§19–§20), or either Handoff Contract (§21). Those are already defined in terms of test outcomes and evidence, not in terms of "a browser."
 
-# 25. Automation Repair Loop
+# 25. Failure Handling — classify and hand off, never repair
 
-**Every execution that produces at least one `Automation Failure` (§17) triggers this loop before the run is considered finished** — it is not an optional follow-up, and it is not silent auto-repair either. Only `Automation Failure` triggers it; `Application Failure`, `Environment Failure`, `Infrastructure Failure`, `Configuration Failure`, and `Inconclusive` do not (an `Inconclusive` result is presented to the human separately, alongside the Repair Summary, but is never folded into an automatic repair proposal — its cause isn't yet known to be automation-side).
+**This stage does not diagnose, repair, or modify automation code.** Its responsibility ends at an accurate, well-evidenced classification of every result (§17) and the three separated health figures (§25.2).
 
-## 25.1 Step 1 — Inspect, consult, and propose (no code change yet)
+> **Revision note (this revision, user-mandated):** the **Automation Repair Loop, Repair Strategy Decision Engine, Repair Confidence Engine, and Automation Repair Knowledge Base** — previously §25–§28 of this document, plus §29's explainability rules — have **moved out of this skill entirely** into the new Stage `5H` [`self-healing-skill`](../self-healing-skill/SKILL.md). This stage reverted to a **pure mechanical runner**.
+>
+> **Why the split.** Repair reasoning and suite execution are different jobs with different risk profiles: running an approved suite is deterministic and needs no gate, while modifying already-approved code is a judgment call that needs one (`pipeline.md` §5.6). Keeping both in one skill meant every execution carried the authority to rewrite the code it was executing. There is now exactly **one** repair engine in the platform, so no boundary needs policing between a "tactical" and a "strategic" repairer.
 
-For every `Automation Failure`, inspect the failure evidence (Evidence Inventory, §16) and:
+## 25.1 What this stage does with a failure
 
-1. **Consult the Automation Repair Knowledge Base first** (§28) — if a confirmed rule matches this failure pattern, it is presented as a candidate strategy (citing its Rule ID) rather than re-derived from scratch.
-2. **Run the Repair Strategy Decision Engine** (§26) — identify every reasonable repair strategy (not just one), including any KB-sourced candidate, before any code changes.
-3. **Produce a Repair Confidence Report** (§27) for the strategy ultimately selected (§26.2) — this replaces the simpler `Reason / Proposed Fix / Confidence (High/Medium/Low)` format used the first time this loop ran; every confidence value is a percentage derived from cited evidence, never invented.
+1. **Classify it by cause** (§17) — Application / Automation / Environment / Infrastructure / Configuration Failure, or Inconclusive / Flaky.
+2. **Capture its evidence** (§16) — screenshot, trace, log, HAR, framework report, as applicable. **The quality of this evidence directly determines whether Stage `5H` can reason about the failure at all**: a failure captured with only an exit code forces a diagnosis pass that richer evidence would have made unnecessary.
+3. **Report it** in the Execution Results, with its cause and evidence.
+4. **Stop there.** No code change, no rerun-after-fix, no repair proposal, no strategy enumeration.
 
-A pattern with no repairable strategy at all, or where every candidate strategy carries low confidence, is still reported in full (never silently dropped) — low confidence is disclosed, not hidden or omitted.
+## 25.2 Application / Automation / Environment Health — always separated
 
-## 25.2 Step 2 — Ask once (Human Decision — not an Engineering Decision, per `workflows_and_pipelines/pipeline/pipeline.md` §5.5)
+The Execution Results never report one merged "Failed" count. Three distinct headline figures:
 
-After presenting every Repair Summary entry together, ask exactly once:
+- **Application Health** — computed only from `Application Failure` classifications plus genuine `Passed` results. **This is the only figure that speaks to whether the application under test actually works.**
+- **Automation Health** — `Automation Failure` counted separately. This speaks to the quality/maintenance state of the suite, not the application.
+- **Environment Health** — `Environment` / `Infrastructure` / `Configuration Failure` counted separately. This speaks to the target environment and execution infrastructure, not either of the above.
 
-```
-Repair automation and rerun ONLY affected tests?
-1. Repair and rerun affected tests
-2. Mark as Known Automation Issue
-3. Skip repair
-```
+`Inconclusive` and `Flaky` are reported on their own line, never folded into any of the three — folding them either way would misrepresent which system is at fault.
 
-This is asked once for the whole batch of Automation Failures from this execution, not once per test case, and this skill does not proceed with any repair before this question is answered — even though the individual fixes (a missing wait, a corrected assertion string) would ordinarily be exactly the kind of Engineering Decision `workflows_and_pipelines/pipeline/pipeline.md` §5.5 says to make automatically. The distinction: those rules govern Test Design–time authoring; this gate governs *re-executing against a real (often shared) environment*, which is why it stays a Human Decision.
+**This separation is what makes Stage `5H` safe.** Healing is restricted to `Automation Failure` (`pipeline.md` §5.6.1), so an honest classification here is the mechanism that stops a genuine application defect from ever being "repaired" into silence. **A misclassified `Application Failure` is therefore the most consequential error this stage can make** — when the evidence does not clearly distinguish an automation fault from an application fault, classify it `Inconclusive` rather than guessing `Automation Failure`.
 
-## 25.3 Step 3 — Repair scope (if approved)
+## 25.3 Handing off to Stage `5H` (optional, human-invoked only)
 
-If the human chooses "Repair and rerun affected tests":
-
-1. **Modify only the generated Automation Package** — the specific files responsible for the diagnosed issue (Page Object methods, locators, wait logic, assertion values).
-2. **Never modify Discovery artifacts** (Timeline, Coverage Summary, QA Assessment Report, Findings) — a repair may *reveal* something Discovery should eventually re-verify, but that is a recommendation surfaced in the comparison report (§25.4), never an in-place edit here.
-3. **Never modify Project Context or any other project documentation.**
-4. **Never modify approved Manual Test Cases** unless the human explicitly, separately requests it — a corrected assertion value inside the *automation* is not the same thing as amending the Test Case document itself; where they now disagree, that disagreement is disclosed in the comparison report, not silently reconciled by editing the Test Case.
-5. **Rerun only the tests that were repaired** — never the full suite, unless every test in the suite happened to need repair.
-
-## 25.4 Step 4 — Before/After comparison report
-
-After the targeted rerun, produce a comparison covering:
-
-- **Fixed tests** — repaired and now passing; labeled `Automation Repaired`, never `Passed` outright, so a reviewer can see this result required a fix, not a clean first attempt.
-- **Remaining failures** — repaired but still failing (the fix didn't resolve it, or surfaced a different issue).
-- **New failures** — anything that passed before the repair but fails after it (a regression introduced by the fix itself).
-- **Root cause** and **Confidence**, carried forward per test case from §25.1, updated with the actual rerun outcome.
-
-For every test in **Fixed**, write or update an Automation Repair Knowledge Base rule (§28) — this is the *only* point at which the KB is ever written. Nothing in **Remaining failures** or **New failures** is written to the KB, per §28's "confirmed-only" rule — a repair that didn't work is not knowledge, no matter how plausible it looked in the Repair Confidence Report.
-
-## 25.5 If declined or marked Known Issue
-
-- **"Mark as Known Automation Issue"**: the test's classification stays `Automation Failure`, but it is additionally tagged `Known Automation Issue` in the Execution Results, with the Repair Summary's diagnosis attached — so a future execution doesn't re-diagnose the same thing from scratch.
-- **"Skip repair"**: no code change, no rerun; the original classification and evidence stand as the final result for this execution.
-
-## 25.6 Application Health / Automation Health / Environment Health — always separated
-
-The final Execution Results (§18) never reports one merged "Failed" count. It reports three distinct headline figures:
-
-- **Application Health** — pass/fail counted only from `Application Failure` classifications (plus genuine Passed results) — this is the only figure that speaks to whether the application under test is actually working.
-- **Automation Health** — `Automation Failure` (and, after this loop, `Automation Repaired`) counted separately — this speaks to the quality/maintenance state of the generated suite, not the application.
-- **Environment Health** — `Environment Failure`/`Infrastructure Failure`/`Configuration Failure` counted separately — this speaks to the target environment/execution infrastructure, not either of the above.
-
-`Inconclusive` and `Flaky` are reported as their own line, not folded into any of the three health figures, since folding them in either direction would misrepresent which system is actually at fault.
-
-# 26. Repair Strategy Decision Engine
-
-**Before any code is modified, identify every reasonable repair strategy for the failure — never just one.** This runs as part of §25.1, for every `Automation Failure` (and any `Inconclusive` the human has chosen to include in the repair pass). **Diagnosis and Repair are never the same decision — see §26.0 first.**
-
-## 26.0 Root Cause Confidence gate — Diagnosis vs. Repair
-
-Before enumerating strategies, classify the current Root Cause Confidence for this specific failure — **High / Medium / Low** — and always state which state it's in, so the human always knows whether this skill is currently trying to *understand* the problem or *fix* it:
-
-| Root Cause Confidence | Meaning | Required Action |
-|---|---|---|
-| **High** | The evidence directly and unambiguously explains the failure — no material open question about *why* it happened. | Proceed straight to §26.1, Repair Strategies only. |
-| **Medium** | Part of the picture is confirmed (e.g., a bug in the automation's own retry logic), but a real open question remains about the underlying cause — a repair attempted now would be a guess with unclear odds. | Recommend a lightweight Diagnosis Strategy (§26.1) *before* proposing any Repair Strategy — do not modify automation yet on the strength of a Medium-confidence guess. |
-| **Low** | The evidence doesn't meaningfully explain the failure. | Recommend Diagnosis only. **Do not propose or apply a repair.** |
-
-**Diagnosis Strategies and Repair Strategies are never ranked or compared against each other in the same list** — they answer different questions (understand vs. fix) and use different criteria (a diagnosis step has no "regression risk" or "fixes the test" outcome; a repair does). Present them as two clearly separated categories:
-
-- **Diagnosis Strategies** (evidence-gathering, no code/behavior change): collect a DOM snapshot, capture network log, capture console errors, capture page source, record additional evidence.
-- **Repair Strategies** (an actual code change, per §26.1's format): update a locator, add synchronization, update an assertion, replace a brittle selector, refactor Page Object logic.
-
-**If a selected Diagnosis Strategy's evidence resolves the open question, this skill automatically returns to Repair Strategy selection (§26.1) using that new evidence** — this is not a second, separate human ask; the loop-back itself is expected and automatic once real evidence exists, only the *resulting* repair proposal goes through the normal §26.2/§25.2 gates again.
-
-## 26.1 Enumerate strategies
-
-For each failure, list 2–4 named strategy options, each with:
+Where at least one `Automation Failure` exists, this stage **states that self-healing is available** and stops. It never invokes it (`pipeline.md` §3.6):
 
 ```
-Option {A/B/C}
-{Strategy name}
-
-Pros
-{brief}
-
-Risk
-{Low | Medium | High} — regression risk this specific strategy introduces
-
-Confidence
-{percentage — derived per §27.2, never invented}
+  {N} Automation Failures recorded. Self-healing is available but never automatic:
+      /self-healing-skill            analyse every Automation Failure
+      /self-healing-skill {module}   scope the pass to named modules
 ```
 
-If §28's Knowledge Base has a confirmed rule matching this exact failure pattern, that rule's approach is always included as one of the options, explicitly citing its Rule ID and confirmation count — it does not automatically win by default, but it does not get silently omitted either.
-
-## 26.2 Ask once (Human Decision)
-
-After every failure's options are listed, ask exactly once, for the whole batch:
-
-```
-Which repair strategy should be used?
-1. Highest confidence
-2. Lowest regression risk
-3. Fastest execution
-4. Custom
-5. Let platform recommend
-```
-
-- Options 1–3 apply mechanically per failure (whichever listed option scores best on that axis) — no further back-and-forth per test case.
-- **Custom**: the human specifies which option to use, potentially differing per failure; this skill asks follow-up only for the specific failures where the human's custom instruction is ambiguous, never for every failure by default.
-- **Let platform recommend**: this skill picks per failure and states, in one line, why (e.g., "Option A — highest confidence and lowest risk, no tradeoff to weigh").
-
-This question may be asked in the same exchange as §25.2's repair-and-rerun gate (a single consolidated ask, per the established pattern at `.claude/skills/automation-skill/SKILL.md` §33.1) — but it is a distinct decision, never inferred from the other.
-
-# 27. Repair Confidence Engine
-
-**Every proposed repair, once a strategy is selected (§26.2), is presented as a structured Repair Confidence Report — never a bare "Fixed" or "Probably fixed."**
-
-## 27.1 Report format
-
-```
-Repair Confidence Report
-
-Test Case:
-{Test Case ID}
-
-Classification:
-{Automation Failure | Inconclusive (pre-repair)}
-
-Root Cause:
-{one-line, evidence-backed}
-
-Proposed Repair:
-{one-line description of the code change}
-
-Confidence:
-{percentage}
-
-Reasoning:
-- {evidence-based factor}
-- {evidence-based factor}
-- {...}
-
-Regression Risk:
-{Low | Medium | High} — brief reason
-
-Evidence:
-{before-state reference} / {after-state reference, once rerun; "pending rerun" before that}
-```
-
-## 27.2 Deriving Confidence — never invented
-
-Confidence is a percentage built additively from **only** these observed-evidence factors — never a round number chosen because it "feels right," and every contributing factor must be named in Reasoning:
-
-| Factor | Contribution | Requires |
-|---|---|---|
-| Root cause directly observed (log timestamp, stack trace, screenshot) rather than guessed | Base 40–60% | The specific evidence artifact is cited |
-| Repair directly targets that observed root cause (not an adjacent/speculative cause) | +10–15% | The causal link is stated, not assumed |
-| Failure reproduced more than once with the same signature | +10% | Cite the occurrences (e.g., "same failure reproduced twice") |
-| A confirmed Knowledge Base rule (§28) matches this exact pattern | +15%, scaling with the rule's confirmation count | Cite the Rule ID and confirmation count |
-| The fix has been statically verified (compiles / lints clean) before rerun | +5% | Cite the check performed |
-| Novel pattern, no prior confirmation anywhere | Capped at 60% regardless of other factors | — |
-
-A report is never issued above 95% before the repair is actually rerun and confirmed — the pre-rerun number is a *proposed* confidence, and the Evidence field distinguishes it from the *confirmed* outcome once the rerun completes (§25.4).
-
-# 28. Automation Repair Knowledge Base
-
-**A two-layer, cross-run store of repair patterns, per the Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10) — distinct from `.claude/skills/automation-skill/SKILL.md` §11's "Automation Knowledge Base," which is reusable *code assets* within one project's package.** This one is reusable *repair reasoning*: what failure pattern, what fix worked, under what conditions.
-
-- **This run's record (always written):** the Repair Summary in `platform_core_data/runs/{{RUN_FOLDER}}/execution/` — the full per-execution narrative of what failed, what was tried, and what worked.
-- **Platform Knowledge (read always; written only via Promotion):** `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-{NNN}.md` and `platform_core_data/knowledge_base/patterns/reasoning/REASON-{NNN}.md` — generalized, cross-project repair/reasoning patterns.
-
-> **Revision (2026-07-27, user-mandated):** there is no longer a project-scoped `knowledge_base/repair/` layer. It was removed along with `execution/`, `findings/`, and `ui/` — all four had stood empty since the platform's inception, and a write target that is never read is a place for knowledge to go and be forgotten. A confirmed repair is now recorded **once**, in the producing run's Repair Summary, and carried across runs only by passing the §28.2 Promotion gate into `patterns/`. The trade-off is deliberate and worth stating plainly: an unpromoted repair is no longer discoverable from a later run, so **Promotion is now the only mechanism for cross-run repair memory** — §28.2's question matters more than it did when a project-scoped fallback existed.
-
-Every read consults Platform Knowledge (`pipeline.md` §10.2) plus the Repair Summaries of prior runs. Writes never touch `platform_core_data/knowledge_base/patterns/` directly, per §10.5's Promotion Workflow below.
-
-## 28.1 Write rule — confirmed repairs only
-
-**A rule is written or updated at exactly one point: §25.4, for a test in the Fixed column.** Never for a proposed-but-unexecuted repair, never for a repair attempt that remained in Remaining Failures or introduced a New Failure. "Do not learn from failed repairs" is absolute — a repair that looked high-confidence and still didn't work contributes nothing to the Knowledge Base, however plausible the original Reasoning was.
-
-The confirmed repair is recorded in this run's Repair Summary (schema, §28.2). Once recorded, evaluate whether it qualifies for Promotion to Platform Knowledge (§28.2) — a separate, explicit step, never bundled silently into the same write.
-
-## 28.2 Recording a confirmed repair, and Promotion to Platform Knowledge
-
-Each confirmed repair is recorded in this run's Repair Summary with enough detail to stand alone:
-
-```
-Implements Platform Pattern:
-{Platform Pattern ID, e.g. REPAIR-{NNN} or REASON-{NNN} — or "none yet" if this is a
-new, not-yet-generalized pattern}
-
-Execution Context:
-{Execution ID(s), suite, Test Case ID(s)}
-
-What Happened:
-{the failure pattern addressed and the fix that worked, in this project's own terms}
-```
-
-Then propose promotion (per `workflows_and_pipelines/pipeline/pipeline.md` §10.5) when the pattern is genuinely reusable beyond this one application (e.g., a synchronization strategy, a locator-recovery technique, a framework-level hazard) — never for something tied to this application's own specific behavior. Ask exactly once, per §10.5's exact question.
-
-**Because the project-scoped layer is gone, a declined promotion means the repair lives only in this run's Repair Summary.** That is the intended behavior, not an oversight — but it makes the judgment call real: a genuinely reusable pattern left unpromoted will be rediscovered the hard way, by failing again in a later run. If approved:
-
-```
-ID:
-REPAIR-{NNN}  (or REASON-{NNN} for a reasoning/process pattern rather than a code-level repair)
-
-Problem:
-{the failure pattern, generalized beyond the one project/test case}
-
-Strategy:
-{the fix that worked, generalized}
-
-Applicable Conditions:
-{what kind of test/flow/framework this generalizes to}
-
-Confidence:
-Confirmed by {N} execution(s), across {M} project(s)
-
-Confirmed In:
-{the run folder(s) and Execution ID(s) whose Repair Summary backs this,
-e.g. "run-004__2026-07-27_14-30-05__Smoke__Login / EXEC-002"}
-```
-
-A later run independently confirming the same Platform pattern increments its confirmation count and appends its own run reference as an additional "Confirmed In" entry — it does not create a duplicate Platform document, and the detailed per-execution narrative stays in that run's Repair Summary, never copied into the Platform document (avoiding duplication across layers).
-
-## 28.3 Read rule — consult before creating something new
-
-- **Automation Execution skill (§25.1)**: before proposing a new repair strategy, check Platform Knowledge (`platform_core_data/knowledge_base/patterns/repair_patterns/`, `platform_core_data/knowledge_base/patterns/reasoning/`) for a matching rule, then this project's prior-run Repair Summaries under `platform_core_data/runs/*/execution/`; if found, include it as a candidate option (§26.1), explicitly cited by ID or by run reference.
-- **Automation skill**: before generating any new automation (`.claude/skills/automation-skill/SKILL.md` §5, §11), consult Platform Knowledge for patterns relevant to the flows being automated (e.g., a Login suite consults any rule tagged "Authentication flows") and applies a matching rule's approach proactively, rather than waiting to discover the same failure via execution again.
-
-## 28.4 Explainability
-
-Every recorded repair and every Platform rule must remain independently reviewable — a human reading one entry, with no other context, can tell what problem it solves, what fix worked, where it generalizes, and which real executions back it. A rule that can't be explained this plainly is not ready to be written. A Platform-layer rule must additionally be reviewable *without* opening the run whose Repair Summary it came from — its Problem/Strategy/Applicable Conditions must stand on their own, generalized, with the run cited only as supporting evidence, not as required context.
-
-# 29. Explainability & Platform Rules
-
-The platform must always be able to answer, for any repair, past or present:
-
-- **Why was this repair chosen?** — the Repair Confidence Report's Root Cause + Reasoning (§27.1).
-- **Which previous executions support it?** — the Platform pattern's Confirmed In entries (§28.2), if one was reused, or "none — first occurrence" if not.
-- **What confidence does it have?** — the Repair Confidence Report's Confidence field, always a percentage traceable to §27.2's factors.
-- **Which rule was reused?** — the cited Rule ID (§26.1), or "none — new pattern" if this repair created new knowledge rather than reusing it.
-
-Hard constraints, restated explicitly (all already established individually across §25/§28, consolidated here for a single point of reference):
-
-1. Never hide a failure — every classification, repaired or not, is reported (§18, §25.6).
-2. Never silently rewrite a Test Case — §25.3 rule 4.
-3. Never silently overwrite a Reference Automation Project — `.claude/skills/automation-skill/SKILL.md` §32.2.
-4. Never update Test Cases automatically — §25.3 rule 4 (only on a separate, explicit request).
-5. Never update Discovery artifacts automatically — §25.3 rule 2.
-6. Never learn from a failed repair — §28.1.
-7. Every learning artifact (Knowledge Base rule) must remain explainable and reviewable — §28.4.
+**Naming the option is not invoking it, and is not a recommendation to invoke it.** Many failing runs should not be healed — the right response is often to fix the application, fix the environment, or accept the finding.
 
 # 30. Direct Invocation
 
 This skill is independently invocable — `/automation-execution-skill`, optionally with a run-scoped instruction (e.g. `/automation-execution-skill run the Login spec only, headed`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
 
-- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may set the Execution Scope (a subset, a failed-test re-run) and may supply the Execution Mode explicitly — supplying it in the invocation is a valid answer to Rule 3's question, and is recorded in the run-identity header exactly as a Run Configuration value would be. An instruction never authorizes assuming a *default* mode when none is given anywhere (Rule 3's halt stands), proceeding against an environment that mismatches the Project Context (Rule 1), running destructive actions the Project Context does not authorize, executing against a Workspace Automation Baseline instead of this run's working copy (§22), or entering the Automation Repair Loop without §25.2's human answer.
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may set the Execution Scope (a subset, a failed-test re-run) and may supply the Execution Mode explicitly — supplying it in the invocation is a valid answer to Rule 3's question, and is recorded in the run-identity header exactly as a Run Configuration value would be. An instruction never authorizes assuming a *default* mode when none is given anywhere (Rule 3's halt stands), proceeding against an environment that mismatches the Project Context (Rule 1), running destructive actions the Project Context does not authorize, executing against a Workspace Automation Baseline instead of this run's working copy (§22), or repairing anything at all — repair is Stage `5H`'s exclusive responsibility (§25), and no instruction to this skill authorizes it. `/automation-execution-skill repair ...` is not a valid invocation; the correct command is `/self-healing-skill`.
 - **Upstream `Pending Automation Approval` → request approval, then recommend** (§5.3.1 #4). This is the strictest gate in the pipeline (§5.2): approving it authorizes code to run against a real environment. A direct invocation never substitutes for it. Report it and offer both paths (approve → `/automation-execution-skill`, or revise → `/automation-skill <feedback>`).
 - **Missing upstream → run degraded** (§5.3.1 #5):
   - *No Automation Package:* nothing to execute — existing §19 Stop Condition stands. This skill never generates what it would then run.
   - *No Automation Summary:* if the framework and execution command can be determined from the package itself, execute and mark the Results' framework basis as `Inferred from package — Requires Upstream Stage`. If the framework cannot be determined, the existing Missing Framework halt applies (§15 — this skill never selects one).
   - *No Project Context:* execute only if the target environment is supplied in the invocation; record the environment/safety basis as `Open Question — Requires Stage 1`, and treat every destructive action not authorized by default as prohibited.
+- **A repair request is redirected, never honoured** (§25). An instruction asking this skill to fix, repair, or "make the failing tests pass" is answered by naming the correct stage and command (`/self-healing-skill`) — this skill does not do it, and does not treat the request as authorization.
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 6 complete — Execution Results
+Stage 5A complete — Execution Results
   platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md
-  {P} Passed | {F} Failed | {S} Skipped | {B} Blocked
-  Application {a} / Automation {b} / Environment {c} failures
+  {P} Passed | {F} Failed | {S} Skipped | {B} Blocked | {I} Inconclusive | {X} Flaky
+
+  Application Health:   {a} failures  <- the only figure about the application itself
+  Automation Health:    {b} failures
+  Environment Health:   {c} failures
   Execution Mode: {mode}
+
+  No code was modified. This stage never repairs.
 
 Next step — either:
   1. Produce the final report:   /reporting-skill
-  2. Repair automation failures: /automation-execution-skill repair   (§25.2 gate applies)
-  3. Re-run failures only:       /automation-execution-skill re-run failed
+  2. Heal automation failures:   /self-healing-skill            (optional, Stage 5H)
+                                 /self-healing-skill {module}   (scoped to named modules)
+  3. Re-run as-is, no changes:   /automation-execution-skill re-run failed
 ```
 
 # 31. Resolving `{{RUN_FOLDER}}`

@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Stack Documentation Context (Stage 5 of 7)
+TEMPLATE — Stack Documentation Context (Stage 4A — Automation branch)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §34 (Stack Documentation Step), §34.4 (this
             structure), §34.5, §34.6; platform_core/tools/mcp/README.md §2.5

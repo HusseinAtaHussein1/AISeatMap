@@ -1,6 +1,6 @@
 ---
 name: project-context-skill
-description: Stage 1 of 7 in the Agentic AI Testing Platform pipeline. Reads an approved PRD and a run configuration, and distills them into the single Project Context artifact — the source of truth every downstream stage (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) consumes. Use when starting a new pipeline run, onboarding a new project, or a PRD/run configuration needs to be reconciled into an approved Project Context.
+description: Stage 1 (shared by both pipelines) in the Agentic AI Testing Platform. Reads an approved PRD and a run configuration, and distills them into the single Project Context artifact — the source of truth every downstream stage (Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) consumes. Use when starting a new pipeline run, onboarding a new project, or a PRD/run configuration needs to be reconciled into an approved Project Context.
 inputs:
   - name: prd
     type: file_path
@@ -20,7 +20,7 @@ dependencies:
   - none upstream (first stage in the pipeline)
 ---
 
-> **Pipeline position:** Stage 1 of 7 — first stage in the pipeline, consumes the PRD.
+> **Pipeline position:** Stage 1 — first stage, shared by both pipelines, consumes the PRD.
 > **Traceability:** `PRD → Project Context`. This is the only stage permitted to read the PRD directly.
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
@@ -94,7 +94,7 @@ A single **Project Context** document that becomes the sole source of truth for 
 
 # 9. Operational Contract
 
-Role: requirements-to-Project-Context distillation (Stage 1 of 7).
+Role: requirements-to-Project-Context distillation (Stage 1 — shared).
 
 Convert an approved PRD into a single, structured Project Context that every downstream stage uses as its scope-of-truth. Execution is fully specified above — §3 (what to extract), §4 (inputs and run-configuration keys), §7 (rules and halt conditions), §8 (output structure and path). This section adds no rules of its own; the contract is stated once above rather than restated here.
 

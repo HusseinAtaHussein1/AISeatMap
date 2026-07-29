@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Automation Coverage Report (Stage 5 of 7)
+TEMPLATE — Automation Coverage Report (Stage 4A — Automation branch)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §16 Outputs #5, §13 (the four decisions), §19
 
@@ -88,6 +88,6 @@ This is realized coverage. The Automation Plan §9's figure was an estimate; §4
 | Stage | Count | Dropped Here | Why |
 |---|---|---|---|
 | Designed (Stage 3) | {{DESIGNED_COUNT}} | — | — |
-| Manually executed (Stage 4) | {{EXECUTED_COUNT}} | {{DROPPED_EXECUTION}} | {{WHY_EXECUTION}} |
-| Automation candidates (Stage 4 §9.1) | {{CANDIDATE_COUNT}} | {{DROPPED_CANDIDATE}} | {{WHY_CANDIDATE}} |
+| Manually executed (Stage 4M — other branch, informational only) | {{EXECUTED_COUNT}} | {{DROPPED_EXECUTION}} | {{WHY_EXECUTION}} |
+| Advisory automation-candidate hint (Stage 3 Coverage Report) | {{CANDIDATE_COUNT}} | {{DROPPED_CANDIDATE}} | {{WHY_CANDIDATE}} |
 | Automated (this stage) | {{AUTOMATED_COUNT}} | {{DROPPED_AUTOMATION}} | {{WHY_AUTOMATION}} |

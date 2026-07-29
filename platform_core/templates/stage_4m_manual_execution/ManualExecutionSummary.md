@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Manual Execution Summary (Stage 4 of 7)
+TEMPLATE — Manual Execution Summary (Stage 4M — Manual branch, terminal)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md
 Authority:  .claude/skills/manual-execution-skill/SKILL.md §10 (Standard Output Contract — the
             Summary-side sections #2, #5, #6, #7, #8), §13
@@ -30,48 +30,31 @@ per-test detail here.
 
 **Headline figures:** {{PASSED_COUNT}} Passed · {{FAILED_COUNT}} Failed · {{BLOCKED_COUNT}} Blocked · {{SKIPPED_COUNT}} Skipped · {{NOT_EXECUTED_COUNT}} Not Executed · {{INCONCLUSIVE_COUNT}} Inconclusive
 
-**Automation Candidate exclusions:** {{EXCLUDED_COUNT}} of {{TOTAL_COUNT}} executed cases excluded.
+## 5. Delivery Artifacts
 
-| Test Case ID | Exclusion Reason (§9.1 criterion not met) |
-|---|---|
-| {{TEST_CASE_ID}} | {{EXCLUSION_REASON}} |
+<!-- §10 #5 / §9 — this stage is TERMINAL (pipeline.md §3.3): it self-reports rather than
+     handing off. Confirm all three renderings exist and AGREE on every test case's status.
 
-## 5. Automation Candidates
+     The Automation Candidate Package and its qualifying-criteria engine were REMOVED from the
+     platform in this revision: Stage 4A now takes its scope directly from the approved Stage 3
+     test cases and grounds correctness in its own live selector verification. This stage
+     produces no candidate list, and no Automation-branch artifact of any kind. -->
 
-<!-- §10 #5 — the qualifying criteria APPLIED (§9.1) and the resulting list, cross-referenced to the
-     standalone AutomationCandidatePackage.md.
-
-     Inclusion is ALWAYS evidence-based on an actual execution outcome (§9.2) — never inherited from
-     Test Design's pre-execution advisory hint, which is only a prioritization signal for execution
-     order. -->
-
-**Criteria applied (all four must hold, §9.1):**
-
-| # | Criterion | How it was applied this run |
+| Artifact | Path | Present? |
 |---|---|---|
-| 1 | Status this run is `Passed` | {{CRITERION_1_APPLICATION}} |
-| 2 | Steps and Expected Result are deterministic and objectively verifiable | {{CRITERION_2_APPLICATION}} |
-| 3 | Repeat executions within this run all agreed on the outcome | {{CRITERION_3_APPLICATION}} |
-| 4 | Not dispositioned by Test Design as an Exploratory test against a Finding | {{CRITERION_4_APPLICATION}} |
+| Manual Execution Results (authoritative) | `manual_execution/ManualExecutionResults.md` | {{CHK_RESULTS}} |
+| Manual Test Results CSV | `manual_execution/ManualTestResults.csv` | {{CHK_CSV}} |
+| Manual QA Report (stakeholder deliverable) | `manual_execution/ManualQAReport.md` | {{CHK_REPORT}} |
+| Evidence | `manual_execution/artifacts/` | {{CHK_EVIDENCE}} |
 
-**Qualifying candidates:** {{CANDIDATE_COUNT}} — full package: `manual_execution/AutomationCandidatePackage.md`
+**All three renderings agree on every status:** {{CHK_AGREEMENT}}
 
-| Test Case ID | Module |
-|---|---|
-| {{TEST_CASE_ID}} | {{MODULE}} |
+<!-- The row above is the one that actually fails in practice. A status corrected in the Results
+     without regenerating the CSV produces a delivery that contradicts itself — and the
+     contradiction is normally found by the stakeholder, not the reviewer. -->
 
-**Manual-Only characteristics noted for the Automation skill's awareness (§9.1 #2):**
-
-| Test Case ID | Why subjective / not assertable |
-|---|---|
-| {{TEST_CASE_ID}} | {{REASON}} |
-
-**Not Stable exclusions (§9.1 #3) — both outcomes cited:**
-
-| Test Case ID | Outcome 1 | Outcome 2 |
-|---|---|---|
-| {{TEST_CASE_ID}} | {{OUTCOME_1}} | {{OUTCOME_2}} |
-
+**Scripts produced:** none. <!-- §2.1 — this stage never produces a script of any kind. A throwaway
+     driver script used to reach a screen is debug scaffolding, deleted after use (pipeline.md §11). -->
 ## 6. Known Limitations
 
 <!-- §10 #6 — anything this execution could not fully verify (e.g. a Blocked precondition, a Skipped

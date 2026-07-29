@@ -3,7 +3,7 @@
 **Explore · Design · Validate · Automate · Execute · Report**
 
 [![Version](https://img.shields.io/badge/version-2.0-2563eb?style=flat-square)](docs/CHANGELOG.md)
-[![Architecture](https://img.shields.io/badge/architecture-seven--stage%20pipeline-2563eb?style=flat-square)](#7-skill-architecture)
+[![Architecture](https://img.shields.io/badge/architecture-dual%20pipeline%20%C2%B7%208%20skills-2563eb?style=flat-square)](#7-skill-architecture)
 [![Enterprise Ready](https://img.shields.io/badge/enterprise-ready-2563eb?style=flat-square)](#13-design-principles)
 [![Installable](https://img.shields.io/badge/installable-into%20your%20repo-2563eb?style=flat-square)](#16-quick-start)
 [![Human Governed](https://img.shields.io/badge/human--governed-yes-16a34a?style=flat-square)](#6-pipeline-architecture)
@@ -134,7 +134,7 @@ Concretely, the platform:
 - **Traceability by construction.** Every test case, automation script, and execution result carries a citation back to the requirement it covers — not because someone remembered to fill in a spreadsheet column, but because the pipeline's artifact contracts require it.
 - **Governed, not autonomous.** The platform is AI-*assisted*. Every stage that produces a document or authorizes code execution stops at a named checkpoint until a human with the right role signs off — see §5.5 of [`workflows_and_pipelines/pipeline/pipeline.md`](workflows_and_pipelines/pipeline/pipeline.md) for exactly which decisions are reserved for a human versus made automatically.
 - **Compounding, not repeating.** Repair strategies that are confirmed to work are captured in a versioned Knowledge Base and reused on the next failure with the same signature — instead of every run re-diagnosing the same class of problem from zero.
-- **Single project, cleanly separated.** The hosted application is fully self-contained under `platform_core_data/`, and nothing application-specific lives outside it — so the same seven agents and one pipeline specification apply unchanged when the platform is retargeted at a different application, with no code changes.
+- **Single project, cleanly separated.** The hosted application is fully self-contained under `platform_core_data/`, and nothing application-specific lives outside it — so the same eight agents and one pipeline specification apply unchanged when the platform is retargeted at a different application, with no code changes.
 
 ### Philosophy of AI-assisted testing
 
@@ -142,7 +142,7 @@ The platform is built on one recurring architectural pattern, repeated at every 
 
 - Requirements are *defined* in the PRD and *validated* (never redefined) by the Explorer Agent against the live application — a documented discrepancy is a **Gap**, resolved by a human, never silently overwritten by what the agent observed ([Lessons Learned §1](docs/LESSONS_LEARNED.md)).
 - Test results are *produced* mechanically by the Automation Execution Agent and *judged* separately by the Reporting Agent — no single agent both runs a test and writes the narrative conclusion about it ([Lessons Learned §2](docs/LESSONS_LEARNED.md)).
-- Every gate that can accept a wrong *document* (Stages 1–4) is deliberately weaker than the gate that authorizes *code to execute* against a real environment (Stage 5) — because the blast radius of the two failure modes is not the same ([Lessons Learned §3](docs/LESSONS_LEARNED.md)).
+- Every gate that can accept a wrong *document* (Stages 1–3, `4M`) is deliberately weaker than the gate that authorizes *code to execute* against a real environment (`4A`, and any `5H` re-merge) — because the blast radius of the two failure modes is not the same ([Lessons Learned §3](docs/LESSONS_LEARNED.md)).
 
 This is why the platform reads as "a pipeline with agents inside it," not "an agent with tools attached" — the discipline lives in the artifact contracts and checkpoints between stages, not in any single agent's judgment.
 
@@ -154,10 +154,11 @@ This is why the platform reads as "a pipeline with agents inside it," not "an ag
 |---|---|---|
 | **AI-Driven Discovery** | Explores a live application (or falls back through screenshots, recordings, user-guided exploration, documentation, or APIs) and produces evidence-backed findings, never inventing requirements | [`.claude/skills/explorer-skill/SKILL.md`](.claude/skills/explorer-skill/SKILL.md) |
 | **Test Design Generation** | Derives manual test cases and a full traceability matrix from the approved Project Context, using Discovery only to validate/enrich | [`.claude/skills/test-design-skill/SKILL.md`](.claude/skills/test-design-skill/SKILL.md) |
-| **Manual Execution & Automation Candidate Identification** | Executes the approved manual test suite against the live application, records raw results with evidence, and identifies only the successfully, stably executed test cases as candidates for automation | [`.claude/skills/manual-execution-skill/SKILL.md`](.claude/skills/manual-execution-skill/SKILL.md) |
-| **Automation Generation** | Produces a production-quality, maintainable automation project — never a bag of isolated scripts — reusing existing automation first, scoped to the Manual Execution Agent's confirmed Automation Candidates | [`.claude/skills/automation-skill/SKILL.md`](.claude/skills/automation-skill/SKILL.md) |
+| **Manual Execution & Reporting** (`4M`, terminal) | Executes the approved manual test suite against the live application **headed**, records results with full defect write-ups and evidence, then self-reports a stakeholder QA Report and a Test Results CSV. Produces no scripts | [`.claude/skills/manual-execution-skill/SKILL.md`](.claude/skills/manual-execution-skill/SKILL.md) |
+| **Automation Generation** (`4A`) | Produces a production-quality, maintainable automation project — never a bag of isolated scripts — scoped directly from the approved test design, with **every selector verified live and headless** before it is emitted, both shared knowledge bases consulted first, and a bounded self-review pass | [`.claude/skills/automation-skill/SKILL.md`](.claude/skills/automation-skill/SKILL.md) |
 | **Multi-Package, Multi-Framework Automation** | A project can hold several independent Automation Packages side by side (e.g. SHAFT and Playwright for the same application), each tracked in its own registry entry | [§8](#8-automation-package-lifecycle), [§12](#12-multi-framework-architecture) |
-| **Automation Repair Loop + Confidence Engine** | Diagnoses automation-side failures, proposes evidence-derived repair strategies with a percentage confidence, reruns only what was repaired, and separates Application/Automation/Environment health | [`.claude/skills/automation-execution-skill/SKILL.md` §25–§28](.claude/skills/automation-execution-skill/SKILL.md) |
+| **Self-Healing: Repair Reasoning + Confidence Engine** (`5H`, optional) | Diagnoses automation-side failures, proposes evidence-derived repair strategies with a **derived** percentage confidence, applies only human-approved repairs, reruns only what was repaired, and quarantines rather than repairing indefinitely. **Never heals an application defect** | [`.claude/skills/self-healing-skill/SKILL.md`](.claude/skills/self-healing-skill/SKILL.md) |
+| **Live Selector Verification** (`4A`) | Every emitted locator is confirmed to resolve against the running application, headless, at generation time — with its fallback chain and code-state anchor recorded to a knowledge base **both** pipelines read | [`.claude/skills/automation-skill/SKILL.md` §11A](.claude/skills/automation-skill/SKILL.md) |
 | **Two-Layer Knowledge Architecture** | Reusable engineering knowledge (Platform Knowledge) is kept separate from application-specific knowledge (Project Knowledge), merged automatically, promoted only by explicit human approval | [§11](#11-knowledge-base), [`workflows_and_pipelines/pipeline/pipeline.md` §10](workflows_and_pipelines/pipeline/pipeline.md) |
 | **Human Approval Workflow** | Two distinct gate types — "Human Review Required" for documents, "Automation Approval Required" for code about to execute — plus an explicit Human-vs-Engineering decision boundary so approval isn't requested for routine engineering calls | [`workflows_and_pipelines/pipeline/pipeline.md` §5](workflows_and_pipelines/pipeline/pipeline.md) |
 | **Self-Descriptive Run Management** | Every execution gets a deterministic, self-descriptive folder name (`run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target`), generated by a single reusable utility, an on-demand-built workspace, structured metadata, and a factual run summary — with no judgment role of its own | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) |
@@ -165,7 +166,7 @@ This is why the platform reads as "a pipeline with agents inside it," not "an ag
 | **Reference Automation Project Support** | A project can register an external, human-owned automation codebase as a reference — read-only by default, with an explicit gate before any write to it | [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) |
 | **Browser Driver Layer** | A single shared engine (`platform_core/tools/browser_driver/`) drives every authenticated browser session, with credentials always outside the repo's tracked history | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) |
 | **Reporting** | A Final QA Report that computes Requirement Coverage and Automation Coverage by walking the full traceability chain, not by re-asserting the Automation Execution Agent's raw output | [`.claude/skills/reporting-skill/SKILL.md`](.claude/skills/reporting-skill/SKILL.md) |
-| **Execution Analysis** | Application Health, Automation Health, and Environment Health are always reported as three separate figures — never one merged "Failed" count | [`.claude/skills/automation-execution-skill/SKILL.md` §25.6](.claude/skills/automation-execution-skill/SKILL.md) |
+| **Execution Analysis** | Application Health, Automation Health, and Environment Health are always reported as three separate figures — never one merged "Failed" count. This separation is what makes self-healing safe: only `Automation Failure` is ever eligible for repair | [`.claude/skills/automation-execution-skill/SKILL.md` §25.2](.claude/skills/automation-execution-skill/SKILL.md) |
 
 ---
 
@@ -205,13 +206,15 @@ A capability listed here as *Implemented* has a written agent/pipeline specifica
 |---|---|---|
 | Discovery (browser automation + documented fallback chain) | ✅ Implemented | [`.claude/skills/explorer-skill/SKILL.md`](.claude/skills/explorer-skill/SKILL.md) |
 | Test Design Generation | ✅ Implemented | [`.claude/skills/test-design-skill/SKILL.md`](.claude/skills/test-design-skill/SKILL.md) |
-| Manual Execution & Automation Candidate Identification | ✅ Implemented | [`.claude/skills/manual-execution-skill/SKILL.md`](.claude/skills/manual-execution-skill/SKILL.md) |
+| Manual Execution & Reporting (`4M`) | ✅ Implemented | [`.claude/skills/manual-execution-skill/SKILL.md`](.claude/skills/manual-execution-skill/SKILL.md) |
+| Self-Healing (`5H`, optional) | ✅ Implemented | [`.claude/skills/self-healing-skill/SKILL.md`](.claude/skills/self-healing-skill/SKILL.md) |
 | Automation Generation (multi-framework, multi-package) | ✅ Implemented | [`.claude/skills/automation-skill/SKILL.md`](.claude/skills/automation-skill/SKILL.md) |
 | Execution | ✅ Implemented | [`.claude/skills/automation-execution-skill/SKILL.md`](.claude/skills/automation-execution-skill/SKILL.md) |
 | Reporting | ✅ Implemented | [`.claude/skills/reporting-skill/SKILL.md`](.claude/skills/reporting-skill/SKILL.md) |
 | Human Approval Workflow (two gate types) | ✅ Implemented | [`workflows_and_pipelines/pipeline/pipeline.md` §5](workflows_and_pipelines/pipeline/pipeline.md) |
 | Automation Package Lifecycle (registry, decision gates, repair states) | ✅ Implemented | [§8](#8-automation-package-lifecycle) |
-| Automation Repair Loop + Confidence Engine | ✅ Implemented | [`.claude/skills/automation-execution-skill/SKILL.md` §25–§28](.claude/skills/automation-execution-skill/SKILL.md) |
+| Self-Healing: Repair Reasoning + Confidence Engine | ✅ Implemented | [`.claude/skills/self-healing-skill/SKILL.md`](.claude/skills/self-healing-skill/SKILL.md) |
+| Live Selector Verification | ✅ Implemented | [`.claude/skills/automation-skill/SKILL.md` §11A](.claude/skills/automation-skill/SKILL.md) |
 | Two-Layer Knowledge Architecture | ✅ Implemented | [§11](#11-knowledge-base) |
 | Intelligent Run Management | ✅ Implemented | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) |
 | Reference Automation Project support | ✅ Implemented | [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) |
@@ -237,8 +240,8 @@ The platform is organized as five concentric layers. Reusable engineering logic 
 flowchart TD
     PLAT["Platform<br/><small>.claude/skills/ · workflows_and_pipelines/pipeline/ · platform_core_data/knowledge_base/patterns/ · platform_core/tools/</small>"]
     PROJ["Project Data<br/><small>platform_core_data/ — the one hosted application, fully self-contained</small>"]
-    PIPE["Pipeline<br/><small>the fixed seven-stage execution order, gates, and artifact contracts</small>"]
-    AGENTS["Agents<br/><small>the seven specialized AI agents that do the actual work of each stage</small>"]
+    PIPE["Pipelines<br/><small>two branches sharing Stages 1-3: execution order, gates, artifact contracts</small>"]
+    AGENTS["Agents<br/><small>the eight specialized AI agents that do the actual work of each stage</small>"]
     RUNS[("Runs<br/><small>platform_core_data/runs/run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target/ — every stage's artifacts, per run</small>")]
     BASE[("Automation Baseline<br/><small>platform_core_data/automation_baseline/{framework}/ — the persistent automation source of truth</small>")]
 
@@ -251,7 +254,16 @@ Reading this top to bottom: the **Platform** defines reusable rules that hold wh
 
 ## 6. Pipeline Architecture
 
-Seven agents run in a fixed order. Each stage consumes only artifacts explicitly declared as its input — never a peer stage's internal reasoning — and every checkpoint stops the pipeline until a human with the right role approves.
+**Two pipelines share their first three stages and then diverge completely.** Each stage consumes only artifacts explicitly declared as its input — never a peer stage's internal reasoning — and every checkpoint stops the pipeline until a human with the right role approves.
+
+| Pipeline | Stages | Delivers | Generates scripts? |
+|---|---|---|---|
+| **Manual Execution** | 1 → 2 → 3 → `4M` | Results, defect records, Test Results CSV, Manual QA Report, evidence | **never** |
+| **Automation** | 1 → 2 → 3 → `4A` → `5A` → *(optional)* `5H` → `6A` | Automation suite, execution results, repairs, Final QA Report | yes |
+
+**Branch isolation is load-bearing** (`pipeline.md` §3.3): neither branch reads any artifact the other produces, and either may run alone, in either order, or both. Automation does **not** wait on a manual pass — it grounds its correctness in live selector verification against the build the suite will actually run on, which is stronger and more current evidence.
+
+**Stage `5H` (Self-Healing) never runs automatically** (§3.6). No failing execution triggers it and no orchestrator may chain into it; it runs only when a human invokes it, optionally scoped to named modules.
 
 ```mermaid
 flowchart TD
@@ -270,18 +282,18 @@ flowchart TD
     TD --> G3{{"⛔ Human Review Required"}}
     G3 -->|approved| S4
 
-    S4["Stage 4 — Manual Execution Agent"] --> MANEX["Manual Execution Results · Manual Execution Summary · Automation Candidate Package"]
+    S4["Stage 4M — Manual Execution Agent (terminal)"] --> MANEX["Manual Execution Results · Test Results CSV · Manual QA Report · Evidence"]
     MANEX --> G4{{"⛔ Human Review Required"}}
     G4 -->|approved| S5
 
-    S5["Stage 5 — Automation Agent"] --> AUTO["Automation Package"]
+    S5["Stage 4A — Automation Agent"] --> AUTO["Automation Package · Selector Verification Report · Target Write Plan"]
     AUTO --> G5{{"⛔ Automation Approval Required"}}
     G5 -->|approved| S6
 
-    S6["Stage 6 — Automation Execution Agent"] --> EXEC["Execution Results · Screenshots · Logs · Evidence"]
+    S6["Stage 5A — Automation Execution Agent (pure runner)"] --> EXEC["Execution Results · Screenshots · Logs · Evidence · Health Summary"]
     EXEC --> S7
 
-    S7["Stage 7 — Reporting Agent"] --> REPORT["Final QA Report"]
+    S7["Stage 6A — Reporting Agent"] --> REPORT["Final QA Report"]
     REPORT --> DONE["Delivered to stakeholders — terminal, no downstream agent"]
 ```
 
@@ -292,16 +304,19 @@ flowchart TD
 | 1 | Project Context Agent | PRD, Supporting Documents, Run Configuration | Project Context | Human Review Required |
 | 2 | Explorer Agent | Project Context, Running Application | Discovery Artifacts, Findings, Evidence | Human Review Required |
 | 3 | Test Design Agent | Project Context (primary), Discovery Artifacts (secondary) | Manual Test Suites, Traceability Matrix, Coverage Report | Human Review Required |
-| 4 | Manual Execution Agent | Approved Manual Test Suites, Traceability Matrix, Coverage Report, Project Context | Manual Execution Results, Manual Execution Summary, Automation Candidate Package | Human Review Required |
-| 5 | Automation Agent | Approved Automation Candidate Package, Manual Test Suites (content source), Project Context | Automation Package | Automation Approval Required |
-| 6 | Automation Execution Agent | Automation Package | Execution Results, Evidence, Metadata | None — mechanical run, already gated by Stage 5 |
+| `4M` | Manual Execution Agent *(Manual branch, terminal)* | Approved Manual Test Suites, Traceability Matrix, Coverage Report, Project Context | Manual Execution Results, Test Results CSV, Manual QA Report, Evidence | Human Review Required *(terminal — approving releases the delivery)* |
+| `4A` | Automation Agent *(Automation branch)* | Approved Manual Test Suites (**scope and content**), Traceability Matrix, Coverage Report, Project Context, Discovery, both shared KBs | Automation Package, Selector Verification Report, Target Write Plan, Self Review Report | Automation Approval Required |
+| `5A` | Automation Execution Agent *(pure mechanical runner)* | Approved Automation Package | Execution Results, Evidence, Metadata, three separated Health figures | None — mechanical run, already gated at `4A` |
+| `5H` | Self-Healing Agent *(**optional**, human-invoked only)* | Execution Results with ≥1 Automation Failure, Automation Suite, Repair KB | Repair Summary, Before/After Comparison, Quarantine Register, repaired suite | Batch Repair Approval (§5.6), then Automation Approval to re-merge |
 | 7 | Reporting Agent | Execution Results, Traceability Matrix, Project Context | Final QA Report | None — terminal stage |
 
 Full specification, including every rule governing gate mechanics and rejection handling: [`workflows_and_pipelines/pipeline/pipeline.md`](workflows_and_pipelines/pipeline/pipeline.md).
 
 ### Why two gate types, not one
 
-Approving a document (Stages 1–4) risks a wrong document reaching the next stage. Approving Stage 5 authorizes **generated code to execute against a real environment** — a materially larger blast radius (data mutation, destructive actions, credential use). The pipeline treats "Automation Approval Required" as at least as strict as a production deployment approval, never as a lighter variant of document review.
+Approving a document (Stages 1–3, `4M`) risks a wrong document reaching the next stage. Approving `4A` authorizes **generated code to execute against a real environment** — a materially larger blast radius (data mutation, destructive actions, credential use). The pipeline treats "Automation Approval Required" as at least as strict as a production deployment approval, never as a lighter variant of document review.
+
+A third gate, **Batch Repair Approval** (§5.6), exists solely for Stage `5H` — the only stage that modifies code a human already approved. It is asked **once per healing pass, never per test case**, and it can never authorize "healing" a genuine application defect: repairs may change how a test *interacts* with the application (locators, waits, setup), never *what it asserts to be correct*.
 
 ### Only Stage 1 reads the PRD
 
@@ -318,7 +333,7 @@ Not every judgment call inside a stage requires stopping to ask. The pipeline dr
 
 ## 7. Skill Architecture
 
-Each of the seven skills has exactly one responsibility and communicates with its neighbors only through the artifacts defined in [§6](#6-pipeline-architecture). The **Run Manager** sits outside this pipeline entirely — it is orchestration tooling, never a judgment-making stage.
+Each of the eight skills has exactly one responsibility and communicates with its neighbors only through the artifacts defined in [§6](#6-pipeline-architecture). The **Run Manager** sits outside this pipeline entirely — it is orchestration tooling, never a judgment-making stage.
 
 Each is invokable in pipeline order, or **directly by name** with an optional instruction prompt — see [`docs/USER_GUIDE.md` §6](docs/USER_GUIDE.md#6-calling-a-single-skill-directly) for the approve-and-recommend and degraded-run semantics that govern an out-of-order call.
 
@@ -328,10 +343,11 @@ Each is invokable in pipeline order, or **directly by name** with an optional in
 | [Project Context skill](.claude/skills/project-context-skill/SKILL.md) *(Stage 1)* | Builds the scoped, approved Project Context from Project Knowledge + Run Scope — the only stage permitted to read the PRD | Re-consult the PRD once its own output is approved |
 | [Explorer skill](.claude/skills/explorer-skill/SKILL.md) *(Stage 2)* | Explores the application (browser automation, or a documented fallback chain) and produces evidence-backed Discovery Artifacts and Findings | Author or redefine requirements — a live/documented disagreement is logged as a Gap, never silently resolved in this skill's favor |
 | [Test Design skill](.claude/skills/test-design-skill/SKILL.md) *(Stage 3)* | Derives manual test cases and full traceability from the Project Context, using Discovery only to validate, enrich, and surface gaps | Treat Discovery Artifacts as a requirements source |
-| [Manual Execution skill](.claude/skills/manual-execution-skill/SKILL.md) *(Stage 4)* | Executes the approved manual test suite against the live application, records raw results and evidence, and identifies only successfully, stably executed test cases as Automation Candidates | Write or execute automation code, or decide what ultimately gets automated |
-| [Automation skill](.claude/skills/automation-skill/SKILL.md) *(Stage 5)* | Generates a maintainable automation package from the Manual Execution skill's Automation Candidates, reusing existing automation, assigning every candidate an explicit Automation Decision | Execute what it generates, invent missing business logic, modify an approved manual test case, or automate a test case outside the Automation Candidate Package |
-| [Automation Execution skill](.claude/skills/automation-execution-skill/SKILL.md) *(Stage 6)* | Runs approved automation, records raw results and evidence, runs the Automation Repair Loop on automation-side failures | Interpret results into a narrative conclusion, execute manually-designed test cases directly, or repair anything without explicit human approval first |
-| [Reporting skill](.claude/skills/reporting-skill/SKILL.md) *(Stage 7)* | Synthesizes the Final QA Report, computing Requirement/Automation Coverage by walking the traceability chain | Re-run anything, or assert a conclusion not present in the Automation Execution skill's output |
+| [Manual Execution skill](.claude/skills/manual-execution-skill/SKILL.md) *(Stage `4M`, terminal)* | Executes the approved manual test suite **headed** against the live application, records results with full defect write-ups and evidence, and self-reports a QA Report plus a Test Results CSV | Produce a script of any kind, execute automation, decide what gets automated, or write to either shared knowledge base |
+| [Automation skill](.claude/skills/automation-skill/SKILL.md) *(Stage `4A`)* | Generates a maintainable automation package from the approved test design, **verifying every selector live and headless** before emitting it, consulting both shared KBs first, self-reviewing within a bounded budget, and detecting brownfield vs. greenfield automatically | Execute what it generates, repair a failure, invent missing business logic, modify an approved manual test case, emit an unverified selector as though confirmed, or read a Manual branch artifact |
+| [Automation Execution skill](.claude/skills/automation-execution-skill/SKILL.md) *(Stage `5A`)* | Runs approved automation and records raw results, evidence, and three separated Health figures. **A pure mechanical runner** | Modify automation code for any reason, diagnose or repair a failure, interpret results into a narrative conclusion, or execute manually-designed test cases |
+| [Self-Healing skill](.claude/skills/self-healing-skill/SKILL.md) *(Stage `5H`, **optional**)* | Reasons over `Automation Failure` results — diagnose → strategy → derived confidence → human-approved repair → targeted rerun — and owns all repair knowledge | Run automatically, repair an **application** defect, weaken an assertion to make a test pass, repair below High root-cause confidence, or re-merge without fresh approval |
+| [Reporting skill](.claude/skills/reporting-skill/SKILL.md) *(Stage `6A`, terminal)* | Synthesizes the Final QA Report for the **Automation branch**, computing Requirement/Automation Coverage by walking the traceability chain, and distinguishing repaired passes from clean ones | Re-run anything, assert a conclusion not present in the execution output, or substitute Manual branch results for automation coverage |
 
 ```mermaid
 flowchart LR
@@ -361,7 +377,7 @@ flowchart LR
 
 A project never has "one" automation codebase to overwrite. It holds a **registry of independent Automation Packages** — e.g. `tests_SHAFT` and `tests_Playwright` for the same project — each generated, approved, executed, and repaired on its own track. A project may also register an external, human-owned **Reference Automation Project** that the platform treats as read-only by default.
 
-### Sequence — one Stage 5 → Stage 6 pass
+### Sequence — one Stage `4A` → `5A` pass
 
 ```mermaid
 sequenceDiagram
@@ -373,16 +389,16 @@ sequenceDiagram
     Orc->>H: Automation Start Decision Gate — report actual stage state, ask how to proceed
     H-->>Orc: Decision (resume / full pipeline / generate directly)
 
-    Orc->>AA: Invoke Stage 5
+    Orc->>AA: Invoke Stage 4A
     AA->>H: Consolidated gate — Automation Target · Framework · Strategy
     H-->>AA: Continue existing package "X" / create new package with framework "Y"
-    AA->>AA: Automation Plan → generate code (scoped to the Automation Candidate Package) → Self Review
+    AA->>AA: Automation Plan → live selector verification → generate code → bounded Self Review
     AA-->>H: Automation Package marked "Pending Automation Approval"
 
     H->>AA: Approve (Automation Approval Required — production-deploy-grade review)
     AA-->>Orc: Package state = Approved
 
-    Orc->>EA: Invoke Stage 6 against the Approved package
+    Orc->>EA: Invoke Stage 5A against the Approved package
     EA->>EA: Execute suite, classify every result
     alt Automation Failure detected
         EA->>H: Repair Summary (Root Cause, options, confidence) — ask once
@@ -403,7 +419,7 @@ stateDiagram-v2
     Planning --> PendingApproval: Automation Plan + code generated, Self Review passed
     PendingApproval --> Approved: Automation Approval Required — granted
     PendingApproval --> Planning: Rejected — same agent re-runs with feedback
-    Approved --> Executing: Stage 6 invoked
+    Approved --> Executing: Stage 5A invoked
     Executing --> Passed: All tests pass
     Executing --> AutomationFailure: Automation-side failure detected
     AutomationFailure --> RepairProposed: Repair Strategy Decision Engine + Confidence Engine
@@ -436,31 +452,32 @@ Every project is fully self-contained: durable knowledge and generated artifacts
 agentic-ai-testing-platform/
 │
 ├── .claude/
-│   └── skills/                      # The seven agent specifications, as Claude Code skills — what each does in isolation
+│   └── skills/                      # The eight agent specifications, as Claude Code skills — what each does in isolation
 │       ├── project-context-skill/SKILL.md
 │       ├── explorer-skill/SKILL.md
 │       ├── test-design-skill/SKILL.md
 │       ├── manual-execution-skill/SKILL.md
 │       ├── automation-skill/SKILL.md
 │       ├── automation-execution-skill/SKILL.md
+│       ├── self-healing-skill/SKILL.md
 │       └── reporting-skill/SKILL.md
 │
 ├── workflows_and_pipelines/          # Orchestrators and flow definitions
-│   ├── pipeline/                       # How the seven agents are wired together into one governed process
+│   ├── pipeline/                       # How the eight agents are wired into two governed pipelines
 │   │   ├── pipeline.md                   # Stage order, artifact contracts, gates, Knowledge Architecture (§10)
 │   │   ├── run_manager.md                # Run identity: naming, Active Run pointer, anchor, lineage, Manifest
 │   │   └── run_scope.md                  # Run Scope Types/Sources — what a run is allowed to validate
 │   └── workflows/
 │       ├── first_run.md                # Smoke-test workflow: Stages 1–3 only, one module
 │       ├── user_story_run.md           # Stages 3–7 for one User Story, reusing Context + Discovery
-│       └── bug_fix_run.md              # Bug regression: Stage 6 → (conditional) 5 → 6 → 7
+│       └── bug_fix_run.md              # Bug regression: 5A → (conditional) 4A → 5A → 6A
 │
 ├── platform_core/                     # Shared source code — zero project-specific data
 │   ├── README.md                       # This layer's own contract
 │   ├── templates/                      # Output artifact templates — the authoritative structure of
 │   │   ├── README.md                   #   everything the pipeline writes (26 templates)
 │   │   ├── metadata/                   #   RunManifest — run-wide, not owned by one stage
-│   │   └── stage_1_context/ … stage_7_reporting/   # One template per artifact per stage
+│   │   └── stage_1_context/ … stage_6a_reporting/   # One template per artifact per stage
 │   └── tools/
 │       ├── automation_lifecycle/     # Baseline copy, merge plan/apply, promotion record, cleanup
 │       ├── browser_driver/          # Shared browser automation engine — zero project-specific data
@@ -480,9 +497,9 @@ agentic-ai-testing-platform/
 │   │   ├── PRD.md · PRD_UserStories.md  # Stage 1's only requirements input
 │   │   ├── run_configuration.md         # Target URL, environment, modules in scope — Stage 1 input
 │   │   ├── onboarding.md · architecture.md · glossary.md
-│   │   ├── automation_framework.md      # Binding framework structure — Stage 5 must comply
+│   │   ├── automation_framework.md      # Binding framework structure — Stage 4A must comply
 │   │   ├── reference_automation_project.md  # Registration of an external reference automation repo
-│   │   ├── stack.md                     # Detected stack + pinned deps — written by Stage 5, durable
+│   │   ├── stack.md                     # Detected stack + pinned deps — written by Stage 4A, durable
 │   │   ├── requirements/                # By Type: epics/, features/, user_stories/, bugs/, specifications/
 │   │   ├── api/{swagger,postman}/ · diagrams/    # Supporting reference material
 │   │   ├── browser/                     # Browser Driver profile + screen/component locators
@@ -560,10 +577,10 @@ flowchart TD
     META -.->|Stage 1 writes| CTX["context/"]
     META -.->|Stage 2 writes| DISC["discovery/ (+ findings/)"]
     META -.->|Stage 3 writes| TDS["test_design/"]
-    META -.->|Stage 4 writes| MANEX["manual_execution/"]
-    META -.->|Stage 5 writes| AUT["automation/"]
-    META -.->|Stage 6 writes| EXE["execution/"]
-    META -.->|Stage 7 writes| REP["reporting/"]
+    META -.->|Stage 4M writes| MANEX["manual_execution/"]
+    META -.->|Stage 4A writes| AUT["automation/"]
+    META -.->|Stage 5A writes| EXE["execution/"]
+    META -.->|Stage 6A writes| REP["reporting/"]
 ```
 
 ### Run metadata (`run.json`)
@@ -650,7 +667,7 @@ The category folders for `automation_patterns/`, `diagnosis_patterns/`, `executi
 **The repository stores Automation Packages; it does not have a single project-wide framework.** SHAFT (Java/TestNG-based) and Playwright can both automate the same application, in the same project, as two independent packages that never overwrite each other.
 
 - **Discovery technology ≠ Automation technology.** The tool used to explore an application in Stage 2 (e.g. Playwright, for browser-driven discovery) has no bearing on which framework Stage 5 selects — this is enforced explicitly, because it has previously been the exact mistake an early agent revision made.
-- **Framework choice is scoped to one package, one run's decision** — never inferred as a standing project default. Every Stage 5 invocation asks again.
+- **Framework choice is scoped to one package, one run's decision** — never inferred as a standing project default. Every Stage 4A invocation asks again.
 - **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/knowledge_base/automation_framework.md`](platform_core_data/knowledge_base/automation_framework.md) — and is binding only for runs that select SHAFT.
 - **Currently supported:** Playwright, SHAFT Engine. **Named as first-class candidates whenever a project's needs call for them:** Selenium, Cypress, Appium, REST Assured — the Automation Agent's framework detection/selection model already treats these as standard options ([`.claude/skills/automation-skill/SKILL.md` §6–§8](.claude/skills/automation-skill/SKILL.md)); onboarding one for a real project is a per-project decision, not a platform-level gap.
 
@@ -740,7 +757,7 @@ your-project/
   tests/e2e/                    ← generated automation lands HERE, in your own conventions
   agentic-testing-tool/         ← the platform; gitignored, with its own nested git repo
     platform_core_data/         ← every process artifact: knowledge_base/ (PRD, config), runs/, automation_baseline/
-  .claude/skills/               ← the seven skills, so Claude Code can find them
+  .claude/skills/               ← the eight skills, so Claude Code can find them
 ```
 
 Then:
@@ -818,16 +835,16 @@ Follow [`platform_core/tools/browser_driver/README.md`](platform_core/tools/brow
 
 ### 4. Run the pipeline
 
-Every stage after Stage 1 requires the previous stage's checkpoint to already be `Approved`. Before automation (Stage 5) or any single downstream stage is invoked for the first time, the platform runs the **Automation Start Decision Gate** ([`workflows_and_pipelines/pipeline/pipeline.md` §5.4](workflows_and_pipelines/pipeline/pipeline.md)) — it reports the actual current state of every stage and asks explicitly how to proceed; it never assumes.
+Every stage after Stage 1 requires the previous stage's checkpoint to already be `Approved`. Before automation (Stage 4A) or any single downstream stage is invoked for the first time, the platform runs the **Automation Start Decision Gate** ([`workflows_and_pipelines/pipeline/pipeline.md` §5.4](workflows_and_pipelines/pipeline/pipeline.md)) — it reports the actual current state of every stage and asks explicitly how to proceed; it never assumes.
 
 ```mermaid
 flowchart LR
     A["Invoke Stage 1"] --> B{{"Approve Project Context?"}}
     B -->|yes| C["Invoke Stage 2"] --> D{{"Approve Discovery?"}}
     D -->|yes| E["Invoke Stage 3"] --> F{{"Approve Test Design?"}}
-    F -->|yes| G["Invoke Stage 4"] --> GG{{"Approve Manual Execution?"}}
-    GG -->|yes| H["Invoke Stage 5"] --> HH{{"Approve Automation?"}}
-    HH -->|yes| I["Invoke Stage 6 (mechanical)"] --> J["Invoke Stage 7"] --> K["Final QA Report delivered"]
+    F -->|yes| G["Invoke Stage 4M"] --> GG{{"Approve Manual Execution?"}}
+    GG -->|yes| H["Invoke Stage 4A"] --> HH{{"Approve Automation?"}}
+    HH -->|yes| I["Invoke Stage 5A (mechanical)"] --> J["Invoke Stage 6A"] --> K["Final QA Report delivered"]
 ```
 
 ### 5. Validate the platform itself first (recommended after retargeting)

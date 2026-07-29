@@ -1,6 +1,6 @@
 ---
 name: manual-execution-skill
-description: Stage 4 of 7 in the Agentic AI Testing Platform pipeline. Executes the approved Manual Test Suite against a target environment, records raw structured Manual Execution Results with full Result Classification and Evidence, and identifies Automation Candidates from successful, stable executions for the Automation skill to consume. Use when validating manually-designed test cases against a live application before committing automation effort to them.
+description: Stage 4M of the Agentic AI Testing Platform's Manual Execution Pipeline — the branch's terminal stage. Executes the approved Manual Test Suite against a target environment, records structured Manual Execution Results with full Result Classification, paste-ready defect records, and Evidence, then self-reports a stakeholder-facing Markdown QA Report and a machine-readable Test Results CSV. Never generates or runs a script of any kind. Use when validating manually-designed test cases against a live application as a complete, standalone delivery.
 inputs:
   - name: manual_test_suite
     type: file_path
@@ -9,11 +9,19 @@ inputs:
   - name: traceability_matrix
     type: file_path
     required: true
-    description: Approved Requirement Traceability Matrix — carried through unmodified onto Manual Execution Results and the Automation Candidate Package.
+    description: Approved Requirement Traceability Matrix — carried through unmodified onto Manual Execution Results, and the basis for the Manual QA Report's Requirement Coverage.
   - name: coverage_report
     type: file_path
     required: true
     description: Approved Coverage Report — informs which test cases Test Design already excluded/dispositioned, so this skill doesn't attempt to execute what Stage 3 already marked out of scope.
+  - name: selector_verification_kb
+    type: file_path
+    required: false
+    description: Shared Selector Verification KB (pipeline.md §10.8), read-only — verified locators that disambiguate which control a test step means when a screen has several plausible candidates.
+  - name: repair_kb
+    type: file_path
+    required: false
+    description: Shared Repair KB (pipeline.md §10.8), read-only — known application/environment quirks, so a documented timing quirk is not mistaken for a new application defect.
   - name: project_context
     type: file_path
     required: true
@@ -27,21 +35,29 @@ outputs:
     type: file_path
     location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md"
     description: Consolidated run-level summary — what was executed, headline outcome figures, Known Limitations.
-  - name: automation_candidate_package
+  - name: manual_test_results_csv
     type: file_path
-    location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md"
-    description: The specific, execution-confirmed test case IDs judged successful and stable enough to hand to the Automation skill, each cited back to its Manual Test Suite/Traceability Matrix entry.
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualTestResults.csv"
+    description: Machine-readable per-test-case results — one row per executed test case, for import into a test-management tool or spreadsheet.
+  - name: manual_qa_report
+    type: file_path
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualQAReport.md"
+    description: Stakeholder-facing Markdown QA report for this manual run — requirement coverage, outcome figures, defect register, and resolved assumptions. This stage's terminal deliverable.
   - name: manual_execution_artifacts
     type: file_path
     location: "platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/artifacts/"
     description: Captured screenshots, videos, notes, and logs.
 dependencies:
-  - test-design-skill (upstream skill)
-  - Platform Browser Driver Layer (`tools/browser_driver/`), for executing UI steps against the live environment
+  - test-design-skill (upstream skill — supplies the approved test cases, traceability, and coverage)
+  - Playwright MCP server (headed), for executing UI steps against the live environment
+  - "NO downstream skill: this is the Manual branch's terminal stage (pipeline.md §3.3)"
 ---
 
-> **Pipeline position:** Stage 4 of 7 — consumes the approved Manual Test Suite, Requirement Traceability Matrix, and Coverage Report, produces raw Manual Execution Results and the Automation Candidate Package.
-> **Traceability:** `Manual Test Case → Manual Execution Result → Automation Candidate`.
+> **Pipeline position:** Stage `4M` of the **Manual Execution Pipeline** — the branch's **terminal stage**. Consumes the approved Manual Test Suite, Requirement Traceability Matrix, and Coverage Report; produces Manual Execution Results, a Test Results CSV, and a stakeholder-facing Manual QA Report.
+> **Traceability:** `Manual Test Case → Manual Execution Result → {CSV row, Defect Record, QA Report coverage figure}`.
+> **Branch:** Manual only. **No downstream skill** — its reviewer is its consumer (`workflows_and_pipelines/pipeline/pipeline.md` §3.3). It never produces a script and never hands anything to the Automation branch.
+>
+> **Revision note (this revision, user-mandated):** the Manual and Automation pipelines now diverge completely after Stage 3. This stage is no longer Stage 4 of a single 7-stage chain feeding Automation: the **Automation Candidate Package is removed** along with its qualifying-criteria engine, because Automation (`4A`) now takes scope directly from the approved Stage 3 test cases and grounds its correctness in its own live selector verification (`pipeline.md` §3.3, §3.5). In exchange, this stage gained its own reporting: it **self-reports** a Manual QA Report and a Test Results CSV rather than handing off to the Reporting stage.
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
 > **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
@@ -54,39 +70,49 @@ dependencies:
 
 The Manual Execution skill runs the approved Manual Test Suite — exactly as the Test Design skill authored it — against a target environment, and produces a raw, unedited, structured record of what actually happened: pass/fail/blocked status, evidence, and failure detail, per test case. It exists to answer one question before any automation effort is spent: *does this manually-designed test case actually hold true against the live application, reliably?*
 
-**Its second responsibility is narrower and just as important: identifying which successfully, stably executed test cases are worth automating**, and packaging exactly those — never the whole suite by default — as the Automation Candidate Package the Automation skill consumes. A test case that failed, was blocked, or produced an inconsistent outcome this run is never included as a candidate, regardless of how well-written the manual test case itself is.
+**Its second responsibility is to close out the delivery itself.** Because this is the Manual branch's terminal stage, it does not hand raw results to a reporting agent — it **self-reports**: a stakeholder-facing Manual QA Report (§9) and a machine-readable Test Results CSV (§9.2), both derived from the same per-test result set so they can never disagree.
 
-**This skill does not automate anything and does not decide what gets automated.** Identifying a test case as an Automation Candidate is an evidence-based observation about *execution stability*, not a binding automation decision — that decision (Reuse Existing Automation / Generate New Automation / Partially Automatable / Manual Only) remains exclusively the Automation skill's own authority, per `.claude/skills/automation-skill/SKILL.md` §13, applied only to the candidates this skill hands it.
+## 2.1 What this skill never does
 
-**This skill does not execute automated test suites.** Running a generated automation package against an environment is exclusively the Automation Execution skill's responsibility (Stage 6) — the two skills never overlap: this skill executes manually-designed test cases before automation exists for them; the Automation Execution skill executes automation code after it exists.
+Three prohibitions define this stage's boundary:
+
+1. **It never produces a script of any kind.** No Playwright spec, no page object, no fixture, no helper, no persisted driver script. A throwaway script written only to reach a screen is debug scaffolding, deleted after use, never an artifact (`pipeline.md` §11). If a deliverable would be a script, it belongs to Stage `4A` in the other branch.
+2. **It never automates, and never decides what gets automated.** Automation scope is Stage `4A`'s own decision, taken from the approved Stage 3 test cases and its own live verification (`pipeline.md` §3.3). This stage produces **no Automation Candidate Package** — that artifact is removed from the platform.
+3. **It never executes an automation suite.** Running generated code is Stage `5A`'s responsibility, in the other branch. The two never overlap: this stage executes manually-designed test cases by hand; `5A` executes automation code.
 
 # 3. Responsibilities
 
 - **Execute manual test cases generated by the Test Design skill** — exactly as authored (Steps, Test Data, Expected Result, per `.claude/skills/test-design-skill/SKILL.md` §6) — never inventing, skipping, or reinterpreting a step to make it easier to pass.
 - **Validate preconditions before execution** (§5) — confirm the test case's stated Preconditions (login state, data state, role) actually hold before running its Steps; a test case whose preconditions cannot be met is `Blocked`, never force-run against an unmet precondition.
-- **Execute tests on the target environment** named in the Project Context, using the Platform Browser Driver Layer (`tools/browser_driver/`) the same way the Explorer skill does — but **headed, not headless** (§11.1), so a human can watch each interaction happen live — confirming the target environment matches what the Project Context expects before running anything.
+- **Execute tests on the target environment** named in the Project Context, driving the live application through the **Playwright MCP server, headed, not headless** (§11.1), so a human can watch each interaction happen live — confirming the target environment matches what the Project Context expects before running anything.
 - **Record execution results** for every test case: Status, Execution Time, and, on failure/block, the specific step and observed-vs-expected discrepancy.
 - **Capture execution evidence** (§7) — screenshots, videos, notes, and logs where applicable — and name explicitly what wasn't captured and why, never a silent gap.
 - **Classify every result** using exactly the Result Classification set (§8): Passed, Failed, Blocked, Skipped, Not Executed, Inconclusive.
 - **Generate a Manual Execution Summary** — a run-level narrative and headline figures, distinct from the raw per-test Manual Execution Results.
-- **Identify Automation Candidates** (§9) based on successful and stable manual executions only — never a test case that failed, was blocked, or produced an inconsistent outcome this run.
-- **Produce an Automation Candidate Package** (§9.3) — the specific, execution-confirmed test case IDs, cited back to the Manual Test Suite and Traceability Matrix, that the Automation skill consumes as its primary scope-determining input.
+- **Self-report the delivery** (§9) — produce a stakeholder-facing **Manual QA Report** (requirement coverage, outcome figures, defect register, resolved assumptions) and a **Manual Test Results CSV**, both derived from the same per-test result set.
+- **Consult the shared Selector Verification KB and Repair KB, read-only** (§9.3, `pipeline.md` §10.8) — to disambiguate which control a step means, and to recognize a documented quirk rather than report it as a new defect.
 - Never modify the approved Manual Test Suite, Traceability Matrix, or Coverage Report — a test case that appears wrong or outdated is escalated as a discrepancy for Stage 3 to address, never silently corrected here.
+- **Never write to either shared Knowledge Base** — this stage is a reader only (`pipeline.md` §10.8 rule 2).
+- **Never read, produce, or reference an Automation-branch artifact** (`pipeline.md` §3.3).
 - Never execute a test case's mutating actions against an environment the Project Context has not explicitly marked safe for them.
 - **Adapt execution strategy to the run's Run Scope and Run Type** (§17), consistent with the same Run Scope model every other stage uses.
 - **Produce output conforming to the Standard Output Contract** (§10) so the Automation skill never has to interpret free-form prose to find what it needs.
 - **Recognize named Stop Conditions** (§18) and, rather than halting the entire run over one blocked test case, recommend the smallest corrective action (§19) while continuing to execute every other unaffected test case.
-- **Verify handoff completeness in both directions** (§20) — confirm every input the Test Design skill's output actually provides is used correctly, and confirm every input the Automation skill's own specification declares it needs from this stage is present.
+- **Verify input completeness and delivery completeness** (§20) — confirm every input the Test Design skill's output provides is used correctly, and that every artifact this terminal stage owes its stakeholders is present and internally consistent.
 
 # 4. Inputs
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
 | Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case |
-| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` — carried through unmodified onto every Manual Execution Result and the Automation Candidate Package |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`) and advisory Automation Candidates (§18 #11 there), which this skill treats only as a starting hint to prioritize, never as a substitute for this skill's own execution-based confirmation |
+| Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` — carried unmodified onto every Manual Execution Result, and the basis for the QA Report's Requirement Coverage (§9.1) |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`), so this stage does not attempt to execute what Stage 3 already dispositioned out of scope. Its advisory *Automation Candidates* hint is **not** consumed here — it is a hint for Stage `4A`, in the other branch |
 | Project Context | Governing | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Drives §17's strategy selection. |
+| Selector Verification KB | Secondary (read-only) | Optional | `platform_core_data/knowledge_base/browser/screens/`, `.../components/` — verified locators (`pipeline.md` §10.8). Used only to identify *which control* a step refers to when a screen offers several plausible candidates; never to change what a step does. Where its code-state anchor shows drift, it is treated as a hint, not a fact. |
+| Repair KB | Secondary (read-only) | Optional | `platform_core_data/knowledge_base/patterns/` + prior runs' Repair Summaries (`pipeline.md` §10.8). Used to recognize a **documented** application/environment quirk so it is not written up as a newly-discovered defect. A KB entry never suppresses a genuine finding — it is cited alongside it. |
+
+**No Automation-branch artifact is an input.** This stage never reads an Automation Suite, Execution Result, or Repair Summary as a basis for its own execution (`pipeline.md` §3.3).
 
 **Every input above must be in an `Approved` checkpoint state before this skill consumes it.** If any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, this skill halts and reports the blocking artifact rather than executing against a draft.
 
@@ -129,41 +155,83 @@ Every test case executed gets exactly one classification:
 | **Not Executed** | The test case was in scope but the run ended (time limit, environment failure, manual stop) before reaching it. |
 | **Inconclusive** | The test case was executed but produced a result this skill cannot confidently classify as Passed or Failed (e.g., a genuinely ambiguous UI state) — reported as such, never forced into Passed or Failed. |
 
-A `Failed`, `Blocked`, `Not Executed`, or `Inconclusive` result is never, by itself, treated as an Automation Candidate exclusion reason that goes unstated — every non-Passed result carries its reason in the Manual Execution Results (§10).
+**Every non-Passed result carries its reason** in the Manual Execution Results (§10) and in its CSV row (§9.2) — a status is never recorded without the reason that produced it.
 
-# 9. Automation Candidate Identification
+# 9. Self-Reporting — the Manual branch's terminal deliverables
 
-## 9.1 Qualifying criteria
+**Because this stage is terminal (`pipeline.md` §3.3), it reports its own results.** There is no Reporting stage downstream: the Reporting skill (`6A`) serves the Automation branch and consumes automation Execution Results, not manual ones. A run that took only the Manual branch therefore has no Final QA Report, and that is correct rather than a gap.
 
-A test case qualifies as an Automation Candidate only when **all** of the following hold:
+Three artifacts are produced from **one** underlying per-test result set:
 
-1. Its Status this run is `Passed` (§8) — a Failed, Blocked, Skipped, Not Executed, or Inconclusive result never qualifies.
-2. Its Steps and Expected Result are deterministic and objectively verifiable — a test case whose Expected Result requires subjective human/visual judgment (rather than an assertable state) is excluded, however well it executed, and noted as a Manual-Only characteristic for the Automation skill's own awareness.
-3. Where this skill executed the same test case more than once within this run (e.g., a re-validation), every execution agreed on the outcome — a test case that passed once but produced a different outcome on a repeat execution is excluded as **Not Stable**, with both outcomes cited, never silently included on the strength of its best result.
-4. It is not a test case Test Design (§5.3 of `.claude/skills/test-design-skill/SKILL.md`) already dispositioned as an **Exploratory test** against a Finding — an exploratory disposition means the right resolution depends on ongoing human judgment, which this skill does not override.
+| Artifact | Audience | Purpose |
+|---|---|---|
+| **Manual Execution Results** (§10) | QA reviewer at the `4M` checkpoint | The raw, complete, per-test record — every status, evidence reference, and full defect write-up |
+| **Manual Test Results CSV** (§9.2) | Tooling / test-management import / spreadsheet | One row per executed test case, machine-readable |
+| **Manual QA Report** (§9.1) | Stakeholders | The readable delivery: coverage against requirements, outcome figures, defect register, limitations |
 
-## 9.2 Relationship to Test Design's advisory flag
+**One result set, three renderings — they must never disagree.** The Results document is authored first and is authoritative; the CSV and QA Report are derived from it. A status corrected in the Results is corrected in all three, in the same pass. A figure in the QA Report that cannot be recomputed from the Results is a defect in this stage's output, not a rounding difference.
 
-Test Design's own Coverage Report already carries an advisory, non-binding **Automation Candidates** hint (`.claude/skills/test-design-skill/SKILL.md` §18 #11). This skill treats that hint only as a prioritization signal for which test cases to execute first — it never substitutes for, or is copied directly into, this skill's own Automation Candidate Package. Inclusion in this skill's package is always evidence-based on an actual execution outcome (§9.1), never inherited from a pre-execution guess.
+## 9.1 Manual QA Report
 
-## 9.3 Automation Candidate Package
+The stakeholder-facing Markdown report contains, at minimum:
 
-The package lists, for every qualifying test case: its Test Case ID, Requirement/Discovery/Finding/Evidence References (carried unmodified from the Traceability Matrix), the Manual Execution Result(s) that confirmed it, and the specific Manual Test Suite file/module it lives in — enough for the Automation skill to locate the full test case content without this skill duplicating it. A test case that does not qualify is never included, but its exclusion reason is recorded in the Manual Execution Summary (§10 #2) so a reviewer can see why the candidate set is narrower than the full suite.
+| # | Section | Must contain |
+|---|---|---|
+| 1 | **Run Identification** | Run folder, Run Scope/Run Type (§17), target environment, execution window, who/what executed it |
+| 2 | **Executive Summary** | What was validated and the headline outcome, in plain language a non-QA stakeholder can act on |
+| 3 | **Outcome Figures** | Counts and rates for all six statuses (§8) — never a bare pass/fail split |
+| 4 | **Requirement Coverage** | Per requirement from the Traceability Matrix: which test cases covered it, and its resolved verification state (verified / failed / not verified, with the reason) |
+| 5 | **Defect Register** | Every `Failed`/`Inconclusive` case as a table row — ID, title, severity, priority, category — each linking to its full §10.1 write-up in the Results |
+| 6 | **Assumptions & Risks Resolved** | Every Test Design "Assumption-based test" tag carried to a resolved state (confirmed / refuted / unverified) |
+| 7 | **Known Limitations** | What this run could not verify and why — Blocked preconditions, Skipped mutating actions, headless fallback (§11.1) |
+| 8 | **Recommendations** | The smallest corrective action per blocked/failed item (§19) |
+
+**Coverage is computed from the Traceability Matrix, never asserted.** A requirement with no executed test case is reported as *not verified*, never omitted — an absent row reads as "nothing to say," which is the opposite of the truth.
+
+**It reports manual coverage only.** It never states or implies anything about automation coverage, even where the Automation branch also ran for the same scope — cross-branch comparison is a human's synthesis across two independent deliveries, not a claim either branch makes about the other.
+
+## 9.2 Manual Test Results CSV
+
+One row per executed test case, written to `ManualTestResults.csv`. The column set is fixed so an import mapping written once keeps working:
+
+```
+Test Case ID, Module, Title, Requirement ID(s), Run Scope, Status, Execution Time,
+Executed At, Environment, Failed Step, Severity, Priority, Defect Category,
+Reproducibility, Evidence Paths, Notes
+```
+
+Rules:
+
+1. **One row per test case in scope** — including every `Blocked`, `Skipped`, and `Not Executed` case. Emitting only executed rows silently shrinks the denominator and overstates the pass rate.
+2. **`Status` uses exactly the six §8 values**, unabbreviated — never a collapsed pass/fail.
+3. **Defect columns are populated only for `Failed`/`Inconclusive`** rows, and empty (not `N/A`, not `0`) elsewhere, so a spreadsheet filter behaves predictably.
+4. **`Evidence Paths` is a semicolon-separated list of run-relative paths**, resolvable from the run folder without editing.
+5. **Standard CSV quoting** — UTF-8, fields containing a comma/quote/newline are double-quoted with internal quotes doubled. A defect summary containing a comma is a routine case, not an edge case.
+6. **The CSV is generated, never hand-maintained.** Re-derive it after any correction to the Results rather than editing the row.
+
+## 9.3 Using the shared Knowledge Bases (read-only)
+
+Per `pipeline.md` §10.8, this stage **reads** both shared KBs and **writes to neither**:
+
+- **Selector Verification KB** — where a step says "click Submit" and the screen has several plausible submit controls, a verified locator record identifies which control the automation branch confirmed, so both branches exercise the same control. It never changes what a step does or what it expects.
+- **Repair KB** — where a documented quirk exists (a known redirect delay, a known environment timing behaviour), it is recognized and **cited alongside** the observation rather than mistaken for a newly-discovered application defect.
+
+**A KB entry never suppresses a finding.** If observed behaviour is wrong, it is reported as wrong even when a KB entry explains why it happens. The entry adds context to the write-up; it never converts a defect into a non-event. Where a KB record's code-state anchor shows drift (`run_manager.md` §5.8), it is treated as an unverified hint.
 
 # 10. Standard Output Contract
 
-The Manual Execution Results and Manual Execution Summary artifacts must together contain exactly these sections, so the Automation skill never has to interpret free-form prose to extract what it needs:
+The Manual Execution Results, Manual Execution Summary, and Manual QA Report must together contain exactly these sections, so a reviewer and a stakeholder each find what they need without reading the other's artifact:
 
 | # | Section | Artifact | Must contain, at minimum |
 |---|---|---|---|
 | 1 | **Execution Metadata** | Results | Execution ID, Run Scope/Run Type (§17), environment, timestamps |
-| 2 | **Execution Summary** | Summary | One-paragraph narrative: what was executed, overall outcome, headline pass/fail/blocked figures, and the count/reason of every test case excluded from the Automation Candidate Package |
+| 2 | **Execution Summary** | Summary | One-paragraph narrative: what was executed, overall outcome, and headline figures across all six statuses (§8) |
 | 3 | **Per-Test Results** | Results | Test Case ID, Status (§8), Execution Time, Evidence Inventory references, failure/block detail where applicable — every `Failed`/`Inconclusive` case follows the Defect Documentation Standard (§10.1) in full, not a one-line summary |
 | 4 | **Evidence Inventory** | Results | Every evidence type captured (§7), per test case, with paths, and every gap with a reason |
-| 5 | **Automation Candidates** | Summary + Candidate Package | The qualifying criteria applied (§9.1) and the resulting list, cross-referenced to the standalone Automation Candidate Package artifact |
+| 5 | **Delivery Artifacts** | Summary | Confirmation that the CSV (§9.2) and Manual QA Report (§9.1) were produced, and that all three renderings agree on every test case's status |
 | 6 | **Known Limitations** | Summary | Anything this execution could not fully verify (e.g., a Blocked precondition, a Skipped mutating action) and why |
 | 7 | **Recommendations** | Summary | The corrective actions recommended per §19 for any blocked/failed item |
-| 8 | **Inputs for Automation skill** | Summary | The explicit handoff package per §20 — confirmation that every input `.claude/skills/automation-skill/SKILL.md` §4 declares it needs from this stage is present |
+| 8 | **Delivery Completeness** | Summary | The §20 checklist: every input consumed correctly, and every terminal deliverable present and internally consistent. **No handoff section** — this stage hands off to nobody (`pipeline.md` §3.3) |
 
 ## 10.1 Defect Documentation Standard (Failed / Inconclusive test cases)
 
@@ -209,7 +277,7 @@ Good:
 |---|---|---|
 | **Category** | Validation / UI / Workflow / Authorization / Business Rule / Data Integrity / Performance / Security | The technical nature of the defect. Prefer the most mechanically precise category over the broadest applicable one — e.g. a missing "at least one required" check is `Validation` even though the underlying rule is a business rule; a decision-reversal path that shouldn't exist is `Workflow`, not `Validation`. |
 | **Layer** | Frontend / Backend / API / Database / Integration / Unknown | Where the defect is suspected to live, based only on what was actually observed (e.g., a client-side condition that never fired vs. a value that round-tripped to the backend and was persisted). Use `Unknown` rather than guessing when the evidence doesn't distinguish layers. |
-| **Reproducibility** | Always / Intermittent / Unable to confirm | Based strictly on how many times this run actually observed the behavior — `Always` requires at least two independent observations agreeing (consistent with the Automation Candidate "stability" bar, §9.1 #3); a single observation is `Unable to confirm`, not `Always`. |
+| **Reproducibility** | Always / Intermittent / Unable to confirm | Based strictly on how many times this run actually observed the behavior — `Always` requires at least two independent observations agreeing; a single observation is `Unable to confirm`, not `Always`. |
 | **Regression** | Yes / No / Unknown | Whether this behavior is newly broken vs. a prior confirmed-working state. Default to `Unknown` unless a prior run's Discovery/execution evidence directly establishes the behavior once worked differently — never infer regression status from absence of prior testing. |
 | **Suspected Component** | Free text, or "N/A" | Name the specific screen/form/control/service suspected, when inferable from what was observed (e.g., "Add/Update Agency form's Product Access FormArray validator"). Use "N/A" when no component can be responsibly named — never invent a component name to fill the field. |
 | **Confidence** | High / Medium / Low | Confidence in the *defect's existence* as observed (not in the Root Cause guess, which is separately hedged) — `High` when multiple independent observations agree and the observed behavior itself is unambiguous; `Low` when the finding rests on a single observation, an inference from a different test case, or a test-execution limitation muddied the result (as with an Inconclusive case). |
@@ -228,23 +296,28 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 
 # 11. Allowed Tools
 
-- A live browser mechanism to execute each test case's Steps against the live environment — the same execution mechanism the Explorer skill uses for live investigation, here driven by Test Design's authored Steps rather than free exploration. **Two selectable peers** (`platform_core/tools/mcp/README.md` §1.1–§1.2): the **Platform Browser Driver Layer** (`platform_core/tools/browser_driver/`) — the default, and strongly preferred here, because executing authored Steps is repeatable, credential-aware work the driver is built for — or the **`playwright` MCP server**, appropriate only where a Step reaches a screen with no Screen/Component Knowledge yet, or where the driver is unavailable for a reason unrelated to the application. A credential value is **never** typed into an MCP tool call (`mcp/README.md` §1.3): authenticate via `BrowserDriver.authenticate()`, then execute the remaining Steps against that authenticated session. Each executed test case records which mechanism produced its evidence.
-- File tools: Read (Manual Test Suite, Traceability Matrix, Coverage Report, Project Context), Write (Manual Execution Results, Manual Execution Summary, Automation Candidate Package, evidence files)
+- **The `playwright` MCP server, run headed** (§11.1) — the execution mechanism for this stage. It drives the live application through Test Design's authored Steps so a human can watch each interaction happen. A credential value is **never** typed into an MCP tool call (`platform_core/tools/mcp/README.md` §1.3): authenticate through the platform's credential contract, then execute the remaining Steps against that authenticated session. Every executed test case records which mechanism produced its evidence.
+- File tools: Read (Manual Test Suite, Traceability Matrix, Coverage Report, Project Context, both shared KBs read-only), Write (Manual Execution Results, Manual Execution Summary, Manual Test Results CSV, Manual QA Report, evidence files).
 
-**Not permitted:** writing or editing automation code of any kind, executing an already-generated Automation Package (that is the Automation Execution skill's responsibility, Stage 6), editing the Manual Test Suite/Traceability Matrix/Coverage Report/Project Context/PRD, or executing any test case's mutating actions against an environment not explicitly marked safe for them.
+**Not permitted:**
+- **Writing or editing automation code, or a script of any kind** (§2.1) — including a persisted "helper" or driver script. A throwaway script used to reach a screen is deleted after use and never becomes an artifact (`pipeline.md` §11).
+- **Executing an already-generated Automation Package** — that is Stage `5A`'s responsibility, in the other branch.
+- **Writing to the Selector Verification KB or Repair KB** — this stage is a reader only (`pipeline.md` §10.8 rule 2).
+- Editing the Manual Test Suite / Traceability Matrix / Coverage Report / Project Context / PRD.
+- Executing any test case's mutating actions against an environment not explicitly marked safe for them.
 
 ## 11.1 Headed Browser — Required for This Skill
 
-**This skill runs the browser headed (visible), not headless.** It is the one deliberate exception to the platform-wide headless default (`platform_core/tools/mcp/README.md` §1.1.1, which the Explorer skill follows per its own §10). The reason is specific to Stage 4's purpose: this stage exists so a human can *watch* authored Steps being executed against the live application and judge, in real time, whether the observed behavior actually matches the Expected Result — including the timing, transient, and visual-state behavior (§7's "Notes" evidence type, §9.1 #2's subjective-judgment exclusion) that a post-hoc screenshot does not preserve. A headless run of this stage would produce the same artifacts while removing the live human observation the stage is designed around.
+**This skill runs the browser headed (visible), not headless.** It is the deliberate exception to the platform-wide headless default, and the one place the two branches differ in tooling posture (`pipeline.md` §3.4): the Automation branch runs headless for speed and repeatability, while this stage runs headed because a human watching *is* the point. This stage exists so a person can watch authored Steps execute against the live application and judge, in real time, whether observed behaviour matches the Expected Result — including timing, transient, and visual-state behaviour (§7's "Notes" evidence type) that a post-hoc screenshot does not preserve. A headless run would produce the same files while removing the live observation the stage is designed around.
 
 **How to run headed, per mechanism:**
 
 | Mechanism | How to run headed |
 |---|---|
-| **Platform Browser Driver** (default, strongly preferred) | **Pass `stage: 'manual_execution'`** — e.g. `BrowserDriver.authenticate({ env, stage: 'manual_execution' })`. The profile's `browser.headlessByStage` maps that stage to `false`, so the driver launches headed on its own; no call site has to remember `headless: false`. Passing an explicit `headless: true` would still override it — never do so in this skill. |
+| **`playwright` MCP server** | The server must be started **without** the `--headless` flag for this stage. Where the repo-root `.mcp.json` hard-codes `--headless`, a tool call cannot override it at runtime — a headed run requires a human operator to remove that flag and restart the server. **This skill must never edit `.mcp.json` itself** (outside its write scope, §11). |
 | **`playwright` MCP server** (fallback only, per §11) | The server is registered in the repo-root `.mcp.json` with a hard-coded `--headless` flag, which a tool call cannot override at runtime. A headed MCP run therefore requires a human operator to remove `--headless` from `.mcp.json` and restart the MCP server. This skill must not edit `.mcp.json` itself — that file is outside this skill's write scope (§11 "Not permitted"). |
 
-**When headed is genuinely unavailable** — no display/session is attached (a CI runner, a headless container), or the operator has not enabled headed mode for the MCP fallback — this skill does **not** halt. It proceeds headless and records the fact explicitly in the Manual Execution Results' Execution Metadata (§10 #1) and in Known Limitations (§10 #6), naming which mechanism ran headless and why. Evidence capture is unaffected either way (screenshots, DOM, console, and network are captured identically), so a headless fallback run changes no result's Status (§8) and no Automation Candidate's qualification (§9.1) — the only thing lost is live human observation, which is what the Known Limitations entry must say.
+**When headed is genuinely unavailable** — no display/session is attached (a CI runner, a headless container), or the operator has not removed `--headless` — this skill does **not** halt. It proceeds headless and records the fact explicitly in the Execution Metadata (§10 #1) and in Known Limitations (§10 #6), naming why. Evidence capture is unaffected either way (screenshots, DOM, console, and network are captured identically), so a headless fallback changes no result's Status (§8) — the only thing lost is live human observation, which is exactly what the Known Limitations entry must say.
 
 # 12. Execution Rules
 
@@ -256,8 +329,8 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 6. **Must classify every result using the full six-state Result Classification** (§8) — never collapse Blocked/Skipped/Not Executed/Inconclusive into a bare Pass/Fail.
 7. **Must produce a structured Evidence Inventory** (§7, §10) naming every evidence type captured and every one that could not be, with a reason.
 8. Must never modify the Manual Test Suite, Traceability Matrix, or Coverage Report — a test case that appears wrong is escalated as a discrepancy for Stage 3, never silently corrected here.
-9. **Must apply the Automation Candidate qualifying criteria in full** (§9.1) before including any test case in the Automation Candidate Package — a Failed, Blocked, Not Executed, Inconclusive, subjective, or Not Stable test case is never included.
-10. **Must never treat Test Design's advisory Automation Candidates hint as a substitute for this skill's own execution-based confirmation** (§9.2).
+9. **Must self-report the delivery in full** (§9) — the Manual Execution Results, the Manual Test Results CSV, and the Manual QA Report, all three derived from one result set and agreeing on every test case's status.
+10. **Must never produce a script, an Automation Candidate Package, or any Automation-branch artifact** (§2.1, `pipeline.md` §3.3), and must never write to either shared Knowledge Base (§9.3).
 11. Must timestamp and uniquely identify each run so results are never ambiguous about which execution they came from.
 12. **Must select the Execution Strategy matching this run's Run Scope and Run Type** (§17) — never apply one default "execute everything" behavior regardless of scope.
 13. **Must produce output conforming to the Standard Output Contract** (§10).
@@ -266,24 +339,27 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 16. Must never execute an automated test suite or write automation code — that is exclusively the Automation skill's (generation) and Automation Execution skill's (running) responsibility.
 17. **Must never read the PRD directly.** Only Stage 1 may do so (`workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4).
 18. **Must never consume an input artifact that is not itself `Approved`** at its own pipeline checkpoint (§4).
-19. **Must run the browser headed, so each interaction is visible live** (§11.1) — this is the skill's normal behaviour, not an opt-in. Pass `stage: 'manual_execution'` to `BrowserDriver.authenticate()` and the profile's `browser.headlessByStage` makes it headed automatically; never pass `headless: true`, which would override it. Where headed is genuinely unavailable (no display attached, or the MCP fallback's `--headless` flag not removed by an operator), proceed headless rather than halting, and state it in Execution Metadata (§10 #1) and Known Limitations (§10 #6).
+19. **Must run the browser headed, so each interaction is visible live** (§11.1) — the skill's normal behaviour, not an opt-in. Where headed is genuinely unavailable (no display attached, or `--headless` not removed by an operator), proceed headless rather than halting, and state it in Execution Metadata (§10 #1) and Known Limitations (§10 #6).
+20. **Must compute the QA Report's coverage from the Traceability Matrix**, reporting an uncovered requirement as *not verified* rather than omitting it (§9.1).
+21. **Must emit one CSV row per test case in scope**, including Blocked/Skipped/Not Executed, so the pass rate is never computed against a silently shrunken denominator (§9.2).
 
 # 13. Expected Artifacts
 
 | Artifact | Path | Template |
 |---|---|---|
-| Manual Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md` | [`stage_4_manual_execution/ManualExecutionResults.md`](../../../platform_core/templates/stage_4_manual_execution/ManualExecutionResults.md) (defect block: [`Defect_entry.md`](../../../platform_core/templates/stage_4_manual_execution/Defect_entry.md)) |
-| Manual Execution Summary | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md` | [`stage_4_manual_execution/ManualExecutionSummary.md`](../../../platform_core/templates/stage_4_manual_execution/ManualExecutionSummary.md) |
-| Automation Candidate Package | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md` | [`stage_4_manual_execution/AutomationCandidatePackage.md`](../../../platform_core/templates/stage_4_manual_execution/AutomationCandidatePackage.md) |
+| Manual Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md` | [`stage_4m_manual_execution/ManualExecutionResults.md`](../../../platform_core/templates/stage_4m_manual_execution/ManualExecutionResults.md) (defect block: [`Defect_entry.md`](../../../platform_core/templates/stage_4m_manual_execution/Defect_entry.md)) |
+| Manual Execution Summary | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md` | [`stage_4m_manual_execution/ManualExecutionSummary.md`](../../../platform_core/templates/stage_4m_manual_execution/ManualExecutionSummary.md) |
+| **Manual Test Results CSV** | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualTestResults.csv` | Schema fixed by §9.2 (not a Markdown template) |
+| **Manual QA Report** | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualQAReport.md` | [`stage_4m_manual_execution/ManualQAReport.md`](../../../platform_core/templates/stage_4m_manual_execution/ManualQAReport.md) |
 | Captured screenshots / videos / notes / logs | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/artifacts/` | — (evidence files, not a document) |
 
 **Every artifact's document structure is defined by its template** in `platform_core/templates/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. The Results and Summary templates together carry §10's 8-section contract, and `Defect_entry.md` encodes §10.1's 15-section Defect Documentation Standard. `platform_core/templates/README.md` states the shared conventions.
 
 # 14. Operational Contract
 
-Role: manual test case execution, raw result recording, and Automation Candidate identification (Stage 4 of 7).
+Role: manual test case execution, result recording, defect documentation, and self-reported delivery (Stage `4M` — the Manual pipeline's terminal stage).
 
-Execute the approved Manual Test Suite exactly as authored, record a raw unedited result per test case, and identify which stably-executed cases are worth handing to Stage 5. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Precondition Validation), §6 (Environment Awareness), §7 (Evidence Collection), §8 (Result Classification), §9 (Automation Candidate Identification), §10 (Standard Output Contract, incl. the Defect Documentation Standard §10.1), §11.1 (Headed Browser — required), §12 (Execution Rules), §13 (Artifacts), §17 (Execution Strategy by Run Scope), §18–§19 (Stop Conditions and Recovery), §20 (Handoff Contracts). This section adds no rules of its own; the contract is stated once above rather than restated here.
+Execute the approved Manual Test Suite exactly as authored, record a raw unedited result per test case, document every defect to the full standard, and self-report the delivery. Execution is fully specified above — §2.1 (What this skill never does), §4 (Inputs, all of which must be Approved), §5 (Precondition Validation), §6 (Environment Awareness), §7 (Evidence Collection), §8 (Result Classification), §9 (Self-Reporting — QA Report, CSV, shared KB reads), §10 (Standard Output Contract, incl. the Defect Documentation Standard §10.1), §11.1 (Headed Browser — required), §12 (Execution Rules), §13 (Artifacts), §17 (Execution Strategy by Run Scope), §18–§19 (Stop Conditions and Recovery), §20 (Delivery Completeness). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
 # 15. Example Execution
 
@@ -297,13 +373,21 @@ Input:
   platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
 ```
 
-Hypothetical result: this skill confirms the target environment matches the Project Context, then executes all 12 Login test cases. `TC-LOGIN-001` (valid login) and `TC-LOGIN-002` (invalid password) both Pass with deterministic, objectively verifiable outcomes and are included in the Automation Candidate Package. `TC-LOGIN-004` (the Forgot Password regression case tied to `FINDING-003`) Fails — the observed response still times out — and is excluded, with the failure detail and screenshot cited in the Manual Execution Results. `TC-LOGIN-007` (an exploratory test case dispositioned against `FINDING-004`, the anti-enumeration concern) Passes but is excluded from the Automation Candidate Package per §9.1 rule 4, since its resolution still depends on a pending human policy call. The resulting `AutomationCandidatePackage.md` lists 9 of the 12 test cases, and the Summary states the 3 exclusions and their reasons.
+Hypothetical result: this skill confirms the target environment matches the Project Context, launches the browser **headed**, and executes all 12 Login test cases while a human watches.
+
+`TC-LOGIN-001` (valid login) and `TC-LOGIN-002` (invalid password) Pass. `TC-LOGIN-004` (the Forgot Password regression case tied to `FINDING-003`) **Fails** — the response still times out — and is written up to the full Defect Documentation Standard (§10.1): expected vs. actual as complete statements, Category `Workflow`, Layer `Backend`, Reproducibility `Always` (observed twice), Severity High with justification, screenshot and console log cited. `TC-LOGIN-009` is `Blocked` — the required seed account does not exist in this environment — and is never force-run (§5). `TC-LOGIN-011`'s mutating action is not authorized for this shared environment, so it is `Skipped` with the constraint named (§6).
+
+The Repair KB carries a documented 2-second post-login redirect delay for this application; the executor recognizes it and **cites it alongside** the observation rather than raising it as a new defect (§9.3) — while still reporting the genuine `TC-LOGIN-004` failure in full.
+
+Three deliverables result: `ManualExecutionResults.md` (12 per-test records, 1 full defect write-up), `ManualTestResults.csv` (12 rows — including the Blocked and Skipped ones, so the pass rate is computed against 12, not 10), and `ManualQAReport.md` (requirement coverage from the Traceability Matrix, with the requirement behind `TC-LOGIN-004` shown as *not verified*). **No script is produced, and no Automation Candidate Package exists** — automation scope, if this scope is ever automated, comes from Stage 3 in the other branch (§2.1).
 
 # 16. Architecture Principle
 
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this skill specifically: its single responsibility is faithfully executing manually-designed test cases and evidencing which of them are actually stable enough to justify automation effort — never deciding what gets automated, and never executing automation code itself. Its outputs — the Manual Execution Results, Manual Execution Summary, and Automation Candidate Package — become the Automation skill's primary scope-determining input in the next stage.
+For this skill specifically: its single responsibility is faithfully executing manually-designed test cases and reporting what actually happened, with evidence — never generating a script, never deciding what gets automated, and never executing automation code.
+
+**This stage is where the "every output becomes another agent's input" clause legitimately terminates.** Its outputs — the Manual Execution Results, Manual Execution Summary, Test Results CSV, and Manual QA Report — are consumed by people, not by another agent (`pipeline.md` §3.3). That is why it self-reports rather than handing off: a terminal stage that produced only raw results would leave its delivery unfinished, waiting for a reporting stage that serves the other branch and does not read manual results.
 
 # 17. Execution Strategy by Run Scope and Run Type
 
@@ -329,7 +413,7 @@ If the Project Context/Run Scope states no explicit Type, this skill defaults to
 
 # 19. Recovery Strategy — Smallest Corrective Action
 
-Consistent with every other execution-capable stage in this pipeline (`.claude/skills/automation-execution-skill/SKILL.md` §20): never simply fail — recommend the smallest corrective action, and never let one blocked test case stop the whole run.
+Consistent with every other execution-capable stage in either pipeline: never simply fail — recommend the smallest corrective action, and never let one blocked test case stop the whole run.
 
 1. For a Local Stop Condition (§18), continue executing every other unaffected test case.
 2. For every block/failure, recommend the smallest corrective action: validate environment, re-run the affected subset once the underlying cause is believed fixed, or flag the specific test case for Test Design if the block reveals the test case itself (not the environment) is the problem.
@@ -337,25 +421,31 @@ Consistent with every other execution-capable stage in this pipeline (`.claude/s
 
 # 20. Handoff Contracts
 
-## 20.1 Test Design skill → Manual Execution skill
+## 20.1 Test Design skill → Manual Execution skill (inbound)
 
 | This skill needs (§4) | Satisfied by (`.claude/skills/test-design-skill/SKILL.md` §9/§21) |
 |---|---|
 | Manual Test Suite | §9 Outputs #1–#2 |
 | Requirement Traceability Matrix | §9 Outputs #3 |
-| Coverage Report (incl. advisory Automation Candidates, §18 #11 there) | §9 Outputs #4 |
+| Coverage Report (Coverage Gaps only — the advisory Automation Candidates hint belongs to Stage `4A`) | §9 Outputs #4 |
 | Project Context | Unchanged pass-through from Stage 1 |
 
-## 20.2 Manual Execution skill → Automation skill
+## 20.2 Outbound — there is none
 
-| Automation skill needs (`.claude/skills/automation-skill/SKILL.md` §4) | Satisfied by (this skill's output) |
+**This stage has no downstream skill** (`pipeline.md` §3.3). It is the Manual branch's terminal stage: its outputs are consumed by the `4M` reviewer and by stakeholders, not by another agent.
+
+In place of a handoff contract, a run is not complete until every one of these holds:
+
+| Delivery requirement | Verified by |
 |---|---|
-| Automation Candidate Package (Primary) | §9.3 |
-| Manual Execution Summary (Secondary) | §10 #2, #5 |
-| Manual Test Suite / Traceability Matrix / Coverage Report (content source, unchanged pass-through) | Not produced by this skill — still read directly from `test_design/` by the Automation skill for full test case content; this skill's package only bounds *which* IDs are in scope |
-| Project Context | Unchanged pass-through from Stage 1 |
+| Every test case in scope has a recorded outcome | §12 Rule 5 — no silent omissions |
+| Every `Failed`/`Inconclusive` case meets the Defect Documentation Standard in full | §10.1 |
+| Every result's evidence is captured, or its absence stated with a reason | §7, §10 #4 |
+| The CSV has one row per test case in scope, statuses unabbreviated | §9.2 |
+| The QA Report's coverage is computed from the Traceability Matrix, with uncovered requirements shown as *not verified* | §9.1 |
+| **All three renderings agree on every test case's status** | §9 |
 
-**A run is not complete until every row above is verifiably satisfied.** An Automation Candidate cited in the package without a resolvable Manual Test Suite/Traceability Matrix reference is a handoff defect, not an acceptable shorthand.
+**The last row is the one that actually fails in practice.** A status corrected in the Results after the CSV was written, without regenerating the CSV, produces a delivery that contradicts itself — and the contradiction is normally found by the stakeholder, not the reviewer.
 
 # 21. Metrics
 
@@ -363,19 +453,20 @@ Consistent with every other execution-capable stage in this pipeline (`.claude/s
 |---|---|
 | **Execution Duration** | Total wall-clock time for this execution, start to finish. |
 | **Pass Rate** | Passed ÷ total executed. |
-| **Automation Candidate Rate** | Automation Candidates ÷ total executed — how much of the suite this run judged ready to hand to Automation. |
+| **Requirement Verification Rate** | Requirements with at least one Passed covering test case ÷ requirements in scope — the figure the QA Report leads with. |
+| **Defect Density** | Failed + Inconclusive ÷ total executed. |
 | **Block/Skip Rate** | (Blocked + Skipped) ÷ total in scope. |
 | **Evidence Count** | Total evidence items captured, per §7. |
 
 # 22. Future Scalability
 
-The Result Classification (§8) and Automation Candidate criteria (§9.1) are already defined in terms of outcome and determinism rather than "a web page" — they extend to Mobile, Desktop, and API-shaped manual test cases (where "Steps" become device gestures or request/response definitions, per `.claude/skills/test-design-skill/SKILL.md` §22) with no change to this skill's Standard Output Contract (§10) or Handoff Contracts (§20).
+The Result Classification (§8) and the Defect Documentation Standard (§10.1) are defined in terms of outcome and evidence rather than "a web page" — they extend to Mobile, Desktop, and API-shaped manual test cases (where "Steps" become device gestures or request/response definitions, per `.claude/skills/test-design-skill/SKILL.md` §22) with no change to this skill's Standard Output Contract (§10), its CSV schema (§9.2), or its QA Report structure (§9.1). Only the execution mechanism (§11) changes.
 
 # 23. Direct Invocation
 
 This skill is independently invocable — `/manual-execution-skill`, optionally with a run-scoped instruction (e.g. `/manual-execution-skill run TC-LOGIN-001..008 only`). Full rules: `workflows_and_pipelines/pipeline/pipeline.md` §5.3.1.
 
-- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may select which test case IDs to execute, set an execution order, or limit the session. It never authorizes force-running a test whose Preconditions are unmet (§5 — that is `Blocked`), taking unauthorized destructive actions, relaxing Evidence capture, reading the PRD directly (§17), or admitting a test case into the Automation Candidate Package without applying §9.1's criteria.
+- **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may select which test case IDs to execute, set an execution order, or limit the session. It never authorizes force-running a test whose Preconditions are unmet (§5 — that is `Blocked`), taking unauthorized destructive actions, relaxing Evidence capture, reading the PRD directly (§17), producing a script or any Automation-branch artifact (§2.1), or omitting one of the three terminal deliverables (§9).
 - **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4). Report which of the Manual Test Suite / Traceability Matrix / Coverage Report / Project Context is open, then offer both paths (approve → `/manual-execution-skill`, or revise → `/test-design-skill <feedback>`).
 - **Missing upstream → run degraded** (§5.3.1 #5):
   - *No Manual Test Suite:* there is nothing to execute — report it as the blocking gap (existing §18 Stop Condition stands). This skill executes designed test cases; it never authors them to fill the gap.
@@ -384,14 +475,22 @@ This skill is independently invocable — `/manual-execution-skill`, optionally 
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 4 complete — Manual Execution Results → Pending Review
+Stage 4M complete — Manual Execution delivery → Pending Review
   platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md
-  {P} Passed | {F} Failed | {B} Blocked | {C} Automation Candidates
+  platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualTestResults.csv
+  platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualQAReport.md
+
+  {P} Passed | {F} Failed | {B} Blocked | {S} Skipped | {N} Not Executed | {I} Inconclusive
+  {D} defects documented | Requirement verification {V}/{T}
+
+This is the Manual pipeline's terminal stage — approving it releases the delivery.
 
 Next step — either:
-  1. Approve, then continue:   "approved"  →  /automation-skill
+  1. Approve and deliver:      "approved"
   2. Re-run failed cases:      /manual-execution-skill re-run {IDs}
-  3. Report without automating: /reporting-skill   (declares Automation Coverage gap)
+  3. Revise the test cases:    /test-design-skill <your feedback>
+  4. Also automate this scope: /automation-skill   (independent branch — takes its
+                               scope from Stage 3, not from this stage's results)
 ```
 
 # 24. Resolving `{{RUN_FOLDER}}`

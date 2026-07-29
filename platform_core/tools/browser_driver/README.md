@@ -21,7 +21,7 @@ const { BrowserDriver } = require('../../platform_core/tools/browser_driver/api'
 const driver = await BrowserDriver.authenticate({
   env: 'STG',        // optional — omit to let the credentials file's activeEnvironment/environment decide
   // stage: 'manual_execution', // optional — selects that stage's display-mode default from
-  //                             // the profile's browser.headlessByStage. Stage 4 maps to headed.
+  //                             // the profile's browser.headlessByStage. Stage 4M maps to headed.
   // headless: false,          // optional — forces a headed window regardless of stage/profile.
   //                           // Omit both: the profile's browser.headless default is `true`.
 });

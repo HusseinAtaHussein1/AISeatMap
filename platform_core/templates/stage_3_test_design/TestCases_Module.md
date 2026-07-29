@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Manual Test Suite, per module (Stage 3 of 7)
+TEMPLATE — Manual Test Suite, per module (Stage 3 — shared, divergence point)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{{MODULE}}.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §9 Outputs #1–#2, §6 (Test Case Schema),
             §9.1 (Excel Rendering), §12
@@ -13,7 +13,7 @@ THIS MARKDOWN FILE IS THE AUTHORED ARTIFACT. THE .xlsx IS GENERATED FROM IT — 
 
 §9 requires the Markdown and Excel suites to be "two renderings of one test case set — they must
 never diverge in content." Deriving the workbook from this file is what actually GUARANTEES that;
-authoring both by hand makes it a matter of discipline, and when they drift, Stage 4 silently
+authoring both by hand makes it a matter of discipline, and when they drift, Stage 4M silently
 executes against whichever one the tester happened to open. Nothing downstream can detect that.
 
 So: edit THIS file, then re-run the export. Never hand-edit a generated .xlsx — the next export
@@ -26,7 +26,7 @@ structured to match any external ALM, issue-tracking, or test-management system.
 
 <!-- One file per artifact, edited in place — no `.vN` copies. Git is the version history
      (templates/README.md §6, pipeline.md §7). A superseded TestCases_{{MODULE}}.vN.md left beside
-     this file is skipped by the exporter rather than rendered into a shadow workbook Stage 4 could
+     this file is skipped by the exporter rather than rendered into a shadow workbook Stage 4M could
      execute by accident. -->
 
 # Manual Test Suite — {{MODULE}}

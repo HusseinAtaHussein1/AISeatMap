@@ -1,6 +1,6 @@
 ---
 name: reporting-skill
-description: Stage 7 of 7 (terminal stage) in the Agentic AI Testing Platform pipeline. Synthesizes raw Execution Results, the Traceability Matrix, and the Project Context into a stakeholder-facing Final QA Report — Requirement Coverage, Automation Coverage, defects, and resolved assumptions/risks. Use when producing the final QA report after an execution run.
+description: Stage 6A (terminal stage) of the Agentic AI Testing Platform's Automation Pipeline. Synthesizes automation Execution Results, the Traceability Matrix, the Project Context, and any Stage 5H Repair Summary into a stakeholder-facing Final QA Report — Requirement Coverage, Automation Coverage, defects, and resolved assumptions/risks. Serves the Automation branch only: the Manual branch self-reports at Stage 4M. Use when producing the final QA report after an automation execution run.
 inputs:
   - name: execution_results
     type: file_path
@@ -28,7 +28,9 @@ dependencies:
   - "platform_core_data/knowledge_base/patterns/reporting/ (Platform Knowledge patterns, if any promoted)"
 ---
 
-> **Pipeline position:** Stage 7 of 7 — final stage, consumes Execution Results, produces the Final QA Report.
+> **Pipeline position:** Stage `6A` — the **Automation Pipeline's** terminal stage. Consumes automation Execution Results, produces the Final QA Report.
+> **Branch:** Automation only. **The Manual branch never reaches this stage** — Stage `4M` self-reports its own Manual QA Report and Test Results CSV (`workflows_and_pipelines/pipeline/pipeline.md` §3.3). A run that took only the Manual branch has no Final QA Report, and that is correct rather than a gap.
+> **Repaired results are reported as repaired:** where Stage `5H` ran, an `Automation Repaired` result is never presented as a clean `Passed` (§7).
 > **Traceability:** `Execution → Reports`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 
@@ -83,12 +85,16 @@ The Reporting skill is the final stage of the pipeline. It synthesizes the raw E
 5. Must not recommend a specific code fix as if already applied — findings are reported as needing developer investigation.
 6. Must not re-run any test or modify upstream artifacts (Execution Results, test cases, Project Context, PRD).
 7. Must group defects by module and assign severity based only on evidence present in the Execution Results.
+8. **Must report the three health figures separately** — Application Health, Automation Health, Environment Health — exactly as the Execution Results record them (`automation-execution-skill` §25.2). **Never merge them into one "failed" count**: an automation-authoring gap and a genuine application defect are different facts about different systems, and a stakeholder acting on a merged figure is acting on a number that describes neither.
+9. **Must never present an `Automation Repaired` result as a clean `Passed`** (`pipeline.md` §4, Stage `6A`). Where Stage `5H` ran, the report distinguishes first-attempt passes from repaired ones, cites the Repair Summary, and states how many tests required a fix — coverage achieved only after repair is real coverage, but a reader must be able to see that it needed repair.
+10. **Must report quarantined tests** (`self-healing-skill` §14), where a Quarantine Register exists, as coverage that is *not currently verified* — never omitted, and never counted as passing.
+11. **Must report Automation coverage only, and never substitute Manual Execution results for it** (`pipeline.md` §3.3). Manual coverage is reported by Stage `4M`'s own QA Report. Where both branches ran the same scope, comparing them is a human's synthesis across two independent deliveries — this report never claims manual coverage as its own.
 
 # 8. Expected Artifacts
 
 | Artifact | Path | Template |
 |---|---|---|
-| Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | [`platform_core/templates/stage_7_reporting/Final_QA_Report.md`](../../../platform_core/templates/stage_7_reporting/Final_QA_Report.md) |
+| Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | [`platform_core/templates/stage_6a_reporting/Final_QA_Report.md`](../../../platform_core/templates/stage_6a_reporting/Final_QA_Report.md) |
 
 **Document structure is defined by the template, not restated here.** Render the report by copying the
 template and filling its `{{PLACEHOLDER}}` tokens; its section order is mandatory and its inline
@@ -98,7 +104,7 @@ result. `platform_core/templates/README.md` states the conventions every templat
 
 # 9. Operational Contract
 
-Role: execution-to-stakeholder-report synthesis (Stage 7 of 7, terminal).
+Role: execution-to-stakeholder-report synthesis (Stage `6A`, the Automation Pipeline's terminal stage).
 
 Synthesize raw execution results into a clear, accurate, stakeholder-facing QA report based only on the Execution Results, the Manual Test Suites / Traceability Matrix, and the Project Context. Execution is fully specified above — §3 (Responsibilities, incl. the two distinct coverage measures), §4 (Inputs), §5 (Outputs), §7 (Execution Rules), §8 (Artifacts and the eight required report sections). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
@@ -131,20 +137,25 @@ This skill is independently invocable — `/reporting-skill`, optionally with a 
 - **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may set report emphasis, audience, or section depth. It never authorizes re-testing, code diagnosis, inferring an outcome not present in the Execution Results (§7), or reading the PRD directly — this skill reports what the artifacts say, nothing more.
 - **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4). Report which input is open, then offer both paths (approve → `/reporting-skill`, or revise → the producing skill's command).
 - **Missing upstream → run degraded** (§5.3.1 #5). This is the terminal stage and the most common legitimate direct-invocation target — a report on a partial run is often exactly what is wanted. Report on whatever exists, and state the basis explicitly:
-  - *No Execution Results:* report coverage and design status only. Mark every outcome-dependent section (`Defect Summary`, pass/fail figures, Automation Coverage) as `Not Executed — Requires Stage 6`, never as zero defects or as passing.
+  - *No Execution Results:* report coverage and design status only. Mark every outcome-dependent section (`Defect Summary`, pass/fail figures, Automation Coverage) as `Not Executed — Requires Stage 5A`, never as zero defects or as passing.
+  - *No Repair Summary:* the normal case — Stage `5H` is optional and usually does not run (`pipeline.md` §3.6). Report results as executed, with no repair section at all. Its absence is never a gap to disclose.
+  - *Manual Execution Results present, no automation results:* **do not substitute them.** This stage reports automation coverage; manual coverage is reported by Stage `4M`'s own QA Report (`pipeline.md` §3.3). Report the automation gap plainly and point the reader to the manual delivery.
   - *No Traceability Matrix:* omit the Requirement Coverage table and state why, rather than computing coverage from an incomplete basis.
   - *No Project Context:* carry no assumption/risk resolution section; mark it `Requires Stage 1`.
   - **A gap is always reported as a gap, never as a favourable result.** An absent input must never render as 0 defects, 100% pass, or full coverage.
 - **Closing message must state the report's basis** (§5.3.1 #6):
 
 ```
-Stage 7 complete — Final QA Report
+Stage 6A complete — Final QA Report (Automation branch)
   platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md
+  Requirement coverage {R}% | Automation coverage {A}%
+  {P} passed | {H} automation-repaired | {F} failed    <- repaired is never counted as passed
   Basis: {inputs present} | Declared gaps: {inputs absent}
 
 Next step — either:
   1. Regenerate with different emphasis:  /reporting-skill <your focus>
   2. Fill a declared gap first:           /automation-execution-skill   (then re-report)
+  3. Heal remaining failures:             /self-healing-skill           (then re-report)
 ```
 
 # 13. Resolving `{{RUN_FOLDER}}`

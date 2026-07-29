@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Automation Summary (Stage 5 of 7)
+TEMPLATE — Automation Summary (Stage 4A — Automation branch)
 Renders to: platform_core_data/automation_baseline/{{FRAMEWORK_LOWER}}/AutomationSummary_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §25 (Standard Output Contract — these 8
             sections, this order), §16 Outputs #7, §19
@@ -80,7 +80,7 @@ to interpret free-form prose to extract what it needs.
 
 <!-- §25 #6 — EVERY locator fallback (§24.2), EVERY Partially Automatable / Manual Only reason, and
      any Self Review (§15) finding NOT YET RESOLVED. Completeness matters here: this is the section
-     Stage 6 reads to know what it cannot trust. -->
+     Stage 5A reads to know what it cannot trust. -->
 
 **Locator fallbacks (§24.2):**
 
@@ -129,4 +129,4 @@ to interpret free-form prose to extract what it needs.
 **Handoff confirmation:** {{HANDOFF_CONFIRMATION}}
 
 **Suite to execute:** `runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/`
-<!-- Stage 6 executes this run's WORKING COPY, never the Workspace Automation Baseline directly. -->
+<!-- Stage 5A executes this run's WORKING COPY, never the Workspace Automation Baseline directly. -->

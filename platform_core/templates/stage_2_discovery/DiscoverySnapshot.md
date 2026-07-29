@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Discovery Snapshot (Stage 2 of 7)
+TEMPLATE — Discovery Snapshot (Stage 2 — shared)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/{{SCREEN_OR_STATE}}.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §9 Outputs #1, §12 Artifacts
 
@@ -55,7 +55,7 @@ mode (e.g. no console log obtainable from a static screenshot) are NAMED AS MISS
 
 <!-- Every element a test could act on. Locator is what a later stage needs to find the element —
      record the most stable one observed (accessible name/role/label before a brittle CSS path).
-     Stage 5 consumes these; a fallback locator must be flagged as such. -->
+     Stage 4A consumes these; a fallback locator must be flagged as such. -->
 
 | Element | Type | Label / Accessible Name | Locator | Required? | Notes |
 |---|---|---|---|---|---|

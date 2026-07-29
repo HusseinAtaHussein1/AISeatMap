@@ -21,7 +21,7 @@ One concern per document, one stable ID per document (e.g. `REPAIR-001`), groupe
 | `framework_patterns/` | Framework best practices (SHAFT, Playwright, etc.) |
 | `reasoning/` | General AI reasoning patterns that apply across more than one agent/skill — if a pattern is specifically about sourcing evidence during failure investigation, it belongs in `diagnosis_patterns/` instead |
 | `reporting/` | Reporting conventions |
-| `pipeline_decision_patterns/` | Cross-project pipeline decision heuristics (e.g. "defer Stage 5 by default for Run Scope=Bug on a Shared environment") — distinct from `workflows_and_pipelines/pipeline/`, which is the orchestration engine's own spec, not a knowledge category. **Currently held empty**: no agent or workflow is yet named as a reader in `pipeline.md` §10.7, and no project-level `knowledge_base/` counterpart folder exists to promote from — do not promote a document into this folder until both exist. |
+| `pipeline_decision_patterns/` | Cross-project pipeline decision heuristics (e.g. "defer Stage 4A by default for Run Scope=Bug on a Shared environment") — distinct from `workflows_and_pipelines/pipeline/`, which is the orchestration engine's own spec, not a knowledge category. **Currently held empty**: no agent or workflow is yet named as a reader in `pipeline.md` §10.7, and no project-level `knowledge_base/` counterpart folder exists to promote from — do not promote a document into this folder until both exist. |
 
 See `INDEX.md` for the full catalog of documents currently in this layer.
 

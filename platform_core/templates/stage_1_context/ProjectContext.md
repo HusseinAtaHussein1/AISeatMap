@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Project Context (Stage 1 of 7)
+TEMPLATE — Project Context (Stage 1 — shared)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md
 Authority:  .claude/skills/project-context-skill/SKILL.md §3 (what to extract), §7 (rules), §8 (this structure)
 
@@ -71,7 +71,7 @@ Missing run configuration → run degraded: mark affected sections
 <!-- Every PRD `> Assumption` and Risk entry relevant to an in-scope module, carried forward
      verbatim in MEANING (§7 rule 4) — never diluted or reworded away from its original caveat.
      Stage 2 probes these; Stage 3 designs an explicitly tagged assumption-based test per entry;
-     Stage 7 resolves each as confirmed / refuted / still unverified. Keep IDs stable. -->
+     Stage 6A resolves each as confirmed / refuted / still unverified. Keep IDs stable. -->
 
 | ID | Type | Statement (meaning preserved) | Affected Module(s) | PRD Reference |
 |---|---|---|---|---|

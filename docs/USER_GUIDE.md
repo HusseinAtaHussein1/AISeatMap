@@ -1,6 +1,15 @@
 # User Guide
 
-**Agentic AI Testing Platform — install it into your repository, run seven governed stages, get a traceable QA report.**
+**Agentic AI Testing Platform — install it into your repository, run one of two governed pipelines, get a traceable QA delivery.**
+
+Two pipelines share the first three stages and then diverge (`pipeline.md` §3.3):
+
+| Pipeline | Run this | Delivers | Scripts? |
+|---|---|---|---|
+| **Manual** | 1 → 2 → 3 → `4M` | Results, defect records, **CSV**, Manual QA Report, evidence | **never** |
+| **Automation** | 1 → 2 → 3 → `4A` → `5A` → *(optional)* `5H` → `6A` | Suite, execution results, repairs, Final QA Report | yes |
+
+Either may run alone, in either order, or both — **neither reads the other's artifacts**, and automation never waits on a manual pass.
 
 This guide is the task-oriented companion to [`README.md`](../README.md). The README explains *what the platform is and why it's built this way*; this guide walks you through *doing things with it*, in the order you'll actually need them.
 
@@ -59,7 +68,7 @@ npx agentic-testing detect      # read-only: what does the platform make of my p
 npx agentic-testing init --dry-run   # print the full plan, write nothing
 ```
 
-`detect` reports the stack it found (from `package.json`, `pom.xml`, `requirements.txt`, and friends), the test directories it identified, and the coding conventions it will match when generating automation. If it guesses wrong, override it with `--test-dir` and `--framework` rather than letting the pipeline discover the mistake at Stage 5.
+`detect` reports the stack it found (from `package.json`, `pom.xml`, `requirements.txt`, and friends), the test directories it identified, and the coding conventions it will match when generating automation. If it guesses wrong, override it with `--test-dir` and `--framework` rather than letting the pipeline discover the mistake at Stage `4A`.
 
 ### Greenfield projects
 
@@ -81,7 +90,7 @@ your-project/
                                    automation_baseline/
     workflows_and_pipelines/       the pipeline specification
     platform.config.json           the two-root wiring
-  .claude/skills/               ← the seven skills, so Claude Code can find them
+  .claude/skills/               ← the eight skills, so Claude Code can find them
   .gitignore                    ← one marker block added
   .mcp.json                     ← two server entries added (merged, never overwritten)
 ```
@@ -93,7 +102,7 @@ The complete list of what `init` touches:
 | Adds `agentic-testing-tool/` | one folder, gitignored by default, holding the entire platform |
 | Adds a marker block to `.gitignore` | delimited by markers so `upgrade` can update it without eating your rules |
 | Merges two entries into `.mcp.json` | `playwright` and `context7`; your existing servers are preserved |
-| Adds `.claude/skills/` | the seven `SKILL.md` files |
+| Adds `.claude/skills/` | the eight `SKILL.md` files |
 | Writes `platform.config.json` | inside the tool folder — the Tool Root / Target Root contract |
 
 **What it never does:** modify your source, your CI configuration, your lockfiles, or your existing tests — and it never commits anything to your repository ([`pipeline.md` §13](../workflows_and_pipelines/pipeline/pipeline.md)). Host-file edits are *additive merges*, not overwrites.
@@ -107,7 +116,7 @@ Everything hinges on one distinction ([`platform_core/tools/platform_paths/READM
 | **Tool Root** | `agentic-testing-tool/` | read + write, unrestricted |
 | **Target Root** | your repository | read for **technical facts only**; write **only** inside the configured automation directory |
 
-Process artifacts always live under the Tool Root. Your project receives generated automation code and nothing else. The write allowlist is **fail-closed**: if it's empty, the platform writes nothing to your repo at all and Stage 5 generates inside `platform_core_data/` instead.
+Process artifacts always live under the Tool Root. Your project receives generated automation code and nothing else. The write allowlist is **fail-closed**: if it's empty, the platform writes nothing to your repo at all and Stage `4A` generates inside `platform_core_data/` instead. Every file it would write is listed in a **Target Write Plan** you approve before anything is written (`automation-skill` §11C.4).
 
 Verify the wiring any time:
 
@@ -127,7 +136,7 @@ npx agentic-testing doctor       # resolved roots + an ordered trace of every de
 | 2 | `run_configuration.md` | target URL, environment, credentials location, in-scope modules | Stage 1 |
 | 3 | `architecture.md` | architecture of the application under test | optional context |
 | 4 | `glossary.md` | domain terminology | optional context |
-| — | `stack.md` | detected framework + pinned dependency versions | **written for you** by Stage 5 — edit only to correct it |
+| — | `stack.md` | detected framework + pinned dependency versions | **written for you** by Stage `4A` — edit only to correct it |
 
 They ship **blank rather than pre-filled** on purpose: Stage 1 reads the PRD as approved truth and cannot tell a real requirement from a plausible-looking placeholder.
 
@@ -150,7 +159,14 @@ The Browser Driver is the scripted, credential-aware engine. Set it up per [`pla
 
 `credentials.json` is git-ignored by two overlapping rules. **Never commit it.** Only the template, with placeholder values, is ever committed.
 
-Both browser mechanisms default to **headless** — with one deliberate exception: **Stage 4 (Manual Execution) runs headed**, so you can watch each test step execute against the live app in real time. That is configured, not opt-in: `browser.headlessByStage` in `platform_core_data/knowledge_base/browser/profile.json` maps `manual_execution` to `false`. Everywhere else, headed is an explicit opt-in — useful when you're debugging a locator, not something a run should depend on.
+Browser mode is the clearest difference between the two pipelines (`pipeline.md` §3.4):
+
+| Pipeline | Mode | Why |
+|---|---|---|
+| **Manual** (`4M`) | **Headed** — visible | A human watching each interaction *is* the point: timing, transient, and visual-state behaviour a post-hoc screenshot cannot preserve |
+| **Automation** (`4A`, `5A`, `5H`) | **Headless** | Speed and repeatability; verification output is a machine-checkable fact, not something a human needs to watch |
+
+Stage `4M`'s headed mode is configured, not opt-in: `browser.headlessByStage` in `platform_core_data/knowledge_base/browser/profile.json` maps `manual_execution` to `false`. Where headed is genuinely unavailable (a CI runner, a headless container), `4M` proceeds headless and says so in its Known Limitations rather than halting.
 
 ### 4.2 The two MCP servers
 
@@ -159,7 +175,7 @@ The repo ships a project-scoped [`.mcp.json`](../.mcp.json) registering:
 | Server | Role |
 |---|---|
 | `playwright` | a **second, selectable browser mode** alongside the Browser Driver — interactive and agent-driven, for exploratory discovery |
-| `context7` | **version-accurate documentation** for the exact stack Stage 5 generates against |
+| `context7` | **version-accurate documentation** for the exact stack Stage `4A` generates against |
 
 A project-scoped `.mcp.json` requires explicit approval before its servers start. Run `/mcp` (or `claude mcp`) once per machine, then:
 
@@ -174,7 +190,7 @@ export CONTEXT7_API_KEY=...     # optional, higher rate limits — never commit 
 
 ### 4.3 How Context7 gets used
 
-At Stage 5, before generating anything, the platform extracts your project's stack and **pinned dependency versions** from its manifests and lockfiles, then queries Context7 per library at those exact versions. Generated automation is written against the docs for the versions your suite actually runs on — not whatever the model remembers. The extractor is [`platform_core/tools/mcp/stack_docs/`](../platform_core/tools/mcp/stack_docs/).
+At Stage `4A`, before generating anything, the platform extracts your project's stack and **pinned dependency versions** from its manifests and lockfiles, then queries Context7 per library at those exact versions. Generated automation is written against the docs for the versions your suite actually runs on — not whatever the model remembers. The extractor is [`platform_core/tools/mcp/stack_docs/`](../platform_core/tools/mcp/stack_docs/).
 
 ---
 
@@ -221,10 +237,11 @@ flowchart LR
 | 1 | [`/project-context-skill`](../.claude/skills/project-context-skill/SKILL.md) | Project Context |
 | 2 | [`/explorer-skill`](../.claude/skills/explorer-skill/SKILL.md) | Discovery Artifacts, Findings, Evidence |
 | 3 | [`/test-design-skill`](../.claude/skills/test-design-skill/SKILL.md) | Manual Test Suite (MD + Excel), Traceability Matrix, Coverage Report |
-| 4 | [`/manual-execution-skill`](../.claude/skills/manual-execution-skill/SKILL.md) | Manual Execution Results, Automation Candidate Package |
+| `4M` | [`/manual-execution-skill`](../.claude/skills/manual-execution-skill/SKILL.md) | Manual Execution Results, **ManualTestResults.csv**, **ManualQAReport.md**, evidence — *terminal: this branch self-reports* |
 | 5 | [`/automation-skill`](../.claude/skills/automation-skill/SKILL.md) | Automation Package |
 | 6 | [`/automation-execution-skill`](../.claude/skills/automation-execution-skill/SKILL.md) | Execution Results, Evidence |
-| 7 | [`/reporting-skill`](../.claude/skills/reporting-skill/SKILL.md) | Final QA Report |
+| `5H` | [`/self-healing-skill`](../.claude/skills/self-healing-skill/SKILL.md) | **OPTIONAL, opt-in only** — Repair Summary, Before/After Comparison, Quarantine Register, repaired suite |
+| `6A` | [`/reporting-skill`](../.claude/skills/reporting-skill/SKILL.md) | Final QA Report *(Automation branch only)* |
 
 ### Your first run
 
@@ -234,7 +251,7 @@ It is explicitly **not** a QA sign-off on your application. It's a smoke test of
 
 ### The Automation Start Decision Gate
 
-Before Stage 5 — or before any single downstream stage is invoked for the first time — the platform reports the actual current state of every stage and asks how to proceed ([`pipeline.md` §5.4](../workflows_and_pipelines/pipeline/pipeline.md)). It never assumes you want to resume, and never assumes you want to start fresh.
+Before Stage `4A` — or before any single downstream stage is invoked for the first time — the platform reports the actual current state of every stage and asks how to proceed ([`pipeline.md` §5.4](../workflows_and_pipelines/pipeline/pipeline.md)). It never assumes you want to resume, and never assumes you want to start fresh.
 
 ---
 
@@ -273,7 +290,8 @@ Everything a run produces lives in **that run's own folder**. There is no second
 | Project Context | `context/ProjectContext.md` |
 | Discovery Artifacts | `discovery/*.md` (+ `findings/`) |
 | Manual Test Suite, Traceability Matrix | `test_design/` |
-| Manual Execution Results, Candidate Package | `manual_execution/` |
+| Manual Execution Results, CSV, Manual QA Report | `manual_execution/` *(Manual branch)* |
+| Repair Summary, Before/After, Quarantine Register | `self_healing/` *(only if Stage `5H` was invoked)* |
 | Automation working copy | `automation/tests_{Framework}/` |
 | Execution Results | `execution/` |
 | Final QA Report | `reporting/` |
@@ -344,7 +362,9 @@ Every run declares what it is allowed to validate: Entire Project, Epic, Feature
 
 The second is treated as at least as strict as a production deployment approval, never as a lighter variant of document review. Approving a document and authorizing code to run are different risk classes and the pipeline refuses to conflate them.
 
-Stages 6 and 7 have no gate of their own: Stage 6 is a mechanical run already authorized by Stage 5, and Stage 7 is terminal.
+Stage `5A` and Stage `6A` have no gate of their own: `5A` is a mechanical run already authorized at `4A`, and `6A` is terminal.
+
+Stage `5H` has its own third gate — **Batch Repair Approval** (`pipeline.md` §5.6) — because it is the only stage that modifies code a human already approved. It is asked **once per healing pass, never per test case**, and a repaired suite needs a *fresh* Automation Approval before it re-merges: `4A`'s approval covered the code as it was then.
 
 ### What interrupts you, and what doesn't
 
@@ -387,6 +407,7 @@ If you reuse an installation in place, two things matter:
 |---|---|---|
 | **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting |
 | **Project Knowledge** | `platform_core_data/knowledge_base/business_rules/`, `lessons_learned/` | this application's own business rules and cross-run lessons — the other seven categories were removed 2026-07-27; that output stays in each run's own folder |
+| **Shared execution KBs** | `knowledge_base/browser/screens/` + `.../patterns/repair_patterns/` | **read by both pipelines** (`pipeline.md` §10.8): verified locators (written by `4A`) and confirmed repair patterns (written by `5H`). This is the only thing the two branches share beyond Stages 1–3 — and it is knowledge, not a deliverable, which is why sharing it does not break branch isolation |
 
 Every stage resolves **Platform Knowledge first, then Project Knowledge**, and merges both. Knowledge is written project-scoped by default; moving something to the Platform layer is a **Promotion**, and requires your explicit approval — asked exactly once, and not re-proposed on every subsequent run if you decline.
 
@@ -399,10 +420,12 @@ Every stage resolves **Platform Knowledge first, then Project Knowledge**, and m
 | Symptom | Cause | Fix |
 |---|---|---|
 | `Target Root missing in installed mode` | `platform.config.json` has no declared `targetRoot` | run `npx agentic-testing init` in the target repo — a stage never *guesses* a target root, because guessing wrong means writing into the wrong repository |
-| Stage 5 generates inside `platform_core_data/` instead of your test dir | `writeAllowlist` is empty — it is **fail-closed** | add your test globs to `target.writeAllowlist` in `platform.config.json` |
+| Stage `4A` generates inside `platform_core_data/` instead of your test dir | `writeAllowlist` is empty — it is **fail-closed** | add your test globs to `target.writeAllowlist` in `platform.config.json` |
 | `configVersion mismatch` | tool and config are different generations | the error names whether to upgrade the platform or migrate the config; it is deliberately a hard error, never a best-effort read |
 | MCP tools unavailable | project-scoped `.mcp.json` not yet approved | run `/mcp` once per machine |
-| Browser opens when you expected none | Stage 4 (Manual Execution) is headed by design, or headed was explicitly opted into | Stage 4 runs headed on purpose — see `browser.headlessByStage` in `profile.json`. For any other stage, headless is the default; check `profile.json` and the `.mcp.json` `--headless` flag |
+| Browser opens when you expected none | Stage `4M` (Manual Execution) is headed by design | `4M` runs headed on purpose — see `browser.headlessByStage` in `profile.json`. Every Automation-branch stage is headless; check `profile.json` and the `.mcp.json` `--headless` flag |
+| A failing suite was not repaired automatically | **Correct behaviour** — Stage `5H` never runs on its own (`pipeline.md` §3.6) | Invoke it: `/self-healing-skill`, or `/self-healing-skill {module}` to scope it. Many failing runs should *not* be healed — fix the app, fix the environment, or accept the finding |
+| Self-healing refuses to fix a failing test | It is classified `Application Failure`, not `Automation Failure` | This is the platform's most important guardrail: a genuinely broken application must never be "healed" into a green suite (`self-healing-skill` §8). Fix the application |
 | `.env` or credentials unreadable | the built-in read denylist | working as designed. `readDenylist` **merges with**, never replaces, a non-overridable list (`.env*`, `**/credentials*.json`, `**/secrets*`, `**/*.pem`, `**/*.key`, `**/.aws/**`, `**/id_rsa*`). Secrets reach the platform only through `platform_core_data/knowledge_base/credentials/credentials.json` |
 | A stage halts citing a missing input | upstream artifact absent | either produce it, or invoke the skill directly to run degraded — see [§6](#6-calling-a-single-skill-directly) |
 | Machine-specific paths need overriding | shared config is committed | use `platform.config.local.json` — gitignored, shallow-merges over the base |

@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Finding metadata (Stage 2 of 7)
+TEMPLATE — Finding metadata (Stage 2 — shared)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{{ID}}_{{SHORT_NAME}}/metadata.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §5.14 (this exact field order), §5.12 (package layout)
 

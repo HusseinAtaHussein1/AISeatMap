@@ -11,7 +11,7 @@ This workflow takes a single, already-scoped User Story from requirement to a st
 
 It exists for the common case where a project has already been onboarded and explored at least once (e.g., via a prior Entire Project or First Run pass), and a new User Story arrives against that same, still-valid application surface — re-discovering the whole application for one story would be wasted, redundant work.
 
-**This workflow does not decide, by itself, that Stages 1–2 don't need to run.** That determination is made by the existing Automation Start Decision Gate mechanism (`pipeline/pipeline.md` §5.4), applied here at Stage 3's entry point rather than Stage 4's — see §4 Step 1.
+**This workflow does not decide, by itself, that Stages 1–2 don't need to run.** That determination is made by the existing Automation Start Decision Gate mechanism (`pipeline/pipeline.md` §5.4), applied here at Stage 3's entry point rather than Stage 4M's — see §4 Step 1.
 
 # 3. Scope
 
@@ -39,18 +39,18 @@ Only this story's acceptance criteria are in scope for Stage 3's test design (`.
       │  ⛔ Human Review Required ⛔
               │ (approved)
               ▼
- 3. Manual Execution Agent           [= Pipeline Stage 4]
+ 3. Manual Execution Agent           [= Pipeline Stage 4M]
       │  ⛔ Human Review Required ⛔
               │ (approved)
               ▼
- 4. Automation Agent                 [= Pipeline Stage 5]
+ 4. Automation Agent                 [= Pipeline Stage 4A]
       │  ⛔ Automation Approval Required ⛔
               │ (approved)
               ▼
- 5. Automation Execution Agent       [= Pipeline Stage 6]
-      │  (mechanical — no separate gate, per pipeline/pipeline.md §4 Stage 6)
+ 5. Automation Execution Agent       [= Pipeline Stage 5A]
+      │  (mechanical — no separate gate, per pipeline/pipeline.md §4 Stage 5A)
               ▼
- 6. Reporting Agent                  [= Pipeline Stage 7]
+ 6. Reporting Agent                  [= Pipeline Stage 6A]
               │
               ▼
       Stop Workflow
@@ -87,7 +87,7 @@ Before Stage 3 is invoked, the Run Manager performs the Automation Start Decisio
 
 Per `.claude/skills/test-design-skill/SKILL.md` §16 ("User Story" strategy): at minimum one test case per enumerated acceptance criterion, and every carried-forward Assumption/Risk tied to this story gets its own explicitly tagged assumption-based test case. If the story's specific area was never independently exercised by the existing Discovery Artifacts, the agent's own existing rule applies — it records `"Not independently verified in Discovery"` (§5.1) rather than treating that as a blocker.
 
-## Step 3 — Manual Execution Agent *(Pipeline Stage 4)*
+## Step 3 — Manual Execution Agent *(Pipeline Stage 4M)*
 
 **Spec:** `.claude/skills/manual-execution-skill/SKILL.md` — unmodified.
 
@@ -101,7 +101,7 @@ Per `.claude/skills/test-design-skill/SKILL.md` §16 ("User Story" strategy): at
 
 Per `.claude/skills/manual-execution-skill/SKILL.md` §17 ("User Story" Run Scope): execute only the test cases traceable to this story's acceptance criteria — no opportunistic execution of unrelated suite content. Only test cases confirmed successful and stable here (§9 of that spec) become Automation Candidates for Step 4.
 
-## Step 4 — Automation Agent *(Pipeline Stage 5)*
+## Step 4 — Automation Agent *(Pipeline Stage 4A)*
 
 **Spec:** `.claude/skills/automation-skill/SKILL.md` — unmodified.
 
@@ -115,7 +115,7 @@ Per `.claude/skills/manual-execution-skill/SKILL.md` §17 ("User Story" Run Scop
 
 The Framework Decision Gate (`.claude/skills/automation-skill/SKILL.md` §31) still applies in full — this workflow does not pre-select a framework on the human's behalf. Only test case IDs named in Step 3's Automation Candidate Package receive an automation decision — a story's acceptance criterion whose test case failed or was blocked during Step 3 is never automated this run.
 
-## Step 5 — Automation Execution Agent *(Pipeline Stage 6)*
+## Step 5 — Automation Execution Agent *(Pipeline Stage 5A)*
 
 **Spec:** `.claude/skills/automation-execution-skill/SKILL.md` — unmodified.
 
@@ -128,7 +128,7 @@ The Framework Decision Gate (`.claude/skills/automation-skill/SKILL.md` §31) st
 | **Contract keys produced** | `execution_results`, `execution_artifacts` |
 | **Checkpoint** | *None — mechanical, gated only by Step 4's Automation Approval* |
 
-## Step 6 — Reporting Agent *(Pipeline Stage 7)*
+## Step 6 — Reporting Agent *(Pipeline Stage 6A)*
 
 **Spec:** `.claude/skills/reporting-skill/SKILL.md` — unmodified.
 
@@ -159,7 +159,8 @@ Per `workflows_and_pipelines/pipeline/pipeline.md` §7 ("Cross-run reuse"), this
 | Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` | Test Design Agent |
 | Manual Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md` | Manual Execution Agent |
 | Manual Execution Summary | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md` | Manual Execution Agent |
-| Automation Candidate Package | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md` | Manual Execution Agent |
+| Manual Test Results CSV | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualTestResults.csv` | Manual Execution Agent |
+| Manual QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualQAReport.md` | Manual Execution Agent — the Manual branch self-reports (`pipeline.md` §3.3) |
 | Automation Package + supporting reports | `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` and siblings | Automation Agent |
 | Execution Results | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` | Automation Execution Agent |
 | Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | Reporting Agent |
@@ -186,7 +187,7 @@ Per `workflows_and_pipelines/pipeline/pipeline.md` §7 ("Cross-run reuse"), this
 
 1. **This workflow never re-runs Stage 1 or Stage 2** — it consumes their existing Approved outputs unchanged. If they don't exist or aren't current, Step 1 stops and asks; it does not run them itself (that would make this workflow indistinguishable from a full pipeline run, which already exists).
 2. **The Stage-State Check (§4 Step 1) always runs first** — never assumed, never skipped, per `pipeline/pipeline.md` §5.4's existing "never choose on the human's behalf" rule.
-3. **All applicable checkpoints from `pipeline/pipeline.md` §5 still apply in full** — Human Review at Stage 3 and Stage 4, Automation Approval at Stage 5.
+3. **All applicable checkpoints from `pipeline/pipeline.md` §5 still apply in full** — Human Review at Stage 3 and Stage 4M, Automation Approval at Stage 4A.
 4. **Scope never widens beyond this story's acceptance criteria** without an explicit, disclosed Human Decision (`pipeline/pipeline.md` §5.5) — an adjacent feature staying out of scope is documented, not silently folded in.
 
 # 10. Relationship to the Platform Architecture

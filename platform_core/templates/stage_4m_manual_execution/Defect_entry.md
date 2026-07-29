@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Defect entry for a Failed / Inconclusive test case (Stage 4 of 7)
+TEMPLATE — Defect entry for a Failed / Inconclusive test case (Stage 4M — Manual branch, terminal)
 Used INSIDE: platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md §3
 Authority:  .claude/skills/manual-execution-skill/SKILL.md §10.1 (Defect Documentation Standard —
             these 15 sections, this order)

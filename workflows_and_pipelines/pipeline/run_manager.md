@@ -15,7 +15,7 @@ The Run Manager is an orchestration component responsible for preparing, organiz
 
 **It is not an AI Agent.** It never analyzes software behavior, never forms an opinion about whether observed behavior is correct, never generates Findings, and never generates test cases. It has no judgment role anywhere in the pipeline. Its entire responsibility is mechanical: give every run a unique identity, a well-organized workspace, and a running record of what happened — nothing about *whether* what happened was good or bad.
 
-Where the seven Agents (Project Context, Explorer, Test Design, Manual Execution, Automation, Automation Execution, Reporting) answer "what does the application do, and what should be tested, manually validated, built, run, and reported," the Run Manager only answers "which run is this, where does its output go, and what state is it in."
+Where the eight Agents (Project Context, Explorer, Test Design, Manual Execution, Automation, Automation Execution, Self-Healing, Reporting) answer "what does the application do, and what should be tested, manually validated, built, run, and reported," the Run Manager only answers "which run is this, where does its output go, and what state is it in."
 
 # 3. Non-Responsibilities
 
@@ -438,27 +438,41 @@ platform_core_data/
       discovery/             <- created only when Stage 2 writes to it
         findings/            <- created only when a Finding is actually raised
       test_design/           <- created only when Stage 3 writes to it
-      manual_execution/      <- created only when Stage 4 writes to it
-      automation/            <- created only when Stage 5 writes to it
-      execution/             <- created only when Stage 6 writes to it
-      reporting/             <- created only when Stage 7 writes to it
+                             ---- MANUAL branch ----
+      manual_execution/      <- created only when Stage 4M writes to it
+                             ---- AUTOMATION branch ----
+      automation/            <- created only when Stage 4A writes to it
+      execution/             <- created only when Stage 5A writes to it
+      self_healing/          <- created ONLY when a human invokes Stage 5H (optional)
+      reporting/             <- created only when Stage 6A writes to it
 ```
 
 **Naming note:** every reference to a run's workspace path elsewhere in this document uses the placeholder `{{RUN_FOLDER}}` for brevity. For a run created under this document's current naming convention, that placeholder resolves to the full `run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target` folder name (§5); for a pre-existing run, it resolves to that run's original `RUN-YYYYMMDD-XXX[-slug]` folder name, which is never renamed (§5.6).
 
-A run that only ever reaches Stage 2 (Explorer) has exactly `metadata/` and `discovery/` on disk — `context/`, `test_design/`, `manual_execution/`, `automation/`, `execution/`, and `reporting/` are never created for that run. This applies for the life of the run: if it's later resumed and reaches further stages, each newly-reached stage's folder is created at that point, not before.
+A run that only ever reaches Stage 2 (Explorer) has exactly `metadata/` and `discovery/` on disk — every other stage folder is never created for that run. This applies for the life of the run: if it's later resumed and reaches further stages, each newly-reached stage's folder is created at that point, not before.
+
+**Which folders exist records which branch the run took** (`pipeline.md` §3.3, §6 Rule 3a). The two pipelines share Stages 1–3 and then diverge:
+
+| Run took | Folders present | Folders never created |
+|---|---|---|
+| **Manual branch only** | `metadata/`, `context/`, `discovery/`, `test_design/`, `manual_execution/` | `automation/`, `execution/`, `self_healing/`, `reporting/` |
+| **Automation branch only** | `metadata/`, `context/`, `discovery/`, `test_design/`, `automation/`, `execution/`, `reporting/` | `manual_execution/`, and `self_healing/` unless Stage 5H was invoked |
+| **Both branches** | all of the above | `self_healing/` unless Stage 5H was invoked |
+
+**A branch not taken is not a gap.** An absent `automation/` folder means the run delivered the Manual pipeline in full — not that four stages were skipped (`pipeline.md` §6 Rule 3a). Likewise, an absent `self_healing/` folder is the normal case: Stage 5H is optional and never runs on its own (§3.6).
 
 - `metadata/` — `run.json` (§7), `run_summary.md` (§9), and the Run Manifest (`RunManifest.md`, `pipeline.md` §7 — the per-stage record of timestamp, checkpoint status, approving reviewer, revision count, and Invocation Path), plus any other run-bookkeeping file. The one folder every run has, always.
 - `context/` — the Project Context this run used (`ProjectContext.md`), edited in place per `pipeline.md` §7 — one file, no version suffixes.
 - `discovery/` — Explorer Agent discovery snapshots, QA Assessment Report, and evidence (screenshots/videos/logs/network captures) produced during this run.
 - `discovery/findings/` — Explorer Agent Finding evidence packages produced during this run (see `.claude/skills/explorer-skill/SKILL.md` §5.11).
 - `test_design/` — Test Design Agent's Manual Test Suite, Traceability Matrix, and Coverage Report for this run.
-- `manual_execution/` — Manual Execution Agent's Manual Execution Results, Manual Execution Summary, Automation Candidate Package, and captured evidence (screenshots, videos, notes, logs) for this run.
+- `manual_execution/` — **Manual branch (Stage 4M), terminal.** Manual Execution Results, Manual Execution Summary, **Manual Test Results CSV**, **Manual QA Report** (this branch self-reports — it has no downstream Reporting stage), and captured evidence (screenshots, videos, notes, logs) for this run. **Never contains a script of any kind** (`manual-execution-skill` §2.1). The Automation Candidate Package was removed from the platform in this revision — Stage 4A takes its scope from `test_design/` directly.
 - `automation/` — Automation Agent's Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Summary for this run. Per the Automation Asset Lifecycle (`pipeline.md` §12, added 2026-07-24), the Automation Package here is a **temporary working copy** of the project's Workspace Automation Baseline, not the authoritative copy — once it clears Automation Approval and is merged back into that baseline, its source code is removed from this folder (Cleanup, `pipeline.md` §12.5), leaving a permanent `automation_promotion.md` (Promotion Status, Merge Date, Approved By, Source Run, Workspace Destination, file-level Added/Modified/Deleted/Renamed/Discarded-Untracked lists, Conflicts, Merge Result, Notes) alongside the unaffected Plan/Manifest/Decision Report/Coverage Report/Suite Manifest/Summary.
-- `execution/` — Automation Execution Agent's Execution Results and captured evidence (screenshots, traces, logs, HAR, framework reports) for this run.
-- `reporting/` — Reporting Agent's Final QA Report for this run.
+- `execution/` — **Automation branch (Stage 5A).** Execution Results and captured evidence (screenshots, traces, logs, HAR, framework reports) for this run. Stage 5A is a pure mechanical runner: this folder never contains a repair record.
+- `self_healing/` — **Automation branch (Stage 5H) — present only when a human explicitly invoked self-healing** (`pipeline.md` §3.6). Repair Summary, Repair Confidence Reports, Before/After Comparison, and Quarantine Register. Its absence is the normal case and is never reported as a gap.
+- `reporting/` — **Automation branch (Stage 6A), terminal.** Final QA Report for this run. A Manual-only run has no `reporting/` folder, because the Manual branch self-reports in `manual_execution/` instead (`pipeline.md` §3.3).
 
-**Retroactive note (2026-07-17):** this replaces an earlier version of this section that had the Run Manager create the full seven-folder skeleton upfront, before any Agent ran. Existing runs created under that earlier behavior had empty subfolders for stages they never reached; those empty folders have been removed from NDC's existing runs to match this corrected behavior (no run content was touched — only folders with zero files were removed). The skeleton now has eight possible subfolders (`manual_execution/` added alongside `context/`, `discovery/`, `test_design/`, `automation/`, `execution/`, `reporting/`, and the always-present `metadata/`), created on the same on-demand basis.
+**Retroactive note (2026-07-17):** this replaces an earlier version of this section that had the Run Manager create the full seven-folder skeleton upfront, before any Agent ran. Existing runs created under that earlier behavior had empty subfolders for stages they never reached; those empty folders have been removed from NDC's existing runs to match this corrected behavior (no run content was touched — only folders with zero files were removed). The skeleton now has nine possible subfolders — `context/`, `discovery/`, `test_design/`, `manual_execution/`, `automation/`, `execution/`, `self_healing/`, `reporting/`, and the always-present `metadata/` — created on the same on-demand basis. `self_healing/` was added in this revision alongside the two-pipeline split.
 
 This Run Workspace is **the sole location** for every artifact the pipeline produces — not an additive, run-scoped view of a separate current-approved tree. `platform_core_data/workspace/` was removed on 2026-07-27 (`workflows_and_pipelines/pipeline/pipeline.md` §7), and every stage now writes directly into its own run folder: the Project Context at `platform_core_data/runs/{{RUN_FOLDER}}/context/ProjectContext.md`, Discovery Artifacts at `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md`, and so on for every stage in §6's structure. There is no second, authoritative "current approved" copy anywhere — approval flips the `status:` field in the artifact's own header and is recorded in the Run Manifest (`metadata/RunManifest.md`), per `pipeline.md` §7. The Run Manager still organizes and monitors that run-scoped view for history and archival; it is now organizing the artifacts themselves rather than a mirror of them.
 
@@ -553,7 +567,7 @@ platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md
 | Field | Description |
 |---|---|
 | Visited Screens | Count of distinct screens/states captured in this run's `discovery/` (a mechanical count of Explorer Agent discovery snapshots, not a judgment of exploration completeness) |
-| Executed Agents | Which of the seven Agents ran during this run, and in what order |
+| Executed Agents | Which of the eight Agents ran during this run, in what order, and which branch(es) the run took |
 | Generated Artifacts | A count/list of artifacts produced across all Run Workspace subdirectories (§6) |
 | Findings Count | Count of Finding evidence packages under this run's `discovery/findings/` |
 | Evidence Count | Count of evidence items across `discovery/` (screenshots/videos/logs/network captures) and `execution/` (screenshots/traces/logs/HAR/framework reports) |
@@ -606,7 +620,7 @@ The Run Manager sits outside the 7-stage Agent pipeline defined in `workflows_an
                     └───────────────────┬───────────────────────┘
                                          │ provides workspace paths to
                                          ▼
-   Stage 1        Stage 2        Stage 3        Stage 4        Stage 5        Stage 6        Stage 7
+   Stage 1        Stage 2        Stage 3        Stage 4M/4A     Stage 5A        Stage 5H        Stage 6A
 Project Context → Explorer  → Test Design → Manual     → Automation → Automation → Reporting
    Agent            Agent        Agent      Execution      Agent      Execution     Agent
                                              Agent                      Agent

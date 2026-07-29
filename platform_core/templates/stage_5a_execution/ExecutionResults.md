@@ -1,12 +1,12 @@
 <!--
-TEMPLATE — Execution Results (Stage 6 of 7)
+TEMPLATE — Execution Results (Stage 5A — Automation branch)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md
 Authority:  .claude/skills/automation-execution-skill/SKILL.md §18 (Standard Output Contract — these
             10 sections, this order), §17 (Result Classification), §22 (Metrics),
-            §25 (Automation Repair Loop), §25.6 (three health figures), §9
+            §25 (Failure Handling — classify and hand off, NEVER repair), §25.2 (three health figures), §9
 
 Section order is mandatory: the Reporting skill must never have to interpret free-form prose. This is
-a SINGLE-FILE input for Stage 7 by design (reporting-skill §4).
+a SINGLE-FILE input for Stage 6A by design (reporting-skill §4).
 
 The suite executed is ALWAYS this run's own WORKING COPY
 (runs/{{RUN_FOLDER}}/automation/tests_{{FRAMEWORK}}/) — never the Workspace Automation Baseline.
@@ -107,7 +107,7 @@ Execution happens strictly BEFORE the Workspace Merge.
 
 ## 6. Health Summary
 
-<!-- §18 #6 / §25.6 — THREE SEPARATE FIGURES. NEVER ONE MERGED "Failed" COUNTER.
+<!-- §18 #6 / §25.2 — THREE SEPARATE FIGURES. NEVER ONE MERGED "Failed" COUNTER.
      Folding these together misrepresents which system is actually at fault. -->
 
 ### Application Health
@@ -123,7 +123,8 @@ Execution happens strictly BEFORE the Workspace Merge.
 
 ### Automation Health
 
-<!-- `Automation Failure` — and, after the Repair Loop, `Automation Repaired` — counted separately.
+<!-- `Automation Failure` counted separately. (`Automation Repaired` never appears in THIS document:
+     a repaired result is Stage 5H's outcome, recorded in self_healing/BeforeAfterComparison.md.)
      Speaks to the quality/maintenance state of the generated suite, NOT the application. -->
 
 | Metric | Value |
@@ -154,9 +155,14 @@ Execution happens strictly BEFORE the Workspace Merge.
 | Inconclusive | {{INCONCLUSIVE_COUNT}} |
 | Flaky | {{FLAKY_COUNT}} |
 
-## 7. Automation Repair Loop Outcome
+## 7. Self-Healing Availability
 
-<!-- §18 #7 — include ONLY when the Repair Loop was triggered (§25), i.e. an `Automation Failure`
+<!-- §18 #7 / §25.3 — include ONLY when at least one `Automation Failure` occurred.
+     THIS STAGE NEVER REPAIRS. This section states AVAILABILITY ONLY — the count of Automation
+     Failures and the literal /self-healing-skill commands. Any actual repair, and its Before/After
+     comparison, is Stage 5H's artifact in self_healing/, never recorded here.
+     Naming the option is not invoking it and is not a recommendation to invoke it (pipeline.md §3.6).
+     ORIGINAL NOTE FOLLOWS — an `Automation Failure`
      occurred this run. OMITTED ENTIRELY — not left as an empty section — when none occurred. -->
 
 **Repair Summary (§25.1):** {{REPAIR_SUMMARY}}

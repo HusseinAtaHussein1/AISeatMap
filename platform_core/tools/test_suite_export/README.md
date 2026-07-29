@@ -19,7 +19,7 @@ The only way to *guarantee* that is to derive one from the other. So:
 - **The workbook is generated output.** This tool parses the Markdown and writes the `.xlsx`.
 
 Authoring both by hand makes non-divergence a matter of discipline rather than construction — and
-when they do drift, Stage 4 silently executes against whichever one the tester happened to open.
+when they do drift, Stage 4M silently executes against whichever one the tester happened to open.
 Nothing downstream can detect that. Deriving the workbook makes the failure mode unreachable.
 
 Re-run the tool after *any* edit to a suite document; the workbook is never hand-edited.
@@ -45,7 +45,7 @@ node .../cli.js --json                  # machine-readable result
 | `2` | Parsed **with warnings** (e.g. a case missing Expected Result), or `--check` found a problem |
 
 Exit `2` is deliberate: a workflow step can gate on "did every case parse cleanly?" instead of
-shipping a workbook with blank cells nobody notices until Stage 4 tries to execute it.
+shipping a workbook with blank cells nobody notices until Stage 4M tries to execute it.
 
 The run folder is **never guessed** — it comes from the Active Run pointer via
 [`run_manager`](../run_manager/), per `test-design-skill/SKILL.md` §24. `--dir` bypasses run
@@ -90,7 +90,7 @@ and the Requirement/Discovery/Finding/Evidence references are deliberately **abs
 them in `TraceabilityMatrix.md`, keyed by Test Case ID, not on the execution-facing document.
 
 **Steps** are joined into one cell with ` | ` and **renumbered canonically** (`1. … | 2. …`). The
-numbering is not decoration: Stage 4 records a result per step and a defect cites "failed at step 3",
+numbering is not decoration: Stage 4M records a result per step and a defect cites "failed at step 3",
 so a joined cell that dropped its numbers makes that citation unresolvable. Renumbering also
 normalizes a suite authored as an all-`1.` Markdown list.
 
@@ -117,7 +117,7 @@ Strict about structure, permissive about prose: what it cannot parse is **report
 written as a blank cell. It warns on a missing required field (Title, Objective, Steps, Expected
 Result, Priority, Tags), a duplicate field label, a duplicate Test Case ID, and a document with no
 cases at all. Superseded `TestCases_{Module}.vN.md` copies are skipped loudly so they can't become
-shadow workbooks Stage 4 executes by accident.
+shadow workbooks Stage 4M executes by accident.
 
 ## Zero dependencies, by design
 
@@ -160,7 +160,7 @@ npm test    # the repo-wide suite, which includes this tool's tests
 - **Never hand-edit a generated `.xlsx`.** Edit the Markdown suite and re-run the tool; a hand-edited
   workbook is exactly the divergence §9 prohibits, and the next export silently discards it.
 - **Never treat a warning as cosmetic.** A missing Expected Result means an unexecutable test case
-  reaching Stage 4 — fix the Markdown, not the workbook.
+  reaching Stage 4M — fix the Markdown, not the workbook.
 - **Never resolve a run folder here.** It comes from the Active Run pointer (§24); this tool never
   writes the pointer, and never falls back to "the newest run."
 - **Never add a runtime dependency to this folder.** See *Zero dependencies* above.

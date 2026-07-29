@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Automation Plan (Stage 5 of 7)
+TEMPLATE — Automation Plan (Stage 4A — Automation branch)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §5 (Automation Planning Engine — these fields),
             §10 (Suite Planning), §34 (Stack Documentation), §16 Outputs #1, §19
@@ -19,7 +19,7 @@ unjustified framework choice.
 |---|---|
 | Run Folder | `{{RUN_FOLDER}}` |
 | Framework Decision Gate answer (§31) | {{FRAMEWORK_GATE_ANSWER}} |
-| Candidate Package | `runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md` |
+| Scope source | `runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` (approved) — scope AND content |
 | Stack Documentation Context | `runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{{FRAMEWORK}}.md` |
 | Generated | {{TIMESTAMP}} |
 | Status | {{STATUS}} <!-- Pending Review / Approved --> |

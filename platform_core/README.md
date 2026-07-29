@@ -39,10 +39,10 @@ platform_core/
 │   ├── stage_1_context/      #   ProjectContext
 │   ├── stage_2_discovery/    #   snapshots, Timeline, Coverage, QA Report, findings/
 │   ├── stage_3_test_design/  #   TestCases (+ per-case entry), Traceability, Coverage
-│   ├── stage_4_manual_execution/  # Results, Summary, Candidate Package, Defect entry
-│   ├── stage_5_automation/   #   Plan, Manifests, Decision/Coverage Reports, Summary
-│   ├── stage_6_execution/    #   ExecutionResults
-│   └── stage_7_reporting/    #   Final_QA_Report
+│   ├── stage_4m_manual_execution/  # Results, Summary, Candidate Package, Defect entry
+│   ├── stage_4a_automation/   #   Plan, Manifests, Decision/Coverage Reports, Summary
+│   ├── stage_5a_execution/    #   ExecutionResults
+│   └── stage_6a_reporting/    #   Final_QA_Report
 └── tools/
     ├── automation_lifecycle/ # baseline copy, merge plan/apply, promotion record, cleanup
     ├── browser_driver/       # shared browser automation engine — zero project-specific data

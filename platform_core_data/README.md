@@ -53,10 +53,10 @@ platform_core_data/
     architecture.md                 # architecture of the application under test (not the platform)
     glossary.md                     # domain/product terminology
     onboarding.md                   # how a new person/agent gets oriented fast
-    automation_framework.md         # binding framework structure — Stage 5 complies, never re-selects
+    automation_framework.md         # binding framework structure — Stage 4A complies, never re-selects
     reference_automation_project.md # registration of an external reference automation repo (read-only)
     # Generated but durable
-    stack.md                        # detected stack + pinned dependencies, written by Stage 5 (§34.4),
+    stack.md                        # detected stack + pinned dependencies, written by Stage 4A (§34.4),
                                     #   correctable by hand; shared across runs
     # Supporting material — human-maintained
     requirements/                   # organized by Type only: epics/, features/, user_stories/,
@@ -118,7 +118,7 @@ The nine hand-authored documents at `knowledge_base/`'s root — every root `.md
 | 4 | `browser/profile.json` | Login selectors plus a post-login success signal — needed for any live-browser stage. |
 | 5 | everything else | `architecture.md`, `glossary.md`, `onboarding.md`, `automation_framework.md`, `PRD_UserStories.md` — read when relevant, never required to start. |
 
-`stack.md` needs no manual step: Stage 5 writes it on the first automation run. Edit it only to record a correction detection got wrong — Stage 5 surfaces such conflicts rather than silently overwriting them.
+`stack.md` needs no manual step: Stage 4A writes it on the first automation run. Edit it only to record a correction detection got wrong — Stage 4A surfaces such conflicts rather than silently overwriting them.
 
 ## Where the Current Artifacts Live
 

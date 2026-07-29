@@ -34,13 +34,27 @@ It does **not** own *when* or *in what order* agents run (that is `workflows_and
     ├── project-context-skill/SKILL.md    # Stage 1 — PRD + Run Configuration → Project Context
     ├── explorer-skill/SKILL.md           # Stage 2 — Project Context → Discovery Artifacts + Findings
     ├── test-design-skill/SKILL.md        # Stage 3 — Discovery → Manual Test Suite + Traceability Matrix
-    ├── manual-execution-skill/SKILL.md   # Stage 4 — Manual Test Suite → Manual Execution Results + Automation Candidate Package
-    ├── automation-skill/SKILL.md         # Stage 5 — Automation Candidate Package → Automation Package
-    ├── automation-execution-skill/SKILL.md  # Stage 6 — Automation Package → Execution Results
-    └── reporting-skill/SKILL.md          # Stage 7 — Execution Results → Final QA Report
+    │
+    │   ── MANUAL branch (terminal) ──
+    ├── manual-execution-skill/SKILL.md   # Stage 4M — Test Suite → Results + CSV + Manual QA Report
+    │
+    │   ── AUTOMATION branch ──
+    ├── automation-skill/SKILL.md         # Stage 4A — Test Suite → Automation Package (live-verified)
+    ├── automation-execution-skill/SKILL.md  # Stage 5A — Automation Package → Execution Results
+    ├── self-healing-skill/SKILL.md       # Stage 5H — OPTIONAL, opt-in: reason over failures → repairs
+    └── reporting-skill/SKILL.md          # Stage 6A — Execution Results → Final QA Report
 ```
 
-Each subfolder corresponds 1:1 to one of the seven pipeline stages defined in `workflows_and_pipelines/pipeline/pipeline.md` §4 — there is no Skill here without a matching stage, and no stage without a matching Skill. Siblings never call each other directly; each declares its own inputs/outputs, and it is the orchestration layer's job to wire the output of one into the input of the next.
+Each subfolder corresponds 1:1 to one of the eight pipeline stages defined in `workflows_and_pipelines/pipeline/pipeline.md` §4 — there is no Skill here without a matching stage, and no stage without a matching Skill. Siblings never call each other directly; each declares its own inputs/outputs, and it is the orchestration layer's job to wire the output of one into the input of the next.
+
+**Two pipelines share Stages 1–3, then diverge completely** (`pipeline.md` §3.3):
+
+| Pipeline | Stages | Produces | Scripts? |
+|---|---|---|---|
+| **Manual** | 1 → 2 → 3 → `4M` | Results, defects, CSV, Manual QA Report, evidence | **never** |
+| **Automation** | 1 → 2 → 3 → `4A` → `5A` → *(optional)* `5H` → `6A` | Suite, execution results, repairs, Final QA Report | yes |
+
+Neither branch reads the other's artifacts, and either may run alone, in either order. **Stage `5H` never runs automatically** — it requires explicit human invocation (§3.6).
 
 ## Interaction with Other Layers
 
@@ -55,7 +69,7 @@ workflows_and_pipelines/pipeline/pipeline.md
         └──▶ platform_core_data/            (reads its declared Inputs, writes its declared Outputs)
 ```
 
-- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven skills; it invokes them in a fixed order and enforces checkpoints. A Skill never reads `pipeline.md` to decide its own behavior — it only needs to already conform to the contract that document describes.
+- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the eight skills; it invokes them in a fixed order *within a branch* and enforces checkpoints. A Skill never reads `pipeline.md` to decide its own behavior — it only needs to already conform to the contract that document describes.
 - **`.claude/` → `platform_core_data/knowledge_base/patterns/` and `platform_core/tools/`:** each Skill's `dependencies` line names exactly which Platform Knowledge subfolders it consults (e.g. `automation-skill` reads `repair_patterns/`, `automation_patterns/`, `framework_patterns/`) and, where relevant, which shared tool it uses (e.g. the Browser Driver, `platform_core/tools/browser_driver/`).
 - **`.claude/` → `platform_core_data/`:** every Skill's actual Inputs and Outputs at runtime resolve to files under that run's Run Folder, `platform_core_data/runs/{{RUN_FOLDER}}/{stage}/` (and, for knowledge writes, `platform_core_data/knowledge_base/`). A Skill file names those paths literally — the only placeholder is `{{RUN_FOLDER}}`, resolved per run by the Run Manager (`run_manager.md` §5.1); there is no project-name segment to substitute, because the platform hosts one project (`pipeline.md` §1).
 
@@ -102,11 +116,11 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 ```
 Pipeline Orchestrator (workflows_and_pipelines/pipeline/pipeline.md)
         ↓
-.claude/skills/automation-skill/SKILL.md invoked for Stage 5
+.claude/skills/automation-skill/SKILL.md invoked for Stage 4A
         ↓
 Resolves platform_core_data/knowledge_base/patterns/repair_patterns/, automation_patterns/, framework_patterns/
         ↓
-Reads platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ (Automation Candidate Package — its declared primary Input) and .../test_design/ (content source)
+Reads platform_core_data/runs/{{RUN_FOLDER}}/test_design/ (its declared primary Input — scope AND content; never a Manual branch artifact, pipeline.md §3.3)
         ↓
 Writes platform_core_data/runs/{{RUN_FOLDER}}/automation/ (its declared Output)
         ↓

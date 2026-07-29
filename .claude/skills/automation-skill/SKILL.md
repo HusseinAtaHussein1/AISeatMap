@@ -1,23 +1,15 @@
 ---
 name: automation-skill
-description: Stage 5 of 7 in the Agentic AI Testing Platform pipeline (Automation Engineering skill). Transforms the Manual Execution skill's confirmed Automation Candidates — plus their full content from the approved Manual Test Suite — into a production-quality automation package: detecting/selecting a framework (Playwright, SHAFT, Selenium, etc.), reusing existing automation, and never executing what it generates. Use when generating or extending test automation from a Manual Execution skill's Automation Candidate Package.
+description: Stage 4A of the Agentic AI Testing Platform's Automation Pipeline (Automation Engineering skill). Transforms the approved Stage 3 Manual Test Suite directly into a production-quality automation package — taking its scope from the test cases themselves, verifying every selector live against the running application through the headless Playwright MCP server, consulting the shared Selector Verification and Repair knowledge bases before generating, self-reviewing within a bounded iteration/time budget, detecting brownfield vs. greenfield automatically, and presenting a Target Write Plan for approval. Never executes what it generates. Use when generating or extending test automation for an approved test-design scope.
 inputs:
   - name: project_context
     type: file_path
     required: true
     description: Approved Project Context.
-  - name: automation_candidate_package
-    type: file_path
-    required: true
-    description: Approved Automation Candidate Package from the Manual Execution skill — the sole source of which test case IDs are in scope for this run.
-  - name: manual_execution_summary
-    type: file_path
-    required: true
-    description: Approved Manual Execution Summary — the execution evidence backing the Automation Candidate Package.
   - name: manual_test_suite
     type: file_path
     required: true
-    description: Approved Manual Test Suite (Markdown + Excel) — read for the full content of exactly the test case IDs named in the Automation Candidate Package.
+    description: "Approved Manual Test Suite (Markdown + Excel) from Test Design — this stage's SOLE scope-determining input AND its content source (Steps, Test Data, Expected Result). Narrowed only by the run's own scope/module filter, never by a manual execution outcome (pipeline.md §3.3)."
   - name: traceability_matrix
     type: file_path
     required: true
@@ -29,7 +21,15 @@ inputs:
   - name: discovery_artifacts
     type: file_path
     required: false
-    description: Approved Discovery Artifacts, Findings, and Evidence Packages — used only to resolve UI/selector detail, never as a source of business logic.
+    description: "Approved Discovery Artifacts, Findings, and Evidence Packages — behavioural context only. Discovery contains NO selectors or DOM captures by design (pipeline.md §3.5), so selector detail is never sourced here; it is verified live in §11A. Never a source of business logic."
+  - name: selector_verification_kb
+    type: file_path
+    required: false
+    description: "Shared Selector Verification KB (pipeline.md §10.8) — locators this stage confirmed in earlier runs, with their code-state anchors. MANDATORY read before generation; this stage is its sole writer."
+  - name: repair_kb
+    type: file_path
+    required: false
+    description: "Shared Repair KB (pipeline.md §10.8) — confirmed repair/diagnosis patterns from Stage 5H plus prior runs' Repair Summaries. MANDATORY read before generation, so a known failure mode is pre-empted in the first draft rather than rediscovered by failing in Stage 5A."
   - name: existing_automation_package
     type: file_path
     required: false
@@ -63,6 +63,18 @@ outputs:
     type: file_path
     location: "platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md"
     description: "Consolidated handoff document (Framework Used, Execution Instructions, Coverage, Known Limitations) for the automation-execution-skill."
+  - name: selector_verification_records
+    type: file_path
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/SelectorVerificationReport_{Framework}.md"
+    description: "Per-locator live verification evidence (§11A) — what resolved, by which strategy, with which fallback, and what could not be verified. Every emitted locator traces to a row here; the durable copy is written to the shared Selector Verification KB."
+  - name: target_write_plan
+    type: file_path
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/TargetWritePlan_{Framework}.md"
+    description: "Every file to be created/modified/deleted in the Target Project, with a one-line reason each, plus the brownfield/greenfield determination (§11C). Presented at the Automation Approval gate; no Target Project write happens before it clears (pipeline.md §13.3)."
+  - name: self_review_report
+    type: file_path
+    location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/SelfReviewReport_{Framework}.md"
+    description: "Each self-review iteration's findings and fixes, the iteration/time budget consumed, and every check left unsatisfied when the budget ended (§15A) — disclosed, never silently dropped."
   - name: stack_documentation_context
     type: file_path
     location: "platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md"
@@ -72,16 +84,24 @@ outputs:
     location: "platform_core_data/knowledge_base/stack.md"
     description: "The project's durable stack record — ecosystems, framework/version, pinned dependency table, and observed conventions (§34.4). Shared across runs and updated in place, unlike the per-run stack_documentation_context above."
 dependencies:
-  - project-context-skill, explorer-skill, test-design-skill, manual-execution-skill (upstream skills)
+  - project-context-skill, explorer-skill, test-design-skill (upstream skills — the shared foundation)
+  - "NOT manual-execution-skill: the Automation branch consumes no Manual branch artifact (pipeline.md §3.3)"
   - Detected automation framework toolchain (Playwright, SHAFT/TestNG/Allure, Selenium, Cypress, Appium, REST Assured, or equivalent)
-  - "platform_core/tools/mcp/ (MCP tools layer — the `context7` server for the §34 Stack Documentation step, and the `playwright` server as a selectable browser mode for selector verification per its README §1.2)"
+  - "platform_core/tools/mcp/ (MCP tools layer — the `context7` server for the §34 Stack Documentation step, and the `playwright` server, run HEADLESS, as the mandatory live selector/DOM verification mechanism per §11A)"
   - "platform_core/tools/mcp/stack_docs/ (shared stack + pinned-dependency extractor backing §34.2)"
   - "platform_core_data/knowledge_base/patterns/repair_patterns/, automation_patterns/, framework_patterns/ (Platform Knowledge, consulted before generating new assets)"
 ---
 
-> **Pipeline position:** Stage 5 of 7 — consumes the Approved Project Context, the Manual Execution skill's Automation Candidate Package and Manual Execution Summary, the Manual Test Suite (content source), Requirement Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, and Evidence Packages, produces a production-quality Automation Package.
-> **Traceability:** `Requirement → Discovery → Finding → Evidence → Manual Test Case → Manual Execution Result → Automation Candidate → Automation Script` (§12).
+> **Pipeline position:** Stage `4A` of the **Automation Pipeline** — consumes the Approved Project Context, the approved Manual Test Suite (**scope and content**), Requirement Traceability Matrix, Coverage Report, Discovery Artifacts, and both shared knowledge bases; produces a production-quality Automation Package with live-verified selectors.
+> **Traceability:** `Requirement → Discovery → Finding → Manual Test Case → Automation Script → Verified Locator` (§12).
+> **Branch:** Automation only. This stage reads **no** Manual Execution artifact (`workflows_and_pipelines/pipeline/pipeline.md` §3.3).
 > **Revision history:** see `docs/CHANGELOG.md`.
+>
+> **Revision note (this revision, user-mandated):** the two pipelines now diverge after Stage 3. Four changes to this stage follow:
+> 1. **Scope comes directly from the approved Stage 3 Manual Test Suite** — the Automation Candidate Package and Manual Execution Summary are **no longer inputs**, and the Candidate Package is removed from the platform (`pipeline.md` §3.3). This stage no longer waits on a manual pass.
+> 2. **Live selector/DOM verification is now mandatory and headless** (§11A), replacing the execution-confirmed evidence the Candidate Package used to supply — and it is *stronger* evidence, since it confirms the flow against the same build the suite will run on. Discovery no longer carries selectors at all (`pipeline.md` §3.5).
+> 3. **Both shared knowledge bases are mandatory reads before generation** (§11B), so known failure modes are pre-empted rather than rediscovered in Stage `5A`.
+> 4. **Brownfield/greenfield is detected automatically; the write decision is approved explicitly** via a Target Write Plan (§11C) — replacing the previous multi-gate prompting.
 
 > **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed, and the persistent Workspace Automation Baseline now lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
 
@@ -91,21 +111,29 @@ dependencies:
 
 # 2. Purpose
 
-The Automation skill transforms the test cases the Manual Execution skill has confirmed successful and stable — pulling their full content from the approved Manual Test Suite — into a **production-quality automation project** — not merely a collection of isolated scripts. It is the bridge between manual validation and automated execution: it must automate exactly what the Automation Candidate Package names — no more, no less — respecting the business rules already reconciled into the Project Context, reusing whatever automation already exists before generating anything new, and being explicit about anything it could not safely, reliably, or confidently automate.
+The Automation skill transforms the **approved Stage 3 Manual Test Suite** into a **production-quality automation project** — not merely a collection of isolated scripts. It automates exactly the test cases in the run's scope — no more, no less — respecting the business rules already reconciled into the Project Context, verifying every selector live against the running application before emitting it (§11A), reusing whatever automation already exists before generating anything new, and being explicit about anything it could not safely, reliably, or confidently automate.
 
-**Its responsibility ends the moment the automation package has been successfully generated.** It never executes automation, never runs the suite against any environment, and never reports pass/fail results — that is exclusively the Automation Execution skill's responsibility (Stage 6). This boundary is absolute: generating code and running code are two different pipeline stages, and this skill stops precisely at the handoff between them.
+**It does not wait on manual validation.** The Automation branch is independent of the Manual branch (`pipeline.md` §3.3): this stage's correctness comes from its own live verification against the build the suite will run on, which is stronger and more current evidence than a manual pass on an earlier build.
+
+**Its responsibility ends the moment the automation package has been successfully generated.** It never executes the suite against any environment and never reports pass/fail results — that is exclusively Stage `5A`'s responsibility. **It also never repairs**: diagnosing and fixing a failed test is Stage `5H`'s job (`self-healing-skill`), and only on explicit human invocation. This boundary is absolute — generating code, running code, and repairing code are three different stages.
+
+**Driving the browser to *verify* a selector is not executing the suite** (§11A). Verification confirms a locator resolves and a flow is reachable; execution runs the generated tests and produces results. The first is this stage's own grounding work, the second is Stage `5A`'s.
 
 This skill designs and generates a project; it does not execute one.
 
 # 3. Responsibilities
 
-- **Consume only approved artifacts** (§4) — Project Context, the Manual Execution skill's Automation Candidate Package and Manual Execution Summary, the Manual Test Suite, Requirement Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, and Evidence Packages, every one of them cleared at its own pipeline checkpoint.
+- **Consume only approved artifacts** (§4) — Project Context, the Manual Test Suite (**scope and content**), Requirement Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, and Evidence Packages, every one cleared at its own pipeline checkpoint. **Never a Manual Execution artifact** (`pipeline.md` §3.3).
+- **Verify every selector and flow live, headless, before emitting it** (§11A) — and disclose, never guess, whatever could not be verified.
+- **Consult both shared knowledge bases before generating** (§11B) — reuse confirmed locators, and pre-empt known failure modes in the first draft.
+- **Detect brownfield vs. greenfield automatically, and present a Target Write Plan for approval** (§11C) — never prompt for what can be detected, never write to the Target Project before the plan clears.
+- **Self-review within a bounded iteration and time budget, disclosing every unsatisfied check** (§15A).
 - **Never read the PRD directly** — only Stage 1 (Project Context skill) is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4.
 - **Produce a complete Automation Plan (§5) before any code generation begins.** No script, page object, or configuration file is written until the plan is finished.
 - **Detect the target automation framework from the approved Project Context — never assume one** (§6), and select the most appropriate framework using explicit, justified criteria (§7), treating SHAFT Engine as a first-class option (§8) alongside Playwright, Selenium, Cypress, Appium, REST Assured, and any other framework the Project Context or existing project may specify.
 - **Inspect any existing automation project before generating anything new** (§9), and treat it as a reusable knowledge base (§11) — reuse before generating is not a preference, it is the default behavior.
 - **Group approved test cases into logical automation suites organized around business workflows**, not individual pages or screens (§10), with shared setup, teardown, fixtures, components, utilities, and test data per suite.
-- **Assign every test case named in the Automation Candidate Package exactly one Automation Decision** — Reuse Existing Automation, Generate New Automation, Partially Automatable, or Manual Only (§13) — each with an explicit justification, never a silent omission.
+- **Assign every test case in the run's scope exactly one Automation Decision** — Reuse Existing Automation, Generate New Automation, Partially Automatable, or Manual Only (§13) — each with an explicit justification, never a silent omission.
 - **Generate only maintainable automation** — modular, DRY, readable, reusable, maintainable, versionable (§14) — preferring composition over duplication.
 - **Perform a Self Review pass before declaring generation complete** (§15), checking naming consistency, duplicate code, broken references, and missing reusable assets/page objects/utilities/test data, and producing recommendations wherever improvements are identified.
 - **Maintain the full traceability chain** — Requirement → Discovery → Finding → Evidence → Manual Test Case → Automation Script (§12) — on every generated asset.
@@ -130,17 +158,21 @@ The Automation skill consumes only approved artifacts. Every input below must be
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Called out explicitly because it drives §23's strategy selection, not left an implicit read of prose. |
 | Framework Configuration | Governing (embedded, may be absent) | Conditionally required — see §6 | **Hidden-assumption check:** the Project Context's own required document structure (`.claude/skills/project-context-skill/SKILL.md` §8) has no dedicated "Framework" field — a framework preference, if one exists, currently surfaces only informally, inside Environment Constraints prose or an existing automation project (§9). This skill must not assume this field exists or is populated; if no framework is stated anywhere and no existing automation project exists to infer one from, §6's existing halt-and-report rule applies. |
 | Project Configuration | Governing (embedded) | Required | Target environment, credentials, and safety constraints — already covered by the Project Context row above; named separately here only to confirm no *additional*, undeclared configuration source is silently assumed. |
-| Automation Candidate Package | **Primary** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md` — from the Manual Execution skill (Stage 4). The sole source of *which* test case IDs are in scope for this run: only test cases the Manual Execution skill actually executed, confirmed `Passed`, and judged deterministic and stable (`.claude/skills/manual-execution-skill/SKILL.md` §9) may receive an automation decision (§13). This skill no longer determines automation scope directly from the raw Manual Test Suite — a test case absent from this package is out of scope for this run, full stop, regardless of how it reads in the Manual Test Suite. |
-| Manual Execution Summary | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionSummary.md` — the execution evidence and exclusion reasoning backing the Automation Candidate Package; consulted for context, never re-litigated |
-| Manual Test Suite | Secondary — content source | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` and `.xlsx` — read directly for the full test case content (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-skill/SKILL.md`) of exactly the test case IDs named in the Automation Candidate Package. This skill's entire "Automation Requirements" input is the combination of the Automation Candidate Package (which IDs) and this artifact (their full content) — there is no separate requirements artifact to consult beyond them. |
+| Manual Test Suite | **Primary — scope *and* content** | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` and `.xlsx` — **this stage's sole scope-determining input**, and its content source (Steps, Test Data, Expected Result, schema fields, §6 of `.claude/skills/test-design-skill/SKILL.md`). Every approved test case within the run's scope filter is eligible for an automation decision (§13). Narrowed only by the run's own Run Scope / module filter (§23) or an explicit run-scoped instruction (§35) — **never by a manual execution outcome** (`pipeline.md` §3.3). |
+| Selector Verification KB | Secondary — **mandatory read** | Required if present | `platform_core_data/knowledge_base/browser/screens/`, `.../components/` — locators this stage confirmed in earlier runs, with their code-state anchors (`pipeline.md` §10.8). Consulted **before** generation (§11B); a record whose anchor shows drift is re-verified live rather than trusted (§11A). This stage is the KB's **sole writer**. |
+| Repair KB | Secondary — **mandatory read** | Required if present | `platform_core_data/knowledge_base/patterns/repair_patterns/`, `.../diagnosis_patterns/`, `.../reasoning/` + prior runs' Repair Summaries (`pipeline.md` §10.8). Consulted **before** generation so a known failure mode is pre-empted in the first draft (§11B), rather than rediscovered by failing in Stage `5A` and repaired in Stage `5H`. |
 | Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md` — carries the Requirement/Discovery/Finding/Evidence references this skill must propagate onto each Automation Script (§12) |
 | Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md` — informs which test cases and Findings are already known to be Uncovered/exceptions, so this skill doesn't attempt to automate what Stage 3 already excluded |
-| Discovery Artifacts | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` — used only to resolve UI/selector detail a test case under-specifies, never as a source of business logic |
+| Discovery Artifacts | Secondary | Required, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/*.md` — **behavioural context only.** Discovery deliberately carries **no selectors and no DOM captures** (`pipeline.md` §3.5), so a selector is never sourced here: it is verified live against the running application in §11A. Never a source of business logic. |
 | Findings | Secondary | Required if any exist, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md` and each `FINDING-{ID}_{ShortName}/metadata.md` — used to carry Finding Reference through to the Automation Script that regress-tests or exploratory-tests it |
 | Evidence Packages | Secondary | Required wherever a test case's Finding Reference is populated, must be `Approved` | `platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/FINDING-{ID}_{ShortName}/` — cited by reference on the resulting Automation Script; never copied wholesale into generated code |
 | Existing Automation Package(s) | Contextual | Optional — present if one or more prior automation efforts exist | **A project holds exactly one authoritative Automation Package per framework** (v8) — e.g. `tests_SHAFT/` and `tests_Playwright/` both under `platform_core_data/runs/{{RUN_FOLDER}}/automation/`, tracked in that project's `AutomationPackages.md` registry (§19), one row per framework. Multiple *different* frameworks may coexist; never two competing packages within the same framework. This skill reads the registry in full, inspects each framework's one project per §9, and treats it as a reusable knowledge base per §11, before the Framework Decision Gate (§31) asks whether to extend the existing project, start one for a framework that doesn't have one yet, or (rare, explicit) reset one from scratch. |
 
 **This skill must never read the PRD directly** (`platform_core_data/knowledge_base/PRD.md` or equivalent) — only Stage 1 is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. If a test case's specification is genuinely incomplete, that is reported as a gap (§13, "Partially Automatable" or "Manual Only") rather than a reason to independently consult the PRD or raw Discovery Artifacts for missing business logic.
+
+**This skill must never read a Manual Execution artifact** (`pipeline.md` §3.3). The Manual Execution Results, its CSV, and its QA Report are the other branch's deliverables: a manual pass is not evidence that automation will work, and a manual failure is not evidence that a test should not be automated. This stage grounds its correctness in its own live verification (§11A), which is evidence about the build the suite will actually run against.
+
+**Waiting on the Manual branch is never a precondition here.** A run may generate automation without any manual execution ever having happened, and that is a complete, valid Automation-branch run — not a degraded one requiring disclosure.
 
 # 5. Automation Planning Engine
 
@@ -283,7 +315,171 @@ This skill treats the existing automation project (§9) as a reusable knowledge 
 
 **Never generate a duplicate reusable asset.** If a page object, utility, or fixture already exists that covers (or can be reasonably extended to cover) a new need, this skill reuses or extends it — it does not author a second, parallel version. Where reuse requires extending an existing asset, that extension is itself planned and recorded (Automation Plan §5, Automation Decision Report §13) rather than performed as an undocumented side effect.
 
+# 11A. Live Selector & DOM Verification (mandatory, headless)
+
+**Every locator this stage emits is confirmed against the running application before it is written into a script.** This is the reasoning grounding that replaces the execution-confirmed evidence the removed Automation Candidate Package used to supply (`pipeline.md` §3.3) — and it is stronger evidence, because it verifies against *the build the suite will actually run on* rather than against a human's earlier pass on a possibly different build.
+
+## 11A.1 Why here, and not in Discovery
+
+Discovery (Stage 2) deliberately captures **no** selectors or DOM structure (`pipeline.md` §3.5). Three reasons, and they matter to how this section is implemented:
+
+1. **Staleness.** A selector captured at Discovery time and used at generation time is verified against an older build. Verifying here reduces that window to zero.
+2. **Performance.** Discovery is the platform's broadest sweep; persisting DOM for every screen it visits inflates its runtime and artifacts for data most runs never use.
+3. **Clean artifacts.** Discovery's reader is a QA lead reviewing findings, not a consumer of DOM dumps.
+
+The consequence for this stage is explicit: **it must not expect selector data to arrive from upstream.** It acquires that data itself, here.
+
+## 11A.2 Headless, through the Playwright MCP server
+
+Verification runs **headless** — the Automation branch's posture throughout (`pipeline.md` §3.4), in deliberate contrast to Stage `4M`'s headed execution. Headless is correct here because nothing about verification requires human observation: the output is a machine-checkable fact (did this locator resolve to exactly one element?), captured as evidence.
+
+A credential value is **never** typed into an MCP tool call (`platform_core/tools/mcp/README.md` §1.3) — authenticate through the platform's credential contract, then verify against that authenticated session.
+
+## 11A.3 What is verified, per test case
+
+For every test case in scope, before its script is emitted:
+
+| Check | Passes when | On failure |
+|---|---|---|
+| **Reachability** | Every screen the test case's Steps traverse is actually reachable in the target environment, in the stated order | The test case is `Partially Automatable` or `Manual Only` (§13) with the unreachable step named — never emitted as though it works |
+| **Locator resolution** | Each interacted element resolves to **exactly one** element under the chosen strategy | Try the next strategy in the §24.1 priority order; if all fail, record `Unverified` (§11A.5) |
+| **Uniqueness** | No locator matches multiple elements | Narrow the strategy, or scope it to a container; a multi-match locator is never emitted, since which element it hits is then arbitrary |
+| **Interactability** | The element is visible and enabled at the point the Step acts on it | Record the precondition/wait actually required, and generate that wait — this is the single most common source of the flakiness Stage `5H` would otherwise have to repair |
+| **Assertable state** | The state the Expected Result describes is observable through some assertable property | The test case is `Partially Automatable` with the unassertable part named — never a weakened assertion to make it fit (§14.1) |
+
+## 11A.4 Verification produces a record, not just a locator
+
+Each verified locator yields a row in the **Selector Verification Report** (§19), and a durable entry in the shared **Selector Verification KB** (`pipeline.md` §10.8 — this stage is its sole writer):
+
+```
+Screen/Component:   {name}
+Element:            {logical name used in the Page Object}
+Strategy:           {role | label | test-id | text | css | xpath}  (§24.1 order)
+Locator:            {the actual locator emitted}
+Resolved:           {unique | multiple | none}
+Interactable:       {yes | required wait: <condition>}
+Fallback chain:     {ordered alternates recorded for recovery}
+Verified At:        {timestamp}
+Code-State Anchor:  {targetRef — what build this was verified against}
+Evidence:           {snapshot/screenshot reference}
+```
+
+**The code-state anchor is what makes reuse safe later.** A future run reads this record and compares its anchor against current drift (`run_manager.md` §5.8): unchanged means reuse without re-verifying; `moved` or any `unknown-*` means re-verify before trusting (`pipeline.md` §10.8 rule 3).
+
+## 11A.5 Unverifiable is disclosed, never guessed
+
+**A locator that could not be verified is never emitted as though it were confirmed.** Three honest outcomes, in preference order:
+
+1. **Verified** — resolved uniquely and interactable. Emitted, with its record.
+2. **Verified with required wait** — resolved, but only after a named condition. Emitted *with that wait generated*, and the condition recorded.
+3. **Unverified** — could not be resolved or reached. The test case is downgraded to `Partially Automatable` / `Manual Only` (§13) with the specific element named, and the reason recorded in the Automation Coverage Report as a named gap (§25).
+
+**Never a fourth option.** Emitting a plausible-looking unverified selector converts a generation-time problem this stage could disclose into an execution-time failure Stage `5A` reports and Stage `5H` spends a human approval repairing. A suite that is 80% verified and honest about the other 20% is worth more than one that is 100% emitted and silently 20% broken.
+
+## 11A.6 Time and iteration budget
+
+Verification is bounded, and its bounds are recorded (the same discipline §15A applies to self-review):
+
+- **Per-locator strategy attempts:** capped at the §24.1 priority order — each strategy is tried once, in order, not re-attempted speculatively.
+- **Per-test-case verification budget:** a stated time cap. On exhaustion, the remaining elements are `Unverified` (§11A.5) rather than the stage running indefinitely.
+- **Reuse before re-verification:** a KB record whose anchor shows no drift is *reused*, not re-verified — this is the main lever that keeps verification affordable on a large suite across runs.
+- **Whatever the budget did not reach is stated explicitly** in the Selector Verification Report. Silent truncation would read as "everything verified," which is the one thing this section exists to prevent.
+
+# 11B. Mandatory Knowledge-Base Consultation (before generation)
+
+**Both shared knowledge bases are read before the first line of code is generated, not after a failure** (`pipeline.md` §10.8). Consulting them afterwards is what the platform used to do implicitly, and it meant every known failure mode had to be rediscovered by failing in Stage `5A` and repaired in Stage `5H` — spending an execution cycle and a human approval to relearn something the platform already knew.
+
+## 11B.1 Selector Verification KB — reuse what is already confirmed
+
+For every screen/component in scope, before verifying it live (§11A):
+
+1. Look for an existing verified record.
+2. **No drift** (`run_manager.md` §5.8 reports `unchanged`) → reuse the locator and its fallback chain directly; note the reuse and its source anchor.
+3. **Drift, or any `unknown-*`** → re-verify live (§11A). The record becomes a *candidate* to try first, never a fact to trust.
+4. **No record** → verify live and write the new record.
+
+## 11B.2 Repair KB — pre-empt known failure modes
+
+For every flow in scope, consult confirmed repair/diagnosis patterns and prior runs' Repair Summaries, then **apply matching patterns proactively in the first draft**:
+
+| A KB pattern says | The first draft therefore |
+|---|---|
+| This app's login redirect races the dashboard assertion (`REPAIR-003`) | Generates the correct wait-for-state up front, rather than a bare navigation assertion |
+| This framework's grid rows are index-unstable | Scopes row locators by content, never by index |
+| This screen's save is async with no spinner | Waits on the resulting state change, not on a fixed delay |
+
+**Every proactively-applied pattern is cited** in the Automation Manifest, by Rule ID — so a reviewer can see the suite was built on accumulated knowledge, and a later reader can tell an applied pattern from an original decision.
+
+## 11B.3 A KB is evidence, never authority
+
+Neither KB ever tells this stage **what the application should do** — that remains exclusively the approved Project Context's role (`pipeline.md` §6 Rule 5). A KB entry that appears to contradict the approved test case is disclosed as a discrepancy, never silently followed.
+
+# 11C. Brownfield / Greenfield Fit — detect automatically, approve the write
+
+Per the resolved design: **detection is automatic and asks nothing; the write decision is approved explicitly, once, at the existing Automation Approval gate** (`pipeline.md` §5.2). This replaces asking separately about framework, directory, extend-vs-new, and conventions — the over-asking `pipeline.md` §5.5 was written to stop.
+
+## 11C.1 Detected automatically — no prompt
+
+All of this is an Engineering Decision (`pipeline.md` §5.5) and is determined without interrupting:
+
+| Detected | How | Used for |
+|---|---|---|
+| Ecosystem, framework, pinned versions | `detectStack` (§34.2) | Generating against the real API surface |
+| Test directory layout and naming | `detectTestDirs` (`pipeline.md` §13.2) | Placing files where the team already puts them |
+| Page-object / fixture / helper patterns | Reading existing test code for **structure and style only** (`pipeline.md` §13.2) | Generating code indistinguishable in style from the team's own |
+| Build/test invocation | `package.json#scripts`, Maven/Gradle tasks | Telling Stage `5A` how the team actually runs the suite |
+| **Brownfield vs. greenfield** | Existing automation present in `target.automationRoot`? | Choosing between extend and scaffold |
+
+**Reading existing test code is for structure and style, never intent** (`pipeline.md` §6 Rule 9). An existing test's assertions are evidence of what the code currently does — never of what it should do. A conflict with the approved Project Context is a **Finding to report**, never a requirement to adopt.
+
+## 11C.2 Brownfield — extend the team's real suite
+
+Where automation already exists:
+
+- **Extend and reuse rather than duplicate** — a helper, fixture, or page object that already exists is used, not re-created alongside a near-identical twin.
+- **Match the existing conventions** even where platform defaults differ. The team's suite is the authority on its own style; a stylistic "improvement" that makes generated files look foreign is a defect, not an upgrade.
+- **Never modify an existing file without naming it in the Write Plan** and having it individually approved (§11C.4, `pipeline.md` §13.3). Creating new files in an allowlisted directory is covered by the gate's blanket approval; editing files the team owns is not.
+- **Bootstrap Migration** lifts a pre-existing suite into a Workspace Automation Baseline the first time (`pipeline.md` §13.8), so "extend the existing suite" means the team's real suite rather than an empty baseline.
+
+## 11C.3 Greenfield — test infrastructure only
+
+Where no automation exists, scaffold **test infrastructure only** (`pipeline.md` §13.6): the test directory, the framework's config file, the suite itself, and — with approval — the test-script wiring.
+
+**Never scaffold the application:** no source files, no build config, no framework skeleton, no dependency beyond a test-scoped devDependency the human approved. A greenfield run produces a repository ready to *receive* tests, and nothing else.
+
+## 11C.4 The Target Write Plan — the one thing that is asked
+
+Presented at the Automation Approval gate (`pipeline.md` §5.2), as part of the same single approval that covers the suite:
+
+```
+Target Write Plan — {Framework}
+Fit: {Brownfield: extending existing suite | Greenfield: scaffolding test infrastructure}
+Destination: <targetRoot>/<automationRoot>          both resolved, never assumed (§11C.1)
+Layout/naming: matched from <detectedTestDirs>      the team's own conventions, not platform defaults
+
+  CREATE  <specDir>/<module>-create.<ext>            covers TC-AGENCY-CREATE-001..006
+  CREATE  <pageObjectDir>/<Module>FormPage.<ext>     new page object (verified locators, §11A)
+  REUSE   <pageObjectDir>/LoginPage.<ext>            existing — used unchanged, not duplicated
+  MODIFY  <buildManifest>                            + one test-script entry (additive only)
+
+Selector verification: 38 verified · 3 reused from KB (no drift) · 2 unverified (named below)
+Self-review: 3 iterations, budget not exhausted, 0 checks left unsatisfied
+
+Every <placeholder> above is RESOLVED per project — from platform.config.json and detectTestDirs
+(§11C.1). A plan that names a fixed layout has assumed what it was supposed to detect.
+```
+
+Rules, all inherited from `pipeline.md` §13.3 rather than invented here:
+
+1. **No Target Project file is written before this plan clears the gate.**
+2. **Writes are fail-closed** — absent or empty `target.writeAllowlist` means nothing is written to the Target Project, and generation stays inside `platform_core_data/`.
+3. **Every existing file to be modified is named individually** and approved individually.
+4. **No deletions**, except a file this platform itself created in a prior run and recorded in the Target Write Ledger.
+5. **Filesystem writes only** — the platform never runs `git add`/`commit`/`mv`/`rm` against the Target Project. Generated code is left in the working tree for the team to review and commit with their own conventions and hooks.
+6. **Every write is recorded in the Target Write Ledger** — path, run folder, operation, sha256 — the platform's record of what it owns inside someone else's repository.
+
 # 12. Traceability
+
 
 The Automation skill maintains the pipeline's full traceability chain, extended one level further than the Test Design skill's own four-dimension model:
 
@@ -307,7 +503,9 @@ A gap anywhere in this chain (an Automation Script that cannot cite its Test Cas
 
 # 13. Automation Decision Engine
 
-**Every test case named in the Automation Candidate Package must receive exactly one automation decision.** No candidate test case is left undecided. A test case absent from the Automation Candidate Package (never executed manually, or executed but not confirmed successful/stable) receives no automation decision this run — its status is tracked by the Manual Execution skill, not re-litigated here.
+**Every test case in the run's scope must receive exactly one automation decision.** No in-scope test case is left undecided. Scope is the approved Stage 3 Manual Test Suite narrowed only by the run's Run Scope / module filter (§23) or an explicit run-scoped instruction (§35) — never by a manual execution outcome (`pipeline.md` §3.3).
+
+**Live verification (§11A) is what most often drives a decision away from "Generate New Automation":** a flow whose screen is unreachable, whose control cannot be uniquely located, or whose Expected Result has no assertable property becomes `Partially Automatable` or `Manual Only` **with the specific element named** — never an emitted script built on an unverified guess.
 
 Possible decisions:
 
@@ -379,7 +577,53 @@ This skill validates:
 - **Framework compliance** — the generated code actually follows the selected framework's conventions (e.g., SHAFT Engine's DriverFactory/Page Object Model/TestNG/Allure per §8, not generic unwrapped Selenium) — a compliance gap here is exactly the "specification violation" §8 already names, caught before handoff rather than after.
 - **Traceability** — every generated script's Test Case ID, and the Requirement/Discovery/Finding/Evidence References it inherited (§12), are actually present and resolvable — distinct from "broken references" above, which checks internal code references (page objects/fixtures); this checks the external traceability chain specifically.
 
-**This skill generates recommendations whenever improvements are identified** — it does not silently fix everything it finds without recording what it found and why, and it does not silently ship known rough edges without disclosing them. Self Review findings are recorded in the Automation Manifest (§16).
+**This skill generates recommendations whenever improvements are identified** — it does not silently fix everything it finds without recording what it found and why, and it does not silently ship known rough edges without disclosing them. Self Review findings are recorded in the Automation Manifest (§16) and, per iteration, in the Self Review Report (§15A).
+
+# 15A. Self-Review Iteration & Time Budget
+
+**Self-review is an iterative loop with an explicit budget, not a single pass and not an open-ended pursuit of perfection.** Reasoning quality improves materially over the first few passes and then flattens; without a stated bound, this stage would either stop arbitrarily after one pass or grind indefinitely against checks that cannot be satisfied in this environment.
+
+## 15A.1 The loop
+
+```
+iteration := 1
+while iteration <= MAX_ITERATIONS and time_spent < TIME_BUDGET:
+    run every §15 check
+    if no findings:              -> converged, exit
+    if only unfixable findings:  -> exit, disclose them (§15A.3)
+    fix what is fixable
+    record iteration: findings, fixes, checks still failing
+    iteration := iteration + 1
+```
+
+## 15A.2 The budget
+
+| Bound | Default | Rationale |
+|---|---|---|
+| **MAX_ITERATIONS** | **3** | Pass 1 catches structural issues; pass 2 catches what those fixes introduced; pass 3 confirms stability. A 4th pass rarely finds anything a human reviewer would not prefer to judge themselves. |
+| **TIME_BUDGET** | Stated per run, scaled to suite size | Prevents a large suite's review from dominating the run. |
+| **Convergence** | Exit early on a clean pass | The budget is a ceiling, never a quota — three iterations are not run for their own sake. |
+| **Oscillation guard** | Exit on a repeated finding-set | A finding that reappears unchanged after a fix attempt will not be resolved by attempting it again; it is disclosed instead. |
+
+Both bounds, and what was actually consumed, are recorded in the Self Review Report (§19).
+
+## 15A.3 Exhaustion is disclosed, never silent
+
+**When the budget ends with checks unsatisfied, every one is named** in the Self Review Report and surfaced at the Automation Approval gate (`pipeline.md` §5.2, which reviews for exactly this):
+
+```
+Self-Review — 3 iterations, budget exhausted
+  PASS  traceability · naming · duplication · page objects · framework compliance · compilation
+  FAIL  2 checks unsatisfied:
+          - TC-AGENCY-014: assertion depends on a value only verifiable via DB access (out of scope)
+          - AgencyGridPage: rows index-unstable; content-scoped locator added, still order-sensitive
+```
+
+A silently-truncated review reads to a reviewer as a clean one. That is the specific failure this section prevents: an unsatisfied check disclosed is a reviewer's decision to make, while an unsatisfied check hidden is a defect shipped with the reviewer's signature on it.
+
+## 15A.4 What self-review may never do
+
+The §14.1 prohibitions bind here exactly as they bind Stage `5H` (`pipeline.md` §5.6.4): self-review **never weakens an assertion, removes a check, widens an expected value, or adds a tolerance** to make its own generated code pass its own review. A check that cannot be satisfied honestly is disclosed (§15A.3) — never satisfied by lowering the bar.
 
 # 16. Outputs
 
@@ -388,12 +632,14 @@ The Automation skill generates only the following:
 1. **Automation Plan** — the complete plan from §5, written before any code generation
 2. **Automation Package** — the actual generated/reused automation project: scripts, page objects, fixtures, utilities, configuration, and any other source artifacts needed to run the suite, organized per the Suite Planning Engine (§10) and the selected framework's conventions (§6–§8)
 3. **Automation Manifest** — a structured inventory of the Automation Package: every file it contains, which were generated versus reused, and the Self Review (§15) findings and recommendations
-4. **Automation Decision Report** — the per-test-case record from the Automation Decision Engine (§13): Decision, Justification, Reused Assets, Generated Assets, Automation Readiness, Known Limitations, for every test case named in the Automation Candidate Package
+4. **Automation Decision Report** — the per-test-case record from the Automation Decision Engine (§13): Decision, Justification, Reused Assets, Generated Assets, Automation Readiness, Known Limitations, for every test case in the run's scope
 5. **Automation Coverage Report** — the aggregate view: how many test cases received each of the four decisions, an automation coverage percentage, and named reasons for every Partially Automatable / Manual Only case
 6. **Automation Suite Manifest** — the realized suite structure from the Suite Planning Engine (§10): which suites exist, which test cases and automation assets belong to each, and each suite's shared setup/teardown/fixtures/components/utilities/test data
-7. **Automation Summary** — a single consolidated handoff document, structured per the Standard Output Contract (§25): Automation Summary, Generated Files, Framework Used, Coverage, Automation Decisions, Known Limitations, Execution Instructions, and Inputs for Automation Execution skill. This is the artifact `.claude/skills/automation-execution-skill/SKILL.md` §4 and `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage 5 already name as required (`AutomationSummary.md`) but which v2's six-artifact split never actually produced — see the v3 revision note above. It does not replace the other five artifacts; it is a consolidated pointer/summary over them, for a consumer that needs one file rather than six.
+7. **Automation Summary** — a single consolidated handoff document, structured per the Standard Output Contract (§25): Automation Summary, Generated Files, Framework Used, Coverage, Automation Decisions, Known Limitations, Execution Instructions, and Inputs for Automation Execution skill. This is the artifact `.claude/skills/automation-execution-skill/SKILL.md` §4 and `workflows_and_pipelines/pipeline/pipeline.md` §4 Stage `4A` already name as required (`AutomationSummary.md`) but which v2's six-artifact split never actually produced — see the v3 revision note above. It does not replace the other five artifacts; it is a consolidated pointer/summary over them, for a consumer that needs one file rather than six.
 
-No other artifact is produced by this skill. It does not execute the Automation Package, and it does not produce execution results, logs, or screenshots — those belong to the Automation Execution skill (Stage 6).
+Plus the three artifacts this revision adds: the **Selector Verification Report** (§11A.4), the **Target Write Plan** (§11C.4), and the **Self Review Report** (§15A).
+
+No other artifact is produced by this skill. It does not execute the Automation Package, and it does not produce execution results — those belong to Stage `5A`. It produces no Repair Summary — that belongs to Stage `5H`. Verification evidence captured under §11A is retained as verification evidence, never presented as an execution result.
 
 # 17. Allowed Tools
 
@@ -402,7 +648,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 - **Browser tools for selector verification only** — either the Browser Driver (`platform_core/tools/browser_driver/`) or the **`playwright` MCP server** (`browser_navigate`, `browser_snapshot`, `browser_find`, `browser_click`, `browser_evaluate` read-only), selected per the Mode Selection Rule in `platform_core/tools/mcp/README.md` §1.2. Strictly for verifying a selector or reading an accessibility tree against the live/staging environment during generation, if available — **never** for executing the generated suite. A credential value is never typed into an MCP tool call (`mcp/README.md` §1.3): authenticate via `BrowserDriver.authenticate()` and use MCP only on the already-authenticated session.
 - **`context7` MCP server** (`resolve-library-id`, `query-docs`) for the mandatory Stack Documentation step (§34) — version-accurate documentation for this project's own stack, used as a generation guideline. Never a source of business logic, requirements, or coverage justification.
 
-**Not permitted:** modifying the PRD, Project Context, or any approved upstream artifact (Automation Candidate Package, Manual Execution Summary, Manual Test Suite, Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, Evidence Packages); executing the generated Automation Package against any environment; automating any scenario not named in the Automation Candidate Package; inventing business logic to fill a specification gap; overwriting an existing reusable asset without explicit approval.
+**Not permitted:** modifying the PRD, Project Context, or any approved upstream artifact (Manual Test Suite, Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, Evidence Packages); **reading any Manual Execution artifact** (`pipeline.md` §3.3); executing the generated Automation Package against any environment; **repairing a failed test** (Stage `5H`'s exclusive responsibility); automating any scenario outside the run's approved scope; **emitting an unverified selector as though it were confirmed** (§11A.5); **weakening an assertion to satisfy its own self-review** (§15A.4); inventing business logic to fill a specification gap; writing to the Target Project before the Target Write Plan clears its gate (§11C.4); writing to the Repair KB (Stage `5H` is its sole writer); overwriting an existing reusable asset without explicit approval.
 
 # 18. Execution Rules
 
@@ -416,7 +662,12 @@ No other artifact is produced by this skill. It does not execute the Automation 
 8. **Must search the Automation Knowledge Base (§11) before creating any reusable asset**, and must never generate a duplicate of an asset that already exists or can be reasonably extended.
 9. **Must organize automation into suites by business workflow, never by individual page** (§10).
 10. **Must assign every manual test case exactly one Automation Decision** (§13) with full justification — no test case is left undecided.
-11. Must automate only test cases named in the Automation Candidate Package, using their content exactly as explicitly defined in the Approved Manual Test Suite — no new scenarios invented, and no test case outside the Candidate Package attempted.
+11. Must automate only test cases within the run's approved scope, using their content exactly as defined in the Approved Manual Test Suite — no new scenarios invented, and no test case outside that scope attempted.
+11a. **Must verify every selector and flow live and headless before emitting it** (§11A), and must record `Unverified` with the element named rather than emitting a guess (§11A.5).
+11b. **Must consult the Selector Verification KB and Repair KB before generating** (§11B), reuse non-drifted records, and cite every proactively-applied pattern by Rule ID.
+11c. **Must detect brownfield/greenfield without prompting, and present a Target Write Plan at the Automation Approval gate** (§11C) — no Target Project write before it clears.
+11d. **Must bound self-review by iteration and time, and disclose every unsatisfied check** (§15A) — never silently truncate a review.
+11e. **Must never read a Manual Execution artifact, and must never wait on the Manual branch** (`pipeline.md` §3.3).
 12. Must respect every business rule and safety constraint stated in the Project Context, even when a test case's steps do not restate them.
 13. Must report, by Test Case ID and reason, any test case that receives `Partially Automatable` or `Manual Only` — never silently drop a test case and never force an unsafe workaround to force full automation.
 14. **Must never invent missing business logic** to make an underspecified scenario automatable — the correct decision in that case is `Partially Automatable` or `Manual Only`, not a guess.
@@ -426,7 +677,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 18. **Must perform Self Review (§15) before declaring generation complete**, and must record findings/recommendations in the Automation Manifest even when no issues are found (state that explicitly, rather than omitting the section).
 19. **Must maintain the full traceability chain** (§12) on every generated asset — every Automation Script cites its Test Case ID and inherits that test case's Requirement/Discovery/Finding/Evidence References without alteration.
 20. Every automated test must be independent and idempotent, or use explicit setup/teardown to guarantee that.
-21. **Must never execute the generated Automation Package.** Execution is exclusively the Automation Execution skill's responsibility (Stage 6) — this skill's task is complete the moment the Automation Package and its accompanying reports (§16) are generated.
+21. **Must never execute the generated Automation Package, and must never repair a failed test.** Execution is exclusively Stage `5A`'s responsibility and repair exclusively Stage `5H`'s — this skill's task is complete the moment the Automation Package and its accompanying reports (§16) are generated. Driving the browser to verify a selector (§11A) is not execution.
 22. **Must never assume Playwright, or any other single framework, as a default** (§6) — a framework is selected only via the §7 precedence rules, never because it happens to appear first in an example.
 23. **Must apply the Locator Strategy's priority order** (§24) and record a fallback/recovery recommendation wherever the top-priority locator type is not viable for a given element.
 24. **Must select the Automation Strategy matching this run's Run Scope Type** (§23) — never apply one default breadth/depth regardless of scope.
@@ -434,8 +685,8 @@ No other artifact is produced by this skill. It does not execute the Automation 
 26. **Must recognize the named Stop Conditions** (§26) and, for any Local condition, continue generating automation for every other unblocked test case rather than halting the run — and must state the smallest missing prerequisite for every blocked item (§27), never a bare "cannot proceed."
 27. **Must verify Handoff completeness** (§28) before treating a run's Automation outputs as finished — every input `.claude/skills/automation-execution-skill/SKILL.md` §4 declares it needs must be present and unambiguous.
 28. **Must never begin this stage until the Automation Start Decision Gate (§30, `workflows_and_pipelines/pipeline/pipeline.md` §5.4) has been explicitly answered by a human** — a request for "automation" is never, by itself, authorization to also silently run, resume, or skip Stages 1–4.
-29. **Must complete the Framework Decision Gate (§31) before writing the Automation Plan or any code** — must read the project's full Automation Package registry and summarize every existing framework's project (a project holds exactly one per framework, never assume otherwise), then ask (never infer) whether to extend the existing one, start a project for a framework that doesn't have one yet, or reset one from scratch, and which framework for a new one. Criteria-based analysis (§7) may only be offered as a labeled recommendation inside that question, never substituted for asking it. Must ask this every Stage 5 run, never treat a prior run's answer as a standing default.
-30. **Must never treat the tool used for Stage 2 Browser Automation as evidence for the Stage 5 framework choice** (§6, §31.3) — discovery technology and automation technology are independent decisions, even when the same tool (e.g., Playwright) is technically capable of both roles.
+29. **Must complete the Framework Decision Gate (§31) before writing the Automation Plan or any code** — must read the project's full Automation Package registry and summarize every existing framework's project (a project holds exactly one per framework, never assume otherwise), then ask (never infer) whether to extend the existing one, start a project for a framework that doesn't have one yet, or reset one from scratch, and which framework for a new one. Criteria-based analysis (§7) may only be offered as a labeled recommendation inside that question, never substituted for asking it. Must ask this every Stage `4A` run, never treat a prior run's answer as a standing default.
+30. **Must never treat the tool used for Stage 2 Browser Automation as evidence for the Stage `4A` framework choice** (§6, §31.3) — discovery technology and automation technology are independent decisions, even when the same tool (e.g., Playwright) is technically capable of both roles.
 31. **Must update `AutomationPackages.md` (§19) at the end of every run** that extends a framework's project or adds a new framework — a new framework's project added, the existing one's "last touched" run updated, or (on Reset) the reset noted — so the next run's registry summary (§31.1) is accurate.
 32. **Must detect a registered Reference Automation Project (§32) at the start of every run** and ask the Automation Target Decision Gate (§32.3) — never silently assume "inside the platform" just because a Reference Project wasn't mentioned in the current request.
 33. **Must never modify a Reference Automation Project's files** unless the human explicitly chose "Update the Reference Project directly" for *this* run (§32.2) — a prior run's choice is never carried forward as a default.
@@ -449,26 +700,26 @@ No other artifact is produced by this skill. It does not execute the Automation 
 
 | Artifact | Path | Template |
 |---|---|---|
-| Automation Package Registry | `platform_core_data/automation_baseline/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. | [`AutomationPackages.md`](../../../platform_core/templates/stage_5_automation/AutomationPackages.md) |
-| Automation Plan | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md` | [`AutomationPlan.md`](../../../platform_core/templates/stage_5_automation/AutomationPlan.md) |
+| Automation Package Registry | `platform_core_data/automation_baseline/AutomationPackages.md` — the one project-level (not per-package) index: every package that exists, its framework, its location, which run/checkpoint last touched it, and — per `workflows_and_pipelines/pipeline/pipeline.md` §12.7 — its **Baseline Ref** (the Workspace Automation Baseline's path-scoped git commit hash as of the last successful Workspace Merge) and **Last Merged Run** (which run's automation was most recently merged in). This skill reads it at the start of every run (§31.1) and updates it at the end of every run that adds or continues a package. | [`AutomationPackages.md`](../../../platform_core/templates/stage_4a_automation/AutomationPackages.md) |
+| Automation Plan | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationPlan_{Framework}.md` | [`AutomationPlan.md`](../../../platform_core/templates/stage_4a_automation/AutomationPlan.md) |
 | Automation Package (Workspace Automation Baseline) | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` — per `pipeline.md` §12.1, this is the authoritative, persistent copy; this skill never writes here directly (§33.2, Execution Rule 35) | — (generated source code, not a document) |
-| Automation Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md` | [`AutomationManifest.md`](../../../platform_core/templates/stage_5_automation/AutomationManifest.md) |
-| Automation Decision Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md` | [`AutomationDecisionReport.md`](../../../platform_core/templates/stage_5_automation/AutomationDecisionReport.md) |
-| Automation Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md` | [`AutomationCoverageReport.md`](../../../platform_core/templates/stage_5_automation/AutomationCoverageReport.md) |
-| Stack Documentation Context (§34) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` | [`StackDocumentationContext.md`](../../../platform_core/templates/stage_5_automation/StackDocumentationContext.md) |
+| Automation Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{Framework}.md` | [`AutomationManifest.md`](../../../platform_core/templates/stage_4a_automation/AutomationManifest.md) |
+| Automation Decision Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{Framework}.md` | [`AutomationDecisionReport.md`](../../../platform_core/templates/stage_4a_automation/AutomationDecisionReport.md) |
+| Automation Coverage Report | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationCoverageReport_{Framework}.md` | [`AutomationCoverageReport.md`](../../../platform_core/templates/stage_4a_automation/AutomationCoverageReport.md) |
+| Stack Documentation Context (§34) | `platform_core_data/runs/{{RUN_FOLDER}}/automation/StackDocumentationContext_{Framework}.md` | [`StackDocumentationContext.md`](../../../platform_core/templates/stage_4a_automation/StackDocumentationContext.md) |
 | Project Stack record (§34.4) | `platform_core_data/knowledge_base/stack.md` — durable, shared across runs, updated in place | — (durable knowledge_base record, not a run artifact) |
-| Automation Suite Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md` | [`AutomationSuiteManifest.md`](../../../platform_core/templates/stage_5_automation/AutomationSuiteManifest.md) |
-| Automation Summary | `platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md` | [`AutomationSummary.md`](../../../platform_core/templates/stage_5_automation/AutomationSummary.md) |
+| Automation Suite Manifest | `platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{Framework}.md` | [`AutomationSuiteManifest.md`](../../../platform_core/templates/stage_4a_automation/AutomationSuiteManifest.md) |
+| Automation Summary | `platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md` | [`AutomationSummary.md`](../../../platform_core/templates/stage_4a_automation/AutomationSummary.md) |
 
-**Every document artifact's structure is defined by its template** in `platform_core/templates/stage_5_automation/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. `AutomationSummary.md` encodes §25's 8-section contract, `AutomationDecisionReport.md` encodes §13's four decisions and six mandatory per-decision fields, and `AutomationPlan.md` encodes §5's required plan fields. `platform_core/templates/README.md` states the shared conventions.
+**Every document artifact's structure is defined by its template** in `platform_core/templates/stage_4a_automation/`, not restated here. Render an artifact by copying its template and filling the `{{PLACEHOLDER}}` tokens; section order is mandatory and the inline `<!-- -->` guidance is stripped from the rendered output. `AutomationSummary.md` encodes §25's 8-section contract, `AutomationDecisionReport.md` encodes §13's four decisions and six mandatory per-decision fields, and `AutomationPlan.md` encodes §5's required plan fields. `platform_core/templates/README.md` states the shared conventions.
 
-**Where this skill actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage 6, its Execution Results and evidence.
+**Where this skill actually generates** (v7 — see `pipeline.md` §12): a run-scoped working copy at `platform_core_data/runs/{{RUN_FOLDER}}/automation/tests_{Framework}/` (the run folder name itself is generated by `platform_core/tools/run_manager`, never hand-formatted here; see `workflows_and_pipelines/pipeline/run_manager.md` §5), created via Working Copy Creation (§33.2). This working copy is temporary — once its automation clears Automation Approval (`pipeline.md` §5.2), the Workspace Merge (`pipeline.md` §12.4) promotes its content into the flat, project-level Automation Package path above, and Cleanup (`pipeline.md` §12.5) removes the merged source from the run, leaving only its permanent reports (this table's other rows, plus `automation_promotion.md`) and, after Stage `5A`, its Execution Results and evidence.
 
 # 20. Operational Contract
 
-Role: automation engineering (Stage 5 of 7).
+Role: automation engineering (Stage `4A` of the Automation Pipeline).
 
-Turn the execution-confirmed Automation Candidate Package into a reviewable automation package. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Automation Planning Engine — the plan is written in full before any code), §6–§7 (Framework Detection and Selection), §8 (SHAFT Engine Support), §9 (Existing Framework Analysis), §10 (Suite Planning Engine), §11 (Automation Knowledge Base), §12 (Traceability), §13 (Automation Decision Engine), §14 (Code Generation Standards), §15 (Self Review), §16 (Outputs), §18 (Execution Rules), §19 (Artifacts), §34 (Stack Documentation Step — mandatory before any code generation), §23 (Strategy by Run Scope), §24 (Locator Strategy), §25 (Standard Output Contract), §26–§27 (Stop Conditions and Recovery), §28 (Handoff Contract), and the human decision gates in §30–§33. This section adds no rules of its own; the contract is stated once above rather than restated here.
+Turn the approved Stage 3 Manual Test Suite into a reviewable, live-verified automation package. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Automation Planning Engine — the plan is written in full before any code), §6–§7 (Framework Detection and Selection), §8 (SHAFT Engine Support), §9 (Existing Framework Analysis), §10 (Suite Planning Engine), §11 (Automation Knowledge Base), **§11A (Live Selector & DOM Verification — mandatory)**, **§11B (Mandatory KB Consultation)**, **§11C (Brownfield/Greenfield Fit and the Target Write Plan)**, §12 (Traceability), §13 (Automation Decision Engine), §14 (Code Generation Standards), §15 (Self Review), **§15A (Self-Review Iteration & Time Budget)**, §16 (Outputs), §18 (Execution Rules), §19 (Artifacts), §34 (Stack Documentation Step — mandatory before any code generation), §23 (Strategy by Run Scope), §24 (Locator Strategy), §25 (Standard Output Contract), §26–§27 (Stop Conditions and Recovery), §28 (Handoff Contract), and the human decision gates in §30–§33. This section adds no rules of its own.
 
 # 21. Example Execution
 
@@ -554,7 +805,8 @@ This skill recognizes the following named conditions. Recognizing one is never, 
 | Condition | Scope | Required Action |
 |---|---|---|
 | **Missing framework** (no Project Context statement, no existing automation project to infer from) | Global | Halt and report per §6's existing rule — there is no basis to select or justify a framework. |
-| **Missing manual tests** (Automation Candidate Package or Manual Test Suite not `Approved`, or empty) | Global | Halt and report the blocking artifact (Execution Rule 1) — never generate against a draft or empty suite. |
+| **Missing manual tests** (Manual Test Suite not `Approved`, or empty) | Global | Halt and report the blocking artifact (Execution Rule 1) — never generate against a draft or empty suite. |
+| **Application unreachable for live verification** (§11A) | Global | Halt. A suite generated with no selector verified is a suite of guesses. Report the environment problem and recommend retrying when the application is reachable — never fall back to emitting unverified locators (§11A.5). |
 | **Unsupported technology** (the Project Context describes an application type/stack no available framework can drive, and no existing automation project covers it either) | Global, or Local to the affected test cases if only part of the suite is affected | Report the gap explicitly; do not force-fit an unsuitable framework. Where only some test cases are affected, those specific cases become `Manual Only` (§13) while the rest of the run proceeds. |
 | **Incomplete requirements** (a test case's Steps/Expected Result are too vague to generate deterministic automation without inventing logic) | Local — that test case only | Per the existing §13/Execution Rule 14 rule: `Partially Automatable` or `Manual Only`, never a guess. |
 | **Missing selectors** (no stable locator exists at any priority level, §24) | Local — that test case/step only | Per §24.2: record the fallback attempted and the recommendation to add a stable locator; mark the affected portion `Partially Automatable` or `Manual Only`. |
@@ -564,7 +816,7 @@ This skill recognizes the following named conditions. Recognizing one is never, 
 
 Like the Test Design skill (`.claude/skills/test-design-skill/SKILL.md` §20), this skill has no alternate generation mechanism to fall back to — its recovery behavior is: **never let one blocked test case stop the whole run, and always name the smallest thing that would unblock it.**
 
-1. When a Local Stop Condition (§26) blocks a specific test case, this skill continues processing every *other*, unblocked test case in the Automation Candidate Package — a single blocked case is never a reason to produce zero output for the run.
+1. When a Local Stop Condition (§26) blocks a specific test case, this skill continues processing every *other*, unblocked test case in the run's scope — a single blocked case is never a reason to produce zero output for the run.
 2. For the blocked case, this skill states the **smallest missing prerequisite** that would resolve it — never a vague "cannot automate." Examples: *"Add a `data-testid` to the Airlines multi-select dropdown"*, not *"selectors unreliable"*; *"Confirm the maximum airline-selection count with the DBA (T3087 Prerequisites)"*, not *"requirements incomplete."*
 3. For a Global Stop Condition (§26), this skill still states the minimal prerequisite (e.g., *"Awaiting Test Design skill re-run — Coverage Report for RUN-20260710-001 is still Pending Review"*) rather than a bare halt message.
 4. The recommended prerequisite is recorded in the Automation Plan's "Blocked Tests" field (§5) and in the Automation Summary's Known Limitations section (§25) — never only in a narrative aside a reviewer could miss.
@@ -637,7 +889,7 @@ Per §31.6's Human Decision Principle, gather the options above, analyze them, p
 - **"Extend" is the default recommendation whenever a project already exists for the chosen framework** — a second, independent, competing project for the same framework is never an available option; that gap (this platform's own former "v5" behavior) is exactly what produced NDC's `tests_SHAFT`/`tests_SHAFT_Agency` split, later consolidated back into one project (see `AutomationPackages.md` Notes, 2026-07-24).
 - **"Reset" is rare and destructive** — it discards the current baseline's content entirely. Never offered as a casual alternative to "Extend"; only surfaced, with its consequence stated plainly, when the human has reason to believe the existing project is genuinely unsalvageable.
 - **This skill's own criteria-based analysis (§7) is offered as a labeled recommendation inside this question, never substituted for it.** "Based on X/Y/Z, extending the existing SHAFT project looks correct — proceed with that, or choose differently?" is acceptable framing; silently proceeding with the recommendation is not.
-- **This question is asked before every Stage 5 run**, not only the first one for a project — a prior run's answer is never treated as a standing default for the next run.
+- **This question is asked before every Stage `4A` run**, not only the first one for a project — a prior run's answer is never treated as a standing default for the next run.
 
 ## 31.3 Step 3 — Never infer the framework from Discovery tooling
 
@@ -645,11 +897,11 @@ Per §6's hardened language: which tool Stage 2 used for Browser Automation must
 
 ## 31.4 Recording the outcome
 
-The human's actual answer — not this skill's recommendation — is what gets recorded in the Automation Plan's Target Framework/Target Language fields (§5), with the recommendation (if one was offered) noted alongside it for traceability. A Framework Decision Gate that was asked but whose answer wasn't recorded verbatim is treated as incomplete, per the same standard as any other missing Automation Plan field (§5). This skill also updates `AutomationPackages.md` (§19) with the outcome — a new framework's project added, the existing one's "last touched" run updated, or (on Reset) the project's history noted as reset — so the next Stage 5 run's Step 1 summary is accurate without re-deriving it from scratch.
+The human's actual answer — not this skill's recommendation — is what gets recorded in the Automation Plan's Target Framework/Target Language fields (§5), with the recommendation (if one was offered) noted alongside it for traceability. A Framework Decision Gate that was asked but whose answer wasn't recorded verbatim is treated as incomplete, per the same standard as any other missing Automation Plan field (§5). This skill also updates `AutomationPackages.md` (§19) with the outcome — a new framework's project added, the existing one's "last touched" run updated, or (on Reset) the project's history noted as reset — so the next Stage 4A run's Step 1 summary is accurate without re-deriving it from scratch.
 
 ## 31.5 Platform Principle (v8)
 
-**Discovery technology != Automation technology, and one authoritative project per framework, project-wide.** Playwright may be the tool that inspected the application in Stage 2. SHAFT, Playwright, Selenium, or Cypress may each independently have their own one authoritative project for that same platform project — none of these facts constrain any other. A framework choice made for one Stage 5 invocation binds that framework's one project for the whole repository, not just that run — extending it is the expected path for every subsequent run targeting the same framework, never a coexisting second package.
+**Discovery technology != Automation technology, and one authoritative project per framework, project-wide.** Playwright may be the tool that inspected the application in Stage 2, and is also this stage's mandatory selector-verification mechanism (§11A.2) — **neither fact carries any weight in the framework choice.** SHAFT, Playwright, Selenium, or Cypress may each independently have their own one authoritative project for that same platform project. A framework choice made for one Stage `4A` invocation binds that framework's one project for the whole repository, not just that run — extending it is the expected path for every subsequent run targeting the same framework, never a coexisting second package.
 
 ## 31.6 Human Decision Principle for Repository-Structure Decisions (added 2026-07-24, user-mandated)
 
@@ -723,7 +975,7 @@ This is the same question already specified at §31.2 — restated here as its o
 
 ## 33.1 Presentation — one consolidated gate, asked once per stage
 
-**§30/§32.3/§31.2/§33 are presented to the human together, as one Decision Gate, not as separate questions across turns:** (1) proceed with Stage 5 now, or stop after Manual Execution; (2) Automation Target (§32.3); (3) Framework (§31.2); (4) Automation Strategy (§33). Every option is shown at once so the human answers all four in a single exchange, and no sub-question is silently skipped (e.g. never omit Framework just because Target implies an obvious answer — ask it, even if the expected answer is predictable from context). **Once this consolidated gate is answered, this skill does not ask again during that Stage 5 run** — it proceeds straight through Automation Plan → generation → the full Standard Output Contract (§25) without further confirmation dialogs, reserving any further pause exclusively for a genuine technical blocker encountered during generation (§26 Stop Conditions), never for a repeat or refinement of a decision already made.
+**§30/§32.3/§31.2/§33 are presented to the human together, as one Decision Gate, not as separate questions across turns:** (1) proceed with Stage `4A` now; (2) Automation Target (§32.3); (3) Framework (§31.2); (4) Automation Strategy (§33). **The brownfield/greenfield determination is *not* one of these questions** — it is detected automatically (§11C.1), and its consequences are approved later, as the Target Write Plan at the §5.2 gate (§11C.4). Every option is shown at once so the human answers all four in a single exchange, and no sub-question is silently skipped (e.g. never omit Framework just because Target implies an obvious answer — ask it, even if the expected answer is predictable from context). **Once this consolidated gate is answered, this skill does not ask again during that Stage `4A` run** — it proceeds straight through Automation Plan → generation → the full Standard Output Contract (§25) without further confirmation dialogs, reserving any further pause exclusively for a genuine technical blocker encountered during generation (§26 Stop Conditions), never for a repeat or refinement of a decision already made.
 
 > **Revision note (v6):** User-mandated addition, 2026-07-12, after registering NDC's real production SHAFT codebase (`E:\Automation2\NDC-Uplift-Automation`) as a Reference Automation Project. Adds §32 (Reference Automation Project — registration, read-only default, the Automation Target Decision Gate, its Architecture Summary requirement, and generation rules when it governs) and §33 (Automation Strategy Decision Gate, named explicitly and separately from §31's Framework question, though the same underlying "continue vs. new" choice §31.2 already specified). No prior section's numbering changed.
 
@@ -794,18 +1046,26 @@ This skill is independently invocable — `/automation-skill`, optionally with a
 **The §30 Automation Start Decision Gate is unchanged and still fires.** A direct call authorizes *this* skill to begin its own work; it is never authorization to run, resume, or skip Stages 1–4 (§5.3.1 #2, Execution Rule 28). §5.3.1 relaxes only *who may start this stage and when* — not §30's requirement that the upstream-state decision be made explicitly by a human.
 
 - **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may select which candidate test case IDs to automate, prioritize a suite, or set a generation order. It never authorizes selecting a framework unilaterally (§31 — a Human Decision), choosing a merge destination or repository structure (§31.6), writing into a Workspace Automation Baseline directly (Execution Rule 35), reading the PRD (Execution Rule 2), inventing business logic, or executing what it generates (this skill never executes).
-- **Upstream `Pending Review` / `Pending Automation Approval` → request approval, then recommend** (§5.3.1 #4). Report which required input is open, then offer both paths (approve → `/automation-skill`, or revise → `/manual-execution-skill <feedback>`).
+- **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4). Report which required input is open, then offer both paths (approve → `/automation-skill`, or revise → `/test-design-skill <feedback>`). **Never `/manual-execution-skill`** — that is the other branch and is not upstream of this stage (`pipeline.md` §3.3).
 - **Missing upstream → run degraded** (§5.3.1 #5):
-  - *No Automation Candidate Package:* the scope of what to automate is undefined. Do not substitute "every test case in the Manual Test Suite" for it — that is exactly the scope invention §26's Stop Condition forbids. Report the gap and, if the invocation itself names specific test case IDs, treat that named list as the run-scoped candidate set and record it in the Automation Plan as `Scope source: direct invocation, not an approved Candidate Package`.
+  - *No approved Manual Test Suite:* the scope of what to automate is undefined — halt (§26). If the invocation itself names specific test case IDs, treat that named list as the scope and record it in the Automation Plan as `Scope source: direct invocation, no approved Test Suite`, with every generated test marked `Requires Upstream Stage`.
+  - *No Selector Verification KB / Repair KB:* proceed — verify everything live (§11A) and state that no prior art was available. This is a normal first run, not a degraded one.
+  - *Application unreachable:* halt rather than emit unverified locators (§26).
   - *No Manual Test Suite:* blocking for any candidate whose full content it would supply — report per §26/§27's minimal-prerequisite form.
   - *No Traceability Matrix / Coverage Report:* generate anyway; mark the Automation Plan's traceability section `Requires Upstream Stage`.
 - **Closing message must recommend the next step** (§5.3.1 #6):
 
 ```
-Stage 5 complete — Automation Package → Pending Automation Approval
+Stage 4A complete — Automation Package → Pending Automation Approval
   {run working copy}/automation/tests_{Framework}/
   {S} scripts | {A} automated | {P} partial | {M} manual-only
-  Not executed — this skill never runs what it generates.
+
+  Selectors:    {V} verified | {R} reused from KB (no drift) | {U} unverified (named in report)
+  KB patterns:  {K} applied proactively (cited by Rule ID)
+  Self-review:  {I}/3 iterations | {C} checks left unsatisfied (disclosed)
+  Write Plan:   {N} create | {M2} modify | {Fit: brownfield|greenfield}
+
+  Not executed — this skill never runs what it generates, and never repairs.
 
 Next step — either:
   1. Approve, then execute:    "approved"  →  /automation-execution-skill

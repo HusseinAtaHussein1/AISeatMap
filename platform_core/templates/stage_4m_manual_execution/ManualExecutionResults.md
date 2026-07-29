@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Manual Execution Results (Stage 4 of 7)
+TEMPLATE — Manual Execution Results (Stage 4M — Manual branch, terminal)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/manual_execution/ManualExecutionResults.md
 Authority:  .claude/skills/manual-execution-skill/SKILL.md §10 (Standard Output Contract — the
             Results-side sections #1, #3, #4), §8 (Result Classification), §10.1, §13

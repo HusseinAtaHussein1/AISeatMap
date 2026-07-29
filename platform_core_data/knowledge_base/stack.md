@@ -1,7 +1,7 @@
 # Detected Stack
 
 > **Generated, then durable.** Unlike every other document in this folder, this one is written by the
-> platform rather than by a human — Stage 5 (Automation) resolves the project's stack and its
+> platform rather than by a human — Stage 4A (Automation) resolves the project's stack and its
 > **pinned** dependency versions via `platform_core/tools/mcp/stack_docs/` and records the result
 > here, so later runs reuse it instead of re-detecting from scratch.
 >
@@ -10,11 +10,11 @@
 > the run folder as `StackDocumentationContext_{Framework}.md` (`automation-skill` §34).
 >
 > Safe to edit by hand: where a human correction and mechanical detection disagree, record the
-> correction plus the reason, and Stage 5 surfaces the conflict rather than silently overwriting it.
+> correction plus the reason, and Stage 4A surfaces the conflict rather than silently overwriting it.
 
 ## Detected At
 
-_ISO timestamp of the last detection run — left blank until Stage 5 first writes here._
+_ISO timestamp of the last detection run — left blank until Stage 4A first writes here._
 
 ## Ecosystems
 
@@ -51,7 +51,7 @@ _Material libraries only — what the generated code actually imports, not trans
 ## Human Corrections
 
 _Anything detection got wrong or cannot see. Each entry: what was detected, what is actually true,
-and why — Stage 5 reads this before trusting its own detection._
+and why — Stage 4A reads this before trusting its own detection._
 
 ## Detection Gaps
 

@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Automation Suite Manifest (Stage 5 of 7)
+TEMPLATE — Automation Suite Manifest (Stage 4A — Automation branch)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationSuiteManifest_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §10 (Suite Planning Engine), §16 Outputs #6, §19
 
@@ -64,7 +64,7 @@ plan and manifest is a defect in this stage's output.
 ## 3. Cross-Suite Shared Assets
 
 <!-- Assets shared across more than one suite — the layer a change would ripple through. Knowing this
-     is what lets Stage 6 scope a repair's blast radius. -->
+     is what lets Stage 5H scope a repair's blast radius. -->
 
 | Asset | Type | Used By Suites |
 |---|---|---|

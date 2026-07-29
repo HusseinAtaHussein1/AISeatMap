@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This folder exists to define the **fixed, repeatable process** that wires the platform's seven independent Skills (`.claude/skills/`) together into one governed pipeline — the sequencing, the artifact handoff contracts, the human checkpoints, and the run-identity/workspace mechanics around them.
+This folder exists to define the **fixed, repeatable process** that wires the platform's eight independent Skills (`.claude/skills/`) together into two governed pipelines — a Manual Execution pipeline and an Automation pipeline, sharing their first three stages — the sequencing, the artifact handoff contracts, the human checkpoints, and the run-identity/workspace mechanics around them.
 
 `.claude/skills/` defines what each stage does *in isolation*; this folder defines *how those stages are wired together*, in what order, with what gates, and how one run is told apart from another. Without this layer, "what order do agents run in" and "who approves what" would have to be re-decided, informally, every time — this folder exists so that decision is made once and enforced mechanically on every run.
 
@@ -12,7 +12,7 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 
 ## What Lives Here
 
-- **The pipeline specification** — the invariant, seven-stage execution model: stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the end-to-end traceability chain, and the Knowledge Architecture governing `platform_core_data/knowledge_base/patterns/`.
+- **The pipeline specification** — the invariant execution model for **both** pipelines: the shared Stages 1–3, the two branches that diverge from them, stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the two end-to-end traceability chains, and the Knowledge Architecture governing `platform_core_data/knowledge_base/patterns/` (including the two shared knowledge bases both branches read, §10.8).
 - **Orchestration component specifications** — mechanical (non-judgment) components the pipeline specification delegates full detail to: run identity/workspace/status management, and the Run Scope concept (what a given run is allowed to validate).
 - **Named, reusable workflows** — specific, narrower-than-full-pipeline invocations layered on top of the pipeline specification (e.g. a three-stage smoke check), never modifying it.
 
@@ -56,7 +56,7 @@ workflows/{name}.md  ──layers on top of──▶  pipeline/pipeline.md
                                      platform_core_data/knowledge_base/patterns/   platform_core_data/runs/{{RUN_FOLDER}}/
 ```
 
-- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the seven Skills — it invokes each in sequence and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
+- **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the eight Skills — it invokes each in sequence within a branch and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
 - **`workflows_and_pipelines/` → `platform_core_data/knowledge_base/patterns/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core_data/knowledge_base/patterns/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
 - **`workflows_and_pipelines/` → `platform_core_data/`:** this folder defines every artifact path convention, artifact-lifecycle rule, Run Workspace layout, and Run Scope concept that governs how `platform_core_data/runs/` (the Run Folders that are now the sole home of every stage artifact, per `pipeline.md` §7) is organized — but it never contains the generated content itself.
 - **`.claude/` never depends back on this folder.** The dependency direction is strictly one-way: orchestration invokes behavior, behavior never invokes orchestration.
@@ -71,7 +71,9 @@ Run requested (optionally via a named workflows/{name}.md)
 Run Manager (run_manager.md) generates the run folder name (run-NNN__…, §5.1), creates the Run Workspace
         ↓
 pipeline.md invokes Stage 1 → checkpoint (§5.1) → Stage 2 → checkpoint → Stage 3 → checkpoint
-        → Stage 4 → checkpoint (§5.1) → Stage 5 → checkpoint (§5.2) → Stage 6 (mechanical, no gate) → Stage 7
+        ├─ MANUAL:     → Stage 4M → checkpoint (§5.1) → delivered (terminal)
+        └─ AUTOMATION: → Stage 4A → checkpoint (§5.2) → Stage 5A (mechanical, no gate)
+                        → [Stage 5H — optional, opt-in only, gate §5.6] → Stage 6A
         ↓
 Each stage resolves Knowledge (platform_core_data/knowledge_base/patterns/ + platform_core_data/knowledge_base/, §10)
         ↓
@@ -112,7 +114,7 @@ Run Manifest updated at each checkpoint; Run Summary published on terminal statu
 
 ## Common Mistakes
 
-- **"Add a fourth Login sub-check as a new pipeline stage."** No — the pipeline is fixed at seven stages (`pipeline.md` §6 Rule 3); a narrower or additional check is expressed as a named workflow selecting existing stages, never a new stage.
+- **"Add a fourth Login sub-check as a new pipeline stage."** No — each pipeline's stage set is fixed (`pipeline.md` §6 Rule 3); a narrower or additional check is expressed as a named workflow selecting existing stages, never a new stage.
 - **"Put this agent behavioral rule in `pipeline.md` since it affects the whole run."** No — agent behavior belongs exclusively in the corresponding `.claude/skills/{stage}/SKILL.md`; `pipeline.md` only sequences and gates it.
 - **"Let the Run Manager flag this Finding since it's already tracking the run."** No — the Run Manager has no judgment role of any kind; a Finding is exclusively the Explorer Agent's output.
 - **"Store this run's screenshots inside `workflows_and_pipelines/`."** No — generated run content lives under `platform_core_data/runs/`; this folder only defines the rules for that structure.

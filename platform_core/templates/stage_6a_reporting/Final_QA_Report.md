@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Final QA Report (Stage 7 of 7, terminal)
+TEMPLATE — Final QA Report (Stage 6A — Automation branch, terminal)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md
 Authority:  .claude/skills/reporting-skill/SKILL.md §8 (these 8 sections, this order), §3
             (Responsibilities — the two distinct coverage measures), §7 (Execution Rules), §12
@@ -20,7 +20,7 @@ HARD RULES (§7):
 
 DEGRADED RUNS (§12): a gap is ALWAYS reported as a gap, NEVER as a favourable result. An absent input
 must never render as 0 defects, 100% pass, or full coverage. Mark outcome-dependent sections
-`Not Executed — Requires Stage 6` instead.
+`Not Executed — Requires Stage 5A` instead.
 -->
 
 # Final QA Report — {{RUN_FOLDER}}
@@ -74,7 +74,7 @@ must never render as 0 defects, 100% pass, or full coverage. Mark outcome-depend
 |---|---|---|---|---|---|
 | {{MODULE}} | {{PASSED}} | {{FAILED}} | {{SKIPPED}} | {{NOT_AUTOMATED}} | {{NOT_EXECUTED}} |
 
-<!-- Where the Execution Results separated Application / Automation / Environment health (§25.6
+<!-- Where the Execution Results separated Application / Automation / Environment health (§25.2
      there), preserve that separation rather than re-merging it into one "Failed" figure — a merged
      count would tell a stakeholder the application is broken when the environment was. -->
 
@@ -184,7 +184,7 @@ must never render as 0 defects, 100% pass, or full coverage. Mark outcome-depend
      above it limits. Omit the section entirely only when every declared input was present.
 
      Per §12: no absent input may render as a favourable result.
-       No Execution Results  → outcome-dependent sections marked `Not Executed — Requires Stage 6`
+       No Execution Results  → outcome-dependent sections marked `Not Executed — Requires Stage 5A`
        No Traceability Matrix → §5 omitted, with the reason stated, rather than computed from an
                                 incomplete basis
        No Project Context     → §7 carries no resolution; marked `Requires Stage 1` -->

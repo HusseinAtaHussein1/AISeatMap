@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — QA Assessment Report (Stage 2 of 7)
+TEMPLATE — QA Assessment Report (Stage 2 — shared)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/QA_Assessment_Report.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §19 (Standard Output Contract — this exact
             section order), §9 Outputs #4, §12 Artifacts

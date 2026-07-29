@@ -116,12 +116,13 @@ The workflow does not proceed to Step 4 until this checkpoint is explicitly appr
 
 Once Step 4's checkpoint is approved, this workflow ends. The following stages are **intentionally excluded** from First Run and must not be launched under this workflow:
 
-- Manual Execution Agent (Pipeline Stage 4)
-- Automation Agent (Pipeline Stage 5)
-- Automation Execution Agent (Pipeline Stage 6)
-- Reporting Agent (Pipeline Stage 7)
+- Manual Execution Agent (Stage `4M` — Manual branch)
+- Automation Agent (Stage `4A` — Automation branch)
+- Automation Execution Agent (Stage `5A` — Automation branch)
+- Self-Healing Agent (Stage `5H` — Automation branch, optional)
+- Reporting Agent (Stage `6A` — Automation branch)
 
-Excluding these stages from *this workflow* does not remove them from the platform's architecture — a full pipeline run (per `workflows_and_pipelines/pipeline/pipeline.md`) still includes all seven stages. First Run is simply a shorter, purpose-built workflow that stops early by design.
+Excluding these stages from *this workflow* does not remove them from the platform's architecture — a full run of either pipeline (per `workflows_and_pipelines/pipeline/pipeline.md`) still includes every stage of the branch it takes. First Run stops at the end of the **shared foundation** (Stages 1–3), which is exactly the divergence point: from its output, either branch may then be run, in any order, or both (`pipeline.md` §3.3).
 
 # 5. Explorer Objectives (First-Run-Specific Direction)
 
@@ -185,7 +186,7 @@ On failure, the Run Manager records Status `Failed` in `run.json` and `run_summa
 
 # 10. Relationship to the Platform Architecture
 
-This workflow does not introduce a new pipeline, a new stage, or a new agent. It is a **reusable, scoped invocation** of the existing first three stages of the seven-stage architecture defined in `workflows_and_pipelines/pipeline/pipeline.md`, orchestrated by the existing Run Manager defined in `workflows_and_pipelines/pipeline/run_manager.md`. A full pipeline run (all seven stages, all in-scope modules) remains the platform's standard execution mode; First Run exists alongside it as a fast operational check, not a replacement.
+This workflow does not introduce a new pipeline, a new stage, or a new agent. It is a **reusable, scoped invocation** of the **shared** first three stages defined in `workflows_and_pipelines/pipeline/pipeline.md`, orchestrated by the existing Run Manager defined in `workflows_and_pipelines/pipeline/run_manager.md`. A full run of either pipeline remains the platform's standard execution mode; First Run exists alongside it as a fast operational check, not a replacement — and because it ends precisely at the divergence point, its output is directly usable by whichever branch is chosen next.
 
 # 11. Example
 

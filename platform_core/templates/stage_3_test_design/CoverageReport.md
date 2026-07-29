@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Coverage Report (Stage 3 of 7)
+TEMPLATE — Coverage Report (Stage 3 — shared, divergence point)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/test_design/CoverageReport.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §18 (Standard Output Contract — these 12
             sections, this order), §8 (Coverage Tracking), §9 Outputs #4, §12
@@ -94,7 +94,7 @@ interpret free-form prose to extract what it needs.
 
      Case Count is per module and must agree with the suite document's own Total Test Cases and with
      that module's row count in TraceabilityMatrix.md §1. This is the reconciliation point where a
-     miscount gets caught — a wrong total here propagates into Stage 4 and Stage 5 summaries, where
+     miscount gets caught — a wrong total here propagates into the Stage 4M and Stage 4A summaries, where
      it is much harder to notice. State the count you actually counted from the files, never one
      carried over from a draft.
 

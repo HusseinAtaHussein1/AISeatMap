@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Findings Summary (Stage 2 of 7)
+TEMPLATE — Findings Summary (Stage 2 — shared)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/discovery/findings/Findings_Summary.md
 Authority:  .claude/skills/explorer-skill/SKILL.md §9 Outputs #5, §5.9 (Duplicate Detection)
 

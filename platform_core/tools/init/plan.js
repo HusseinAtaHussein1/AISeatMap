@@ -27,6 +27,7 @@ const SKILL_NAMES = [
   'manual-execution-skill',
   'automation-skill',
   'automation-execution-skill',
+  'self-healing-skill',
   'reporting-skill',
 ];
 

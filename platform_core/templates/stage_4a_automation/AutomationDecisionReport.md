@@ -1,15 +1,18 @@
 <!--
-TEMPLATE — Automation Decision Report (Stage 5 of 7)
+TEMPLATE — Automation Decision Report (Stage 4A — Automation branch)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationDecisionReport_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §13 (Automation Decision Engine — the four
             decisions and the six mandatory fields per decision), §16 Outputs #4, §19
 
-HARD RULE (§13): EVERY test case named in the Automation Candidate Package receives EXACTLY ONE
+HARD RULE (§13): EVERY test case in the run's SCOPE receives EXACTLY ONE
 decision. No candidate is left undecided.
 
-A test case ABSENT from the Automation Candidate Package (never executed manually, or executed but
-not confirmed successful/stable) receives NO decision this run — its status belongs to the Manual
-Execution skill and is not re-litigated here.
+A test case OUTSIDE the run's scope receives no automation decision this run. Scope comes
+directly from the approved Stage 3 Manual Test Suite (pipeline.md §3.3) — never from a manual
+execution outcome. Live selector verification (§11A) is what most often drives a decision away
+
+from Generate New Automation: an unreachable screen or an unlocatable control becomes Partially
+Automatable / Manual Only WITH THE ELEMENT NAMED — never an emitted script built on a guess.
 
 This stage holds the BINDING automation decision. Test Design's advisory Automation Candidates hint
 never pre-empts it.
@@ -21,7 +24,7 @@ never pre-empts it.
 |---|---|
 | Run Folder | `{{RUN_FOLDER}}` |
 | Framework | {{FRAMEWORK}} <!-- the human's Framework Decision Gate answer (§31) --> |
-| Candidate Package | `runs/{{RUN_FOLDER}}/manual_execution/AutomationCandidatePackage.md` |
+| Scope source | `runs/{{RUN_FOLDER}}/test_design/TestCases_*.md` (approved), narrowed by {{SCOPE_FILTER}} |
 | Candidates decided | {{DECIDED_COUNT}} of {{CANDIDATE_COUNT}} |
 | Generated | {{TIMESTAMP}} |
 
@@ -64,7 +67,7 @@ never pre-empts it.
 | **Justification** | {{JUSTIFICATION}} <!-- why THIS decision, referencing the specific test case content, existing assets, or specification gap involved — never a generic rationale --> |
 | **Reused Assets** | {{REUSED_ASSETS}} <!-- which existing assets this relies on, or `None` --> |
 | **Generated Assets** | {{GENERATED_ASSETS}} <!-- which new assets this produces, or `None` --> |
-| **Automation Readiness** | {{READINESS}} <!-- ready to hand to Stage 6, or blocked pending something specific (e.g. a missing test data fixture) — name the blocker --> |
+| **Automation Readiness** | {{READINESS}} <!-- ready to hand to Stage 5A, or blocked pending something specific (e.g. a missing test data fixture) — name the blocker --> |
 | **Known Limitations** | {{KNOWN_LIMITATIONS}} <!-- reliability, scope, and edge cases this automation does NOT cover --> |
 
 **Traceability (carried from the Candidate Package, unmodified):**

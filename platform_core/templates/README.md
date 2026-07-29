@@ -3,7 +3,7 @@
 The single home for the **structure of every artifact the pipeline writes**. One template per
 artifact, per stage. A skill renders its output by copying the matching template and filling the
 `{{PLACEHOLDER}}` tokens — it does not re-derive the section list from prose. The set is 26 templates:
-`metadata/` (run-wide) plus `stage_1_context/` … `stage_7_reporting/`.
+`metadata/` (run-wide) plus `stage_1_context/` … `stage_6a_reporting/`.
 
 ## Why this folder exists
 
@@ -49,12 +49,14 @@ platform_core/templates/
 │   ├── TestCase_entry.md              # the per-case block used inside TestCases_{Module}.md
 │   ├── TraceabilityMatrix.md
 │   └── CoverageReport.md
-├── stage_4_manual_execution/
+├── stage_4m_manual_execution/         # MANUAL branch (terminal)
 │   ├── ManualExecutionResults.md
 │   ├── ManualExecutionSummary.md
-│   ├── AutomationCandidatePackage.md
+│   ├── ManualQAReport.md              # stakeholder deliverable — this branch self-reports
 │   └── Defect_entry.md                # §10.1 Defect Documentation Standard block
-├── stage_5_automation/
+│                                      # ManualTestResults.csv has no template: its schema is
+│                                      # fixed by manual-execution-skill §9.2
+├── stage_4a_automation/               # AUTOMATION branch
 │   ├── AutomationPlan.md
 │   ├── AutomationManifest.md
 │   ├── AutomationDecisionReport.md
@@ -63,14 +65,19 @@ platform_core/templates/
 │   ├── StackDocumentationContext.md
 │   ├── AutomationSummary.md
 │   └── AutomationPackages.md          # project-level registry (automation_baseline/)
-├── stage_6_execution/
+├── stage_5a_execution/
 │   └── ExecutionResults.md
-└── stage_7_reporting/
-    └── Final_QA_Report.md
+├── stage_5h_self_healing/             # OPTIONAL, opt-in only (pipeline.md §3.6)
+│   ├── RepairSummary.md
+│   ├── RepairConfidenceReport.md      # per-failure block embedded in RepairSummary §3
+│   ├── BeforeAfterComparison.md
+│   └── QuarantineRegister.md
+└── stage_6a_reporting/                # AUTOMATION branch only — the Manual branch
+    └── Final_QA_Report.md             # self-reports at 4M and never reaches here
 ```
 
 Sub-folders are named `stage_{N}_{stage-folder}` so a template's folder matches the run-folder
-segment its artifact lands in — `stage_7_reporting/` → `runs/{{RUN_FOLDER}}/reporting/`.
+segment its artifact lands in — `stage_6a_reporting/` → `runs/{{RUN_FOLDER}}/reporting/`.
 
 `metadata/` follows the same rule but is not a stage: it holds the run-wide artifacts every run has
 (`runs/{{RUN_FOLDER}}/metadata/`). `run.json` and `run_summary.md` have no template here because
@@ -87,7 +94,7 @@ a workflow's Step 1 creates it by hand.
 3. **Section order is mandatory.** These templates encode each stage's Standard Output Contract; the
    order is what lets the next stage parse the artifact without interpreting prose.
 4. **A missing input is rendered as a named gap, never as a favourable result.** An absent execution
-   result is `Not Executed — Requires Stage 6`, never `0 defects` or `100% pass`.
+   result is `Not Executed — Requires Stage 5A`, never `0 defects` or `100% pass`.
 5. **Optional sections say so.** A section marked optional is omitted whole when it doesn't apply —
    never left in place as an empty heading.
 6. **One file per artifact, edited in place.** No `.vN` suffixes, no duplicate "final" copy on

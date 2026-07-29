@@ -1,6 +1,6 @@
 ---
 name: explorer-skill
-description: Stage 2 of 7 in the Agentic AI Testing Platform pipeline (Evidence-Driven QA Explorer). Validates the approved Project Context against the live application (or the best available fallback Discovery Mode), producing evidence-backed Findings, Timeline, Coverage Summary, and a QA Assessment Report. Use when running discovery/exploratory testing against a target application for an approved Project Context.
+description: Stage 2 (shared by both pipelines) in the Agentic AI Testing Platform. Evidence-Driven QA Explorer — validates the approved Project Context against the live application (or the best available fallback Discovery Mode), producing evidence-backed Findings, Timeline, Coverage Summary, and a QA Assessment Report. Output is deliberately BEHAVIOURAL: it never harvests selectors or locator catalogues for automation reuse, which keeps Discovery fast and its artifacts clean. Use when running discovery/exploratory testing against a target application for an approved Project Context.
 inputs:
   - name: project_context
     type: file_path
@@ -40,8 +40,9 @@ dependencies:
   - Browser automation tool (e.g. Playwright MCP) when live Discovery Mode is available; file/Read tools only otherwise
 ---
 
-> **Pipeline position:** Stage 2 of 7 — consumes the Project Context, produces Discovery Artifacts.
-> **Traceability:** `Project Context → Discovery`.
+> **Pipeline position:** Stage 2 — **shared by both pipelines**. Consumes the Project Context, produces Discovery Artifacts consumed unchanged by Stage 3 and, through it, by both the Manual (`4M`) and Automation (`4A`) branches.
+> **Traceability:** `Project Context → Discovery → Findings`.
+> **Scope boundary:** behavioural output only — **no selector or DOM catalogue for automation reuse** (§5.15, `workflows_and_pipelines/pipeline/pipeline.md` §3.5).
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
 > **Revision note (2026-07-27, user-mandated):** artifacts now live in this run's own Run Folder (`platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`) — `platform_core_data/workspace/` is removed — and each artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7.
@@ -376,6 +377,37 @@ Every `metadata.md` must contain the following fields, in this order:
 - **Evidence Links** — every evidence file included in the package (§5.12), and a note on any item that could not be captured
 - **Recommendation** — a suggested next step for the human reviewer (e.g., "confirm with Product Owner whether X is intended," "reproduce in staging," "no action needed if intentional") — a suggestion, never a directive, and never a claim that the Finding is definitely a defect. (Note: this field exists on every Finding regardless of Category, including Findings whose Category is itself `Recommendation` — see §5.3's disambiguation of the two.)
 
+## 5.15 Scope Boundary — behavioural findings, not a selector catalogue
+
+**This skill does not produce selector, locator, or DOM-structure knowledge for downstream automation to consume** (`workflows_and_pipelines/pipeline/pipeline.md` §3.5). Selector acquisition belongs exclusively to Stage `4A` (`automation-skill` §11A), which verifies each locator live at the moment it generates the code that uses it.
+
+### 5.15.1 The distinction that matters
+
+This is a rule about **purpose**, not about tooling — and the line is precise, because Discovery legitimately captures DOM snapshots:
+
+| Permitted — evidence for a Finding | Prohibited — a catalogue for automation |
+|---|---|
+| A DOM snapshot captured because a console error fired and the DOM state explains the Finding (§5.11, §9) | A DOM snapshot of every screen visited, captured so automation can mine locators from it later |
+| An accessibility-tree read used to determine whether a control is actually reachable, supporting an accessibility Finding | An accessibility-tree dump per screen, persisted as a locator inventory |
+| Naming a control in prose so a reader knows which element a Finding concerns ("the Product Access section's Add button") | Recording that control's `css`/`xpath` selector as a reusable locator definition |
+| A screenshot documenting an in-scope screen | A "Screen Inventory" artifact whose purpose is to seed page objects |
+
+**The test to apply:** *is this artifact here because a Finding needs it as evidence, or because a later stage might want to reuse it?* The first is Discovery's job. The second is out of scope, and (per `pipeline.md` §11.2) is debug scaffolding rather than a deliverable.
+
+### 5.15.2 Why this boundary exists
+
+Three reasons, in the order they matter:
+
+1. **Correctness.** A selector captured here and reused at generation time was verified against a *possibly older* build. Verifying at generation time (§11A of `automation-skill`) removes that staleness window entirely.
+2. **Performance.** Discovery is the platform's broadest sweep. Capturing and persisting DOM for every screen it visits multiplies its runtime and its artifact size — for data most runs never use, since a run may never take the Automation branch at all (`pipeline.md` §3.3).
+3. **Clean artifacts.** Discovery's reviewer is a QA lead reading Findings and a Gap Analysis. DOM dumps do not serve that reader, and they bury the output that does.
+
+### 5.15.3 What replaced it
+
+Durable locator knowledge still exists and is still reused across runs — it lives in the **Selector Verification KB** (`pipeline.md` §10.8), written by Stage `4A` after live verification and readable by both branches. Discovery is not part of that loop: it neither writes to nor reads from that KB.
+
+**Existing Screen/Component Knowledge is still *read* here.** `platform_core_data/knowledge_base/browser/screens/` is consumed by the Browser Driver to navigate and authenticate efficiently (§10) — reading existing navigation knowledge to explore is entirely different from generating a selector catalogue as output.
+
 # 6. Timeline
 
 This skill maintains a single, run-wide, chronologically ordered Timeline of significant actions and events, sufficient for a human to reconstruct what happened and when without replaying the session.
@@ -528,7 +560,7 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 
 # 13. Operational Contract
 
-Role: evidence-driven QA discovery (Stage 2 of 7).
+Role: evidence-driven QA discovery (Stage 2 — shared by both pipelines).
 
 Validate the approved Project Context against the live application and publish evidence-backed Findings. Execution is fully specified above — §4 (Core Philosophy), §5 (Finding Framework: Investigation Workflow §5.1, Event-Driven Capture §5.2, Classification §5.3, Severity §5.4, Confidence §5.5, Status §5.6, Investigation & Recovery Engine §5.7, Investigation Mode §5.8, Duplicate Detection §5.9, Evidence §5.10–§5.12, Root Cause Hypothesis §5.13, metadata schema §5.14), §6 (Timeline), §7 (Coverage), §8 (Inputs and Discovery Modes), §9 (Outputs), §11 (Execution Rules), §12 (Artifacts), §16 (Discovery Strategy by Run Scope), §17 (Evidence Categories), §18 (Confidence Model), §19 (Standard Output Contract — the QA Assessment Report section order), §20–§21 (Stop Conditions and Recovery), §22 (Handoff Contract). This section adds no rules of its own; the contract is stated once above rather than restated here.
 

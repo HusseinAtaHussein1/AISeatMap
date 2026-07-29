@@ -1,6 +1,6 @@
 ---
 name: test-design-skill
-description: Stage 3 of 7 in the Agentic AI Testing Platform pipeline (Requirement-Driven Test Engineering skill). Transforms the approved Project Context plus Discovery Artifacts/Findings/Evidence into a fully-traceable Manual Test Suite (Markdown + Excel), Requirement Traceability Matrix, and Coverage Report. Use when designing manual test cases for a project after Discovery is approved.
+description: Stage 3 (shared by both pipelines, and the divergence point) in the Agentic AI Testing Platform (Requirement-Driven Test Engineering skill). Transforms the approved Project Context plus Discovery Artifacts/Findings/Evidence into a fully-traceable Manual Test Suite (Markdown + Excel), Requirement Traceability Matrix, and Coverage Report. Its approved output is the sole scope-determining input for BOTH the Manual Execution branch (4M) and the Automation branch (4A). Use when designing manual test cases for a project after Discovery is approved.
 inputs:
   - name: project_context
     type: file_path
@@ -33,7 +33,9 @@ dependencies:
   - platform_core/tools/test_suite_export (renders the authored Markdown suites to Excel — §9.1)
 ---
 
-> **Pipeline position:** Stage 3 of 7 — consumes the Project Context (primary) and Discovery Artifacts, Findings, Evidence Packages, and the QA Assessment Report (secondary), produces Manual Test Suites.
+> **Pipeline position:** Stage 3 — **shared by both pipelines, and the point at which they diverge.** Consumes the Project Context (primary) and Discovery Artifacts, Findings, Evidence Packages, and the QA Assessment Report (secondary); produces Manual Test Suites.
+> **Both branches consume this stage's approved output directly and independently** — Stage `4M` executes these test cases by hand, Stage `4A` generates automation from them. Neither depends on the other (`workflows_and_pipelines/pipeline/pipeline.md` §3.3).
+> **Test cases are authored branch-agnostically:** a test case is never marked "manual" or "automated" here. How it is later verified is the branch's decision, not this stage's.
 > **Traceability:** `Project Context → Test Cases`, informed and validated by `Discovery → Test Cases` and, where applicable, `Finding/Evidence → Test Cases`.
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
@@ -45,7 +47,9 @@ dependencies:
 
 # 2. Purpose
 
-The Test Design skill transforms validated project knowledge — the approved Project Context, Discovery Report, Findings, Evidence Packages, and QA Assessment Report — into a complete, structured set of manual test assets with full, explicit, four-dimension traceability. It is the quality gate between "what the business requires and what was actually observed" (Stages 1–2) and "what gets manually validated, and ultimately automated" (Manual Execution skill, Stage 4, followed by the Automation skill, Stage 5).
+The Test Design skill transforms validated project knowledge — the approved Project Context, Discovery Report, Findings, Evidence Packages, and QA Assessment Report — into a complete, structured set of manual test assets with full, explicit, four-dimension traceability. It is the quality gate between "what the business requires and what was actually observed" (Stages 1–2) and everything that verifies it — and it is where the pipeline forks: its approved output feeds **both** the Manual Execution branch (Stage `4M`) and the Automation branch (Stage `4A`), independently and in either order (`pipeline.md` §3.3).
+
+**One suite, two consumers, no per-branch authoring.** This skill writes each test case once, branch-agnostically. It never splits its output into "manual test cases" and "automation test cases", and never marks a case as belonging to one branch — that would pre-empt a decision neither branch has made yet, and would make the same requirement's manual and automated coverage incomparable.
 
 **The Project Context is this skill's primary source of truth.** Discovery Artifacts, Findings, and Evidence Packages — everything the Explorer skill produced — are secondary inputs used to validate that requirements hold in the live application, enrich test scenarios with real UI detail and observed evidence, detect undocumented behavior, and ensure every Finding is deliberately accounted for in the test suite. None of these secondary sources is ever treated as more authoritative than the Project Context; where they disagree, the disagreement is recorded as a discrepancy, not silently resolved in favor of whichever source this skill happens to read first.
 
@@ -252,7 +256,7 @@ The following are still mandatory pipeline outputs — nothing here is dropped, 
 - **Requirement Reference, Discovery Reference, Finding Reference, Evidence Reference, Acceptance Criteria Reference, Run Scope Reference** (§5.1, §5.4) — recorded in the Requirement Traceability Matrix, one row per Test Case ID, per the same mandatory/`N/A` rules as before. §5.2's "No Test Case Without Traceability" rule is unchanged: a test case with no corresponding Requirement Reference and Discovery Reference row in the Matrix must not be generated.
 - **Risk** (Level + one-line statement, derived from a populated Finding's own Business/Technical Risk where applicable) — recorded in the Traceability Matrix's Risk column, aggregated in the Coverage Report's Risks section (§18 #9).
 - **Category** (Positive/Negative-{subtype}/Exploratory/etc., §7) and **Test Type** (Smoke/Regression) — recorded as compact Tags on the test case (§6.1) *and* rolled up in the Coverage Report's Test Scenarios section (§18 #5) for at-a-glance breakdown.
-- **Automation Candidate** (advisory Yes/No/Partially hint, §9.2/§18 #11) — recorded as a Tag on the test case (§6.1) when Yes, *and* listed in the Coverage Report's Automation Candidates section — never only in one place, since the Manual Execution skill's own tooling may read either.
+- **Automation Candidate** (advisory Yes/No/Partially hint, §9.2/§18 #11) — recorded as a Tag on the test case (§6.1) when Yes, *and* listed in the Coverage Report's Automation Candidates section. **It is read by Stage `4A` (Automation) as a prioritization hint only, never as a scope boundary** — Stage `4A` takes its scope from the approved test cases themselves (`pipeline.md` §3.3). Stage `4M` does not consume this hint at all.
 
 # 7. Negative Test Generation Engine
 
@@ -325,20 +329,20 @@ node platform_core/tools/test_suite_export/cli.js            # every suite in th
 node platform_core/tools/test_suite_export/cli.js --check     # parse + report only; writes nothing
 ```
 
-**Why derivation rather than two authored formats.** §9's "must never diverge" is only *guaranteed* if one format is derived from the other; authored twice, non-divergence is a matter of discipline, and the moment they drift, Stage 4 executes against whichever file the tester happened to open — a difference nothing downstream can detect. Deriving the workbook makes that failure mode unreachable rather than merely discouraged.
+**Why derivation rather than two authored formats.** §9's "must never diverge" is only *guaranteed* if one format is derived from the other; authored twice, non-divergence is a matter of discipline, and the moment they drift, Stage 4M executes against whichever file the tester happened to open — a difference nothing downstream can detect. Deriving the workbook makes that failure mode unreachable rather than merely discouraged.
 
 **The rules this creates:**
 
 1. **Author Markdown, then export.** Run the export after *any* edit to a suite document — including a one-word correction during review. An `.xlsx` older than its `.md` is a stale artifact, not a minor lag.
 2. **Never hand-edit a generated workbook.** The next export discards the edit silently, and until it does, the two formats disagree — exactly what §9 prohibits.
 3. **Never hand-write an `.xlsx`, and never add a spreadsheet dependency to do it.** The tool is dependency-free by design (`platform_core/` must run on a clean install); a run-scoped script pulling in a spreadsheet library is how this behaviour was prototyped, not how it ships.
-4. **Treat a parse warning as a defect in the Markdown, never in the workbook.** `--check` exits non-zero when a case is missing Title, Objective, Steps, Expected Result, Priority, or Tags, or when a Test Case ID is duplicated. A case reaching Stage 4 with a blank Expected Result is unexecutable — fix the suite document, then re-export.
-5. **Run `--check` before requesting review.** Publishing a suite whose own cases do not parse means the reviewer is reading something Stage 4 cannot execute.
+4. **Treat a parse warning as a defect in the Markdown, never in the workbook.** `--check` exits non-zero when a case is missing Title, Objective, Steps, Expected Result, Priority, or Tags, or when a Test Case ID is duplicated. A case reaching Stage 4M with a blank Expected Result is unexecutable — fix the suite document, then re-export.
+5. **Run `--check` before requesting review.** Publishing a suite whose own cases do not parse means the reviewer is reading something Stage 4M cannot execute.
 6. **Reconcile the counts before publishing.** Each module's case count must agree across three places: the suite document's own Total Test Cases, that module's row count in `TraceabilityMatrix.md`, and the Coverage Report's Manual Test Cases table (§18 #6). The export's per-module count is the figure to check them against — count from the files, never carry a total over from a draft. A miscount here propagates into the Stage 4 and Stage 5 summaries, where it is far harder to notice.
 
 **The workbook's column contract is §6.1's field list, in §6.1's order, and nothing else** — one sheet per module workbook, tab named for the module. Traceability, Risk, and the Requirement/Discovery/Finding/Evidence references are deliberately absent from it, exactly as they are absent from the Markdown case block (§6.2): they live in `TraceabilityMatrix.md`, keyed by Test Case ID. Adding a traceability column to the workbook is the same spec violation as adding the field to the case block.
 
-Steps render into a single cell joined with ` | ` and renumbered canonically (`1. … | 2. …`). The numbering carries weight downstream: Stage 4 records a result per step and a defect cites "failed at step 3", so one action per authored line (§6.1) is what keeps that citation resolvable.
+Steps render into a single cell joined with ` | ` and renumbered canonically (`1. … | 2. …`). The numbering carries weight downstream: Stage 4M records a result per step and a defect cites "failed at step 3", so one action per authored line (§6.1) is what keeps that citation resolvable.
 
 Where a module's workbook should carry a sheet name different from the file's module — a file deliberately grouping several requirement groups, e.g. NAV + NFR + BR in `TestCases_Navigation.md` — pass `--sheet-name`, and state the grouping decision in the Coverage Report's Manual Test Cases section (§18 #6) rather than leaving a reader to notice the file name and the module list disagree.
 
@@ -378,7 +382,8 @@ The tool's full behaviour — accepted heading shapes, field markers, warning ta
 22. **Must structure the Coverage Report per the Standard Output Contract** (§18) — all twelve required sections, in order — never substituting free-form prose for any of them.
 23. **Must recognize the named Stop Conditions** (§19) and, for any Local condition, continue designing every other unblocked requirement rather than halting the run — and must state the smallest missing prerequisite for every blocked item (§20), never a bare "cannot proceed."
 24. **Must verify Handoff completeness** (§21) before treating a run's Test Design outputs as finished — every input `.claude/skills/manual-execution-skill/SKILL.md` §4 declares it needs must be present, and every Discovery/Finding/Evidence Reference must be specific, not merely non-empty.
-25. **Must never let an Automation Candidates flag (§18 §11) be mistaken for a binding Automation Decision** — that decision remains exclusively the Automation skill's authority (`.claude/skills/automation-skill/SKILL.md` §13), reached only after the Manual Execution skill (Stage 4) confirms which candidates actually executed successfully and stably (`.claude/skills/manual-execution-skill/SKILL.md` §9); this skill's flag is advisory only, for prioritization, never a substitute for that execution-based confirmation.
+25. **Must never let an Automation Candidates flag (§18 #11) be mistaken for a binding Automation Decision** — that decision remains exclusively Stage `4A`'s authority (`.claude/skills/automation-skill/SKILL.md` §13), reached from the approved test cases plus its own live selector verification (`automation-skill` §11A). This skill's flag is advisory, for prioritization only.
+26. **Must author every test case branch-agnostically** (§2) — never marked "manual only" or "automation only", and never split into per-branch suites. A case genuinely unsuitable for automation is described by its *characteristics* (subjective judgment required, no assertable state), leaving each branch to draw its own conclusion.
 
 # 12. Expected Artifacts
 
@@ -393,7 +398,7 @@ The tool's full behaviour — accepted heading shapes, field markers, warning ta
 
 # 13. Operational Contract
 
-Role: requirement-driven test case design (Stage 3 of 7).
+Role: requirement-driven test case design (Stage 3 — shared by both pipelines, and the divergence point).
 
 Transform validated project knowledge into a complete, structured, fully traceable set of manual test assets. Design and track tests; do not execute them, write automation code, read the PRD, or shape output around any external ALM, issue-tracking, or test-management system — produce only the platform's own canonical artifacts. Execution is fully specified above — §4 (Inputs), §5 (Traceability Model, incl. Finding disposition §5.3 and Run Scope Reference §5.4), §6 (Test Case Schema), §7 (Negative Test Generation Engine), §8 (Coverage Tracking), §9 (Outputs, incl. Excel rendering §9.1), §11 (Execution Rules), §12 (Artifacts), §16 (Strategy by Run Scope), §17 (Required Dimensions), §18 (Standard Output Contract), §19–§20 (Stop Conditions and Recovery), §21 (Handoff Contract). This section adds no rules of its own; the contract is stated once above rather than restated here.
 
@@ -472,8 +477,8 @@ The Coverage Report (§9 Outputs #4) must contain exactly these sections, in thi
 | 8 | **Coverage Gaps** | Uncovered Requirements (§8.1), Uncovered Findings (§8.2), and Partially Covered / Unknown-Unassessed items (§8.3), each with its stated reason |
 | 9 | **Risks** | Every test case's Risk entry from the Traceability Matrix (§6.2) aggregated, with High/Critical items called out explicitly |
 | 10 | **Recommendations** | Exploratory Recommendations (§17) and any other non-fixed-case suggestion for the human reviewer |
-| 11 | **Automation Candidates** | Test cases this skill flags as *likely* well-suited to automation — an advisory, prioritization-only hint consumed first by the Manual Execution skill (`.claude/skills/manual-execution-skill/SKILL.md` §9.2); the binding Automation Decision (Reuse/Generate/Partially Automatable/Manual Only) remains exclusively the Automation skill's own authority per `.claude/skills/automation-skill/SKILL.md` §13, never pre-empted here |
-| 12 | **Inputs for Manual Execution skill** | The explicit handoff package per §21 — confirmation that every input `.claude/skills/manual-execution-skill/SKILL.md` §4 declares it needs is present and specific |
+| 11 | **Automation Candidates** | Test cases this skill flags as *likely* well-suited to automation — an advisory, prioritization-only hint consumed by Stage `4A` (`.claude/skills/automation-skill/SKILL.md` §13) to order its work, **never to bound its scope** (`pipeline.md` §3.3). The binding Automation Decision remains exclusively Stage `4A`'s authority. Stage `4M` does not consume this section |
+| 12 | **Inputs for Both Branches** | The explicit handoff package per §21 — confirmation that every input Stage `4M` (`manual-execution-skill` §4) **and** Stage `4A` (`automation-skill` §4) declares it needs from this stage is present and specific. One section, both consumers |
 
 # 19. Stop Conditions
 
@@ -499,7 +504,7 @@ Where the Explorer skill falls back to an alternate Discovery Mode (`.claude/ski
 
 # 21. Handoff Contract with the Manual Execution skill
 
-The Test Design skill's outputs are consumed next by the Manual Execution skill as declared inputs in `.claude/skills/manual-execution-skill/SKILL.md` §4 — not directly by the Automation skill, which now consumes Manual Execution's own outputs instead (`.claude/skills/automation-skill/SKILL.md` §4). Before concluding a run, this skill verifies each of the following is actually present and specific — not merely assumed:
+The Test Design skill's outputs are consumed next by **both branches, independently**: Stage `4M` (`.claude/skills/manual-execution-skill/SKILL.md` §4) and Stage `4A` (`.claude/skills/automation-skill/SKILL.md` §4), which takes both its scope and its content from here (`pipeline.md` §3.3). Before concluding a run, this skill verifies each of the following is actually present and specific — not merely assumed:
 
 | Manual Execution skill needs (`.claude/skills/manual-execution-skill/SKILL.md` §4) | Satisfied by (this skill's output) |
 |---|---|
@@ -546,10 +551,19 @@ Stage 3 complete — Manual Test Suite → Pending Review
   platform_core_data/runs/{{RUN_FOLDER}}/test_design/TestCases_{Module}.md (+ .xlsx)
   {T} test cases | Requirement coverage {P}%
 
-Next step — either:
-  1. Approve, then continue:   "approved"  →  /manual-execution-skill
-  2. Revise this stage:        /test-design-skill <your feedback>
-  3. Skip manual execution:    /automation-skill   (requires the §5.4 gate + declares gaps)
+This is the divergence point — once approved, either branch may run, in any order,
+or both. Neither depends on the other.
+
+Next step — approve, then choose a branch (or both):
+  1. Approve:                  "approved"
+
+  Then, independently:
+     Manual delivery:          /manual-execution-skill
+                               executes by hand, headed → results, defects, CSV, QA report
+     Automation delivery:      /automation-skill
+                               live-verifies selectors, headless → suite → /automation-execution-skill
+
+  Or revise this stage:        /test-design-skill <your feedback>
 ```
 
 # 24. Resolving `{{RUN_FOLDER}}`

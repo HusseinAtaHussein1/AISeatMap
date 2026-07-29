@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Automation Manifest (Stage 5 of 7)
+TEMPLATE — Automation Manifest (Stage 4A — Automation branch)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/automation/AutomationManifest_{{FRAMEWORK}}.md
 Authority:  .claude/skills/automation-skill/SKILL.md §16 Outputs #3, §15 (Self Review), §19
 
@@ -61,7 +61,7 @@ Automation Approval.
 ## 5. Locator Fallbacks (§24.2)
 
 <!-- Every place a preferred locator was unavailable and a fallback was used. Also surfaced in the
-     Automation Summary's Known Limitations — Stage 6 reads it to know what is brittle.
+     Automation Summary's Known Limitations — Stage 5A reads it to know what is brittle.
      Omit this section only when no fallback was needed. -->
 
 | File | Element | Preferred Locator (unavailable) | Fallback Used | Why Preferred Was Unavailable |

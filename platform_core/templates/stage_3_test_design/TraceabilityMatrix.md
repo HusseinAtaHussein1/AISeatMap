@@ -1,5 +1,5 @@
 <!--
-TEMPLATE — Requirement Traceability Matrix (Stage 3 of 7)
+TEMPLATE — Requirement Traceability Matrix (Stage 3 — shared, divergence point)
 Renders to: platform_core_data/runs/{{RUN_FOLDER}}/test_design/TraceabilityMatrix.md
 Authority:  .claude/skills/test-design-skill/SKILL.md §5.1 (Four Dimensions), §5.2 (No Test Case
             Without Traceability), §5.3 (Finding disposition), §5.4 (Run Scope Reference),

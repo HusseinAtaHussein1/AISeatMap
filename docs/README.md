@@ -306,7 +306,7 @@ platform_core_data/
     ├── PRD.md · PRD_UserStories.md · run_configuration.md   (Stage 1 inputs)
     ├── onboarding.md · architecture.md · glossary.md
     ├── automation_framework.md · reference_automation_project.md
-    ├── stack.md                        (written by Stage 5, durable)
+    ├── stack.md                        (written by Stage 4A, durable)
     ├── INDEX.md                        (start here — maps the whole tree)
     ├── requirements/ · api/ · diagrams/
     ├── browser/ · credentials/           (Browser Driver assets; ui/screenshots/ on demand)

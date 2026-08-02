@@ -98,3 +98,12 @@ __pycache__/
 # End-to-end install verification (scripts/e2e/verify-install.sh) — throwaway target repos.
 # The tarball it installs from is already covered by the *.tgz rule above.
 .e2e-workdir/
+
+# Automation Workspace build and report outputs. A Workspace Baseline is a source tree;
+# these four are regenerated from it by Maven and Allure on every run, carry no review value,
+# and dwarf the source they came from. Scoped under platform_core_data/workspace/ so an
+# identically-named folder anywhere else in the repo is untouched.
+platform_core_data/workspace/**/target/
+platform_core_data/workspace/**/allure-results/
+platform_core_data/workspace/**/execution-summary/
+platform_core_data/workspace/**/generatedReport_*.zip

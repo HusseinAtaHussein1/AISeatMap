@@ -48,11 +48,19 @@ structured to match any external ALM, issue-tracking, or test-management system.
      Reference) is deliberately NOT here — it lives in TraceabilityMatrix.md keyed by Test Case ID,
      keeping this execution-facing document lean (§6, §6.2). -->
 
-| Test Case ID | Title | Tier | Priority | Tags |
-|---|---|---|---|---|
-| {{TEST_CASE_ID}} | {{TITLE}} | {{TIER}} <!-- Atomic / Scenario / E2E --> | {{PRIORITY}} | {{TAGS}} |
+| Test Case ID | Title | Tier | Priority | Tags | Review | Automation |
+|---|---|---|---|---|---|---|
+| {{TEST_CASE_ID}} | {{TITLE}} | {{TIER}} <!-- Atomic / Scenario / E2E --> | {{PRIORITY}} | {{TAGS}} | {{REVIEW}} <!-- Pending / Approved / Rejected --> | {{AUTOMATION}} <!-- Pending / Approved / Rejected --> |
 
 **Tier breakdown:** {{ATOMIC_COUNT}} Atomic · {{SCENARIO_COUNT}} Scenario · {{E2E_COUNT}} E2E
+
+**Lifecycle breakdown:** Review — {{REVIEW_PENDING}} Pending · {{REVIEW_APPROVED}} Approved · {{REVIEW_REJECTED}} Rejected · Automation — {{AUTO_PENDING}} Pending · {{AUTO_APPROVED}} Approved · {{AUTO_REJECTED}} Rejected
+
+<!-- The two lifecycle columns appear in this index as well as on each case block, because their
+     whole purpose is at-a-glance triage: a reviewer needs to see which cases still await a decision
+     without opening 50 case blocks. They are still recorded once per case in the block below — the
+     index is a view of them, never a second place to edit them. -->
+
 
 ## Test Cases
 

@@ -623,17 +623,62 @@ node platform_core/tools/test_suite_export/cli.js [flags]
 
 | Flag | What it does |
 |---|---|
-| *(none)* | export every `TestCases_*.md` in the **active run**'s `test_design/` folder |
-| `--run <run-folder>` | a specific run instead of the active one |
+| *(none)* | export every `TestCases_*.md` in the **active module**'s `test_design/` folder |
+| `--module <slug>` | a specific module instead of the active one(s) |
+| `--run <run-folder>` | a **historic** run folder that still has a pre-2026-07-29 `test_design/` |
 | `--dir <path>` | any folder holding `TestCases_*.md` |
 | `--file <path>` | a single suite document |
 | `--sheet-name <name>` | with `--file`, name the sheet tab (for a file grouping several requirement groups) |
 | `--check` | parse and report only — writes nothing; use as a review or CI gate |
 | `--json` | machine-readable result |
+| `--import-lifecycle` | pull your `Review`/`Automation` decisions **out of** the workbook into the Markdown |
+| `--sync-index` | re-render the suite's Case Index and totals from the case bodies |
 
-Exit codes: `0` exported cleanly · `1` error (no active run, bad path, no suites found) · `2` parsed **with warnings**, e.g. a case missing its Expected Result — so a CI step can gate on it.
+Exit codes: `0` exported cleanly · `1` error (no active module, bad path, no suites found) · `2` parsed **with warnings**, e.g. a case missing its Expected Result — so a CI step can gate on it.
+
+**The default is the module, not the run.** Test suites live in the module workspace and are refined in place across runs; a run only records which revision it executed. If several modules are active you get one workbook per module, and a module that hasn't reached Stage 3 yet is skipped and reported rather than failing the others. *(Corrected 2026-08-01 — the default still pointed at the run folder the module-workspace migration had replaced.)*
 
 **The Markdown is the authored artifact; the `.xlsx` is generated from it and never hand-edited.** Editing a workbook directly is silently discarded by the next export, and until then the two formats disagree — exactly what Stage 3's "must never diverge" rule exists to prevent. Fix the Markdown, then re-export. See [`test_suite_export/README.md`](../platform_core/tools/test_suite_export/README.md).
+
+### The Review and Automation columns
+
+*(Added 2026-08-01.)* Every test case carries two lifecycle columns, last in the sheet, recording decisions made **after** the case is written:
+
+| Column | Question it answers | Values | Default |
+|---|---|---|---|
+| **Review** | Has a human accepted this test case? | `Pending` · `Approved` · `Rejected` | `Pending` |
+| **Automation** | Should this case be automated? | `Pending` · `Approved` · `Rejected` | `Pending` |
+
+**Both branches gate on `Review`. Only the Automation branch also gates on `Automation`** *(revised 2026-08-01)*:
+
+| Stage | Runs a case only when |
+|---|---|
+| **4M** — Manual Execution | `Review = Approved` |
+| **4A** — Automation | `Review = Approved` **AND** `Automation = Approved` |
+
+**Why manual execution gates on it too.** An unreviewed case costs a real tester's time and, on a shared environment, real data — to check an expectation nobody has accepted. And when it fails you cannot tell whether the *application* is wrong or the *test case* is, which is the only thing an execution result is for. `Review = Approved` is exactly the statement "if this fails, the application is at fault."
+
+**`Automation` never affects manual scope.** `Automation: Rejected` means the case deliberately stays manual — that is a reason to run it by hand, not to skip it — and it is never reported as an automation gap. Stage 4M does not read the column at all.
+
+**Nothing is silently dropped.** A non-approved case is recorded `Excluded` (reason `Pending Review` or `Rejected at Review`) and still appears in the Results, the CSV, and the QA Report totals. Two denominators are always reported: the **executable scope** (`Review = Approved`) that the pass rate is computed against, and the **suite total**. That is what stops a run reading "3 of 3 passed" while 48 cases went unexamined. Zero approved cases is a **halt**, not a report showing "0 executed, 0 failures."
+
+### Reviewing in Excel — and keeping it
+
+**You can mark your decisions in the workbook.** It is the natural place to review 52 rows, and the two lifecycle columns are the only ones you are expected to edit there. Then import them back before anything else touches the files:
+
+```bash
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle --check   # preview
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle           # apply
+node platform_core/tools/test_suite_export/cli.js                             # re-export
+```
+
+The Case Index at the top of the suite is re-rendered automatically as part of the import, so it can never disagree with the case bodies about which cases are approved. The import moves **only** `Review` and `Automation` into the Markdown; a Title or Steps you retyped in the spreadsheet is *not* imported and is still discarded on the next export, because those are generated content. Content flows Markdown → Excel; decisions flow Excel → Markdown.
+
+**Run the import before re-exporting a workbook you have reviewed.** An export regenerates the sheet from the Markdown and would otherwise overwrite your decisions. Until you import, the two files disagree and Stage 4M halts rather than guess which one you meant.
+
+**No skill will ever change these values for you.** That is the point of the columns — a skill that advanced its own review status would have reviewed its own work. Only you, or a review process you explicitly ask for, moves either off `Pending`.
+
+Omitting a value is the same as `Pending`, so older suites export cleanly. A value outside the three raises a parse warning rather than being silently corrected.
 
 ---
 

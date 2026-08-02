@@ -45,9 +45,12 @@ the Automation branch also ran the same scope (§9.1).
 
 ## 3. Outcome Figures
 
-<!-- §9.1 #3 — ALL SIX statuses (§8), never a bare pass/fail split. The denominator is every test
-     case IN SCOPE, including Blocked / Skipped / Not Executed — reporting only executed cases
-     overstates the pass rate. -->
+<!-- §9.1 #3 — ALL SEVEN statuses (§8), never a bare pass/fail split. Two denominators are
+     reported, and both are required (§4.1):
+       Executable scope = cases with Review = Approved — what this run was authorized to run
+       Suite total      = every case in the module suite
+     Percentages are of the EXECUTABLE SCOPE. Reporting only executed cases overstates the pass
+     rate; reporting a pass rate without naming its denominator is not a valid figure. -->
 
 | Status | Count | % of scope |
 |---|---|---|
@@ -57,7 +60,17 @@ the Automation branch also ran the same scope (§9.1).
 | Skipped | {{N_SKIPPED}} | {{PCT_SKIPPED}}% |
 | Not Executed | {{N_NOT_EXEC}} | {{PCT_NOT_EXEC}}% |
 | Inconclusive | {{N_INCONCLUSIVE}} | {{PCT_INCONCLUSIVE}}% |
-| **Total in scope** | **{{N_TOTAL}}** | **100%** |
+| **Executable scope** (`Review = Approved`) | **{{N_EXECUTABLE}}** | **100%** |
+
+Not authorized to run this pass — reported, not dropped:
+
+| Excluded | Count | % of suite |
+|---|---|---|
+| Pending Review | {{N_EXCL_PENDING}} | {{PCT_EXCL_PENDING}}% |
+| Rejected at Review | {{N_EXCL_REJECTED}} | {{PCT_EXCL_REJECTED}}% |
+| **Suite total** | **{{N_TOTAL}}** | **100%** |
+
+**Authorized Coverage:** {{PCT_AUTHORIZED}}% of the designed suite ({{N_EXECUTABLE}} of {{N_TOTAL}}) was approved for execution in this pass.
 
 ## 4. Requirement Coverage
 

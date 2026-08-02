@@ -106,7 +106,7 @@ Three prohibitions define this stage's boundary:
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case |
+| Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case. **Its scope is narrowed per case by the `Review` lifecycle gate (§4.1).** |
 | Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` — carried unmodified onto every Manual Execution Result, and the basis for the QA Report's Requirement Coverage (§9.1) |
 | Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`), so this stage does not attempt to execute what Stage 3 already dispositioned out of scope. Its advisory *Automation Candidates* hint is **not** consumed here — it is a hint for Stage `4A`, in the other branch |
 | Project Context | Governing | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
@@ -119,6 +119,35 @@ Three prohibitions define this stage's boundary:
 **Every input above must be in an `Approved` checkpoint state before this skill consumes it.** If any required input is still `Pending Review`, `Pending Automation Approval`, or `Rejected`, this skill halts and reports the blocking artifact rather than executing against a draft.
 
 **This skill must never read the PRD directly** — only Stage 1 (Project Context skill) is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4. A test case whose expected result appears wrong is a discrepancy to log against Test Design, never a reason to independently consult the PRD.
+
+## 4.1 The `Review` Gate — which cases this stage may execute
+
+*(Added 2026-08-01, user-mandated. Supersedes the earlier statement that Stage `4M` did not consume the lifecycle columns.)*
+
+**This stage executes a test case only when its `Review` column reads `Approved`** (`test-design-skill` §6.3). Both branches now gate on `Review`; only the Automation branch additionally gates on `Automation`:
+
+| Branch | Gate |
+|---|---|
+| Stage `4M` — Manual Execution | `Review = Approved` |
+| Stage `4A` — Automation | `Review = Approved` **AND** `Automation = Approved` |
+
+**Why the gate belongs here too.** Executing an unreviewed case spends a real tester's time, and real data on a shared environment, verifying an expectation nobody has accepted. Worse, when it fails, the result is ambiguous in the most expensive way: nobody can tell whether the application is wrong or the test case is. The reviewer's own words for the case that motivated this rule — *some of the test cases are wrong and I am still reviewing them* — describe exactly that ambiguity. `Review = Approved` is the statement "if this fails, the application is at fault", and without it a `Failed` result carries no information.
+
+**`Automation` is never read by this stage.** `Automation = Approved` says a case *should also* be automated; it says nothing about whether it should be executed by hand, and `Automation = Rejected` does not remove a case from manual scope — it is the *reason* the case must be exercised manually. Reading it here would make an automation decision silently change manual coverage.
+
+**The three values, and what each means for this stage:**
+
+| `Review` | This stage |
+|---|---|
+| `Approved` | **Executes** the case normally |
+| `Pending` | Does **not** execute it — records `Excluded` (§8) with reason `Pending Review` |
+| `Rejected` | Does **not** execute it — records `Excluded` (§8) with reason `Rejected at Review` |
+
+**An excluded case is still reported, never dropped.** It gets its row in the Results, in the CSV, and in the QA Report's totals (§9.2 #1). Silently narrowing the suite to the approved subset would let a run report "3 of 3 passed" while 48 cases went unexamined — a pass rate computed against a denominator the reader cannot see. `Excluded` exists as its own status precisely so "how much of the suite was authorized to run?" and "how much of what was authorized actually ran?" stay two separate, answerable questions.
+
+**This gate is not a substitute for the Stage 3 checkpoint, and neither replaces the other.** They act at different grains: the artifact's `status:` header answers "may this suite be used at all?", while `Review` answers "is *this case* correct?" A suite whose header is `Pending Review` is not consumed regardless of how its columns read (§4's approval rule stands).
+
+**The decision is read from the Markdown suite, which is authoritative** — not from the workbook. A reviewer who marked their decisions in the `.xlsx` must first move them into the Markdown with `cli.js --import-lifecycle` (`tools/test_suite_export/README.md`); until that runs, the workbook holds decisions the Markdown does not, and the next export would discard them. This stage never edits either file (§12 #8) — a scope that looks wrong is reported, not corrected here.
 
 # 5. Precondition Validation
 
@@ -156,8 +185,21 @@ Every test case executed gets exactly one classification:
 | **Skipped** | The test case was deliberately not executed (e.g., its mutating action is not authorized for this environment, per §6) — a decision, not a failure. |
 | **Not Executed** | The test case was in scope but the run ended (time limit, environment failure, manual stop) before reaching it. |
 | **Inconclusive** | The test case was executed but produced a result this skill cannot confidently classify as Passed or Failed (e.g., a genuinely ambiguous UI state) — reported as such, never forced into Passed or Failed. |
+| **Excluded** | *(Added 2026-08-01.)* The test case was **never authorized to run**: its `Review` column is not `Approved` (§4.1). The reason is mandatory and is exactly one of `Pending Review` or `Rejected at Review`. |
+
+**`Excluded` is deliberately not `Skipped`, and the distinction is load-bearing.** `Skipped` means a case that *was* authorized and that this stage decided, at execution time, not to run — an unauthorized mutating action on a shared environment, say. `Excluded` means the case was never in the executable set to begin with. Collapsing them makes the one question a reviewer most needs answered — *how much of the approved suite did we actually get through?* — impossible to compute, because the denominator would silently mix "you told me not to run this" with "I chose not to run this."
 
 **Every non-Passed result carries its reason** in the Manual Execution Results (§10) and in its CSV row (§9.2) — a status is never recorded without the reason that produced it.
+
+**Two denominators, always reported separately** (§9.1, §9.2, §21):
+
+```
+Suite total      = every case in the module's suite
+Executable scope = cases with Review = Approved      ← the pass rate's denominator
+Excluded         = Suite total − Executable scope
+```
+
+A pass rate quoted against the suite total understates the run; quoted against the suite total *without saying so* it overstates coverage. Both figures appear, always.
 
 # 9. Self-Reporting — the Manual branch's terminal deliverables
 
@@ -181,7 +223,7 @@ The stakeholder-facing Markdown report contains, at minimum:
 |---|---|---|
 | 1 | **Run Identification** | Run folder, Run Scope/Run Type (§17), target environment, execution window, who/what executed it |
 | 2 | **Executive Summary** | What was validated and the headline outcome, in plain language a non-QA stakeholder can act on |
-| 3 | **Outcome Figures** | Counts and rates for all six statuses (§8) — never a bare pass/fail split |
+| 3 | **Outcome Figures** | Counts and rates for all seven statuses (§8) — never a bare pass/fail split — against BOTH denominators: executable scope and suite total (§4.1) |
 | 4 | **Requirement Coverage** | Per requirement from the Traceability Matrix: which test cases covered it, and its resolved verification state (verified / failed / not verified, with the reason) |
 | 5 | **Defect Register** | Every `Failed`/`Inconclusive` case as a table row — ID, title, severity, priority, category — each linking to its full §10.1 write-up in the Results |
 | 6 | **Assumptions & Risks Resolved** | Every Test Design "Assumption-based test" tag carried to a resolved state (confirmed / refuted / unverified) |
@@ -204,8 +246,8 @@ Reproducibility, Evidence Paths, Notes
 
 Rules:
 
-1. **One row per test case in scope** — including every `Blocked`, `Skipped`, and `Not Executed` case. Emitting only executed rows silently shrinks the denominator and overstates the pass rate.
-2. **`Status` uses exactly the six §8 values**, unabbreviated — never a collapsed pass/fail.
+1. **One row per test case in the SUITE** — including every `Blocked`, `Skipped`, `Not Executed`, and `Excluded` case. Emitting only executed rows silently shrinks the denominator and overstates the pass rate. An `Excluded` case is emitted for the same reason: a reader filtering the CSV must be able to see that 48 cases were never authorized, not infer it from a missing row.
+2. **`Status` uses exactly the seven §8 values**, unabbreviated — never a collapsed pass/fail. `Excluded` rows carry their `Pending Review` / `Rejected at Review` reason in `Notes` and leave every execution column (`Execution Time`, `Failed Step`, evidence) empty, since nothing ran.
 3. **Defect columns are populated only for `Failed`/`Inconclusive`** rows, and empty (not `N/A`, not `0`) elsewhere, so a spreadsheet filter behaves predictably.
 4. **`Evidence Paths` is a semicolon-separated list of run-relative paths**, resolvable from the run folder without editing.
 5. **Standard CSV quoting** — UTF-8, fields containing a comma/quote/newline are double-quoted with internal quotes doubled. A defect summary containing a comma is a routine case, not an edge case.
@@ -227,7 +269,7 @@ The Manual Execution Results, Manual Execution Summary, and Manual QA Report mus
 | # | Section | Artifact | Must contain, at minimum |
 |---|---|---|---|
 | 1 | **Execution Metadata** | Results | Execution ID, Run Scope/Run Type (§17), environment, timestamps |
-| 2 | **Execution Summary** | Summary | One-paragraph narrative: what was executed, overall outcome, and headline figures across all six statuses (§8) |
+| 2 | **Execution Summary** | Summary | One-paragraph narrative: what was executed, overall outcome, and headline figures across all seven statuses (§8), stating the executable scope the figures are against (§4.1) |
 | 3 | **Per-Test Results** | Results | Test Case ID, Status (§8), Execution Time, Evidence Inventory references, failure/block detail where applicable — every `Failed`/`Inconclusive` case follows the Defect Documentation Standard (§10.1) in full, not a one-line summary |
 | 4 | **Evidence Inventory** | Results | Every evidence type captured (§7), per test case, with paths, and every gap with a reason |
 | 5 | **Delivery Artifacts** | Summary | Confirmation that the CSV (§9.2) and Manual QA Report (§9.1) were produced, and that all three renderings agree on every test case's status |
@@ -328,7 +370,7 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 3. Must confirm the target environment matches the Project Context before executing anything; halt and report on mismatch.
 4. Must not execute any test case's mutating actions against an environment not explicitly marked safe for them — classify as `Skipped` with the constraint named.
 5. Must record every test case's outcome — no silent omissions. A test case that cannot run must be logged with an explicit reason.
-6. **Must classify every result using the full six-state Result Classification** (§8) — never collapse Blocked/Skipped/Not Executed/Inconclusive into a bare Pass/Fail.
+6. **Must classify every result using the full seven-state Result Classification** (§8) — never collapse Blocked/Skipped/Not Executed/Inconclusive/Excluded into a bare Pass/Fail.
 7. **Must produce a structured Evidence Inventory** (§7, §10) naming every evidence type captured and every one that could not be, with a reason.
 8. Must never modify the Manual Test Suite, Traceability Matrix, or Coverage Report — a test case that appears wrong is escalated as a discrepancy for Stage 3, never silently corrected here.
 9. **Must self-report the delivery in full** (§9) — the Manual Execution Results, the Manual Test Results CSV, and the Manual QA Report, all three derived from one result set and agreeing on every test case's status.
@@ -343,7 +385,10 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 18. **Must never consume an input artifact that is not itself `Approved`** at its own pipeline checkpoint (§4).
 19. **Must run the browser headed, so each interaction is visible live** (§11.1) — the skill's normal behaviour, not an opt-in. Where headed is genuinely unavailable (no display attached, or `--headless` not removed by an operator), proceed headless rather than halting, and state it in Execution Metadata (§10 #1) and Known Limitations (§10 #6).
 20. **Must compute the QA Report's coverage from the Traceability Matrix**, reporting an uncovered requirement as *not verified* rather than omitting it (§9.1).
-21. **Must emit one CSV row per test case in scope**, including Blocked/Skipped/Not Executed, so the pass rate is never computed against a silently shrunken denominator (§9.2).
+21. **Must emit one CSV row per test case in the suite**, including Blocked/Skipped/Not Executed/Excluded, so the pass rate is never computed against a silently shrunken denominator (§9.2).
+22. **Must execute only test cases whose `Review` column reads `Approved`** (§4.1). A `Pending` or `Rejected` case is recorded `Excluded` with its reason and is never executed "just to see" — an unreviewed case's failure cannot distinguish an application defect from a defective test case. The `Automation` column is never read by this stage.
+23. **Must report the two denominators separately** (§8, §9.1, §21) — suite total and executable scope. A pass rate stated without naming which denominator produced it is not a valid figure.
+24. **Must read the lifecycle decision from the Markdown suite, never the workbook** (§4.1). Where the two disagree, halt and report it (§18): the workbook holds decisions not yet imported, and guessing which file the reviewer meant is how a rejected case gets executed.
 
 # 13. Expected Artifacts
 
@@ -412,6 +457,8 @@ If the Project Context/Run Scope states no explicit Type, this skill defaults to
 | **Environment Unavailable** (target URL unreachable, application down) | Global | Halt; recommend validating the environment before retrying. |
 | **Authentication Failure** (the Project Context's credentials don't work) | Global | Halt; this is a credential/environment problem, not a test defect. |
 | **Precondition Not Met** (§5) | Local — that test case only | Classify `Blocked`; continue executing every other test case whose preconditions are met. |
+| **No test case is `Review = Approved`** (§4.1) | Global | Halt **before** executing or writing results. Report the suite total, that zero cases are approved, and the `Pending`/`Rejected` split. Producing a report reading "0 executed, 0 failures" is worse than halting — at a glance it is indistinguishable from a clean run. Recommend reviewing the suite, then re-running. |
+| **Markdown and workbook disagree on a lifecycle value** (§4.1) | Global | Halt. Recommend `cli.js --import-lifecycle` to move the reviewer's decisions into the Markdown, then re-run. Executing while they disagree risks running a case the reviewer rejected. |
 
 # 19. Recovery Strategy — Smallest Corrective Action
 
@@ -428,6 +475,7 @@ Consistent with every other execution-capable stage in either pipeline: never si
 | This skill needs (§4) | Satisfied by (`.claude/skills/test-design-skill/SKILL.md` §9/§21) |
 |---|---|
 | Manual Test Suite | §9 Outputs #1–#2 |
+| Per-case `Review` decision on every case (§4.1) | §6.3 — the `Review` lifecycle column, `Pending` unless a human changed it |
 | Requirement Traceability Matrix | §9 Outputs #3 |
 | Coverage Report (Coverage Gaps only — the advisory Automation Candidates hint belongs to Stage `4A`) | §9 Outputs #4 |
 | Project Context | Unchanged pass-through from Stage 1 |
@@ -454,10 +502,11 @@ In place of a handoff contract, a run is not complete until every one of these h
 | Metric | Definition |
 |---|---|
 | **Execution Duration** | Total wall-clock time for this execution, start to finish. |
-| **Pass Rate** | Passed ÷ total executed. |
+| **Pass Rate** | Passed ÷ total executed. Always stated together with the executable scope it was computed against (§8), never alone. |
+| **Authorized Coverage** | Executable scope (`Review = Approved`) ÷ suite total — how much of the designed suite this run was permitted to exercise at all. |
 | **Requirement Verification Rate** | Requirements with at least one Passed covering test case ÷ requirements in scope — the figure the QA Report leads with. |
 | **Defect Density** | Failed + Inconclusive ÷ total executed. |
-| **Block/Skip Rate** | (Blocked + Skipped) ÷ total in scope. |
+| **Block/Skip Rate** | (Blocked + Skipped) ÷ executable scope — `Excluded` cases are not in this denominator, since they were never authorized to run. |
 | **Evidence Count** | Total evidence items captured, per §7. |
 
 # 22. Future Scalability

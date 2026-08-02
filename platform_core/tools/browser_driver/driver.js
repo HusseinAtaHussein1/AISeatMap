@@ -193,7 +193,18 @@ async function launchAuthenticated({ env, credentialsPath, headless, stage } = {
   const page = await context.newPage();
 
   const baseUrl = creds.baseUrl || profile.defaultBaseUrl;
-  await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: 20000 });
+  // `networkidle` is NOT a usable readiness signal for this target (fixed 2026-08-02).
+  //
+  // It resolves only after 500ms with no more than two in-flight requests. An Angular SPA that
+  // polls, holds a keep-alive, or refreshes a token may never reach that state, so the wait ran to
+  // its timeout and login failed — INTERMITTENTLY, which was the confusing part: it succeeded
+  // whenever the app happened to fall quiet, and failed when it did not. Measured during a Stage 4M
+  // run, the server answered `/`, `/auth/login`, `/dashboard` and `/admin/agency` in 22-50ms each
+  // while this call timed out at 20s, which is what ruled out the environment.
+  //
+  // The correct readiness signal for a login page is the login form itself, so wait for that.
+  await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  await page.waitForSelector(profile.login.usernameSelector, { state: 'visible', timeout: 30000 });
 
   await page.fill(profile.login.usernameSelector, creds.username);
   await page.fill(profile.login.passwordSelector, creds.password);

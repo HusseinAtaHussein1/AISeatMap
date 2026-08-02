@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Renders each authored `TestCases_{Module}.md` in a run's `test_design/` folder into the matching
+Renders each authored `TestCases_{Module}.md` in a module's `test_design/` folder into the matching
 `TestCases_{Module}.xlsx`, so Stage 3 delivers both outputs
 [`test-design-skill/SKILL.md`](../../../.claude/skills/test-design-skill/SKILL.md) §9 requires
 (Outputs #1 Markdown and #2 Excel).
@@ -27,10 +27,11 @@ Re-run the tool after *any* edit to a suite document; the workbook is never hand
 ## Usage
 
 ```bash
-# the normal call — export every suite in the ACTIVE run's test_design/ folder
+# the normal call — export every suite in the ACTIVE MODULE's test_design/ folder
 node platform_core/tools/test_suite_export/cli.js
 
-node .../cli.js --run <run-folder>      # a specific run instead of the active one
+node .../cli.js --module <slug>         # a specific module instead of the active one(s)
+node .../cli.js --run <run-folder>      # a HISTORIC run folder (pre-2026-07-29 layout only)
 node .../cli.js --dir <path>            # any folder holding TestCases_*.md
 node .../cli.js --file <path/to/TestCases_Search.md>    # a single suite
 node .../cli.js --file ... --sheet-name Navigation_NFR_BR
@@ -41,22 +42,122 @@ node .../cli.js --json                  # machine-readable result
 | Exit code | Meaning |
 |---|---|
 | `0` | Exported; every case parsed cleanly |
-| `1` | Error — no active run, unreadable path, or no suite documents found |
+| `1` | Error — no active module, unreadable path, or no suite documents found |
 | `2` | Parsed **with warnings** (e.g. a case missing Expected Result), or `--check` found a problem |
 
 Exit `2` is deliberate: a workflow step can gate on "did every case parse cleanly?" instead of
 shipping a workbook with blank cells nobody notices until Stage 4M tries to execute it.
 
-The run folder is **never guessed** — it comes from the Active Run pointer via
-[`run_manager`](../run_manager/), per `test-design-skill/SKILL.md` §24. `--dir` bypasses run
-resolution entirely, for exporting a folder that isn't inside a run.
+### What the default resolves to, and why it is the module
+
+**The default target is the active MODULE, not the active run** (corrected 2026-08-01, platform
+defect DREC-T04). The 2026-07-29 module-workspace migration moved Stage 3's output from
+`runs/{run}/test_design/` to `modules/{module}/test_design/`, and this tool's default was left
+behind — so the documented no-argument call could not find any module suite, and every export needed
+an explicit `--dir`.
+
+The migration is also *why* the module is the right default rather than a mechanical find-and-replace
+of one path for another: the suite is **durable and owned by its module**, refined in place across
+runs, while a run only records which revision of it was executed
+([`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §10.5).
+Resolution follows what the artifact *is*.
+
+Precedence, highest first:
+
+| | Resolves to | Missing suite is |
+|---|---|---|
+| `--dir <path>` | that literal folder | an error |
+| `--run <run-folder>` | `runs/{run}/test_design/` — **historic layout only** | an error, naming the module path instead |
+| `--module <slug>` | `modules/{slug}/test_design/` (slug, display name, or unambiguous prefix) | an error |
+| *(default)* | `modules/{slug}/test_design/` for **every** active module | **skipped**, per module |
+
+**Neither pointer is ever guessed.** Modules come from the Active Module pointer via
+[`module_manager`](../module_manager/) (`module_architecture.md` §6.5 #1), runs from the Active Run
+pointer via [`run_manager`](../run_manager/). With nothing active, the tool reports how to set it
+rather than falling back to "the only module" or "the newest" — the fallback that scatters one
+module's artifacts across unrelated folders.
+
+**A multi-module selection exports one workbook per module, never a merged one**, and a module that
+has not reached Stage 3 yet is *skipped and reported* rather than aborting its siblings' export. That
+is the one case where a folder holding no suite isn't an error: under a `multi` or `full-project`
+pointer (`module_architecture.md` §9.1) it is an expected state. When the human named exactly one
+target, it is an error, because they named something that isn't there.
+
+## `--import-lifecycle` — the one inverse operation
+
+```bash
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle          # apply
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle --check   # preview only
+```
+
+Pulls the reviewer's **`Review`** and **`Automation`** decisions out of the workbook and writes them
+into the Markdown suite. `--module` / `--dir` / `--file` mean the same thing here as for an export.
+
+**Why an inverse exists at all, given the rule above.** Every column obeys "the workbook is derived"
+— *except* the two that do not describe the test case. `Review` and `Automation` record a **human
+decision taken after generation** (`test-design-skill` §6.3), and the human takes it in the
+spreadsheet, because that is where reviewing a 52-row suite actually happens. Without an import there
+were only two outcomes, both bad:
+
+1. The reviewer edits the workbook, and the next export **silently discards** the decisions — exactly
+   the failure this tool exists to prevent, now aimed at the reviewer instead of the author.
+2. The reviewer is told to hand-edit 52 Markdown blocks instead — so the review either does not
+   happen, or happens in a file nothing reads.
+
+So the direction of derivation is preserved and made explicit:
+
+```
+content    Markdown ──► Excel      (export — every column)
+decisions  Markdown ◄── Excel      (import — Review and Automation only)
+```
+
+**The import is narrow on purpose.** A `Title`, `Steps`, or `Expected Result` edited in the workbook
+is **not** imported and is still discarded on the next export. Those are derived content, and editing
+them there is the mistake §9.1 prevents; a lifecycle decision is not.
+
+**The workflow.** Export → review in Excel → `--import-lifecycle` → re-export. The last step matters:
+until it runs, the workbook and the Markdown disagree, and Stage `4M` halts rather than guess which
+one the reviewer meant (`manual-execution-skill` §4.1, §18).
+
+Guarantees worth knowing: an unrecognised value (`Review: Maybe`) **warns and changes nothing**
+rather than being coerced; casing is normalised (`approved` → `Approved`); a workbook row with no
+matching Markdown case warns rather than inventing a test case; a workbook **older** than its
+Markdown is flagged, since the review may have been made against superseded case text; and the rest
+of the document is preserved line-for-line, so the diff shows only the decisions that moved.
+
+## `--sync-index` — the Case Index is derived too
+
+```bash
+node platform_core/tools/test_suite_export/cli.js --sync-index          # apply
+node platform_core/tools/test_suite_export/cli.js --sync-index --check   # preview only
+```
+
+A suite document opens with a **Case Index** repeating each case's Title, Tier, Priority, Tags,
+Review, and Automation — a *second* record of facts the case bodies already state. Second records
+drift, and this one drifted within minutes of the lifecycle columns existing: a reviewer's decisions
+and a rewritten title landed in the bodies while the index still showed the superseded values, so the
+document disagreed with itself about which cases were approved.
+
+Same argument as §9.1, one level down: **the case body is authoritative, the index is rendered from
+it.** Also recomputed, for the same reason a hand-maintained count is eventually a wrong count: the
+header's `Total Test Cases`, the `Tier breakdown`, and the `Lifecycle breakdown` roll-up.
+
+`Tier` is derived from Tags (the Granularity Tier, §6.0.1), checked most-specific first. Zeros are
+shown in the roll-up rather than omitted — `0 Rejected` states that nothing was rejected, while an
+absent entry reads as "not tracked", and at a review gate that difference matters.
+
+**It runs automatically after `--import-lifecycle`**, since an import that left the index stale would
+recreate the exact contradiction it exists to remove. Two things it deliberately does *not* do: an
+index row whose case body no longer exists is **warned about, not deleted** (deleting it could
+silently drop a case someone meant to restore), and a pipe inside a title is escaped rather than
+allowed to break the table.
 
 ## Programmatic use
 
 ```js
 const { exportSuiteDir, parseTestCases, buildWorkbook } = require('./platform_core/tools/test_suite_export');
 
-const { results, warnings } = exportSuiteDir('platform_core_data/runs/<run>/test_design');
+const { results, warnings } = exportSuiteDir('platform_core_data/modules/<slug>/test_design');
 ```
 
 `exportSuite` / `exportSuiteDir` are the primary surface. `parseTestCases`, `toRows`, and
@@ -83,11 +184,38 @@ order — no more"):
 | H | Priority | 8 |
 | I | Tags | 25 |
 | J | Notes | 35 |
+| K | **Review** | 12 |
+| L | **Automation** | 12 |
 
 `FIELDS` in [`parseTestCases.js`](parseTestCases.js) is the single ordering authority for both the
 columns and the per-case field extraction, so the two cannot fall out of step. Traceability, Risk,
 and the Requirement/Discovery/Finding/Evidence references are deliberately **absent** — §6.2 puts
 them in `TraceabilityMatrix.md`, keyed by Test Case ID, not on the execution-facing document.
+
+### The lifecycle columns — K and L
+
+Added **2026-08-01**, user-mandated, and **purely additive**: columns A–J are unchanged in content,
+name, and order. K and L sit last because they record decisions made *after* the case is written.
+
+| Column | Records | Allowed values | Default |
+|---|---|---|---|
+| **Review** | The human review status of the case after Stage 3 | `Pending` · `Approved` · `Rejected` | `Pending` |
+| **Automation** | Whether the approved case should be automated | `Pending` · `Approved` · `Rejected` | `Pending` |
+
+How this tool treats them (`test-design-skill` §6.3 is the governing spec):
+
+- **An omitted field exports as `Pending`, silently.** "No decision yet" is precisely what an absent
+  value already says, so warning on it would fire against every suite written before this contract
+  existed while telling a reader nothing. This is why neither column is in `REQUIRED_FIELDS`: a case
+  with no review decision is *unreviewed*, not *unexecutable*.
+- **An unrecognised value warns and exports as written.** `**Review:** Maybe` is someone recording a
+  decision the lifecycle does not define; silently rewriting it to `Pending` would erase their
+  intent, and dropping it would hide the error.
+- **Casing is normalised** — `approved` and `Approved` are the same decision.
+
+This tool only reads and renders these values. **It never sets or advances them**, and neither does
+any skill: only a human reviewer may move `Review` off `Pending` (§6.3.1). Stage `4A` consumes a case
+only when `Review = Approved AND Automation = Approved`.
 
 **Steps** are joined into one cell with ` | ` and **renumbered canonically** (`1. … | 2. …`). The
 numbering is not decoration: Stage 4M records a result per step and a defect cites "failed at step 3",
@@ -115,9 +243,14 @@ prose emphasis and stays with the field it appears in, rather than being dropped
 
 Strict about structure, permissive about prose: what it cannot parse is **reported**, never silently
 written as a blank cell. It warns on a missing required field (Title, Objective, Steps, Expected
-Result, Priority, Tags), a duplicate field label, a duplicate Test Case ID, and a document with no
-cases at all. Superseded `TestCases_{Module}.vN.md` copies are skipped loudly so they can't become
-shadow workbooks Stage 4M executes by accident.
+Result, Priority, Tags), **a `Review` or `Automation` value outside `Pending`/`Approved`/`Rejected`**,
+a duplicate field label, a duplicate Test Case ID, and a document with no cases at all. Superseded
+`TestCases_{Module}.vN.md` copies are skipped loudly so they can't become shadow workbooks Stage 4M
+executes by accident.
+
+Note the deliberate asymmetry in that list: a **missing** lifecycle value is not a warning (it means
+`Pending`), while an **unrecognised** one is. Absence carries a defined meaning; an undefined value
+does not.
 
 ## Zero dependencies, by design
 

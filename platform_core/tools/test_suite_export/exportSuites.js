@@ -1,5 +1,6 @@
 // Stage 3 Manual Test Suite export — renders each authored `TestCases_{Module}.md` into the
-// matching `TestCases_{Module}.xlsx`, in the active run's `test_design/` folder.
+// matching `TestCases_{Module}.xlsx`, in the module workspace's `test_design/` folder. Which folder
+// that is, is cli.js's decision — see its header; this module exports whatever folder it is handed.
 //
 // The workbook is DERIVED, never authored: see parseTestCases.js for why that is what actually
 // enforces §9's "two renderings of one test case set — they must never diverge."

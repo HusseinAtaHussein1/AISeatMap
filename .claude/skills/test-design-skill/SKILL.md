@@ -214,8 +214,10 @@ Every Test Case in the Manual Test Suite (Markdown/Excel) contains exactly these
 - **Steps** — a numbered list, one user action per step (see Step Writing Rules below)
 - **Expected Result** — the specific, observable outcome that constitutes a pass, one verification point per statement (see Expected Result Rules below) — for a regression test derived from a Finding (§5.3), this is the *corrected* behavior, never a restatement of the bug
 - **Priority** — execution priority (P1–P4), reflecting how urgently this case should run relative to others
-- **Tags** — short labels only, always including the Granularity Tier (`Atomic`/`Scenario`/`E2E`, §6.0.1, mandatory on every case), plus e.g. `Smoke`, `Regression`, `Negative-InvalidInputs`, `AutomationCandidate` — the compact, at-a-glance categorization that replaces what used to be separate Category/Test Type/Automation-Candidate fields on the test case itself; never a paragraph
+- **Tags** — short labels only, always including the Granularity Tier (`Atomic`/`Scenario`/`E2E`, §6.0.1, mandatory on every case), plus e.g. `Smoke`, `Regression`, `Negative-InvalidInputs` — the compact, at-a-glance categorization that replaces what used to be separate Category/Test Type fields on the test case itself; never a paragraph. **The `AutomationCandidate` tag is retired** (2026-08-01) — the `Automation` column below is now the single authoritative automation decision, so a tag that could disagree with it no longer exists
 - **Notes** *(optional)* — anywhere additional explanation is genuinely needed, so Steps/Expected Result never grow long carrying it instead (see "If additional explanation is needed" below)
+- **Review** — the human review status of this case after Stage 3. `Pending` | `Approved` | `Rejected`, default **`Pending`** (§6.3)
+- **Automation** — whether this approved case should be automated. `Pending` | `Approved` | `Rejected`, default **`Pending`** (§6.3)
 
 ### Step Writing Rules
 
@@ -264,7 +266,80 @@ The following are still mandatory pipeline outputs — nothing here is dropped, 
 - **Requirement Reference, Discovery Reference, Finding Reference, Evidence Reference, Acceptance Criteria Reference, Run Scope Reference** (§5.1, §5.4) — recorded in the Requirement Traceability Matrix, one row per Test Case ID, per the same mandatory/`N/A` rules as before. §5.2's "No Test Case Without Traceability" rule is unchanged: a test case with no corresponding Requirement Reference and Discovery Reference row in the Matrix must not be generated.
 - **Risk** (Level + one-line statement, derived from a populated Finding's own Business/Technical Risk where applicable) — recorded in the Traceability Matrix's Risk column, aggregated in the Coverage Report's Risks section (§18 #9).
 - **Category** (Positive/Negative-{subtype}/Exploratory/etc., §7) and **Test Type** (Smoke/Regression) — recorded as compact Tags on the test case (§6.1) *and* rolled up in the Coverage Report's Test Scenarios section (§18 #5) for at-a-glance breakdown.
-- **Automation Candidate** (advisory Yes/No/Partially hint, §9.2/§18 #11) — recorded as a Tag on the test case (§6.1) when Yes, *and* listed in the Coverage Report's Automation Candidates section. **It is read by Stage `4A` (Automation) as a prioritization hint only, never as a scope boundary** — Stage `4A` takes its scope from the approved test cases themselves (`pipeline.md` §3.3). Stage `4M` does not consume this hint at all.
+- **Automation decision** — **no longer recorded here.** *(Revised 2026-08-01.)* It is now the `Automation` column on the test case itself (§6.3), a **binding** decision rather than the advisory `AutomationCandidate` tag and Coverage Report listing it replaces. Stage `4A` consumes a case only when `Review = Approved AND Automation = Approved` (§6.3.2). The `Automation` column alone is never read by Stage `4M` — but `Review` is, by both branches (§6.3.2).
+
+## 6.3 The Lifecycle Columns — Review and Automation
+
+*(Added 2026-08-01, user-mandated. Additive: no existing field was removed, renamed, or reordered.)*
+
+Two columns record decisions made **after** the test case is written, which is why they sit last in §6.1's order and last in the workbook. They are part of the platform lifecycle and **must exist for every test case**.
+
+| Column | Records | Allowed values | Default |
+|---|---|---|---|
+| **Review** | The human review status of the case after Stage 3 | `Pending` · `Approved` · `Rejected` | `Pending` |
+| **Automation** | Whether the approved case should be automated | `Pending` · `Approved` · `Rejected` | `Pending` |
+
+### 6.3.1 Review — written by humans, never by a skill
+
+**This skill always generates a new test case with `Review: Pending`.** It never writes any other value, at any time, for any reason.
+
+**No skill may change this value.** Only a human reviewer — or a review process a human explicitly requested — may move it to `Approved` or `Rejected`. This is the one rule in this section that is not merely a convention: a skill that advances its own review status has reviewed its own work, which is precisely what the column exists to prevent. It is the same reasoning that forbids a stage from inferring its own checkpoint approval (`pipeline.md` §5.3, §6 Rule 6), applied at test-case granularity.
+
+`Rejected` means the case was reviewed and is not accepted as written. It is not deleted — the record of the rejection is the point.
+
+**The one transition a skill may perform: a material rewrite resets `Review` to `Pending`.** *(Added 2026-08-01.)*
+
+```
+Approved  ──rewrite──►  Pending          (mandatory)
+Rejected  ──rewrite──►  Pending          (mandatory)
+anything  ──────────►  Approved          NEVER, under any circumstance
+```
+
+**Why this is not a skill approving its own work.** Every permitted move goes *toward* `Pending` — it only ever **removes** authorization, never grants it. That is what makes the rule safe to automate: a skill cannot use it to advance a case, only to withdraw a stale verdict on text that no longer exists.
+
+**Why it is mandatory rather than allowed.** Without it the column means two different things at once:
+
+- Leaving `Approved` on a rewritten case would carry a human's acceptance of *superseded text* forward onto text they never read — the exact laundering the column exists to prevent, and the more dangerous of the two, since Stage `4M` and `4A` would both execute on it.
+- Leaving `Rejected` on a case that was rewritten *in response to that rejection* makes the gate a one-way trapdoor: the case is fixed, and permanently excluded anyway. The reviewer's feedback would be impossible to act on.
+
+**What counts as a material rewrite:** any change to Objective, Preconditions, Test Data, Steps, or Expected Result — i.e. anything that changes what is executed or what constitutes a pass. Fixing a typo in Notes is not one. When in doubt, reset: an unnecessary re-review costs a reading, an inherited approval costs the gate.
+
+**Two obligations come with it, and neither is optional:**
+
+1. **Record it in the case's Notes** — that it was rejected or approved, on what date, the reason if one was given, and that it has been rewritten. Resetting the column silently destroys the audit trail the rejection was there to create.
+2. **Report it in the closing message**, per case. A reviewer must never discover from a re-export that a case they approved is back at `Pending`.
+
+This mirrors the artifact-level rejection flow exactly (`pipeline.md` §5 step 4): a rejected artifact is not left `Rejected` forever — the producing stage re-runs against the feedback and the result returns to `Pending Review`. This is that same rule at test-case granularity.
+
+### 6.3.2 The gates the two columns create
+
+*(Revised 2026-08-01, user-mandated: `Review` now gates **both** branches, not automation alone.)*
+
+`Pending` means no automation decision has been made yet. `Approved` authorizes the case for automation. `Rejected` means the case stays manual, deliberately.
+
+**`Review` is the universal gate. `Automation` is the Automation branch's additional one:**
+
+| Branch | A case is in scope only when |
+|---|---|
+| Stage `4M` — Manual Execution | `Review = Approved` |
+| Stage `4A` — Automation | `Review = Approved` **AND** `Automation = Approved` |
+
+**Why `Review` gates manual execution too.** An unreviewed case costs a real tester's time and, on a shared environment, real data — to verify an expectation nobody has accepted. And when it fails, the result cannot distinguish *the application is wrong* from *the test case is wrong*, which is the one thing an execution result exists to establish. `Review = Approved` is precisely the statement "if this fails, the application is at fault."
+
+**`Automation` never affects manual scope.** `Automation = Rejected` does not remove a case from Stage `4M` — it is the *reason* that case must be exercised by hand. Letting an automation decision narrow manual coverage would be exactly backwards.
+
+**Nothing is dropped for being out of scope.** Stage `4M` records a non-approved case as `Excluded`, with reason `Pending Review` or `Rejected at Review`, and still reports it (`manual-execution-skill` §4.1, §8) — so a run can never show "3 of 3 passed" while 48 cases went unexamined. Stage `4A` likewise reports generating nothing as a correct, reportable outcome rather than a silent no-op.
+
+Every other combination is out of scope for automation — including `Review: Pending` with `Automation: Approved`, which is not a shortcut: an unreviewed case is not automatable however its Automation column is marked, because automating a case nobody has accepted encodes an unreviewed expectation into executable code.
+
+**This column supersedes the retired `AutomationCandidate` tag** and the Coverage Report's former Automation Candidates section (§18 #11). Both were *advisory* hints for prioritization; this is a *binding* decision. Keeping an advisory flag alongside a binding one invites the two to disagree, and leaves a reader no way to tell which governs — so the advisory one is gone rather than demoted.
+
+### 6.3.3 How absence and bad values are treated
+
+- **An omitted field is `Pending`.** The exporter defaults it silently (`test_suite_export/parseTestCases.js`), because "no decision yet" is exactly what an absent value already says. Warning on it would fire against every suite authored before this contract existed while telling a reader nothing.
+- **An unrecognised value is reported.** Anything outside the three allowed values is exported as written and raises a parse warning — it means someone recorded a decision the lifecycle does not define, and silently rewriting it would erase their intent.
+- **Casing is normalised**, so `approved` and `Approved` are the same decision.
+- **Neither column is a required field.** A case with no review decision is *unreviewed*, not *unexecutable* — and `REQUIRED_FIELDS` is reserved for content Stage `4M` cannot run without.
 
 # 7. Negative Test Generation Engine
 
@@ -322,7 +397,7 @@ The Test Design skill generates **only the platform's own canonical artifacts.**
 1. **Manual Test Suite (Markdown)** — human-readable, version-control-friendly test case documents, grouped by module
 2. **Manual Test Suite (Excel)** — the same test cases in spreadsheet form, for stakeholders and tools that consume tabular test data
 3. **Requirement Traceability Matrix** — Project Context requirement ID → Test Case ID, annotated with Discovery/Finding/Evidence references and validation status
-4. **Coverage Report** — the consolidated Requirement Coverage (§8.1, §8.3) and Finding Coverage (§8.2) accounting, structured per the Standard Output Contract (§18): Run Scope, Requirements Covered, Coverage Matrix, Business Rules, Test Scenarios, Manual Test Cases (by reference), Assumptions, Coverage Gaps, Risks, Recommendations, Automation Candidates, and Inputs for Manual Execution skill
+4. **Coverage Report** — the consolidated Requirement Coverage (§8.1, §8.3) and Finding Coverage (§8.2) accounting, structured per the Standard Output Contract (§18): Run Scope, Requirements Covered, Coverage Matrix, Business Rules, Test Scenarios, Manual Test Cases (by reference), Assumptions, Coverage Gaps, Risks, Recommendations, Automation Status, and Inputs for Manual Execution skill
 
 The Markdown and Excel test suites are two renderings of one underlying test case set — they must never diverge in content. A field added, corrected, or removed in one format is added, corrected, or removed in the other in the same pass.
 
@@ -333,7 +408,7 @@ Any future integration that maps these canonical artifacts into a third-party AL
 **The Markdown suite is the authored artifact; the `.xlsx` is generated from it.** Every module's workbook is produced by the platform's Test Suite Export tool, never written by hand and never hand-edited afterwards:
 
 ```bash
-node platform_core/tools/test_suite_export/cli.js            # every suite in the active run
+node platform_core/tools/test_suite_export/cli.js             # every suite in the active module
 node platform_core/tools/test_suite_export/cli.js --check     # parse + report only; writes nothing
 ```
 
@@ -349,6 +424,8 @@ node platform_core/tools/test_suite_export/cli.js --check     # parse + report o
 6. **Reconcile the counts before publishing.** Each module's case count must agree across three places: the suite document's own Total Test Cases, that module's row count in `TraceabilityMatrix.md`, and the Coverage Report's Manual Test Cases table (§18 #6). The export's per-module count is the figure to check them against — count from the files, never carry a total over from a draft. A miscount here propagates into the Stage 4 and Stage 5 summaries, where it is far harder to notice.
 
 **The workbook's column contract is §6.1's field list, in §6.1's order, and nothing else** — one sheet per module workbook, tab named for the module. Traceability, Risk, and the Requirement/Discovery/Finding/Evidence references are deliberately absent from it, exactly as they are absent from the Markdown case block (§6.2): they live in `TraceabilityMatrix.md`, keyed by Test Case ID. Adding a traceability column to the workbook is the same spec violation as adding the field to the case block.
+
+**The two lifecycle columns are part of that contract and are not an exception to it** (added 2026-08-01, §6.3). `Review` and `Automation` are the last two columns, and they are workflow state rather than traceability — they record *what a human decided about this case*, not *what requirement it covers*. That distinction is why they belong on the sheet while a Related Requirements column still does not: the Matrix remains the single source of truth for traceability, and duplicating it into the workbook would give the suite a second copy to drift.
 
 Steps render into a single cell joined with ` | ` and renumbered canonically (`1. … | 2. …`). The numbering carries weight downstream: Stage 4M records a result per step and a defect cites "failed at step 3", so one action per authored line (§6.1) is what keeps that citation resolvable.
 
@@ -390,7 +467,7 @@ The tool's full behaviour — accepted heading shapes, field markers, warning ta
 22. **Must structure the Coverage Report per the Standard Output Contract** (§18) — all twelve required sections, in order — never substituting free-form prose for any of them.
 23. **Must recognize the named Stop Conditions** (§19) and, for any Local condition, continue designing every other unblocked requirement rather than halting the run — and must state the smallest missing prerequisite for every blocked item (§20), never a bare "cannot proceed."
 24. **Must verify Handoff completeness** (§21) before treating a run's Test Design outputs as finished — every input `.claude/skills/manual-execution-skill/SKILL.md` §4 declares it needs must be present, and every Discovery/Finding/Evidence Reference must be specific, not merely non-empty.
-25. **Must never let an Automation Candidates flag (§18 #11) be mistaken for a binding Automation Decision** — that decision remains exclusively Stage `4A`'s authority (`.claude/skills/automation-skill/SKILL.md` §13), reached from the approved test cases plus its own live selector verification (`automation-skill` §11A). This skill's flag is advisory, for prioritization only.
+25. **Must generate every new test case with `Review: Pending` and `Automation: Pending`** (§6.3), and **must never change either value.** Only a human reviewer, or a review process a human explicitly requested, may advance them. A skill that advances its own review status has reviewed its own work — the same reasoning that forbids a stage inferring its own checkpoint approval (`pipeline.md` §5.3, §6 Rule 6), applied per test case. This rule replaces the former advisory-flag rule: the retired `AutomationCandidate` tag no longer exists, and the `Automation` column is binding, not a hint (§6.3.2).
 26. **Must author every test case branch-agnostically** (§2) — never marked "manual only" or "automation only", and never split into per-branch suites. A case genuinely unsuitable for automation is described by its *characteristics* (subjective judgment required, no assertable state), leaving each branch to draw its own conclusion.
 
 # 12. Expected Artifacts
@@ -485,7 +562,7 @@ The Coverage Report (§9 Outputs #4) must contain exactly these sections, in thi
 | 8 | **Coverage Gaps** | Uncovered Requirements (§8.1), Uncovered Findings (§8.2), and Partially Covered / Unknown-Unassessed items (§8.3), each with its stated reason |
 | 9 | **Risks** | Every test case's Risk entry from the Traceability Matrix (§6.2) aggregated, with High/Critical items called out explicitly |
 | 10 | **Recommendations** | Exploratory Recommendations (§17) and any other non-fixed-case suggestion for the human reviewer |
-| 11 | **Automation Candidates** | Test cases this skill flags as *likely* well-suited to automation — an advisory, prioritization-only hint consumed by Stage `4A` (`.claude/skills/automation-skill/SKILL.md` §13) to order its work, **never to bound its scope** (`pipeline.md` §3.3). The binding Automation Decision remains exclusively Stage `4A`'s authority. Stage `4M` does not consume this section |
+| 11 | **Automation Status** | *(Renamed and re-scoped 2026-08-01 — was "Automation Candidates".)* A **roll-up of the `Automation` column** across this module's cases: how many are `Pending`, `Approved`, `Rejected`, and which are which. It is a **count of decisions already recorded on the cases, never a separate recommendation** — the advisory candidate list it replaces is retired (§6.3.2), because an advisory hint sitting beside a binding column can disagree with it. Stage `4A` reads the cases themselves and gates on `Review = Approved AND Automation = Approved`; it does not take scope from this section. Stage `4M` gates on `Review` alone and does not read the `Automation` column at all (§6.3.2) |
 | 12 | **Inputs for Both Branches** | The explicit handoff package per §21 — confirmation that every input Stage `4M` (`manual-execution-skill` §4) **and** Stage `4A` (`automation-skill` §4) declares it needs from this stage is present and specific. One section, both consumers |
 
 # 19. Stop Conditions
@@ -519,7 +596,7 @@ The Test Design skill's outputs are consumed next by **both branches, independen
 | Project Context (Governing) | Unchanged pass-through — this skill does not modify it; Manual Execution reads the same Approved version directly |
 | Manual Test Suite (Primary) | §9 Outputs #1–#2 |
 | Requirement Traceability Matrix (Secondary) | §9 Outputs #3, carrying Requirement/Discovery/Finding/Evidence References (§5.1) plus Acceptance Criteria/Run Scope References (§5.4) |
-| Coverage Report (Secondary — "so Manual Execution doesn't attempt what Stage 3 already excluded") | §9 Outputs #4, structured per §18, specifically sections 8 (Coverage Gaps) and 11 (Automation Candidates) |
+| Coverage Report (Secondary — "so Manual Execution doesn't attempt what Stage 3 already excluded") | §9 Outputs #4, structured per §18, specifically sections 8 (Coverage Gaps) and 11 (Automation Status) |
 | Discovery Artifacts (Secondary — passed through to Automation later "to resolve UI/selector detail") | Not produced by this skill — but every Discovery Reference (§5.1) this skill writes must cite a *specific* snapshot/Timeline entry/Report section, never a bare "see Discovery" |
 | Findings (Secondary) | Not produced by this skill — but every Finding Reference/disposition (§5.3) this skill writes must be unambiguous about which of the three outcomes applies, so Manual Execution and, later, Automation know whether a regression script, an exploratory script, or no script at all is expected |
 | Evidence Packages (Secondary) | Not produced by this skill — but every Evidence Reference (§5.1) this skill writes must cite specific evidence file(s), never the Finding as a whole |

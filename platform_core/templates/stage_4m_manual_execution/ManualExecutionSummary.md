@@ -28,7 +28,9 @@ per-test detail here.
 
 {{EXECUTION_SUMMARY_NARRATIVE}}
 
-**Headline figures:** {{PASSED_COUNT}} Passed · {{FAILED_COUNT}} Failed · {{BLOCKED_COUNT}} Blocked · {{SKIPPED_COUNT}} Skipped · {{NOT_EXECUTED_COUNT}} Not Executed · {{INCONCLUSIVE_COUNT}} Inconclusive
+**Headline figures:** {{PASSED_COUNT}} Passed · {{FAILED_COUNT}} Failed · {{BLOCKED_COUNT}} Blocked · {{SKIPPED_COUNT}} Skipped · {{NOT_EXECUTED_COUNT}} Not Executed · {{INCONCLUSIVE_COUNT}} Inconclusive · {{EXCLUDED_COUNT}} Excluded
+
+**Scope:** {{EXECUTABLE_SCOPE_COUNT}} of {{TOTAL_COUNT}} cases were authorized to execute (`Review = Approved`). Every figure above is against that executable scope; the excluded remainder is broken down in the QA Report.
 
 ## 5. Delivery Artifacts
 

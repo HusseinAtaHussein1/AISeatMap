@@ -103,6 +103,19 @@ dependencies:
 > 3. **Both shared knowledge bases are mandatory reads before generation** (§11B), so known failure modes are pre-empted rather than rediscovered in Stage `5A`.
 > 4. **Brownfield/greenfield is detected automatically; the write decision is approved explicitly** via a Target Write Plan (§11C) — replacing the previous multi-gate prompting.
 
+> **Revision note (2026-08-01, user-mandated): the Review/Automation lifecycle gate.** Every Stage 3 test case now carries two lifecycle columns — `Review` and `Automation`, each `Pending` | `Approved` | `Rejected`, both defaulting to `Pending` (`test-design-skill` §6.3). **This stage considers a test case only when both are `Approved`:**
+>
+> ```
+> Review = Approved   AND   Automation = Approved
+> ```
+>
+> Four consequences, stated so none is inferred:
+>
+> 1. **`Automation = Rejected` means the case stays manual, deliberately.** It is not a gap in this stage's coverage and is never reported as one — it is a recorded decision, and the Automation Coverage Report says so rather than counting it as missed.
+> 2. **`Pending` on either column means no decision has been made yet.** An undecided case is out of scope for generation. This stage does not chase the decision, and it never advances either value — only a human may (`test-design-skill` §6.3.1).
+> 3. **`Review = Pending` with `Automation = Approved` is still out of scope.** This is not a shortcut: automating a case nobody has reviewed encodes an unreviewed expectation into executable code, which is worse than not automating it. Both gates are independent and both must pass.
+> 4. **This replaces the advisory `AutomationCandidate` tag and the Coverage Report's candidate list**, both retired. Scope still comes from the approved Manual Test Suite (§11 below) — the gate *narrows* that scope to the cases a human authorized, it does not become a second source of scope. Where this stage generates nothing because no case is dual-approved, that is a correct outcome to report, not a failure.
+
 > **Revision note (2026-07-27, user-mandated):** the persistent Workspace Automation Baseline lives at `platform_core_data/automation_baseline/{framework}/`. Each Markdown artifact is **one file, edited in place**: no `.vN` suffixes, and **no duplicate "final" copy is ever written on approval**. Refinement edits the same file the reviewer read. Git is the version history. See `workflows_and_pipelines/pipeline/pipeline.md` §7 and §12.
 
 > **Revision note (2026-07-29, user-mandated):** **where this stage generates has changed, and it is a substantive change, not a path rename.** The temporary per-run working copy is gone. Generation now happens in a **Module Automation Project** — `platform_core_data/modules/{module}/automation/tests_{Framework}/` — which is **durable and standalone**:

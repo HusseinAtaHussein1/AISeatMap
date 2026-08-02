@@ -99,7 +99,9 @@ Result is unexecutable, so that warning is never cosmetic.
        Atomic     — a single business rule or validation
        Scenario   — one complete user workflow composed of several related business rules
        E2E        — an entire business journey spanning multiple screens or modules
-     Plus, as applicable: Smoke, Regression, Negative-InvalidInputs, AutomationCandidate.
+     Plus, as applicable: Smoke, Regression, Negative-InvalidInputs, Blocked, Deferred.
+     NOT AutomationCandidate — that tag is RETIRED (2026-08-01). The Automation field below is the
+     single authoritative automation decision; a tag that could disagree with it no longer exists.
      Tags replace what used to be separate Category / Test Type / Automation-Candidate fields.
 
      An E2E case must state in its Objective that it spans multiple screens/modules, and never
@@ -109,3 +111,65 @@ Result is unexecutable, so that warning is never cosmetic.
 <!-- OPTIONAL — genuinely helpful execution context only. NEVER move essential execution information
      (a step, a value, the actual expected outcome) into Notes to keep Steps short: that is hiding
      required content, not simplifying. Omit the field entirely when there is nothing to add. -->
+
+**Review:** {{REVIEW}}
+<!-- LIFECYCLE COLUMN (added 2026-08-01, user-mandated). The HUMAN review status of this test case
+     after Stage 3 (Test Design).
+
+     Allowed values: Pending | Approved | Rejected      Default: Pending
+
+     THIS COLUMN GATES BOTH BRANCHES (revised 2026-08-01):
+       Stage 4M (Manual Execution) executes a case only when Review = Approved.
+       Stage 4A (Automation)       needs Review = Approved AND Automation = Approved.
+     A non-approved case is not deleted or hidden — Stage 4M records it as `Excluded`, with reason
+     `Pending Review` or `Rejected at Review`, and still reports it in every total, so a run can
+     never read "3 of 3 passed" while the rest of the suite went unexamined.
+
+     RULES:
+       - Stage 3 ALWAYS generates a new case with `Pending`. It never writes any other value.
+       - NO SKILL MAY CHANGE THIS VALUE. Only a human reviewer, or a review process a human
+         explicitly requested, may move it to Approved or Rejected. A skill that advances its own
+         review status has reviewed its own work, which is the one thing this column exists to
+         prevent.
+       - Omitting the field is equivalent to `Pending` — the exporter defaults it silently, because
+         "no decision yet" is exactly what an absent value already says. An UNRECOGNISED value is a
+         different matter and is reported as a warning.
+       - A MATERIAL REWRITE OF THIS CASE RESETS THIS FIELD TO `Pending` (§6.3.1, added 2026-08-01).
+         Mandatory, in BOTH directions:
+             Approved --rewrite--> Pending      (never inherit an approval of superseded text)
+             Rejected --rewrite--> Pending      (the rewrite IS the response to the rejection)
+             anything ----------> Approved      NEVER, by any skill, for any reason
+         Every permitted move goes TOWARD `Pending` — it only ever removes authorization. Material
+         means Objective / Preconditions / Test Data / Steps / Expected Result changed; a typo in
+         Notes does not. Record the prior verdict and the rewrite in Notes, and report it. -->
+
+**Automation:** {{AUTOMATION}}
+<!-- LIFECYCLE COLUMN (added 2026-08-01, user-mandated). Whether this approved case SHOULD be
+     automated.
+
+     Allowed values: Pending | Approved | Rejected      Default: Pending
+
+       Pending  — no automation decision has been made yet
+       Approved — the case is authorized for automation
+       Rejected — the case stays manual, deliberately
+
+     RULES:
+       - Stage 3 ALWAYS generates a new case with `Pending`.
+       - Stage `4A` (Automation) considers a case ONLY when BOTH are true:
+             Review = Approved   AND   Automation = Approved
+         Any other combination is out of scope for automation, including `Review = Pending` with
+         `Automation = Approved` — an unreviewed case is not automatable no matter how it is marked.
+       - Stage `4M` (Manual Execution) NEVER reads this column. `Automation = Rejected` means the
+         case must be exercised by hand — a reason to run it manually, not a reason to skip it.
+       - This column SUPERSEDES the retired advisory `AutomationCandidate` tag. There is now one
+         authoritative automation decision per case, not a hint and a decision that can disagree. -->
+
+<!-- FIELD ORDER IS THE WORKBOOK'S COLUMN ORDER. Review and Automation are LAST, deliberately: they
+     record decisions made AFTER the case is written. Everything above them is unchanged — the
+     2026-08-01 change is additive, and no existing field was removed, renamed, or reordered. -->
+
+<!-- NOT ON THIS BLOCK, STILL: Requirement / Discovery / Finding / Evidence References, Risk, and
+     Category. Traceability remains in TraceabilityMatrix.md keyed by Test Case ID (§6.2), and the
+     lifecycle columns do not change that. Adding a Related Requirements column here would duplicate
+     the Matrix into the sheet and give the suite a second, drifting source of truth. -->
+

@@ -43,7 +43,17 @@ a one-line summary.
 | Skipped | {{SKIPPED_COUNT}} |
 | Not Executed | {{NOT_EXECUTED_COUNT}} |
 | Inconclusive | {{INCONCLUSIVE_COUNT}} |
-| **Total in scope** | {{TOTAL_COUNT}} |
+| **Executable scope** (`Review = Approved`) | **{{EXECUTABLE_SCOPE_COUNT}}** |
+| Excluded — Pending Review | {{EXCLUDED_PENDING_COUNT}} |
+| Excluded — Rejected at Review | {{EXCLUDED_REJECTED_COUNT}} |
+| **Suite total** | **{{TOTAL_COUNT}}** |
+
+<!-- TWO DENOMINATORS, BOTH REQUIRED (manual-execution-skill §4.1, §8 — added 2026-08-01).
+     Executable scope = cases this run was AUTHORIZED to execute (Review = Approved).
+     Suite total      = every case in the module suite.
+     The pass rate is computed against the EXECUTABLE SCOPE, and the figure is never quoted
+     without saying so. Reporting only the suite total hides that most cases never ran;
+     reporting only the executable scope hides how much of the suite is still unreviewed. -->
 
 ## 3. Per-Test Results
 
@@ -55,6 +65,11 @@ a one-line summary.
        Not Executed  — in scope, but the run ended before reaching it
        Inconclusive  — executed but cannot be confidently classified Passed or Failed; reported as
                        such, NEVER forced into Passed or Failed
+       Excluded      — NEVER AUTHORIZED TO RUN: Review is not Approved (§4.1). Reason is
+                       mandatory and is exactly `Pending Review` or `Rejected at Review`.
+                       NOT the same as Skipped: Skipped was authorized and this stage chose not
+                       to run it; Excluded was never in the executable set. Collapsing the two
+                       makes "how much of the approved suite did we finish?" uncomputable.
 
      EVERY non-Passed result carries its reason here — never left unstated. -->
 

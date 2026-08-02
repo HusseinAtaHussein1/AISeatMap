@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agentic AI Testing Platform — platform.config.json",
+  "description": "Repository-root configuration. The only required input for platform independence is the project root; every other path is derived from it by platform_core/tools/project_paths/.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional pointer to this schema file."
+    },
+    "projectRoot": {
+      "type": "string",
+      "description": "The project root — the single required input. Relative values resolve against the repository root; absolute values may point outside this repository entirely. Defaults to 'platform_core_data'.",
+      "default": "platform_core_data"
+    },
+    "generatedOutputDir": {
+      "type": "string",
+      "description": "Where generated (non-maintained) artifacts are written — Playwright reports, traces, codegen output. Resolved relative to the PROJECT ROOT unless absolute. Must be isolated and gitignored; never mixed with maintained source code.",
+      "default": ".generated"
+    },
+    "browserProvider": {
+      "type": "string",
+      "description": "The active Browser Provider id. Skills invoke the Browser Provider interface, never a concrete browser tool. See platform_core/tools/browser_provider/README.md.",
+      "default": "playwright-node"
+    },
+    "browserProviders": {
+      "type": "object",
+      "description": "Registry of available Browser Provider implementations, keyed by provider id.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "module": {
+            "type": "string",
+            "description": "Repository-relative path to the provider implementation module."
+          },
+          "command": {
+            "type": "string",
+            "description": "For CLI-backed providers: the base command invoked (e.g. 'npx playwright')."
+          }
+        },
+        "required": ["module"],
+        "additionalProperties": true
+      }
+    },
+    "debugMode": {
+      "type": "boolean",
+      "description": "Debug Mode flag (pipeline.md §11). Default false: throwaway scripts and raw dumps are written outside the project tree and deleted after use.",
+      "default": false
+    }
+  }
+}

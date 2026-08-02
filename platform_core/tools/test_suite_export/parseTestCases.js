@@ -31,10 +31,44 @@ const FIELDS = [
   { key: 'priority', label: 'Priority', width: 8 },
   { key: 'tags', label: 'Tags', width: 25 },
   { key: 'notes', label: 'Notes', width: 35 },
+  // ── Lifecycle columns (added 2026-08-01, user-mandated) ────────────────────────────────────
+  // Appended, never interleaved: they record decisions made AFTER the case is written, so they
+  // belong at the end of the row. Everything above is unchanged — this is an additive evolution
+  // of the contract, not a replacement.
+  { key: 'review', label: 'Review', width: 12 },
+  { key: 'automation', label: 'Automation', width: 12 },
 ];
 
 /** Fields whose absence makes a case unexecutable at Stage 4, so it is reported, never inferred. */
 const REQUIRED_FIELDS = ['title', 'objective', 'steps', 'expectedResult', 'priority', 'tags'];
+
+/**
+ * The two lifecycle columns and their shared value set (added 2026-08-01, user-mandated).
+ *
+ * `Review`     — the human review status of the case after Stage 3.
+ * `Automation` — whether the approved case should be automated.
+ *
+ * Both default to `Pending`, and the default is applied at export rather than demanded of the
+ * author. That is deliberate: `Pending` means "no decision has been made yet", which is exactly what
+ * an absent field already says, so treating absence as a missing-field warning would fire on every
+ * suite authored before this contract existed while telling a reader nothing new. An unrecognised
+ * VALUE is a different matter — it means someone typed a decision the lifecycle does not define —
+ * and that does warn.
+ *
+ * Neither field is in REQUIRED_FIELDS for the same reason: a case with no review decision is not
+ * unexecutable, it is simply unreviewed.
+ */
+const LIFECYCLE_FIELDS = ['review', 'automation'];
+const LIFECYCLE_VALUES = ['Pending', 'Approved', 'Rejected'];
+const LIFECYCLE_DEFAULT = 'Pending';
+
+/** Canonicalises a lifecycle value's casing so `approved` and `Approved` are the same decision. */
+function normalizeLifecycleValue(raw) {
+  if (!raw) return null;
+  const trimmed = String(raw).trim();
+  if (!trimmed) return null;
+  return LIFECYCLE_VALUES.find((v) => v.toLowerCase() === trimmed.toLowerCase()) || trimmed;
+}
 
 /** How multi-line Steps collapse into one spreadsheet cell. */
 const STEP_JOINER = ' | ';
@@ -134,6 +168,24 @@ function parseTestCases(markdown, options = {}) {
         + '— exported as an empty cell; the Markdown suite needs fixing, not the workbook'
       );
     }
+    // Lifecycle columns: absent means "no decision yet", which IS `Pending` — so default it
+    // silently. A present but unrecognised value is an authoring error and is reported, because it
+    // would otherwise reach a reviewer looking like a decision the lifecycle does not define.
+    for (const key of LIFECYCLE_FIELDS) {
+      const normalized = normalizeLifecycleValue(current.record[key]);
+      if (!normalized) {
+        current.record[key] = LIFECYCLE_DEFAULT;
+      } else if (!LIFECYCLE_VALUES.includes(normalized)) {
+        const label = FIELDS.find((f) => f.key === key).label;
+        warnings.push(
+          `${source}${current.record.id}: ${label} is "${normalized}" — expected one of `
+          + `${LIFECYCLE_VALUES.join(', ')}; exported as written, the suite needs fixing`
+        );
+        current.record[key] = normalized;
+      } else {
+        current.record[key] = normalized;
+      }
+    }
     cases.push(current.record);
     current = null;
   };
@@ -216,4 +268,13 @@ function toRows(cases) {
   ];
 }
 
-module.exports = { parseTestCases, toRows, FIELDS, REQUIRED_FIELDS, STEP_JOINER };
+module.exports = {
+  parseTestCases,
+  toRows,
+  FIELDS,
+  REQUIRED_FIELDS,
+  STEP_JOINER,
+  LIFECYCLE_FIELDS,
+  LIFECYCLE_VALUES,
+  LIFECYCLE_DEFAULT,
+};

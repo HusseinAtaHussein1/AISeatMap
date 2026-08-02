@@ -6,6 +6,116 @@ Each agent file now retains only its `Pipeline position` and `Traceability` line
 
 ---
 
+## 2026-08-01 — `Review` gates BOTH branches, and lifecycle decisions can be made in Excel
+
+User-mandated, in two parts that arrived together and belong together.
+
+### Part 1 — Stage `4M` now gates on `Review = Approved`
+
+The lifecycle columns were introduced earlier the same day with `Review` gating automation only; `manual-execution-skill` said explicitly that Stage `4M` did not consume them. The reviewer's objection settles it: *some of the test cases are wrong and I am still reviewing them.* Executing those spends a real tester's time and, on a shared environment, real data — and when one fails, the result cannot distinguish **the application is wrong** from **the test case is wrong**, which is the only thing an execution result exists to establish. `Review = Approved` is precisely the statement "if this fails, the application is at fault."
+
+| Branch | Gate |
+|---|---|
+| Stage `4M` — Manual Execution | `Review = Approved` |
+| Stage `4A` — Automation | `Review = Approved` **AND** `Automation = Approved` |
+
+- **`Automation` is still never read by `4M`.** `Automation = Rejected` is the *reason* a case must be exercised by hand, not a reason to skip it. Letting an automation decision narrow manual coverage would be exactly backwards.
+- **New seventh Result Classification: `Excluded`** (`manual-execution-skill` §8), reason mandatory and exactly one of `Pending Review` / `Rejected at Review`. It is deliberately **not** `Skipped`: `Skipped` was authorized and this stage chose not to run it; `Excluded` was never in the executable set. Collapsing them makes *how much of the approved suite did we finish?* uncomputable, because the denominator would mix "you told me not to" with "I decided not to."
+- **Two denominators, always reported separately** — `Executable scope` (`Review = Approved`), which the pass rate is computed against, and `Suite total`. This is the whole point of the status: without it a run reads "3 of 3 passed" while 48 cases went unexamined. New **Authorized Coverage** metric = executable scope ÷ suite total.
+- **Zero approved cases is a halt**, not a run reporting "0 executed, 0 failures" — at a glance that is indistinguishable from a clean run.
+- **The gate does not replace the Stage 3 checkpoint.** They act at different grains: the artifact's `status:` header answers "may this suite be used at all?", `Review` answers "is *this case* correct?"
+
+### Part 2 — `cli.js --import-lifecycle`: decisions may be recorded in the workbook
+
+A reviewer marks 52 rows in the spreadsheet, because that is where reviewing happens. Before this, that had two outcomes and both were bad: the next export **silently discarded** the decisions (the exact failure §9.1 exists to prevent, aimed at the reviewer instead of the author), or the reviewer was told to hand-edit 52 Markdown blocks and the review effectively did not happen. So the direction of derivation is preserved and made explicit rather than relaxed:
+
+```
+content    Markdown ──► Excel      (export — every column)
+decisions  Markdown ◄── Excel      (import — Review and Automation ONLY)
+```
+
+- **Narrow on purpose.** A `Title`, `Steps`, or `Expected Result` edited in the workbook is **not** imported and is still discarded on the next export — those are derived content, and editing them there is the mistake §9.1 prevents. A lifecycle decision is not derived content, which is what makes it the sole exception.
+- **New `readWorkbook.js`** — a dependency-free `.xlsx` reader (`platform_core/` must run on a clean install). It handles both what we write (STORED entries, `t="inlineStr"`) and what a spreadsheet application writes after a human saves (DEFLATE, `xl/sharedStrings.xml`, `t="s"`, **empty cells omitted entirely**). Cell references are honoured rather than assuming dense ordered cells — a positional read would slide `Review` into `Notes` the moment a reviewer left one cell blank, silently and with plausible values.
+- **Safe by construction:** an unrecognised value warns and changes nothing rather than being coerced; casing is normalised; a workbook row with no matching Markdown case warns rather than inventing a test case; a workbook **older** than its Markdown is flagged, since the review may predate the current case text; and the document is preserved line-for-line, so the diff shows only the decisions that moved. Re-rendering parsed cases instead would have reformatted the reviewer's whole document — turning a two-value change into an unreviewable diff.
+- **Disagreement is a halt, not a guess.** While the workbook holds decisions the Markdown does not, Stage `4M` stops and recommends the import (`manual-execution-skill` §18) — guessing which file the reviewer meant is how a rejected case gets executed.
+
+### Part 3 — the Case Index is derived, and a rewrite resets `Review`
+
+Two consequences surfaced immediately once real decisions existed, and both were contradictions rather than gaps.
+
+**`cli.js --sync-index`.** The suite document opens with a Case Index repeating each case's Title, Tier, Priority, Tags, Review, and Automation — a *second* record of what the case bodies already state. It drifted within minutes: the reviewer's decisions and a rewritten title were in the bodies while the index still showed the superseded values, so the document disagreed with itself about which cases were approved. Same argument as §9.1, one level down — the case body is authoritative, the index is rendered from it, and so are `Total Test Cases`, `Tier breakdown`, and the lifecycle roll-up. It runs automatically after `--import-lifecycle`, since an import leaving the index stale would recreate the contradiction it removes. An index row whose case body no longer exists is **warned about, not deleted** — deleting it could silently drop a case someone meant to restore.
+
+**A material rewrite resets `Review` to `Pending`** (`test-design-skill` §6.3.1) — mandatory, in both directions, and the only lifecycle transition a skill may ever perform:
+
+```
+Approved  ──rewrite──►  Pending          (mandatory)
+Rejected  ──rewrite──►  Pending          (mandatory)
+anything  ──────────►  Approved          NEVER, under any circumstance
+```
+
+Every permitted move goes *toward* `Pending`: it only ever **removes** authorization, never grants it, which is what makes it safe to automate. Without it the column means two contradictory things — leaving `Approved` on a rewritten case launders a human's acceptance of *superseded text* onto text they never read (and both branches would then execute it), while leaving `Rejected` on a case rewritten *in response to that rejection* makes the gate a one-way trapdoor where fixing a case cannot unblock it. This mirrors the artifact-level rejection flow (`pipeline.md` §5 step 4) at test-case granularity. The prior verdict must be recorded in Notes and reported per case.
+
+**Files changed:** `manual-execution-skill/SKILL.md` (new §4.1, §8's seventh status, §9.2, §12 rules 6/21–24, §18's two new Stop Conditions, §20.1, §21) · `test-design-skill/SKILL.md` (§6.3.1 rewrite transition, §6.3.2 rewritten, §6.2, §18 #11) · `pipeline.md` (§4 Stage 3 bullet, Stage `4M` scope rule) · `templates/stage_3_test_design/TestCase_entry.md` · all three `templates/stage_4m_manual_execution/` report templates · `tools/test_suite_export/{cli.js,README.md}` + new `readWorkbook.js`, `importLifecycle.js`, `syncCaseIndex.js` · `docs/USER_GUIDE.md`.
+
+**Verified:** `test_suite_export` **74/74 pass** — 26 new. The reader is covered against both ZIP encodings and both string encodings plus the omitted-empty-cell column shift; the import against the narrow contract (an Excel-edited Title must *not* come back), line-for-line preservation, field insertion when absent, and the invalid-value and stale-workbook warnings; the index sync against body-wins precedence, tier derivation, recomputed totals, pipe escaping, and the missing-body warning. Round-trip confirmed live on the Agency suite: real decisions imported, index re-rendered, re-exported, and a second `--check` reported **0 changes**.
+
+---
+
+## 2026-08-01 — The Test Suite exporter's default target is the module, not the run (DREC-T04)
+
+Platform defect, found while regenerating the Agency workbook. The 2026-07-29 module-workspace migration moved Stage 3's output from `runs/{run}/test_design/` to `modules/{module}/test_design/`, but `tools/test_suite_export/cli.js` still resolved the **active run**. The documented normal call — no arguments — therefore could not find any module suite, and every export needed an explicit `--dir`. Worse than inconvenient: on a project that still had a pre-migration run folder, the default would silently render a *stale* copy while the current suite sat unexported.
+
+**Why the module is the right default, not just the other path.** The suite is **durable and owned by its module** — refined in place across runs, at a rising revision (`module_architecture.md` §10.5). A run only records which revision it executed. Resolution now follows what the artifact *is* rather than where some run happened to sit.
+
+Precedence, highest first — `--dir` (literal) → `--run` (historic) → `--module` (named) → the Active Module pointer:
+
+| | Resolves to | Missing suite is |
+|---|---|---|
+| `--dir <path>` | that literal folder | an error |
+| `--run <run-folder>` | `runs/{run}/test_design/` — **retained for historic layouts only**, never the default | an error that names the module path instead |
+| `--module <slug>` | `modules/{slug}/test_design/` — slug, display name, or unambiguous prefix | an error listing what is registered |
+| *(default)* | `modules/{slug}/test_design/` for **every** active module | **skipped**, per module |
+
+- **Neither pointer is guessed.** Modules come from the Active Module pointer via `module_manager` (`module_architecture.md` §6.5 #1), runs from the Active Run pointer via `run_manager`. With nothing active the tool reports how to set it rather than falling back to "the only module" or "the newest" — the fallback that scatters one module's artifacts across unrelated folders.
+- **A multi-module selection exports one workbook per module, never a merged one**, and a module that has not reached Stage 3 is *skipped and reported* rather than aborting its siblings. That asymmetry is deliberate: under a `multi` or `full-project` pointer (§9.1) an empty module is an expected state, while a human naming one target that isn't there is an error.
+- **The reported source is the resolved selection, not the registry's recorded scope** — an `AGENTIC_TESTING_MODULE` override changes what this process exports without touching the file, so the stored scope can disagree with what actually ran.
+
+**Files changed:** `tools/test_suite_export/{cli.js,README.md}` · new `__tests__/cli.test.js` · `test-design-skill/SKILL.md` §9.1 · `docs/USER_GUIDE.md`.
+
+**Verified:** `test_suite_export` **48/48 pass** (8 new tests pinning the default to the module, the multi-module fan-out, `--module` prefix resolution, both "ask, don't guess" errors, and `--run`'s retained historic behaviour). The Agency workbook was regenerated by the plain no-argument call: `active module: agency`, 52 cases, exit 0.
+
+---
+
+## 2026-08-01 — Test Case lifecycle: the Review and Automation columns
+
+User-mandated. The Manual Test Suite recorded what to test but not **what a human had decided about each case** — whether it had been reviewed, and whether it should be automated. Automation intent existed only as an advisory `AutomationCandidate` tag plus a Coverage Report list, neither binding, and both able to disagree with whatever Stage `4A` concluded. Two columns replace that.
+
+**Additive, not a replacement.** Columns A–J of the workbook are unchanged in content, name, and order. The two new columns are appended as K and L, because they record decisions made *after* a case is written.
+
+| Column | Records | Values | Default |
+|---|---|---|---|
+| **Review** | Human review status of the case after Stage 3 | `Pending` · `Approved` · `Rejected` | `Pending` |
+| **Automation** | Whether the approved case should be automated | `Pending` · `Approved` · `Rejected` | `Pending` |
+
+**The two rules that carry the weight:**
+
+1. **No skill may change `Review`.** Stage 3 always writes `Pending`; only a human reviewer, or a review process a human explicitly requested, may advance it. A skill that advanced its own review status would have reviewed its own work — the same reasoning that forbids a stage inferring its own checkpoint approval (`pipeline.md` §5.3, §6 Rule 6), applied per test case.
+2. **Stage `4A` gates on both:** `Review = Approved AND Automation = Approved`. Every other combination is out of scope — including `Review: Pending` with `Automation: Approved`, which is not a shortcut, because automating an unreviewed case encodes an unaccepted expectation into executable code. `Automation: Rejected` means the case stays manual by decision and is **never** reported as an automation coverage gap.
+
+**Absence vs. an undefined value — a deliberate asymmetry.** An omitted field exports as `Pending` silently, since "no decision yet" is exactly what absence already means and warning on it would fire against every pre-existing suite. An *unrecognised* value (`Review: Maybe`) exports as written **and warns**, because someone recorded a decision the lifecycle does not define. Casing is normalised. Neither column is a `REQUIRED_FIELD`: an unreviewed case is not an unexecutable one.
+
+**Retired:** the advisory `AutomationCandidate` tag and the Coverage Report's Automation Candidates section. §18 #11 becomes **Automation Status** — a roll-up of the binding column rather than a separate recommendation. The engineering judgment behind the old candidate list is preserved as *guidance for the reviewer setting the column*, not as a decision.
+
+**Not changed, deliberately:** traceability. Requirement/Discovery/Finding/Evidence references, Risk, and Category stay in `TraceabilityMatrix.md` keyed by Test Case ID (§6.2). A `Related Requirements` column was considered and rejected — it would duplicate the Matrix into the sheet and give the suite a second copy to drift. The lifecycle columns are workflow *state*, not traceability, which is why they belong on the sheet and a requirements column does not.
+
+**Files changed:** `test-design-skill/SKILL.md` (§6.1 field list, new §6.3, §9.1, §18 #11, Execution Rule 25) · `automation-skill/SKILL.md` (the gate) · `pipeline.md` (§4 Stage 3 and Stage `4A` scope rules) · `templates/stage_3_test_design/{TestCase_entry,TestCases_Module}.md` · `tools/test_suite_export/{parseTestCases.js,README.md}` and its three test files · `docs/USER_GUIDE.md`.
+
+**Verified:** `test_suite_export` **40/40 pass** (4 new tests covering defaulting, casing normalisation, the invalid-value warning, and non-requiredness). Repo-wide sweep confirms zero live `AutomationCandidate` references outside this changelog and the deliberate "why it was retired" notes. The one live suite (`modules/agency`, 52 cases) was migrated: both columns added to every case at `Pending`, the retired tag removed from all 46 occurrences, and the workbook regenerated — 12 columns confirmed present with values populated.
+
+*(The 4 failing tests in `platform_core/tools/browser_provider` are pre-existing and unrelated: that tool is untracked, never committed, and its `providers/playwright_node/driver.js` does not exist.)*
+
+---
+
 ## 2026-07-29 — Two pipelines: the Manual and Automation branches diverge after Stage 3, and Self-Healing becomes its own stage
 
 User-mandated restructure. The platform was a single 7-stage chain in which Manual Execution (Stage 4) produced an Automation Candidate Package that determined Stage 5's scope — so no automation could be generated until a full manual pass had run and been approved. That coupling is removed. The platform now defines **two independent pipelines** sharing Stages 1–3, and the repair engine moves out of the execution stage into a new, optional stage of its own.

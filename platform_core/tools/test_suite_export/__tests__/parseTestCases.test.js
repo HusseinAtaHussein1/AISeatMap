@@ -208,9 +208,68 @@ test('toRows emits the §6.1 header in order, then one row per case', () => {
   assert.deepStrictEqual(rows[0], [
     'Test Case ID', 'Title', 'Objective', 'Preconditions', 'Test Data',
     'Steps', 'Expected Result', 'Priority', 'Tags', 'Notes',
+    // Lifecycle columns, appended 2026-08-01 — decisions made after the case is written, so they
+    // sit at the end. Their position is asserted here because the order is a contract, not a
+    // preference: a reader diffing two workbooks relies on columns not shifting under them.
+    'Review', 'Automation',
   ]);
   assert.strictEqual(rows.length, cases.length + 1);
   for (const row of rows) assert.strictEqual(row.length, FIELDS.length);
   // An absent optional field becomes '', never the string "undefined".
   assert.strictEqual(rows[1][9], '');
+});
+
+test('lifecycle columns default to Pending when the author omits them', () => {
+  const { cases, warnings } = parseTestCases(REFERENCE_SHAPE);
+  for (const c of cases) {
+    assert.strictEqual(c.review, 'Pending');
+    assert.strictEqual(c.automation, 'Pending');
+  }
+  // Absence is not a defect: "no decision yet" is exactly what Pending means, so a suite authored
+  // before this contract existed must export cleanly rather than warn on every case.
+  assert.ok(
+    !warnings.some((w) => /Review|Automation/.test(w)),
+    'defaulting is silent'
+  );
+});
+
+test('lifecycle columns are read and case-normalised when present', () => {
+  const md = [
+    '## TC-L-001', '', '**Title:** T', '', '**Objective:** O', '',
+    '**Steps:**', '1. Go.', '', '**Expected Result:** R', '',
+    '**Priority:** P1', '', '**Tags:** Atomic', '',
+    '**Review:** approved', '', '**Automation:** REJECTED', '',
+  ].join('\n');
+  const { cases, warnings } = parseTestCases(md);
+  assert.strictEqual(cases[0].review, 'Approved');
+  assert.strictEqual(cases[0].automation, 'Rejected');
+  assert.strictEqual(warnings.length, 0, 'casing alone is not an authoring error');
+});
+
+test('an unrecognised lifecycle value warns but still exports as written', () => {
+  const md = [
+    '## TC-L-002', '', '**Title:** T', '', '**Objective:** O', '',
+    '**Steps:**', '1. Go.', '', '**Expected Result:** R', '',
+    '**Priority:** P1', '', '**Tags:** Atomic', '',
+    '**Review:** Maybe', '',
+  ].join('\n');
+  const { cases, warnings } = parseTestCases(md);
+  assert.strictEqual(cases[0].review, 'Maybe', 'exported as written, never silently corrected');
+  assert.strictEqual(cases[0].automation, 'Pending', 'the other column still defaults');
+  assert.ok(
+    warnings.some((w) => w.includes('Review is "Maybe"')),
+    'an undefined decision is surfaced'
+  );
+});
+
+test('lifecycle columns are not required fields', () => {
+  // A case with no review decision is unreviewed, not unexecutable — so it must never produce a
+  // "missing required field" warning, which is reserved for content Stage 4M cannot run without.
+  const md = [
+    '## TC-L-003', '', '**Title:** T', '', '**Objective:** O', '',
+    '**Steps:**', '1. Go.', '', '**Expected Result:** R', '',
+    '**Priority:** P1', '', '**Tags:** Atomic', '',
+  ].join('\n');
+  const { warnings } = parseTestCases(md);
+  assert.strictEqual(warnings.length, 0);
 });

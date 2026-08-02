@@ -265,6 +265,24 @@ supplier-credential values the agency never held. Four restoration routes were a
 refused. Restoring it requires either entering data the record did not previously contain, or a database
 correction — a decision for the reviewer, not for this stage.
 
+**Decision taken (2026-08-02, reviewer): restore in the database**, so that no invented credential data enters
+the record. The target state below is what the form displayed before the change, read from the verified
+baseline; it is stated as observable form state rather than as table names, because this stage never inspected
+the schema and should not guess at it.
+
+| What | Before the run (target) | Now |
+|---|---|---|
+| `Select Product` → `Flight` | selected | **not selected** |
+| `Select Product` → `Others` | selected | selected (unchanged) |
+| Supplier credential grid row | `Sabre` · credential name empty · product `Flight` · description empty, with its selection checkbox ticked | row absent from the form |
+| Product dropdown beside that row | `10` | control absent |
+| Everything else on the record | see `artifacts/BASELINE_AGN2_verified.json` | matches |
+
+Agency is `AGN2 — Test Egypt`, reached at `/admin/agency/edit/949`. After the correction, reopening the form
+should show `Flight` selected, the `Sabre` row present and ticked, and the dropdown reading `10`; the
+published baseline file can be diffed against the reopened form to confirm the whole record, not just this
+part of it.
+
 Everything else this run touched was restored and re-verified against a 74-value baseline — 25 text fields and
 textareas, 38 checkboxes and radios, 8 dropdowns, the uploaded document filenames, the stored logo path and the
 supplier grid. That reference state is published alongside the evidence as

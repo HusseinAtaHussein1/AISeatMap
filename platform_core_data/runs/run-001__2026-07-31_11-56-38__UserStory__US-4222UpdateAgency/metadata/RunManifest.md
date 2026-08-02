@@ -7,7 +7,7 @@
 | Workflow | user_story_run |
 | Status | Preparing |
 | Created | 2026-07-31T08:56:38.061Z |
-| Last updated | 2026-08-01T08:34:41.619Z |
+| Last updated | 2026-08-02T13:40:18.729Z |
 
 ## 1. Code-State Anchor
 
@@ -30,7 +30,8 @@
 |---|---|---|---|---|---|---|---|
 | Stage 1 — Project Context | — | 2026-07-31T10:56:38.600Z | Approved | Ahmed Ayman | 2 | — | — |
 | Stage 2 — Discovery | — | 2026-08-01T08:24:55.105Z | Approved | Ahmed Ayman | 2 | — | — |
-| Stage 3 — Test Design | — | 2026-08-01T08:34:41.619Z | Pending Review | — | 1 | — | — |
+| Stage 3 — Test Design | [TestCases_Agency.md](platform_core_data/modules/agency/test_design/TestCases_Agency.md) | 2026-08-02T13:40:18.729Z | Approved | Ahmed Ayman | 1 | Pipeline | — |
+| Stage 4M — Manual Execution | [ManualExecutionResults.md](platform_core_data/runs/run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency/manual_execution/ManualExecutionResults.md) | 2026-08-02T13:39:47.631Z | Pending Review | — | 1 | Pipeline | — |
 
 ## 3. Cross-Run Reuse / Source Runs
 
@@ -56,6 +57,8 @@
 | 4 | 2026-07-31T11:27:30.702Z | Stage 2 — Discovery | Pending Review | Run Manager | — |
 | 5 | 2026-08-01T08:24:55.105Z | Stage 2 — Discovery | Pending Review → Approved | Ahmed Ayman | — |
 | 6 | 2026-08-01T08:34:41.619Z | Stage 3 — Test Design | Pending Review | Run Manager | — |
+| 7 | 2026-08-02T13:39:35.959Z | Stage 3 — Test Design | Pending Review → Approved | Ahmed Ayman | — |
+| 8 | 2026-08-02T13:39:47.631Z | Stage 4M — Manual Execution | Pending Review | Run Manager | — |
 
 ## 5. Declared Gaps
 

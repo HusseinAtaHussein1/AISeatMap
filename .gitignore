@@ -107,3 +107,11 @@ platform_core_data/workspace/**/target/
 platform_core_data/workspace/**/allure-results/
 platform_core_data/workspace/**/execution-summary/
 platform_core_data/workspace/**/generatedReport_*.zip
+
+# Stage evidence is a deliverable, not a log. The `*.log` rule above matched
+# `discovery/evidence/session_console.log` and dropped it from the commit
+# silently — a console capture disappearing is the exact failure the evidence
+# folder exists to prevent, and it is unrecoverable once the session is over.
+# Re-included by path, so an incidental log anywhere else is still ignored.
+!platform_core_data/modules/**/evidence/**/*.log
+!platform_core_data/runs/**/artifacts/**/*.log

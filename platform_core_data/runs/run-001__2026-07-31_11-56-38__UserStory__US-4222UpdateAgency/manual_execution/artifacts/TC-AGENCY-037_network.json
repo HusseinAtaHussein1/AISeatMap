@@ -1,0 +1,41 @@
+{
+  "flowUrl": "http://192.168.1.70/admin/agency/edit/949",
+  "agency": "AGN2 Test Egypt",
+  "events": [
+    {
+      "kind": "request",
+      "method": "PUT",
+      "url": "http://192.168.1.70:8080/odeysysadmin/Admin2/agency/949",
+      "postData": "{\"branchId\":948,\"name\":\"Test Egypt\",\"stateId\":1035,\"cityId\":1300,\"postOffice\":\"0022\",\"companyUrl\":\"asdas\",\"faxNumber\":\"\",\"address1\":\"US-4222 TC-037 network capture\",\"address2\":\"down town\",\"iata\":false,\"agencyLegalType\":1,\"countryId\":67,\"phoneNumber\":\"+20-1149730331\",\"agencyOwner\":{\"contactPerson\":\"Essam Saady\",\"email\":\"test.user.ndc@gmail.com\",\"phoneNumber\":\"+20-1000000000\"},\"documents\":[{\"docId\":\"/fstore/org/Test/2026/08/Test Egypt/screen-1-logo-black-and-white.png\",\"startDate\":\"2020-07-05\",\"endDate\":\"2030-12-28\"}],\"logo\":{\"logoId\":\"/fstore/org/Test/2026/08/Test Egypt/Capture1.JPG\"},\"travelContacts\":[{\"name\":\"Essam\",\"email\":\"ESaady@wondertravel-eg.com\",\"phoneNumber\":\"+966-540951737\"}],\"bankAccounts\":[{\"accountNumber\":\"\",\"accountType\":-1,\"bankName\":\"\"}],\"paymentSetting\":{\"invoiceGeneration\":1,\"creditLimit\":1000000,\"topUpLimit\":5000000,\"outstandingThreshold\":5,\"targetDates\":[],\"creditTerm\":1000,\"reachingPercentage\":null,\"warningPrompt\":null,\"creditAgency\":false,\"paymentOptionIds\":[197]},\"productAccessDetails\":[{\"status\":1,\"description\":\"sad\",\"supplierId\":133,\"credentialId\":304,\"checked\":true,\"airlineSupplierCredential\":{}}],\"searchResultLimitIsEnabled\":true,\"blueScreenCredentials\":[],\"remarks\":\"a\",\"importPNROption\":true,\"transferPnrOption\":true,\"nativeCommandEnabled\":null,\"productIds\":[2,4,1,3],\"approvalStatus\":0}",
+      "at": "2026-08-02T10:26:45.519Z"
+    },
+    {
+      "kind": "navigation",
+      "url": "http://192.168.1.70/admin/agency",
+      "at": "2026-08-02T10:26:48.259Z"
+    },
+    {
+      "kind": "request",
+      "method": "POST",
+      "url": "http://192.168.1.70:8080/odeysysadmin/Admin2/agency/search?size=10&page=1",
+      "postData": "{\"status\":1}",
+      "at": "2026-08-02T10:26:48.278Z"
+    },
+    {
+      "kind": "response",
+      "method": "PUT",
+      "url": "http://192.168.1.70:8080/odeysysadmin/Admin2/agency/949",
+      "status": 204,
+      "body": "",
+      "at": "2026-08-02T10:26:48.283Z"
+    },
+    {
+      "kind": "response",
+      "method": "POST",
+      "url": "http://192.168.1.70:8080/odeysysadmin/Admin2/agency/search?size=10&page=1",
+      "status": 200,
+      "body": "{\"payload\":[{\"id\":11440,\"name\":\"AbouBakr\",\"code\":\"AGN10022\",\"countryName\":\"Egypt\",\"cityName\":\"Cairo\",\"branchName\":\"kiko\",\"status\":1,\"approvalStatus\":1},{\"id\":11833,\"name\":\"Louie_b38ae8\",\"code\":\"AGN10217\",\"countryName\":\"Egypt\",\"cityName\":\"Badrashin\",\"branchName\":\"Mina_ac4548\",\"status\":1,\"approvalStatus\":1},{\"id\":11438,\"name\":\"killua\",\"code\":\"AGN10020\",\"countryName\":\"Egypt\",\"cityName\":\"Cairo\",\"branchName\":\"Nartuo\",\"status\":1,\"approvalStatus\":1},{\"id\":10962,\"name\":\"Mamdouh\",\"code\":\"AGN9781\",\"countryName\":\"Egypt\",\"cityName\":\"Badr\",\"branchName\":\"NDC2_Hatem Mamdouh\",\"status\":1,\"approvalStatus\":1},{\"id\":11018,\"name\":\"Uplift2_Mohanad Dawood\",\"code\":\"AGN9809\",\"countryName\":\"Egypt\",\"cityName\":\"Badr\",\"branchName\":\"Uplift2_Mohanad Dawood\",\"status\":1,\"approvalStatus\":1},{\"id\":11830,\"name\":\"Pearle_41ccf9\",\"code\":\"AGN10216\",\"countryName\":\"Egypt\",\"cityName\":\"Badrashin\",\"branchName\":\"Basil_920239\",\"status\":1,\"approvalStatus\":1},{\"id\":11006,\"name\":\"NDC1_Ahmed Ayman\",\"code\":\"AGN9799\",\"countryName\":\"Egypt\",\"cityName\":\"Badr\",\"branchName\":\"NDC1_Ahmed Ayman\",\"status\":1,\"approvalStatus\":1},{\"id\":11828,\"name\":\"Lani_a6b460\",\"code\":\"AGN10215\",\"countryName\":\"Egypt\",\"cityName\":\"Badrashin\",\"branchName\":\"Nelson_978dd5\",\"status\":1,\"approvalStatus\":1},{\"id\":11797,\"name\":\"Gulf KSA\",\"code\":\"AGN10197\",\"countryName\":\"Saudi Arabia\",\"cityName\":\"Berdyansk\",\"branchName\":\"wonder saudia\",\"status\":1,\"approvalStatus\":1},{\"id\":11826,\"name\":\"Jada_194753\",\"code\":\"AGN10214\",\"countryName\":\"Egypt\",\"cityName\":\"Badrashin\",\"branchName\":\"Deon_05ae8d\",\"status\":1,\"approvalStatus\":1}],\"total\":9027}",
+      "at": "2026-08-02T10:26:48.999Z"
+    }
+  ]
+}

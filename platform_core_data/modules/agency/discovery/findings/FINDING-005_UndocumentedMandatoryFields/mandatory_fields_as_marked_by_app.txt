@@ -1,0 +1,23 @@
+Branch
+Agency
+Country
+State
+City
+Post office box
+Address
+Phone No
+Contact person
+Email ID
+Phone Number
+Upload document
+Contract Start Date
+Contract End Date
+Upload logo
+Name
+Invoice generation
+Credit limit
+Top up limit
+Outstanding Threshold
+Credit Terms (Days)
+Payment option
+Remarks

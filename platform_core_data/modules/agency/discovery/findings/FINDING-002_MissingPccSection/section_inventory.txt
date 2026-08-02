@@ -1,0 +1,170 @@
+Company
+Branch
+Agency
+Staff
+Welcome
+odeysysadmin
+Dashboard
+Admin
+Master
+Rule Engine
+Settings
+User Management
+Booking-Mid Office
+Profile
+Reports
+PNR Query
+Transfer PNR
+
+Update Agency
+
+Branch *
+Test (BRN2)
+Agency
+*
+Country
+*
+State *
+Cairo
+City *
+Cairo
+Post office box
+*
+Company URL
+Fax No
+Address *
+
+ 
+
+Address
+
+ 
+
+Phone No *
+IATA Agency
+:
+yes
+No
+Agency Business Type
+:
+B2B
+Freelancer
+
+Agency Owner Details
+
+Contact person
+*
+Email ID
+*
+Phone Number *
+
+Upload Document
+
+Upload document
+*
+
+screen-1-logo-black-and-white.png
+
+Contract Start Date *
+Contract End Date *
+Add
+
+Agency Logo
+
+Upload logo
+*
+
+Wonder Travel Sales Contact
+
+Name
+*
+Email ID
+*
+Phone Number *
+Add
+
+Bank Account Details
+
+Account Number
+Account Type
+Select
+Bank name
+Add
+
+Payment settings
+
+Payment terms
+
+Invoice generation *
+monthly
+Credit limit
+*
+Top up limit
+*
+Outstanding Threshold
+*
+Target
+Month
+Select
+Year
+Select
+Set target
+Credit Terms (Days)
+*
+Reaching Percentage
+Warning Prompt (Days)
+Credit agency
+Payment option *
+:
+Cash
+Wallet
+Credit Card
+BANQUE MISR
+Fawry
+Isaiah
+Filomena
+Astrid
+Olive
+Dan
+Rico
+Collin
+Bryant
+Emilio
+Tracy
+Alma
+Desmond
+Enda
+Hiram
+Shannon
+Quinton
+Monserrate
+Joey
+Israel
+Kasi
+Joan
+m
+f
+
+Product Access Details
+
+Select Product
+:
+Flight
+Others
+STATUS	SUPPLIER NAME	CREDENTIAL NAME	PRODUCT NAME	DESCRIPTION
+	SalamAir	Salam Air Live	Flight	
+	FlyNas	fly nas cred	Flight	
+Enable Search Limit
+
+Agency Features
+
+Import PNR Option
+Transfer Pnr Option
+Blue Command Screen
+This option requires the Galileo supplier to be enabled
+Remarks *
+Cancel
+Send For Approval
+Approve
+Reject
+Copyright © Wonder Travel 2026. All Rights Reserved. RC8

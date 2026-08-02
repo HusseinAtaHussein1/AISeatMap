@@ -1,0 +1,15 @@
+{
+  "folderName": "run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency",
+  "index": 1,
+  "scope": "UserStory",
+  "target": "US-4222 Update Agency",
+  "workflow": "user_story_run",
+  "targetRef": "f7009447e8704ac516008843b343b0999212b039",
+  "targetRefScope": [],
+  "targetRefCapturedAt": "2026-07-31T08:56:38.061Z",
+  "targetRepoRoot": "E:/Projects/agentic-ai-testing-platform",
+  "targetRefReason": "git repository at E:/Projects/agentic-ai-testing-platform",
+  "createdBy": "Run Manager",
+  "startedTime": "2026-07-31T08:56:38.061Z",
+  "status": "Preparing"
+}

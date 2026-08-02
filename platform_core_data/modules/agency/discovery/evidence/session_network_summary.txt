@@ -1,0 +1,2 @@
+136 network events captured
+0 responses with status >= 400

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "activeRun": {
+    "folderName": "run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency",
+    "index": 1,
+    "scope": "UserStory",
+    "target": "US-4222UpdateAgency",
+    "status": "Preparing",
+    "title": null,
+    "startedTime": "2026-07-31T08:56:38.061Z",
+    "stagesPresent": [],
+    "path": "platform_core_data/runs/run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency"
+  },
+  "switchedAt": "2026-07-31T08:56:38.061Z",
+  "setBy": "Run Manager",
+  "previousRun": null,
+  "note": "created by user_story_run"
+}

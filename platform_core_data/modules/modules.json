@@ -1,0 +1,1008 @@
+{
+  "schemaVersion": 1,
+  "derivedFrom": {
+    "prdPath": "platform_core_data/knowledge_base/PRD.md",
+    "prdSha256": null,
+    "capturedAt": "2026-07-31T08:55:57.584Z"
+  },
+  "approvedAt": "2026-07-31T10:56:12.044Z",
+  "approvedBy": "Ahmed Ayman",
+  "activeModules": [
+    "agency"
+  ],
+  "activeScope": "single",
+  "spansEveryModule": true,
+  "switchedAt": "2026-07-31T10:56:12.213Z",
+  "setBy": "Module Manager",
+  "previousActiveModules": [],
+  "modules": [
+    {
+      "slug": "authentication",
+      "name": "Authentication",
+      "description": "Admin and Portal login, OTP two-factor, trusted-device bypass, account lock/unlock, forgot password, change password, logout. PRD §4 (AUTH-01..30), §9.1.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:57.584Z",
+      "updatedAt": "2026-07-31T08:55:57.584Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "dashboard",
+      "name": "Dashboard",
+      "description": "Dashboard flight-search entry point, booking-reference lookup with date filter, navigation to itinerary and ticketed document. PRD §7.1 (DASH-01..03).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:57.645Z",
+      "updatedAt": "2026-07-31T08:55:57.645Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "role-management",
+      "name": "Role Management",
+      "description": "Named roles as a permission matrix over module/sub-module/tab with View/Edit/Approval, role approval workflow, status-filtered search, clone, and runtime permission enforcement via staff provisioning. PRD §5 (ROLE-01..10), §13 GAP-6, §11 E2E-02.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:57.706Z",
+      "updatedAt": "2026-07-31T08:55:57.706Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "company",
+      "name": "Company",
+      "description": "Company-level master data: Operating Countries, Departments (with referential-integrity delete), and Admin-side Top-Up Requests including Advance Credit. PRD §7.2 (ORG-01, ORG-02, ORG-13), §11 E2E-05.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:57.767Z",
+      "updatedAt": "2026-07-31T08:55:57.767Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "branch",
+      "name": "Branch",
+      "description": "Branch creation under Company with credit limit, top-up limit, credit terms, owner details and assigned supplier credentials; status-filtered search. PRD §7.2 (ORG-03, ORG-04).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:57.829Z",
+      "updatedAt": "2026-07-31T08:55:57.829Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "agency",
+      "name": "Agency",
+      "description": "Agency lifecycle under a Branch: multi-section create and update (Agency Master, Owner Details, Documents with contract dates, Logo, Sales Contact, Bank Accounts, Payment Settings, Product Access, Airline Supplier Credential PCC, Import PNR toggle), maker-checker approval, search, self-registration requests, agent login details. PRD §7.2 (ORG-05..ORG-10), §13 GAP-7/GAP-8, §11 E2E-04.",
+      "status": "Active",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:57.892Z",
+      "updatedAt": "2026-08-02T07:00:28.102Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Approved",
+          "artifactPath": "platform_core_data/modules/agency/context/ProjectContext.md",
+          "lastRun": "run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency",
+          "lastUpdated": "2026-07-31T11:42:43.385Z",
+          "revisionCount": 2,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Approved",
+          "artifactPath": "platform_core_data/modules/agency/discovery/QA_Assessment_Report.md",
+          "lastRun": "run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency",
+          "lastUpdated": "2026-08-01T08:24:54.935Z",
+          "revisionCount": 2,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Approved",
+          "artifactPath": "platform_core_data/modules/agency/test_design/TestCases_Agency.md",
+          "lastRun": "run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency",
+          "lastUpdated": "2026-08-02T07:00:28.102Z",
+          "revisionCount": 2,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "staff",
+      "name": "Staff",
+      "description": "Operator staff users: creation against a Role with department, approval list, and provisioned credentials; search and activate/deactivate. PRD §7.2 (ORG-11, ORG-12).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:57.956Z",
+      "updatedAt": "2026-07-31T08:55:57.956Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "master-geography",
+      "name": "Master Geography",
+      "description": "Region to Country to State to City hierarchy, passport-mandatory flags, Currency, and Rate of Exchange with its validation rules. PRD §7.3 (GEO-01..11).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.017Z",
+      "updatedAt": "2026-07-31T08:55:58.017Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "master-flight",
+      "name": "Master Flight",
+      "description": "Airport, Airline (incl. LCC), RBD, Prefer Airline, BSP Commission with date/blackout windows, and Deal Code master data. PRD §7.4 (FLT-01..20).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.077Z",
+      "updatedAt": "2026-07-31T08:55:58.077Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "master-supplier",
+      "name": "Master Supplier",
+      "description": "Suppliers, Supplier Credentials (PCCs) with endpoint/timeout/limit and restricted airlines, Credential Fields, Flight Search Limitation, and the credential cascade to Branch and Agency. PRD §7.5 (SUP-01..12), §11 E2E-03/E2E-09.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.139Z",
+      "updatedAt": "2026-07-31T08:55:58.139Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "payment-gateway",
+      "name": "Payment Gateway",
+      "description": "Payment Method master data: add, edit, enable/disable, and the supported agency payment instruments. PRD §7.6 (PAY-01..03).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.202Z",
+      "updatedAt": "2026-07-31T08:55:58.202Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "rule-engine",
+      "name": "Rule Engine",
+      "description": "Markup, Discount, Service Charge, Cancellation Charge, Fare Rules, Offer Pricing, Terms and Conditions, Rule History; hierarchical Country-POS/Branch/Agency scoping and demonstrable price effect. PRD §7.7 (RUL-01..16), §11 E2E-01.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.263Z",
+      "updatedAt": "2026-07-31T08:55:58.263Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "search-and-booking",
+      "name": "Search and Booking",
+      "description": "Operator flight search on behalf of a branch, fare/segment/baggage detail panels, branded fares, passenger capture, Save Quote / Hold / Pay and Book, booking retrieval, My Quotes, Manual Booking Invoice. PRD §7.8 (BMO-01..26), §11 E2E-06.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.323Z",
+      "updatedAt": "2026-07-31T08:55:58.323Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "import-pnr",
+      "name": "Import PNR",
+      "description": "Importing a GDS-created PNR for ticketing and servicing: code validation, organisation enablement, ticketed/cancelled/cross-credential refusals, payment with unchanged fare. PRD §7.9 (IPN-01..13), §11 E2E-07.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.385Z",
+      "updatedAt": "2026-07-31T08:55:58.385Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "travellers",
+      "name": "Travellers",
+      "description": "Traveller/client profiles with personal and identity-document details, Admin and Portal creation, edit, activate/deactivate and search. PRD §7.10 (TRV-01..11).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.448Z",
+      "updatedAt": "2026-07-31T08:55:58.448Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "agency-user-administration",
+      "name": "Agency User Administration",
+      "description": "Admin-side management of agency users: search by agency, Super-Admin edit, immutable full name, activate/deactivate incl. the distinct Agency Owner control, and unlock. PRD §7.11 (USM-01..10).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.509Z",
+      "updatedAt": "2026-07-31T08:55:58.509Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "admin-settings",
+      "name": "Admin Settings",
+      "description": "Global operator settings: flight-search result limit, upselling, refund; Super-Admin effect. PRD §7.12 (SET-01..04).",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.570Z",
+      "updatedAt": "2026-07-31T08:55:58.570Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "reports",
+      "name": "Reports",
+      "description": "The twelve operator reports (Agency Wallet, Booking, Import PNR, AR Ledger, Quotation, Released PNR, Sales, Statement, Sync PNR, Total Due to NDC, Wallet History, plus uncovered menu entries) and their shared mandatory-criteria, empty-state, pagination and Excel-export rules. PRD §7.13 (RPT-01..12), §6.2.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.631Z",
+      "updatedAt": "2026-07-31T08:55:58.631Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    },
+    {
+      "slug": "portal-self-service",
+      "name": "Portal Self Service",
+      "description": "Agency-facing NDC Portal: wallet top-up (Cash, Banque Misr, Fawry, Bank Transfer), agent profile management, and Settings/Financial per-airline markup. PRD §7.14 (PTL-01..15), §11 E2E-05/E2E-08.",
+      "status": "Proposed",
+      "derivedFromSections": [],
+      "createdAt": "2026-07-31T08:55:58.691Z",
+      "updatedAt": "2026-07-31T08:55:58.691Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      }
+    }
+  ]
+}

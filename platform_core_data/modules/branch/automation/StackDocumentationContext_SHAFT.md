@@ -1,0 +1,68 @@
+# Stack Documentation Context — SHAFT — run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch
+
+| Field | Value |
+|---|---|
+| Module | `branch` |
+| Produced by run | `run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch` |
+| Revision | 1 |
+| Framework | SHAFT Engine (Java) |
+| Detected At | 2026-08-03 |
+| Extractor | `platform_core/tools/mcp/stack_docs/` (no manifest to extract — see §6) |
+| Durable record updated | `platform_core_data/knowledge_base/stack.md` |
+
+## 1. Detected Stack
+
+| Field | Value | Source |
+|---|---|---|
+| Ecosystem(s) | Java (Maven) | Human decision at Framework Decision Gate — no existing manifest to detect from (greenfield) |
+| Automation Framework | SHAFT Engine | Human decision at Framework Decision Gate |
+| Language / Runtime | Java 17 (LTS; no project-stated version to detect, LTS chosen as the conservative default for a new project) | Assumed default — no source to detect from; flagged unpinned |
+| Build / Test Runner | Maven + TestNG | Standard SHAFT Engine convention (§8 of `automation-skill/SKILL.md`) — no existing `pom.xml`/`testng.xml` to detect from |
+
+## 2. Dependency Table
+
+| Library | Resolved Version | Pinned? | Source File | Context7 ID | Queried? |
+|---|---|---|---|---|---|
+| SHAFT_ENGINE (`io.github.shafthq:SHAFT_ENGINE`) | `9.4.20251220` | Yes — resolved and pinned during generation, not via Context7 (see §3 below for how) | `pom.xml` | Not resolved (Context7 unavailable) | No |
+| TestNG | Bundled/transitive via SHAFT_ENGINE — not independently resolved | No | — | Not resolved | No |
+| Allure (TestNG adapter) | Bundled/transitive via SHAFT_ENGINE — not independently resolved | No | — | Not resolved | No |
+
+**Correction during generation:** the groupId/artifactId originally assumed here (`com.shafthq:SHAFT_ENGINE`) failed Maven dependency resolution outright. A direct Maven Central search
+(`search.maven.org/solrsearch/select?q=SHAFT_ENGINE`) — performed live, not via Context7 — found the
+real coordinate is `io.github.shafthq:SHAFT_ENGINE`, with a newer, differently-named artifact
+(`io.github.shafthq:shaft-engine`, latest `10.3.20260707`) also published. `10.3.20260707`'s class
+files require JDK 25 (class file version 69), which exceeds this environment's JDK 23 compiler (max
+supported version 67); `9.4.20251220` (class file version 65, JDK 21) was pinned instead as the
+newest version this toolchain can actually compile against — confirmed by a real `mvn test-compile`
+run producing 7/7 compiled classes with zero errors. The corrected coordinate/version is reflected in
+`pom.xml` and above.
+
+## 3. Queries Performed
+
+| # | Library (Context7 ID) | Query | Outcome |
+|---|---|---|---|
+| 1 | SHAFT_Engine (attempted resolve, no ID obtained) | Maven dependency setup, DriverFactory initialization, Page Object Model, TestNG, Allure reporting configuration | **Failed** — Context7 MCP server returned "Invalid API key" (server unavailable/unapproved in this environment). No documentation was fetched. |
+
+**Non-Context7 verification performed instead** (recorded here for transparency, since it materially changed the Dependency Table above; not a substitute for §3's Context7 obligation, which remains unmet):
+
+| # | Action | Outcome |
+|---|---|---|
+| 2 | `curl` to `search.maven.org/solrsearch/select?q=SHAFT_ENGINE` | Found the real coordinate `io.github.shafthq:SHAFT_ENGINE` (and the newer, renamed `io.github.shafthq:shaft-engine`) — the originally-guessed `com.shafthq:SHAFT_ENGINE` does not exist |
+| 3 | `mvn test-compile` against the guessed coordinate | Failed — dependency resolution error, confirming #2 was necessary |
+| 4 | `javap -p` against the resolved `SHAFT_ENGINE-9.4.20251220.jar`'s `SHAFT$GUI$WebDriver`, `ElementActionsContract`/`Actions`, `BrowserActions`, `ElementAssertions`, `WebDriverBrowserValidationsBuilder`, `NativeValidationsBuilder`, `ValidationsExecutor` classes | Found the real, current fluent API surface (`driver.element()`, `driver.browser()`, `driver.assertThat().element(locator).attribute(...).isEqualTo(...).perform()`), which differs from this skill's initial assumption of a simpler `getAttribute()`/`getText()` surface. Page Objects and the test class were corrected accordingly. |
+| 5 | `mvn test-compile` against the corrected coordinate/version/API | **Succeeded** — 7/7 classes compiled with zero errors |
+
+## 4. Guidelines Extracted
+
+*(None — no query succeeded. No guideline in this artifact or in the generated code is sourced from fetched documentation. Generation below is based on SHAFT Engine's long-standing, publicly stable conventions — Maven coordinate `com.shafthq:SHAFT_ENGINE`, `DriverFactory`, Page Object Model, TestNG, `properties/execution.properties` — which are treated here as established platform/team convention, not as version-verified fetched guidance. This distinction is stated explicitly so it is never mistaken for a Context7-backed claim.)*
+
+## 5. Conflicts
+
+*(None — no fetched documentation exists to conflict with `automation_framework.md`, and `automation_framework.md`'s own Framework field was empty prior to this run; it is being populated by this run's Automation Plan, not contradicted by it.)*
+
+## 6. Documentation Gaps
+
+| Library / Scope | Gap | Why | Fallback Used |
+|---|---|---|---|
+| SHAFT_ENGINE API surface (version-specific guidance/changelog) | `context7` unavailable this run (Invalid API key); no version-specific written guidance was fetched for the pinned 9.4.20251220 release | The MCP server rejected the resolve-library-id call outright; no fetch was possible | The Maven coordinate and version were still resolved and verified two other ways during generation (Maven Central search for the coordinate; `javap` against the resolved jar for the real method signatures) — see §2/§3. This is a narrower gap than originally recorded: the *coordinate and API* are now real and verified, but *why* the API is shaped this way, migration notes, and best-practice guidance beyond the raw method signatures were never fetched. A human should re-run this step once Context7 access is restored. |
+| Java / Maven toolchain | No existing `pom.xml`/lockfile to extract a pinned version from at the start of this run (greenfield) | No material dependency manifest existed yet at detection time | Java 17 (`maven.compiler.release`) chosen as a conservative default and confirmed compatible with this environment's JDK 23 compiler via a real `mvn test-compile` pass |

@@ -8,6 +8,9 @@ Full originals, with cross-reference notes, live at:
 - `platform_core_data/resources/requirements/user_stories/Create-Agency.md`
 - `platform_core_data/resources/requirements/user_stories/Create-Role.md`
 
+Extended 2026-08-03 to also serve the Branch module run (User Story 5 below, US 8605 — Create Branch).
+Extended 2026-08-03 to also serve as the source explaining the Branch module's "Outstanding Threshold" field discovered during Stage 2 (User Story 6 below, US 51489 / Q3-INTE-CORE-049 / WT1-T3177 — Agency wallet Threshold option).
+
 ---
 
 ## User Story 1 — Q2-CORE-WT1-T3002-066 — T3002 White / Black list route based
@@ -289,3 +292,136 @@ N/A
 - Search Role
 - Update Role
 - STUFF CRUD
+
+---
+
+## User Story 5 — US 8605 — [Admin] Create Branch
+
+### Description
+
+As a System Administrator, I want to add a new branch with required details, contact information, sales configurations, and product access settings, So that the branch can operate efficiently within the system and adhere to business rules.
+
+### Acceptance Criteria
+
+#### Branch Details
+
+- The system shall automatically set the brand as "NDC" (backend configuration, no dropdown on UI). (Mandatory)
+- The user must select the Operating Country from a searchable dropdown that supports alphabetic input. (Mandatory)
+- The user must enter a Branch Name (free text, alphanumeric input only). (Mandatory)
+- The Country field shall be auto-filled based on the selected Operating Country. (Mandatory)
+- The State dropdown shall dynamically populate based on the selected Country. (Mandatory)
+- The City dropdown shall dynamically populate based on the selected State. (Mandatory)
+- The user must enter Address 1 (free text, all character input). (Mandatory)
+- The user may enter Address 2 (free text, all character input). (Optional)
+- The user must enter a Post Office Box — input is alphanumeric and has a max length of 8 characters. (Mandatory)
+- The user must enter a Phone Number, selecting a country code from a dropdown and entering a numeric input. (Mandatory)
+- The user may enter a PAN Number, Service Tax Number, and ABTA Number. Inputs are alphanumeric, and values are in uppercase. (Optional)
+
+#### Branch Email Configuration
+
+- The user must enter a Branch Email ID (free text, all character input). (Mandatory)
+- The user must enter an Email Password (free text, all character input & has a max length of 15 characters). (Mandatory)
+
+#### Branch Contact Info
+
+- The user must enter a Contact Name (free text; input accepts alphabets, spaces, and a single dot (.)). (Mandatory)
+- The user must enter an Email ID (free text, all character input). (Mandatory)
+- The user must enter a Phone Number (country code dropdown + numeric input). (Mandatory)
+- The system shall automatically set the Designation as "ADMIN" (backend configuration, no user input). (Mandatory)
+- The user must select a Department from a multi-select dropdown. (Mandatory)
+- The user must be able to add multiple contact persons using an "Add" button. (Optional)
+
+#### Branch Sales Configuration
+
+- The user may enter a Target Amount (free text, numeric input). (Optional)
+- The user may set a Month (dropdown). (Optional)
+- The user may set a Year (dropdown). (Optional)
+- The user may click "Add Target" to set multiple targets, but only after entering Target Amount, Month, and Year. (Optional)
+- The user must enter a Credit Limit (numeric input only). It has a max length of 15 characters. (Mandatory)
+- The user must enter a Top-Up Limit (numeric input only). (Mandatory)
+- The user must enter Credit Terms (Days) (numeric input only). (Mandatory)
+- The user may enter a Reaching Percentage (free text, input allows numeric values with up to 3 decimal places and must not be greater than 100%). (Optional)
+- The user may enter a Warning Prompt (Days) (free text, numeric input, max length 11, and should be less than Credit Terms (Days)). (Optional)
+- The user may select Payment Options (multi-select checkboxes). If Credit Card is selected, a Payment Gateway dropdown shall appear as mandatory. (Mandatory if Credit Card is selected)
+
+#### Product Access Details
+
+- The system shall set Flight as the default product (backend configuration, no selection by the user). (Mandatory)
+- The grid shall include the following columns: Status, Supplier Name, Credential Name, Product Name, Description (free text, alphabetic input, enabled only when a supplier is selected). (Mandatory)
+- If a GDS is selected in the grid, an additional grid shall appear with: Generic Supplier Credentials (PCC) (multi-select dropdown) (Mandatory); Manager Name (free text, alphabetic input) (Optional); Supplier Credentials Description (free text, alphabetic input) (Mandatory).
+- Search Supplier Credentials PCC & Ticketing Supplier Credential PCC shall be removed from the UI and statically checked in the backend.
+
+#### Import PNR
+
+- The Import PNR checkbox is always checked.
+
+#### Buttons & Actions
+
+- Submit for Approval: Saves the updates and submits the branch for review. (Mandatory)
+- Cancel: Clears unsaved changes or exits the process. (Mandatory)
+
+### Dependency
+
+- Country POS
+- Department CRUD
+- Payment Mode
+
+### Reflection
+
+- Search Branch
+- Booking Module
+- Staff CRUD
+- Agency CRUD
+
+---
+
+## User Story 6 — 51489 / Q3-INTE-CORE-049 / WT1-T3177 — [Admin] Agency wallet Threshold option
+
+### Description
+
+As an Admin user, I want to configure a threshold value for each agency and manage threshold inheritance for child agencies, So that agencies can have threshold limits based on their region or agency level, allowing them to continue processing bookings according to their assigned business rules while reducing administrative effort.
+
+### Business Value
+
+- Support different threshold values by region or agency level.
+- Allow agencies to continue processing bookings within their assigned threshold.
+- Simplify threshold management across branch hierarchies.
+- Reduce manual updates and administrative effort.
+
+### Acceptance Criteria
+
+#### 1. Agency Module
+
+- Add a new Threshold field to the Agency CRUD screen.
+- Allows administrators to increase or decrease the threshold for an individual agency.
+
+#### 2. Branch Module
+
+- Add a new Child Agencies Threshold Amount field.
+- Allows administrators to define a default threshold for all child agencies under the branch.
+- The configured threshold is automatically applied to child agencies that inherit the branch configuration.
+
+#### 3. PNR Query
+
+- Display the agency's configured Threshold.
+- Type: Read-only.
+- The value is for reference only and cannot be edited from the PNR Query screen.
+
+#### 4. Branch Threshold Update
+
+When the branch threshold is changed:
+
+- The system checks for child agencies with manually modified (custom) thresholds.
+- If any exist, display a confirmation popup.
+- The popup should list all child agencies with custom thresholds.
+- The administrator can review the affected agencies before confirming the update.
+- It will be another section for the rest agencies to be able to review the reflected agencies with the new threshold value.
+
+### Dependency
+
+N/A (implied: Agency CRUD, Branch CRUD, PNR Query)
+
+### Reflection
+
+- PNR Query
+- Agency CRUD

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="OrangeHRM Login &amp; Access Suite" parallel="none">
+    <test name="Login">
+        <classes>
+            <class name="Tests.LoginSuite.ValidLoginTest"/>
+            <class name="Tests.LoginSuite.InvalidCredentialsTest"/>
+            <class name="Tests.LoginSuite.EmptyFormValidationTest"/>
+            <class name="Tests.LoginSuite.EmojiUsernameRegressionTest"/>
+            <class name="Tests.LoginSuite.SqlInjectionLoginTest"/>
+            <class name="Tests.LoginSuite.DeepLinkRedirectTest"/>
+            <class name="Tests.LoginSuite.LongUsernameBoundaryTest"/>
+        </classes>
+    </test>
+    <test name="ForgotPassword">
+        <classes>
+            <class name="Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest"/>
+            <class name="Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest"/>
+        </classes>
+    </test>
+</suite>

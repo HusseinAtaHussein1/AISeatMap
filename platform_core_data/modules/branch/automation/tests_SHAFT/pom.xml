@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ndc.branch</groupId>
+    <artifactId>branch-automation-shaft</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <!--
+        Version pinned to 9.4.20251220. Context7 was unavailable (Invalid API key), so this could not
+        be confirmed via version specific documentation. It was confirmed directly in this run via a
+        Maven Central search (search.maven.org/solrsearch/select) after the originally guessed
+        groupId/artifactId (com.shafthq colon SHAFT_ENGINE) failed dependency resolution; the real
+        groupId is io.github.shafthq. The newer io.github.shafthq colon shaft-engine 10.3.20260707
+        artifact was tried first but its class files require JDK 25 (class file version 69), while
+        this environment's javac is JDK 23 (max supported version 67), so 9.4.20251220 (class file
+        version 65, JDK 21) was pinned instead as the newest version this toolchain can actually
+        compile against. See pages/AddBranchPage.java's class Javadoc and
+        AutomationPlan_SHAFT.md Section 12/14 for the full account. This is a real, verified
+        coordinate and a real, verified API (confirmed via javap against the resolved jar), just not
+        Context7 sourced documentation.
+    -->
+
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <shaft.version>9.4.20251220</shaft.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.shafthq</groupId>
+            <artifactId>SHAFT_ENGINE</artifactId>
+            <version>${shaft.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

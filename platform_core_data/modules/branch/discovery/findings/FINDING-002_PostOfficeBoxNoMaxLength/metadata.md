@@ -1,0 +1,23 @@
+# FINDING-002 — Post Office Box field has no 8-character max-length enforcement
+
+- **Finding ID:** FINDING-002
+- **Title:** Post Office Box field has no 8-character max-length enforcement
+- **Category:** Bug
+- **Severity:** Medium
+- **Severity Reason:** Matches the Medium criterion "Validation issues" — a documented input-length business rule is not enforced, though it does not block the overall Create Branch workflow.
+- **Confidence Score:** 90%
+- **Evidence Category:** Direct Observation
+- **Status:** Confirmed
+- **Business Risk:** Branch records could be created with a Post Office Box value far longer than the business rule allows, producing inconsistent data and potential downstream formatting/display issues wherever Post Office Box is printed or matched (e.g. correspondence, reports).
+- **Technical Risk:** The field carries no `maxlength` attribute and no client-side length validation; if the same absence extends server-side, arbitrarily long values could reach the database and any dependent report/label rendering.
+- **Module:** branch
+- **Workflow:** Admin → Branch → Create Branch → Branch Details → Post Office Box
+- **Description:** Typing a 12-character alphanumeric string ("A1B2C3D4E5F6") into the Post Office Box field is fully accepted — no truncation, no `maxlength` HTML attribute, and no validation message on blur.
+- **Expected Behavior:** "The user must enter a Post Office Box — input is alphanumeric and has a max length of 8 characters. (Mandatory)" (PRD_UserStories.md US 5 §Branch Details).
+- **Actual Behavior:** The field's `maxlength` attribute is `null` (absent); a 12-character value is retained in full with no error shown on blur.
+- **Steps to Reproduce:** 1) Log in as Super Admin. 2) Navigate to `/admin/branch/add`. 3) Click the Post Office Box field and type "A1B2C3D4E5F6" (12 characters). 4) Click away (blur) and observe the field retains all 12 characters with no error message.
+- **Investigation/Recovery Result:** Failure category "Validation failure" (§5.7) — deterministic behavior, no retry required per the Engine's rule; validated once, result recorded.
+- **Investigation Notes:** Investigation Mode (§5.8) Validation boundary conditions probed: long input (12 chars, tested) confirmed accepted. Empty value, spaces-only, unicode, emoji, and special characters were not probed for this field within this run's time-bounded scope (User Story strategy, §16) — recorded as not tested rather than assumed passing.
+- **Occurrence Count:** 1
+- **Evidence Links:** `failure.png` (full-page screenshot showing the 12-character value accepted with no error, alongside other probes from the same session). Console log and DOM snapshot not captured for this candidate — recorded as missing evidence (ad hoc probe scripts did not wire console/DOM capture).
+- **Recommendation:** Add a `maxlength="8"` constraint (or equivalent framework-level validator) to the Post Office Box field and a corresponding validation message; confirm the same limit is enforced server-side.

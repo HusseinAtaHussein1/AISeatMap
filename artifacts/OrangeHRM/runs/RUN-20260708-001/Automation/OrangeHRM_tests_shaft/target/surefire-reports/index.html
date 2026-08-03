@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+  <meta charset='utf-8'>
+  <title>TestNG reports</title>
+
+    <link type="text/css" href="testng-reports1.css" rel="stylesheet" id="ultra" />
+    <link type="text/css" href="testng-reports.css" rel="stylesheet" id="retro" disabled="false"/>
+    <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="testng-reports.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {packages:['table']});
+      google.setOnLoadCallback(drawTable);
+      var suiteTableInitFunctions = new Array();
+      var suiteTableData = new Array();
+    </script>
+    <!--
+      <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
+     -->
+  </head>
+
+  <body>    <div class="top-banner-root">
+      <span class="top-banner-title-font">Test results</span>
+      <button id="button" class="button">Switch Retro Theme</button> <!-- button -->
+      <br/>
+      <span class="top-banner-font-1">1 suite, 10 failed tests</span>
+    </div> <!-- top-banner-root -->
+    <div class="navigator-root">
+      <div class="navigator-suite-header">
+        <span>All suites</span>
+        <a href="#" title="Collapse/expand all the suites" class="collapse-all-link">
+          <img src="collapseall.gif" class="collapse-all-icon">
+          </img> <!-- collapse-all-icon -->
+        </a> <!-- collapse-all-link -->
+      </div> <!-- navigator-suite-header -->
+      <div class="suite">
+        <div class="rounded-window">
+          <div class="suite-header light-rounded-window-top">
+            <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" class="navigator-link">
+              <span class="suite-name border-failed">OrangeHRM Login & Access Suite</span>
+            </a> <!-- navigator-link -->
+          </div> <!-- suite-header light-rounded-window-top -->
+          <div class="navigator-suite-content">
+            <div class="suite-section-title">
+              <span>Info</span>
+            </div> <!-- suite-section-title -->
+            <div class="suite-section-content">
+              <ul>
+                <li>
+                  <a href="#" panel-name="test-xml-OrangeHRM_Login___Access_Suite" class="navigator-link ">
+                    <span>C:\Users\Sheen\agentic-ai-testing-platform\artifacts\OrangeHRM\runs\RUN-20260708-001\Automation\OrangeHRM_tests_shaft\testng.xml</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="testlist-OrangeHRM_Login___Access_Suite" class="navigator-link ">
+                    <span class="test-stats">2 tests</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="group-OrangeHRM_Login___Access_Suite" class="navigator-link ">
+                    <span>0 groups</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="times-OrangeHRM_Login___Access_Suite" class="navigator-link ">
+                    <span>Times</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="reporter-OrangeHRM_Login___Access_Suite" class="navigator-link ">
+                    <span>Reporter output</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="ignored-methods-OrangeHRM_Login___Access_Suite" class="navigator-link ">
+                    <span>Ignored methods</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+                <li>
+                  <a href="#" panel-name="chronological-OrangeHRM_Login___Access_Suite" class="navigator-link ">
+                    <span>Chronological view</span>
+                  </a> <!-- navigator-link  -->
+                </li>
+              </ul>
+            </div> <!-- suite-section-content -->
+            <div class="result-section">
+              <div class="suite-section-title">
+                <span>Results</span>
+              </div> <!-- suite-section-title -->
+              <div class="suite-section-content">
+                <ul>
+                  <li>
+                    <span class="method-stats">10 methods, 10 failed,   </span>
+                  </li>
+                  <li>
+                    <span class="method-list-title failed">Failed methods</span>
+                    <span class="show-or-hide-methods failed">
+                      <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" class="hide-methods failed suite-OrangeHRM_Login___Access_Suite"> (hide)</a> <!-- hide-methods failed suite-OrangeHRM_Login___Access_Suite -->
+                      <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" class="show-methods failed suite-OrangeHRM_Login___Access_Suite"> (show)</a> <!-- show-methods failed suite-OrangeHRM_Login___Access_Suite -->
+                    </span>
+                    <div class="method-list-content failed suite-OrangeHRM_Login___Access_Suite">
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.DeepLinkRedirectTest" class="method navigator-link" hash-for-method="deepLinkRedirectsToLoginThenReturnsAfterLogin">deepLinkRedirectsToLoginThenReturnsAfterLogin</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.EmojiUsernameRegressionTest" class="method navigator-link" hash-for-method="emojiUsernameShowsInvalidCredentialsNotServerError">emojiUsernameShowsInvalidCredentialsNotServerError</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.EmptyFormValidationTest" class="method navigator-link" hash-for-method="emptyFormShowsRequiredOnBothFields">emptyFormShowsRequiredOnBothFields</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.InvalidCredentialsTest" class="method navigator-link" hash-for-method="invalidCredentialsShowGenericMessage(Admin, wrongpass)">invalidCredentialsShowGenericMessage(Admin, wrongpass)</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.InvalidCredentialsTest" class="method navigator-link" hash-for-method="invalidCredentialsShowGenericMessage(UnknownUser_shaft_run20260708, wrongpass)">invalidCredentialsShowGenericMessage(UnknownUser_shaft_run20260708, wrongpass)</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest" class="method navigator-link" hash-for-method="knownUsernameReturnsGenericSuccessMessageWithoutTimeout">knownUsernameReturnsGenericSuccessMessageWithoutTimeout</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.LongUsernameBoundaryTest" class="method navigator-link" hash-for-method="longUsernameShowsInvalidCredentialsNormally">longUsernameShowsInvalidCredentialsNormally</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.SqlInjectionLoginTest" class="method navigator-link" hash-for-method="sqlInjectionPayloadDoesNotBypassAuthentication">sqlInjectionPayloadDoesNotBypassAuthentication</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest" class="method navigator-link" hash-for-method="unknownUsernameReturnsGenericSuccessMessage">unknownUsernameReturnsGenericSuccessMessage</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="failed.png" width="3%"/>
+                        <a href="#" panel-name="suite-OrangeHRM_Login___Access_Suite" title="Tests.LoginSuite.ValidLoginTest" class="method navigator-link" hash-for-method="validLoginRedirectsAwayFromLoginPage">validLoginRedirectsAwayFromLoginPage</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                    </div> <!-- method-list-content failed suite-OrangeHRM_Login___Access_Suite -->
+                  </li>
+                </ul>
+              </div> <!-- suite-section-content -->
+            </div> <!-- result-section -->
+          </div> <!-- navigator-suite-content -->
+        </div> <!-- rounded-window -->
+      </div> <!-- suite -->
+    </div> <!-- navigator-root -->
+    <div class="wrapper">
+      <div class="main-panel-root">
+        <div panel-name="suite-OrangeHRM_Login___Access_Suite" class="panel OrangeHRM_Login___Access_Suite">
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.LoginSuite.DeepLinkRedirectTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="deepLinkRedirectsToLoginThenReturnsAfterLogin">
+                  </a> <!-- deepLinkRedirectsToLoginThenReturnsAfterLogin -->
+                  <span class="method-name">deepLinkRedirectsToLoginThenReturnsAfterLogin</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.type(Actions.java:132)
+	at Pages.LoginPage.enterUsername(LoginPage.java:35)
+	at Tests.LoginSuite.DeepLinkRedirectTest.deepLinkRedirectsToLoginThenReturnsAfterLogin(DeepLinkRedirectTest.java:32)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@24a7d3d3 (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-007 — Unauthenticated deep link redirects to login, then returns after login)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.LoginSuite.EmojiUsernameRegressionTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="emojiUsernameShowsInvalidCredentialsNotServerError">
+                  </a> <!-- emojiUsernameShowsInvalidCredentialsNotServerError -->
+                  <span class="method-name">emojiUsernameShowsInvalidCredentialsNotServerError</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.type(Actions.java:132)
+	at Pages.LoginPage.enterUsername(LoginPage.java:35)
+	at Tests.LoginSuite.EmojiUsernameRegressionTest.emojiUsernameShowsInvalidCredentialsNotServerError(EmojiUsernameRegressionTest.java:36)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@6ed691fd (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-004 — Emoji Username must show 'Invalid credentials', not a generic server error)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.LoginSuite.LongUsernameBoundaryTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="longUsernameShowsInvalidCredentialsNormally">
+                  </a> <!-- longUsernameShowsInvalidCredentialsNormally -->
+                  <span class="method-name">longUsernameShowsInvalidCredentialsNormally</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.type(Actions.java:132)
+	at Pages.LoginPage.enterUsername(LoginPage.java:35)
+	at Tests.LoginSuite.LongUsernameBoundaryTest.longUsernameShowsInvalidCredentialsNormally(LongUsernameBoundaryTest.java:29)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@411933 (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-011 — 259-character Username handled without error or crash)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="knownUsernameReturnsGenericSuccessMessageWithoutTimeout">
+                  </a> <!-- knownUsernameReturnsGenericSuccessMessageWithoutTimeout -->
+                  <span class="method-name">knownUsernameReturnsGenericSuccessMessageWithoutTimeout</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchSessionException: invalid session id&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:466)
+	at com.shaft.gui.element.internal.Actions.click(Actions.java:90)
+	at Pages.LoginPage.clickForgotPassword(LoginPage.java:50)
+	at Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest.knownUsernameReturnsGenericSuccessMessageWithoutTimeout(KnownUsernameForgotPasswordRegressionTest.java:34)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.NoSuchSessionException: invalid session id
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [690cf59f1cfb72d9587e5fe52fc7fa9b, screenshot {}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 149.0.7827.201, chrome: {chromedriverVersion: 149.0.7827.155 (07b52360cc1..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:64897}, goog:processID: 26912, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:64897/devtoo..., se:cdpVersion: 149.0.7827.201, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 30000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webSocketUrl: ws://localhost:7172/session..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 690cf59f1cfb72d9587e5fe52fc7fa9b
+	at org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:142)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:215)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:561)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:638)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:642)
+	at org.openqa.selenium.remote.RemoteWebDriver.getScreenshotAs(RemoteWebDriver.java:350)
+	at com.shaft.gui.element.internal.Actions.takeScreenshot(Actions.java:607)
+	at com.shaft.gui.element.internal.Actions.captureScreenshot(Actions.java:561)
+	at com.shaft.gui.element.internal.Actions.takeFailureScreenshot(Actions.java:545)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:455)
+	... 33 more
+	Suppressed: org.openqa.selenium.NoSuchSessionException: invalid session id
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [690cf59f1cfb72d9587e5fe52fc7fa9b, findElements {value=//p[contains(text(),&apos;Forgot your password?&apos;)], using=xpath}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 149.0.7827.201, chrome: {chromedriverVersion: 149.0.7827.155 (07b52360cc1..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:64897}, goog:processID: 26912, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:64897/devtoo..., se:cdpVersion: 149.0.7827.201, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 30000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webSocketUrl: ws://localhost:7172/session..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 690cf59f1cfb72d9587e5fe52fc7fa9b
+		at org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
+		at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:142)
+		at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+		at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:215)
+		at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
+		at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
+		at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:561)
+		at org.openqa.selenium.remote.ElementLocation$ElementFinder$2.findElements(ElementLocation.java:183)
+		at org.openqa.selenium.remote.ElementLocation.findElements(ElementLocation.java:104)
+		at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:397)
+		at org.openqa.selenium.remote.RemoteWebDriver.findElements(RemoteWebDriver.java:391)
+		at com.shaft.gui.element.internal.Actions.findAllElements(Actions.java:533)
+		at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:225)
+		at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+		at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+		... 33 more
+... Removed 35 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-009 — Forgot Password with a valid username must not time out)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.LoginSuite.ValidLoginTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="validLoginRedirectsAwayFromLoginPage">
+                  </a> <!-- validLoginRedirectsAwayFromLoginPage -->
+                  <span class="method-name">validLoginRedirectsAwayFromLoginPage</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.type(Actions.java:132)
+	at Pages.LoginPage.enterUsername(LoginPage.java:35)
+	at Tests.LoginSuite.ValidLoginTest.validLoginRedirectsAwayFromLoginPage(ValidLoginTest.java:27)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@1319bc2a (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-001 — Valid login redirects successfully)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="unknownUsernameReturnsGenericSuccessMessage">
+                  </a> <!-- unknownUsernameReturnsGenericSuccessMessage -->
+                  <span class="method-name">unknownUsernameReturnsGenericSuccessMessage</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.xpath: //p[contains(text(),&apos;Forgot your password?&apos;)]&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.click(Actions.java:90)
+	at Pages.LoginPage.clickForgotPassword(LoginPage.java:50)
+	at Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest.unknownUsernameReturnsGenericSuccessMessage(UnknownUsernameForgotPasswordTest.java:28)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@75df4b1d (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.xpath: //p[contains(text(),&apos;Forgot your password?&apos;)]
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-008 — Forgot Password with unknown username returns generic success)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.LoginSuite.InvalidCredentialsTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="invalidCredentialsShowGenericMessage(Admin, wrongpass)">
+                  </a> <!-- invalidCredentialsShowGenericMessage(Admin, wrongpass) -->
+                  <span class="method-name">invalidCredentialsShowGenericMessage</span>
+                  <span class="parameters">(Admin,wrongpass)</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.type(Actions.java:132)
+	at Pages.LoginPage.enterUsername(LoginPage.java:35)
+	at Tests.LoginSuite.InvalidCredentialsTest.invalidCredentialsShowGenericMessage(InvalidCredentialsTest.java:43)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@93bf0e0 (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-002 — Invalid credentials rejected with generic message)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="invalidCredentialsShowGenericMessage(UnknownUser_shaft_run20260708, wrongpass)">
+                  </a> <!-- invalidCredentialsShowGenericMessage(UnknownUser_shaft_run20260708, wrongpass) -->
+                  <span class="method-name">invalidCredentialsShowGenericMessage</span>
+                  <span class="parameters">(UnknownUser_shaft_run20260708,wrongpass)</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.type(Actions.java:132)
+	at Pages.LoginPage.enterUsername(LoginPage.java:35)
+	at Tests.LoginSuite.InvalidCredentialsTest.invalidCredentialsShowGenericMessage(InvalidCredentialsTest.java:43)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@426710f0 (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-002 — Invalid credentials rejected with generic message)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.LoginSuite.SqlInjectionLoginTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="sqlInjectionPayloadDoesNotBypassAuthentication">
+                  </a> <!-- sqlInjectionPayloadDoesNotBypassAuthentication -->
+                  <span class="method-name">sqlInjectionPayloadDoesNotBypassAuthentication</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.type(Actions.java:132)
+	at Pages.LoginPage.enterUsername(LoginPage.java:35)
+	at Tests.LoginSuite.SqlInjectionLoginTest.sqlInjectionPayloadDoesNotBypassAuthentication(SqlInjectionLoginTest.java:31)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@4b7e4d14 (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.name: username
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-005 — SQL-injection-style payload is treated as ordinary invalid input)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+          <div class="suite-OrangeHRM_Login___Access_Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">Tests.LoginSuite.EmptyFormValidationTest</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="emptyFormShowsRequiredOnBothFields">
+                  </a> <!-- emptyFormShowsRequiredOnBothFields -->
+                  <span class="method-name">emptyFormShowsRequiredOnBothFields</span>
+                  <div class="stack-trace">java.lang.RuntimeException: Root cause: &quot;org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.cssSelector: button[type=&apos;submit&apos;]&quot;
+	at com.shaft.gui.element.internal.Actions.report(Actions.java:750)
+	at com.shaft.gui.element.internal.Actions.reportBroken(Actions.java:699)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:460)
+	at com.shaft.gui.element.internal.Actions.click(Actions.java:90)
+	at Pages.LoginPage.clickLogin(LoginPage.java:45)
+	at Tests.LoginSuite.EmptyFormValidationTest.emptyFormShowsRequiredOnBothFields(EmptyFormValidationTest.java:27)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+Caused by: org.openqa.selenium.TimeoutException: Expected condition failed: waiting for com.shaft.gui.element.internal.Actions$$Lambda/0x000002a6016a9e28@5d6b42cf (tried for 10 second(s) with 100 milliseconds interval)
+	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:265)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.shaft.gui.element.internal.Actions.performAction(Actions.java:223)
+	... 33 more
+Caused by: org.openqa.selenium.NoSuchElementException: Cannot locate an element using By.cssSelector: button[type=&apos;submit&apos;]
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Build info: version: &apos;4.39.0&apos;, revision: &apos;126f156aee&apos;
+System info: os.name: &apos;Windows 11&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;23.0.1&apos;
+Driver info: driver.version: unknown
+	at com.shaft.gui.element.internal.Actions.lambda$performAction$1(Actions.java:229)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:203)
+	... 34 more
+... Removed 29 stack frames
+</div> <!-- stack-trace -->
+                  <em>
+(TC-LOGIN-003 — Empty login form blocked by required-field validation)                  </em>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-OrangeHRM_Login___Access_Suite-class-failed -->
+        </div> <!-- panel OrangeHRM_Login___Access_Suite -->
+        <div panel-name="test-xml-OrangeHRM_Login___Access_Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">C:\Users\Sheen\agentic-ai-testing-platform\artifacts\OrangeHRM\runs\RUN-20260708-001\Automation\OrangeHRM_tests_shaft\testng.xml</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE suite SYSTEM &quot;https://testng.org/testng-1.0.dtd&quot;&gt;
+&lt;suite name=&quot;OrangeHRM Login &amp;amp; Access Suite&quot; guice-stage=&quot;DEVELOPMENT&quot; verbose=&quot;0&quot;&gt;
+  &lt;test thread-count=&quot;5&quot; name=&quot;Login&quot; verbose=&quot;0&quot;&gt;
+    &lt;classes&gt;
+      &lt;class name=&quot;Tests.LoginSuite.ValidLoginTest&quot;/&gt;
+      &lt;class name=&quot;Tests.LoginSuite.InvalidCredentialsTest&quot;/&gt;
+      &lt;class name=&quot;Tests.LoginSuite.EmptyFormValidationTest&quot;/&gt;
+      &lt;class name=&quot;Tests.LoginSuite.EmojiUsernameRegressionTest&quot;/&gt;
+      &lt;class name=&quot;Tests.LoginSuite.SqlInjectionLoginTest&quot;/&gt;
+      &lt;class name=&quot;Tests.LoginSuite.DeepLinkRedirectTest&quot;/&gt;
+      &lt;class name=&quot;Tests.LoginSuite.LongUsernameBoundaryTest&quot;/&gt;
+    &lt;/classes&gt;
+  &lt;/test&gt; &lt;!-- Login --&gt;
+  &lt;test thread-count=&quot;5&quot; name=&quot;ForgotPassword&quot; verbose=&quot;0&quot;&gt;
+    &lt;classes&gt;
+      &lt;class name=&quot;Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest&quot;/&gt;
+      &lt;class name=&quot;Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest&quot;/&gt;
+    &lt;/classes&gt;
+  &lt;/test&gt; &lt;!-- ForgotPassword --&gt;
+&lt;/suite&gt; &lt;!-- OrangeHRM Login &amp; Access Suite --&gt;
+            </pre>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="testlist-OrangeHRM_Login___Access_Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Tests for OrangeHRM Login & Access Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <ul>
+              <li>
+                <span class="test-name">Login (7 classes)</span>
+              </li>
+              <li>
+                <span class="test-name">ForgotPassword (2 classes)</span>
+              </li>
+            </ul>
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="group-OrangeHRM_Login___Access_Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Groups for OrangeHRM Login & Access Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="times-OrangeHRM_Login___Access_Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Times for OrangeHRM Login & Access Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="times-div">
+              <script type="text/javascript">
+suiteTableInitFunctions.push('tableData_OrangeHRM_Login___Access_Suite');
+function tableData_OrangeHRM_Login___Access_Suite() {
+var data = new google.visualization.DataTable();
+data.addColumn('number', 'Number');
+data.addColumn('string', 'Method');
+data.addColumn('string', 'Class');
+data.addColumn('number', 'Time (ms)');
+data.addRows(10);
+data.setCell(0, 0, 0)
+data.setCell(0, 1, 'sqlInjectionPayloadDoesNotBypassAuthentication')
+data.setCell(0, 2, 'Tests.LoginSuite.SqlInjectionLoginTest')
+data.setCell(0, 3, 270891);
+data.setCell(1, 0, 1)
+data.setCell(1, 1, 'unknownUsernameReturnsGenericSuccessMessage')
+data.setCell(1, 2, 'Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest')
+data.setCell(1, 3, 100669);
+data.setCell(2, 0, 2)
+data.setCell(2, 1, 'longUsernameShowsInvalidCredentialsNormally')
+data.setCell(2, 2, 'Tests.LoginSuite.LongUsernameBoundaryTest')
+data.setCell(2, 3, 82727);
+data.setCell(3, 0, 3)
+data.setCell(3, 1, 'deepLinkRedirectsToLoginThenReturnsAfterLogin')
+data.setCell(3, 2, 'Tests.LoginSuite.DeepLinkRedirectTest')
+data.setCell(3, 3, 74137);
+data.setCell(4, 0, 4)
+data.setCell(4, 1, 'validLoginRedirectsAwayFromLoginPage')
+data.setCell(4, 2, 'Tests.LoginSuite.ValidLoginTest')
+data.setCell(4, 3, 61966);
+data.setCell(5, 0, 5)
+data.setCell(5, 1, 'invalidCredentialsShowGenericMessage')
+data.setCell(5, 2, 'Tests.LoginSuite.InvalidCredentialsTest')
+data.setCell(5, 3, 55554);
+data.setCell(6, 0, 6)
+data.setCell(6, 1, 'invalidCredentialsShowGenericMessage')
+data.setCell(6, 2, 'Tests.LoginSuite.InvalidCredentialsTest')
+data.setCell(6, 3, 55264);
+data.setCell(7, 0, 7)
+data.setCell(7, 1, 'emptyFormShowsRequiredOnBothFields')
+data.setCell(7, 2, 'Tests.LoginSuite.EmptyFormValidationTest')
+data.setCell(7, 3, 50753);
+data.setCell(8, 0, 8)
+data.setCell(8, 1, 'emojiUsernameShowsInvalidCredentialsNotServerError')
+data.setCell(8, 2, 'Tests.LoginSuite.EmojiUsernameRegressionTest')
+data.setCell(8, 3, 10959);
+data.setCell(9, 0, 9)
+data.setCell(9, 1, 'knownUsernameReturnsGenericSuccessMessageWithoutTimeout')
+data.setCell(9, 2, 'Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest')
+data.setCell(9, 3, 2610);
+window.suiteTableData['OrangeHRM_Login___Access_Suite']= { tableData: data, tableDiv: 'times-div-OrangeHRM_Login___Access_Suite'}
+return data;
+}
+              </script>
+              <span class="suite-total-time">Total running time: 12 minutes</span>
+              <div id="times-div-OrangeHRM_Login___Access_Suite">
+              </div> <!-- times-div-OrangeHRM_Login___Access_Suite -->
+            </div> <!-- times-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="reporter-OrangeHRM_Login___Access_Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Reporter output for OrangeHRM Login & Access Suite</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">validLoginRedirectsAwayFromLoginPage</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 13:55:17.0541 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 13:55:17.0615 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 13:55:56.0022 PM</span>
+                <span class="reporter-method-output">[ReportManager] Type "By.name: username" is broken @08-07-2026 13:56:19.0392 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">sqlInjectionPayloadDoesNotBypassAuthentication</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 13:59:19.0556 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 13:59:19.0606 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 14:00:06.0532 PM</span>
+                <span class="reporter-method-output">[ReportManager] Type "By.name: username" is broken @08-07-2026 14:03:50.0402 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">invalidCredentialsShowGenericMessage(Admin, wrongpass)</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 13:56:20.0841 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 13:56:20.0894 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 13:56:54.0007 PM</span>
+                <span class="reporter-method-output">[ReportManager] Type "By.name: username" is broken @08-07-2026 13:57:16.0065 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">emojiUsernameShowsInvalidCredentialsNotServerError</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 13:59:06.0693 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 13:59:06.0740 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 13:59:07.0123 PM</span>
+                <span class="reporter-method-output">[ReportManager] Type "By.name: username" is broken @08-07-2026 13:59:17.0596 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">emptyFormShowsRequiredOnBothFields</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 13:58:14.0537 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 13:58:14.0588 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 13:58:50.0592 PM</span>
+                <span class="reporter-method-output">[ReportManager] Click "By.cssSelector: button[type='submit']" is broken @08-07-2026 13:59:05.0252 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">deepLinkRedirectsToLoginThenReturnsAfterLogin</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/pim/viewEmployeeList" @08-07-2026 14:03:54.0180 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 14:03:54.0261 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/pim/viewEmployeeList". @08-07-2026 14:04:56.0597 PM</span>
+                <span class="reporter-method-output">[ReportManager] Assert that the browser URL contains "/auth/login". @08-07-2026 14:04:57.0178 PM</span>
+                <span class="reporter-method-output">[ReportManager] Expected "/auth/login", and actual "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 14:04:57.0225 PM</span>
+                <span class="reporter-method-output">[ReportManager] Successfully created attachment 'Screenshot - Assert_14-04-57-741_08072026' @08-07-2026 14:04:57.0745 PM</span>
+                <span class="reporter-method-output">[ReportManager] Expected "/auth/login", and actual "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 14:04:57.0745 PM</span>
+                <span class="reporter-method-output">[ReportManager] Type "By.name: username" is broken @08-07-2026 14:05:08.0160 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">longUsernameShowsInvalidCredentialsNormally</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 14:05:09.0680 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 14:05:09.0731 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 14:06:10.0139 PM</span>
+                <span class="reporter-method-output">[ReportManager] Type "By.name: username" is broken @08-07-2026 14:06:32.0372 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">invalidCredentialsShowGenericMessage(UnknownUser_shaft_run20260708, wrongpass)</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 13:57:17.0560 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 13:57:17.0614 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 13:57:54.0822 PM</span>
+                <span class="reporter-method-output">[ReportManager] Type "By.name: username" is broken @08-07-2026 13:58:13.0067 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">knownUsernameReturnsGenericSuccessMessageWithoutTimeout</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 14:08:15.0987 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 14:08:16.0031 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 14:08:16.0404 PM</span>
+                <span class="reporter-method-output">[ReportManager] org.openqa.selenium.NoSuchSessionException: invalid session id
+Build info: version: '4.39.0', revision: '126f156aee'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [690cf59f1cfb72d9587e5fe52fc7fa9b, executeCdpCommand {params={}, cmd=Page.getLayoutMetrics}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 149.0.7827.201, chrome: {chromedriverVersion: 149.0.7827.155 (07b52360cc1..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:64897}, goog:processID: 26912, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:64897/devtoo..., se:cdpVersion: 149.0.7827.201, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 30000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webSocketUrl: ws://localhost:7172/session..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 690cf59f1cfb72d9587e5fe52fc7fa9b
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+ org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:142)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:49)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:215)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:561)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:638)
+ org.openqa.selenium.remote.RemoteExecuteMethod.execute(RemoteExecuteMethod.java:42)
+ org.openqa.selenium.chromium.AddHasCdp.lambda$getImplementation$1(AddHasCdp.java:56)
+ org.openqa.selenium.chromium.ChromiumDriver.executeCdpCommand(ChromiumDriver.java:300)
+ com.shaft.gui.internal.image.ScreenshotHelper.takeFullPageScreenshotUsingCDP(ScreenshotHelper.java:146)
+ com.shaft.gui.internal.image.ScreenshotHelper.makeFullScreenshot(ScreenshotHelper.java:109)
+ com.shaft.gui.element.internal.Actions.takeScreenshot(Actions.java:602)
+ com.shaft.gui.element.internal.Actions.captureScreenshot(Actions.java:561)
+ com.shaft.gui.element.internal.Actions.takeFailureScreenshot(Actions.java:545)
+ com.shaft.gui.element.internal.Actions.performAction(Actions.java:455)
+ com.shaft.gui.element.internal.Actions.click(Actions.java:90)
+ Pages.LoginPage.clickForgotPassword(LoginPage.java:50)
+ Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest.knownUsernameReturnsGenericSuccessMessageWithoutTimeout(KnownUsernameForgotPasswordRegressionTest.java:34)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:686)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:992)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:739)
+ org.testng.TestRunner.run(TestRunner.java:614)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+ org.testng.SuiteRunner.run(SuiteRunner.java:312)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+ org.testng.TestNG.runSuites(TestNG.java:1112)
+ org.testng.TestNG.run(TestNG.java:1079)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) @08-07-2026 14:08:18.0549 PM</span>
+                <span class="reporter-method-output">[ReportManager] Click "By.xpath: //p[contains(text(),'Forgot your password?')]" is broken @08-07-2026 14:08:18.0560 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">unknownUsernameReturnsGenericSuccessMessage</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output">[ReportManager] Target URL: "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login" @08-07-2026 14:06:33.0975 PM</span>
+                <span class="reporter-method-output">[ReportManager] Initial URL: "about:blank" @08-07-2026 14:06:34.0022 PM</span>
+                <span class="reporter-method-output">[ReportManager] Navigate to url "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login". @08-07-2026 14:08:04.0199 PM</span>
+                <span class="reporter-method-output">[ReportManager] Click "By.xpath: //p[contains(text(),'Forgot your password?')]" is broken @08-07-2026 14:08:14.0597 PM</span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="ignored-methods-OrangeHRM_Login___Access_Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">0 ignored methods</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+        <div panel-name="chronological-OrangeHRM_Login___Access_Suite" class="panel">
+          <div class="main-panel-header rounded-window-top">
+            <span class="header-content">Methods in chronological order</span>
+          </div> <!-- main-panel-header rounded-window-top -->
+          <div class="main-panel-content rounded-window-bottom">
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.LoginSuite.ValidLoginTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">0 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">validLoginRedirectsAwayFromLoginPage</span>
+                <span class="method-start">44946 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">106925 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.LoginSuite.InvalidCredentialsTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">107207 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">invalidCredentialsShowGenericMessage(Admin, wrongpass)</span>
+                <span class="method-start">108307 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">163588 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">163811 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">invalidCredentialsShowGenericMessage(UnknownUser_shaft_run20260708, wrongpass)</span>
+                <span class="method-start">165020 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">220577 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.LoginSuite.EmptyFormValidationTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">220840 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">emptyFormShowsRequiredOnBothFields</span>
+                <span class="method-start">222005 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">272768 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.LoginSuite.EmojiUsernameRegressionTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">273035 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">emojiUsernameShowsInvalidCredentialsNotServerError</span>
+                <span class="method-start">274145 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">285106 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.LoginSuite.SqlInjectionLoginTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">285390 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">sqlInjectionPayloadDoesNotBypassAuthentication</span>
+                <span class="method-start">287017 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">557908 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.LoginSuite.DeepLinkRedirectTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">558825 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">deepLinkRedirectsToLoginThenReturnsAfterLogin</span>
+                <span class="method-start">561529 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">635669 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.LoginSuite.LongUsernameBoundaryTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">635924 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">longUsernameShowsInvalidCredentialsNormally</span>
+                <span class="method-start">637151 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">719880 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">720163 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">unknownUsernameReturnsGenericSuccessMessage</span>
+                <span class="method-start">721434 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">822118 ms</span>
+              </div> <!-- configuration-method after -->
+            </div> <!-- chronological-class -->
+            <div class="chronological-class">
+              <div class="chronological-class-name">Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest</div> <!-- chronological-class-name -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">822373 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">knownUsernameReturnsGenericSuccessMessageWithoutTimeout</span>
+                <span class="method-start">823456 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">826070 ms</span>
+              </div> <!-- configuration-method after -->
+          </div> <!-- main-panel-content rounded-window-bottom -->
+        </div> <!-- panel -->
+      </div> <!-- main-panel-root -->
+    </div> <!-- wrapper -->
+  </body>
+<script type="text/javascript" src="testng-reports2.js"></script>
+</html>

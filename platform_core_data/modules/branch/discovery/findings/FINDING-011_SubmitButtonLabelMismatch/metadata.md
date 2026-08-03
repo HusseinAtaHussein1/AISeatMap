@@ -1,0 +1,23 @@
+# FINDING-011 — Submit button reads "Send For Approval" instead of the AC's "Submit for Approval"
+
+- **Finding ID:** FINDING-011
+- **Title:** Submit button reads "Send For Approval" instead of the AC's "Submit for Approval"
+- **Category:** Bug
+- **Severity:** Low
+- **Severity Reason:** Matches the Low criterion "UI/cosmetic issues" — a copy/label mismatch with no functional impact on the workflow.
+- **Confidence Score:** 95%
+- **Evidence Category:** Direct Observation
+- **Status:** Confirmed
+- **Business Risk:** Minimal — could cause minor confusion if the business specifically expects the literal label "Submit for Approval" to appear (e.g. for training materials or other stories that reference that exact wording).
+- **Technical Risk:** None identified.
+- **Module:** branch
+- **Workflow:** Admin → Branch → Create Branch → Buttons & Actions
+- **Description:** The primary action button at the bottom of the Create Branch form is labeled "Send For Approval"; the Cancel button's label matches the AC exactly.
+- **Expected Behavior:** "Submit for Approval: Saves the updates and submits the branch for review. (Mandatory)" (PRD_UserStories.md US 5 §Buttons & Actions).
+- **Actual Behavior:** The button reads "Send For Approval," not "Submit for Approval."
+- **Steps to Reproduce:** 1) Log in as Super Admin. 2) Navigate to `/admin/branch/add`. 3) Scroll to the bottom of the form and read the primary action button's label.
+- **Investigation/Recovery Result:** Not applicable — a label read is deterministic; no retry category applies.
+- **Investigation Notes:** Did not click the button (doing so would attempt to submit an incomplete/deliberately-invalid form populated with several of this run's probe values) — the label was read directly from the rendered screenshot/DOM text without interacting with the control.
+- **Occurrence Count:** 1
+- **Evidence Links:** `failure.png` (full-page screenshot showing the "Send For Approval" and "Cancel" buttons at the bottom of the form).
+- **Recommendation:** Low priority — confirm with Product/Business whether the exact button wording matters for this story; if not, treat as a non-issue and update the AC's wording instead.

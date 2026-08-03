@@ -14,45 +14,51 @@
 
 ## Detected At
 
-_ISO timestamp of the last detection run — left blank until Stage 4A first writes here._
+2026-08-03 (first detection — Stage 4A, `branch` module, run-002)
 
 ## Ecosystems
 
 | Ecosystem | Detected From |
 |---|---|
-| | |
+| Java (Maven) | Human decision at the Framework Decision Gate — no existing manifest; this is the platform's first automation project, any module, any framework |
 
 ## Automation Framework
 
 | Key | Value |
 |---|---|
-| Framework | |
-| Version | |
-| Pinned? | |
-| Language | |
-| Automation root | |
+| Framework | SHAFT Engine |
+| Version | `9.4.20251220` (real groupId `io.github.shafthq`; verified via Maven Central search + `javap` against the resolved jar, not Context7 — see Detection Gaps) |
+| Pinned? | Yes |
+| Language | Java 17 (`maven.compiler.release`) — confirmed compilable against this environment's JDK 23 toolchain via a real `mvn test-compile` pass |
+| Automation root | `platform_core_data/modules/branch/automation/tests_SHAFT/` (module project; not yet merged to `platform_core_data/automation_baseline/SHAFT/`) |
 
 ## Dependency Table
 
-_Material libraries only — what the generated code actually imports, not transitive dependencies._
-
 | Library | Resolved Version | Pinned? | Source File | Context7 ID |
 |---|---|---|---|---|
-| | | | | |
+| SHAFT_ENGINE (`io.github.shafthq:SHAFT_ENGINE`) | `9.4.20251220` | Yes | `pom.xml` | Not resolved (Context7 unavailable) |
+| TestNG | Bundled via SHAFT_ENGINE | No | — | Not resolved |
+| Allure (TestNG adapter) | Bundled via SHAFT_ENGINE | No | — | Not resolved |
+
+**Note:** a newer artifact, `io.github.shafthq:shaft-engine:10.3.20260707`, also exists on Maven
+Central but requires JDK 25 to compile against (class file version 69) — incompatible with this
+environment's JDK 23 (max 67). Re-evaluate pinning to 10.x once a JDK 25 toolchain is available.
 
 ## Conventions Observed
 
 | Aspect | Convention |
 |---|---|
-| File naming | |
-| Page object pattern | |
-| Fixture strategy | |
+| File naming | `{Screen}Page.java` (Page Objects), `{Workflow}Tests.java` (TestNG test classes) — SHAFT Engine standard, no existing project to detect an override from |
+| Page object pattern | SHAFT Engine Page Object Model — locators as `public static` `By` constants, actions via SHAFT's `SHAFT.GUI()` fluent API |
+| Fixture strategy | TestNG `@BeforeMethod`/`@AfterMethod` for per-test driver lifecycle via `DriverFactory`; shared test data in a dedicated `data/` package |
 
 ## Human Corrections
 
-_Anything detection got wrong or cannot see. Each entry: what was detected, what is actually true,
-and why — Stage 4A reads this before trusting its own detection._
+_None yet._
 
 ## Detection Gaps
 
-_What could not be resolved mechanically and still needs a human answer._
+| Gap | Why | Status |
+|---|---|---|
+| SHAFT_ENGINE / TestNG / Allure resolved, pinned version | Context7 MCP server returned "Invalid API key" — unavailable this run | Open — re-run the Stack Documentation step once Context7 access is restored, before the next Stage 4A pass extends this project |
+| Java/Maven toolchain version | No existing manifest; Java 17 assumed, not detected | Open — confirm with the team's actual CI/build environment when available |

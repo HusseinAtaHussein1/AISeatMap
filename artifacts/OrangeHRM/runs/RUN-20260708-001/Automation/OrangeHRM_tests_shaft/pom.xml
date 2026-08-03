@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ae.tildetech.orangehrm</groupId>
+    <artifactId>OrangeHRM_tests_shaft</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <!--
+        RUN-20260708-001 — Stage 4 (Automation Agent) — Login / Authentication & Access module only.
+        Framework: SHAFT Engine (explicit human instruction — see OrangeHRM_AutomationPlan.md §1).
+    -->
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <shaft.version>9.4.20251220</shaft.version>
+        <testng.version>7.10.2</testng.version>
+    </properties>
+
+    <dependencies>
+        <!-- Source: https://mvnrepository.com/artifact/io.github.shafthq/shaft-engine -->
+        <dependency>
+            <groupId>io.github.shafthq</groupId>
+            <artifactId>SHAFT_ENGINE</artifactId>
+            <version>${shaft.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>OrangeHRM_tests_shaft</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <!-- Explicit TestNG provider: surefire auto-detected JUnit Platform instead of TestNG
+                     (a transitive JUnit 5 dependency pulled in by SHAFT Engine's own dependency tree
+                     was otherwise winning provider auto-selection, silently running 0 tests). -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-testng</artifactId>
+                        <version>3.2.5</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

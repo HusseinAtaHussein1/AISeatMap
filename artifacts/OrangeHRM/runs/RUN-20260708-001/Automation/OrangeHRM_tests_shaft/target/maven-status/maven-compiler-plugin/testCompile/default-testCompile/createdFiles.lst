@@ -1,0 +1,13 @@
+Tests\ForgotPasswordSuite\UnknownUsernameForgotPasswordTest.class
+Pages\ForgotPasswordPage.class
+Tests\LoginSuite\LongUsernameBoundaryTest.class
+Tests\ForgotPasswordSuite\KnownUsernameForgotPasswordRegressionTest.class
+Tests\LoginSuite\ValidLoginTest.class
+Tests\LoginSuite\DeepLinkRedirectTest.class
+Tests\LoginSuite\SqlInjectionLoginTest.class
+Utilities\TestData.class
+Tests\LoginSuite\InvalidCredentialsTest.class
+Pages\LoginPage.class
+Tests\LoginSuite\EmptyFormValidationTest.class
+Tests\LoginSuite\EmojiUsernameRegressionTest.class
+Utilities\BaseTest.class

@@ -1,0 +1,40 @@
+Test Case ID,Module,Status,Execution Time,Severity,Priority,Category,Notes,Evidence Paths
+TC-BR-001,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-001-after-submit.png
+TC-BR-002,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-002-last-field.png
+TC-BR-003,branch,Failed,2026-08-03,Low,P3,Validation,"Special/markup characters accepted verbatim (input-side gap); stored value confirmed safely HTML-encoded on Branch-list output and script did not execute -- NOT confirmed Stored XSS",manual_execution/artifacts/TC-BR-003-list-search-result.png
+TC-BR-004,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-004.png
+TC-BR-005,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-005.png
+TC-BR-006,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-006.png
+TC-BR-007,branch,Excluded,,,P2,,Rejected at Review,
+TC-BR-008,branch,Excluded,,,P1,,Rejected at Review,
+TC-BR-009,branch,Excluded,,,P2,,Rejected at Review,
+TC-BR-010,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-010.png
+TC-BR-011,branch,Excluded,,,P3,,Rejected at Review,
+TC-BR-012,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-012.png
+TC-BR-013,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-013-last-field.png
+TC-BR-014,branch,Excluded,,,P2,,Rejected at Review,
+TC-BR-015,branch,Excluded,,,P2,,Rejected at Review,
+TC-BR-016,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-016.png
+TC-BR-017,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-017-last-field.png
+TC-BR-018,branch,Excluded,,,P2,,Rejected at Review,
+TC-BR-019,branch,Inconclusive,2026-08-03,,P3,,Second Contact Person not reliably re-verified by automation; needs manual re-check,manual_execution/artifacts/TC-BR-019.png
+TC-BR-020,branch,Excluded,,,P3,,Rejected at Review,
+TC-BR-021,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-021-last-field.png
+TC-BR-022,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-022.png
+TC-BR-023,branch,Passed,2026-08-03,,P1,,Contradicts FINDING-003's Confirmed status — see Recommendations,manual_execution/artifacts/TC-BR-023.png
+TC-BR-024,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-024.png
+TC-BR-025,branch,Passed,2026-08-03,,P3,,,manual_execution/artifacts/TC-BR-025.png
+TC-BR-026,branch,Failed,2026-08-03,Medium,P1,Validation,No 11-digit length enforcement; regression for FINDING-004,manual_execution/artifacts/TC-BR-026.png
+TC-BR-027,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-027.png
+TC-BR-028,branch,Passed,2026-08-03,,P3,,,manual_execution/artifacts/TC-BR-028.png
+TC-BR-029,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-029.png
+TC-BR-030,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-030.png
+TC-BR-031,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-031.png
+TC-BR-032,branch,Passed,2026-08-03,,P2,,GDS row confirmed to be "Amadeus",manual_execution/artifacts/TC-BR-032.png
+TC-BR-033,branch,Passed,2026-08-03,,P3,,,manual_execution/artifacts/TC-BR-033.png
+TC-BR-034,branch,Passed,2026-08-03,,P1,,,manual_execution/artifacts/TC-BR-034.png
+TC-BR-035,branch,Failed,2026-08-03,Low,P4,UI,Button reads "Send For Approval"; regression for FINDING-011,manual_execution/artifacts/TC-BR-035.png
+TC-BR-036,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-036.png
+TC-BR-037,branch,Passed,2026-08-03,,P2,,,manual_execution/artifacts/TC-BR-037.png
+TC-BR-038,branch,Passed,2026-08-03,,P3,,,manual_execution/artifacts/TC-BR-038.png
+TC-BR-039,branch,Passed,2026-08-03,,P3,,,manual_execution/artifacts/TC-BR-039.png

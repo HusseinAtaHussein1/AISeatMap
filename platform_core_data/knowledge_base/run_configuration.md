@@ -8,7 +8,7 @@
 > next time Stage 1 runs; editing it never retroactively changes an approved Project Context.
 
 **Application:** NDC Admin Portal
-**Configured:** 2026-07-31, from the user's answers to this run's pre-flight decision gate (`pipeline.md` §5.4, §5.5).
+**Configured:** 2026-08-03, updated for the active run (US-8605 — Create Branch); supersedes the 2026-07-31 configuration written for the prior run (US-4222 — Update Agency), preserved at the bottom of §History of scope choices.
 
 ## Target Environment
 
@@ -16,49 +16,57 @@
 |---|---|
 | Environment | **STG** — shared staging, *not* isolated (other testers/teams have live data on it) |
 | Application URL | `http://192.168.1.70` — internal/LAN address, plain HTTP |
-| Environment notes | Shared environment. Confirmed as this run's target by the user on 2026-07-31; last verified reachable during the pre-migration NDC runs (2026-07-25). **Reachability has not been re-verified since the 2026-07-29 platform migration** — Stage 2 confirms it before doing anything else and reports it as a blocker if unreachable. |
-| Execution Mode | **Headed** for Stage `4M` — mandatory for the Manual branch, so a human can watch each interaction live (`pipeline.md` §3.4) |
+| Environment notes | Shared environment. Originally confirmed as the run target by the user on 2026-07-31; last verified reachable during the pre-migration NDC runs (2026-07-25). **Reachability has not been re-verified since the 2026-07-29 platform migration, and has not been re-checked for this run** — Stage 2 (Discovery) confirms it before doing anything else and reports it as a blocker if unreachable. |
+| Execution Mode | **Headed** for Stage `4M` — mandatory for the Manual branch, so a human can watch each interaction live (`pipeline.md` §3.4). Not yet applicable — see Pipeline Branch below. |
 
 ## Pipeline Branch
 
-**Manual Execution Pipeline — Stages 1 → 2 → 3 → `4M`.** Chosen by the user on 2026-07-31.
-
-The Automation branch (`4A` → `5A` → optional `5H` → `6A`) is **not applicable to this run** — a branch not
-taken is never recorded as a gap (`pipeline.md` §6 Rule 3a). No automation code is generated, no script of
-any kind is produced, and no framework decision is required.
+**Not yet chosen for this run.** The prior run (US-4222) took the Manual Execution Pipeline; that choice does not carry forward. Stage 2 (Discovery) does not require this to be resolved; it becomes a blocker only at the Stage 3→4 branch point (`pipeline.md` §3, §5.4–§5.5).
 
 ## Run Scope
 
 | Key | Value |
 |---|---|
 | Run Type | **User Story** |
-| Run Scope Type | **User Story** (`run_scope.md` §3) — expected to resolve to `single` module |
-| Run Scope Source | **Markdown file** — [`requirements/user_stories/US-4222_Admin_Update_Agency.md`](requirements/user_stories/US-4222_Admin_Update_Agency.md) (originally supplied as pasted text on 2026-07-31, transcribed to that file before Stage 1 ran) |
-| Target | US-4222 — [Admin] Update Agency |
+| Run Scope Type | **User Story** (`run_scope.md` §3) — resolved to `single` module (`branch`) |
+| Run Scope Source | **Pasted text**, transcribed into [`PRD_UserStories.md`](PRD_UserStories.md) as User Story 5 (Stage 1, 2026-08-03), per `run_scope.md` §4.1 |
+| Target | US 8605 — [Admin] Create Branch |
+| Active run folder | `run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch` |
 
 ## Modules In Scope
 
 _The modules this run covers. Everything else is out of scope for this run._
 
-**To be proposed by Stage 1 and approved by a human at Stage 1's gate.** The story's acceptance criteria
-target the Admin → Agency update flow; Stage 1 proposes the decomposition and no other stage may (`pipeline.md`
-§4 Stage 1). `modules/modules.json` is currently empty — this is the first module registered on this
-platform install.
+**Resolved at Stage 1's gate on 2026-08-03: `branch`.** Proposed and approved (module was previously
+`Proposed`, scaffolded on approval); it is the platform's active module for this run. No other module is in
+scope for this run.
 
-The story's own **Reflection** section names five downstream areas (Rule Engine, Search & Booking, NDC
-Portal Screens, Reports, Top Up). Whether those are in scope for downstream-effect verification or listed
-as impact awareness only is Open Question #8 in the story file — Stage 1 resolves or carries it forward,
-and does not widen scope on its own (§5.3.1 #3).
+The story's own **Reflection** section names four downstream areas (Search Branch, Booking Module, Staff
+CRUD, Agency CRUD) and its **Dependency** section names three upstream ones (Country POS, Department CRUD,
+Payment Mode). These are recorded as Out-of-Scope / Module-Boundary items in
+[`modules/branch/context/ProjectContext.md`](../modules/branch/context/ProjectContext.md) §3–§3.1, not
+widened into this run's scope.
+
+**Department CRUD ownership** — resolved from authoritative project documentation: `modules.json`'s own
+proposed scope statement for the `company` module names "Departments (with referential-integrity delete)"
+explicitly, sourced from PRD.md ORG-02. Ownership is therefore attributed to `company`, **which remains
+`Proposed` (not yet approved/scaffolded)** — the attribution is settled; the module's approval is not. This
+is not treated as an open item.
 
 ## Requirements Sources
 
 | Source | Path | Status |
 |---|---|---|
-| **PRD** | [`PRD.md`](PRD.md) | Restored 2026-07-31 from `NDC_Previous_used_helper_docs_tobe_delete/PRD.md` by user decision. ⚠️ **Reverse-engineered from the Reference Automation Project on 2026-07-25, marked *Draft for business review* — not business-approved.** Every requirement carries an evidence tag: **[V]** verified by an automated assertion, **[O]** observed but unasserted, **[I]** inferred from locators/field names only. Downstream stages must carry those tags forward and treat `[O]`/`[I]` as **unconfirmed**, never as settled acceptance criteria. |
-| **In-scope User Story** | [`requirements/user_stories/US-4222_Admin_Update_Agency.md`](requirements/user_stories/US-4222_Admin_Update_Agency.md) | Business-supplied, verbatim. This is the **authoritative** requirement for this run where it and the PRD disagree — it is business-written and the PRD is reverse-engineered. A disagreement is reported as a discrepancy, never silently reconciled. |
-| **Prior user stories** | [`PRD_UserStories.md`](PRD_UserStories.md) | Restored alongside `PRD.md` because that document's own provenance note cites it. Historical context (Create Agency, Create Role, Credential Route lists, Airline whitelist/blacklist) — not a requirement source for this run. |
+| **PRD** | [`PRD.md`](PRD.md) | ⚠️ **Reverse-engineered from the Reference Automation Project on 2026-07-25, marked *Draft for business review* — not business-approved.** Every requirement carries an evidence tag: **[V]** verified by an automated assertion, **[O]** observed but unasserted, **[I]** inferred from locators/field names only. Downstream stages must carry those tags forward and treat `[O]`/`[I]` as **unconfirmed**, never as settled acceptance criteria. For Branch, PRD.md §7.2 ORG-03/ORG-04 exist but are far coarser than the in-scope story below. |
+| **In-scope User Story** | [`PRD_UserStories.md`](PRD_UserStories.md) User Story 5 (US 8605 — Create Branch) | Business-supplied, verbatim, appended 2026-08-03. This is the **authoritative** requirement for this run where it and PRD.md disagree — it is business-written and more granular; PRD.md is reverse-engineered from automation. A disagreement is reported as a Finding/discrepancy, never silently reconciled, and never converted into a settled requirement without evidence from the running application. |
+| **Prior user stories** | [`PRD_UserStories.md`](PRD_UserStories.md) User Stories 1–4 | Historical context (Create Agency, Create Role, Credential Route lists, Airline whitelist/blacklist) — not a requirement source for this run, though User Story 3 (Create Agency)'s Product Access Details section is cited as a structural analogue in the Branch Project Context §2. |
 
-### Requirement authority — revised 2026-07-31 by user directive
+### Requirement authority — revised 2026-07-31 by user directive (historical — scoped to US-4222 only)
+
+**This subsection describes the prior run's (US-4222) override and does not apply to the current run
+(US-8605 — Create Branch).** For US-8605, the default rule in the Requirements Sources table above stands
+unmodified: the in-scope User Story (US 8605) is authoritative over PRD.md where they disagree, with no
+application-primacy override granted. Preserved below for traceability of the prior run's decision.
 
 **US-4222 is relatively old, and the application has evolved since it was authored.** Functionality has
 been added and changed after the story was written — the **Threshold-related fields are confirmed later
@@ -98,8 +106,8 @@ artifact, never typed into a tool call, and never echoed in a report.
 
 | Role | Purpose | Available? |
 |---|---|---|
-| Admin | Stage 2 Discovery and Stage `4M` execution of the Admin → Agency update flow | ⛔ **`credentials.json` does not exist on this install.** It must be created by a human — the platform never writes it. Stage 1 does not need it; **Stage 2 cannot start without it.** |
-| Agency (Portal) | Only if a Reflection-area check requires viewing the agency portal | Not set up |
+| Super Admin (`odeysysadmin`, per PRD.md §2 Actor table) | Stage 2 Discovery and any execution of the Admin → Branch → Create Branch flow, including approval steps (Super Admin is the platform's approver role, XC-06) | ✅ **Set up 2026-08-03.** Supplied by the user and written directly to `credentials.json` (git-ignored); values are never echoed in any artifact, tool call, or report. Covers both the maker (create) and checker (approve) steps for this run since Super Admin is the platform's highest-privilege account. |
+| Agency (Portal) | Not needed — no Reflection-area check for this run requires the agency portal | Not set up (not required) |
 
 ## Environment Constraints (standing, project-wide)
 
@@ -126,9 +134,28 @@ Limits that are part of the same authorization:
 3. **Does not carry forward.** A future run asks fresh rather than inheriting this
    (memory: `feedback_automation_decision_gates`).
 
+### Run-specific mutation override — US-8605 / `branch` only
+
+**Granted by the user on 2026-08-03**, modelled on the same shape as the US-4222 override above. Mutation
+of **Branch records only** is authorized for this run: creation of a Branch, **Submit for Approval**,
+**Approve**, and **Reject**.
+
+Limits that are part of the same authorization:
+
+1. The standing read-only constraint remains in **full force for every other entity** — Company, Agency,
+   Staff, Supplier, Role, reference data (Country/State/City, Department, Payment Method), and every module
+   outside Branch. Discovery may read these to populate dropdowns/cascades but must not create, edit, or
+   delete them.
+2. **No bookings, payments, wallet charges, top-ups, holds, or ticketing** are permitted, even in service of
+   verifying a Reflection-area effect of a Branch change. Verification of a downstream effect (Search
+   Branch, Booking Module, Staff CRUD, Agency CRUD) is limited to searching and reading.
+3. **Does not carry forward.** A future run asks fresh rather than inheriting this
+   (memory: `feedback_automation_decision_gates`).
+
 ## History of scope choices
 
 | Run | Scope Type | Target | Notes |
 |---|---|---|---|
 | *(pre-migration runs)* | — | — | Runs before 2026-07-29 live under `platform_core_data/runs/RUN-2026071*` and predate the Module Workspace architecture. Their scope history is preserved in `NDC_Previous_used_helper_docs_tobe_delete/run_configuration.md`. |
-| *(this run — folder created at Stage `4M`)* | User Story | US-4222 — [Admin] Update Agency | Manual Execution Pipeline. Agency-record mutation authorized (above). First module registered on this install. |
+| `run-001` (folder created at Stage `4M`) | User Story | US-4222 — [Admin] Update Agency | Manual Execution Pipeline. Agency-record mutation authorized (historical override, preserved above). First module registered on this install. |
+| `run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch` | User Story | US 8605 — [Admin] Create Branch | Pipeline branch not yet chosen. Branch-record mutation authorized (above). `branch` module approved and scaffolded 2026-08-03; Super Admin credentials supplied 2026-08-03. |

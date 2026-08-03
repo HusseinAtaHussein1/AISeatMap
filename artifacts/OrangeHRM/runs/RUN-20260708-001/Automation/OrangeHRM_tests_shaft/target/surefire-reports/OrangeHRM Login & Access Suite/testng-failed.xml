@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [OrangeHRM Login &amp; Access Suite]" guice-stage="DEVELOPMENT" verbose="0">
+  <test thread-count="5" name="Login(failed)" verbose="0">
+    <classes>
+      <class name="Tests.LoginSuite.DeepLinkRedirectTest">
+        <methods>
+          <include name="tearDown"/>
+          <include name="deepLinkRedirectsToLoginThenReturnsAfterLogin"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.LoginSuite.DeepLinkRedirectTest -->
+      <class name="Tests.LoginSuite.EmojiUsernameRegressionTest">
+        <methods>
+          <include name="emojiUsernameShowsInvalidCredentialsNotServerError"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.LoginSuite.EmojiUsernameRegressionTest -->
+      <class name="Tests.LoginSuite.LongUsernameBoundaryTest">
+        <methods>
+          <include name="longUsernameShowsInvalidCredentialsNormally"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.LoginSuite.LongUsernameBoundaryTest -->
+      <class name="Tests.LoginSuite.ValidLoginTest">
+        <methods>
+          <include name="validLoginRedirectsAwayFromLoginPage"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.LoginSuite.ValidLoginTest -->
+      <class name="Tests.LoginSuite.SqlInjectionLoginTest">
+        <methods>
+          <include name="sqlInjectionPayloadDoesNotBypassAuthentication"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.LoginSuite.SqlInjectionLoginTest -->
+      <class name="Tests.LoginSuite.InvalidCredentialsTest">
+        <methods>
+          <include name="invalidCredentialsShowGenericMessage" invocation-numbers="0 1"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.LoginSuite.InvalidCredentialsTest -->
+      <class name="Tests.LoginSuite.EmptyFormValidationTest">
+        <methods>
+          <include name="emptyFormShowsRequiredOnBothFields"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.LoginSuite.EmptyFormValidationTest -->
+    </classes>
+  </test> <!-- Login(failed) -->
+  <test thread-count="5" name="ForgotPassword(failed)" verbose="0">
+    <classes>
+      <class name="Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest">
+        <methods>
+          <include name="knownUsernameReturnsGenericSuccessMessageWithoutTimeout"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.ForgotPasswordSuite.KnownUsernameForgotPasswordRegressionTest -->
+      <class name="Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest">
+        <methods>
+          <include name="unknownUsernameReturnsGenericSuccessMessage"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- Tests.ForgotPasswordSuite.UnknownUsernameForgotPasswordTest -->
+    </classes>
+  </test> <!-- ForgotPassword(failed) -->
+</suite> <!-- Failed suite [OrangeHRM Login & Access Suite] -->

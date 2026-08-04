@@ -1,0 +1,15 @@
+{
+  "folderName": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch",
+  "index": 3,
+  "scope": "UserStory",
+  "target": "US-8599-SearchActions_US-8606-UpdateBranch",
+  "workflow": "unversioned",
+  "targetRef": "42de80a1148cbef6bf43f7a9a8071ae6d0a8e1cc",
+  "targetRefScope": [],
+  "targetRefCapturedAt": "2026-08-04T08:24:38.821Z",
+  "targetRepoRoot": "E:/Projects/agentic-ai-testing-platform",
+  "targetRefReason": "git repository at E:/Projects/agentic-ai-testing-platform",
+  "createdBy": "Run Manager",
+  "startedTime": "2026-08-04T08:24:38.821Z",
+  "status": "Preparing"
+}

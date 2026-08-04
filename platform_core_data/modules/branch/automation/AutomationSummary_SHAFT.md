@@ -124,3 +124,42 @@ mvn test
 **Handoff confirmation:** All inputs Automation Execution's own specification declares it needs are present. This project has **not yet cleared Automation Approval** — Stage 5A must not execute it until a human approves this Stage 4A output (`pipeline.md` §5.2), after which the Workspace Merge promotes it into `automation_baseline/shaft/tests_SHAFT/`.
 
 **Suite to execute:** `modules/branch/automation/tests_SHAFT/` (this run's working copy — Stage 5A executes this, never a baseline directly, per the standing rule).
+
+---
+
+# Revision 2 — run-003
+
+| Field | Value |
+|---|---|
+| Run Folder (this update) | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Generated | 2026-08-04 |
+| Status | Pending Review |
+
+## What this revision added
+
+19 new automated test cases covering US 8599 (Search & Actions Branch) and US 8606 (Update Branch), bringing the module's SHAFT project from 13 to **32** automated cases across four workflow-shaped suites. The project was **extended in place**, never recreated.
+
+## Handoff to Stage 5A (§28 completeness check)
+
+| Input Stage 5A declares it needs | Present? |
+|---|---|
+| Runnable module project | Yes — `modules/branch/automation/tests_SHAFT/`, compiles offline against the pinned SHAFT version |
+| Entry point | `testng.xml`, 4 suites |
+| Environment configuration | `src/test/resources/environment.properties` (4 keys, all with accessors) |
+| Credential mechanism | Environment variables `BRANCH_QA_USERNAME` / `BRANCH_QA_PASSWORD`; never in any file |
+| Case-to-method traceability | Automation Suite Manifest §Case-to-method map |
+| Known expected failures | Yes — TC-BR-052, stated in advance with the reason |
+| Unverified locators | Yes — 3, disclosed in the Selector Verification Report |
+| Data preconditions | Yes — 4, listed in the Suite Manifest |
+
+**Handoff is complete.** Stage 5A needs no information this stage did not supply.
+
+## Three things Stage 5A should not misread
+
+1. **TC-BR-052 failing is correct.** It asserts the requirement; the application does not meet it (FINDING-012). Do not repair it into passing.
+2. **TC-BR-054 / TC-BR-060 / TC-BR-061 can fail on data, not on defects.** Each says so explicitly in its failure message. Treat those as Environment Health, not Application Health.
+3. **A TC-BR-067 failure is ambiguous by disclosure.** Its validation-message locator is unverified, so a red result may mean a wrong locator rather than a missing message. Its failure text carries that caveat.
+
+## Records this run will create
+
+Seven Branch records per full execution, named `QARUN003_<nanoTime>`, all left in place — deletion is not authorised. They are the only records any test in this suite is permitted to mutate.

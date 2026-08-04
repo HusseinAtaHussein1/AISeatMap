@@ -53,3 +53,54 @@ T+00:20  FINDING-010 created (Category: Requirement Gap) — undocumented Outsta
 T+00:20  FINDING-011 created (Category: Bug) — Submit button label mismatch
 T+00:21  Stage 2 end — Explore module: branch (User Story-scoped strategy; Create Branch screen only)
 ```
+
+---
+
+## run-003 — US 8599 Search & Actions Branch + US 8606 Update Branch (2026-08-04)
+
+Discovery Mode: Browser automation — **Browser Driver** (headless, Stage 2 default).
+Role: Super Admin (`odeysysadmin`), standing in for both actors per the 2026-08-04 directive.
+
+```
+T+00:00  Stage 2 start — module: branch, User Story-scoped strategy (two stories)
+T+00:00  Resolved pointers: module `branch` (single), run-003 active, drift `unchanged` @42de80a
+T+00:00  Confirmed upstream gate: ProjectContext.md Status=Approved, Revision 8
+T+00:01  BrowserDriver.authenticate(STG) -> OK (20.2s); post-login URL /dashboard
+T+00:01  ENVIRONMENT REACHABILITY CONFIRMED — resolves the standing open item carried since 2026-07-29
+T+00:01  Navigate /admin/branch -> 200, title "NDC - Branch"
+T+00:02  Captured grid headers (6) + first-row action icons + count text
+T+00:02  CANDIDATE raised: search form appears to lack Country/State/City/Status filters
+T+00:03  Widget-aware re-probe of the filter region (PrimeNG p-dropdown/p-multiselect/p-radiobutton)
+T+00:03  CANDIDATE REJECTED — all six specified controls present; first probe's selectors under-reported
+T+00:04  Status filter counts: Active=491, Inactive=125, Both=616 (Both = Active + Inactive exactly)
+T+00:04  Empty-result probe (code ZZZZQQ9) -> "No data has been found!" — exact XC-11 string match
+T+00:05  Branch code input: CSS text-transform uppercase, underlying value unchanged
+T+00:05  Branch name search input accepted <script>@#$%^&*() unmodified
+T+00:06  Cascade probe FAILED — #id-Country not clickable (inside .p-hidden-accessible)
+T+00:06  RECOVERY: retried via visible .p-dropdown trigger -> succeeded
+T+00:07  Cascade CONFIRMED: State disabled until Country chosen (Egypt -> 33 states); City until State
+T+00:08  Grid header re-enumeration incl. hidden check -> 6 headers, none hidden, no "State"
+T+00:08  FINDING-012 created (Category: Bug, Severity: Medium) — State column absent from grid
+T+00:08  FINDING-014 created (Category: Requirement Gap) — Active/Inactive status filterable, never displayed
+T+00:09  FINDING-015 created (Category: Requirement Gap) — City filter is multi-select, not dropdown
+T+00:10  Opened /admin/branch/edit/BRN2 via edit pen — READ ONLY (pre-existing record, no typing/submit)
+T+00:11  Captured 61 labelled fields, 6 section headings, 7 action buttons
+T+00:11  RISK-BR-5 probe: PAN absent, Department absent, PaymentGateway absent (Credit Card saved-checked)
+T+00:12  CANDIDATE raised: Update form appears not to pre-fill State/City/Name/PostOfficeBox/CreditLimit
+T+00:13  RECOVERY per 5.7: polled pre-fill across 2 fresh navigations + 1 hard reload
+T+00:14  CANDIDATE REJECTED — 10/10 fields populated at t=500ms, stable; earlier read sampled mid-render
+T+00:14  Email Password confirmed populated on all 3 attempts (value never captured or logged)
+T+00:15  FINDING-013 created (Category: Security Concern, Severity: High) — stored email password returned to client
+T+00:16  Navigation timeout on login (30s) — Event-Driven Capture trigger
+T+00:16  RECOVERY: raw HTTP probes x5 -> 200 in 50-850ms; environment healthy
+T+00:16  Verified 23 chrome processes are the USER'S personal browser, not leaked Playwright — nothing killed
+T+00:17  CANDIDATE REJECTED — timeout was local tooling, not an application condition
+T+00:18  Paginated 12 pages on Status=Both; 120 distinct codes, no repeats
+T+00:19  Filter persistence across paging CONFIRMED (Status=Both still checked on page 3)
+T+00:19  Approval status distribution: Approved 110, Pending for approval 6, Rejected 4
+T+00:20  RISK-BR-6a RESOLVED read-only — action icons are state-dependent:
+T+00:20    Approved -> pencil + thumbs-down | Pending -> pencil + thumbs-up + thumbs-down | Rejected -> pencil + thumbs-up
+T+00:21  Occurrence 2 appended to FINDING-001, 007, 008, 009, 011 (same conditions, Update screen)
+T+00:22  Artifacts written: 2 discovery snapshots, 4 new evidence packages, summaries updated
+T+00:23  Stage 2 end — no mutating action was performed at any point this run
+```

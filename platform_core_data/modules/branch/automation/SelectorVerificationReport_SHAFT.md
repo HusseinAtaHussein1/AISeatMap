@@ -40,3 +40,72 @@
 ## Budget
 
 Not separately time-boxed this run — verification was a byproduct of Stage 4M's already-completed live execution rather than a dedicated Stage 4A verification pass. No element was left unverified, so no budget exhaustion occurred; this is stated explicitly rather than silently omitted, per §11A.6.
+
+---
+
+# Revision 2 — run-003
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Revision | 2 |
+| Verified against | STG — `http://192.168.1.70`, code-state anchor: live build as of 2026-08-04 |
+| Mechanism | Browser Driver (`platform_core/tools/browser_driver/`), headless — **two live passes**, both read-only |
+| Passes | Pass 1 (`verify.js`) — form, grid, Update fields, buttons. Pass 2 (`verify2.js`) — pagination structure, row-scoped icons on a non-Approved row, disambiguation of duplicate ids |
+
+**Why two passes.** Pass 1 left four items unresolved: `#id-Name` resolved MULTI (n=2), no `.p-paginator` existed anywhere, thumbs-up was absent from every page-1 row, and three textareas were ambiguous. Publishing locators with those open would have meant guessing. Pass 2 resolved all four.
+
+## Verified — Search screen (`/admin/branch`)
+
+| Element | Locator | Result |
+|---|---|---|
+| Branch Code input | `#id-Branchcode` | n=1 vis=1 |
+| Branch Name input | `#id-Branchname` | n=1 vis=1 |
+| Country dropdown | `//*[@id='id-Country']/ancestor::div[contains(@class,'p-dropdown')][1]` | n=1 vis=1 |
+| State dropdown | `//*[@id='id-State']/ancestor::div[contains(@class,'p-dropdown')][1]` | n=1 vis=1 |
+| Status radios | `label[for="id-Status-Active\|Inactive\|Both"]` | n=1 vis=1 each |
+| Search button | `//button[@type='submit'][contains(.,'Search')]` | n=1 vis=1 |
+| Grid headers / rows | `table thead th` / `table tbody tr` | present |
+| Empty state | `td.message` → `"No data has been found!"` | confirmed |
+| Result summary | leaf containing `results of` → `"Showing 10 results of 493 results"` | confirmed |
+| Row by code | `//table//tbody//tr[td[1][normalize-space()='CODE']]` | **n=1 — unique** |
+| Row icons (scoped) | `…//i[contains(@class,'pi-pencil'\|'pi-thumbs-up'\|'pi-thumbs-down')]` | n=1 each on a Pending row |
+| Approval Status cell | `…/td[5]` | confirmed |
+
+## Verified — pagination (the finding that would have broken the suite)
+
+Pagination is a **custom `<tilde-paginator>`, not PrimeNG**. `.p-paginator` does not exist on this screen; Stage 2's assumed PrimeNG selectors resolved n=0.
+
+| Control | Locator | Result |
+|---|---|---|
+| Previous / Next | `button.prev` / `button.next` | n=1, icon `pi-angle-left` / `pi-angle-right` |
+| Page numbers | `button.page-no` (current carries `.selected`) | n>1 |
+| **First / Last** | `span.first` / `span.last` | **`<span>`, not `<button>` — clickability NOT confirmed** |
+
+Consequence encoded in code: TC-BR-061 navigates via the highest-numbered `button.page-no` rather than clicking `span.last`. An unverified interaction is not shipped as if it were verified.
+
+## Verified — Update screen
+
+| Element | Locator | Result |
+|---|---|---|
+| Branch Name (readiness signal) | `(//input[@id='id-Name'])[1]` | **[1] = Branch, [2] = Contact** — disambiguated in pass 2 |
+| Branch Email ID | `(//input[@id='id-EmailID'])[1]` | same duplicate-id pattern |
+| Post Office Box / Credit Limit / Outstanding Threshold | `#id-PostOfficeBox` / `#id-CreditLimit` / `#id-OutstandingThreshold` | n=1 each |
+| Credit Terms / Warning Prompt | `[id='id-CreditTerms(Days)']` / `[id='id-WarningPrompt(Days)']` | n=1 each |
+| Address 1 | `(//textarea)[1]` | index 1 of 3 |
+| **Remarks** | `textarea[placeholder='remarks...']` | index 2 of 3 — **arrived pre-filled with "Approved"** |
+| Action buttons | `//button[normalize-space(.)='Send For Approval'\|'Approve'\|'Reject'\|'Cancel'\|'Change Threshold']` | n=1 vis=1 each |
+
+**The pre-filled Remarks is why TC-BR-067 clears the field first.** Without the clear, the "Remarks is mandatory" test would submit an already-populated field and pass without ever exercising the rule.
+
+## Disclosed as UNVERIFIED
+
+| Locator | Why | Consequence |
+|---|---|---|
+| `.p-error, .invalid-feedback, .error-message, small.error, .field-error` | Triggering a validation message requires submitting a form; the verification pass was read-only by design | TC-BR-067's message assertion may fail on a wrong locator rather than a missing message. Its failure text says so explicitly. |
+| `.p-toast-message, .p-message, .toast, .alert-success, .snackbar` | Same reason | Used only for **observations** recorded as Allure steps, never for an assertion |
+| `span.last` | Renders as a span; clicking it was not attempted | Deliberately **not used** — numbered buttons used instead |
+
+Both message locators match **visible elements carrying text**, never raw page source. An earlier draft asserted `getPageSource().contains("required")`, which is true of nearly any Angular form because of the `required` attribute — an assertion that could never fail. That was corrected during self-review.
+
+**Totals:** 34 verified unique and interactable · 0 reused from KB (no prior records for these screens) · 3 disclosed unverified.

@@ -64,3 +64,55 @@
 ## 5. Locator Fallbacks (§24.2)
 
 *(None. Every locator in `SelectorVerificationReport_SHAFT.md` resolved via its primary strategy — no fallback strategy was needed for any of the 13 in-scope test cases' elements.)*
+
+---
+
+# Revision 2 — run-003
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Framework | SHAFT Engine 9.4.20251220 (unchanged) |
+| Lifecycle state | Generated |
+| Total files | 21 (13 carried + 7 created + 1 base page) |
+| Created this revision | 8 |
+| Modified this revision | 4 |
+| Unchanged | 9 |
+| Generated | 2026-08-04 |
+
+## Created
+
+| File | Purpose |
+|---|---|
+| `src/test/java/base/AbstractBaseTest.java` | Driver lifecycle + Super Admin login + `navigateToStartScreen()` hook |
+| `src/test/java/pages/BasePage.java` | Shared driver handle, bounded-wait factory, read helpers *(added during self-review to remove duplication — beyond the approved file list, flagged explicitly)* |
+| `src/test/java/pages/SearchBranchPage.java` | Filters, grid, row-by-code actions, custom `tilde-paginator` |
+| `src/test/java/pages/UpdateBranchPage.java` | Readiness poll, field reads, remarks, action buttons |
+| `src/test/java/utils/BranchProvisioner.java` | Creates a run-tagged branch, returns its assigned Branch Code |
+| `src/test/java/tests/SearchBranchTests.java` | 11 tests |
+| `src/test/java/tests/BranchActionsTests.java` | 3 tests |
+| `src/test/java/tests/UpdateBranchTests.java` | 5 tests |
+
+## Modified
+
+| File | Change |
+|---|---|
+| `src/test/java/base/BaseTest.java` | Now extends `AbstractBaseTest`; contributes only the Add Branch navigation. Behaviour preserved exactly. |
+| `src/test/java/utils/EnvironmentConfig.java` | `editBranchPath()` accessor added |
+| `src/test/resources/environment.properties` | `editBranchPath` key added |
+| `testng.xml` | Three new suites registered |
+
+## Unchanged — verified byte-identical via `git diff`
+
+`tests/CreateBranchTests.java` · `pages/AddBranchPage.java` · `pages/LoginPage.java` · `utils/BranchDataFactory.java` · `data/BranchTestData.java` · `src/test/resources/branch_baseline.properties` · `pom.xml` · `src/main/resources/properties/execution.properties` · `README.md`
+
+## Knowledge-base rules applied
+
+| Rule | Application points |
+|---|---|
+| REPAIR-001 | Grid readiness · post-search settle · approval-status change (re-read from a fresh search) · Update-form pre-fill |
+| REPAIR-002 | Remarks prompt · validation messages · success toasts — all non-throwing boolean polls |
+
+## Build verification
+
+`mvn -o -DskipTests test-compile` → **BUILD SUCCESS**, offline, against the pinned 9.4.20251220. 17 classes produced. **The suite was not executed — that is Stage 5A.**

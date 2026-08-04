@@ -113,3 +113,77 @@ All 13 cases were pre-screened by this run's own Stage 4M execution (same day, s
 | RISK-AUTO-1 (realized and resolved during this run) | SHAFT_ENGINE's actual current API surface differed materially from this skill's initial, general-knowledge assumption (a simpler `getAttribute()`/`getText()` surface) — the real 9.4.20251220 API is fluent/assertion-based (`driver.assertThat().element(locator).attribute(...).isEqualTo(...).perform()`). This was not a hypothetical risk: `mvn test-compile` failed with ~40 "cannot find symbol" errors on the first attempt. | Realized — Medium impact, fully mitigated this run | Diagnosed via `javap` against the resolved jar rather than guessing further; Page Objects and the test class were rewritten to the real API; `mvn test-compile` was re-run and now succeeds (7/7 classes, 0 errors) — see Self Review Report. Still recommend re-running the Stack Documentation step with Context7 restored, to get version-specific guidance beyond raw method signatures. |
 | RISK-AUTO-2 | TC-BR-026 (Warning Prompt length cap) is a regression test whose Expected Result asserts the *corrected* behavior (per Test Design's own instruction) — the underlying defect (FINDING-004) is still open per this run's own Stage 4M execution. Running this generated test today will genuinely **fail**, correctly, until the defect is fixed. | Certain (by design) / Low impact if understood correctly | Stated plainly in the Automation Decision Report and Automation Summary's Known Limitations, so Stage 5A does not mistake an expected, meaningful failure for a broken script |
 | RISK-AUTO-3 | The Product Access grid and Payment Option section both carry live master data (supplier list, payment-gateway-derived options) that can change independently of this application's own release cycle (per Discovery's FINDING-001/FINDING-007 observations) | Low likelihood / Medium impact — TC-BR-028 hardcodes "Cash" as a stable, always-present option; low risk, but not zero | `AddBranchPage`'s Payment Option locator is scoped by the checkbox's own `id` (`id-PaymentOption-Cash`), not by position, so a reordering of the list does not break it — only removal of "Cash" itself would |
+
+---
+
+# Revision 2 — run-003 (US 8599 Search & Actions, US 8606 Update Branch)
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Revision | 2 |
+| Framework Decision Gate (§31) | **Not re-asked.** A SHAFT project already exists for this module, so this pass is an *extension* of `tests_SHAFT/`, which is the registry's one authoritative package for this framework (§19). Brownfield. |
+| Scope source | `modules/branch/test_design/TestCases_Branch.md` rev 3 (Approved), narrowed to `Review = Approved AND Automation = Approved` |
+| Candidates in scope | 32 of 81 (13 carried from run-002 + 19 new) |
+| Generated | 2026-08-04 |
+| Status | Pending Review |
+
+## 1. Scope
+
+The Stage 3 suite reached 81 cases at revision 3. The lifecycle gate narrows this stage to 32:
+
+| Gate | Count |
+|---|---|
+| `Review = Approved` | 73 |
+| `Review = Rejected` | 8 |
+| `Automation = Approved` **and** `Review = Approved` | **32 — this stage's entire scope** |
+| `Automation = Rejected` | 49 — recorded decisions to stay manual, **not** coverage gaps |
+
+The 19 cases new to this revision: TC-BR-040, 041, 042, 043, 045, 046, 052, 054, 055, 056, 057, 058, 060, 061, 065, 066, 067, 068, 069.
+
+**The user's Excel review was imported before this stage began** (`--import-lifecycle`, Excel → Markdown), per the standing rule that Stage 4 is never entered on un-imported sheet edits.
+
+## 2. Suite organisation (§10 — suites follow workflows, not screens)
+
+| Suite | Class | Cases | Mutating |
+|---|---|---|---|
+| CreateBranchSuite | `tests.CreateBranchTests` | 13 | Yes (creates only) |
+| SearchBranchSuite | `tests.SearchBranchTests` | 11 | **No** |
+| BranchActionsSuite | `tests.BranchActionsTests` | 3 | Yes — self-created records only |
+| UpdateBranchSuite | `tests.UpdateBranchTests` | 5 | Yes — self-created records only |
+
+Search was split from Actions deliberately: the 11 read-only cases then run against a shared environment without depending on the mutation authorisation at all.
+
+## 3. Mutation authorisation, made enforceable
+
+ProjectContext §5 permits creating Branch records and acting on **records this run created**, and forbids acting on any Branch it did not. Two mechanisms enforce this rather than merely documenting it:
+
+1. `utils.BranchProvisioner` creates each record under a run-tagged name (`QARUN003_<nanoTime>`) and reads back the application-assigned Branch Code **before** any action is taken.
+2. Every mutating action is issued through `//table//tbody//tr[td[1][normalize-space()='CODE']]`, verified to resolve uniquely. No test in this suite can address a record it did not create.
+
+Seven records are created per full run (TC-BR-056/057/058/066/067/068/069). They are **not** cleaned up — deletion is not authorised.
+
+## 4. Structural change to the existing project
+
+`base.BaseTest` previously owned driver lifecycle, login, **and** navigation to the Add Branch form. Search and Update start on the branch list, so the lifecycle was extracted to `base.AbstractBaseTest` (driver + login + a `navigateToStartScreen()` hook). `BaseTest` now extends it and contributes only the Add Branch navigation.
+
+`tests.CreateBranchTests` is **byte-identical** and required no change (`git diff` empty).
+
+The hook is a method override rather than a re-annotated `@BeforeMethod`: TestNG's annotation inheritance makes an overridden-and-re-annotated setup easy to run twice or not at all, and this shape removes the question. The suite contains exactly one `@BeforeMethod` and one `@AfterMethod`.
+
+## 5. Knowledge-base patterns applied proactively (§11B)
+
+| Rule | Where applied |
+|---|---|
+| **REPAIR-001** — bounded poll for post-submit state, never an immediate assertion | Grid readiness; post-search settling; approval-status change (re-searches so it reads *persisted* state); Update-form pre-fill |
+| **REPAIR-002** — transient message via content locator + non-throwing presence poll | Remarks prompt; validation messages; success toasts — all returning booleans, never asserting on their own |
+
+## 6. Risks carried into Stage 5A
+
+| ID | Risk |
+|---|---|
+| RISK-AUTO-3 | **TC-BR-052 is expected to fail.** It asserts all seven grid columns; FINDING-012 confirms State is absent. Asserting corrected behaviour is required by §13 — the assertion must not be softened. |
+| RISK-AUTO-4 | TC-BR-054 scans up to 10 pages for a row in each approval state. If none exists it fails naming an **environment data gap**, not an application defect. |
+| RISK-AUTO-5 | Validation-message and toast container classes are **unverified** (never triggered during the read-only verification pass). A failure may indicate a wrong locator rather than a missing message. |
+| RISK-AUTO-6 | `goToLastPage()` walks numbered page buttons because First/Last are `<span>`, not buttons. With ~62 pages this may take several hops; bounded at 80. |
+| RISK-AUTO-7 | Seven Branch records accumulate per full run and are never removed. |

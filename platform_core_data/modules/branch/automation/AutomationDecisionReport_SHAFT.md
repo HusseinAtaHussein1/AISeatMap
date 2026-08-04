@@ -250,3 +250,59 @@
 ## 4. Manual Only — Reasons
 
 *(None — zero Manual Only decisions this run. The 26 test cases with `Automation = Rejected` are out of this run's scope by the reviewer's own prior decision, not a Manual Only automation decision made here.)*
+
+---
+
+# Revision 2 — run-003
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Revision | 2 |
+| Scope source | `modules/branch/test_design/TestCases_Branch.md` rev 3 (Approved), narrowed to `Review = Approved AND Automation = Approved` |
+| Candidates decided | 32 of 32 |
+| Generated | 2026-08-04 |
+
+Every case below carries exactly one Automation Decision with a stated justification (§13). No case in scope is silently omitted.
+
+## Generate New Automation — 19 (new this revision)
+
+| Case | Suite | Justification |
+|---|---|---|
+| TC-BR-040 | Search | Deterministic: code in, one row out. Read-only. |
+| TC-BR-041 | Search | Deterministic name search; asserts the returned row's name. |
+| TC-BR-042 | Search | Default-filter behaviour; asserts a total is stated and no empty state. |
+| TC-BR-043 | Search | Empty-state message is a fixed string on a verified element. |
+| TC-BR-045 | Search | Arithmetic relation (Both = Active + Inactive) is stable under a shared, changing dataset — the fixed 491/125/616 counts deliberately are not asserted. |
+| TC-BR-046 | Search | Cascade enable/disable is observable via the `p-disabled` class. |
+| TC-BR-052 | Search | Regression for FINDING-012. **Expected to fail** — see Risk. |
+| TC-BR-054 | Search | Icon set per approval state is fully observable; bounded page scan. |
+| TC-BR-055 | Search | Grid-to-form comparison; routed through the pre-fill poll. |
+| TC-BR-060 | Search | Page-1/page-2 disjointness is a clean assertion. |
+| TC-BR-061 | Search | Last page reachable via verified numbered buttons. |
+| TC-BR-056 | Actions | Self-provisioned record; status transition is persisted and re-read. |
+| TC-BR-057 | Actions | As above, second record so it also starts Pending. |
+| TC-BR-058 | Actions | Automatable with a caveat — see note below. |
+| TC-BR-065 | Update | Ten stored values read after a bounded readiness poll. |
+| TC-BR-066 | Update | Self-provisioned; asserts persisted status after submit. |
+| TC-BR-067 | Update | Requires clearing the pre-filled Remarks; message locator disclosed unverified. |
+| TC-BR-068 | Update | Cancel-then-reopen comparison against the value read before editing. |
+| TC-BR-069 | Update | Approve from the Update screen on a self-provisioned record. |
+
+**TC-BR-058 note.** Whether the *grid-level* approve prompts for Remarks was never established — Discovery only ever exercised the Update screen's mandatory field. The test therefore **records** the prompt's presence as an Allure observation and **asserts** only that the approval completes, which is what the case actually claims. Asserting the prompt exists would encode a guess as a requirement, and the test case explicitly says to record "no prompt" as an observation rather than a pass.
+
+## Reuse Existing Automation — 13
+
+TC-BR-001, 002, 004, 013, 021, 024, 025, 026, 028, 030, 037, 038, 039 — already automated in `tests.CreateBranchTests` at revision 1 and **unchanged**. The `BaseTest` extraction preserved their behaviour exactly (`git diff` empty). No regeneration, no duplication.
+
+## Manual Only / Partially Automatable — 0 in scope
+
+The 49 cases marked `Automation = Rejected` are **recorded human decisions to remain manual**, not gaps in this stage's coverage, and are not counted as missed (§revision note 2026-08-01, consequence 1).
+
+## Decisions taken during implementation, not deferred
+
+| Decision | Resolution |
+|---|---|
+| How to learn a created record's Branch Code | The code is application-assigned; only the Name is controllable. Provisioning creates under a run-tagged name, then searches that name with Status = Both (a new record is not assumed Active) and reads back the code. |
+| Whether to extend `BranchDataFactory` for run tagging | No. Uniqueness and provenance tagging are different concerns; the tag lives in `BranchProvisioner`, leaving the reused factory untouched. |
+| Whether to modify `AddBranchPage` to inject a name | No. `fillMandatoryBaseline(skip)` + the existing public `setBranchName` achieve it with zero modification to a file 13 passing tests depend on. |

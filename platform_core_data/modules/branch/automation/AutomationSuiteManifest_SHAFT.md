@@ -59,3 +59,59 @@
 ## 4. Divergence From Plan
 
 *(None. The realized structure matches Automation Plan §5 exactly — one suite, one Page Object per screen, the same shared fixture/utility set.)*
+
+---
+
+# Revision 2 — run-003
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Runs standalone | Yes — own `pom.xml`, `testng.xml`, and test data. Confirmed via `mvn -o test-compile` (**offline**, 0 errors), which also proves dependency resolution needs nothing outside the local repository. Execution was not run — that is Stage 5A. |
+| Suites | 4 |
+| Automated test cases | 32 |
+| Generated | 2026-08-04 |
+
+## Suites
+
+| Suite | Class | Cases | Mutating | Notes |
+|---|---|---|---|---|
+| CreateBranchSuite | `tests.CreateBranchTests` | 13 | Creates only | Unchanged from revision 1 |
+| SearchBranchSuite | `tests.SearchBranchTests` | 11 | **No** | Runs safely against a shared environment without invoking the mutation authorisation |
+| BranchActionsSuite | `tests.BranchActionsTests` | 3 | Yes | Each test provisions its own record |
+| UpdateBranchSuite | `tests.UpdateBranchTests` | 5 | Yes | TC-BR-065 is read-only; the other four provision |
+
+## Case-to-method map
+
+| Case | Method |
+|---|---|
+| TC-BR-040 | `tcBr040_searchByBranchCodeReturnsMatchingRecord` |
+| TC-BR-041 | `tcBr041_searchByBranchNameReturnsMatchingRecord` |
+| TC-BR-042 | `tcBr042_searchWithNoCriteriaReturnsDefaultActiveResultSet` |
+| TC-BR-043 | `tcBr043_searchWithNonMatchingCriteriaShowsEmptyState` |
+| TC-BR-045 | `tcBr045_statusFilterReturnsOnlyRecordsMatchingSelectedStatus` |
+| TC-BR-046 | `tcBr046_stateFilterStaysDisabledUntilCountrySelected` |
+| TC-BR-052 | `tcBr052_resultsGridDisplaysAllSpecifiedColumns` |
+| TC-BR-054 | `tcBr054_rowActionIconsMatchApprovalState` |
+| TC-BR-055 | `tcBr055_editPenOpensUpdateBranchPreFilled` |
+| TC-BR-056 | `tcBr056_approvePendingBranchFromResultsGrid` |
+| TC-BR-057 | `tcBr057_rejectPendingBranchFromResultsGrid` |
+| TC-BR-058 | `tcBr058_approveAndRejectCaptureRemarksEntry` |
+| TC-BR-060 | `tcBr060_navigateToNextPage` |
+| TC-BR-061 | `tcBr061_navigateToLastPage` |
+| TC-BR-065 | `tcBr065_updateBranchPreFillsEveryStoredValue` |
+| TC-BR-066 | `tcBr066_updateBranchAndSubmitForApproval` |
+| TC-BR-067 | `tcBr067_remarksIsMandatoryBeforeAnyUpdateAction` |
+| TC-BR-068 | `tcBr068_cancelDiscardsUnsavedChanges` |
+| TC-BR-069 | `tcBr069_approveBranchUpdateRequestFromUpdateScreen` |
+
+## Preconditions for Stage 5A
+
+1. `BRANCH_QA_USERNAME` and `BRANCH_QA_PASSWORD` set as environment variables. The suite throws a named error if absent — credentials are never read from a file.
+2. Network reachability to `http://192.168.1.70` (STG).
+3. The dataset must contain rows in **Approved**, **Pending for approval**, and **Rejected** states within 10 pages, or TC-BR-054 reports an unmet precondition.
+4. Enough records for at least two pages, or TC-BR-060/061 report the same.
+
+## Expected outcome, stated in advance
+
+**TC-BR-052 is expected to fail.** It asserts the seven grid columns US 8599 specifies; FINDING-012 confirms State is absent. This is the regression assertion working as designed, not a broken script — do not soften it in Stage 5A or 5H.

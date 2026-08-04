@@ -38,6 +38,16 @@ public class EnvironmentConfig {
     }
 
     /**
+     * Path fragment identifying the Update Branch screen. Used only to recognise whether the browser
+     * is still on that screen after a submit -- the screen itself is always reached by clicking a
+     * row's edit pen, never by direct navigation, because it needs a record id this suite does not
+     * synthesise.
+     */
+    public static String editBranchPath() {
+        return PROPS.getProperty("editBranchPath");
+    }
+
+    /**
      * Never hardcode a credential value (platform-wide rule, restated here). Set
      * BRANCH_QA_USERNAME / BRANCH_QA_PASSWORD as environment variables before running this suite --
      * never inside this file, never inside a test.

@@ -20,6 +20,8 @@
 - **Investigation Notes:** This absence is corroborated by, but distinct from, the run-configuration decomposition gap already recorded in `modules/branch/context/ProjectContext.md` §3.1 — that item is about which *module* owns Department CRUD (attributed to `company`, still Proposed); this Finding is about the Branch Create *form itself* lacking any Department-selection control regardless of which module manages Department master data.
 
   **Human Review Update (2026-08-03):** The module owner directed this Finding (together with FINDING-008) to be ignored — "ignore this Two Mandatory fields from the story don't exist in the UI at all" — in the context of US 8605 being confirmed old/outdated elsewhere in the same review. The absence itself remains accurately observed; only its disposition changes.
-- **Occurrence Count:** 1
+
+  **Occurrence 2 (run-003, 2026-08-04):** Re-observed on the **Update Branch** screen, run-003, 2026-08-04. A full-page text scan finds no match for `/Department/i`, and the Branch Contact Info section contains only Name, Email ID and Phone Number controls. US 8606 restates the Department multi-select as **Mandatory**, so a mandatory field named by the story is absent from the Update screen exactly as it is from Create. Resolves ProjectContext.md RISK-BR-5 for this criterion: the "ignore" disposition **extends** on direct evidence.
+- **Occurrence Count:** 2
 - **Evidence Links:** `failure.png` (full-page screenshot showing Branch Contact Info's three fields and Add button with no Department control present).
 - **Recommendation:** No further action this run per module-owner direction. If Department selection is reinstated in a future story revision, re-open this check.

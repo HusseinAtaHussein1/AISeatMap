@@ -54,3 +54,48 @@
 | Manually executed (Stage 4M — other branch, informational only) | 31 | 8 | `Review = Rejected` — never authorized to run in the Manual branch either (independent of this branch's own scope filter) |
 | Automation-approved scope (`Automation = Approved`, this stage's actual scope source) | 13 | 18 | `Automation = Rejected` — a deliberate reviewer decision to keep these 18 manual-only, not a gap this stage introduced or could close |
 | Automated (this stage) | 13 | 0 | Every case in scope received Generate New Automation — no further drop-out |
+
+---
+
+# Revision 2 — run-003
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Revision | 2 |
+| Candidates decided | 32 of 32 |
+| Generated | 2026-08-04 |
+
+## Coverage against the lifecycle gate
+
+| Category | Count | % of gated scope |
+|---|---|---|
+| **Covered** — generated or reused | **32** | **100%** |
+| Partially Covered | 0 | 0% |
+| Out-of-Scope — `Automation = Rejected` (recorded human decision) | 49 | — |
+| Unknown / Unassessed | 0 | 0% |
+
+Every one of the 32 dual-approved cases has an Automation Script. There are **no uncovered cases in scope**.
+
+The 49 `Automation = Rejected` cases are deliberate decisions to remain manual and are **not** reported as gaps — per the 2026-08-01 revision note, a rejected case is a recorded decision, not a miss.
+
+## Coverage by user story
+
+| Story | Gated cases | Covered |
+|---|---|---|
+| US 8605 — Create Branch | 13 | 13 (reused, unchanged) |
+| US 8599 — Search & Actions Branch | 14 | 14 |
+| US 8606 — Update Branch | 5 | 5 |
+
+## Finding coverage
+
+| Finding | Status | Covered by |
+|---|---|---|
+| FINDING-012 — State column absent | Confirmed, open | **TC-BR-052** — asserts the corrected behaviour; expected red until fixed |
+| FINDING-011 — "Send For Approval" label | Confirmed, open | TC-BR-066 drives the label that exists; the mismatch has its own case (not in automation scope) |
+| FINDING-013 — Email password exposed to client | Confirmed, High | **Not automated** — `Automation = Rejected`. A security exposure is not asserted by a UI test; it needs a code/response-level check outside this suite's remit. Recorded, not missed. |
+| FINDING-014 / FINDING-015 | Needs Human Review | Not automated pending disposition; TC-BR-045 exercises the Status filter behaviour that FINDING-014 bears on. |
+
+## Caveat on reported coverage
+
+100% here means *100% of what a human authorised for automation*, not 100% of the module. Of 81 designed cases, 32 are automated — the remaining 49 are verified by hand by deliberate choice. Reading this number without that denominator would overstate automated protection.

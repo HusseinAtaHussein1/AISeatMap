@@ -58,3 +58,85 @@ None. Every in-scope area was either visited, deliberately skipped (§4), or blo
 | Unreachable | 0 |
 
 **By Discovery Mode:** Browser automation (Browser Driver): 3 screens visited, 4 components, all skipped/blocked areas were also assessed via this same mode (i.e., no fallback mode was needed this run — reachability was confirmed and the Browser Driver worked end to end once `playwright` was installed).
+
+---
+
+# Coverage Summary — run-003 (US 8599 Search & Actions Branch + US 8606 Update Branch)
+
+| Field | Value |
+|---|---|
+| Module | `branch` |
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Revision | 1 (this run's section; the run-002 section above is unchanged) |
+| In-scope surface (from Project Context §2, Rev 8) | 13 areas added at Rev 6 for the two new stories: search/filter form · results grid · empty-result state · pagination · Edit action · Approve/Reject actions · cascade dependency · default status filter · Update all-five-field-groups · Update mandatory Remarks · Update four action buttons · Update pre-fill fidelity · state-dependent action availability |
+| Generated | 2026-08-04 |
+
+## 1. Coverage Percentage
+
+**11/13 in-scope areas visited = 85%.**
+
+Basis: every area named for US 8599 and US 8606 in `ProjectContext.md` §2 was reached and inspected, **except** the two that require performing a mutating action on a record this run created. This is a visitation count, not a depth judgment.
+
+Not counted as visited:
+- **Approve / Reject actions** — the icons and their state-dependent availability were fully observed (see §5), but no approve or reject was *performed*, so the resulting state transition and any Remarks capture are unverified.
+- **Update mandatory Remarks enforcement** — the `Remarks *` textarea was confirmed present; that an action is *blocked* without it was not tested, since testing it means attempting an action.
+
+## 2. Visited Screens
+
+| Screen / URL | Module | Discovery Mode | Snapshot Artifact |
+|---|---|---|---|
+| Search Branch (`/admin/branch`) | branch — **now in scope** (Rev 6 moved it from Out of Scope) | Browser automation — **Browser Driver** | `discovery/DiscoverySnapshot_SearchBranch.md` |
+| Update Branch (`/admin/branch/edit/{code}`) | branch — **new this run**, never previously observed | Browser automation — **Browser Driver** | `discovery/DiscoverySnapshot_UpdateBranch.md` |
+| Dashboard (`/dashboard`) | branch (waypoint only) | Browser automation — Browser Driver | no dedicated snapshot — out-of-scope waypoint |
+
+## 3. Visited Components
+
+| Component | Where Exercised | Discovery Mode |
+|---|---|---|
+| `p-dropdown` (single-select) | Search Branch — Country, State; Update Branch — State, City | Browser Driver — opened, enumerated options, selected |
+| `p-multiselect` | Search Branch — City filter | Browser Driver — presence + enabled-state only; multi-selection not exercised (FINDING-015) |
+| `p-radiobutton` group | Search Branch — Status (Inactive/Active/Both) | Browser Driver — all three selected and searched |
+| Results grid + pager | Search Branch | Browser Driver — 12 pages traversed, 120 rows read |
+| Row action icons (`pi-pencil`/`pi-thumbs-up`/`pi-thumbs-down`) | Search Branch grid | Browser Driver — **observed only**; pencil clicked (read-only navigation), thumbs never clicked |
+| `textarea` (Remarks) | Update Branch | Browser Driver — presence only |
+| Masked password input | Update Branch — Email Password | Browser Driver — presence + populated-state only; **value never captured** (FINDING-013) |
+
+## 4. Skipped Areas
+
+| Area | Why skipped |
+|---|---|
+| Create Branch screen | Already covered in depth by run-002; not re-explored. Its snapshot remains current. |
+| `Change Threshold` popup (US 51489 §4) | Present on the Update screen, but exercising it would risk mutating a pre-existing branch's threshold. |
+| Multi-city selection behaviour | A behavioural question better answered by a designed test case than an exploratory probe (see FINDING-015). |
+
+## 5. Blocked Areas
+
+| Area | Blocking condition | Recovery attempted (§21) |
+|---|---|---|
+| Performing Approve / Reject | Authorization permits acting only on records **this run created**; every record on the environment is pre-existing. | No fallback Discovery Mode can observe a state transition that was never performed. Correctly deferred to Stage `4M`, which will create its own record. **Not recorded as Unreachable** — the surface was reached and read; only the action was withheld. |
+| Remarks mandatory-enforcement on Update | Same — requires attempting an action. | Same. |
+| XC-06 self-approval | Requires creating a record then approving it from the same account. | Same — a Stage `4M` activity. Now testable (ProjectContext §4, Rev 8). |
+| Field-level validation on the Update form (max lengths, Warning-Prompt-vs-Credit-Terms) | Requires typing into a pre-existing record's form. | Deferred to `4M` against a self-created record. |
+
+## 6. Unreachable Areas
+
+**None.** Every in-scope area had a viable Discovery Mode. No `Test Gap` Finding was required on Discovery-mechanism grounds.
+
+## 7. Discovery Mode summary
+
+**One mode used throughout: Browser automation — Browser Driver.**
+
+The Playwright MCP server was deliberately **not** used, despite Search Branch and Update Branch both being first-contact screens with no `screens/*.json` (which would ordinarily select it per `mcp/README.md` §1.2). Both screens sit behind login, the MCP server runs `--isolated` and so cannot inherit the Driver's authenticated session, and a credential value may never be typed into an MCP tool call (§1.3). The Driver was therefore the only mechanism that could reach these screens at all. `driver.page` provided the read-only structural access that first-contact exploration needed.
+
+**Evidence Category for every entry above: Direct Observation.** No Finding in this run rests on Documentation, Human Observation, Static Artifact or Assumption.
+
+## 8. Carried-forward risk disposition (ProjectContext §6)
+
+| Risk | Outcome this run |
+|---|---|
+| **RISK-BR-5** — do the Create-screen dispositions extend to Update? | **Resolved for 3 of 4.** PAN Number, Department, Payment-Gateway-on-Credit-Card all confirmed to extend on direct evidence. Import PNR **does not transfer** — Update shows a stored value, not a default; recorded as not-comparable rather than answered. |
+| **RISK-BR-6** — permission model / action availability | **(a) state-dependent availability: RESOLVED** read-only, clean three-state pattern (§5 of the Search snapshot). **(b) role-differentiated availability: NOT OBSERVABLE** — single privileged account, as declared at Stage 1. |
+| **RISK-BR-7** — Branch Name character set | **Resolved for the search field** — accepts specials unmodified, consistent with US 8599's "Alphabetic & Special Char". The create-field contradiction (TC-BR-003) is unchanged and out of this run's scope. |
+| **RISK-BR-8** — Status vs Approval Status | **Resolved structurally.** The grid exposes **one** column (`Approval Status`); the Active/Inactive axis is filterable but never displayed (FINDING-014). What "approving updates its status accordingly" means for the Active/Inactive axis therefore cannot be evidenced from this UI — a question for Product, now backed by evidence. |
+| **RISK-BR-9** — is pagination testable without seeding? | **Resolved: YES, comfortably.** 616 records across 62 pages at the default size of 10. **No seeding required** — the cost concern raised at Stage 1 is closed. |
+| Environment reachability (open since 2026-07-29) | **Resolved — CONFIRMED reachable.** Login succeeded; 5/5 raw HTTP probes returned 200 in 50–850ms. |

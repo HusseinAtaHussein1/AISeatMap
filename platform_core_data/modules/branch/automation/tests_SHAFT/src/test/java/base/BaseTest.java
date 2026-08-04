@@ -1,31 +1,22 @@
 package base;
 
-import com.shaft.driver.SHAFT;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import pages.AddBranchPage;
-import pages.LoginPage;
 
 /**
- * Shared Setup/Teardown (Automation Plan §5): DriverFactory init + login as Super Admin + navigate
- * to the Add Branch form before every test; DriverFactory teardown after every test. Every test
- * class in this suite extends this one rather than re-authoring the lifecycle per class.
+ * Base class for the Create Branch suite: inherits the shared driver lifecycle and Super Admin login
+ * from {@link AbstractBaseTest} and adds the one thing specific to creating a branch — landing on the
+ * Add Branch form before every test.
+ *
+ * <p>Behaviour is identical to this class's previous, self-contained form (driver → login → open Add
+ * Branch), so {@code CreateBranchTests} required no change when the lifecycle was extracted. The
+ * lifecycle now lives in exactly one place; the Search and Update suites reuse it without inheriting
+ * a navigation they do not want.</p>
  */
-public class BaseTest {
-    protected SHAFT.GUI.WebDriver driver;
+public class BaseTest extends AbstractBaseTest {
     protected AddBranchPage addBranchPage;
 
-    @BeforeMethod
-    public void setUp() {
-        driver = new SHAFT.GUI.WebDriver();
-        new LoginPage(driver).open().loginAsSuperAdmin();
+    @Override
+    protected void navigateToStartScreen() {
         addBranchPage = new AddBranchPage(driver).open();
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 }

@@ -66,3 +66,15 @@ run producing 7/7 compiled classes with zero errors. The corrected coordinate/ve
 |---|---|---|---|
 | SHAFT_ENGINE API surface (version-specific guidance/changelog) | `context7` unavailable this run (Invalid API key); no version-specific written guidance was fetched for the pinned 9.4.20251220 release | The MCP server rejected the resolve-library-id call outright; no fetch was possible | The Maven coordinate and version were still resolved and verified two other ways during generation (Maven Central search for the coordinate; `javap` against the resolved jar for the real method signatures) — see §2/§3. This is a narrower gap than originally recorded: the *coordinate and API* are now real and verified, but *why* the API is shaped this way, migration notes, and best-practice guidance beyond the raw method signatures were never fetched. A human should re-run this step once Context7 access is restored. |
 | Java / Maven toolchain | No existing `pom.xml`/lockfile to extract a pinned version from at the start of this run (greenfield) | No material dependency manifest existed yet at detection time | Java 17 (`maven.compiler.release`) chosen as a conservative default and confirmed compatible with this environment's JDK 23 compiler via a real `mvn test-compile` pass |
+
+---
+
+# Revision 2 — run-003
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Revision | 2 |
+| Generated | 2026-08-04 |
+
+Framework, version (9.4.20251220), and toolchain are unchanged from revision 1. Re-confirmed this run by a successful **offline** `mvn -o test-compile`, which proves every SHAFT API this suite uses exists in the pinned jar rather than in a version Maven might otherwise resolve.

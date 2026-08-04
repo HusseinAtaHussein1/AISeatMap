@@ -5,7 +5,7 @@
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
 **Slug:** `branch` · **Status:** Active
-**Last generated:** 2026-08-03T13:43:35.023Z
+**Last generated:** 2026-08-04T13:25:25.614Z
 
 ## Scope
 
@@ -17,17 +17,17 @@ Branch creation under Company with credit limit, top-up limit, credit terms, own
 
 | Stage | Status | Artifact | Revisions | Last updated | Last run |
 |---|---|---|---|---|---|
-| Stage 1 — Project Context | Approved | [ProjectContext.md](context/ProjectContext.md) | rev 5 | 2026-08-03 | run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch |
-| Stage 2 — Discovery | Approved | [QA_Assessment_Report.md](discovery/QA_Assessment_Report.md) | rev 4 | 2026-08-03 | run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch |
-| Stage 3 — Test Design | Approved | [TestCases_Branch.md](test_design/TestCases_Branch.md) | rev 2 | 2026-08-03 | run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch |
-| Stage 4A — Automation | Pending Review | [AutomationSummary_SHAFT.md](automation/AutomationSummary_SHAFT.md) | rev 1 | 2026-08-03 | run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch |
+| Stage 1 — Project Context | Approved | [ProjectContext.md](context/ProjectContext.md) | rev 8 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
+| Stage 2 — Discovery | Approved | [QA_Assessment_Report.md](discovery/QA_Assessment_Report.md) | rev 6 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
+| Stage 3 — Test Design | Approved | [TestCases_Branch.md](test_design/TestCases_Branch.md) | rev 4 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
+| Stage 4A — Automation | Pending Review | [tests_SHAFT](modules/branch/automation/tests_SHAFT/) | rev 2 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
 | Stage 5H — Self-Healing | Not Started | — | — | — | — |
 
 ## Coverage
 
 | Measure | Value | Source |
 |---|---|---|
-| Test cases designed | 39 | [`test_design/`](test_design/) |
+| Test cases designed | 81 | [`test_design/`](test_design/) |
 | Findings recorded | 0 | [`discovery/findings/`](discovery/findings/) |
 
 ## Automation
@@ -39,7 +39,7 @@ Branch creation under Company with credit limit, top-up limit, credit terms, own
 
 ## Runs that touched this module
 
-- [`run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch`](../../runs/run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch/)
+- [`run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch`](../../runs/run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch/)
 
 ---
 

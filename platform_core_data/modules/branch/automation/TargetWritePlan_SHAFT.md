@@ -42,3 +42,41 @@ Self-review: 3 iterations, converged (not budget-exhausted), 0 checks left unsat
 - This plan is presented for review alongside the Automation Approval gate (`pipeline.md` §5.2), per
   §11C.4 — no file above was written to a location outside the Module Automation Project before this
   plan existed to describe it.
+
+---
+
+# Revision 2 — run-003 — approved 2026-08-04
+
+```
+Target Write Plan — SHAFT Engine (Java)
+Fit: BROWNFIELD — extending modules/branch/automation/tests_SHAFT/ in place (§11C).
+     A SHAFT project already exists for this module; it is the registry's one authoritative
+     package for this framework (§19), so this is an extension, not a new project or a reset.
+Destination: platform_core_data/modules/branch/automation/tests_SHAFT/
+Layout: matched from the existing project (base/ pages/ data/ utils/ tests/)
+
+  CREATE  base/AbstractBaseTest.java        driver lifecycle + login + start-screen hook
+  CREATE  pages/SearchBranchPage.java       filters · grid · row-by-code · tilde-paginator
+  CREATE  pages/UpdateBranchPage.java       readiness poll · field reads · action buttons
+  CREATE  utils/BranchProvisioner.java      run-tagged record + its assigned Branch Code
+  CREATE  tests/SearchBranchTests.java      11 cases
+  CREATE  tests/BranchActionsTests.java     3 cases  (self-created records)
+  CREATE  tests/UpdateBranchTests.java      5 cases  (self-created records)
+
+  MODIFY  base/BaseTest.java                extends AbstractBaseTest; keeps Add Branch nav
+  MODIFY  testng.xml                        register 3 new suites
+  MODIFY  src/test/resources/environment.properties   + editBranchPath
+  MODIFY  utils/EnvironmentConfig.java      + editBranchPath() accessor
+
+  REUSE   pages/LoginPage.java · pages/AddBranchPage.java · utils/BranchDataFactory.java
+          data/BranchTestData.java
+  UNTOUCHED  tests/CreateBranchTests.java   verified byte-identical afterwards
+```
+
+**Approved by the user on 2026-08-04**, with the `AbstractBaseTest` extraction chosen explicitly over a duplicate standalone base class.
+
+## Deviation from the approved plan — one file
+
+`pages/BasePage.java` was **added during self-review**, not in the approved plan. Justification: `selenium()`, `waitFor()`, `hasClass()` and the value/text readers were byte-identical across both new page objects, and the user's own review checklist required eliminating duplicated waits and DRY violations. It touches only files created this run — `AddBranchPage` and `LoginPage` deliberately still do not extend it, because retro-fitting them would modify code the 13 passing Create Branch tests depend on, which is outside the approved write scope.
+
+Recorded here rather than folded in silently, so the delta between what was approved and what was written is visible.

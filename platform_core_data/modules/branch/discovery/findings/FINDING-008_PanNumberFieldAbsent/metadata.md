@@ -20,6 +20,8 @@
 - **Investigation Notes:** Only a full-page text-content search was performed (not a check for a differently-labeled field that might serve the same purpose under another name) — if the business intends PAN Number to exist under a different label, this Finding would not have detected it, and that possibility is left open here rather than ruled out.
 
   **Human Review Update (2026-08-03):** The module owner directed this Finding (together with FINDING-009) to be ignored — "ignore this Two Mandatory fields from the story don't exist in the UI at all" — in the context of US 8605 being confirmed old/outdated elsewhere in the same review. The absence itself remains accurately observed; only its disposition changes, from "needs Product/Business confirmation" to "explicitly deprioritized by module-owner direction."
-- **Occurrence Count:** 1
+
+  **Occurrence 2 (run-003, 2026-08-04):** Re-observed on the **Update Branch** screen, run-003, 2026-08-04. A full-page text scan of the rendered form finds no match for `/PAN\s*Number/i`, and the 61-field label inventory contains no PAN Number control. US 8606 restates PAN Number as an (Optional) Branch Details field, so the same absence the module owner directed be ignored on Create is present on Update. Resolves ProjectContext.md RISK-BR-5 for this criterion: the "ignore" disposition **extends** to the Update screen on direct evidence.
+- **Occurrence Count:** 2
 - **Evidence Links:** `failure.png` (full-page screenshot of the Create Branch form's Branch Details section, showing Service Tax Number and ABTA Number with no PAN Number field between or near them).
 - **Recommendation:** No further action this run per module-owner direction. If PAN Number is reinstated in a future story revision, re-open this check.

@@ -48,3 +48,76 @@ Self-Review — 3 iterations, converged (not budget-exhausted)
 ```
 
 **One item deliberately left as a disclosed limitation, not a self-review failure:** `tcBr026_warningPromptRejectsValueExceeding11Digits` is expected to fail when actually executed, because it asserts the *corrected* behavior for a still-open defect (FINDING-004). This is by design (automation-skill §13's regression-test guidance), not something self-review should "fix" by weakening the assertion — §15A.4 explicitly forbids that.
+
+---
+
+# Revision 2 — run-003 · Self Review & Quality Gate
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Revision | 2 |
+| Iteration budget | MAX_ITERATIONS = 3 (§15A.2) |
+| Iterations used | 2 |
+| Convergence signal | Clean `mvn -o test-compile` (offline, against the pinned 9.4.20251220) + a 12-point review checklist |
+
+## Iteration 1 — generation
+
+Produced `AbstractBaseTest`, `SearchBranchPage`, `UpdateBranchPage`, `BranchProvisioner`, and the three test classes. Two defects were caught before the first compile: a nonsense readiness expression (`!count(A.equals(A) ? A : A).equals(0)`) and a private helper named `wait(Duration)`, which shadows `Object.wait`. Both fixed.
+
+## Iteration 2 — review against the 12-point checklist
+
+### Defects found and corrected
+
+| # | Defect | Severity | Correction |
+|---|---|---|---|
+| 1 | **Vacuous assertions.** `validationMessageShown("required","remarks","mandatory")` and `confirmationShown("success","saved","submitted","approval")` matched raw page source. `required` appears as an attribute on nearly every Angular form control, `remarks` is the field's own label, and `approval` is in the "Send For Approval" button. **TC-BR-067's message assertion could never fail.** | **High** — a test passing for the wrong reason is worse than no test | Replaced with detection of *visible elements carrying text* (`visibleTextsOf`). If the container classes are wrong the test now fails honestly and Stage 5H repairs it against real evidence. |
+| 2 | **Nested bounded waits.** `waitForApprovalStatus` called `open()` — itself a 20 s `WebDriverWait` — inside a 30 s `WebDriverWait` condition, making the outer bound non-deterministic. | **Medium** — violates "bounded and deterministic" | Rewritten as a plain 3-attempt loop; each attempt performs its own bounded waits, so total time is bounded and predictable. |
+| 3 | **Duplicated infrastructure.** `selenium()`, `waitFor()`, `hasClass()`, and the value/text readers were byte-identical in both new page objects. | Medium (DRY) | Extracted to `pages.BasePage`; both extend it. Adds one file beyond the approved plan — flagged explicitly rather than done silently. |
+| 4 | **Seven dead methods** — `isCityFilterEnabled`, `hasPreviousPage`, `waitUntilLeftUpdateScreen`, `clickReject`, `clickChangeThreshold`, `reachingPercentage`, `warningPromptDays` — plus `UpdateBranchPage.contactName`/`creditTermsDays` and a dead `SearchBranchPage.confirmationShown`. Their locators were dead with them. | Low | All removed with their locators. |
+| 5 | `BranchProvisioner.runTaggedBranchName()` was public but used only internally. | Low | Made private. |
+| 6 | `validationErrorMessages()` became dead after fix #1. | Low | Now used in TC-BR-067's failure message, which also states that the locator is unverified — so a failure is diagnosable rather than merely red. |
+
+### Checklist results
+
+| # | Check | Result |
+|---|---|---|
+| 1 | Compiles against **9.4.20251220** | **Pass** — `mvn -o test-compile` succeeds *offline*, so the version cannot silently resolve elsewhere. Every SHAFT API used provably exists in the pinned jar. |
+| 2 | `CreateBranchTests` behaviour unchanged | **Pass** — `git diff` empty for it and for `AddBranchPage`, `LoginPage`, `BranchDataFactory`, `BranchTestData`. Setup sequence identical: driver → login → open Add Branch. |
+| 3 | No duplicated waits / login / lifecycle | **Pass** — exactly one `@BeforeMethod`, one `@AfterMethod`, one `new SHAFT.GUI.WebDriver()`, one `driver.quit()`, one `new WebDriverWait` in the entire suite. |
+| 4 | No dead locators or methods | **Pass** after 10 removals (defects 4–6). |
+| 5 | Tests independent | **Pass** — fresh driver per method; no `dependsOnMethods`; no shared mutable static state; every mutating test provisions its own record. Each is runnable alone or in suite. |
+| 6 | Provisioner guarantees uniqueness and returns the persisted code | **Pass** — `QARUN003_<nanoTime>` name; searches Status = Both (a new record is not assumed Active); asserts the row exists **and** the code cell is non-empty before returning, failing loudly rather than letting a test act on an unidentified record. |
+| 7 | Polling bounded, deterministic, no `Thread.sleep` | **Pass** — zero `Thread.sleep` calls (the two grep hits are javadoc prose). All waits bounded; nesting removed by fix #2. |
+| 8 | Assertions validate business behaviour | **Pass** after fix #1. Status transitions are re-read from a fresh search, i.e. persisted state rather than an optimistic UI update. |
+| 9 | REPAIR-001 / REPAIR-002 applied consistently | **Pass** — 001 at grid readiness, search settle, status change, form pre-fill; 002 at Remarks prompt, validation, toast. |
+| 10 | `testng.xml` / `environment.properties` / `EnvironmentConfig` synchronised | **Pass** — 4 property keys ↔ 4 accessors; 4 registered classes ↔ 4 class files. |
+| 11 | Architecture review | See scores below. |
+
+## Quality Gate
+
+| Dimension | Score | Basis |
+|---|---|---|
+| **Architecture** | **92 / 100** | Clean POM hierarchy, single-responsibility page objects, workflow-shaped suites, provisioning isolated from assertions. −8: `AddBranchPage`/`LoginPage` predate `BasePage` and do not extend it, so two read idioms coexist. |
+| **Maintainability** | **90 / 100** | Every non-obvious locator carries the evidence for its shape; timeouts and bounds are named constants. −10: three page objects now hold Update-screen knowledge (`SearchBranchPage` needs the Remarks locator for the grid prompt), and search fixtures are constants rather than externalised. |
+| **Test Isolation** | **95 / 100** | Fresh driver per test, self-provisioned records, code-scoped mutation. −5: TC-BR-054 and TC-BR-060/061 depend on ambient data volume and can fail on an environment gap. |
+| **SHAFT Compliance** | **88 / 100** | SHAFT fluent API for all actions and assertions; Allure `@Epic`/`@Feature`/`@Story`/`@Description` throughout; config externalised; credentials from environment variables only. −12: element-information reads go through `getDriver()` and plain Selenium, so those reads do not appear as Allure steps — a deliberate trade for cross-version safety, documented in `BasePage`. |
+
+**Gate verdict: PASS.** No High-severity issue remains open; all six found were corrected before artifacts were generated.
+
+## Technical debt
+
+1. `AddBranchPage` / `LoginPage` do not extend `BasePage` — retro-fitting would modify files 13 passing tests depend on, outside this run's approved write scope.
+2. Validation/toast container classes remain unverified until something triggers them live.
+3. Seven Branch records accumulate per full run with no teardown (deletion unauthorised).
+4. `SearchBranchPage` carries a Remarks locator that properly belongs to the Update screen, because the grid-level prompt's markup is unknown.
+5. Search fixtures (`BRN2`, `Emirates NDC`) are in-class constants rather than externalised test data.
+
+## Suggested future improvements — outside approved scope, not actioned
+
+1. Trigger a validation message once during a verification pass to promote the two unverified locators to Confirmed.
+2. Add an `@AfterSuite` cleanup once record deletion is authorised.
+3. Migrate `AddBranchPage`/`LoginPage` onto `BasePage` in a dedicated refactor run with the Create suite re-executed as the guard.
+4. Externalise search fixtures into `branch_baseline.properties`.
+5. Promote the row-by-code and PrimeNG-ancestor idioms into `platform/knowledge/` — both are application-shape-independent and would serve any PrimeNG target (requires explicit promotion approval).
+6. Introduce a `PaginationComponent` if a second paginated screen is automated.

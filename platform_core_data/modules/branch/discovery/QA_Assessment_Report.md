@@ -182,3 +182,160 @@ Verify the live Create Branch screen (`/admin/branch/add`) against every accepta
 **Closed, no longer needing a Test Design coverage decision (module-owner review, 2026-08-03):** GAP-BR-1 (PAN Number, ignored), GAP-BR-2 (Department, ignored), GAP-BR-3 (Outstanding Threshold, traced to US 51489 §2), GAP-BR-4 (Flight editability, outdated requirement), GAP-BR-5 (Import PNR default, confirmed feature), GAP-BR-6 (no Payment Gateway dropdown, outdated requirement) — see §11.
 
 **Handoff confirmation:** Every input `test-design-skill/SKILL.md` §4 declares as needed is present: this Discovery Report (this file + `Timeline.md` + `Coverage_Summary.md`), the Findings Summary and every Finding's populated `metadata.md` (each with an Expected Behavior field citing a specific `PRD_UserStories.md` US 5/US 6 section or `ProjectContext.md` section), the Evidence Packages referenced above, and Regression Test Candidates (§12). No Finding in this run's set is missing an Expected Behavior citation, and each Finding's Status/Evidence Category combination is unambiguous for Test Design's disposition mapping (Confirmed → Regression candidate; Needs Human Review → pending-clarification candidate; Rejected → Documented exception, not carried into test-case design).
+
+---
+
+# QA Assessment Report — run-003 (US 8599 Search & Actions Branch + US 8606 Update Branch)
+
+| Field | Value |
+|---|---|
+| Module | `branch` |
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Generated | 2026-08-04 |
+| Status | Pending Review |
+
+## 1. Scope
+
+**Run Scope Type:** User Story · **Run Type:** User Story · **Run Scope Source:** Pasted text (`PRD_UserStories.md` User Story 7 and User Story 8, appended 2026-08-04).
+
+Validated against **`ProjectContext.md` Revision 8, Status Approved**. Two stories in one run: US 8599 (Search & Actions Branch) and US 8606 (Update Branch), the latter supplied expressly so US 8599's edit-pen criterion resolves against a real requirement.
+
+**Strategy applied (§16, User Story):** targeted verification of the two stories' acceptance criteria, with every carried-forward Assumption/Risk given an explicit confirm/refute/unresolved treatment (see §8 and `Coverage_Summary.md` §8). No wandering into adjacent screens — the Create Branch screen was not re-explored, since run-002 already covers it.
+
+## 2. Objectives
+
+1. Confirm environment reachability, unverified since the 2026-07-29 platform migration.
+2. Explore the **Search Branch** screen substantively — run-002 visited it as a single waypoint and deliberately went no further.
+3. Reach the **Update Branch** screen, never previously observed, and answer **RISK-BR-5**: do the module owner's 2026-08-03 Create-screen dispositions extend to it?
+4. Resolve **RISK-BR-8** (Status vs Approval Status), **RISK-BR-9** (is pagination testable without seeding?), **RISK-BR-7** (Branch Name search character set), and **RISK-BR-6a** (state-dependent action availability).
+
+## 3. Evidence Sources
+
+| Discovery Mode | Areas covered | Why |
+|---|---|---|
+| Browser automation — **Browser Driver** | Every in-scope area | Both target screens sit behind login. The Playwright MCP server runs `--isolated` and cannot inherit the Driver's authenticated session, and a credential value may never be typed into an MCP call (`mcp/README.md` §1.3) — so despite both being first-contact screens, the Driver was the only viable mechanism. |
+
+**Evidence Category for every Finding: Direct Observation.** Nothing in this run rests on Documentation, Human Observation, Static Artifact, or Assumption.
+
+## 4. Modules Explored
+
+Route structure confirmed for the Branch module:
+
+```
+/admin/branch                    Search Branch — filter form + results grid + pager
+/admin/branch/add                Create Branch (covered by run-002)
+/admin/branch/edit/{BranchCode}  Update Branch — a branch is addressable directly by its code
+```
+
+Reusable components exercised: PrimeNG `p-dropdown`, `p-multiselect`, `p-radiobutton`, results grid + pager, `textarea`, masked password input. These recur across the Admin application, so behaviour observed here likely generalises — but that generalisation is **not** asserted, only noted.
+
+## 5. Observed Behaviour
+
+- **Search form** carries all six controls US 8599 specifies. `Active` is pre-selected on load, matching the AC's stated default.
+- **Cascade** behaves exactly as the Business Rule requires: State disabled until a Country is chosen (Egypt yields 33 states), City disabled until a State is chosen.
+- **Status filter partitions the record set arithmetically**: Active 491 + Inactive 125 = Both 616.
+- **Empty result** renders `No data has been found!` — an exact match to the platform-wide contractual string.
+- **Pagination** preserves the active filter across page changes; 120 distinct codes were read across 12 pages with no repetition.
+- **Row action availability is state-dependent** — `Approved` gives edit + reject; `Pending for approval` gives edit + approve + reject; `Rejected` gives edit + approve. A record only offers transitions to a state it is not already in.
+- **Update Branch pre-fills completely**, including both cascading dropdowns, within 500ms.
+- **Update Branch renders `Approve` and `Reject` buttons even on an already-Approved record** — differing from the grid, which hides thumbs-up on such a row.
+- The Branch code search input applies CSS `text-transform: uppercase` for display only; the submitted value is unchanged.
+- The result count reads cumulatively through the current page (`Showing 30 results of 616 results` on page 3 at size 10).
+
+## 6. Confirmed Behaviour
+
+Validated against a clearly documented requirement and found to **match**:
+
+| Behaviour | Requirement | Evidence |
+|---|---|---|
+| Status default is `Active` | US 8599 Business Rules | `id-Status-Active` checked on load |
+| State depends on Country; City depends on State | US 8599 Business Rules | Cascade probe, `DiscoverySnapshot_SearchBranch.md` §3.1 |
+| Status filter returns only matching records | PRD.md XC-09 | 491 + 125 = 616, an exact partition |
+| Empty-state message | PRD.md XC-11 / §9.2 | Literal `No data has been found!` |
+| `Pending for approval` state label | PRD.md XC-01 / §9.2 | Observed verbatim in the grid |
+| Pagination preserves the active filter | PRD.md XC-13 | `Status=Both` still checked on page 3 |
+| Edit pen navigates to Update Branch with details pre-filled | US 8599 Actions; US 8606 | `/admin/branch/edit/BRN2`, 10/10 fields populated |
+| Branch Code, Branch Name, Country Name, City, Approval Status, Actions columns | US 8599 Search Result Grid | 6 of the 7 specified columns render — see §11 for the 7th |
+| Remarks field present and marked mandatory on Update | US 8606 Buttons & Actions | `Remarks *` textarea |
+| Approve / Reject / Cancel buttons present on Update | US 8606 Buttons & Actions | Observed |
+
+## 7. Assumptions
+
+| Assumption | Evidence Category |
+|---|---|
+| The Branch code search matches case-insensitively — the CSS uppercase transform is display-only, so a lowercase value is what gets submitted. **Not tested**; inferred from the value/display divergence. | Assumption |
+| Component behaviour observed here (PrimeNG cascade, pager) generalises to other Admin grids. **Not tested** outside Branch. | Assumption |
+
+## 8. Open Questions
+
+| # | Question | Why unresolved |
+|---|---|---|
+| OQ-A | Does clicking grid thumbs-up/thumbs-down capture Remarks, as PRD.md XC-03 requires platform-wide? | Requires *performing* an approve/reject, permitted only on a self-created record. Deferred to `4M`. |
+| OQ-B | Are the `Approve`/`Reject` buttons on the Update **form** enforced server-side for an already-Approved record, or merely always rendered? The grid and the form disagree about availability. | Requires attempting the action. |
+| OQ-C | Does "Approving or rejecting a branch updates its status accordingly" (US 8599) mean Approval Status, or the Active/Inactive Status? | The Active/Inactive axis is displayed nowhere in the grid (FINDING-014), so no UI surface could evidence such a change. Needs a Product answer. |
+| OQ-D | Does selecting multiple cities in the City multi-select return the union of their records? | A behavioural question better answered by a designed case than an exploratory probe (FINDING-015). |
+| OQ-E | Is the Branch Email Password stored reversibly, and must the edit endpoint return it at all? | Not determinable from the UI. Capturing the raw response would write a live credential into this run's evidence, which the platform's rules forbid — the omission is disclosed, not performed (FINDING-013). |
+| OQ-F | Is `Import PNR`'s checked state on an existing record consistent with the Create default being unchecked? | A stored value and a form default are different things; the comparison does not transfer. Recorded rather than forced into an answer. |
+
+## 9. Discovered Risks
+
+**Business:** the highest-impact item this run is **FINDING-013** — a stored Branch Email account password recoverable by any operator who can open a routine edit screen, on a plain-HTTP environment. It outranks every functional finding here and is the one item worth escalating ahead of the rest.
+
+**Technical:** FINDING-013 implies the Branch Email Password is held **reversibly** rather than hashed, and that the edit endpoint serialises the record without field-level redaction — an architectural property no front-end change fixes, and one likely to affect sibling entities handled the same way.
+
+**Process:** two candidates this run would have been published as defects had they been taken from their first symptom — one of them high-severity. Both were killed by the Investigation Workflow's validate-and-recover step. Recorded because it is a live demonstration that fixed-delay sampling produces false reads against this application.
+
+## 10. Coverage
+
+**11/13 in-scope areas visited = 85%.** Full detail, including the two Blocked areas and their recovery analysis, is in `Coverage_Summary.md` (run-003 section). No area was Unreachable, and no `Test Gap` Finding was required on Discovery-mechanism grounds.
+
+## 11. Gaps
+
+| Gap | Finding |
+|---|---|
+| `State` column enumerated by US 8599 does not render in the grid | **FINDING-012** (Bug, Medium, Confirmed) |
+| Active/Inactive status is filterable but never displayed — non-conforming to PRD.md XC-07 | **FINDING-014** (Requirement Gap, Needs Human Review) |
+| City filter is a multi-select where the AC says dropdown | **FINDING-015** (Requirement Gap, Needs Human Review) |
+| Submit button reads `Send For Approval` on Update as well as Create | FINDING-011, occurrence 2 |
+| PAN Number / Department absent on Update, as on Create | FINDING-008 / FINDING-009, occurrence 2 |
+| No Payment Gateway control despite Credit Card being saved-checked | FINDING-007, occurrence 2 |
+| Stored email password returned to the client | **FINDING-013** (Security Concern, High, Confirmed) |
+| `Remarks *` label's `for` attribute points at an id no element carries — label not programmatically associated | Minor a11y defect, recorded in `DiscoverySnapshot_UpdateBranch.md` §5; not raised as a separate Finding |
+
+## 12. Recommendations
+
+**Regression Test Candidates** — areas worth durable coverage, not designed cases:
+
+1. Status filter partition (Active + Inactive = Both) — a cheap, high-signal invariant.
+2. Cascade enable/disable chain on the search form.
+3. Empty-state contractual string.
+4. Pagination filter-persistence across page changes.
+5. State-dependent action-icon availability across all three approval states.
+6. Update pre-fill fidelity, gated on a readiness signal rather than a delay.
+
+**Findings of Category `Recommendation`:** none raised this run.
+
+**Escalate first:** FINDING-013, to whoever owns platform security, ahead of the functional findings.
+
+## 13. Inputs for Test Design
+
+**Findings by disposition** (Status maps to disposition per `test-design-skill` §5.3):
+
+| Status | Findings | Suggested disposition |
+|---|---|---|
+| Confirmed | FINDING-012, FINDING-013 (plus carried 002, 003, 004, 011) | Regression test |
+| Needs Human Review | FINDING-014, FINDING-015 | Exploratory test, pending Product's answer |
+| Rejected | FINDING-001, 005, 006, 007, 008, 009, 010 | Documented exception |
+
+**Assumptions resolved this run:** RISK-BR-5 (3 of 4 extend; 1 not comparable) · RISK-BR-6a (resolved) · RISK-BR-7 (search field resolved) · RISK-BR-8 (resolved structurally) · RISK-BR-9 (resolved — no seeding needed) · environment reachability (confirmed).
+
+**Assumptions still open:** RISK-BR-6b (role-differentiated behaviour — not observable in a single-account run) plus OQ-A through OQ-F above.
+
+**Requirement Gaps needing a coverage decision:** FINDING-012, FINDING-014, FINDING-015 — each needs Product to say whether the story or the build is authoritative before a case can assert an expected result.
+
+**Two hard constraints Test Design must design around:**
+
+1. **Approve/Reject, Remarks enforcement, XC-06 self-approval, and Update field validation all require a self-created Branch record.** This run's authorization permits acting only on records the run itself creates, and Discovery created none. Every such case must begin by creating its own branch and capturing its run-tagged identifier **before** acting on it — that provenance capture is what makes an authorized action provable afterwards.
+2. **The Update screen must be gated on a readiness signal, never a fixed delay.** A fixed-delay read produced a false "form is empty" result twice in this run. Poll for a known field to become non-empty. This is the single most important execution note this run produces.
+
+**Pagination is free.** 616 live records across 62 pages — pagination cases need no seeded data, and the Stage 1 cost concern (RISK-BR-9) is closed.

@@ -184,3 +184,182 @@ No case is in scope for Stage `4A` yet: automation requires `Review = Approved A
 | Evidence Packages (Secondary) | Yes | Cited specifically per Finding-derived test case (TC-BR-008, 023, 026, 035, 037–039) — never the Finding as a whole |
 
 **Handoff confirmation:** Every input both `manual-execution-skill` §4 and `automation-skill` §4 declare as needed is present and specific. No Discovery/Finding/Evidence Reference in the Traceability Matrix is a bare "see Discovery" — each cites a specific file and, where applicable, a specific section or evidence file. The Excel workbook (`TestCases_Branch.xlsx`) must still be generated via `platform_core/tools/test_suite_export/cli.js` before this handoff is fully satisfied per §9.1 — recorded as the one remaining mechanical step, not a content gap.
+
+---
+
+# Coverage Report — run-003 (US 8599 Search & Actions Branch + US 8606 Update Branch)
+
+| Field | Value |
+|---|---|
+| Module | `branch` |
+| Produced by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Project Context | `modules/branch/context/ProjectContext.md` Revision 8 (Approved) |
+| Generated | 2026-08-04 |
+| Status | Pending Review |
+
+## 1. Run Scope
+
+**Run Scope Type:** User Story · **Run Type:** User Story · **Source:** Pasted text (`PRD_UserStories.md` User Story 7 and User Story 8).
+
+Designed against **ProjectContext.md Revision 8**, with Discovery Approved 2026-08-04. Per §16's User Story strategy: at minimum one case per enumerated acceptance criterion, no wandering into adjacent coverage, and every carried-forward Assumption/Risk given its own explicitly tagged case.
+
+**Suite extended in place.** run-002's 39 Create Branch cases (TC-BR-001…039) are unchanged. run-003 adds **42 cases, TC-BR-040…081**, bringing the module suite to 81.
+
+## 2. Requirements Covered
+
+| Requirement area | Cases |
+|---|---|
+| US 8599 §Search & Filtering | TC-BR-040, 041, 042, 044, 046, 047, 048, 049, 050, 051, 064, 079 |
+| US 8599 §Search Result Grid | TC-BR-043, 052, 053, 078 |
+| US 8599 §Actions & Functionalities | TC-BR-054, 055, 056, 057, 058, 059, 060, 061, 062, 063 |
+| US 8599 §Business Rules | TC-BR-044, 045, 046, 047 |
+| US 8606 §Branch Details / Sales Configuration | TC-BR-071, 072, 073, 074, 075 |
+| US 8606 §Buttons & Actions | TC-BR-066, 067, 068, 069, 070 |
+| US 8606 §Description (pre-fill) | TC-BR-055, 065 |
+| US 51489 §4 Branch Threshold Update | TC-BR-076 |
+| Credential handling (ProjectContext §5) | TC-BR-077 |
+| Role boundary (ProjectContext §4) | TC-BR-080 |
+
+## 3. Coverage Matrix
+
+Consolidated view; full per-case detail in `TraceabilityMatrix.md`.
+
+| Requirement | Test Case IDs | Status |
+|---|---|---|
+| Branch Code filter | TC-BR-040, 048 | Covered |
+| Branch Name filter | TC-BR-041, 049, 050, 051 | Covered |
+| Country / State / City filters + cascade | TC-BR-046, 047, 079 | **Partially Covered** — multi-city application is Exploratory, pending FINDING-015 |
+| Status filter (Inactive/Active/Both) + default | TC-BR-044, 045 | Covered |
+| Search button / result set | TC-BR-042, 043, 064 | Covered |
+| Grid displayed columns | TC-BR-052, 053 | **Partially Covered** — State column asserted but currently absent (FINDING-012) |
+| Active/Inactive visibility in grid | TC-BR-078 | **Partially Covered** — Exploratory, pending FINDING-014 |
+| Edit action | TC-BR-055, 065 | Covered |
+| Approve / Reject actions | TC-BR-054, 056, 057, 058, 069, 070 | Covered |
+| Self-approval (XC-06) | TC-BR-059 | Covered |
+| Pagination | TC-BR-060, 061, 062, 063 | Covered |
+| Update field groups + validation | TC-BR-071, 072, 073, 074, 075 | Covered |
+| Update Remarks mandatory | TC-BR-067 | Covered |
+| Update Submit / Approve / Reject / Cancel | TC-BR-066, 068, 069, 070 | Covered |
+| Branch Threshold Update popup | TC-BR-076 | Covered |
+| Credential handling on re-edit | TC-BR-077 | Covered |
+| Role-differentiated behaviour | TC-BR-080 | **Unknown / Unassessed** — not observable with one account |
+| Account lockout | TC-BR-081 | **Unknown / Unassessed** — deferred, requires dedicated environment |
+
+**Requirement Coverage: 15/17 Covered = 88%.** 3 Partially Covered, 2 Unknown/Unassessed, 0 Uncovered.
+
+## 4. Business Rules
+
+| Rule | Case(s) |
+|---|---|
+| Default search status is Active, switchable to Inactive or Both | TC-BR-044, 045 |
+| State and City dropdowns depend on Country and State respectively | TC-BR-046, 047 |
+| Approving or rejecting a branch updates its status accordingly | TC-BR-056, 057, 069, 070 — and see §8, since which *status* is meant remains open (FINDING-014) |
+| Remarks required before any Update action | TC-BR-067 |
+| Warning Prompt must be less than Credit Terms | TC-BR-074 |
+| Reaching Percentage must not exceed 100% | TC-BR-075 |
+
+## 5. Test Scenarios
+
+**By tier:** 34 Atomic · 8 Scenario · 0 E2E (run-003 additions).
+
+**By dimension (§7 / §17):**
+
+| Dimension | Cases | Notes |
+|---|---|---|
+| Positive Scenarios | 21 | |
+| Boundary Values | TC-BR-072, 073, 075 | |
+| Empty Values | TC-BR-067, 071 | |
+| Invalid Inputs | TC-BR-043, 074 | |
+| Unicode | TC-BR-050 | |
+| Special Characters | TC-BR-049 | |
+| Security Inputs | TC-BR-051, 077 | |
+| Timeouts | — | **Not Applicable** — no timeout-sensitive behaviour is documented for search or update in either story, and the environment offers no supported way to induce one. |
+| Business Rules | TC-BR-044…047, 067, 074, 075 | |
+| Error Handling | TC-BR-043 | Empty-state message is the only documented error response for these screens |
+| Permissions | TC-BR-059, 080 | |
+| Configuration | — | **Not Applicable** — neither story documents a feature flag or config toggle affecting Search or Update behaviour. |
+| Regression Impact | TC-BR-072, 073 | Update re-tests the Create-screen length gaps (FINDING-002/003) on the second screen |
+| Integration Behaviour | TC-BR-046, 047, 076 | Geography cascade, and the Branch→Agency threshold inheritance |
+| Risk-based Prioritization | applied | TC-BR-059 and TC-BR-077 carry High risk and are P1 |
+| Exploratory Recommendations | TC-BR-078, 079 | |
+
+## 6. Manual Test Cases
+
+- `platform_core_data/modules/branch/test_design/TestCases_Branch.md`
+- `platform_core_data/modules/branch/test_design/TestCases_Branch.xlsx` — generated by `test_suite_export`, not hand-authored
+
+**Case count: 81** for module `branch` — reconciled across the suite document's Total Test Cases, `TraceabilityMatrix.md` (81 rows), and the exporter's own count (81). No file groups more than one module.
+
+## 7. Assumptions
+
+Assumption-based cases carried forward from ProjectContext.md §6:
+
+| Case | Assumption |
+|---|---|
+| TC-BR-059 | XC-06 self-approval is *inferred*, never asserted, in the source material — either outcome is a valid result |
+| TC-BR-076 | The Branch Threshold Update popup flow was never exercised during Discovery; its behaviour on a branch with no child agencies is unknown |
+
+## 8. Coverage Gaps
+
+| Item | Category | Reason |
+|---|---|---|
+| Role-differentiated behaviour (TC-BR-080) | Unknown / Unassessed | Only one account exists and it holds Super Admin privileges while standing in for both actors. A privileged account cannot demonstrate an unprivileged view. **Minimal prerequisite: provision an Admin-role credential.** |
+| Account lockout (TC-BR-081) | Unknown / Unassessed | Deferred — Requires Dedicated Environment. Locking an account on shared staging would block other teams and is not self-reversing. **Minimal prerequisite: an isolated environment with a disposable account.** |
+| Which status "approving updates its status accordingly" refers to | Partially Covered | The Active/Inactive axis is displayed nowhere in the grid (FINDING-014), so no UI surface can evidence a change to it. **Minimal prerequisite: a Product decision on FINDING-014.** |
+| Multi-city filter application (TC-BR-079) | Partially Covered | Exploratory pending FINDING-015. **Minimal prerequisite: a Product decision on whether multi-select is intended.** |
+| State column (TC-BR-052) | Partially Covered | Case asserts the corrected behaviour; the column is currently absent (FINDING-012). **Minimal prerequisite: a Product decision on whether US 8599's column list or the build is authoritative.** |
+| Grid-level Remarks capture (TC-BR-058) | Covered, unvalidated | Discovery could not observe whether the grid action prompts for Remarks without performing an approval. Resolved by executing the case. |
+
+**Uncovered Requirements: 0. Uncovered Findings: 0.**
+
+## 9. Risks
+
+| Risk | Level | Cases |
+|---|---|---|
+| Stored mail-account password recoverable by any operator who can open the edit screen, over plain HTTP (FINDING-013) | **High** | TC-BR-077 |
+| A maker may be able to approve their own change, meaning the maker–checker control does not exist in practice | **High** | TC-BR-059 |
+| Operator cannot distinguish Active from Inactive branches in a mixed result set (FINDING-014) | Medium | TC-BR-078 |
+| Over-length values reaching storage unchecked on Update (FINDING-002/003) | Medium | TC-BR-072, 073 |
+| A threshold change applied without reviewing affected child agencies | Medium | TC-BR-076 |
+| Operator cannot distinguish branches sharing a city name across states (FINDING-012) | Medium | TC-BR-052 |
+
+The two High-risk items are both P1 and both sit on the critical path for this run.
+
+## 10. Recommendations
+
+1. **Escalate FINDING-013 ahead of execution.** TC-BR-077 will confirm it, but the finding is already evidenced — the security decision does not need to wait for a test result.
+2. **Answer FINDING-014 and FINDING-015 before execution** if possible. Both drive Exploratory cases whose expected result is currently "confirm with the reviewer"; a decision converts them into assertable cases.
+3. **Provision an Admin-role credential** to convert TC-BR-080 from Unknown into real coverage, and to give TC-BR-059 the control case it currently lacks.
+4. **Exploratory charters:** TC-BR-078 and TC-BR-079 are recorded as exploratory rather than forced into fixed pass/fail assertions, because in both cases the correct expected result is a Product decision this stage cannot make.
+
+## 11. Automation Status
+
+Roll-up of the `Automation` column across all 81 cases in the module suite:
+
+| Value | Count |
+|---|---|
+| Pending | **42** (every run-003 case, TC-BR-040…081) |
+| Approved | 13 (run-002 cases) |
+| Rejected | 26 (run-002 cases) |
+
+This run took the **Manual Execution branch (`4M`)**, which gates on `Review` alone and does not read this column. Every new case is `Automation: Pending` because no automation decision has been made — not because one was declined.
+
+## 12. Inputs for Both Branches
+
+**Stage `4M` — Manual Execution** (gates on `Review = Approved`):
+
+| Needs | Present |
+|---|---|
+| Project Context (governing) | `modules/branch/context/ProjectContext.md` Rev 8, Approved |
+| Manual Test Suite | `TestCases_Branch.md` + `.xlsx`, 81 cases |
+| Requirement Traceability Matrix | `TraceabilityMatrix.md`, 81 rows, every reference specific |
+| Coverage Report | this document |
+
+**Two execution constraints Stage `4M` must honour — both are hard:**
+
+1. **Twelve cases require a self-created Branch record** — TC-BR-056, 057, 058, 059, 066, 067, 068, 069, 070, 071, 072, 073, 074, 075, 076. This run's authorization permits acting only on records the run itself creates. Each such case must create its own branch and **record its Branch Code before acting on it**, so the action stays provable as authorized afterwards. Acting on any pre-existing branch is prohibited.
+2. **Never read the Update form on a fixed delay.** Wait for a field to actually populate. A fixed-delay read produced a false "form is empty" result twice during Discovery, and would produce a false failure here.
+
+**Three cases must never be recorded as passed:** TC-BR-078 and TC-BR-079 are Exploratory (record the observation and the reviewer's decision), and TC-BR-080 is `Not Covered — Single-Account Run`. TC-BR-081 is `Deferred — Requires Dedicated Environment` and must not be executed on shared staging.
+
+**Stage `4A` — Automation:** not invoked this run. Zero cases are currently in its scope, since all 42 new cases are `Automation: Pending`.

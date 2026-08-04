@@ -1,0 +1,28 @@
+# FINDING-012 — "State" column is absent from the Search Branch results grid
+
+- **Finding ID:** FINDING-012
+- **Title:** "State" column is absent from the Search Branch results grid
+- **Category:** Bug
+- **Severity:** Medium
+- **Severity Reason:** Matches the Medium criterion "Business rule inconsistencies" — an explicitly enumerated output column is missing, so the grid does not present the data the acceptance criteria require. It does not block the workflow (search, edit, approve and reject all function), so it does not reach High.
+- **Confidence Score:** 97%
+- **Evidence Category:** Direct Observation
+- **Status:** Confirmed
+- **Business Risk:** An operator cannot distinguish two branches that share a city name across different states, and cannot read a branch's state without opening its record. US 8599's stated purpose is to "monitor branch details" efficiently; a missing geography column works directly against that. With 616 records live on this environment, the omission is more than cosmetic.
+- **Technical Risk:** None identified — the underlying State data exists (it is stored, it pre-fills correctly on the Update screen, and it is filterable via the search form). This is a presentation-layer omission, not a data-integrity problem.
+- **Module:** branch
+- **Workflow:** Admin → Branch → Search Branch → results grid
+- **Description:** US 8599 enumerates seven columns for the Search Result Grid. The live grid renders six. The **State** column is not present.
+- **Expected Behavior:** "Search Result Grid: Displayed Columns: Branch Code, Branch Name, Country Name, **State**, City, Approval Status, Action Options" (PRD_UserStories.md US 7 §Search Result Grid; carried into ProjectContext.md §2, row "NEW — Search Branch: results grid").
+- **Actual Behavior:** The grid renders exactly six headers, in order: `Code`, `Branch Name`, `Country Name`, `City`, `Approval Status`, `Actions`. No header matching `/state/i` exists.
+- **Steps to Reproduce:** 1) Log in as Super Admin. 2) Navigate to `/admin/branch`. 3) Click **Search**. 4) Read the results-grid header row.
+- **Investigation/Recovery Result:** Not applicable — reading a rendered table header is deterministic; no recovery category in §5.7 matches. The read was nonetheless repeated on two independent page loads, in two separate browser sessions, with identical results.
+- **Investigation Notes:** The first pass raised the possibility that the column was responsive-hidden rather than absent, since the viewport is 1440×900 and this is a PrimeNG/Angular grid. A second probe therefore enumerated every `thead th`/`td` **including** hidden ones, capturing `offsetParent === null` and computed `display` per header. Result: exactly 6 headers, all `display: table-cell`, none hidden, none containing "state". The column is genuinely not rendered. Also checked, and separately recorded: no Active/Inactive `Status` column exists either (FINDING-014) — that is a distinct omission traced to a different requirement source, so it is not merged into this Finding. The `Code` header is also shorter than the AC's "Branch Code" wording; this is treated as trivial copy variance and is not raised as a defect.
+- **Root Cause Hypothesis:**
+  - **Possible Root Cause:** The grid's column definition may simply omit the State binding — consistent with the fact that the adjacent `Country Name` and `City` columns render correctly from the same record, so the data is available to the component and only the column is missing.
+  - **Confidence:** 55%
+  - **Supporting Evidence:** `failure.png` shows Country Name and City rendering populated values for every row while no State column exists at all; the Update screen (`DiscoverySnapshot_UpdateBranch.md` §4) shows State stored and pre-filling correctly for the same records.
+  - **Unknowns:** Whether the column was deliberately dropped (e.g. for width) rather than omitted in error, and whether the list API returns a state field at all — neither is determinable from the UI. Front-end source and the list endpoint's payload would settle it.
+- **Occurrence Count:** 1
+- **Evidence Links:** `failure.png` (grid with Status=Both, showing the six rendered headers), `full_page.png` (full Search Branch screen on first load). Console and DOM snapshot not retained as separate files — the header enumeration, including the hidden-element check, is transcribed verbatim in `DiscoverySnapshot_SearchBranch.md` §4, which is the material evidence for this Finding.
+- **Recommendation:** Confirm with Product whether the State column was intentionally dropped. If it was, US 8599's Search Result Grid criteria are outdated and should be corrected — the same "story is old" disposition already applied to four other US 8605/8606 criteria (FINDING-005/006/007/008/009). If it was not, this is a straightforward front-end column addition.

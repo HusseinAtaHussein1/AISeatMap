@@ -18,6 +18,8 @@
 - **Steps to Reproduce:** 1) Log in as Super Admin. 2) Navigate to `/admin/branch/add`. 3) Scroll to the bottom of the form and read the primary action button's label.
 - **Investigation/Recovery Result:** Not applicable — a label read is deterministic; no retry category applies.
 - **Investigation Notes:** Did not click the button (doing so would attempt to submit an incomplete/deliberately-invalid form populated with several of this run's probe values) — the label was read directly from the rendered screenshot/DOM text without interacting with the control.
-- **Occurrence Count:** 1
+
+  **Occurrence 2 (run-003, 2026-08-04):** Re-observed on the **Update Branch** screen, run-003, 2026-08-04. The submit action is labelled **`Send For Approval`** there too, against US 8606 §Buttons & Actions' "Submit for Approval". The same label mismatch therefore spans both the Create and Update screens, and both stories (US 8605 and US 8606) use the "Submit for Approval" wording. Full observed button set on an Approved record: `Add`, `Add`, `Change Threshold`, `Cancel`, `Reject`, `Approve`, `Send For Approval`. Unlike Create, the Update screen also renders `Approve` and `Reject` directly on the form. Treated as one underlying condition (the product's label differs from the stories' label) rather than a second Finding, per §5.9.
+- **Occurrence Count:** 2
 - **Evidence Links:** `failure.png` (full-page screenshot showing the "Send For Approval" and "Cancel" buttons at the bottom of the form).
 - **Recommendation:** Low priority — confirm with Product/Business whether the exact button wording matters for this story; if not, treat as a non-issue and update the AC's wording instead.

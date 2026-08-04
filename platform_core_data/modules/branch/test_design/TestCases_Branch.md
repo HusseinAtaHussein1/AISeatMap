@@ -3,13 +3,13 @@
 | Field | Value |
 |---|---|
 | Module | `branch` |
-| Produced by run | `run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch` |
-| Revision | 2 (in place — TC-BR-026/027 corrected: cross-field Warning Prompt/Credit Terms validation confirmed, TC-BR-026 re-isolated from it) |
+| Produced by run | `run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch` (TC-BR-001…039) · `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` (TC-BR-040…081) |
+| Revision | 3 (in place — run-003 extended the suite from Create-only to Create + Search & Actions + Update, adding TC-BR-040…081. The 39 existing cases are unchanged.) |
 | Run Scope Type / Run Type | User Story / User Story |
 | Project Context | `modules/branch/context/ProjectContext.md` |
-| Total Test Cases | 39 |
-| Generated | 2026-08-03 |
-| Status | Approved — 31/39 Approved, 8 Rejected (module owner review, 2026-08-03); Rejected cases remain in the suite as a record, excluded from Stage 4 scope by owner decision |
+| Total Test Cases | 81 |
+| Generated | 2026-08-03 (TC-BR-001…039) · 2026-08-04 (TC-BR-040…081) |
+| Status | **Approved** — 2026-08-04, ahmed.ayman@tildetech.ae. TC-BR-040…081 approved for execution; TC-BR-001…039 retain their 2026-08-03 review decisions (31 Approved, 8 Rejected). |
 
 ## Case Index
 
@@ -54,10 +54,52 @@
 | TC-BR-037 | Create Branch with a valid Child Agencies Threshold Amount value | Atomic | P2 | Atomic, Positive, ExpectedImplementation | Approved | Approved |
 | TC-BR-038 | Child Agencies Threshold Amount blocks submission when empty | Atomic | P3 | Atomic, Negative-EmptyValues, AssumptionBased, ExpectedImplementation | Approved | Approved |
 | TC-BR-039 | Child Agencies Threshold Amount accepts a numeric value | Atomic | P3 | Atomic, Positive, ExpectedImplementation | Approved | Approved |
+| TC-BR-040 | Search Branch by Branch Code returns the matching record | Atomic | P1 | Atomic, Positive, Smoke | Approved | Approved |
+| TC-BR-041 | Search Branch by Branch Name returns the matching record | Atomic | P1 | Atomic, Positive, Smoke | Approved | Approved |
+| TC-BR-042 | Search with no criteria returns the default Active result set | Atomic | P2 | Atomic, Positive | Approved | Approved |
+| TC-BR-043 | Search with non-matching criteria shows the empty-state message | Atomic | P1 | Atomic, Negative-InvalidInputs, Regression | Approved | Approved |
+| TC-BR-044 | Status filter defaults to Active on page load | Atomic | P1 | Atomic, Positive, BusinessRule | Approved | Rejected |
+| TC-BR-045 | Status filter returns only records matching the selected status | Atomic | P1 | Atomic, Positive, BusinessRule, Regression | Approved | Approved |
+| TC-BR-046 | State filter stays disabled until a Country is selected | Atomic | P2 | Atomic, Positive, BusinessRule | Approved | Approved |
+| TC-BR-047 | City filter stays disabled until a State is selected | Atomic | P2 | Atomic, Positive, BusinessRule | Approved | Rejected |
+| TC-BR-048 | Branch Code filter accepts alphanumeric input | Atomic | P3 | Atomic, Positive | Approved | Rejected |
+| TC-BR-049 | Branch Name filter accepts alphabetic and special characters | Atomic | P3 | Atomic, Positive | Approved | Rejected |
+| TC-BR-050 | Branch Name filter handles Unicode input without error | Atomic | P3 | Atomic, Negative-Unicode | Approved | Rejected |
+| TC-BR-051 | Search filters handle security-payload-shaped input safely | Atomic | P2 | Atomic, Negative-SecurityInputs | Approved | Rejected |
+| TC-BR-052 | Results grid displays all specified columns | Atomic | P1 | Atomic, Regression | Approved | Approved |
+| TC-BR-053 | Approval Status column reflects each record's approval state | Atomic | P2 | Atomic, Positive | Approved | Rejected |
+| TC-BR-054 | Row action icons match the record's approval state | Atomic | P2 | Atomic, Positive | Approved | Approved |
+| TC-BR-055 | Edit pen opens Update Branch with the record's details pre-filled | Scenario | P1 | Scenario, Positive, Smoke | Approved | Approved |
+| TC-BR-056 | Approve a Pending branch from the results grid | Scenario | P1 | Scenario, Positive, SelfCreatedRecord | Approved | Approved |
+| TC-BR-057 | Reject a Pending branch from the results grid | Scenario | P1 | Scenario, Positive, SelfCreatedRecord | Approved | Approved |
+| TC-BR-058 | Approve and Reject capture a Remarks entry | Atomic | P2 | Atomic, Positive, SelfCreatedRecord | Approved | Approved |
+| TC-BR-059 | Same account attempts to approve the branch it created | Atomic | P1 | Atomic, Security, SelfCreatedRecord, AssumptionBased | Approved | Rejected |
+| TC-BR-060 | Navigate to the next page of results | Atomic | P2 | Atomic, Positive | Approved | Approved |
+| TC-BR-061 | Navigate to the last page of results | Atomic | P3 | Atomic, Positive | Approved | Approved |
+| TC-BR-062 | Pagination preserves the active status filter | Atomic | P1 | Atomic, Positive, Regression | Approved | Rejected |
+| TC-BR-063 | Result count text reflects the filtered total | Atomic | P3 | Atomic, Positive | Approved | Rejected |
+| TC-BR-064 | A record on a later page is findable by direct search | Atomic | P2 | Atomic, Positive | Approved | Rejected |
+| TC-BR-065 | Update Branch pre-fills every stored value | Scenario | P1 | Scenario, Positive, Smoke | Approved | Approved |
+| TC-BR-066 | Update a branch and submit it for approval | Scenario | P1 | Scenario, Positive, SelfCreatedRecord | Approved | Approved |
+| TC-BR-067 | Remarks is mandatory before any Update action | Atomic | P1 | Atomic, Negative-EmptyValues, SelfCreatedRecord | Approved | Approved |
+| TC-BR-068 | Cancel discards unsaved changes on Update Branch | Atomic | P2 | Atomic, Positive, SelfCreatedRecord | Approved | Approved |
+| TC-BR-069 | Approve a branch update request from the Update screen | Scenario | P1 | Scenario, Positive, SelfCreatedRecord | Approved | Approved |
+| TC-BR-070 | Reject a branch update request from the Update screen | Scenario | P1 | Scenario, Positive, SelfCreatedRecord | Approved | Rejected |
+| TC-BR-071 | Mandatory Update Branch fields block submission when cleared | Atomic | P1 | Atomic, Negative-EmptyValues, SelfCreatedRecord | Approved | Rejected |
+| TC-BR-072 | Post Office Box rejects a value exceeding 8 characters on Update | Atomic | P2 | Atomic, Negative-BoundaryValues, Regression, SelfCreatedRecord | Approved | Rejected |
+| TC-BR-073 | Credit Limit rejects a value exceeding 15 characters on Update | Atomic | P2 | Atomic, Negative-BoundaryValues, Regression, SelfCreatedRecord | Approved | Rejected |
+| TC-BR-074 | Warning Prompt must not exceed Credit Terms on Update | Atomic | P2 | Atomic, Negative-InvalidInputs, SelfCreatedRecord | Approved | Rejected |
+| TC-BR-075 | Reaching Percentage rejects a value above 100 on Update | Atomic | P2 | Atomic, Negative-BoundaryValues, SelfCreatedRecord | Approved | Rejected |
+| TC-BR-076 | Change Threshold lists child agencies before confirming | Scenario | P2 | Scenario, Positive, SelfCreatedRecord, AssumptionBased | Approved | Rejected |
+| TC-BR-077 | Stored Branch Email Password is not recoverable from the Update form | Atomic | P1 | Atomic, Security, Regression | Approved | Rejected |
+| TC-BR-078 | Exploratory — is Active/Inactive status discoverable from the grid? | Atomic | P2 | Atomic, Exploratory | Approved | Rejected |
+| TC-BR-079 | Exploratory — does the City filter accept and apply multiple cities? | Atomic | P3 | Atomic, Exploratory | Approved | Rejected |
+| TC-BR-080 | Admin-role operator sees the same grid columns and row actions | Atomic | P3 | Atomic, Permissions, NotCovered-SingleAccountRun | Approved | Rejected |
+| TC-BR-081 | Repeated failed login attempts lock the account | Atomic | P3 | Atomic, Security, Deferred-RequiresDedicatedEnvironment | Approved | Rejected |
 
-**Tier breakdown:** 37 Atomic · 2 Scenario
+**Tier breakdown:** 71 Atomic · 10 Scenario
 
-**Lifecycle breakdown:** Review — 0 Pending · 31 Approved · 8 Rejected · Automation — 0 Pending · 13 Approved · 26 Rejected
+**Lifecycle breakdown:** Review — 0 Pending · 73 Approved · 8 Rejected · Automation — 0 Pending · 32 Approved · 49 Rejected
 
 ## Test Cases
 
@@ -1211,3 +1253,1200 @@
 **Review:** Approved
 
 **Automation:** Approved
+
+---
+
+### TC-BR-040 — Search Branch by Branch Code returns the matching record
+
+**Objective:** Verify that searching by a known Branch Code returns that branch.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Code | BRN2 |
+
+**Steps:**
+
+1. Enter the Test Data value in the **Branch code** field.
+2. Click **Search**.
+
+**Expected Result:** The grid returns the branch whose Code is `BRN2`.
+
+**Priority:** P1
+
+**Tags:** Atomic, Positive, Smoke
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-041 — Search Branch by Branch Name returns the matching record
+
+**Objective:** Verify that searching by Branch Name returns branches whose name matches.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Name | Emirates NDC |
+
+**Steps:**
+
+1. Enter the Test Data value in the **Branch name** field.
+2. Click **Search**.
+
+**Expected Result:** The grid returns the branch named `Emirates NDC`.
+
+**Priority:** P1
+
+**Tags:** Atomic, Positive, Smoke
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-042 — Search with no criteria returns the default Active result set
+
+**Objective:** Verify that searching without entering any criteria returns all Active branches.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Leave every filter at its default.
+2. Click **Search**.
+
+**Expected Result:** The grid returns results and the count text states the total number of Active branches. No validation error is shown.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-043 — Search with non-matching criteria shows the empty-state message
+
+**Objective:** Verify that a search returning no records displays the platform's empty-state message rather than a blank grid.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Code | ZZZZQQ9 |
+
+**Steps:**
+
+1. Enter the Test Data value in the **Branch code** field.
+2. Click **Search**.
+
+**Expected Result:** The message `No data has been found!` is displayed and the grid shows no rows.
+
+**Priority:** P1
+
+**Tags:** Atomic, Negative-InvalidInputs, Regression
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-044 — Status filter defaults to Active on page load
+
+**Objective:** Verify that the Status radio group has Active pre-selected when the screen loads.
+
+**Preconditions:** User is logged in as Super Admin.
+
+**Steps:**
+
+1. Open Admin → Branch.
+2. Read the Status radio group without changing it.
+
+**Expected Result:** **Active** is selected. **Inactive** and **Both** are not selected.
+
+**Priority:** P1
+
+**Tags:** Atomic, Positive, BusinessRule
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-045 — Status filter returns only records matching the selected status
+
+**Objective:** Verify that each Status option returns only branches in that state, and that Both returns the union.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Status selected |
+|---|
+| Active |
+| Inactive |
+| Both |
+
+**Steps:**
+
+1. Select the Status option under test.
+2. Click **Search**.
+3. Record the total from the result count text.
+4. Repeat steps 1–3 for each option in Test Data.
+
+**Expected Result:** Each search returns a result set, and the Both total equals the Active total plus the Inactive total.
+
+**Priority:** P1
+
+**Tags:** Atomic, Positive, BusinessRule, Regression
+
+**Notes:** Discovery observed 491 Active + 125 Inactive = 616 Both. Compare the totals to each other rather than to those fixed numbers — the environment is shared and counts change.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-046 — State filter stays disabled until a Country is selected
+
+**Objective:** Verify that the State filter becomes usable only after a Country is chosen.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Observe the **State** filter before selecting a Country.
+2. Select **Egypt** in the **Country** filter.
+3. Observe the **State** filter again.
+
+**Expected Result:** State is disabled at step 1 and enabled at step 3, listing states belonging to Egypt.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive, BusinessRule
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-047 — City filter stays disabled until a State is selected
+
+**Objective:** Verify that the City filter becomes usable only after a State is chosen.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch, with Country set to Egypt.
+
+**Steps:**
+
+1. Observe the **City** filter before selecting a State.
+2. Select any State.
+3. Observe the **City** filter again.
+
+**Expected Result:** City is disabled at step 1 and enabled at step 3, listing cities belonging to the selected State.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive, BusinessRule
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-048 — Branch Code filter accepts alphanumeric input
+
+**Objective:** Verify that the Branch Code filter accepts letters and digits.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Code | BRN262 |
+
+**Steps:**
+
+1. Enter the Test Data value in the **Branch code** field.
+2. Click **Search**.
+
+**Expected Result:** The value is accepted with no validation error and the search executes.
+
+**Priority:** P3
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-049 — Branch Name filter accepts alphabetic and special characters
+
+**Objective:** Verify that the Branch Name filter accepts letters and special characters as the acceptance criteria state.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Name | Test-Branch & Co. |
+
+**Steps:**
+
+1. Enter the Test Data value in the **Branch name** field.
+2. Click **Search**.
+
+**Expected Result:** The value is accepted with no validation error and the search executes.
+
+**Priority:** P3
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-050 — Branch Name filter handles Unicode input without error
+
+**Objective:** Verify that non-ASCII input in the Branch Name filter is handled without an unhandled error.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Name | القاهرة 東京 🏢 |
+
+**Steps:**
+
+1. Enter the Test Data value in the **Branch name** field.
+2. Click **Search**.
+
+**Expected Result:** The search completes. Either matching records or `No data has been found!` is displayed. No unhandled error, blank page, or server error appears.
+
+**Priority:** P3
+
+**Tags:** Atomic, Negative-Unicode
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-051 — Search filters handle security-payload-shaped input safely
+
+**Objective:** Verify that payload-shaped strings in the search filters are treated as literal text.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Name | `<script>alert(1)</script>` |
+| Branch Code | `' OR '1'='1` |
+
+**Steps:**
+
+1. Enter the Branch Name value and click **Search**.
+2. Clear the field, enter the Branch Code value and click **Search**.
+
+**Expected Result:** Each search completes and returns either matching records or `No data has been found!`. No script executes, no database error is exposed, and no unfiltered result set is returned.
+
+**Priority:** P2
+
+**Tags:** Atomic, Negative-SecurityInputs
+
+**Notes:** Input-handling probe only — observe the response, never attempt to exploit.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-052 — Results grid displays all specified columns
+
+**Objective:** Verify that the results grid shows every column the acceptance criteria require.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Click **Search**.
+2. Read the grid's header row.
+
+**Expected Result:** The grid displays Branch Code, Branch Name, Country Name, **State**, City, Approval Status, and Actions columns.
+
+**Priority:** P1
+
+**Tags:** Atomic, Regression
+
+**Notes:** This asserts the corrected behaviour. Discovery confirmed the State column is currently absent (FINDING-012) — this case is expected to fail until that is fixed or the requirement is formally changed.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-053 — Approval Status column reflects each record's approval state
+
+**Objective:** Verify that the Approval Status column shows the record's current approval state.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Select Status **Both**.
+2. Click **Search**.
+3. Read the Approval Status value on each row.
+
+**Expected Result:** Every row shows one of `Approved`, `Pending for approval`, or `Rejected`. No row shows a blank Approval Status.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-054 — Row action icons match the record's approval state
+
+**Objective:** Verify that each row offers only the actions valid for its approval state.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch, with Status set to Both and results displayed.
+
+**Test Data:**
+
+| Approval Status | Expected icons |
+|---|---|
+| Approved | edit pen, thumbs-down |
+| Pending for approval | edit pen, thumbs-up, thumbs-down |
+| Rejected | edit pen, thumbs-up |
+
+**Steps:**
+
+1. Locate a row for each Approval Status in the Test Data.
+2. Read the icons in that row's Actions column.
+
+**Expected Result:** Each row shows exactly the icons listed for its Approval Status — a record never offers a transition to the state it is already in.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive
+
+**Notes:** Pending and Rejected rows may not appear on page 1; page through the results or search for a known record to find one.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-055 — Edit pen opens Update Branch with the record's details pre-filled
+
+**Objective:** Verify that the edit pen navigates to Update Branch showing the selected branch's stored values.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch, with results displayed.
+
+**Steps:**
+
+1. Note the Code, Branch Name, Country Name and City shown on a chosen row.
+2. Click that row's edit pen icon.
+3. Wait until the Branch Name field shows a value.
+4. Compare the form's Name, Country, State and City against the values noted in step 1.
+
+**Expected Result:** The Update Branch screen opens for the selected branch, and its Name, Country, State and City match the values shown in the grid row.
+
+**Priority:** P1
+
+**Tags:** Scenario, Positive, Smoke
+
+**Notes:** Step 3 matters — wait for a field to actually populate before comparing. Reading the form on a fixed delay produced a false "form is empty" result twice during Discovery.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-056 — Approve a Pending branch from the results grid
+
+**Objective:** Verify that the thumbs-up action approves a branch awaiting approval.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run exists with Approval Status `Pending for approval`, and its Branch Code has been recorded.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Code | the code of the branch this run created |
+
+**Steps:**
+
+1. Search for the recorded Branch Code.
+2. Confirm the row's Approval Status reads `Pending for approval`.
+3. Click that row's thumbs-up icon.
+4. Complete any prompt that appears.
+5. Search for the same Branch Code again.
+
+**Expected Result:** The branch's Approval Status changes to `Approved`, and its row now offers the edit pen and thumbs-down only.
+
+**Priority:** P1
+
+**Tags:** Scenario, Positive, SelfCreatedRecord
+
+**Notes:** Act only on a branch this run created. Record its Branch Code before acting — acting on a pre-existing branch is not authorised for this run.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-057 — Reject a Pending branch from the results grid
+
+**Objective:** Verify that the thumbs-down action rejects a branch awaiting approval.
+
+**Preconditions:** User is logged in as Super Admin. A second branch created by this run exists with Approval Status `Pending for approval`, and its Branch Code has been recorded.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Branch Code | the code of a second branch this run created |
+
+**Steps:**
+
+1. Search for the recorded Branch Code.
+2. Confirm the row's Approval Status reads `Pending for approval`.
+3. Click that row's thumbs-down icon.
+4. Complete any prompt that appears.
+5. Search for the same Branch Code again.
+
+**Expected Result:** The branch's Approval Status changes to `Rejected`, and its row now offers the edit pen and thumbs-up only.
+
+**Priority:** P1
+
+**Tags:** Scenario, Positive, SelfCreatedRecord
+
+**Notes:** Use a different self-created branch from TC-BR-056 so each case starts from a Pending record.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-058 — Approve and Reject capture a Remarks entry
+
+**Objective:** Verify that approving or rejecting a branch records a free-text Remarks reason.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run exists with Approval Status `Pending for approval`.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Remarks | Approved by QA run-003 |
+
+**Steps:**
+
+1. Search for the self-created branch.
+2. Click the thumbs-up icon.
+3. Observe whether a Remarks entry is requested.
+4. If it is, enter the Test Data value and confirm.
+
+**Expected Result:** A Remarks entry is requested before the approval completes, the entered text is accepted, and the approval succeeds.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive, SelfCreatedRecord
+
+**Notes:** Discovery could not establish whether the grid-level action prompts for Remarks — the Update screen has a mandatory Remarks field, but the grid path was never exercised. If no prompt appears, record that as the observed result rather than a pass.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-059 — Same account attempts to approve the branch it created
+
+**Objective:** Verify whether the account that created a branch is permitted to approve it.
+
+**Preconditions:** User is logged in as Super Admin and has just created a branch with this same account, leaving it `Pending for approval`. Its Branch Code has been recorded.
+
+**Steps:**
+
+1. Search for the branch this account just created.
+2. Click that row's thumbs-up icon.
+3. Observe the outcome.
+4. Search for the branch again and read its Approval Status.
+
+**Expected Result:** Record which of the following occurs: the approval succeeds and the status becomes `Approved`, or the action is blocked with a message. Capture the exact message if one appears.
+
+**Priority:** P1
+
+**Tags:** Atomic, Security, SelfCreatedRecord, AssumptionBased
+
+**Notes:** Assumption-based — the requirement that a maker cannot approve their own change is inferred, not asserted, in the source material. Either outcome is a valid result. Because this run has only one account, a blocked result must be reported as "appears blocked" — there is no second account to prove that approval by a different user would have succeeded.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-060 — Navigate to the next page of results
+
+**Objective:** Verify that the next-page control advances through the result set.
+
+**Preconditions:** User is logged in as Super Admin, with a search returning more rows than one page.
+
+**Steps:**
+
+1. Note the Branch Codes shown on page 1.
+2. Click the next-page control.
+3. Read the Branch Codes now shown.
+
+**Expected Result:** A different set of records is displayed, and none of the page 1 codes reappear.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-061 — Navigate to the last page of results
+
+**Objective:** Verify that the last-page control jumps to the final page of results.
+
+**Preconditions:** User is logged in as Super Admin, with a search returning several pages.
+
+**Steps:**
+
+1. Click the **Last** control.
+2. Read the page indicator and the rows displayed.
+
+**Expected Result:** The final page is displayed with at least one row, and no further next-page navigation is offered.
+
+**Priority:** P3
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-062 — Pagination preserves the active status filter
+
+**Objective:** Verify that changing pages does not reset the selected Status filter.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Select Status **Both** and click **Search**.
+2. Note the total shown in the result count text.
+3. Navigate forward two pages.
+4. Read the Status radio group and the result count text.
+
+**Expected Result:** **Both** is still selected and the total is unchanged from step 2.
+
+**Priority:** P1
+
+**Tags:** Atomic, Positive, Regression
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-063 — Result count text reflects the filtered total
+
+**Objective:** Verify that the result count text states the total for the applied filter.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Select Status **Active** and click **Search**; read the count text.
+2. Select Status **Inactive** and click **Search**; read the count text.
+
+**Expected Result:** The count text is displayed in each case and its stated total changes between the two searches.
+
+**Priority:** P3
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-064 — A record on a later page is findable by direct search
+
+**Objective:** Verify that a branch not on page 1 can still be retrieved by searching for it.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Select Status **Both**, click **Search**, and page forward until a row is visible that was not on page 1.
+2. Note that row's Branch Code.
+3. Return to Admin → Branch and enter the noted code in the **Branch code** field.
+4. Click **Search**.
+
+**Expected Result:** The branch is returned on the first page of results.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-065 — Update Branch pre-fills every stored value
+
+**Objective:** Verify that opening a branch for update shows all of its stored values.
+
+**Preconditions:** User is logged in as Super Admin and has opened a branch via the edit pen.
+
+**Steps:**
+
+1. Wait until the Branch Name field shows a value.
+2. Read Operating Country, Name, Country, State, City, Post Office Box, Email ID, Credit Limit, Top Up Limit and Outstanding Threshold.
+
+**Expected Result:** Every field listed in step 2 shows the branch's stored value. No field that holds data is blank, and neither State nor City shows an unselected placeholder.
+
+**Priority:** P1
+
+**Tags:** Scenario, Positive, Smoke
+
+**Notes:** Wait for a field to populate before reading — a fixed delay produced a false "form is empty" result twice during Discovery.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-066 — Update a branch and submit it for approval
+
+**Objective:** Verify that an edited branch can be submitted for approval and returns to a pending state.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Address 1 | Updated by QA run-003 |
+| Remarks | Address corrected |
+
+**Steps:**
+
+1. Change **Address 1** to the Test Data value.
+2. Enter the Remarks value.
+3. Click **Send For Approval**.
+4. Search for the branch on Admin → Branch.
+
+**Expected Result:** The update is saved, a success confirmation is shown, and the branch's Approval Status reads `Pending for approval`.
+
+**Priority:** P1
+
+**Tags:** Scenario, Positive, SelfCreatedRecord
+
+**Notes:** The button is labelled `Send For Approval`, not "Submit for Approval" — see FINDING-011. Act only on a branch this run created.
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-067 — Remarks is mandatory before any Update action
+
+**Objective:** Verify that an Update action is blocked when Remarks is empty.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Steps:**
+
+1. Change **Address 1** to any valid value.
+2. Leave **Remarks** empty.
+3. Click **Send For Approval**.
+
+**Expected Result:** Submission is blocked and a required-field validation message is shown for Remarks.
+
+**Priority:** P1
+
+**Tags:** Atomic, Negative-EmptyValues, SelfCreatedRecord
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-068 — Cancel discards unsaved changes on Update Branch
+
+**Objective:** Verify that Cancel exits without saving edits.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Steps:**
+
+1. Change **Address 1** to a new value.
+2. Click **Cancel**.
+3. Re-open the same branch via the edit pen and wait for the form to populate.
+4. Read **Address 1**.
+
+**Expected Result:** Address 1 shows its original value; the change made in step 1 was not saved.
+
+**Priority:** P2
+
+**Tags:** Atomic, Positive, SelfCreatedRecord
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-069 — Approve a branch update request from the Update screen
+
+**Objective:** Verify that a pending branch update can be approved from the Update Branch screen.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run has a pending update and is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Remarks | Update approved by QA run-003 |
+
+**Steps:**
+
+1. Enter the Remarks value.
+2. Click **Approve**.
+3. Search for the branch on Admin → Branch.
+
+**Expected Result:** A success confirmation is shown and the branch's Approval Status reads `Approved`.
+
+**Priority:** P1
+
+**Tags:** Scenario, Positive, SelfCreatedRecord
+
+**Review:** Approved
+
+**Automation:** Approved
+
+---
+
+### TC-BR-070 — Reject a branch update request from the Update screen
+
+**Objective:** Verify that a pending branch update can be rejected from the Update Branch screen.
+
+**Preconditions:** User is logged in as Super Admin. A second branch created by this run has a pending update and is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Remarks | Update rejected by QA run-003 |
+
+**Steps:**
+
+1. Enter the Remarks value.
+2. Click **Reject**.
+3. Search for the branch on Admin → Branch.
+
+**Expected Result:** A confirmation is shown and the branch's Approval Status reads `Rejected`.
+
+**Priority:** P1
+
+**Tags:** Scenario, Positive, SelfCreatedRecord
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-071 — Mandatory Update Branch fields block submission when cleared
+
+**Objective:** Verify that clearing a mandatory field on Update blocks submission.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen, with the form populated.
+
+**Test Data:**
+
+| Field Cleared |
+|---|
+| Name |
+| State |
+| City |
+| Address 1 |
+| Post Office Box |
+| Credit Limit |
+| Top Up Limit |
+| Credit Terms (Days) |
+
+**Steps:**
+
+1. Clear the one field under test.
+2. Enter a valid Remarks value.
+3. Click **Send For Approval**.
+4. Restore the field's original value and repeat steps 1–3 for each field in Test Data.
+
+**Expected Result:** For each field cleared, submission is blocked and a required-field validation message is shown for that field.
+
+**Priority:** P1
+
+**Tags:** Atomic, Negative-EmptyValues, SelfCreatedRecord
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-072 — Post Office Box rejects a value exceeding 8 characters on Update
+
+**Objective:** Verify that the Update screen enforces the 8-character limit on Post Office Box.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Post Office Box | ABCD123456 |
+| Remarks | Boundary check |
+
+**Steps:**
+
+1. Replace **Post Office Box** with the 10-character Test Data value.
+2. Enter the Remarks value.
+3. Click **Send For Approval**.
+
+**Expected Result:** The field either truncates the entry to 8 characters or blocks submission with a length validation message.
+
+**Priority:** P2
+
+**Tags:** Atomic, Negative-BoundaryValues, Regression, SelfCreatedRecord
+
+**Notes:** The Create screen accepts over-length values without enforcement (FINDING-002). This asserts the corrected behaviour on Update and is expected to fail if the same gap exists there.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-073 — Credit Limit rejects a value exceeding 15 characters on Update
+
+**Objective:** Verify that the Update screen enforces the 15-character limit on Credit Limit.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Credit Limit | 1234567890123456 |
+| Remarks | Boundary check |
+
+**Steps:**
+
+1. Replace **Credit Limit** with the 16-digit Test Data value.
+2. Enter the Remarks value.
+3. Click **Send For Approval**.
+
+**Expected Result:** The field either truncates the entry to 15 digits or blocks submission with a length validation message.
+
+**Priority:** P2
+
+**Tags:** Atomic, Negative-BoundaryValues, Regression, SelfCreatedRecord
+
+**Notes:** Mirrors FINDING-003 on the Create screen. Asserts the corrected behaviour.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-074 — Warning Prompt must not exceed Credit Terms on Update
+
+**Objective:** Verify that the cross-field rule between Warning Prompt and Credit Terms is enforced on Update.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Credit Terms (Days) | 10 |
+| Warning Prompt (Days) | 20 |
+| Remarks | Cross-field check |
+
+**Steps:**
+
+1. Set **Credit Terms (Days)** to 10.
+2. Set **Warning Prompt (Days)** to 20.
+3. Enter the Remarks value.
+4. Click **Send For Approval**.
+
+**Expected Result:** Submission is blocked with a message stating the warning prompt days must not be greater than the credit terms days.
+
+**Priority:** P2
+
+**Tags:** Atomic, Negative-InvalidInputs, SelfCreatedRecord
+
+**Notes:** This rule is confirmed enforced on the Create screen; equal values are permitted there and only a greater value is rejected.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-075 — Reaching Percentage rejects a value above 100 on Update
+
+**Objective:** Verify that Reaching Percentage cannot exceed 100 on the Update screen.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Reaching Percentage | 101 |
+| Remarks | Boundary check |
+
+**Steps:**
+
+1. Set **Reaching Percentage** to 101.
+2. Enter the Remarks value.
+3. Click **Send For Approval**.
+
+**Expected Result:** Submission is blocked with a validation message indicating the percentage may not exceed 100.
+
+**Priority:** P2
+
+**Tags:** Atomic, Negative-BoundaryValues, SelfCreatedRecord
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-076 — Change Threshold lists child agencies before confirming
+
+**Objective:** Verify that changing a branch threshold surfaces the child agencies affected before the change is confirmed.
+
+**Preconditions:** User is logged in as Super Admin. A branch created by this run is open on the Update Branch screen.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Outstanding Threshold | 50 |
+
+**Steps:**
+
+1. Change **Outstanding Threshold** to the Test Data value.
+2. Click **Change Threshold**.
+3. Read the confirmation popup.
+
+**Expected Result:** A confirmation popup appears listing any child agencies holding a custom threshold, and offers the option to confirm or cancel before the change is applied.
+
+**Priority:** P2
+
+**Tags:** Scenario, Positive, SelfCreatedRecord, AssumptionBased
+
+**Notes:** Assumption-based — this flow was never exercised during Discovery. A branch created by this run will have no child agencies, so the popup may legitimately show an empty list; record what appears rather than treating an empty list as a failure.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-077 — Stored Branch Email Password is not recoverable from the Update form
+
+**Objective:** Verify that a branch's stored email password is not returned to the browser when the Update screen loads.
+
+**Preconditions:** User is logged in as Super Admin and has opened any branch via the edit pen.
+
+**Steps:**
+
+1. Wait until the form has populated.
+2. Inspect the **Email Password** field's underlying value using browser developer tools.
+
+**Expected Result:** The field holds no recoverable password value — it is empty, or contains only a placeholder that is not the stored password.
+
+**Priority:** P1
+
+**Tags:** Atomic, Security, Regression
+
+**Notes:** Asserts the corrected behaviour. Discovery confirmed the stored password is currently returned and populated into this field (FINDING-013), so this case is expected to fail until that is fixed. **Never record the observed password value in a result, defect, or screenshot** — report only whether a recoverable value was present.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-078 — Exploratory — is Active/Inactive status discoverable from the grid?
+
+**Objective:** Determine whether an operator can tell an Active branch from an Inactive one in the results grid.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
+
+**Steps:**
+
+1. Select Status **Both** and click **Search**.
+2. Attempt to determine, from the grid alone, which returned records are Active and which are Inactive.
+3. Note every column, icon, or styling cue that conveys it, if any.
+
+**Expected Result:** Confirm with the reviewer whether operating without an Active/Inactive indicator in the grid is acceptable, or whether the grid must expose that status as a column.
+
+**Priority:** P2
+
+**Tags:** Atomic, Exploratory
+
+**Notes:** Exploratory pending a Product decision (FINDING-014). The acceptance criteria do not list an Active/Inactive column, but the platform-wide convention treats Status and Approval Status as distinct columns. Do not record a pass or fail — record the observation and the reviewer's decision.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-079 — Exploratory — does the City filter accept and apply multiple cities?
+
+**Objective:** Determine whether the City filter's multi-select capability works and is intended.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch, with a Country and State selected.
+
+**Steps:**
+
+1. Open the **City** filter and attempt to select two or more cities.
+2. Click **Search**.
+3. Check whether the results include branches from every selected city.
+
+**Expected Result:** Confirm with the reviewer whether multi-city selection is intended behaviour, and if so, whether the acceptance criteria should be updated to describe a multi-select rather than a dropdown.
+
+**Priority:** P3
+
+**Tags:** Atomic, Exploratory
+
+**Notes:** Exploratory pending a Product decision (FINDING-015). The control is built as a multi-select; the acceptance criteria specify a dropdown. Do not record a pass or fail.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-080 — Admin-role operator sees the same grid columns and row actions
+
+**Objective:** Verify that an Admin-role operator sees the same Search Branch surface as a Super Admin.
+
+**Preconditions:** An Admin-role account exists and its credentials are available.
+
+**Steps:**
+
+1. Log in as an Admin-role user.
+2. Open Admin → Branch and click **Search**.
+3. Compare the grid columns and the row action icons against those seen as Super Admin.
+
+**Expected Result:** Confirm whether the Admin role sees the same columns and the same row actions, and record any difference.
+
+**Priority:** P3
+
+**Tags:** Atomic, Permissions, NotCovered-SingleAccountRun
+
+**Notes:** **Not executable this run.** Only one account is available, and it holds Super Admin privileges while standing in for both actors — a privileged account cannot demonstrate an unprivileged view. Record as `Not Covered — Single-Account Run`, never as passed. Unblocked by provisioning an Admin-role credential.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-081 — Repeated failed login attempts lock the account
+
+**Objective:** Verify that the account lock rule triggers after repeated failed authentication attempts.
+
+**Preconditions:** A dedicated, non-shared environment with a disposable account.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Password | a deliberately incorrect value |
+
+**Steps:**
+
+1. Attempt to log in with a valid username and an incorrect password.
+2. Repeat until the documented lock threshold is exceeded.
+3. Attempt to log in with the correct password.
+
+**Expected Result:** After the threshold is exceeded the account is locked and a lock message is shown; the correct password no longer grants access until the account is unlocked.
+
+**Priority:** P3
+
+**Tags:** Atomic, Security, Deferred-RequiresDedicatedEnvironment
+
+**Notes:** **Deferred — Requires Dedicated Environment.** Designed in full but not for execution on the shared staging environment: locking a shared account would block other teams, and the lock is not self-reversing. Execute only on an isolated environment with a disposable account.
+
+**Review:** Approved
+
+**Automation:** Rejected

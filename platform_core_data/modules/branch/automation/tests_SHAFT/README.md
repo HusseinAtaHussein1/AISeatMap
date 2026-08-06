@@ -13,17 +13,10 @@ Automates the 13 test cases from `TestCases_Branch.md` where both `Review = Appr
 
 ## Credentials
 
-**Never hardcode a credential value anywhere in this project.** Set two environment variables
-before running:
-
-```
-BRANCH_QA_USERNAME=<Super Admin username>
-BRANCH_QA_PASSWORD=<Super Admin password>
-```
-
-`utils/EnvironmentConfig.java` reads these at runtime and fails fast with a clear message if either
-is missing. This mirrors the platform's own `credentials.json` contract
-(`platform_core/tools/browser_driver/README.md` §4) in this standalone Java project's own terms.
+The QA Super Admin credentials are held in `src/main/java/utilities/EnvironmentConfig.java`
+(`USERNAME` / `PASSWORD`), so the suite runs from any terminal or IDE with no setup step. Keep them
+in that one class — never inline a credential in a test or page class. To point the suite at a
+different environment, change those two constants alongside `environment.properties`.
 
 ## Running the suite
 
@@ -48,6 +41,19 @@ mvn test-compile
 a regression test asserting the *corrected* behavior, per Test Design's own instruction. A failure
 here is the test doing its job, not a broken script. See `AutomationDecisionReport_SHAFT.md` and
 `AutomationPlan_SHAFT.md` RISK-AUTO-2.
+
+## Project layout
+
+Follows the company's standard NDC automation layout (`AdminPages.<Module>.<SubModule>` packages,
+`_Page`/`_TC`/`_Common` suffixes), the same convention used by `NDC-Uplift-Automation`:
+
+```
+src/main/java/AdminPages/Login/LogIn_Page.java
+src/main/java/AdminPages/Admin/Branch/{AddBranch_Page,SearchBranch_Page,UpdateBranch_Page,Branch_Common}.java
+src/main/java/utilities/{EnvironmentConfig,BranchDataFactory}.java
+src/test/java/AdminPages/Login/{TestBase,TestBase_TC}.java
+src/test/java/AdminPages/Admin/Branch/{CreateBranch_Admin_TC,SearchBranch_TC,UpdateBranch_TC,BranchActions_TC,BranchProvisioner,BranchTestData}.java
+```
 
 ## Target environment
 

@@ -34,13 +34,13 @@ regression check for a still-open defect (FINDING-004).
 | `src/main/resources/properties/execution.properties` | config | Generated | — |
 | `src/test/resources/environment.properties` | config | Generated | — |
 | `src/test/resources/branch_baseline.properties` | test data | Generated | CreateBranchSuite |
-| `src/test/java/utils/EnvironmentConfig.java` | utility | Generated | CreateBranchSuite |
-| `src/test/java/utils/BranchDataFactory.java` | utility | Generated | CreateBranchSuite |
-| `src/test/java/data/BranchTestData.java` | fixture | Generated | CreateBranchSuite |
-| `src/test/java/base/BaseTest.java` | fixture (base class) | Generated | CreateBranchSuite |
-| `src/test/java/pages/LoginPage.java` | page object | Generated | CreateBranchSuite |
-| `src/test/java/pages/AddBranchPage.java` | page object | Generated | CreateBranchSuite |
-| `src/test/java/tests/CreateBranchTests.java` | test script | Generated | CreateBranchSuite |
+| `src/main/java/utilities/EnvironmentConfig.java` | utility | Generated | CreateBranchSuite |
+| `src/main/java/utilities/BranchDataFactory.java` | utility | Generated | CreateBranchSuite |
+| `src/main/java/AdminPages/Admin/Branch/BranchTestData.java` | fixture | Generated | CreateBranchSuite |
+| `src/test/java/AdminPages/Login/TestBase_TC.java` | fixture (base class) | Generated | CreateBranchSuite |
+| `src/main/java/AdminPages/Login/LogIn_Page.java` | page object | Generated | CreateBranchSuite |
+| `src/main/java/AdminPages/Admin/Branch/AddBranch_Page.java` | page object | Generated | CreateBranchSuite |
+| `src/test/java/AdminPages/Admin/Branch/CreateBranch_Admin_TC.java` | test script | Generated | CreateBranchSuite |
 
 **Totals:** 14 generated · 0 reused
 
@@ -49,9 +49,10 @@ regression check for a still-open defect (FINDING-004).
 | Field | Value |
 |---|---|
 | Framework | SHAFT Engine |
-| Version | `9.4.20251220` (`io.github.shafthq:SHAFT_ENGINE`) |
+| Version | `7.4.20231015` (`io.github.shafthq:SHAFT_ENGINE`) — changed 2026-08-05, user-mandated, from the originally-pinned `9.4.20251220` |
 | Selection basis | Framework Decision Gate (§31) — human choice among Playwright / SHAFT Engine (Java) / Selenium (Java), asked explicitly since no automation project existed for any framework |
 | Justification | Human decision; no existing project to extend, no Discovery-tooling bias applied (Discovery/Stage 4M used the Playwright MCP server and Browser Driver, which carried zero weight in this choice per §31.5) |
+| Version realignment (2026-08-05) | User pointed to a real, pre-existing NDC SHAFT project (`C:\Users\Sheen\NDC-Automation`, not previously known to this platform) that already automates Branch and other Admin screens on `SHAFT_ENGINE 7.4.20231015`. `pom.xml` and the TestNG listener registration (`META-INF/services/org.testng.ITestNGListener` + explicit `surefire-testng`/`aspectjweaver` plugin bindings) were realigned to match it exactly. Confirmed to compile and run cleanly under this environment's JDK 23 toolchain (no JDK-25 issue, unlike the newer 10.3 release); the four stale `io.qameta.allure.listener.*` service files from the original 9.4-era generation were removed as they referenced classes (`com.shaft.listeners.AllureListener`) that do not exist in 7.4 and crashed the TestNG provider on startup. |
 
 ## 4. Coverage
 
@@ -92,16 +93,22 @@ All 13 in-scope test cases: Generate New Automation. Zero Partially Automatable,
 | Item | Detail |
 |---|---|
 | TC-BR-026 expected failure | Regression test for FINDING-004 (Warning Prompt length cap), still an open defect as of this run's own Stage 4M execution — will report Failed until fixed, by design |
-| SHAFT_ENGINE version | Pinned to 9.4.20251220, not the latest published (10.3.20260707), because the latter requires a JDK 25 compiler this environment does not have |
+| SHAFT_ENGINE version | Pinned to 7.4.20231015 (2026-08-05, user-mandated realignment to the pre-existing `NDC-Automation` reference project) — not the latest published (10.3.20260707), which requires a JDK 25 compiler this environment does not have |
 | Context7 unavailable | No version-specific documentation was fetched; the API used was confirmed via direct `javap` inspection of the resolved jar instead — real and verified, but not documentation-guideline-informed beyond raw method signatures |
 
 ## 7. Execution Instructions
 
-**Prerequisites:** JDK 17+, Maven 3.9+, network access to Maven Central, `BRANCH_QA_USERNAME` and `BRANCH_QA_PASSWORD` environment variables set.
+**Prerequisites:** JDK 17+ (compiled to release 17; runs fine on this environment's JDK 23), Maven 3.9+, network access to Maven Central (resolves `aspectjweaver` to `~/.m2/repository/...` — the surefire `argLine` javaagent path depends on it being present there), `BRANCH_QA_USERNAME` and `BRANCH_QA_PASSWORD` environment variables set.
 
 ```bash
 cd platform_core_data/modules/branch/automation/tests_SHAFT
 mvn test
+```
+
+A known, pre-existing gap unrelated to this run's changes: the bundled `log4j2.properties`/`reportportal.properties` `ReportPortalAppender` initializes regardless of `rp.enable=false` and crashes with "Base url for ReportPortal server is not set!" unless `rp.endpoint` is also supplied as a JVM system property. Until that's fixed at the config-file level (see `modules/branch/healing/RepairSummary.md` §11 REC-02), run with both flags:
+
+```bash
+mvn test -Drp.endpoint=http://localhost:8080 -Drp.enable=false
 ```
 
 | Required Config / Env Var | Purpose | Source |

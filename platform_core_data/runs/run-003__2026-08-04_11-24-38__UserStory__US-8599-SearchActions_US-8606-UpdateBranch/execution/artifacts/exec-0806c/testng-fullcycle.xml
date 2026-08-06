@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Full available Branch cycle. NOTE: the approved testng.xml's BranchActionsSuite is deliberately
+    absent here because the class it names, AdminPages.Admin.Branch.BranchActions_TC, does not exist in
+    the project (KL-02) — declaring it makes the whole suite fail to load. Approve/Reject coverage is
+    therefore NOT EXECUTED, not passing.
+-->
+<suite name="BranchFullCycle" verbose="1">
+    <test name="CreateBranchSuite">
+        <classes><class name="AdminPages.Admin.Branch.CreateBranch_Admin_TC"/></classes>
+    </test>
+    <test name="SearchBranchSuite">
+        <classes><class name="AdminPages.Admin.Branch.SearchBranch_TC"/></classes>
+    </test>
+    <test name="UpdateBranchSuite">
+        <classes><class name="AdminPages.Admin.Branch.UpdateBranch_TC"/></classes>
+    </test>
+</suite>

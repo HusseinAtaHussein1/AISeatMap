@@ -1,0 +1,2 @@
+1, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields' failed. Please investigate and open a new Issue if needed.
+2, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits' failed. Please investigate and open a new Issue if needed.

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Stage 5A execution scoping only (Create Branch / US-8605). Held outside the automation package
+    so the approved suite file is never modified by this stage.
+-->
+<suite name="BranchAutomationSuite_CreateBranchOnly" verbose="1">
+    <test name="CreateBranchSuite">
+        <classes>
+            <class name="AdminPages.Admin.Branch.CreateBranch_Admin_TC"/>
+        </classes>
+    </test>
+</suite>

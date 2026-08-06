@@ -1,0 +1,36 @@
+Command: mvn test -DheadlessExecution=false -Dsurefire.suiteXmlFiles=".../testng_addbranch_only.xml"
+(scoped suite file limiting the run to <test name="CreateBranchSuite"><class name="AdminPages.Admin.Branch.CreateBranch_Admin_TC"/></test>)
+
+[INFO] Scanning for projects...
+[INFO] ---------------< com.ndc.branch:branch-automation-shaft >---------------
+[INFO] Building branch-automation-shaft 1.0.0
+[WARNING] 1 problem was encountered while building the effective model for org.javassist:javassist:jar:3.18.1-GA during dependency collection step for project (use -X to see details)
+[INFO] --- resources:3.3.1:resources (default-resources) @ branch-automation-shaft ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] --- compiler:3.13.0:compile (default-compile) @ branch-automation-shaft ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ branch-automation-shaft ---
+[INFO] Copying 2 resources from src\test\resources to target\test-classes
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ branch-automation-shaft ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] --- surefire:3.2.5:test (default-test) @ branch-automation-shaft ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Results:
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  6.538 s
+
+Supporting evidence:
+- `mvn dependency:tree` confirms TestNG 7.11.0 and surefire-testng:3.5.4 ARE present on the
+  classpath (org.testng:testng:jar:7.11.0:compile; org.apache.maven.surefire:surefire-testng:jar:3.5.4:compile),
+  alongside JUnit-Platform provider classes brought in transitively (via cucumber/SHAFT_ENGINE deps).
+- Surefire's provider auto-detection resolves to JUnitPlatformProvider when both are present on this
+  classpath, so the project's `<suiteXmlFiles>testng.xml</suiteXmlFiles>` configuration (which only the
+  TestNG provider consumes) is silently ignored, and the JUnit5 provider finds zero JUnit5-annotated
+  test classes to run -- all 13 @Test(TestNG) methods in CreateBranch_Admin_TC.java are never attempted.
+- No -D system property exists to force Surefire's provider selection from the command line; the fix
+  requires an explicit provider binding inside pom.xml (build configuration -- automation code), which
+  is out of Stage 5A's authority to modify (automation-execution-skill/SKILL.md Rule 5, Rule 11).

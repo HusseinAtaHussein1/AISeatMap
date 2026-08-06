@@ -19,13 +19,13 @@ Layout/naming: SHAFT Engine standard (Maven-conventional src/test/java, src/test
   CREATE  src/main/resources/properties/execution.properties   SHAFT driver config (headless chrome)
   CREATE  src/test/resources/environment.properties         target base URL + paths (non-secret)
   CREATE  src/test/resources/branch_baseline.properties     shared baseline test data fixture
-  CREATE  src/test/java/utils/EnvironmentConfig.java         config + credential-from-env-var reader
-  CREATE  src/test/java/utils/BranchDataFactory.java         unique Name/Email generator
-  CREATE  src/test/java/data/BranchTestData.java              baseline fixture reader
-  CREATE  src/test/java/base/BaseTest.java                    DriverFactory lifecycle (@BeforeMethod/@AfterMethod)
-  CREATE  src/test/java/pages/LoginPage.java                  login Page Object
-  CREATE  src/test/java/pages/AddBranchPage.java               Add Branch form Page Object
-  CREATE  src/test/java/tests/CreateBranchTests.java           13 @Test methods, one per in-scope TC-BR-ID
+  CREATE  src/main/java/utilities/EnvironmentConfig.java         config + credential-from-env-var reader
+  CREATE  src/main/java/utilities/BranchDataFactory.java         unique Name/Email generator
+  CREATE  src/main/java/AdminPages/Admin/Branch/BranchTestData.java              baseline fixture reader
+  CREATE  src/test/java/AdminPages/Login/TestBase_TC.java                    DriverFactory lifecycle (@BeforeMethod/@AfterMethod)
+  CREATE  src/main/java/AdminPages/Login/LogIn_Page.java                  login Page Object
+  CREATE  src/main/java/AdminPages/Admin/Branch/AddBranch_Page.java               Add Branch form Page Object
+  CREATE  src/test/java/AdminPages/Admin/Branch/CreateBranch_Admin_TC.java           13 @Test methods, one per in-scope TC-BR-ID
 
 Selector verification: 19 verified (reused from this run's own Stage 4M live evidence, §11A) ·
                         0 unverified
@@ -55,28 +55,28 @@ Fit: BROWNFIELD — extending modules/branch/automation/tests_SHAFT/ in place (�
 Destination: platform_core_data/modules/branch/automation/tests_SHAFT/
 Layout: matched from the existing project (base/ pages/ data/ utils/ tests/)
 
-  CREATE  base/AbstractBaseTest.java        driver lifecycle + login + start-screen hook
-  CREATE  pages/SearchBranchPage.java       filters · grid · row-by-code · tilde-paginator
-  CREATE  pages/UpdateBranchPage.java       readiness poll · field reads · action buttons
-  CREATE  utils/BranchProvisioner.java      run-tagged record + its assigned Branch Code
-  CREATE  tests/SearchBranchTests.java      11 cases
-  CREATE  tests/BranchActionsTests.java     3 cases  (self-created records)
-  CREATE  tests/UpdateBranchTests.java      5 cases  (self-created records)
+  CREATE  AdminPages/Login/TestBase.java        driver lifecycle + login + start-screen hook
+  CREATE  AdminPages/Admin/Branch/SearchBranch_Page.java       filters · grid · row-by-code · tilde-paginator
+  CREATE  AdminPages/Admin/Branch/UpdateBranch_Page.java       readiness poll · field reads · action buttons
+  CREATE  AdminPages/Admin/Branch/BranchProvisioner.java      run-tagged record + its assigned Branch Code
+  CREATE  AdminPages/Admin/Branch/SearchBranch_TC.java      11 cases
+  CREATE  AdminPages/Admin/Branch/BranchActions_TC.java     3 cases  (self-created records)
+  CREATE  AdminPages/Admin/Branch/UpdateBranch_TC.java      5 cases  (self-created records)
 
-  MODIFY  base/BaseTest.java                extends AbstractBaseTest; keeps Add Branch nav
+  MODIFY  AdminPages/Login/TestBase_TC.java                extends TestBase; keeps Add Branch nav
   MODIFY  testng.xml                        register 3 new suites
   MODIFY  src/test/resources/environment.properties   + editBranchPath
-  MODIFY  utils/EnvironmentConfig.java      + editBranchPath() accessor
+  MODIFY  utilities/EnvironmentConfig.java      + editBranchPath() accessor
 
-  REUSE   pages/LoginPage.java · pages/AddBranchPage.java · utils/BranchDataFactory.java
-          data/BranchTestData.java
-  UNTOUCHED  tests/CreateBranchTests.java   verified byte-identical afterwards
+  REUSE   AdminPages/Login/LogIn_Page.java · AdminPages/Admin/Branch/AddBranch_Page.java · utilities/BranchDataFactory.java
+          AdminPages/Admin/Branch/BranchTestData.java
+  UNTOUCHED  AdminPages/Admin/Branch/CreateBranch_Admin_TC.java   verified byte-identical afterwards
 ```
 
-**Approved by the user on 2026-08-04**, with the `AbstractBaseTest` extraction chosen explicitly over a duplicate standalone base class.
+**Approved by the user on 2026-08-04**, with the `TestBase` extraction chosen explicitly over a duplicate standalone base class.
 
 ## Deviation from the approved plan — one file
 
-`pages/BasePage.java` was **added during self-review**, not in the approved plan. Justification: `selenium()`, `waitFor()`, `hasClass()` and the value/text readers were byte-identical across both new page objects, and the user's own review checklist required eliminating duplicated waits and DRY violations. It touches only files created this run — `AddBranchPage` and `LoginPage` deliberately still do not extend it, because retro-fitting them would modify code the 13 passing Create Branch tests depend on, which is outside the approved write scope.
+`AdminPages/Admin/Branch/Branch_Common.java` was **added during self-review**, not in the approved plan. Justification: `selenium()`, `waitFor()`, `hasClass()` and the value/text readers were byte-identical across both new page objects, and the user's own review checklist required eliminating duplicated waits and DRY violations. It touches only files created this run — `AddBranch_Page` and `LogIn_Page` deliberately still do not extend it, because retro-fitting them would modify code the 13 passing Create Branch tests depend on, which is outside the approved write scope.
 
 Recorded here rather than folded in silently, so the delta between what was approved and what was written is visible.

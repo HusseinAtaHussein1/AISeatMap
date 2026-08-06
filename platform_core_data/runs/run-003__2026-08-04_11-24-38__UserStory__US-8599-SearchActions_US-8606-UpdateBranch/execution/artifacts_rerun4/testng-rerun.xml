@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Stage 5H targeted rerun scope: the repaired test (TC-BR-001) plus every other test that consumes
+    the repaired shared fixture fillMandatoryBaseline() — TC-BR-002 / 013 / 021 / 038 — so a
+    regression introduced by the repair cannot hide. Held outside the automation package.
+-->
+<suite name="BranchHealingRerun" verbose="1">
+    <test name="CreateBranchSuite_Rerun">
+        <classes>
+            <class name="AdminPages.Admin.Branch.CreateBranch_Admin_TC">
+                <methods>
+                    <include name="tcBr001_createBranchWithAllMandatoryFields"/>
+                    <include name="tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty"/>
+                    <include name="tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty"/>
+                    <include name="tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty"/>
+                    <include name="tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

@@ -5,7 +5,7 @@
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
 **Slug:** `branch` · **Status:** Active
-**Last generated:** 2026-08-04T13:25:25.614Z
+**Last generated:** 2026-08-06T09:14:33.549Z
 
 ## Scope
 
@@ -20,8 +20,8 @@ Branch creation under Company with credit limit, top-up limit, credit terms, own
 | Stage 1 — Project Context | Approved | [ProjectContext.md](context/ProjectContext.md) | rev 8 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
 | Stage 2 — Discovery | Approved | [QA_Assessment_Report.md](discovery/QA_Assessment_Report.md) | rev 6 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
 | Stage 3 — Test Design | Approved | [TestCases_Branch.md](test_design/TestCases_Branch.md) | rev 4 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
-| Stage 4A — Automation | Pending Review | [tests_SHAFT](modules/branch/automation/tests_SHAFT/) | rev 2 | 2026-08-04 | run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch |
-| Stage 5H — Self-Healing | Not Started | — | — | — | — |
+| Stage 4A — Automation | Approved | [tests_SHAFT](modules/branch/automation/tests_SHAFT/) | rev 3 | 2026-08-05 | run-003 |
+| Stage 5H — Self-Healing | Approved | [RepairSummary.md](healing/RepairSummary.md) | rev 2 | 2026-08-05 | run-003 |
 
 ## Coverage
 
@@ -32,13 +32,15 @@ Branch creation under Company with credit limit, top-up limit, credit terms, own
 
 ## Automation
 
-**Lifecycle state:** Generated · **Framework:** SHAFT
+**Lifecycle state:** Executed · **Framework:** SHAFT
 
 - Assembled into the baseline: never
 - Generated against shared ref: —
+- Executed by: `run-003`, `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch`
 
 ## Runs that touched this module
 
+- [`run-003`](../../runs/run-003/)
 - [`run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch`](../../runs/run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch/)
 
 ---

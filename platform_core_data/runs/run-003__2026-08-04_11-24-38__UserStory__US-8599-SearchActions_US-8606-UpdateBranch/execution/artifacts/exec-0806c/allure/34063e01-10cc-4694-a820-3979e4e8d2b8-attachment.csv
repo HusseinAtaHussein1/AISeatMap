@@ -1,0 +1,14 @@
+1, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields' failed. Please investigate and open a new Issue if needed.
+2, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits' failed. Please investigate and open a new Issue if needed.
+3, Test Method 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr043_searchWithNonMatchingCriteriaShowsEmptyState' failed. Please investigate and open a new Issue if needed.
+4, Test Method 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr046_stateFilterStaysDisabledUntilCountrySelected' failed. Please investigate and open a new Issue if needed.
+5, Test Method 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr052_resultsGridDisplaysAllSpecifiedColumns' failed. Please investigate and open a new Issue if needed.
+6, Test Method 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr054_rowActionIconsMatchApprovalState' failed. Please investigate and open a new Issue if needed.
+7, Test Method 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr055_editPenOpensUpdateBranchPreFilled' failed. Please investigate and open a new Issue if needed.
+8, Test Method 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage' failed. Please investigate and open a new Issue if needed.
+9, Test Method 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr061_navigateToLastPage' failed. Please investigate and open a new Issue if needed.
+10, Test Method 'AdminPages.Admin.Branch.UpdateBranch_TC.tcBr065_updateBranchPreFillsEveryStoredValue' failed. Please investigate and open a new Issue if needed.
+11, Test Method 'AdminPages.Admin.Branch.UpdateBranch_TC.tcBr066_updateBranchAndSubmitForApproval' failed. Please investigate and open a new Issue if needed.
+12, Test Method 'AdminPages.Admin.Branch.UpdateBranch_TC.tcBr067_remarksIsMandatoryBeforeAnyUpdateAction' failed. Please investigate and open a new Issue if needed.
+13, Test Method 'AdminPages.Admin.Branch.UpdateBranch_TC.tcBr068_cancelDiscardsUnsavedChanges' failed. Please investigate and open a new Issue if needed.
+14, Test Method 'AdminPages.Admin.Branch.UpdateBranch_TC.tcBr069_approveBranchUpdateRequestFromUpdateScreen' failed. Please investigate and open a new Issue if needed.

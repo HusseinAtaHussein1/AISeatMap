@@ -1,0 +1,16 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '20 out of 29' test cases in the current suite                                       
+                      Test Method: 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr052_resultsGridDisplaysAllSpecifiedColumns'                      
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Moved the mouse to the middle of the element. @06-08-2026 12:04:34.0595 PM
+[ReportManager] Click "Search". @06-08-2026 12:04:34.0652 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:04:34.0752 PM
+[ReportManager] Get Text from "Code", text is "Code". @06-08-2026 12:04:34.0840 PM
+[ReportManager] Get Text from "Branch Name", text is "Branch Name". @06-08-2026 12:04:34.0861 PM
+[ReportManager] Get Text from "Country Name", text is "Country Name". @06-08-2026 12:04:34.0883 PM
+[ReportManager] Get Text from "City", text is "City". @06-08-2026 12:04:34.0902 PM
+[ReportManager] Get Text from "Approval Status", text is "Approval Status". @06-08-2026 12:04:34.0925 PM
+[ReportManager] Get Text from "Actions", text is "Actions". @06-08-2026 12:04:34.0947 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @06-08-2026 12:04:34.0951 PM

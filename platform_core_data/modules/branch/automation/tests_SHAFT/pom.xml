@@ -10,31 +10,31 @@
     <packaging>jar</packaging>
 
     <!--
-        Version pinned to 9.4.20251220. Context7 was unavailable (Invalid API key), so this could not
-        be confirmed via version specific documentation. It was confirmed directly in this run via a
-        Maven Central search (search.maven.org/solrsearch/select) after the originally guessed
-        groupId/artifactId (com.shafthq colon SHAFT_ENGINE) failed dependency resolution; the real
-        groupId is io.github.shafthq. The newer io.github.shafthq colon shaft-engine 10.3.20260707
-        artifact was tried first but its class files require JDK 25 (class file version 69), while
-        this environment's javac is JDK 23 (max supported version 67), so 9.4.20251220 (class file
-        version 65, JDK 21) was pinned instead as the newest version this toolchain can actually
-        compile against. See pages/AddBranchPage.java's class Javadoc and
-        AutomationPlan_SHAFT.md Section 12/14 for the full account. This is a real, verified
-        coordinate and a real, verified API (confirmed via javap against the resolved jar), just not
-        Context7 sourced documentation.
+        Aligned (2026-08-05, user-mandated) to match C:\Users\Sheen\NDC-Automation\pom.xml, the real,
+        pre-existing NDC SHAFT project (Ahmed Rifaat) that already automates Branch and other Admin
+        screens. shaft_engine.version downgraded from 9.4.20251220 to 7.4.20231015 to match exactly, per
+        explicit user decision (pom.xml comment history: 9.4 was pinned only because 10.3 needed
+        JDK 25; 7.4 is older still and compiles cleanly under this environment's JDK 23, verified this
+        run). The explicit surefire-testng provider binding this project already carries (Stage 5H
+        REPAIR-003, run-003) is exactly what NDC-Automation's own pom.xml already does, confirming that
+        fix was the right shape, not a one-off workaround.
     -->
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <shaft.version>9.4.20251220</shaft.version>
+        <shaft_engine.version>7.4.20231015</shaft_engine.version>
+        <aspectjweaver.version>1.9.19</aspectjweaver.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <surefire-testng.version>3.1.2</surefire-testng.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.github.shafthq</groupId>
             <artifactId>SHAFT_ENGINE</artifactId>
-            <version>${shaft.version}</version>
+            <version>${shaft_engine.version}</version>
         </dependency>
     </dependencies>
 
@@ -48,12 +48,57 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                    <encoding>UTF-8</encoding>
+                    <maxmem>10240m</maxmem>
+                    <meminitial>1024m</meminitial>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>${maven-surefire-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectjweaver.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-testng</artifactId>
+                        <version>${surefire-testng.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <testng.dtd.http>true</testng.dtd.http>
+                    </systemPropertyVariables>
+                    <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                    <failIfNoTests>false</failIfNoTests>
+                    <trimStackTrace>false</trimStackTrace>
+                    <useFile>false</useFile>
+                    <encoding>UTF-8</encoding>
+                    <argLine>
+                        -javaagent:"${user.home}/.m2/repository/org/aspectj/aspectjweaver/${aspectjweaver.version}/aspectjweaver-${aspectjweaver.version}.jar"
+                    </argLine>
+                    <properties>
+                        <property>
+                            <name>usedefaultlisteners</name>
+                            <value>false</value>
+                        </property>
+                        <property>
+                            <name>listener</name>
+                            <value>com.shaft.listeners.TestNGListener</value>
+                        </property>
+                    </properties>
                 </configuration>
             </plugin>
         </plugins>

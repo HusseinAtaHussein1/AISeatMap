@@ -1,0 +1,12 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '25 out of 29' test cases in the current suite                                       
+                       Test Method: 'AdminPages.Admin.Branch.UpdateBranch_TC.tcBr065_updateBranchPreFillsEveryStoredValue'                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Moved the mouse to the middle of the element. @06-08-2026 12:08:22.0734 PM
+[ReportManager] Click "Search". @06-08-2026 12:08:22.0792 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:08:22.0889 PM
+[ReportManager] Moved the mouse to the middle of the element. @06-08-2026 12:08:23.0232 PM
+[ReportManager] Click "By.xpath: (//table//tbody//tr)[1]//i[contains(@class,'pi-pencil')]". @06-08-2026 12:08:23.0282 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @06-08-2026 12:08:53.0762 PM

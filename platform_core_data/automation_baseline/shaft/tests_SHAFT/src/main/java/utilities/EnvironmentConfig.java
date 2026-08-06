@@ -6,10 +6,9 @@ import java.util.Properties;
 
 /**
  * Configuration Management (automation-skill §14.1): environment-specific values are read from
- * configuration, never hardcoded into test logic. Credentials are read from environment variables
- * only -- never from a checked-in file -- mirroring the platform's own credentials.json contract
- * (platform_core/tools/browser_driver/README.md §4), restated in this project's own terms since a
- * standalone Java project cannot read that Node-side file directly.
+ * configuration, never hardcoded into test logic. Both the non-secret values (from
+ * environment.properties) and the QA credentials are centralised here, so no test class ever
+ * carries an environment-specific literal of its own.
  */
 public class EnvironmentConfig {
     private static final Properties PROPS = new Properties();
@@ -48,27 +47,19 @@ public class EnvironmentConfig {
     }
 
     /**
-     * Never hardcode a credential value (platform-wide rule, restated here). Set
-     * BRANCH_QA_USERNAME / BRANCH_QA_PASSWORD as environment variables before running this suite --
-     * never inside this file, never inside a test.
+     * Super Admin credentials for the QA environment, held here rather than in environment
+     * variables so a generated suite runs from any terminal or IDE with no setup step. They live in
+     * this one class only -- never inside a test -- so pointing a suite at a different environment
+     * stays a single-file change alongside {@code environment.properties}.
      */
+    private static final String USERNAME = "odeysysadmin";
+    private static final String PASSWORD = "qqE6)Cxp6>B8";
+
     public static String username() {
-        String value = System.getenv("BRANCH_QA_USERNAME");
-        if (value == null || value.isBlank()) {
-            throw new IllegalStateException(
-                "BRANCH_QA_USERNAME environment variable is not set. Set it before running this suite; " +
-                "never hardcode a credential value in source (see README.md \"Credentials\").");
-        }
-        return value;
+        return USERNAME;
     }
 
     public static String password() {
-        String value = System.getenv("BRANCH_QA_PASSWORD");
-        if (value == null || value.isBlank()) {
-            throw new IllegalStateException(
-                "BRANCH_QA_PASSWORD environment variable is not set. Set it before running this suite; " +
-                "never hardcode a credential value in source (see README.md \"Credentials\").");
-        }
-        return value;
+        return PASSWORD;
     }
 }

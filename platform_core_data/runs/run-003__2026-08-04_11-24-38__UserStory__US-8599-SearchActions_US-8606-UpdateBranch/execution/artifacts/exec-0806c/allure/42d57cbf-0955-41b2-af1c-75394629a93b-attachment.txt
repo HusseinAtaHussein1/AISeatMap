@@ -1,0 +1,209 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '23 out of 29' test cases in the current suite                                       
+                                Test Method: 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Moved the mouse to the middle of the element. @06-08-2026 12:07:17.0218 PM
+[ReportManager] Click "By.cssSelector: label[for='id-Status-Both']". @06-08-2026 12:07:17.0278 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:17.0352 PM
+[ReportManager] Moved the mouse to the middle of the element. @06-08-2026 12:07:17.0662 PM
+[ReportManager] Click "Search". @06-08-2026 12:07:17.0717 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:17.0816 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:18.0157 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:18.0499 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:18.0822 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:19.0162 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:19.0505 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:19.0842 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:20.0185 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:20.0522 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:20.0872 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:21.0222 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:21.0572 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:21.0912 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:22.0272 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:22.0622 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:22.0994 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:23.0335 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:23.0692 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:24.0032 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:24.0382 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:24.0742 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:25.0092 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:25.0434 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:25.0762 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:26.0119 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:26.0462 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:26.0802 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:27.0159 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:27.0502 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:27.0837 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:28.0181 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:28.0532 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:28.0872 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:29.0202 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:29.0545 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:29.0895 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:30.0252 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:30.0608 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:30.0945 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:31.0266 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:31.0650 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:31.0988 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:32.0315 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:32.0657 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:33.0012 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:33.0362 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:33.0702 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:34.0085 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:34.0452 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:34.0783 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:35.0138 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:35.0492 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:35.0822 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:36.0167 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:36.0512 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:36.0870 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:37.0212 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:37.0552 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 494 results". @06-08-2026 12:07:37.0882 PM
+[ReportManager] Get Attribute "class" from "", value is "next". @06-08-2026 12:07:38.0013 PM
+[ReportManager] Get Text from "BRN2", text is "BRN2". @06-08-2026 12:07:38.0162 PM
+[ReportManager] Get Text from "BRN291", text is "BRN291". @06-08-2026 12:07:38.0236 PM
+[ReportManager] Get Text from "BRN375", text is "BRN375". @06-08-2026 12:07:38.0302 PM
+[ReportManager] Get Text from "BRN690", text is "BRN690". @06-08-2026 12:07:38.0377 PM
+[ReportManager] Get Text from "BRN689", text is "BRN689". @06-08-2026 12:07:38.0445 PM
+[ReportManager] Get Text from "BRN688", text is "BRN688". @06-08-2026 12:07:38.0517 PM
+[ReportManager] Get Text from "BRN298", text is "BRN298". @06-08-2026 12:07:38.0583 PM
+[ReportManager] Get Text from "BRN262", text is "BRN262". @06-08-2026 12:07:38.0652 PM
+[ReportManager] Get Text from "BRN145", text is "BRN145". @06-08-2026 12:07:38.0740 PM
+[ReportManager] Get Text from "BRN687", text is "BRN687". @06-08-2026 12:07:38.0822 PM
+[ReportManager] Get Text from "BRN2", text is "BRN2". @06-08-2026 12:07:38.0972 PM
+[ReportManager] Get Text from "BRN291", text is "BRN291". @06-08-2026 12:07:39.0032 PM
+[ReportManager] Get Text from "BRN375", text is "BRN375". @06-08-2026 12:07:39.0092 PM
+[ReportManager] Get Text from "BRN690", text is "BRN690". @06-08-2026 12:07:39.0158 PM
+[ReportManager] Get Text from "BRN689", text is "BRN689". @06-08-2026 12:07:39.0212 PM
+[ReportManager] Get Text from "BRN688", text is "BRN688". @06-08-2026 12:07:39.0277 PM
+[ReportManager] Get Text from "BRN298", text is "BRN298". @06-08-2026 12:07:39.0337 PM
+[ReportManager] Get Text from "BRN262", text is "BRN262". @06-08-2026 12:07:39.0400 PM
+[ReportManager] Get Text from "BRN145", text is "BRN145". @06-08-2026 12:07:39.0463 PM
+[ReportManager] Get Text from "BRN687", text is "BRN687". @06-08-2026 12:07:39.0521 PM
+[ReportManager] Moved the mouse to the middle of the element. @06-08-2026 12:07:39.0812 PM
+[ReportManager] Click "". @06-08-2026 12:07:39.0875 PM
+[ReportManager] Get Text from "BRN2", text is "BRN2". @06-08-2026 12:07:40.0022 PM
+[ReportManager] Get Text from "BRN291", text is "BRN291". @06-08-2026 12:07:40.0082 PM
+[ReportManager] Get Text from "BRN375", text is "BRN375". @06-08-2026 12:07:40.0147 PM
+[ReportManager] Get Text from "BRN690", text is "BRN690". @06-08-2026 12:07:40.0212 PM
+[ReportManager] Get Text from "BRN689", text is "BRN689". @06-08-2026 12:07:40.0272 PM
+[ReportManager] Get text action failed. @06-08-2026 12:07:40.0342 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786007260510_tcBr060_navigateToNextPage_getText_failed' @06-08-2026 12:07:43.0734 PM
+[ReportManager] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$lQISHfxY.getText(Unknown Source)
+ AdminPages.Admin.Branch.SearchBranch_Page.branchCodesOnCurrentPage(SearchBranch_Page.java:231)
+ AdminPages.Admin.Branch.SearchBranch_Page.lambda$waitForPageContentToChange$4(SearchBranch_Page.java:448)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.waitForPageContentToChange(SearchBranch_Page.java:448)
+ AdminPages.Admin.Branch.SearchBranch_Page.goToNextPage(SearchBranch_Page.java:411)
+ AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage(SearchBranch_TC.java:319)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.129)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [d73c983cb5e99ab96bd41fd14dc1a8a8, getElementText {id=f.1A5E353080B709D6DB33F3188ACA1715.d.14B88C941629F1B8036C69BB90DA7C8D.e.962}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:57211}, goog:processID: 41432, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:57211/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:18200/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[[[ChromeDriver: chrome on windows (d73c983cb5e99ab96bd41fd14dc1a8a8)] -> css selector: table tbody tr]] -> tag name: td]
+Session ID: d73c983cb5e99ab96bd41fd14dc1a8a8
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.getText(RemoteWebElement.java:192)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$lQISHfxY.getText(Unknown Source)
+ AdminPages.Admin.Branch.SearchBranch_Page.branchCodesOnCurrentPage(SearchBranch_Page.java:231)
+ AdminPages.Admin.Branch.SearchBranch_Page.lambda$waitForPageContentToChange$4(SearchBranch_Page.java:448)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.waitForPageContentToChange(SearchBranch_Page.java:448)
+ AdminPages.Admin.Branch.SearchBranch_Page.goToNextPage(SearchBranch_Page.java:411)
+ AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage(SearchBranch_TC.java:319)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) @06-08-2026 12:07:43.0734 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @06-08-2026 12:07:43.0742 PM

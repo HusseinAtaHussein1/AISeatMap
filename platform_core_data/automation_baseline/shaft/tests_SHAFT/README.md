@@ -13,17 +13,10 @@ Automates the 13 test cases from `TestCases_Branch.md` where both `Review = Appr
 
 ## Credentials
 
-**Never hardcode a credential value anywhere in this project.** Set two environment variables
-before running:
-
-```
-BRANCH_QA_USERNAME=<Super Admin username>
-BRANCH_QA_PASSWORD=<Super Admin password>
-```
-
-`src/main/java/utilities/EnvironmentConfig.java` reads these at runtime and fails fast with a clear message if either
-is missing. This mirrors the platform's own `credentials.json` contract
-(`platform_core/tools/browser_driver/README.md` §4) in this standalone Java project's own terms.
+The QA Super Admin credentials are held in `src/main/java/utilities/EnvironmentConfig.java`
+(`USERNAME` / `PASSWORD`), so a suite runs from any terminal or IDE with no setup step. Keep them
+in that one class — never inline a credential in a test or page class. To point a suite at a
+different environment, change those two constants alongside `environment.properties`.
 
 ## Running the suite
 

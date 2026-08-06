@@ -108,6 +108,21 @@ platform_core_data/workspace/**/allure-results/
 platform_core_data/workspace/**/execution-summary/
 platform_core_data/workspace/**/generatedReport_*.zip
 
+# Module automation suite build and report outputs. Same reasoning as the workspace
+# rules above: Maven, Allure, Extent and the SHAFT performance hook regenerate all of
+# these from the tracked source tree on every run, they carry no review value, and they
+# dwarf the source (allure-report ~23M, extent-reports ~18M for one Branch run).
+# Execution evidence under runs/**/execution/artifacts/ is a deliverable and stays tracked.
+platform_core_data/modules/**/target/
+platform_core_data/modules/**/allure-report/
+platform_core_data/modules/**/allure-results/
+platform_core_data/modules/**/extent-reports/
+platform_core_data/modules/**/performanceReport/
+platform_core_data/modules/**/execution-summary/
+
+# IntelliJ module descriptors — per-machine, regenerated on import.
+*.iml
+
 # Stage evidence is a deliverable, not a log. The `*.log` rule above matched
 # `discovery/evidence/session_console.log` and dropped it from the commit
 # silently — a console capture disappearing is the exact failure the evidence

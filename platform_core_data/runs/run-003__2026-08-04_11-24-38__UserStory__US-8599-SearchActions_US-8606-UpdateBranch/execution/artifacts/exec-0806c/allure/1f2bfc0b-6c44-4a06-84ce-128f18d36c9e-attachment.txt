@@ -1,0 +1,18 @@
+[ReportManager] Setting "targetOperatingSystem" property with "windows". @06-08-2026 12:00:32.0135 PM
+[ReportManager] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} @06-08-2026 12:00:32.0137 PM
+[ReportManager] Attempting to run locally on: "windows | Chrome". @06-08-2026 12:00:32.0137 PM
+[ReportManager] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... @06-08-2026 12:00:32.0137 PM
+[ReportManager] Successfully Opened: "windows | Chrome". @06-08-2026 12:00:33.0580 PM
+[ReportManager] Target URL: "http://192.168.1.70" @06-08-2026 12:00:33.0629 PM
+[ReportManager] Initial URL: "about:blank" @06-08-2026 12:00:33.0711 PM
+[ReportManager] Navigate to url "http://192.168.1.70". @06-08-2026 12:00:36.0016 PM
+[ReportManager] Type "odeysysadmin" into "Username *". @06-08-2026 12:00:36.0305 PM
+[ReportManager] Type secure "••••••••••••" into "Password * Forgot Password?". @06-08-2026 12:00:36.0550 PM
+[ReportManager] Moved the mouse to the middle of the element. @06-08-2026 12:00:36.0829 PM
+[ReportManager] Click "Login". @06-08-2026 12:00:36.0917 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @06-08-2026 12:00:39.0097 PM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @06-08-2026 12:00:39.0174 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @06-08-2026 12:00:39.0871 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @06-08-2026 12:00:41.0957 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @06-08-2026 12:00:41.0957 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786006840806_setUp_ValidateElementExists_passed' @06-08-2026 12:00:41.0959 PM

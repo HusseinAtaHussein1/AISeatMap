@@ -1,0 +1,1085 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.ndc.branch:branch-automation-shaft >---------------
+[INFO] Building branch-automation-shaft 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] 1 problem was encountered while building the effective model for org.javassist:javassist:jar:3.18.1-GA during dependency collection step for project (use -X to see details)
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ branch-automation-shaft ---
+[INFO] Copying 12 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ branch-automation-shaft ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ branch-automation-shaft ---
+[INFO] Copying 3 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ branch-automation-shaft ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ branch-automation-shaft ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running TestSuite
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                    Powered by SHAFT v.7.4.20231015                                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:34:28 AM 
+[INFO] Loaded OpenCV "opencv_java470". | com.shaft.tools.io.ReportManager - main - 11:34:29 AM 
+[INFO] Initializing Allure Reporting Environment... | com.shaft.tools.io.ReportManager - main - 11:34:29 AM 
+[INFO] Initializing Extent Reporting Environment... | com.shaft.tools.io.ReportManager - main - 11:34:29 AM 
+[INFO] Initializing Summary Reporting Environment... | com.shaft.tools.io.ReportManager - main - 11:34:29 AM 
+[INFO] TestNG run detected... | com.shaft.tools.io.ReportManager - main - 11:34:29 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                             Starting execution of suite setup configuration method                                             
+                                          'com.shaft.listeners.internal.ConfigurationHelper.suiteSetup'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[INFO] Initializing Important Links... | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[INFO] Initializing Properties... | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:34:30 AM 
+[WARN] Aug 06, 2026 11:34:33 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:34:33 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:34:33 AM 
+[WARN] Aug 06, 2026 11:34:33 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:34:33 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:34:33 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:34:33 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:34:33 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:34:33 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:34:35 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:34:36 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:34:36 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:34:36 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:34:37 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:34:38 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:34:38 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:34:39 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:34:44 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005280834_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:34:44 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '1 out of 13' test cases in the current suite                                        
+                     Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields'                     
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:34:44 AM 
+[INFO] Get current url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] Successfully created attachment 'Browser Action Test Data - Get page source - Actual Value' | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] Get current url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] [DIAG8] url=http://192.168.1.70/admin/branch/add | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] [DIAG8] errors=FlightOthers | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] [DIAG8] emptyFields=Address 2 | Service Tax Number | ABTA Number | id-supplier-180 | id-supplier-202 | id-supplier-123 | id-supplier-138 | id-supplier-167 | id-supplier-179 | id-supplier-201 | id-supplier-200 | id-supplier-196 | id-supplier-210 | id-supplier-120 | id-supplier-209 | id-supplier-205 | id-supplier-189 | id-supplier-182 | id-supplier-146 | id-supplier-173 | id-supplier-198 | id-supplier-213 | id-supplier-188 | id-supplier-190 | id-supplier-185 | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr001_createBranchWithAllMandatoryFields' | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+          Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields'          
+                                                              Test Status: 'Failed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:34:50 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:34:51 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:34:51 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:34:51 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:34:51 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:34:51 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:34:51 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:34:51 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:34:51 AM 
+[WARN] Aug 06, 2026 11:34:52 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:34:52 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:34:52 AM 
+[WARN] Aug 06, 2026 11:34:52 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:34:52 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:34:52 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:34:52 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:34:52 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:34:52 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:34:54 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:34:54 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:34:54 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:34:55 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:34:55 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:34:56 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:34:56 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:34:57 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:35:01 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005298657_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:35:01 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '2 out of 13' test cases in the current suite                                        
+            Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty'            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:01 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:01 AM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:01 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:35:01 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:35:04 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005302739_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:35:04 AM 
+[INFO] Get current url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:35:08 AM 
+[INFO] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:08 AM 
+[INFO] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:35:09 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005308630_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' | com.shaft.tools.io.ReportManager - main - 11:35:09 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:09 AM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:09 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:35:09 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:35:11 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005310773_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:35:11 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty' | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+ Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty' 
+                                                              Test Status: 'Failed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:35:32 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:35:32 AM 
+[WARN] Aug 06, 2026 11:35:34 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:35:34 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:35:34 AM 
+[WARN] Aug 06, 2026 11:35:34 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:35:34 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:35:34 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:35:34 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:35:34 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:35:34 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:35:35 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:35:36 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:35:36 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:35:36 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:35:36 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:38 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:35:38 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:35:39 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:35:41 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005340136_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:35:41 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '3 out of 13' test cases in the current suite                                        
+                    Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr004_countryAutoFillsFromOperatingCountry'                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:41 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:35:42 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr004_countryAutoFillsFromOperatingCountry' | com.shaft.tools.io.ReportManager - main - 11:35:42 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+         Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr004_countryAutoFillsFromOperatingCountry'         
+                                                              Test Status: 'Passed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:42 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:42 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:35:43 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:35:43 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:35:43 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:43 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:35:43 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:35:43 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:35:43 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:35:43 AM 
+[WARN] Aug 06, 2026 11:35:44 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:35:44 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:35:44 AM 
+[WARN] Aug 06, 2026 11:35:44 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:35:44 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:35:44 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:35:44 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:35:44 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:35:44 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:35:46 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:35:46 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:35:46 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:35:47 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:35:47 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:48 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:35:48 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:35:49 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:35:51 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005350700_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:35:51 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '4 out of 13' test cases in the current suite                                        
+             Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty'             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:35:51 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:51 AM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:51 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:35:51 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:35:53 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005352905_tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:35:53 AM 
+[INFO] Get current url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:35:58 AM 
+[INFO] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:35:58 AM 
+[INFO] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:36:00 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005358790_tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' | com.shaft.tools.io.ReportManager - main - 11:36:00 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:00 AM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:00 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:36:00 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:36:04 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005361983_tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:36:04 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty' | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+  Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty'  
+                                                              Test Status: 'Failed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:36:25 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:36:25 AM 
+[WARN] Aug 06, 2026 11:36:27 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:36:27 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:36:27 AM 
+[WARN] Aug 06, 2026 11:36:27 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:36:27 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:36:27 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:36:27 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:36:27 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:36:27 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:36:28 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:36:29 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:36:29 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:36:29 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:36:29 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:31 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:36:31 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:36:32 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:36:34 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005393094_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:36:34 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '5 out of 13' test cases in the current suite                                        
+             Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty'             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:36:34 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:34 AM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:35 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:36:35 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:36:38 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005396472_tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:36:38 AM 
+[INFO] Get current url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:36:43 AM 
+[INFO] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:43 AM 
+[INFO] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:36:44 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005403562_tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' | com.shaft.tools.io.ReportManager - main - 11:36:44 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:44 AM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:36:44 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:36:44 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:36:46 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005405800_tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:36:46 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty' | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+  Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty'  
+                                                              Test Status: 'Failed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:37:07 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:37:07 AM 
+[WARN] Aug 06, 2026 11:37:09 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:37:09 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:37:09 AM 
+[WARN] Aug 06, 2026 11:37:09 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:37:09 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:37:09 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:09 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:37:09 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:37:09 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:37:11 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:37:11 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:37:11 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:37:12 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:37:12 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:37:13 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:37:14 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:37:14 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005435636_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '6 out of 13' test cases in the current suite                                        
+                Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr024_reachingPercentageRejectsValueGreaterThan100'                
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] Successfully created attachment 'Browser Action Test Data - Get page source - Actual Value' | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr024_reachingPercentageRejectsValueGreaterThan100' | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+     Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr024_reachingPercentageRejectsValueGreaterThan100'     
+                                                              Test Status: 'Passed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:18 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:37:19 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:37:19 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:37:19 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:19 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:37:19 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:37:19 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:19 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:37:19 AM 
+[WARN] Aug 06, 2026 11:37:20 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:37:20 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:37:20 AM 
+[WARN] Aug 06, 2026 11:37:20 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:37:20 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:37:20 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:20 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:37:20 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:37:21 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:37:22 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:37:22 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:37:23 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:37:23 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:37:23 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:37:25 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:37:25 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:37:25 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:37:28 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005446936_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:37:28 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '7 out of 13' test cases in the current suite                                        
+                Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr025_reachingPercentageAcceptsThreeDecimalPlaces'                
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:28 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:37:28 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr025_reachingPercentageAcceptsThreeDecimalPlaces' | com.shaft.tools.io.ReportManager - main - 11:37:28 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+     Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr025_reachingPercentageAcceptsThreeDecimalPlaces'     
+                                                              Test Status: 'Passed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:28 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:28 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:37:29 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:37:29 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:37:29 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:29 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:37:29 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:37:29 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:29 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:37:29 AM 
+[WARN] Aug 06, 2026 11:37:30 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:37:30 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:37:30 AM 
+[WARN] Aug 06, 2026 11:37:30 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:37:30 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:37:30 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:30 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:37:30 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:37:31 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:37:32 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:37:32 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:37:32 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:37:33 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:37:33 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:37:34 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:37:35 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:37:35 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:37:41 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005456646_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:37:41 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '8 out of 13' test cases in the current suite                                        
+                 Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits'                 
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:41 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:37:41 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr026_warningPromptRejectsValueExceeding11Digits' | com.shaft.tools.io.ReportManager - main - 11:37:41 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+      Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits'      
+                                                              Test Status: 'Failed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:41 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:41 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:37:42 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:37:42 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:37:42 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:42 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:37:42 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:37:42 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:42 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:37:42 AM 
+[WARN] Aug 06, 2026 11:37:43 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:37:43 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:37:43 AM 
+[WARN] Aug 06, 2026 11:37:43 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:37:43 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:37:43 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:43 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:37:43 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:37:43 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:37:47 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:37:47 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:37:47 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:37:48 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:37:48 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:37:49 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:37:49 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:37:50 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:37:51 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005471445_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:37:51 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '9 out of 13' test cases in the current suite                                        
+                       Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr028_selectAtLeastOnePaymentOption'                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:51 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr028_selectAtLeastOnePaymentOption' | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+            Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr028_selectAtLeastOnePaymentOption'            
+                                                              Test Status: 'Passed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:37:52 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:37:52 AM 
+[WARN] Aug 06, 2026 11:37:54 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:37:54 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:37:54 AM 
+[WARN] Aug 06, 2026 11:37:54 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:37:54 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:37:54 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:37:54 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:37:54 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:37:54 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:37:55 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:37:55 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:37:56 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:37:56 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:37:56 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:37:58 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:37:58 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:37:58 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:38:00 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005479779_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:38:00 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '10 out of 13' test cases in the current suite                                       
+               Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr030_descriptionEnabledOnlyWhenSupplierRowSelected'               
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:00 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr030_descriptionEnabledOnlyWhenSupplierRowSelected' | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+    Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr030_descriptionEnabledOnlyWhenSupplierRowSelected'    
+                                                              Test Status: 'Passed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:38:01 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:38:01 AM 
+[WARN] Aug 06, 2026 11:38:03 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:38:03 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:38:03 AM 
+[WARN] Aug 06, 2026 11:38:03 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:38:03 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:38:03 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:38:03 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:38:03 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:38:03 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:38:04 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:38:04 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:38:05 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:38:05 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:38:05 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:38:07 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:38:07 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:38:08 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005488978_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '11 out of 13' test cases in the current suite                                       
+                 Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr037_createBranchWithValidOutstandingThreshold'                 
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr037_createBranchWithValidOutstandingThreshold' | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+      Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr037_createBranchWithValidOutstandingThreshold'      
+                                                              Test Status: 'Passed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:38:10 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:38:10 AM 
+[WARN] Aug 06, 2026 11:38:12 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:38:12 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:38:12 AM 
+[WARN] Aug 06, 2026 11:38:12 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:38:12 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:38:12 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:38:12 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:38:12 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:38:12 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:38:16 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:38:17 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:38:17 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:38:17 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:38:17 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:38:19 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:38:19 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:38:20 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:38:21 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005501293_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:38:21 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '12 out of 13' test cases in the current suite                                       
+               Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty'               
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:21 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:38:42 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty' | com.shaft.tools.io.ReportManager - main - 11:38:42 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+    Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty'    
+                                                              Test Status: 'Failed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:42 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:42 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:38:43 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:38:43 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:38:43 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Branch.CreateBranch_Admin_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:43 AM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 11:38:43 AM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest...], extensions: [], prefs: {download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 11:38:43 AM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:38:43 AM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 11:38:43 AM 
+[WARN] Aug 06, 2026 11:38:44 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 11:38:44 AM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 11:38:44 AM 
+[WARN] Aug 06, 2026 11:38:44 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 11:38:44 AM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.129. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 11:38:44 AM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 11:38:44 AM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 11:38:45 AM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 11:38:45 AM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 11:38:46 AM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 11:38:46 AM 
+[INFO] Type secure "������������" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 11:38:47 AM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 11:38:47 AM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 11:38:47 AM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch/add" | com.shaft.tools.io.ReportManager - main - 11:38:49 AM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 11:38:49 AM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch/add". | com.shaft.tools.io.ReportManager - main - 11:38:50 AM 
+[INFO] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] Successfully created attachment 'Screenshot - 1786005531595_setUp_ValidateElementExists_passed' | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '13 out of 13' test cases in the current suite                                       
+                  Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr039_outstandingThresholdAcceptsNumericValue'                  
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tcBr039_outstandingThresholdAcceptsNumericValue' | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+       Finished Execution of Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr039_outstandingThresholdAcceptsNumericValue'       
+                                                              Test Status: 'Passed'                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[ERROR] Could not add attachment: no test is running | io.qameta.allure.AllureLifecycle - main - 11:38:52 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tearDown' | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                           Starting execution of engine teardown configuration method                                           
+                                        'com.shaft.listeners.internal.ConfigurationHelper.engineTeardown'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Execution log' | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] File Action "DoesFileExist" successfully performed. With the following test data "File Path: "target/logs/log4j.log"". | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] File Action "GetAbsolutePath" successfully performed. With the following test data "Relative Folder Path: "target/logs/log4j.log"". | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] File Action "ReadFileAsByteArray" successfully performed. With the following test data "File Path: "C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\branch\automation\tests_SHAFT\target\logs\log4j.log"". | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] File Action "DeleteFile" successfully performed. With the following test data "Target File Path: "target/logs/log4j.log", file was not deleted.". | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Execution log: 20260806-113852' | com.shaft.tools.io.ReportManager - main - 11:38:52 AM 
+[INFO] File Action "DoesFileExist" successfully performed. With the following test data "File Path: "allure-results/cucumberReport.html"". | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] Successfully created attachment 'HTML - Checkpoints Report' | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Issues log CSV: 20260806-113853' | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] Driver is already closed. | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] File Action "GetAbsolutePath" successfully performed. With the following test data "Relative File Path: "execution-summary/ExecutionSummaryReport_06-08-2026_11-38-53-0169-AM.html"". | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] File Action "WriteToFile" successfully performed. With the following test data "Target File Path: "C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\branch\automation\tests_SHAFT\execution-summary\ExecutionSummaryReport_06-08-2026_11-38-53-0169-AM.html"". | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] Executing: ".\execution-summary/ExecutionSummaryReport_*.html" locally. | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] Terminal Action "PerformTerminalCommands" successfully performed. With the following test data "Host Name: "localHost" | Command: ".\execution-summary/ExecutionSummaryReport_*.html" | Exit Status: "0"". | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                         Test Execution Summary Results                                                         
+                                             Total Cases: 13 --> Passed: 7 | Failed: 6 | Skipped: 0                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                           This test run was powered by SHAFT v.7.4.20231015                                           
+                               SHAFT is and will always be 100% FREE for commercial and private use                               
+                                                   in compliance with the MIT license                                                   
+                                   Visit SHAFT's user guide https://shafthq.github.io/ to learn more                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 11:38:53 AM 
+[ERROR] Tests run: 13, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 267.5 s <<< FAILURE! -- in TestSuite
+[ERROR] AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields -- Time elapsed: 6.122 s <<< FAILURE!
+java.lang.AssertionError: Expected the Branch to be saved with status "Pending for approval." expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:111)
+	at org.testng.Assert.failNotEquals(Assert.java:1578)
+	at org.testng.Assert.assertTrue(Assert.java:57)
+	at AdminPages.Admin.Branch.AddBranch_Page.assertSubmissionSucceeded(AddBranch_Page.java:669)
+	at AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields(CreateBranch_Admin_TC.java:39)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+	at org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty -- Time elapsed: 31.06 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@375c6b98 (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$4pTYniqv
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:59808}, goog:processID: 2468, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:59808/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:19111/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: ac7cdb6af76e81a32d401af72babc5a5
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:230)
+	at AdminPages.Admin.Branch.AddBranch_Page.openDependentDropdown(AddBranch_Page.java:308)
+	at AdminPages.Admin.Branch.AddBranch_Page.selectState(AddBranch_Page.java:329)
+	at AdminPages.Admin.Branch.AddBranch_Page.fillMandatoryBaseline(AddBranch_Page.java:554)
+	at AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty(CreateBranch_Admin_TC.java:57)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+	at org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty -- Time elapsed: 33.92 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@536fddad (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$Ixpq9KQN
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:61294}, goog:processID: 41472, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:61294/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:10943/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: c07b45ae1f5cf11f7b4699d900558a5d
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:230)
+	at AdminPages.Admin.Branch.AddBranch_Page.openDependentDropdown(AddBranch_Page.java:308)
+	at AdminPages.Admin.Branch.AddBranch_Page.selectState(AddBranch_Page.java:329)
+	at AdminPages.Admin.Branch.AddBranch_Page.fillMandatoryBaseline(AddBranch_Page.java:554)
+	at AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty(CreateBranch_Admin_TC.java:89)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+	at org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty -- Time elapsed: 32.35 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@2bd20f96 (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$iGpEX17G
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:62785}, goog:processID: 45140, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:62785/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:43732/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: e4a0d029de2a4096aae6b3bf8530e4c9
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:230)
+	at AdminPages.Admin.Branch.AddBranch_Page.openDependentDropdown(AddBranch_Page.java:308)
+	at AdminPages.Admin.Branch.AddBranch_Page.selectState(AddBranch_Page.java:329)
+	at AdminPages.Admin.Branch.AddBranch_Page.fillMandatoryBaseline(AddBranch_Page.java:554)
+	at AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty(CreateBranch_Admin_TC.java:108)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+	at org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits -- Time elapsed: 0.334 s <<< FAILURE!
+java.lang.AssertionError: Warning Prompt (Days) should be capped at 11 digits, but retained 15 characters: "999999999999999" (FINDING-004, still open) expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:111)
+	at org.testng.Assert.failNotEquals(Assert.java:1578)
+	at org.testng.Assert.assertTrue(Assert.java:57)
+	at AdminPages.Admin.Branch.AddBranch_Page.assertWarningPromptCappedAt11DigitsOrMessageShown(AddBranch_Page.java:459)
+	at AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits(CreateBranch_Admin_TC.java:153)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+	at org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty -- Time elapsed: 21.11 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@7003891 (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$8pLGURnA
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:58970}, goog:processID: 30664, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:58970/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:11778/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: eac2cb4cea3902f56aac93fe18c82374
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:230)
+	at AdminPages.Admin.Branch.AddBranch_Page.openDependentDropdown(AddBranch_Page.java:308)
+	at AdminPages.Admin.Branch.AddBranch_Page.selectState(AddBranch_Page.java:329)
+	at AdminPages.Admin.Branch.AddBranch_Page.fillMandatoryBaseline(AddBranch_Page.java:554)
+	at AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty(CreateBranch_Admin_TC.java:207)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+	at org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields:39 Expected the Branch to be saved with status "Pending for approval." expected [true] but found [false]
+[ERROR]   CreateBranch_Admin_TC.tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty:57 � Timeout Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@375c6b98 (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$4pTYniqv
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:59808}, goog:processID: 2468, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:59808/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:19111/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: ac7cdb6af76e81a32d401af72babc5a5
+[ERROR]   CreateBranch_Admin_TC.tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty:89 � Timeout Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@536fddad (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$Ixpq9KQN
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:61294}, goog:processID: 41472, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:61294/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:10943/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: c07b45ae1f5cf11f7b4699d900558a5d
+[ERROR]   CreateBranch_Admin_TC.tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty:108 � Timeout Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@2bd20f96 (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$iGpEX17G
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:62785}, goog:processID: 45140, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:62785/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:43732/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: e4a0d029de2a4096aae6b3bf8530e4c9
+[ERROR]   CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits:153 Warning Prompt (Days) should be capped at 11 digits, but retained 15 characters: "999999999999999" (FINDING-004, still open) expected [true] but found [false]
+[ERROR]   CreateBranch_Admin_TC.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty:207 � Timeout Expected condition failed: waiting for AdminPages.Admin.Branch.AddBranch_Page$$Lambda/0x000002781070e4c0@7003891 (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$8pLGURnA
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.129, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:58970}, goog:processID: 30664, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:58970/devtoo..., se:cdpVersion: 150.0.7871.129, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:11778/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: eac2cb4cea3902f56aac93fe18c82374
+[INFO] 
+[ERROR] Tests run: 13, Failures: 6, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  04:32 min
+[INFO] Finished at: 2026-08-06T11:38:54+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.1.2:test (default-test) on project branch-automation-shaft: There are test failures.
+[ERROR] 
+[ERROR] Please refer to C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\branch\automation\tests_SHAFT\target\surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

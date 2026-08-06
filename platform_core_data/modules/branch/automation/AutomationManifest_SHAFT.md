@@ -24,13 +24,13 @@
 | `src/main/resources/properties/execution.properties` | config | Generated | — (project-level) | — | 9 |
 | `src/test/resources/environment.properties` | config | Generated | — (project-level) | — | 4 |
 | `src/test/resources/branch_baseline.properties` | test data | Generated | CreateBranchSuite | TC-BR-001, 013, 021, 038 | 14 |
-| `src/test/java/utils/EnvironmentConfig.java` | utility | Generated | CreateBranchSuite | All 13 | 46 |
-| `src/test/java/utils/BranchDataFactory.java` | utility | Generated | CreateBranchSuite | TC-BR-001, 013, 021, 038 | 18 |
-| `src/test/java/data/BranchTestData.java` | fixture | Generated | CreateBranchSuite | TC-BR-001, 013, 021, 038 | 60 |
-| `src/test/java/base/BaseTest.java` | fixture (base class) | Generated | CreateBranchSuite | All 13 | 24 |
-| `src/test/java/pages/LoginPage.java` | page object | Generated | CreateBranchSuite | All 13 (shared setup) | 30 |
-| `src/test/java/pages/AddBranchPage.java` | page object | Generated | CreateBranchSuite | All 13 | ~315 |
-| `src/test/java/tests/CreateBranchTests.java` | test script | Generated | CreateBranchSuite | TC-BR-001, 002, 004, 013, 021, 024, 025, 026, 028, 030, 037, 038, 039 | ~215 |
+| `src/main/java/utilities/EnvironmentConfig.java` | utility | Generated | CreateBranchSuite | All 13 | 46 |
+| `src/main/java/utilities/BranchDataFactory.java` | utility | Generated | CreateBranchSuite | TC-BR-001, 013, 021, 038 | 18 |
+| `src/main/java/AdminPages/Admin/Branch/BranchTestData.java` | fixture | Generated | CreateBranchSuite | TC-BR-001, 013, 021, 038 | 60 |
+| `src/test/java/AdminPages/Login/TestBase_TC.java` | fixture (base class) | Generated | CreateBranchSuite | All 13 | 24 |
+| `src/main/java/AdminPages/Login/LogIn_Page.java` | page object | Generated | CreateBranchSuite | All 13 (shared setup) | 30 |
+| `src/main/java/AdminPages/Admin/Branch/AddBranch_Page.java` | page object | Generated | CreateBranchSuite | All 13 | ~315 |
+| `src/test/java/AdminPages/Admin/Branch/CreateBranch_Admin_TC.java` | test script | Generated | CreateBranchSuite | TC-BR-001, 002, 004, 013, 021, 024, 025, 026, 028, 030, 037, 038, 039 | ~215 |
 
 ## 2. By Type
 
@@ -49,10 +49,10 @@
 | # | Finding | File(s) | Severity | Status | Resolution / Why Unresolved |
 |---|---|---|---|---|---|
 | 1 | `pom.xml` had an invalid XML comment (a `--` sequence inside a comment), which failed POM parsing outright | `pom.xml` | High (blocked all compilation) | Resolved | Rewrote the comment without any `--` sequence |
-| 2 | Dead-code line (`base.BaseTest fresh = this;`) left over from an earlier draft | `src/test/java/tests/CreateBranchTests.java` | Low | Resolved | Removed |
+| 2 | Dead-code line (`AdminPages.Login.TestBase_TC fresh = this;`) left over from an earlier draft | `src/test/java/AdminPages/Admin/Branch/CreateBranch_Admin_TC.java` | Low | Resolved | Removed |
 | 3 | Assumed Maven coordinate `com.shafthq:SHAFT_ENGINE` does not exist on Maven Central | `pom.xml` | High (blocked all compilation) | Resolved | Corrected to `io.github.shafthq:SHAFT_ENGINE:9.4.20251220`, confirmed via a live Maven Central search |
-| 4 | Assumed SHAFT API surface (`SHAFT.GUI` with plain `getAttribute()`/`getText()`) does not match the real, resolved library's fluent/assertion-first API | `pages/LoginPage.java`, `pages/AddBranchPage.java`, `base/BaseTest.java` | High (~40 compile errors) | Resolved | Inspected the resolved jar directly with `javap -p`; rewrote all three files to the confirmed real API (`SHAFT.GUI.WebDriver`, `driver.assertThat().element(locator).attribute(...).isEqualTo(...).perform()`) |
-| 5 | This SHAFT_ENGINE version's browser-level validation builder has no fluent `text()`/page-source check | `pages/AddBranchPage.java` | Medium | Resolved | Used the concrete `BrowserActions` class's plain `getPageSource()`/`getCurrentURL()` methods with a direct TestNG `Assert`, documented in code comments as a version-specific workaround |
+| 4 | Assumed SHAFT API surface (`SHAFT.GUI` with plain `getAttribute()`/`getText()`) does not match the real, resolved library's fluent/assertion-first API | `AdminPages/Login/LogIn_Page.java`, `AdminPages/Admin/Branch/AddBranch_Page.java`, `AdminPages/Login/TestBase_TC.java` | High (~40 compile errors) | Resolved | Inspected the resolved jar directly with `javap -p`; rewrote all three files to the confirmed real API (`SHAFT.GUI.WebDriver`, `driver.assertThat().element(locator).attribute(...).isEqualTo(...).perform()`) |
+| 5 | This SHAFT_ENGINE version's browser-level validation builder has no fluent `text()`/page-source check | `AdminPages/Admin/Branch/AddBranch_Page.java` | Medium | Resolved | Used the concrete `BrowserActions` class's plain `getPageSource()`/`getCurrentURL()` methods with a direct TestNG `Assert`, documented in code comments as a version-specific workaround |
 
 ## 4. Self Review Recommendations (§15)
 
@@ -84,27 +84,27 @@
 
 | File | Purpose |
 |---|---|
-| `src/test/java/base/AbstractBaseTest.java` | Driver lifecycle + Super Admin login + `navigateToStartScreen()` hook |
-| `src/test/java/pages/BasePage.java` | Shared driver handle, bounded-wait factory, read helpers *(added during self-review to remove duplication — beyond the approved file list, flagged explicitly)* |
-| `src/test/java/pages/SearchBranchPage.java` | Filters, grid, row-by-code actions, custom `tilde-paginator` |
-| `src/test/java/pages/UpdateBranchPage.java` | Readiness poll, field reads, remarks, action buttons |
-| `src/test/java/utils/BranchProvisioner.java` | Creates a run-tagged branch, returns its assigned Branch Code |
-| `src/test/java/tests/SearchBranchTests.java` | 11 tests |
-| `src/test/java/tests/BranchActionsTests.java` | 3 tests |
-| `src/test/java/tests/UpdateBranchTests.java` | 5 tests |
+| `src/test/java/AdminPages/Login/TestBase.java` | Driver lifecycle + Super Admin login + `navigateToStartScreen()` hook |
+| `src/main/java/AdminPages/Admin/Branch/Branch_Common.java` | Shared driver handle, bounded-wait factory, read helpers *(added during self-review to remove duplication — beyond the approved file list, flagged explicitly)* |
+| `src/main/java/AdminPages/Admin/Branch/SearchBranch_Page.java` | Filters, grid, row-by-code actions, custom `tilde-paginator` |
+| `src/main/java/AdminPages/Admin/Branch/UpdateBranch_Page.java` | Readiness poll, field reads, remarks, action buttons |
+| `src/test/java/AdminPages/Admin/Branch/BranchProvisioner.java` | Creates a run-tagged branch, returns its assigned Branch Code |
+| `src/test/java/AdminPages/Admin/Branch/SearchBranch_TC.java` | 11 tests |
+| `src/test/java/AdminPages/Admin/Branch/BranchActions_TC.java` | 3 tests |
+| `src/test/java/AdminPages/Admin/Branch/UpdateBranch_TC.java` | 5 tests |
 
 ## Modified
 
 | File | Change |
 |---|---|
-| `src/test/java/base/BaseTest.java` | Now extends `AbstractBaseTest`; contributes only the Add Branch navigation. Behaviour preserved exactly. |
-| `src/test/java/utils/EnvironmentConfig.java` | `editBranchPath()` accessor added |
+| `src/test/java/AdminPages/Login/TestBase_TC.java` | Now extends `TestBase`; contributes only the Add Branch navigation. Behaviour preserved exactly. |
+| `src/main/java/utilities/EnvironmentConfig.java` | `editBranchPath()` accessor added |
 | `src/test/resources/environment.properties` | `editBranchPath` key added |
 | `testng.xml` | Three new suites registered |
 
 ## Unchanged — verified byte-identical via `git diff`
 
-`tests/CreateBranchTests.java` · `pages/AddBranchPage.java` · `pages/LoginPage.java` · `utils/BranchDataFactory.java` · `data/BranchTestData.java` · `src/test/resources/branch_baseline.properties` · `pom.xml` · `src/main/resources/properties/execution.properties` · `README.md`
+`AdminPages/Admin/Branch/CreateBranch_Admin_TC.java` · `AdminPages/Admin/Branch/AddBranch_Page.java` · `AdminPages/Login/LogIn_Page.java` · `utilities/BranchDataFactory.java` · `AdminPages/Admin/Branch/BranchTestData.java` · `src/test/resources/branch_baseline.properties` · `pom.xml` · `src/main/resources/properties/execution.properties` · `README.md`
 
 ## Knowledge-base rules applied
 

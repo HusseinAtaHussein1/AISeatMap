@@ -107,3 +107,78 @@ Three notes on why fields exist:
 | Gap | Stage Affected | Why | Consequence Stated In |
 |---|---|---|---|
 | {{GAP}} | {{STAGE}} | {{REASON}} | {{WHERE_REPORTED}} |
+
+## 6. Execution Safety
+
+<!-- Added 2026-08-07. `pipeline.md` §14 — which policy this run was evaluated under, and what it was
+     authorized to do. Written by the executing stage (`4M` / `5A`) at preflight time.
+
+     A run that never reached an execution stage has nothing to record here, and says so explicitly
+     rather than leaving the table blank: "not yet evaluated" and "unknown" are different claims.
+
+     THIS SECTION POINTS; IT DOES NOT DUPLICATE. The full records sit beside this file —
+       metadata/SafetyPreflight.md        the run's mutation footprint, captured BEFORE execution
+       metadata/SafetyAuthorizations.md   the scoped approvals granted for THIS run only
+     and the project policy itself stays in knowledge_base/execution_safety_policy.json. Copying the
+     policy in here would give a run a second, drifting copy of a document it does not own.
+
+     The hash is what makes "this run executed under policy v1" a checkable claim rather than an
+     assurance: the same input against the same hash always produces the same decision. -->
+
+| Field | Value |
+|---|---|
+| Policy ID / version | `{{POLICY_ID}}` v{{POLICY_VERSION}} |
+| Policy hash | `{{POLICY_HASH}}` |
+| Environment evaluated | {{ENVIRONMENT}} |
+| Preflight | [`SafetyPreflight.md`](SafetyPreflight.md) — {{MUTATING_COUNT}} mutating operations planned |
+| Scoped authorizations | {{AUTH_COUNT}} — [`SafetyAuthorizations.md`](SafetyAuthorizations.md) |
+| Policy blocks | {{BLOCKED_COUNT}} operations, {{BLOCKED_CASES}} test cases recorded `Skipped` / reason `Execution Safety Policy` |
+| Cleanup-required actions | {{CLEANUP_REQUIRED}} planned · {{CLEANUP_COMPLETED}} completed |
+
+<!-- One row per scoped authorization granted for this run. Omit the table entirely when none were.
+     A policy BLOCK is not listed here — a block is not an authorization, and mixing the two would
+     make the audit trail read as though something had been permitted. -->
+
+| Authorization | Action | Ownership | Module | Approved by | Approved at |
+|---|---|---|---|---|---|
+| `{{AUTH_ID}}` | {{ACTION}} | {{OWNERSHIP}} | {{MODULE}} | {{APPROVED_BY}} | {{APPROVED_AT}} |
+
+**No run-scoped authorization carries beyond this run**, and none of them lifts a `Forbidden`
+(`pipeline.md` §14.5). A future run asks fresh.
+
+## 7. Observability
+
+<!-- Added 2026-08-07. `pipeline.md` §15 — the run's telemetry, and how complete it is.
+
+     THIS SECTION POINTS; IT DOES NOT RESTATE A METRIC. The numbers live beside this file and are
+     derived from the event stream, regenerable at any time:
+       metadata/observability/ObservabilityEvents.jsonl     append-only evidence
+       metadata/observability/ObservabilityMetrics.json     derived, machine-readable
+       metadata/observability/ObservabilityReport.md        human-readable
+       metadata/observability/ObservabilityDashboard.html   self-contained, offline
+     Copying a metric in here would give the run a second copy that drifts the moment the stream
+     grows — and a metric typed by hand has no evidence behind it at all.
+
+     Instrumentation is one of: Fully Instrumented / Partially Instrumented / Not Instrumented.
+     `Partially Instrumented` is not a lesser version of complete — it means some telemetry is
+     missing and the metrics are therefore not a full picture. Say which, rather than implying it.
+
+     A run created before 2026-08-07 has no telemetry at all and is `Not Instrumented`; no event is
+     fabricated for it (HD-OBS-003). Its Historical Derived Metrics, if any, are obtained with
+     `observability historical --run <run>` and are never presented as telemetry. -->
+
+| Field | Value |
+|---|---|
+| Telemetry schema | v{{OBSERVABILITY_SCHEMA_VERSION}} |
+| Instrumentation | {{INSTRUMENTATION_STATUS}} |
+| Events recorded | {{EVENT_COUNT}} ({{TOOL_EVENTS}} platform-tool · {{SKILL_EVENTS}} skill) |
+| Unclosed spans | {{UNCLOSED_SPANS}} <!-- each reported Incomplete; none receives a duration --> |
+| Report / Dashboard | [`ObservabilityReport.md`](observability/ObservabilityReport.md) · [`ObservabilityDashboard.html`](observability/ObservabilityDashboard.html) |
+
+**Platform-tool and Skill events are different reliability classes** and are counted separately above.
+A platform-tool event is emitted by code as a side effect of the work and cannot be forgotten; a Skill
+event is emitted because a specification requires it, so its presence is reliable but **its absence
+proves nothing** (`pipeline.md` §15.4).
+
+**Token usage and cost are `Unavailable`** on every run, for the reason recorded in the Observability
+Report — never `0`, and never estimated.

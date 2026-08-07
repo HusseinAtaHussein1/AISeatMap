@@ -1,4 +1,4 @@
-> **Position:** Outside the 7-stage Agent pipeline defined in [`workflows_and_pipelines/pipeline/pipeline.md`](pipeline.md) and [`.claude/skills/`](../../.claude/skills/). The Run Manager is an **orchestration component, not an Agent** — it does not appear as a stage in `workflows_and_pipelines/pipeline/pipeline.md`'s Pipeline Overview, and this document does not alter that stage order.
+> **Position:** Outside the eight-stage, two-pipeline Skill architecture defined in [`workflows_and_pipelines/pipeline/pipeline.md`](pipeline.md) and [`.claude/skills/`](../../.claude/skills/). The Run Manager is an **orchestration component, not a Skill** — it does not appear as a stage in `workflows_and_pipelines/pipeline/pipeline.md`'s Pipeline Overview, and this document does not alter that stage order.
 > **Relationship to existing concepts:** `workflows_and_pipelines/pipeline/pipeline.md` §5.3/§9 already names a "Pipeline Orchestrator (tooling, not a person)" responsible for invoking agents in order and maintaining a Run Manifest (§7). The Run Manager is the full specification of that tooling role. It is additive: it does not change the Pipeline Orchestrator's responsibilities, the seven agents' Input/Output contracts, or any existing artifact path documented elsewhere.
 > **Scope of this revision:** This document defines the Run Manager only. No existing agent file, the pipeline specification, or any project artifact has been modified or generated as part of authoring it. Wiring the seven agents to read/write inside a Run Workspace (§6) is a future integration step, out of scope here.
 > **2026-07-21 update:** §4, §5, §6, §7, and §9 were extended to add an AI-generated Display Name/Title/Description on top of the pre-existing immutable Run ID.
@@ -23,8 +23,8 @@ Where the eight Agents (Project Context, Explorer, Test Design, Manual Execution
 To keep this component's boundary unambiguous, the Run Manager explicitly must **not**:
 
 - Analyze, interpret, or judge application behavior.
-- Generate, classify, score, or triage Findings (that is the Explorer Agent's responsibility — see `.claude/skills/explorer-skill/SKILL.md`).
-- Generate, design, or modify test cases (Test Design Agent) or automation scripts (Automation Agent).
+- Generate, classify, score, or triage Findings (that is the Explorer Skill's responsibility — see `.claude/skills/explorer-skill/SKILL.md`).
+- Generate, design, or modify test cases (Test Design Skill) or automation scripts (Automation Skill).
 - Decide whether a run "passed" or "succeeded" in a quality sense — it records mechanical status (§8), not a verdict.
 - Modify the content of any artifact an Agent produces.
 - Substitute for, or bypass, any Human Review / Automation Approval checkpoint defined in `workflows_and_pipelines/pipeline/pipeline.md` §5.
@@ -127,7 +127,7 @@ which one is the pipeline currently writing to?**
 
 A project accumulates runs. Before this revision every stage resolved `{{RUN_FOLDER}}` from
 conversational context, so "continue the Leave run" and "start a new run" were indistinguishable to
-the tooling — and Stage 5 output could land in a run whose Stage 3 belonged to something else. The
+the tooling — and Stage `5A` output could land in a run whose Stage 3 belonged to something else. The
 pointer makes the current run an explicit, inspectable fact on disk:
 
 ```
@@ -453,6 +453,16 @@ platform_core_data/
   runs/
     {{RUN_FOLDER}}/          <- e.g. run-001__2026-07-23_10-35-18__FullRun__FlightSearch (§5)
       metadata/              <- always created immediately
+        RunManifest.md         where the run is right now (§5.11)
+        run.json               status, scope, target (§7)
+        SafetyPreflight.md     the run's mutation footprint, written by 4M/5A BEFORE executing
+        SafetyAuthorizations.json / .md
+                               run-scoped human approvals — see the note below
+        observability/         run telemetry (`pipeline.md` §15) — created on first event
+          ObservabilityEvents.jsonl    append-only evidence, one event per line
+          ObservabilityMetrics.json    derived, regenerable — never hand-edited
+          ObservabilityReport.md       human-readable
+          ObservabilityDashboard.html  self-contained, offline, presentation only
                              ---- MANUAL branch ----
       manual_execution/      <- created only when Stage 4M writes to it
                              ---- AUTOMATION branch ----
@@ -465,6 +475,14 @@ platform_core_data/
 **Naming note:** every reference to a run's workspace path elsewhere in this document uses the placeholder `{{RUN_FOLDER}}` for brevity. For a run created under this document's current naming convention, that placeholder resolves to the full `run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target` folder name (§5); for a pre-existing run, it resolves to that run's original `RUN-YYYYMMDD-XXX[-slug]` folder name, which is never renamed (§5.6).
 
 A run that executes nothing — created, then abandoned before Stage 4M or 5A — has exactly `metadata/` on disk. That is a complete and accurate record: the run existed and executed nothing.
+
+**Execution Safety artifacts live in `metadata/`, and that placement is load-bearing** (added 2026-08-07, `pipeline.md` §14). A run-scoped authorization sits *inside the run folder it belongs to*, so one run structurally cannot read another's — cross-run leakage is prevented by layout, not only by a rule someone has to remember. Each record additionally carries its own `runId`, re-checked on load, so even a copied file authorizes nothing.
+
+**Observability telemetry lives in `metadata/observability/`, for the same structural reason** (added 2026-08-07, `pipeline.md` §15). It gets a subfolder rather than four more flat files because the four artifacts are always produced and consumed together, and `metadata/` should stay the place where run state lives rather than the place where everything lands. The isolation guarantee is identical to the Safety one and defended the same way twice: placement inside the run folder, plus a `runId` on every event that is re-checked on load, so a copied stream contributes nothing to another run's metrics.
+
+Only `ObservabilityEvents.jsonl` is evidence. The other three are **derived and regenerable at any time** from it, which is why none of them is ever hand-edited — an edited metric is a metric with no evidence behind it. A run created before 2026-08-07 has no `observability/` folder at all and reports **Not Instrumented**; no event is fabricated to fill the gap.
+
+Both files are written by the executing stage (`4M` / `5A`), never by the Run Manager, and both are run evidence under §7's immutability rules once written. **A run approval never becomes project policy** — nothing in `metadata/` is ever promoted into `knowledge_base/execution_safety_policy.json`.
 
 **Which folders exist records which branch the run took** (`pipeline.md` §3.3, §6 Rule 3a). The two pipelines share Stages 1–3 (whose output is per module) and then diverge:
 
@@ -552,7 +570,7 @@ Every run's status is exactly one of the following values at any given time:
 | **Running** | At least one Agent stage is actively executing for this run. |
 | **Paused** | Execution has been deliberately suspended (not a checkpoint — a manual pause) and is expected to resume. |
 | **Waiting For Approval** | The run is stopped at one of the Human Review / Automation Approval checkpoints defined in `workflows_and_pipelines/pipeline/pipeline.md` §5, awaiting a reviewer decision. |
-| **Completed** | The run reached the terminal Reporting Agent stage and finished successfully. |
+| **Completed** | The run reached its branch's terminal stage — `4M` for the Manual branch, `6A` (Reporting) for the Automation branch — and finished successfully. |
 | **Failed** | The run stopped due to an error condition (e.g., an Agent could not complete its stage) rather than a deliberate pause or rejection. |
 | **Cancelled** | The run was deliberately terminated before reaching a terminal stage, by explicit human decision. |
 
@@ -589,7 +607,7 @@ platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md
 | Field | Description |
 |---|---|
 | Modules Executed | The module slugs this run executed against, and its `moduleScope` (§7) — a mechanical restatement of `run.json`, not a judgment about coverage adequacy |
-| Visited Screens | Count of distinct screens/states captured in the executed modules' `discovery/` folders (a mechanical count of Explorer Agent discovery snapshots, not a judgment of exploration completeness) |
+| Visited Screens | Count of distinct screens/states captured in the executed modules' `discovery/` folders (a mechanical count of Explorer Skill discovery snapshots, not a judgment of exploration completeness) |
 | Executed Agents | Which of the eight Agents ran during this run, in what order, and which branch(es) the run took |
 | Generated Artifacts | A count/list of artifacts produced across the Run Workspace's subdirectories (§6), plus the module artifacts this run consumed (`moduleArtifactRefs[]`, §7) |
 | Findings Count | Count of Finding evidence packages under the executed modules' `discovery/findings/` |
@@ -600,7 +618,7 @@ platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md
 | Coverage | The mechanical ratio of in-scope modules/screens actually visited (per Discovery Artifacts) against the Project Context's declared in-scope list — a count, not an assessment of whether that coverage was sufficient |
 | Overall Status | The run's final value from the Execution Status enum (§8) — the same value as the opening block's `Status`, repeated here as it was in the pre-existing summary shape |
 
-`run_summary.md` is a factual roll-up of counts and statuses drawn from what each Agent already produced, plus the descriptive identity fields already generated for `run.json` — it must never include an assessment of quality, correctness, or defect severity. Any such judgment belongs in the Explorer Agent's Findings Summary or the Reporting Agent's Final QA Report, not here.
+`run_summary.md` is a factual roll-up of counts and statuses drawn from what each Skill already produced, plus the descriptive identity fields already generated for `run.json` — it must never include an assessment of quality, correctness, or defect severity. Any such judgment belongs in the Explorer Skill's Findings Summary or the Reporting Skill's Final QA Report, not here.
 
 # 10. Rules
 
@@ -609,7 +627,7 @@ platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md
 3. The Run Manager never changes the content of any project artifact produced by an Agent. It may organize where artifacts live within the Run Workspace (§6) and it may create/update its own metadata files (`run.json`, `run_summary.md`, the Active Run pointer (`current_active_run.json`, §5.7), and each refinement run's `lineage.json` (§5.9) — see those sections for their schemas; `run_summary.md`), but it must never edit, rewrite, or delete an Agent-produced artifact.
 4. The Run Manager only prepares and coordinates execution — folder-name generation (§5, via `platform_core/tools/run_manager`), Title/Description generation (§7), workspace creation, metadata tracking, status tracking, and summary publication are its entire mandate.
 5. The Run Manager must not bypass, shortcut, or auto-resolve any Human Review or Automation Approval checkpoint defined in `workflows_and_pipelines/pipeline/pipeline.md` §5 — reaching `Waiting For Approval` status is as far as it goes; only a human decision moves the run past that point.
-6. The Run Manager must not read the PRD — per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4, only Stage 1 (Project Context Agent) is permitted to do so, and the Run Manager is not a stage.
+6. The Run Manager must not read the PRD — per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4, only Stage 1 (Project Context Skill) is permitted to do so, and the Run Manager is not a stage.
 7. **The Run Manager never writes under `platform_core_data/modules/`.** It reads the active-module pointer to record a run's module scope (§7) and reads module artifacts to count them for the Run Summary (§9). Creating a module, activating one, or recording a stage's progress against one is the Module Manager's mandate and nobody else's (`module_architecture.md` §6.5 Rule 3).
 
 # 11. Inputs & Outputs
@@ -630,7 +648,7 @@ The Run Manager does not consume the PRD, the Project Context's business content
 
 # 13. Architecture
 
-The Run Manager sits outside the 7-stage Agent pipeline defined in `workflows_and_pipelines/pipeline/pipeline.md`. It is the concrete specification of the "Pipeline Orchestrator (tooling, not a person)" role already named in that document's §5.3 and §9 Roles Summary.
+The Run Manager sits outside the eight-stage, two-pipeline Skill architecture defined in `workflows_and_pipelines/pipeline/pipeline.md`. It is the concrete specification of the "Pipeline Orchestrator (tooling, not a person)" role already named in that document's §5.3 and §9 Roles Summary.
 
 ```
                     ┌─────────────────────────────────────────┐

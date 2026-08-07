@@ -102,6 +102,8 @@ The sections below are the platform's complete technical documentation — archi
 8. [Automation Package Lifecycle](#8-automation-package-lifecycle)
 9. [Repository Structure](#9-repository-structure)
 10. [Run Architecture](#10-run-architecture)
+10A. [Execution Safety](#10a-execution-safety)
+10B. [Run Observability](#10b-run-observability)
 11. [Knowledge Base](#11-knowledge-base)
 12. [Multi-Framework Architecture](#12-multi-framework-architecture)
 13. [Design Principles](#13-design-principles)
@@ -134,14 +136,14 @@ Concretely, the platform:
 - **Traceability by construction.** Every test case, automation script, and execution result carries a citation back to the requirement it covers — not because someone remembered to fill in a spreadsheet column, but because the pipeline's artifact contracts require it.
 - **Governed, not autonomous.** The platform is AI-*assisted*. Every stage that produces a document or authorizes code execution stops at a named checkpoint until a human with the right role signs off — see §5.5 of [`workflows_and_pipelines/pipeline/pipeline.md`](workflows_and_pipelines/pipeline/pipeline.md) for exactly which decisions are reserved for a human versus made automatically.
 - **Compounding, not repeating.** Repair strategies that are confirmed to work are captured in a versioned Knowledge Base and reused on the next failure with the same signature — instead of every run re-diagnosing the same class of problem from zero.
-- **Single project, cleanly separated.** The hosted application is fully self-contained under `platform_core_data/`, and nothing application-specific lives outside it — so the same eight agents and one pipeline specification apply unchanged when the platform is retargeted at a different application, with no code changes.
+- **Single project, cleanly separated.** The hosted application is fully self-contained under `platform_core_data/`, and nothing application-specific lives outside it — so the same eight Skills and one pipeline specification apply unchanged when the platform is retargeted at a different application, with no code changes.
 
 ### Philosophy of AI-assisted testing
 
 The platform is built on one recurring architectural pattern, repeated at every layer: **separate defining from validating, and separate producing from judging.**
 
-- Requirements are *defined* in the PRD and *validated* (never redefined) by the Explorer Agent against the live application — a documented discrepancy is a **Gap**, resolved by a human, never silently overwritten by what the agent observed ([Lessons Learned §1](docs/LESSONS_LEARNED.md)).
-- Test results are *produced* mechanically by the Automation Execution Agent and *judged* separately by the Reporting Agent — no single agent both runs a test and writes the narrative conclusion about it ([Lessons Learned §2](docs/LESSONS_LEARNED.md)).
+- Requirements are *defined* in the PRD and *validated* (never redefined) by the Explorer skill against the live application — a documented discrepancy is a **Gap**, resolved by a human, never silently overwritten by what was observed ([Lessons Learned §1](docs/LESSONS_LEARNED.md)).
+- Test results are *produced* mechanically by the Automation Execution skill and *judged* separately by the Reporting skill — no single stage both runs a test and writes the narrative conclusion about it ([Lessons Learned §2](docs/LESSONS_LEARNED.md)).
 - Every gate that can accept a wrong *document* (Stages 1–3, `4M`) is deliberately weaker than the gate that authorizes *code to execute* against a real environment (`4A`, and any `5H` re-merge) — because the blast radius of the two failure modes is not the same ([Lessons Learned §3](docs/LESSONS_LEARNED.md)).
 
 This is why the platform reads as "a pipeline with agents inside it," not "an agent with tools attached" — the discipline lives in the artifact contracts and checkpoints between stages, not in any single agent's judgment.
@@ -165,7 +167,7 @@ This is why the platform reads as "a pipeline with agents inside it," not "an ag
 | **Run Scope** | Every run declares exactly what it's allowed to validate — Entire Project, Epic, Feature, User Story, Bug, Requirement Document, or Custom Scope | [`workflows_and_pipelines/pipeline/run_scope.md`](workflows_and_pipelines/pipeline/run_scope.md) |
 | **Reference Automation Project Support** | A project can register an external, human-owned automation codebase as a reference — read-only by default, with an explicit gate before any write to it | [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) |
 | **Browser Driver Layer** | A single shared engine (`platform_core/tools/browser_driver/`) drives every authenticated browser session, with credentials always outside the repo's tracked history | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) |
-| **Reporting** | A Final QA Report that computes Requirement Coverage and Automation Coverage by walking the full traceability chain, not by re-asserting the Automation Execution Agent's raw output | [`.claude/skills/reporting-skill/SKILL.md`](.claude/skills/reporting-skill/SKILL.md) |
+| **Reporting** | A Final QA Report that computes Requirement Coverage and Automation Coverage by walking the full traceability chain, not by re-asserting the Automation Execution skill's raw output | [`.claude/skills/reporting-skill/SKILL.md`](.claude/skills/reporting-skill/SKILL.md) |
 | **Execution Analysis** | Application Health, Automation Health, and Environment Health are always reported as three separate figures — never one merged "Failed" count. This separation is what makes self-healing safe: only `Automation Failure` is ever eligible for repair | [`.claude/skills/automation-execution-skill/SKILL.md` §25.2](.claude/skills/automation-execution-skill/SKILL.md) |
 
 ---
@@ -176,23 +178,32 @@ The entire platform, at a glance — read top to bottom:
 
 ```mermaid
 flowchart TD
-    REQ[/"Requirements (PRD)"/] --> CTX["Project Context"]
-    CTX --> DISC["Discovery"]
-    DISC --> TD["Test Design"]
-    TD --> MANEX["Manual Execution"]
-    MANEX --> AUTO["Automation"]
-    AUTO --> GATE{{"⛔ Human Approval Gates<br/><small>+ AI Review — planned, see Capabilities Matrix</small>"}}
-    GATE --> EXEC["Execution"]
-    EXEC --> REPORT["Reporting"]
+    REQ[/"Requirements (PRD)"/] --> CTX["Stage 1 — Project Context"]
+    CTX --> DISC["Stage 2 — Discovery"]
+    DISC --> TD["Stage 3 — Test Design"]
+    TD --> G3{{"⛔ Human Review Required"}}
+
+    G3 -->|approved| MANEX["Stage 4M — Manual Execution"]
+    G3 -->|approved| AUTO["Stage 4A — Automation"]
+
+    MANEX --> MOUT["Manual QA Deliverables<br/><small>results · defects · CSV — terminal</small>"]
+
+    AUTO --> GATE{{"⛔ Automation Approval Required<br/><small>+ AI Review — planned, see Capabilities Matrix</small>"}}
+    GATE -->|approved| EXEC["Stage 5A — Automation Execution"]
+    EXEC -. "optional · human-invoked only" .-> HEAL["Stage 5H — Self-Healing"]
+    HEAL --> REPORT
+    EXEC --> REPORT["Stage 6A — Reporting"]
+    REPORT --> FINAL["Final QA Report"]
+
+    MOUT --> RUNS[("Immutable Runs")]
+    FINAL --> RUNS
     REPORT --> KB[("Knowledge Base")]
-    KB --> WORK["Workspace<br/><small>current-approved artifacts</small>"]
-    WORK --> RUNS[("Immutable Runs")]
 
     KB -.informs future runs.-> AUTO
     KB -.informs future runs.-> EXEC
 ```
 
-A **Requirement** becomes a scoped **Project Context**, which drives **Discovery** of the real application, which grounds **Test Design**, which drives **Manual Execution** — validating the designed test cases against the live application and identifying which are stable enough to automate — which drives **Automation**. Nothing generated automation executes without clearing a **Human Approval Gate** first. **Execution** produces raw results, **Reporting** turns them into a stakeholder-facing QA assessment, and every confirmed repair or lesson feeds the **Knowledge Base** — which in turn informs the *next* run's Automation and Execution stages, rather than starting from zero. The **Workspace** holds each stage's current-approved output; every run that ever touched it is preserved forever as an **Immutable Run**.
+A **Requirement** becomes a scoped **Project Context**, which drives **Discovery** of the real application, which grounds **Test Design**. Test Design is the **divergence point**: its approved output is the sole scope-determining input for **two independent branches**. The **Manual** branch executes the suite by hand and self-reports its own QA deliverables — it is terminal, and it never feeds Automation. The **Automation** branch generates a suite (grounding correctness in live selector verification, not in a prior manual pass), clears an **Automation Approval Gate** before any generated code executes, runs it, optionally repairs it via human-invoked **Self-Healing**, and **Reports** a stakeholder-facing QA assessment. Either branch may run alone, in either order, or both. Every confirmed repair or lesson feeds the **Knowledge Base** — which in turn informs the *next* run's Automation and Execution stages, rather than starting from zero. Durable design output lives per module; every execution is preserved forever as an **Immutable Run**.
 
 This is the same flow detailed stage-by-stage in [§6 Pipeline Architecture](#6-pipeline-architecture) — this diagram exists so a new engineer can hold the whole system in their head before reading any further.
 
@@ -223,7 +234,7 @@ A capability listed here as *Implemented* has a written agent/pipeline specifica
 | Multi-Framework Support — SHAFT + Playwright, side by side | ✅ Implemented | [§12](#12-multi-framework-architecture) |
 | Additional Frameworks — Selenium / Cypress / Appium / REST Assured | 🚧 Designed | Already named as first-class options in the Framework Decision Gate; no project has selected one yet |
 | Non-Web Automation — API / Mobile / Desktop / Microservices / Batch / Cloud | 🚧 Designed | [`.claude/skills/automation-skill/SKILL.md` §29](.claude/skills/automation-skill/SKILL.md) — abstractions extend without redesign, not yet exercised for a real target |
-| AI Review (dedicated automated code-review pass) | 📅 Planned | Distinct from today's implemented Automation Agent Self Review; see Future Roadmap |
+| AI Review (dedicated automated code-review pass) | 📅 Planned | Distinct from today's implemented Automation skill Self Review; see Future Roadmap |
 | Self-Healing Automation (autonomous repair) | 📅 Planned | Extends today's human-gated Repair Loop |
 | Video → Automation | 📅 Planned | |
 | Regression Intelligence / Impact Analysis | 📅 Planned | |
@@ -241,14 +252,14 @@ flowchart TD
     PLAT["Platform<br/><small>.claude/skills/ · workflows_and_pipelines/pipeline/ · platform_core_data/knowledge_base/patterns/ · platform_core/tools/</small>"]
     PROJ["Project Data<br/><small>platform_core_data/ — the one hosted application, fully self-contained</small>"]
     PIPE["Pipelines<br/><small>two branches sharing Stages 1-3: execution order, gates, artifact contracts</small>"]
-    AGENTS["Agents<br/><small>the eight specialized AI agents that do the actual work of each stage</small>"]
+    SKILLS["Skills<br/><small>the eight specialized Skills that do the actual work of each stage</small>"]
     RUNS[("Runs<br/><small>platform_core_data/runs/run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target/ — every stage's artifacts, per run</small>")]
     BASE[("Automation Baseline<br/><small>platform_core_data/automation_baseline/{framework}/ — the persistent automation source of truth</small>")]
 
-    PLAT --> PROJ --> PIPE --> AGENTS --> RUNS --> BASE
+    PLAT --> PROJ --> PIPE --> SKILLS --> RUNS --> BASE
 ```
 
-Reading this top to bottom: the **Platform** defines reusable rules that hold whatever application is under test. **Project Data** is those rules applied to the one real application currently hosted. The **Pipeline** is the fixed sequence those rules run in. The **Agents** are the workers that actually execute each stage. **Runs** are where every stage writes its artifacts — one folder per run, holding that run's complete output (cylinder = data store, consistent with [§3](#3-end-to-end-platform-overview) and [§11](#11-knowledge-base)). The **Automation Baseline** is the one thing that deliberately outlives a single run: generated automation *code*, merged out of a run's working copy into a persistent, lifecycle-managed baseline.
+Reading this top to bottom: the **Platform** defines reusable rules that hold whatever application is under test. **Project Data** is those rules applied to the one real application currently hosted. The **Pipeline** is the fixed sequence those rules run in. The **Skills** are the workers that actually execute each stage. **Runs** are where every stage writes its artifacts — one folder per run, holding that run's complete output (cylinder = data store, consistent with [§3](#3-end-to-end-platform-overview) and [§11](#11-knowledge-base)). The **Automation Baseline** is the one thing that deliberately outlives a single run: generated automation *code*, merged out of a run's working copy into a persistent, lifecycle-managed baseline.
 
 ---
 
@@ -269,46 +280,53 @@ Reading this top to bottom: the **Platform** defines reusable rules that hold wh
 flowchart TD
     PRD[/"PRD · Supporting Documents · Run Configuration"/] --> S1
 
-    S1["Stage 1 — Project Context Agent"] --> CTX["Project Context"]
+    S1["Stage 1 — Project Context Skill"] --> CTX["Project Context"]
     CTX --> G1{{"⛔ Human Review Required"}}
     G1 -->|approved| S2
 
     APP[/"Running Application"/] -.-> S2
-    S2["Stage 2 — Explorer Agent"] --> DISC["Discovery Artifacts · Findings · Evidence"]
+    S2["Stage 2 — Explorer Skill"] --> DISC["Discovery Artifacts · Findings · Evidence"]
     DISC --> G2{{"⛔ Human Review Required"}}
     G2 -->|approved| S3
 
-    S3["Stage 3 — Test Design Agent"] --> TD["Manual Test Suites (MD + Excel) · Traceability Matrix · Coverage Report"]
+    S3["Stage 3 — Test Design Skill"] --> TD["Manual Test Suites (MD + Excel) · Traceability Matrix · Coverage Report"]
     TD --> G3{{"⛔ Human Review Required"}}
-    G3 -->|approved| S4
 
-    S4["Stage 4M — Manual Execution Agent (terminal)"] --> MANEX["Manual Execution Results · Test Results CSV · Manual QA Report · Evidence"]
+    G3 -->|"approved — MANUAL branch"| S4M
+    G3 -->|"approved — AUTOMATION branch"| S4A
+
+    S4M["Stage 4M — Manual Execution Skill (terminal)"] --> MANEX["Manual Execution Results · Test Results CSV · Manual QA Report · Evidence"]
     MANEX --> G4{{"⛔ Human Review Required"}}
-    G4 -->|approved| S5
+    G4 -->|approved| MDONE["Delivered to stakeholders — terminal, no downstream stage"]
 
-    S5["Stage 4A — Automation Agent"] --> AUTO["Automation Package · Selector Verification Report · Target Write Plan"]
+    S4A["Stage 4A — Automation Skill"] --> AUTO["Automation Package · Selector Verification Report · Target Write Plan"]
     AUTO --> G5{{"⛔ Automation Approval Required"}}
-    G5 -->|approved| S6
+    G5 -->|approved| S5A
 
-    S6["Stage 5A — Automation Execution Agent (pure runner)"] --> EXEC["Execution Results · Screenshots · Logs · Evidence · Health Summary"]
-    EXEC --> S7
+    S5A["Stage 5A — Automation Execution Skill (pure runner)"] --> EXEC["Execution Results · Screenshots · Logs · Evidence · Health Summary"]
+    EXEC -. "OPTIONAL · human-invoked only (§3.6)" .-> S5H
+    S5H["Stage 5H — Self-Healing Skill"] --> HGATE{{"⛔ Batch Repair Approval, then Automation Approval to re-merge"}}
+    HGATE -->|approved| S6A
+    EXEC --> S6A
 
-    S7["Stage 6A — Reporting Agent"] --> REPORT["Final QA Report"]
-    REPORT --> DONE["Delivered to stakeholders — terminal, no downstream agent"]
+    S6A["Stage 6A — Reporting Skill"] --> REPORT["Final QA Report"]
+    REPORT --> DONE["Delivered to stakeholders — terminal, no downstream stage"]
 ```
+
+Manual Execution (`4M`) and Automation (`4A`) both branch from the **same** approved Stage 3 output. There is deliberately no edge from `4M` to `4A`: approving the Manual deliverable releases it to stakeholders and authorizes nothing downstream, because the Manual branch has none.
 
 ### Stage summary
 
-| Stage | Agent | Input | Output | Checkpoint |
+| Stage | Skill | Input | Output | Checkpoint |
 |---|---|---|---|---|
-| 1 | Project Context Agent | PRD, Supporting Documents, Run Configuration | Project Context | Human Review Required |
-| 2 | Explorer Agent | Project Context, Running Application | Discovery Artifacts, Findings, Evidence | Human Review Required |
-| 3 | Test Design Agent | Project Context (primary), Discovery Artifacts (secondary) | Manual Test Suites, Traceability Matrix, Coverage Report | Human Review Required |
-| `4M` | Manual Execution Agent *(Manual branch, terminal)* | Approved Manual Test Suites, Traceability Matrix, Coverage Report, Project Context | Manual Execution Results, Test Results CSV, Manual QA Report, Evidence | Human Review Required *(terminal — approving releases the delivery)* |
-| `4A` | Automation Agent *(Automation branch)* | Approved Manual Test Suites (**scope and content**), Traceability Matrix, Coverage Report, Project Context, Discovery, both shared KBs | Automation Package, Selector Verification Report, Target Write Plan, Self Review Report | Automation Approval Required |
-| `5A` | Automation Execution Agent *(pure mechanical runner)* | Approved Automation Package | Execution Results, Evidence, Metadata, three separated Health figures | None — mechanical run, already gated at `4A` |
-| `5H` | Self-Healing Agent *(**optional**, human-invoked only)* | Execution Results with ≥1 Automation Failure, Automation Suite, Repair KB | Repair Summary, Before/After Comparison, Quarantine Register, repaired suite | Batch Repair Approval (§5.6), then Automation Approval to re-merge |
-| 7 | Reporting Agent | Execution Results, Traceability Matrix, Project Context | Final QA Report | None — terminal stage |
+| 1 | Project Context skill | PRD, Supporting Documents, Run Configuration | Project Context | Human Review Required |
+| 2 | Explorer skill | Project Context, Running Application | Discovery Artifacts, Findings, Evidence | Human Review Required |
+| 3 | Test Design skill | Project Context (primary), Discovery Artifacts (secondary) | Manual Test Suites, Traceability Matrix, Coverage Report | Human Review Required |
+| `4M` | Manual Execution skill *(Manual branch, terminal)* | Approved Manual Test Suites, Traceability Matrix, Coverage Report, Project Context | Manual Execution Results, Test Results CSV, Manual QA Report, Evidence | Human Review Required *(terminal — approving releases the delivery)* |
+| `4A` | Automation skill *(Automation branch)* | Approved Manual Test Suites (**scope and content**), Traceability Matrix, Coverage Report, Project Context, Discovery, both shared KBs | Automation Package, Selector Verification Report, Target Write Plan, Self Review Report | Automation Approval Required |
+| `5A` | Automation Execution skill *(pure mechanical runner)* | Approved Automation Package | Execution Results, Evidence, Metadata, three separated Health figures | None — mechanical run, already gated at `4A` |
+| `5H` | Self-Healing skill *(**optional**, human-invoked only)* | Execution Results with ≥1 Automation Failure, Automation Suite, Repair KB | Repair Summary, Before/After Comparison, Quarantine Register, repaired suite | Batch Repair Approval (§5.6), then Automation Approval to re-merge |
+| `6A` | Reporting skill *(Automation branch, terminal)* | Execution Results, Traceability Matrix, Project Context, Repair Summary (if `5H` ran) | Final QA Report | None — terminal stage |
 
 Full specification, including every rule governing gate mechanics and rejection handling: [`workflows_and_pipelines/pipeline/pipeline.md`](workflows_and_pipelines/pipeline/pipeline.md).
 
@@ -317,6 +335,30 @@ Full specification, including every rule governing gate mechanics and rejection 
 Approving a document (Stages 1–3, `4M`) risks a wrong document reaching the next stage. Approving `4A` authorizes **generated code to execute against a real environment** — a materially larger blast radius (data mutation, destructive actions, credential use). The pipeline treats "Automation Approval Required" as at least as strict as a production deployment approval, never as a lighter variant of document review.
 
 A third gate, **Batch Repair Approval** (§5.6), exists solely for Stage `5H` — the only stage that modifies code a human already approved. It is asked **once per healing pass, never per test case**, and it can never authorize "healing" a genuine application defect: repairs may change how a test *interacts* with the application (locators, waits, setup), never *what it asserts to be correct*.
+
+### The per-case lifecycle gate — `Review` and `Automation` (added 2026-08-01)
+
+Stage-level approval says "this suite is good." It does not say *which cases in it a human has actually signed off on*. Every test case therefore carries **two lifecycle columns**, both `Pending` | `Approved` | `Rejected` and both defaulting to `Pending` ([`pipeline.md` §4 Stage 3](workflows_and_pipelines/pipeline/pipeline.md), `test-design-skill` §6.3):
+
+| Column | Gates | Meaning of `Rejected` |
+|---|---|---|
+| `Review` | **both branches** — `4M` and `4A` | the case itself is not agreed; nobody runs it |
+| `Automation` | the Automation branch only | the case stays **manual by decision** — not an automation coverage gap |
+
+- Stage `4M` executes a case only when `Review = Approved`. Stage `4A` generates for a case only when `Review = Approved` **and** `Automation = Approved`.
+- **Stage 3 always writes `Pending`, and no stage may ever change either value** — only a human reviewer may.
+- Executing an unreviewed case makes its failure uninterpretable: it cannot distinguish *the application is wrong* from *the test case is wrong*, which is the only thing an execution result exists to establish. `4M` therefore reports **two denominators separately** (Executable scope / Suite total) plus an Authorized Coverage metric, adds a seventh Result Classification **`Excluded`** (reason mandatory, distinct from `Skipped`), and **halts rather than reporting "0 executed, 0 failures"** when no case is approved.
+
+**Reviewing happens in the workbook, and the decisions flow back.** Content is derived one way — Markdown → Excel — but the two lifecycle columns are the one thing a human authors *after* generation, so they travel back the other way:
+
+```bash
+# BEFORE any re-export or Stage 4A: pull the reviewer's Review/Automation decisions
+# out of the .xlsx and into the authored Markdown
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle --check   # dry run
+```
+
+Only `Review` and `Automation` are imported. A Title edited in the workbook is still discarded — that is derived content. **Skipping this step silently destroys the reviewer's decisions**, because an export regenerates the sheet from the Markdown.
 
 ### Only Stage 1 reads the PRD
 
@@ -351,25 +393,57 @@ Each is invokable in pipeline order, or **directly by name** with an optional in
 
 ```mermaid
 flowchart LR
-    RM["Run Manager<br/>(orchestration only)"]
-    PCA["Project Context<br/>Agent"]
-    EXP["Explorer<br/>Agent"]
-    TD["Test Design<br/>Agent"]
-    MANEX["Manual Execution<br/>Agent"]
-    AUTO["Automation<br/>Agent"]
-    AEXEC["Automation Execution<br/>Agent"]
-    REP["Reporting<br/>Agent"]
+    RM["Run Manager<br/><small>orchestration tooling — NOT a Skill<br/>run identity · workspace paths · scope · lifecycle metadata<br/>never performs QA reasoning</small>"]
 
-    RM -.provides workspace paths.-> PCA
-    RM -.provides workspace paths.-> EXP
-    RM -.provides workspace paths.-> TD
-    RM -.provides workspace paths.-> MANEX
-    RM -.provides workspace paths.-> AUTO
-    RM -.provides workspace paths.-> AEXEC
-    RM -.provides workspace paths.-> REP
+    subgraph SHARED["Shared foundation — Stages 1–3"]
+        PCA["Project Context<br/>Skill (1)"]
+        EXP["Explorer<br/>Skill (2)"]
+        TD["Test Design<br/>Skill (3)"]
+        PCA --> EXP --> TD
+    end
 
-    PCA --> EXP --> TD --> MANEX --> AUTO --> AEXEC --> REP
+    subgraph MANUAL["Manual branch — terminal"]
+        MANEX["Manual Execution<br/>Skill (4M)"]
+    end
+
+    subgraph AUTOMATION["Automation branch"]
+        AUTO["Automation<br/>Skill (4A)"]
+        AEXEC["Automation Execution<br/>Skill (5A)"]
+        HEAL["Self-Healing<br/>Skill (5H) — OPTIONAL"]
+        REP["Reporting<br/>Skill (6A)"]
+        AUTO --> AEXEC
+        AEXEC -. "human-invoked only" .-> HEAL
+        HEAL --> REP
+        AEXEC --> REP
+    end
+
+    TD --> MANEX
+    TD --> AUTO
+
+    RM -.-> SHARED
+    RM -.-> MANUAL
+    RM -.-> AUTOMATION
 ```
+
+The Run Manager supplies run identity, workspace paths, scope, and lifecycle metadata to every stage — it never produces or judges a QA artifact, which is why it is drawn outside both branches rather than as a ninth Skill.
+
+### 7.1 Prerequisites and Providers — what a Skill may depend on
+
+A Skill specification states *what it does*. It is not allowed to state *what concrete tool provides its capabilities* — that coupling is factored out into two layers, so swapping an implementation never means editing a Skill.
+
+**[`platform_core/prerequisites/`](platform_core/prerequisites/) — declared once, referenced by ID.** Each `PREREQ-*.md` carries an ID, kind, detection method, and absence behavior. A Skill's frontmatter lists the IDs it needs; that is the whole contract. Before this layer, the same requirement was restated in different prose in different Skills and drifted apart, and "what happens when this isn't available?" was answered ad hoc or not at all.
+
+| ID | Kind | Required by |
+|---|---|---|
+| `PREREQ-NODE` | runtime | every Skill that runs platform tooling |
+| `PREREQ-GIT` | tool | automation, automation-execution |
+| `PREREQ-BROWSER-PROVIDER` | capability | explorer, manual-execution, automation, automation-execution |
+| `PREREQ-PLAYWRIGHT` | tool | satisfies `PREREQ-BROWSER-PROVIDER` for the Playwright providers |
+| `PREREQ-JAVA` | toolchain | automation, automation-execution — JVM-framework packages only |
+| `PREREQ-CONTEXT7` | capability | automation (framework API accuracy) |
+| `PREREQ-SPREADSHEET` | library | test-design (Excel rendering of the Manual Test Suite) |
+
+**[`platform_core/tools/browser_provider/`](platform_core/tools/browser_provider/) — the only browser surface a Skill may use.** A Skill never invokes Playwright, Selenium, or any other browser tool directly, and never chooses a browser technology. It calls the interface ([`interface.md`](platform_core/tools/browser_provider/interface.md)); the concrete provider — currently `playwright_cli` or `playwright_node` — is resolved from `platform.config.json`. Whether a provider drives the browser through a language library or a CLI is its own internal decision, invisible to every Skill.
 
 ---
 
@@ -383,8 +457,9 @@ A project never has "one" automation codebase to overwrite. It holds a **registr
 sequenceDiagram
     participant H as Human
     participant Orc as Orchestrator
-    participant AA as Automation Agent
-    participant EA as Automation Execution Agent
+    participant AA as Automation skill (4A)
+    participant EA as Automation Execution skill (5A)
+    participant SH as Self-Healing skill (5H)
 
     Orc->>H: Automation Start Decision Gate — report actual stage state, ask how to proceed
     H-->>Orc: Decision (resume / full pipeline / generate directly)
@@ -399,16 +474,21 @@ sequenceDiagram
     AA-->>Orc: Package state = Approved
 
     Orc->>EA: Invoke Stage 5A against the Approved package
-    EA->>EA: Execute suite, classify every result
-    alt Automation Failure detected
-        EA->>H: Repair Summary (Root Cause, options, confidence) — ask once
-        H-->>EA: Repair and rerun / Mark Known Issue / Skip
-        opt Repair approved
-            EA->>EA: Modify only the automation package, rerun only affected tests
-            EA->>EA: Write confirmed fix to the project's Repair Knowledge Base
+    EA->>EA: Execute suite, classify every result by cause
+    Note over EA: NEVER modifies automation code —<br/>it classifies and hands off, never repairs
+    EA-->>Orc: Execution Results — Application / Automation / Environment Health, reported separately
+
+    opt Automation Failures present AND a human explicitly invokes /self-healing-skill
+        Note over SH: Stage 5H never auto-triggers —<br/>no failing run and no orchestrator may chain into it
+        H->>SH: Invoke Stage 5H, optionally scoped to named modules
+        SH->>H: Batch Repair Approval — all proposed repairs, with derived confidence, asked ONCE
+        H-->>SH: Apply repairs / Diagnose only / Known Issue / Skip
+        opt Repairs approved
+            SH->>SH: Patch the module suite, rerun only affected tests
+            SH->>H: Fresh Automation Approval required before the repaired suite re-merges
+            SH->>SH: Promote confirmed repairs to the shared Repair Knowledge Base
         end
     end
-    EA-->>Orc: Execution Results — Application / Automation / Environment Health, reported separately
 ```
 
 ### State diagram — one Automation Package's lifecycle
@@ -418,14 +498,14 @@ stateDiagram-v2
     [*] --> Planning: Framework/Target/Strategy Decision Gate answered
     Planning --> PendingApproval: Automation Plan + code generated, Self Review passed
     PendingApproval --> Approved: Automation Approval Required — granted
-    PendingApproval --> Planning: Rejected — same agent re-runs with feedback
+    PendingApproval --> Planning: Rejected — same skill re-runs with feedback
     Approved --> Executing: Stage 5A invoked
     Executing --> Passed: All tests pass
-    Executing --> AutomationFailure: Automation-side failure detected
-    AutomationFailure --> RepairProposed: Repair Strategy Decision Engine + Confidence Engine
-    RepairProposed --> Repaired: Human approves repair, rerun confirms fix
+    Executing --> AutomationFailure: Stage 5A classifies an automation-side failure (never repairs it)
+    AutomationFailure --> RepairProposed: Stage 5H — OPTIONAL, only if a human invokes it
+    RepairProposed --> Repaired: Batch Repair Approval granted, rerun confirms fix, fresh Automation Approval to re-merge
     RepairProposed --> KnownIssue: Human marks "Known Automation Issue"
-    RepairProposed --> AutomationFailure: Repair declined — original result stands
+    RepairProposed --> AutomationFailure: Repair declined — Stage 5A's original result stands
     Repaired --> Executing: Next execution reuses the same package
     Passed --> Executing: Next execution reuses the same package
     KnownIssue --> Executing: Next execution reuses the same package
@@ -452,7 +532,7 @@ Every project is fully self-contained: durable knowledge and generated artifacts
 agentic-ai-testing-platform/
 │
 ├── .claude/
-│   └── skills/                      # The eight agent specifications, as Claude Code skills — what each does in isolation
+│   └── skills/                      # The eight Skill specifications, as Claude Code skills — what each does in isolation
 │       ├── project-context-skill/SKILL.md
 │       ├── explorer-skill/SKILL.md
 │       ├── test-design-skill/SKILL.md
@@ -463,23 +543,36 @@ agentic-ai-testing-platform/
 │       └── reporting-skill/SKILL.md
 │
 ├── workflows_and_pipelines/          # Orchestrators and flow definitions
-│   ├── pipeline/                       # How the eight agents are wired into two governed pipelines
+│   ├── pipeline/                       # How the eight Skills are wired into two governed pipelines
 │   │   ├── pipeline.md                   # Stage order, artifact contracts, gates, Knowledge Architecture (§10)
+│   │   ├── module_architecture.md        # The Module Workspace: registry, Active Module pointer, per-stage
+│   │   │                                 #   status, drift, and the module automation lifecycle
 │   │   ├── run_manager.md                # Run identity: naming, Active Run pointer, anchor, lineage, Manifest
 │   │   └── run_scope.md                  # Run Scope Types/Sources — what a run is allowed to validate
 │   └── workflows/
 │       ├── first_run.md                # Smoke-test workflow: Stages 1–3 only, one module
-│       ├── user_story_run.md           # Stages 3–7 for one User Story, reusing Context + Discovery
+│       ├── user_story_run.md           # Stages 3 → 4M/4A → 5A → 6A for one User Story, reusing Context + Discovery
 │       └── bug_fix_run.md              # Bug regression: 5A → (conditional) 4A → 5A → 6A
 │
 ├── platform_core/                     # Shared source code — zero project-specific data
 │   ├── README.md                       # This layer's own contract
+│   ├── prerequisites/                 # What must be AVAILABLE for a Skill to work — declared once,
+│   │   ├── README.md                   #   with an ID, detection method, and absence behavior. A Skill's
+│   │   │                               #   frontmatter lists IDs; it never restates the requirement (§7.1)
+│   │   ├── PREREQ-NODE.md · PREREQ-GIT.md · PREREQ-JAVA.md
+│   │   ├── PREREQ-BROWSER-PROVIDER.md · PREREQ-PLAYWRIGHT.md
+│   │   └── PREREQ-CONTEXT7.md · PREREQ-SPREADSHEET.md
 │   ├── templates/                      # Output artifact templates — the authoritative structure of
-│   │   ├── README.md                   #   everything the pipeline writes (26 templates)
+│   │   ├── README.md                   #   everything the pipeline writes (30 templates)
 │   │   ├── metadata/                   #   RunManifest — run-wide, not owned by one stage
 │   │   └── stage_1_context/ … stage_6a_reporting/   # One template per artifact per stage
 │   └── tools/
 │       ├── automation_lifecycle/     # Baseline copy, merge plan/apply, promotion record, cleanup
+│       ├── browser_provider/         # The ONLY browser surface a Skill may use — an interface, not
+│       │   ├── interface.md            #   a dependency. A Skill never invokes Playwright/Selenium
+│       │   └── providers/              #   directly and never picks a browser technology (§7.1)
+│       │       ├── playwright_cli/     #   provider resolved from platform.config.json
+│       │       └── playwright_node/
 │       ├── browser_driver/          # Shared browser automation engine — zero project-specific data
 │       │   ├── driver.js              # Resolves platform_core_data/ paths, loads profile + credentials, logs in
 │       │   ├── api.js                 # BrowserDriver — the only surface agents/scripts use directly
@@ -488,8 +581,14 @@ agentic-ai-testing-platform/
 │       ├── mcp/                      # MCP servers layer — registration + usage contract, no server code
 │       │   ├── stack_docs/            # Extracts a project's stack + pinned versions; plans Context7 lookups
 │       │   └── README.md              # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
+│       ├── module_manager/          # The Module Workspace's own CLI — the registry, the Active Module
+│       │   └── cli.js                 #   pointer, scaffolding, per-stage status, automation state, drift
 │       ├── platform_paths/          # The two-root resolver (Tool Root / Target Root) + config schema
-│       └── run_manager/             # Run naming/indexing, Active Run pointer, Manifest, lineage, anchor
+│       ├── project_paths/           # Platform-independence layer: every path derives from ONE input,
+│       │                            #   the project root. Nothing may hardcode a project folder name
+│       ├── run_manager/             # Run naming/indexing, Active Run pointer, Manifest, lineage, anchor
+│       └── test_suite_export/       # Stage 3's suite ⇄ Excel: renders TestCases_{Module}.md → .xlsx,
+│                                    #   and `--import-lifecycle` pulls Review/Automation back (§6)
 │
 ├── platform_core_data/               # Process artifacts for the Target Project under test (§9.1)
 │   ├── README.md                       # This folder's own layout contract
@@ -535,7 +634,8 @@ agentic-ai-testing-platform/
 │   ├── USER_GUIDE.md                   # The task-oriented guide — recommended entry point for operators
 │   ├── README.md · CHANGELOG.md · LESSONS_LEARNED.md
 │   ├── PROMPT_HISTORY.md · BRANCH_COMPARISON.md
-│   └── PLATFORM_VALIDATION_REPORT.md · SESSION_HANDOFF.md · MIGRATION_REPORT_2026-07-17.md
+│   ├── PLATFORM_VALIDATION_REPORT.md · SESSION_HANDOFF.md
+│   └── MIGRATION_REPORT_2026-07-17.md · MIGRATION_REPORT_2026-07-29.md
 │
 ├── bin/agentic-testing.js            # CLI entry point — init · doctor · roots · detect · upgrade · uninstall
 ├── scripts/                          # init.sh · init.ps1 · verifyPackable.js · e2e/
@@ -555,6 +655,8 @@ There is deliberately no `credentials/` or `ui/` folder at the repository root �
 | `modules/` | durable, **per module, evolves in place** | each module's Context, Discovery, Test Design, Automation, and Healing output |
 | `runs/` | per run, **immutable once written** | manual and automation execution results, the Final QA Report, run metadata |
 | `automation_baseline/` | long-lived source code | the assembled whole-project automation suite, plus its `shared/` assets |
+
+> **Residue on disk, not a fifth category.** A working tree may still carry pre-consolidation folders beside those four — `knowledge/` and `workspace/` (superseded by `knowledge_base/` on 2026-07-27 and by `automation_baseline/` on 2026-07-29 respectively), a local untracked `credentials/`, and project-specific hand-off folders left from a migration. **No stage reads any of them.** They are leftovers pending cleanup; the four-member rule above is the contract, and a new file never goes into one of them. Anything found there is either dead or belongs under `knowledge_base/`.
 
 The rule in one line: **would the next run want to *start from* it (module), or is it *evidence of one execution* (run)?** Prior to 2026-07-29 every stage wrote into the run folder, which scattered a module's design across the runs that touched it; prior to 2026-07-27 the shared material was split across the folder root, `resources/`, `browser/`, `credentials/`, and `ui/`. Both consolidations removed the ambiguity of two plausible homes for one file.
 
@@ -588,24 +690,29 @@ e.g. `run-001__2026-07-23_10-35-18__FullRun__FlightSearch`, `run-042__2026-07-23
 
 ### On-demand workspace
 
-Only `metadata/` is created up front, for every run. Every other stage folder (`context/`, `discovery/`, `test_design/`, `manual_execution/`, `automation/`, `execution/`, `reporting/`) is created only the moment that stage actually writes its first output — a run that only reaches Stage 2 has exactly `metadata/` and `discovery/` on disk, nothing more.
+Only `metadata/` is created up front, for every run. Every other **run** folder (`manual_execution/`, `execution/`, `reporting/`) is created only the moment that stage actually writes its first output — a Manual-only run has exactly `metadata/` and `manual_execution/` on disk, nothing more, and that absence is itself the record of which branch it took. The design folders (`context/`, `discovery/`, `test_design/`, `automation/`, `healing/`) are **not** created inside a run folder at all — they belong to the module and are refined in place across runs (`pipeline.md` §7).
 
 ```mermaid
 flowchart TD
     RM["Run Manager"] -->|generates via run_manager tool| RID["Folder name:<br/>run-NNN__YYYY-MM-DD_HH-mm-ss__Scope__Target"]
-    RID --> META["metadata/ — always created<br/>run.json + run_summary.md"]
-    META -.->|Stage 1 writes| CTX["context/"]
-    META -.->|Stage 2 writes| DISC["discovery/ (+ findings/)"]
-    META -.->|Stage 3 writes| TDS["test_design/"]
-    META -.->|Stage 4M writes| MANEX["manual_execution/"]
-    META -.->|Stage 4A writes| AUT["automation/"]
-    META -.->|Stage 5A writes| EXE["execution/"]
-    META -.->|Stage 6A writes| REP["reporting/"]
+    RID --> META["runs/{run}/metadata/ — always created<br/>run.json + run_summary.md + RunManifest.md"]
+    META -.->|Stage 4M writes| MANEX["runs/{run}/manual_execution/"]
+    META -.->|Stage 5A writes| EXE["runs/{run}/execution/"]
+    META -.->|Stage 6A writes| REP["runs/{run}/reporting/"]
+
+    MOD[("modules/{module}/ — DURABLE, not per run")]
+    MOD -.->|Stage 1 writes| CTX["context/"]
+    MOD -.->|Stage 2 writes| DISC["discovery/ (+ findings/)"]
+    MOD -.->|Stage 3 writes| TDS["test_design/"]
+    MOD -.->|Stage 4A writes| AUT["automation/"]
+    MOD -.->|Stage 5H writes| HEAL["healing/"]
+
+    META -.->|records revision consumed| MOD
 ```
 
 ### Run metadata (`run.json`)
 
-Tracks, at minimum: Folder Name, Scope, Target, Title, Description, Objective, Workflow, Project Name, the version of the pipeline and every agent in effect for this run, the Project Context version used, Browser/Environment/Resolution, Started/Finished Time and Duration, and the current Status.
+Tracks, at minimum: Folder Name, Scope, Target, Title, Description, Objective, Workflow, Project Name, the version of the pipeline and every Skill in effect for this run, the Project Context version used, Browser/Environment/Resolution, Started/Finished Time and Duration, and the current Status.
 
 ### Execution status
 
@@ -613,7 +720,7 @@ Every run is at all times exactly one of: **Preparing → Running → Paused / W
 
 ### Run summary (`run_summary.md`)
 
-Opens with the run's descriptive identity — Folder Name, Workflow, Project, Run Scope, Target, Execution Purpose, Description, Status, Duration — then continues with the factual roll-up: Visited Screens, Executed Agents, Generated Artifacts count, Findings/Evidence/Screenshots/Videos/Logs counts, Coverage (a mechanical ratio, not a quality judgment), and Overall Status. The Run Manager never writes a quality verdict here — that belongs exclusively to the Reporting Agent's Final QA Report.
+Opens with the run's descriptive identity — Folder Name, Workflow, Project, Run Scope, Target, Execution Purpose, Description, Status, Duration — then continues with the factual roll-up: Visited Screens, Executed Agents, Generated Artifacts count, Findings/Evidence/Screenshots/Videos/Logs counts, Coverage (a mechanical ratio, not a quality judgment), and Overall Status. The Run Manager never writes a quality verdict here — that belongs exclusively to the Reporting skill's Final QA Report.
 
 ### Run Manager CLI
 
@@ -633,9 +740,101 @@ Full specification: [`workflows_and_pipelines/pipeline/run_manager.md`](workflow
 
 ---
 
+## 10A. Execution Safety
+
+*(Added 2026-08-07.)*
+
+Before any mutating execution reaches a live environment, the platform evaluates it against that environment's policy and answers one question deterministically:
+
+> **Is this specific action authorized on this specific environment, against this type of data, for this run?**
+
+```text
+Allowed            execute
+Approval Required  stop, ask a human, execute only within the approved scope
+Forbidden          do not execute — and no approval changes that
+```
+
+**Test eligibility does not imply mutation authorization.** These are three independent concerns, and none substitutes for another:
+
+```text
+Review            Is the Test Case accepted?
+Automation        Should it be automated?
+Execution Safety  May this action execute here and now?
+```
+
+A case can be reviewed, approved for automation, and still contain an operation that must not run on the current environment. `Review = Approved AND Automation = Approved` authorizes *generation*, never *mutation*.
+
+**Human approval is scoped** — to one run, one environment, one module, one action, one data-ownership class. Twelve test cases sharing a scope cost one question. Nothing granted this way carries to another run, and nothing lifts a `Forbidden`.
+
+**Decisions are deterministic and explainable.** Same input plus same policy version gives the same answer, with the matched rule and the reason attached — never a bare `false`. No model is consulted after the operation has been structurally classified.
+
+**A policy block is not a defect.** It is recorded with the existing execution taxonomy (`Skipped` / `Blocked`, reason `Execution Safety Policy`) and never as an Application, Automation, or Environment Failure.
+
+```text
+platform_core/tools/execution_safety/                 the evaluator — reusable, no project rules
+platform_core_data/knowledge_base/
+    execution_safety_policy.json                      this project's policy (authoritative)
+    execution_safety_policy.md                        the same policy, explained, with provenance
+platform_core_data/runs/{RUN}/metadata/
+    SafetyAuthorizations.json / .md                   run-scoped approvals — inside the run folder
+    SafetyPreflight.md                                the mutation footprint, captured before execution
+```
+
+```bash
+agentic-testing doctor                                # includes an Execution Safety section
+node platform_core/tools/execution_safety/cli.js summary
+node platform_core/tools/execution_safety/cli.js evaluate --action UPDATE --ownership Shared --module agency
+```
+
+Canonical documentation: [`platform_core/tools/execution_safety/README.md`](platform_core/tools/execution_safety/README.md) (the model and the precedence algorithm) and [`workflows_and_pipelines/pipeline/pipeline.md` §14](workflows_and_pipelines/pipeline/pipeline.md). The current project's own permissions, with the evidence behind each rule, are in [`platform_core_data/knowledge_base/execution_safety_policy.md`](platform_core_data/knowledge_base/execution_safety_policy.md).
+
+---
+
+## 10B. Run Observability
+
+*(Added 2026-08-07.)*
+
+Every instrumented run records deterministic telemetry for timing, tool activity, human decisions, validation, test design, automation, execution, repair, and Execution Safety outcomes. Metrics are **derived** from that evidence, not remembered:
+
+```text
+Facts  →  Telemetry  →  Deterministic Metrics  →  Transparent Reporting
+```
+
+The platform can answer *what happened during this run* without a model recalling it. No duration, count, or ratio anywhere in the output is produced by interpretation.
+
+**Measure what can be proven; mark what cannot be measured as unavailable.** `0` and `Unavailable` are different claims and never collapse into one another — `Repair Cycles: 0` asserts the run needed none, `Repair Cycles: Unavailable` admits the platform does not know. Every unavailable metric carries its reason.
+
+**Token usage and cost are reported as `Unavailable`, never estimated.** There is no supported run-attributable provider usage source, and none is faked from text length or hardcoded pricing.
+
+**Observability decides nothing.** It is the fourth concern alongside `Review`, `Automation`, and Execution Safety, and the only one with no authority: it never authorizes an operation, rejects a test case, overrides a Human Decision, changes a Safety decision, or alters a test outcome.
+
+**Provenance is preserved.** Platform-tool events are emitted by code and cannot be forgotten; Skill events are emitted because a specification requires it, so their absence proves nothing. The two are counted separately and never presented as one reliability class. An opened span that never closed is reported `Incomplete` — never given a duration.
+
+```text
+platform_core/tools/observability/                    the recorder, aggregator, and renderers
+platform_core_data/runs/{RUN}/metadata/observability/
+    ObservabilityEvents.jsonl                         append-only evidence
+    ObservabilityMetrics.json                         derived, regenerable
+    ObservabilityReport.md                            human-readable
+    ObservabilityDashboard.html                       self-contained, offline, presentation only
+```
+
+```bash
+agentic-testing doctor                                            # capability report, never usage
+node platform_core/tools/observability/cli.js summary   --run <run>
+node platform_core/tools/observability/cli.js validate  --run <run>
+node platform_core/tools/observability/cli.js dashboard --run <run> --out
+```
+
+Observability applies **prospectively** to runs created after 2026-08-07. Earlier runs report **Not Instrumented**; no event is fabricated for them, and what their artifacts genuinely prove is surfaced separately as Historical Derived Metrics.
+
+Canonical documentation: [`platform_core/tools/observability/README.md`](platform_core/tools/observability/README.md) (the event model, the formula registry, and the measurement boundaries) and [`workflows_and_pipelines/pipeline/pipeline.md` §15](workflows_and_pipelines/pipeline/pipeline.md).
+
+---
+
 ## 11. Knowledge Base
 
-The platform tests one project at a time, but splits what it learns into two layers so that pointing it at a different application discards the application's specifics without discarding the engineering knowledge. This is governed by one canonical model ([`workflows_and_pipelines/pipeline/pipeline.md` §10](workflows_and_pipelines/pipeline/pipeline.md)), referenced by every agent rather than restated.
+The platform tests one project at a time, but splits what it learns into two layers so that pointing it at a different application discards the application's specifics without discarding the engineering knowledge. This is governed by one canonical model ([`workflows_and_pipelines/pipeline/pipeline.md` §10](workflows_and_pipelines/pipeline/pipeline.md)), referenced by every Skill rather than restated.
 
 ### Two layers
 
@@ -646,7 +845,7 @@ The platform tests one project at a time, but splits what it learns into two lay
 
 ### Resolution order
 
-Every agent resolves knowledge in a fixed order and merges both: **Platform Knowledge first, then Project Knowledge.** Project Knowledge extends Platform Knowledge; an application-specific finding that appears to contradict a Platform pattern is disclosed as a discrepancy, never silently substituted.
+Every Skill resolves knowledge in a fixed order and merges both: **Platform Knowledge first, then Project Knowledge.** Project Knowledge extends Platform Knowledge; an application-specific finding that appears to contradict a Platform pattern is disclosed as a discrepancy, never silently substituted.
 
 ```mermaid
 flowchart LR
@@ -670,11 +869,11 @@ flowchart LR
 
 ### Promotion — explicit human approval only
 
-Knowledge is written project-scoped by default. When an agent recognizes a lesson as one that would still hold against a *different* application, it asks exactly once: *"This lesson looks application-independent. Promote it to Platform Knowledge?"* Declined lessons stay project-scoped and are not re-proposed on every subsequent run of the same pattern — only genuinely new evidence of generality resurfaces the question.
+Knowledge is written project-scoped by default. When a Skill recognizes a lesson as one that would still hold against a *different* application, it asks exactly once: *"This lesson looks application-independent. Promote it to Platform Knowledge?"* Declined lessons stay project-scoped and are not re-proposed on every subsequent run of the same pattern — only genuinely new evidence of generality resurfaces the question.
 
 ### Repair Knowledge Base
 
-A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): a confirmed repair is recorded in its own run's Repair Summary (`platform_core_data/runs/{{RUN_FOLDER}}/execution/`) at the moment the repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-NNN.md` or `platform_core_data/knowledge_base/patterns/reasoning/REASON-NNN.md`. The project-scoped `knowledge_base/repair/` folder this used to write to was removed on 2026-07-27, so **Promotion is now the only path for a repair to outlive its run**. See the current catalog in [`platform_core_data/knowledge_base/patterns/INDEX.md`](platform_core_data/knowledge_base/patterns/INDEX.md).
+A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): a confirmed repair is recorded in the healed module's Repair Summary (`platform_core_data/modules/{module}/healing/RepairSummary.md`) at the moment the repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-NNN.md` or `platform_core_data/knowledge_base/patterns/reasoning/REASON-NNN.md`. The project-scoped `knowledge_base/repair/` folder this used to write to was removed on 2026-07-27, so **Promotion is now the only path for a repair to outlive its run**. See the current catalog in [`platform_core_data/knowledge_base/patterns/INDEX.md`](platform_core_data/knowledge_base/patterns/INDEX.md).
 
 ### Future expansion
 
@@ -686,10 +885,10 @@ The category folders for `automation_patterns/`, `diagnosis_patterns/`, `executi
 
 **The repository stores Automation Packages; it does not have a single project-wide framework.** SHAFT (Java/TestNG-based) and Playwright can both automate the same application, in the same project, as two independent packages that never overwrite each other.
 
-- **Discovery technology ≠ Automation technology.** The tool used to explore an application in Stage 2 (e.g. Playwright, for browser-driven discovery) has no bearing on which framework Stage 5 selects — this is enforced explicitly, because it has previously been the exact mistake an early agent revision made.
+- **Discovery technology ≠ Automation technology.** The tool used to explore an application in Stage 2 (e.g. Playwright, for browser-driven discovery) has no bearing on which framework Stage `4A` selects — this is enforced explicitly, because it has previously been the exact mistake an early agent revision made.
 - **Framework choice is scoped to one package, one run's decision** — never inferred as a standing project default. Every Stage 4A invocation asks again.
 - **SHAFT-specific structure** (Pages / Locators / Tests / Data layers, a fixed locator-prefix naming convention) is documented once per project that uses it — see [`platform_core_data/knowledge_base/automation_framework.md`](platform_core_data/knowledge_base/automation_framework.md) — and is binding only for runs that select SHAFT.
-- **Currently supported:** Playwright, SHAFT Engine. **Named as first-class candidates whenever a project's needs call for them:** Selenium, Cypress, Appium, REST Assured — the Automation Agent's framework detection/selection model already treats these as standard options ([`.claude/skills/automation-skill/SKILL.md` §6–§8](.claude/skills/automation-skill/SKILL.md)); onboarding one for a real project is a per-project decision, not a platform-level gap.
+- **Currently supported:** Playwright, SHAFT Engine. **Named as first-class candidates whenever a project's needs call for them:** Selenium, Cypress, Appium, REST Assured — the Automation skill's framework detection/selection model already treats these as standard options ([`.claude/skills/automation-skill/SKILL.md` §6–§8](.claude/skills/automation-skill/SKILL.md)); onboarding one for a real project is a per-project decision, not a platform-level gap.
 
 ```mermaid
 flowchart TD
@@ -708,16 +907,16 @@ flowchart TD
 
 | Principle | What it means here |
 |---|---|
-| **Single Responsibility** | Every agent does exactly one thing; a stage that both produces data and judges it is treated as a design smell to be split, not tolerated ([Lessons Learned §2](docs/LESSONS_LEARNED.md)) |
-| **Artifacts-Only Communication** | Agents never share internal reasoning — only the versioned artifact their specification declares as output |
+| **Single Responsibility** | Every Skill does exactly one thing; a stage that both produces data and judges it is treated as a design smell to be split, not tolerated ([Lessons Learned §2](docs/LESSONS_LEARNED.md)) |
+| **Artifacts-Only Communication** | Skills never share internal reasoning — only the versioned artifact their specification declares as output |
 | **Immutable History** | A run's snapshot is never edited after the fact; a correction is always a new version or a new run |
 | **Two Distinct Approval-Gate Types** | Reviewing a document and authorizing code to execute are different risk classes and get different gates ([§6](#6-pipeline-architecture)) |
 | **Human Decisions vs. Engineering Decisions** | Only genuine business/authorization calls interrupt the pipeline to ask; routine engineering judgment (adding a negative test case, deferring an unsafe scenario) is made and disclosed, never gated |
 | **Two Roots, One Project** | Requirements and business rules come only from `platform_core_data/`, plus Platform Knowledge. The Target Project is readable for technical facts (stack, test layout, conventions) and writable only in its configured automation directory — never a source of intent ([`pipeline.md` §6 Rule 9, §13](workflows_and_pipelines/pipeline/pipeline.md)) |
 | **Framework Independence** | Discovery tooling and automation tooling are independent axes; the platform has no built-in bias toward any one framework |
 | **Reuse Before Generation** | Every stage that could generate something new inspects what already exists first — an existing automation package, a confirmed repair rule, a promoted knowledge document |
-| **Extensibility** | The Automation Agent's abstractions (Locator Strategy, Suite Planning, Traceability Model) are already framed generically enough to extend to API, Mobile, Desktop, Microservices, Message Queue, Batch Job, and Cloud Resource automation without redesigning the core contracts ([`.claude/skills/automation-skill/SKILL.md` §29](.claude/skills/automation-skill/SKILL.md)) |
-| **Portability** | The same seven-agent, one-pipeline architecture carries over to any application: retargeting replaces `platform_core_data/`'s contents and touches no specification, agent, or tool |
+| **Extensibility** | The Automation skill's abstractions (Locator Strategy, Suite Planning, Traceability Model) are already framed generically enough to extend to API, Mobile, Desktop, Microservices, Message Queue, Batch Job, and Cloud Resource automation without redesigning the core contracts ([`.claude/skills/automation-skill/SKILL.md` §29](.claude/skills/automation-skill/SKILL.md)) |
+| **Portability** | The same eight-Skill, two-pipeline architecture carries over to any application: retargeting replaces `platform_core_data/`'s contents and touches no specification, Skill, or tool |
 | **No Debug Artifacts in the Project Tree** | Throwaway reconnaissance scripts and raw tool-output dumps are never persisted into `platform_core_data/runs/` — only the synthesized, human-readable deliverable a stage is actually specified to produce ([`workflows_and_pipelines/pipeline/pipeline.md` §11](workflows_and_pipelines/pipeline/pipeline.md)) |
 
 ---
@@ -730,7 +929,7 @@ Short, direct answers to "why does the platform work this way," each pointing ba
 Every run's snapshot is written once and never edited afterward; a correction is always a new run. This makes run history genuinely auditable — a reviewer can trust that what's in `platform_core_data/runs/{{RUN_FOLDER}}/` today is exactly what that run produced on the day it ran. See [§10](#10-run-architecture).
 
 **ADR-002 — Workspace vs. Runs** *(superseded 2026-07-27)*
-This ADR originally kept "what's authoritative right now" (`platform_core_data/workspace/{stage}/`) and "what actually happened on a specific date" (`platform_core_data/runs/`) as two distinct trees, arguing the platform needed both simultaneously. **Real runs disproved it:** maintaining both meant every approval copied a stage's Markdown into a second location, so the same document existed as a `.v1` file, an unsuffixed approved duplicate, and a `.v2` as soon as a reviewer asked for a refinement instead of an edit. `workspace/` is removed; the run folder is now the sole artifact location, each artifact is one file edited in place, and git supplies the history the second tree was meant to protect. The single genuine exception is automation *code*, which must outlive its run — that is `platform_core_data/automation_baseline/{framework}/`. See [§10](#10-run-architecture).
+This ADR originally kept "what's authoritative right now" (`platform_core_data/workspace/{stage}/`) and "what actually happened on a specific date" (`platform_core_data/runs/`) as two distinct trees, arguing the platform needed both simultaneously. **Real runs disproved it:** maintaining both meant every approval copied a stage's Markdown into a second location, so the same document existed as a `.v1` file, an unsuffixed approved duplicate, and a `.v2` as soon as a reviewer asked for a refinement instead of an edit. `workspace/` is removed, each artifact is one file edited in place, and git supplies the history the second tree was meant to protect. **This ADR's original replacement — "the run folder is now the sole artifact location" — was itself superseded on 2026-07-29:** durable *design* output moved to a per-module workspace (`platform_core_data/modules/{module}/`) and the run folder keeps *execution* output only (`pipeline.md` §7, [`module_architecture.md`](workflows_and_pipelines/pipeline/module_architecture.md)). The single genuine exception to both is automation *code*, which must outlive every run — that is `platform_core_data/automation_baseline/{framework}/`. See [§10](#10-run-architecture).
 
 **ADR-003 — Two Human Approval Gate Types**
 An early revision treated every checkpoint identically; in practice, approving a wrong *document* and authorizing *code to execute against a real environment* carry very different blast radii. The pipeline now names these separately — "Human Review Required" and "Automation Approval Required" — so the latter is never reviewed as lightly as the former ([Lessons Learned §3](docs/LESSONS_LEARNED.md)). See [§6](#6-pipeline-architecture).
@@ -739,7 +938,7 @@ An early revision treated every checkpoint identically; in practice, approving a
 Proven engineering patterns (a repair strategy, a synchronization technique) must survive the platform being retargeted, while one application's business rules and findings must not. The two-layer model plus an explicit Promotion step keeps the durable half separable from the disposable half. Originally motivated by cross-project isolation; that rationale was superseded by the 2026-07-25 single-project restructure, but the layer split earned its keep on durability grounds alone. See [§11](#11-knowledge-base).
 
 **ADR-005 — Framework Independence**
-An early Automation Agent revision inferred the automation framework from whichever tool Discovery happened to use for browser exploration — an incorrect coupling, since discovery tooling and automation tooling answer unrelated questions. The Framework Decision Gate now asks explicitly, every run, and Discovery's tool choice is never treated as evidence for it. See [§12](#12-multi-framework-architecture).
+An early Automation skill revision inferred the automation framework from whichever tool Discovery happened to use for browser exploration — an incorrect coupling, since discovery tooling and automation tooling answer unrelated questions. The Framework Decision Gate now asks explicitly, every run, and Discovery's tool choice is never treated as evidence for it. See [§12](#12-multi-framework-architecture).
 
 ---
 
@@ -749,7 +948,7 @@ The platform's specifications describe *what* runs, not a fixed proprietary runt
 
 | Area | Details |
 |---|---|
-| **Specification format** | Markdown — every agent, pipeline stage, gate, and knowledge document is a versioned `.md` contract, not code |
+| **Specification format** | Markdown — every Skill, pipeline stage, gate, and knowledge document is a versioned `.md` contract, not code |
 | **Supported automation frameworks** | SHAFT Engine (Java/TestNG) and Playwright (JavaScript), live side by side; Selenium/Cypress/Appium/REST Assured designed as first-class options (§4), not yet onboarded against a real application |
 | **Browser automation** | Playwright, via the shared [`platform_core/tools/browser_driver/`](platform_core/tools/browser_driver/) engine — one `BrowserDriver` API surface, with the profile and screen/component locators resolved from `platform_core_data/knowledge_base/browser/` |
 | **Documentation format** | Markdown + Mermaid diagrams throughout — every diagram renders natively in the repository, no external diagramming tool required |
@@ -851,7 +1050,7 @@ These are deliberately blank rather than pre-filled with samples: Stage 1 reads 
 
 Follow [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md): create `platform_core_data/knowledge_base/browser/profile.json` (login selectors + a post-login success signal), then create `platform_core_data/knowledge_base/credentials/credentials.json` from the provided template — this file is git-ignored and must never be committed.
 
-**Then approve the two MCP servers.** The repo ships a project-scoped [`.mcp.json`](.mcp.json) registering `playwright` (a second, selectable browser mode alongside the Browser Driver) and `context7` (version-accurate documentation for the stack Stage 5 generates against). Both are launched by `npx`, so there is nothing to install — but a project-scoped `.mcp.json` requires explicit approval before its servers start: run `/mcp` (or `claude mcp`) once per machine. Also run `npx playwright install chromium` for the browsers, and optionally export `CONTEXT7_API_KEY` for higher rate limits — set it in your environment, never in the committed `.mcp.json`. Full contract, including the rule that a credential value is never typed into an MCP tool call: [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md).
+**Then approve the two MCP servers.** The repo ships a project-scoped [`.mcp.json`](.mcp.json) registering `playwright` (a second, selectable browser mode alongside the Browser Driver) and `context7` (version-accurate documentation for the stack Stage `4A` generates against). Both are launched by `npx`, so there is nothing to install — but a project-scoped `.mcp.json` requires explicit approval before its servers start: run `/mcp` (or `claude mcp`) once per machine. Also run `npx playwright install chromium` for the browsers, and optionally export `CONTEXT7_API_KEY` for higher rate limits — set it in your environment, never in the committed `.mcp.json`. Full contract, including the rule that a credential value is never typed into an MCP tool call: [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md).
 
 ### 4. Run the pipeline
 
@@ -862,10 +1061,26 @@ flowchart LR
     A["Invoke Stage 1"] --> B{{"Approve Project Context?"}}
     B -->|yes| C["Invoke Stage 2"] --> D{{"Approve Discovery?"}}
     D -->|yes| E["Invoke Stage 3"] --> F{{"Approve Test Design?"}}
-    F -->|yes| G["Invoke Stage 4M"] --> GG{{"Approve Manual Execution?"}}
-    GG -->|yes| H["Invoke Stage 4A"] --> HH{{"Approve Automation?"}}
+    F -->|yes| R["Review cases in the .xlsx<br/>+ --import-lifecycle"]
+
+    R --> G["Invoke Stage 4M<br/><small>MANUAL branch</small>"] --> GG{{"Approve Manual Execution?"}}
+    GG -->|yes| GD["Manual QA deliverables — terminal"]
+
+    R --> H["Invoke Stage 4A<br/><small>AUTOMATION branch</small>"] --> HH{{"Approve Automation?"}}
     HH -->|yes| I["Invoke Stage 5A (mechanical)"] --> J["Invoke Stage 6A"] --> K["Final QA Report delivered"]
+    I -. "optional — only if you invoke it" .-> SH["Invoke Stage 5H (Self-Healing)"] --> J
 ```
+
+The two branches leave the *same* point. Running `4M` is not a prerequisite for `4A`, and you may run either alone, in either order, or both.
+
+**Approving Stage 3 is not the same as approving its test cases.** Stage 3 writes every case with `Review: Pending` and `Automation: Pending`, and no stage may change either value. Mark your decisions in the generated `TestCases_{Module}.xlsx`, then import them **before** any re-export or any Stage `4A` invocation — an export regenerates the sheet from the Markdown and would otherwise discard them:
+
+```bash
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle --check   # what would change
+node platform_core/tools/test_suite_export/cli.js --import-lifecycle           # apply
+```
+
+`4M` runs a case at `Review = Approved`; `4A` generates for it only at `Review = Approved AND Automation = Approved`. With nothing approved, `4M` halts rather than reporting a vacuous "0 executed, 0 failures" ([§6](#the-per-case-lifecycle-gate--review-and-automation-added-2026-08-01)).
 
 ### 5. Validate the platform itself first (recommended after retargeting)
 
@@ -885,20 +1100,26 @@ Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/w
 | [`workflows_and_pipelines/pipeline/pipeline.md`](workflows_and_pipelines/pipeline/pipeline.md) | The canonical pipeline specification: stage contracts, gates, traceability chain, Knowledge Architecture |
 | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) | Run ID allocation, workspace structure, metadata, execution status, run summaries |
 | [`workflows_and_pipelines/pipeline/run_scope.md`](workflows_and_pipelines/pipeline/run_scope.md) | Run Scope Types and Sources — what a given run is allowed to validate |
-| [`.claude/skills/*/SKILL.md`](.claude/skills/) | Full specification of each of the seven agent skills |
+| [`.claude/skills/*/SKILL.md`](.claude/skills/) | Full specification of each of the eight Skills |
+| [`workflows_and_pipelines/pipeline/module_architecture.md`](workflows_and_pipelines/pipeline/module_architecture.md) | The Module Workspace: the module registry, the Active Module pointer, per-stage status, and the module automation lifecycle |
+| [`platform_core/prerequisites/README.md`](platform_core/prerequisites/README.md) | The prerequisite registry — every `PREREQ-*` ID, its detection method and absence behavior, and which Skills require it ([§7.1](#71-prerequisites-and-providers--what-a-skill-may-depend-on)) |
+| [`platform_core/tools/browser_provider/interface.md`](platform_core/tools/browser_provider/interface.md) | The Browser Provider contract — the only browser surface a Skill may use, and how a concrete provider is resolved |
+| [`platform_core/tools/test_suite_export/README.md`](platform_core/tools/test_suite_export/README.md) | Stage 3's Markdown ⇄ Excel rendering, and `--import-lifecycle` — the one inverse pass, carrying `Review`/`Automation` decisions back |
+| [`platform_core/tools/project_paths/README.md`](platform_core/tools/project_paths/README.md) | The platform-independence layer — every path derived from the project root, and the rule against hardcoding a project folder name |
 | [`platform_core_data/knowledge_base/patterns/README.md`](platform_core_data/knowledge_base/patterns/README.md) | Platform Knowledge layer — structure and promotion rules |
 | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) | Shared browser automation engine, Browser Profile, Screen/Component knowledge, credentials handling |
 | [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md) | The two registered MCP servers: `playwright` as a second, selectable browser mode alongside the Browser Driver (and the hard rule against credential values in MCP tool calls), and `context7` for version-accurate documentation of a project's own extracted stack |
 | [`platform_core_data/README.md`](platform_core_data/README.md) | The layout of the hosted project's knowledge base, run history, and automation baseline |
 | [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/workflows/first_run.md) | The Stages 1–3 smoke-test workflow |
-| [`workflows_and_pipelines/workflows/user_story_run.md`](workflows_and_pipelines/workflows/user_story_run.md) | Stages 3–7 for one User Story, reusing an existing Project Context + Discovery baseline |
-| [`workflows_and_pipelines/workflows/bug_fix_run.md`](workflows_and_pipelines/workflows/bug_fix_run.md) | Reproduce/verify a known bug's regression test case — Stage 6 → (conditional) Stage 5 → Stage 6 → Stage 7 |
+| [`workflows_and_pipelines/workflows/user_story_run.md`](workflows_and_pipelines/workflows/user_story_run.md) | Stages 3 → 4M/4A → 5A → 6A for one User Story, reusing an existing Project Context + Discovery baseline |
+| [`workflows_and_pipelines/workflows/bug_fix_run.md`](workflows_and_pipelines/workflows/bug_fix_run.md) | Reproduce/verify a known bug's regression test case — Stage `5A` → (conditional) Stage `4A` → Stage `5A` → Stage `6A` |
 | [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Full agent specification revision history |
 | [`docs/LESSONS_LEARNED.md`](docs/LESSONS_LEARNED.md) | Architectural lessons from past pipeline redesigns |
 | [`docs/PLATFORM_VALIDATION_REPORT.md`](docs/PLATFORM_VALIDATION_REPORT.md) | End-to-end platform validation report |
 | [`docs/SESSION_HANDOFF.md`](docs/SESSION_HANDOFF.md) | Historical session handoff notes |
 | [`docs/MIGRATION_REPORT_2026-07-17.md`](docs/MIGRATION_REPORT_2026-07-17.md) | Record of the repository's v1.0 self-contained-project migration |
-| [`docs/README.md`](docs/README.md) | An earlier platform overview, superseded by this document as the primary entry point; retained for its additional narrative detail |
+| [`docs/MIGRATION_REPORT_2026-07-29.md`](docs/MIGRATION_REPORT_2026-07-29.md) | Record of the Module Workspace migration — moving Stages 1–3 output out of the Run Folder |
+| [`docs/README.md`](docs/README.md) | **Archived** — describes the pre-2.0 architecture (projects hosted *inside* the platform, `*-agent` skill names). Superseded by this document; retained for its additional narrative detail. Historical, not current |
 
 ---
 
@@ -924,4 +1145,4 @@ Everything above this section is implemented or fully specified today (see [§4 
 - **Autonomous Test Planning** — proposing Run Scope and coverage priorities from a backlog, subject to the same human approval gates that already govern every other stage.
 - **Enterprise Dashboard** — a single operational view across all projects' run health, automation package registries, and knowledge base growth.
 
-None of these change the seven-stage pipeline, the agent boundaries, or the human-approval model described above — every future capability is designed to slot into the existing architecture, not replace it.
+None of these change the two-pipeline stage sequence, the agent boundaries, or the human-approval model described above — every future capability is designed to slot into the existing architecture, not replace it.

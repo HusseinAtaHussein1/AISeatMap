@@ -1,7 +1,7 @@
 # Agentic AI Testing Platform — Pipeline Specification
 
 **Type:** Reusable pipeline orchestration specification
-**Status:** Specification only — no stage, agent, or checkpoint in this document has been executed.
+**Status:** Current, and exercised. This document is a specification, not a run record; the process it defines has been executed against the hosted project — see `platform_core_data/runs/` for the run folders and `platform_core_data/modules/` for the module artifacts they produced. Revisions to this document are never made as a side effect of a run.
 **Governs:** The eight skills defined in [`.claude/skills/`](../../.claude/skills/) — `project-context-skill`, `explorer-skill`, `test-design-skill`, `manual-execution-skill`, `automation-skill`, `automation-execution-skill`, `self-healing-skill`, `reporting-skill`.
 
 **Two pipelines, one shared foundation.** This document defines **two independent delivery pipelines** that share their first three stages and then diverge completely (§3):
@@ -19,7 +19,7 @@ The two branches are **fully isolated after Stage 3**: neither consumes any arti
 
 ## 1. Purpose
 
-This document defines the **execution workflow** of the Agentic AI Testing Platform: the fixed order in which agents run, the artifacts that flow between them, and the human checkpoints that gate progression. The Agent Framework (`.claude/skills/`) specifies *what each skill does in isolation*, via each skill's own YAML contract header (`inputs`/`outputs`/`dependencies`); this Pipeline Specification defines *how those skills are wired together into one governed, repeatable process*.
+This document defines the **execution workflow** of the Agentic AI Testing Platform: the fixed order in which agents run, the artifacts that flow between them, and the human checkpoints that gate progression. The Skills layer (`.claude/skills/`) specifies *what each skill does in isolation*, via each skill's own YAML contract header (`inputs`/`outputs`/`dependencies`); this Pipeline Specification defines *how those skills are wired together into one governed, repeatable process*.
 
 **The platform tests exactly one Target Project at a time.** Every *process artifact* the platform produces — Project Context, Discovery Artifacts, Manual Test Suite, execution results, reports, run history, knowledge base — lives under a single root, `platform_core_data/`, resolved relative to the Tool Root (§1.1). There is no project-name path segment, no project selector, and no second project's artifacts to disambiguate against.
 
@@ -233,7 +233,7 @@ node platform_core/tools/module_manager/cli.js use login       # activate one (s
 
 ## 4. Stage Definitions
 
-### Stage 1 — Project Context Agent *(shared)*
+### Stage 1 — Project Context Skill *(shared)*
 
 **Spec:** [`.claude/skills/project-context-skill/SKILL.md`](../../.claude/skills/project-context-skill/SKILL.md)
 
@@ -252,7 +252,7 @@ Notes:
 - **Its output is one context file per module, whatever the invocation's scope.** A full-project or multi-module invocation writes a separate `ProjectContext.md` under each module in scope; a single-module invocation writes exactly that module's. There is no project-wide context document — the union of the per-module files *is* the project context, and `modules/README.md` indexes them.
 - Its output feeds **both** branches unchanged.
 
-### Stage 2 — Explorer Agent *(shared)*
+### Stage 2 — Explorer Skill *(shared)*
 
 **Spec:** [`.claude/skills/explorer-skill/SKILL.md`](../../.claude/skills/explorer-skill/SKILL.md)
 
@@ -266,11 +266,11 @@ Notes:
 Notes:
 - "Running Application" is the live target system, reached through browser automation — it is data to be observed, not a source of requirements.
 - **It resolves its input from the module workspace**, not from a run folder: `modules/{module}/context/ProjectContext.md` at its current revision, whose `status:` must read `Approved`. It records the revision it consumed in its own `upstream` header (`module_architecture.md` §10.1) and never copies the context into its own folder.
-- Output includes the Gap Analysis (documented vs. observed) required by the Explorer Agent specification.
+- Output includes the Gap Analysis (documented vs. observed) required by the Explorer Skill specification.
 - **Behavioural output only — no selectors, no DOM captures, no locator candidates** (§3.5). Selector acquisition belongs to Stage `4A`. A screenshot documenting an in-scope screen remains permanent evidence; a DOM dump does not (§11.2).
 - Its output feeds **both** branches unchanged.
 
-### Stage 3 — Test Design Agent *(shared)*
+### Stage 3 — Test Design Skill *(shared)*
 
 **Spec:** [`.claude/skills/test-design-skill/SKILL.md`](../../.claude/skills/test-design-skill/SKILL.md)
 
@@ -282,13 +282,13 @@ Notes:
 | **Artifact path** | `platform_core_data/modules/{module}/test_design/TestCases_{Module}.md`, `...{Module}.xlsx`, `.../test_design/TraceabilityMatrix.md`, `.../test_design/CoverageReport.md` |
 
 Notes:
-- Project Context governs *what* is tested; Discovery Artifacts only validate, enrich, and surface gaps — per the reversed primary/secondary relationship established in the Agent Framework.
+- Project Context governs *what* is tested; Discovery Artifacts only validate, enrich, and surface gaps — per the reversed primary/secondary relationship established in the Skills layer.
 - **Both inputs resolve from the same module's workspace** — `modules/{module}/context/` and `modules/{module}/discovery/` — at their current revisions, each recorded in this stage's `upstream` header. Where an input has been revised since this suite was last produced, the suite is flagged **stale** and the staleness is reported; it is never silently regenerated (`module_architecture.md` §10.4).
 - The Markdown and Excel test suites must never diverge — they are two renderings of one underlying test case set. The Markdown is authored; the `.xlsx` is **generated from it** by `platform_core/tools/test_suite_export/cli.js` (`test-design-skill/SKILL.md` §9.1), which is what makes non-divergence structural rather than a matter of discipline. Re-run the export after any edit to a suite document, and never hand-edit a workbook.
 - **This is the divergence point.** Its approved output is the sole scope-determining input for *both* Stage `4M` and Stage `4A`. Test cases are authored branch-agnostically — a test case is not marked "manual" or "automated" here.
 - **Every test case carries two lifecycle columns — `Review` and `Automation`** (`test-design-skill` §6.3, added 2026-08-01). Both are `Pending` | `Approved` | `Rejected` and both default to **`Pending`**; this stage always writes `Pending` and **no stage may ever change either value** — only a human reviewer may. Stage `4M` consumes a case only when `Review = Approved`; Stage `4A` only when `Review = Approved AND Automation = Approved` — `Review` gates **both** branches, `Automation` only the Automation branch *(revised 2026-08-01)*. The advisory **Automation Candidates** hint this bullet previously described is **retired**: a non-binding hint sitting beside a binding column can disagree with it, leaving no way to tell which governs.
 
-### Stage 4M — Manual Execution Agent *(Manual branch · terminal)*
+### Stage 4M — Manual Execution Skill *(Manual branch · terminal)*
 
 **Spec:** [`.claude/skills/manual-execution-skill/SKILL.md`](../../.claude/skills/manual-execution-skill/SKILL.md)
 
@@ -308,7 +308,7 @@ Notes:
 - **Scope is the approved suite narrowed by the `Review` gate** *(added 2026-08-01)*: a case is executed only when `Review = Approved` (`manual-execution-skill` §4.1). A `Pending` or `Rejected` case is recorded `Excluded` — reported in the Results, the CSV, and the QA Report totals, never silently dropped — so the pass rate is never quoted against a denominator the reader cannot see. The `Automation` column is **not** read by this stage: `Automation = Rejected` is the reason a case must be run manually, not a reason to skip it. Zero approved cases is a **halt**, not a run reporting "0 executed, 0 failures".
 - **It produces no Automation Candidate Package** (§3.3 #4) and has no downstream agent. Its reviewer is its consumer.
 
-### Stage 4A — Automation Agent *(Automation branch)*
+### Stage 4A — Automation Skill *(Automation branch)*
 
 **Spec:** [`.claude/skills/automation-skill/SKILL.md`](../../.claude/skills/automation-skill/SKILL.md)
 
@@ -331,7 +331,7 @@ Notes:
 - **Brownfield/greenfield handling is detected automatically; writing is approved explicitly.** Stack, test-directory layout, naming, and framework conventions are detected with no human prompt. The *write* decision — extend the existing suite or scaffold new, and exactly which files are touched — is presented as a **Target Write Plan** at this stage's Automation Approval gate (§5.2, §13.3).
 - "Automation Approval Required" is deliberately named differently from "Human Review Required" (§5) because it gates the point at which generated code is authorized to later execute against a real environment.
 
-### Stage 5A — Automation Execution Agent *(Automation branch)*
+### Stage 5A — Automation Execution Skill *(Automation branch)*
 
 **Spec:** [`.claude/skills/automation-execution-skill/SKILL.md`](../../.claude/skills/automation-execution-skill/SKILL.md)
 
@@ -351,7 +351,7 @@ Notes:
 - No human checkpoint follows: once automation is approved (`4A` gate), running it is deterministic, not a judgment call. Judgment on the *results* happens in `5H` (if invoked) and `6A`.
 - **It never executes manually-designed test cases** — that is exclusively Stage `4M`'s responsibility, in the other branch. The two never overlap.
 
-### Stage 5H — Self-Healing Agent *(Automation branch · OPTIONAL, opt-in only)*
+### Stage 5H — Self-Healing Skill *(Automation branch · OPTIONAL, opt-in only)*
 
 **Spec:** [`.claude/skills/self-healing-skill/SKILL.md`](../../.claude/skills/self-healing-skill/SKILL.md)
 
@@ -372,7 +372,7 @@ Notes:
 - **Diagnosis and repair are separate decisions.** Below a High root-cause confidence, this stage gathers evidence rather than changing code — it never repairs on a guess.
 - **A repaired suite re-enters the normal gate.** Because Stage `4A`'s approval covered the code as it was then, changed code requires a fresh Automation Approval before it merges to the baseline (§12.4) or projects into the Target Project (§13.3).
 
-### Stage 6A — Reporting Agent *(Automation branch · terminal)*
+### Stage 6A — Reporting Skill *(Automation branch · terminal)*
 
 **Spec:** [`.claude/skills/reporting-skill/SKILL.md`](../../.claude/skills/reporting-skill/SKILL.md)
 
@@ -556,7 +556,7 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 - Business ambiguity — anything that would change the run's actual business objective or scope in a way a stakeholder would care about
 
 **Engineering Decisions — make the call, document it, keep moving; never pause to ask:**
-- Adding security-relevant test cases (e.g. anti-enumeration checks), boundary cases, empty-field variants, invalid-credential cases, validation-rule checks — ordinary Test Design Agent (Stage 3) work
+- Adding security-relevant test cases (e.g. anti-enumeration checks), boundary cases, empty-field variants, invalid-credential cases, validation-rule checks — ordinary Test Design Skill (Stage 3) work
 - Marking a scenario Deferred / Requires Dedicated Environment because the current environment can't safely execute it (state why; never silently drop it, and never ask permission to defer it — see the "can't safely execute" rule below)
 - Risk annotations, traceability updates, coverage-gap documentation
 - Whether an adjacent, unrequested feature stays out of the current run's scope (e.g. Logout when only Login was asked for) — document it as "Out of Current Scope / potential future module" in the relevant artifact and continue; never pause execution to ask whether to fold an adjacent feature into scope unless doing so would change the run's business objective (a Human Decision, above)
@@ -807,7 +807,7 @@ Platform Knowledge subfolders: `automation_patterns/`, `diagnosis_patterns/`, `r
 
 There is no `skills/` subfolder here (removed, 2026-07-21 governance review). Cross-cutting agent capability is not Knowledge — it lives in `.claude/skills/`, a separate platform layer.
 
-There is no `confidence_patterns/` subfolder here (removed, 2026-07-21). The Confidence Engine's scoring rubric (§27.2 of the Automation Execution Agent spec) is fixed Capability logic, not a promotable Knowledge category — the rubric has never needed a calibration-adjustment layer in practice, and keeping an empty category open for one invited exactly the scope ambiguity flagged in that review.
+There is no `confidence_patterns/` subfolder here (removed, 2026-07-21). The Repair Confidence Engine's scoring rubric (§9 of the Self-Healing Skill spec) is fixed Capability logic, not a promotable Knowledge category — the rubric has never needed a calibration-adjustment layer in practice, and keeping an empty category open for one invited exactly the scope ambiguity flagged in that review.
 
 Project Knowledge subfolders (the fixed shape §10.4 scaffolds): `business_rules/` and `lessons_learned/`.
 
@@ -848,7 +848,7 @@ Each top-level knowledge directory carries an `INDEX.md` (ID · Category · Titl
 
 ### 10.5 Promotion Workflow — explicit human approval only
 
-Not every lesson learned becomes Platform Knowledge. Whichever agent writes a new piece of knowledge (e.g. the Automation Execution Agent writing a confirmed repair rule, per `.claude/skills/automation-execution-skill/SKILL.md` §28) writes it **only into `platform_core_data/knowledge_base/`** by default. When that agent recognizes the lesson as one that would still hold against a *different* application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "the dashboard redirects after login"), it proposes promotion and asks exactly once:
+Not every lesson learned becomes Platform Knowledge. Whichever Skill writes a new piece of knowledge (e.g. the Self-Healing Skill writing a confirmed repair rule, per `.claude/skills/self-healing-skill/SKILL.md` §10) writes it **only into `platform_core_data/knowledge_base/`** by default. When that Skill recognizes the lesson as one that would still hold against a *different* application (generic locator recovery, a retry strategy, a synchronization strategy, a framework pattern, a diagnosis pattern — not an app-specific behavior like "the dashboard redirects after login"), it proposes promotion and asks exactly once:
 
 > "This lesson looks application-independent. Promote it to Platform Knowledge?"
 
@@ -868,18 +868,18 @@ Note (2026-07-26): the Platform layer now sits **nested inside** the Project lay
 
 The duplicate `diagnosis/` folder this move created alongside `diagnosis_patterns/` was removed on 2026-07-27 (§10.3) — the category has one folder, `diagnosis_patterns/`.
 
-### 10.7 Agent read/write map
+### 10.7 Skill read/write map
 
-| Agent | Branch | Reads | Writes |
+| Skill | Branch | Reads | Writes |
 |---|---|---|---|
-| Project Context Agent (Stage 1) | shared | Platform Knowledge + Project Knowledge + **the PRD** (sole reader) | `modules/{module}/context/` — one Project Context per module; the module registry via the Module Manager. Project Knowledge (`business_rules/`) as it establishes scope |
-| Explorer Agent (Stage 2) | shared | Platform Knowledge + Project Knowledge + `modules/{module}/context/` | `modules/{module}/discovery/` (`findings/`, `evidence/`, behavioural observations). **Never writes selector/DOM data** (§3.5). Project Knowledge only for a `business_rules/` or `lessons_learned/` entry |
-| Test Design Agent (Stage 3) | shared | Platform Knowledge + Project Knowledge + `modules/{module}/context/` + `.../discovery/` | `modules/{module}/test_design/`. Project Knowledge (`lessons_learned/`) where a design decision surfaces one |
-| Manual Execution Agent (Stage `4M`) | Manual | Platform Knowledge + Project Knowledge + `modules/{module}/test_design/` (approved) + **Selector Verification KB** (read-only, §10.8) + **Repair KB** (read-only, for known application/environment quirks) | This run's `manual_execution/` folder (Results, CSV, QA Report, evidence). Project Knowledge (`lessons_learned/`) where an execution surfaces one. **Writes nothing under `modules/`** |
-| Automation Agent (Stage `4A`) | Automation | Platform Knowledge (`automation_patterns/`, `framework_patterns/`, `repair_patterns/`) + `knowledge_base/stack.md` + `modules/{module}/test_design/` (approved) + `.../discovery/` + **Selector Verification KB** + **Repair KB** — both **mandatory reads before generation** (§10.8) | `modules/{module}/automation/` — a standalone module project; `automation_baseline/{framework}/shared/` for genuinely shared assets; **Selector Verification KB** (§10.8) — the only writer of verified locator records |
-| Automation Execution Agent (Stage `5A`) | Automation | Platform Knowledge (`execution_patterns/`) + Project Context + the suite it runs (`modules/{module}/automation/` or the assembled baseline) | This run's `execution/` folder (Execution Results, evidence, Health Summary); `.module_automation_state.json` → `Executed`. **Writes no automation code and no repair knowledge** — it no longer diagnoses or repairs (§4, Stage `5A`) |
-| Self-Healing Agent (Stage `5H`) | Automation | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `reasoning/`) + prior modules' Repair Summaries + **Repair KB** + **Selector Verification KB** | `modules/{module}/healing/` (Repair Summary, Confidence Report, Before/After Comparison, Quarantine Register); the repaired code in place in `modules/{module}/automation/`; **one appended rerun file** in the triggering run's `execution/`; **Repair KB** — confirmed repairs only, and `patterns/` only via the §10.5 Promotion gate |
-| Reporting Agent (Stage `6A`) | Automation | Platform Knowledge (`reporting/`) + Project Knowledge | — (terminal stage) |
+| Project Context Skill (Stage 1) | shared | Platform Knowledge + Project Knowledge + **the PRD** (sole reader) | `modules/{module}/context/` — one Project Context per module; the module registry via the Module Manager. Project Knowledge (`business_rules/`) as it establishes scope |
+| Explorer Skill (Stage 2) | shared | Platform Knowledge + Project Knowledge + `modules/{module}/context/` | `modules/{module}/discovery/` (`findings/`, `evidence/`, behavioural observations). **Never writes selector/DOM data** (§3.5). Project Knowledge only for a `business_rules/` or `lessons_learned/` entry |
+| Test Design Skill (Stage 3) | shared | Platform Knowledge + Project Knowledge + `modules/{module}/context/` + `.../discovery/` | `modules/{module}/test_design/`. Project Knowledge (`lessons_learned/`) where a design decision surfaces one |
+| Manual Execution Skill (Stage `4M`) | Manual | Platform Knowledge + Project Knowledge + `modules/{module}/test_design/` (approved) + **Selector Verification KB** (read-only, §10.8) + **Repair KB** (read-only, for known application/environment quirks) | This run's `manual_execution/` folder (Results, CSV, QA Report, evidence). Project Knowledge (`lessons_learned/`) where an execution surfaces one. **Writes nothing under `modules/`** |
+| Automation Skill (Stage `4A`) | Automation | Platform Knowledge (`automation_patterns/`, `framework_patterns/`, `repair_patterns/`) + `knowledge_base/stack.md` + `modules/{module}/test_design/` (approved) + `.../discovery/` + **Selector Verification KB** + **Repair KB** — both **mandatory reads before generation** (§10.8) | `modules/{module}/automation/` — a standalone module project; `automation_baseline/{framework}/shared/` for genuinely shared assets; **Selector Verification KB** (§10.8) — the only writer of verified locator records |
+| Automation Execution Skill (Stage `5A`) | Automation | Platform Knowledge (`execution_patterns/`) + Project Context + the suite it runs (`modules/{module}/automation/` or the assembled baseline) | This run's `execution/` folder (Execution Results, evidence, Health Summary); `.module_automation_state.json` → `Executed`. **Writes no automation code and no repair knowledge** — it no longer diagnoses or repairs (§4, Stage `5A`) |
+| Self-Healing Skill (Stage `5H`) | Automation | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `reasoning/`) + prior modules' Repair Summaries + **Repair KB** + **Selector Verification KB** | `modules/{module}/healing/` (Repair Summary, Confidence Report, Before/After Comparison, Quarantine Register); the repaired code in place in `modules/{module}/automation/`; **one appended rerun file** in the triggering run's `execution/`; **Repair KB** — confirmed repairs only, and `patterns/` only via the §10.5 Promotion gate |
+| Reporting Skill (Stage `6A`) | Automation | Platform Knowledge (`reporting/`) + Project Knowledge | — (terminal stage) |
 | Pipeline Orchestrator (tooling) | both | *(none — no read dependency on `pipeline_decision_patterns/` is defined yet)* | — |
 
 ### 10.8 Shared Execution Knowledge Bases — written once, used by both branches
@@ -991,7 +991,7 @@ Once §33.1's consolidated gate has resolved which package this module targets:
 - **The module project is created if absent, and reused in place if present.** A second Stage `4A` pass on the same module extends the project it already has — it does not start a fresh copy. This is §7's in-place-edit discipline applied to code, with git as the history.
 - **Shared assets are referenced, not copied.** Record the `shared/` folder's path-scoped git commit hash at generation time (`git log -1 --format=%H -- <shared-path>`, never a bare repo `HEAD`, since this is a monorepo and an unrelated commit elsewhere must never look like a change) as `baselineRef` in `.module_automation_state.json`. This is what Step 3's conflict check compares against later — the same anchor `.lifecycle_snapshot.json` previously held, in the file that now tracks the module project's lifecycle.
 - If no `shared/` exists yet (a brand-new package), the module project starts self-contained, and its first assembly establishes `shared/`.
-- **Generation happens only inside the module project.** The Automation Agent must never edit the Workspace Automation Baseline directly (see the corresponding Execution Rule in `.claude/skills/automation-skill/SKILL.md` §18).
+- **Generation happens only inside the module project.** The Automation Skill must never edit the Workspace Automation Baseline directly (see the corresponding Execution Rule in `.claude/skills/automation-skill/SKILL.md` §18).
 - Implemented by `platform_core/tools/automation_lifecycle/baselineCopy.js` (`copyBaselineIntoModule`) — no agent or script hand-rolls this step, the same discipline already established for run folder naming (`run_manager.md` §5.5).
 
 #### 12.3.1 The module automation lifecycle
@@ -1172,6 +1172,196 @@ A brownfield Target Project that already has automation in `target.automationRoo
 | `off` | no git; the lifecycle runs filesystem-only |
 
 When git is unavailable — no repository, or the host gitignores the tool folder — the Merge Plan carries `degradedMode: 'no-git'` and a warning reproduced verbatim in the Merge Summary and in `automation_promotion.md`. **The absence of protection is always reported, never implied**: a merge that could not be verified is never presented as a verified one. If a run's Step-1 snapshot recorded that git *was* available and it is not at merge time, that is a hard block, not a downgrade.
+
+---
+
+## 14. Execution Safety & Mutation Policy (added 2026-08-07, user-mandated)
+
+### 14.1 The third governance concern
+
+The platform already governs two things about a test case. This adds a third, about an *action*:
+
+```text
+Review            Is the Test Case accepted?              §4 Stage 3 · test-design-skill §6.3
+Automation        Should it be automated?                 §4 Stage 3 · test-design-skill §6.3.2
+Execution Safety  May this action execute here and now?   this section
+```
+
+**All three are independent, and none substitutes for another.**
+
+```text
+Review = Approved  AND  Automation = Approved     does NOT mean     Execution Safety = Allowed
+```
+
+A test case can be correct, accepted, and worth automating while still containing an operation that must not execute on the current environment. Equally, no safety decision can make an unreviewed case executable — safety runs **after** eligibility and only ever narrows it.
+
+**Governing principle: capability does not imply authorization.** That the UI exposes Delete, that the credential can Approve, and that the automation exists to run are facts about capability. None is a permission.
+
+### 14.2 Canonical decisions
+
+```text
+Allowed            execute
+Approval Required  stop, ask a human, execute only within the approved scope
+Forbidden          do not execute — and no run authorization changes that
+```
+
+These are **policy decisions, not test results**. A run that cannot proceed because of one is recorded with the existing execution taxonomy — `Skipped` / `Blocked`, reason `Execution Safety Policy` (§4 Stage `4M`, Stage `5A`). **A policy block is never an Application Failure, an Automation Failure, or an Environment Failure**: none of those occurred, and misfiling it would corrupt the health separation that Stage `5A` §25.2 exists to protect. No new result status is introduced.
+
+### 14.3 Ownership
+
+```text
+platform_core/tools/execution_safety/                    the evaluator — reusable, project-agnostic, NO project rules
+platform_core_data/knowledge_base/
+    execution_safety_policy.json                         the project's policy — authoritative for evaluation
+    execution_safety_policy.md                           the same policy, explained, with provenance per rule
+platform_core_data/runs/{{RUN_FOLDER}}/metadata/
+    SafetyAuthorizations.json / .md                      run-scoped human approvals
+    SafetyPreflight.md                                   the run's mutation footprint, captured before execution
+```
+
+This is the same `platform_core` / `platform_core_data` split §1.1 already draws. The evaluator knows that `PAYMENT` is a financial action; it does not know whether payments are permitted anywhere. **No project rule may be hardcoded into the evaluator, and no evaluation logic may live in the policy.**
+
+**No stage implements its own interpretation of the rules.** A Skill calls the evaluator and uses what it returns. Two Skills reading the same prose constraint is precisely how two stages reach different conclusions about the same action.
+
+### 14.4 Where it is evaluated
+
+| Stage | Enforcement grain | Detail |
+|---|---|---|
+| `4M` Manual Execution | **Per operation** | The skill drives each step itself, so it evaluates before every mutating action (`manual-execution-skill` §6.1) |
+| `4A` Automation | **Not evaluated** — generation is not execution | An asset may be generated for an operation that is currently `Forbidden`; the restriction is disclosed, never converted into a permanent coverage gap (`automation-skill` §27A) |
+| `5A` Automation Execution | **Suite preflight + per test** | The runner is an opaque external process with no interception point inside it. A test whose declared operations resolve `Forbidden` is deselected before invocation. **Per-operation enforcement is not available at this stage and must not be claimed** (`automation-execution-skill` §14A.1) |
+| `6A` Reporting | Reports, never decides | `Blocked by Execution Safety Policy` as its own category (`reporting-skill` §3) |
+
+Both executing stages run a **non-mutating Safety Preflight** before anything starts, so a run's mutation footprint and its authorization questions are known up front rather than discovered by attempting a prohibited action.
+
+### 14.5 Human authorization
+
+A scoped authorization is a **Human Decision** in the §5.5 sense — it belongs to the same category as *"executing any destructive or irreversible operation"*, which that section already names.
+
+It is **class-scoped** per `(environment, module, action, ownership)` for **one run**. Twelve test cases sharing one scope cost one question, not twelve. It never carries to another run, environment, module, action, or ownership class, and **it never lifts a `Forbidden`** — it only ever satisfies an `Approval Required`.
+
+**A run approval never becomes project policy.** It is written into the run folder and nowhere else.
+
+### 14.6 Prospective only
+
+The mechanism takes effect **2026-08-07** and governs runs created on or after that date. `run-001`, `run-002`, and `run-003` executed under the prose grants recorded in `knowledge_base/run_configuration.md`, were never evaluated by it, and **no artifact of theirs has been rewritten to suggest otherwise**. Run immutability (§7) is unaffected.
+
+### 14.7 The browser boundary
+
+```text
+Execution Skill → Execution Safety → authorized operation → Browser Provider
+```
+
+`browser_provider` and `browser_driver` are **actuators**. Business authorization is decided above them and passed down; it is never decided inside a driver. Technical interception may be added as defence in depth, never as the primary control.
+
+---
+
+## 15. Run Observability (added 2026-08-07, user-mandated)
+
+**Canonical technical documentation:** `platform_core/tools/observability/README.md`. This section
+states the architectural position; it deliberately does not restate the schema, which has one owner.
+
+### 15.1 A fourth concern, and the only one that decides nothing
+
+| Concern | Question | Decides? |
+|---|---|---|
+| **Review** | Is this test case accepted? | Yes |
+| **Automation** | Should it be automated? | Yes |
+| **Execution Safety** (§14) | May this operation execute here and now? | Yes |
+| **Observability** | What actually happened, and how efficiently? | **No** |
+
+Observability never authorizes an operation, rejects a test case, overrides a Human Decision (§5.5),
+changes a Safety decision, routes a pipeline, or alters a test outcome. It observes.
+
+### 15.2 The chain
+
+```text
+Facts → Telemetry → Deterministic Metrics → Transparent Reporting
+```
+
+Events are evidence, appended one per line and never rewritten. Metrics are **derived** from them by
+a pure function — no model interprets a duration, a count, or a ratio. The Markdown report and the
+HTML dashboard are renderings of those metrics, and neither is authoritative over them.
+
+### 15.3 Measure what can be proven
+
+> **Measure what can be proven. Mark what cannot be measured as unavailable.**
+
+`0` and `Unavailable` are different claims, and the platform never lets one decay into the other.
+`Repair Cycles: 0` asserts the run needed none; `Repair Cycles: Unavailable` admits it does not know.
+Every unavailable metric carries the reason it could not be measured.
+
+### 15.4 Two reliability classes, reported apart
+
+The platform has no orchestrating process — a stage is a Skill following a specification, and nothing
+wraps it. So every event declares its provenance:
+
+- `platform-tool` — emitted by platform code as a side effect of the work. Cannot be forgotten.
+- `skill` — emitted because a Skill's specification requires it. Its presence is reliable; **its
+  absence proves nothing.**
+
+The two are counted separately in every report and are never presented as one reliability class
+(HD-OBS-001). An opened span with no matching completion is reported `Incomplete` and receives
+**no duration** — never an elapsed-time estimate.
+
+### 15.5 Token and cost telemetry are unavailable
+
+No supported run-attributable provider usage source exists: the platform carries zero runtime
+dependencies and no provider SDK, and its tools run as child processes with no model context.
+Claude Code session transcripts are deliberately not read — they are session-scoped rather than
+run-scoped, and are not an official stable contract (HD-OBS-002).
+
+Reported as `Unavailable` with the reason stated, never as `0` and never estimated. The metrics
+schema is shaped so a future official source populates tokens and cost without a redesign.
+
+### 15.6 Run ownership
+
+```text
+runs/{RUN_FOLDER}/metadata/observability/
+├── ObservabilityEvents.jsonl     append-only evidence
+├── ObservabilityMetrics.json     derived, regenerable
+├── ObservabilityReport.md        human-readable
+└── ObservabilityDashboard.html   self-contained, offline, presentation only
+```
+
+Telemetry belongs to the run, like every other piece of run evidence (§7). Cross-run isolation is
+structural: the stream lives inside the run folder, and every event re-checks its own `runId` on
+load, so a copied file contributes nothing.
+
+### 15.7 Prospective only
+
+Observability applies to runs created **after 2026-08-07**. No event is fabricated for `run-001`,
+`run-002` or `run-003`; they report **Not Instrumented** for every event-based metric. What their
+immutable artifacts genuinely prove is available separately as **Historical Derived Metrics**, kept
+apart from instrumented metrics so the difference in coverage stays visible (HD-OBS-003).
+
+### 15.8 What each stage emits
+
+Skills emit **facts**; the aggregator computes **metrics**. No Skill implements a formula.
+
+| Stage | Emits |
+|---|---|
+| All | `STAGE_STARTED` / `STAGE_COMPLETED`, `SKILL_STARTED` / `SKILL_COMPLETED`, `HUMAN_DECISION_REQUESTED` / `_RESOLVED`, `ARTIFACT_CREATED` / `_UPDATED` |
+| `3` Test Design | `TEST_CASES_GENERATED` (count). **Not** Review or Automation values — those live on the test case and are derived from the Case Index (§15.9) |
+| `4M` Manual Execution | `TEST_EXECUTION_RESULT` per case, `SAFETY_PREFLIGHT_COMPLETED`, `SAFETY_BLOCKED` |
+| `4A` Automation | `AUTOMATION_GENERATED` (Selected / Generated / Reused / Modified), `AUTOMATION_BUILD_RESULT` |
+| `5A` Automation Execution | `SAFETY_PREFLIGHT_COMPLETED`, `TEST_EXECUTION_RESULT` with `attempt` and `cycle`, `SAFETY_BLOCKED` |
+| `5H` Self-Healing | `REPAIR_STARTED` / `REPAIR_COMPLETED` |
+| `6A` Reporting | Consumes metrics; emits its own stage span only |
+| Platform tools | `TOOL_STARTED` / `TOOL_COMPLETED` / `TOOL_FAILED`, `RETRY_OCCURRED`, `VALIDATION_PASSED` / `VALIDATION_FAILED` |
+
+`attempt` is load-bearing: **First-Pass Automation Success is computed only from `attempt: 1`
+evidence** and is never reconstructed from final results after repair, because the final state cannot
+distinguish "passed first time" from "passed eventually".
+
+### 15.9 What observability does not measure
+
+- **Token usage and cost** — no supported source (§15.5)
+- **Per-operation automation telemetry** — Stage `5A` invokes an opaque external runner; the platform
+  observes suite and per-test outcomes only, exactly as §14.4 already states for Safety
+- **Human corrections** — a git diff proves a change, not its author
+- **Review and Automation as events** — they are fields on the test case, derived from the Case
+  Index. A second lifecycle record would be a second source of truth, which §5.4 forbids.
 
 ---
 

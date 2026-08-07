@@ -189,7 +189,11 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 3. **Must never assume a default Execution Mode.** If the Run Configuration does not define one, this skill must halt and request it from the user, and must not proceed until an explicit answer is given.
 4. **Must record the determined Execution Mode in the Execution Metadata** (§5.2, §9) on every Execution Results artifact — an artifact missing this field is incomplete, per the same standard already applied to the other required fields in Rule 8 below.
 5. Must not modify automation scripts to force a pass or hide a failure.
-6. Must not execute any test case against an environment not explicitly marked safe for that test's mutating actions.
+6. **Must evaluate every declared operation against the Execution Safety policy before invoking the runner** (§14A), through `platform_core/tools/execution_safety/` — never by interpreting constraint prose itself. A test whose operations resolve `Forbidden`, or whose `Approval Required` was refused, is **deselected from the invocation** and recorded `Skipped` with reason `Execution Safety Policy`.
+6a. **Must write the Safety Preflight to the run's `metadata/` before executing anything** (§14A.2), and resolve every required authorization up front — one scoped question per policy scope, never one per test.
+6b. **Must state the actual enforcement strength in Known Limitations on every run** (§14A.1) — suite-preflight and per-test, **not** per-operation, because the runner is an opaque external process. Claiming operation-level enforcement this stage does not have is a specification violation of the same category as assuming a framework's invocation syntax (Rule 11).
+6c. **Must never record a policy block as an Application, Automation, Environment, Infrastructure, or Configuration Failure** (§14A.3, §25.2) — none of those occurred, and doing so corrupts the health separation Rule 20 exists to protect.
+6d. **Must never treat `Automation = Approved` as authorization for the business mutations the suite performs** (§14A) — generation permission and execution permission are decided by different mechanisms.
 7. Must record every test's outcome — no silent skips. A test that cannot run must be logged with an explicit reason.
 8. Must not interpret, summarize, or draw narrative conclusions from the results — report raw outcomes only, verbatim.
 9. Must timestamp and uniquely identify each run so results are never ambiguous about which execution they came from.
@@ -287,6 +291,62 @@ This skill must never assume a specific environment — every run states, in its
 | **Cloud** | A cloud-hosted target (dev/staging/prod, per the categories above). | Same as Container — the deployment substrate doesn't change execution behavior; only the named environment tier (Dev/QA/Staging/Production) does. |
 
 **This skill must never infer the environment from where it itself happens to be running** (e.g., "I am running inside CI, therefore the target must be a CI-appropriate environment") — the target environment is always what the Project Context states, confirmed via Rule 1's existing environment-match check, regardless of this skill's own execution context.
+
+# 14A. Execution Safety — what this stage may actually run
+
+*(Added 2026-08-07, user-mandated.)*
+
+The Automation skill decided what to **generate**. This stage decides nothing about that, and the Execution Safety policy decides whether what was generated may **run** here.
+
+```text
+Review = Approved AND Automation = Approved   → the asset exists          (automation-skill §27A)
+Execution Safety                              → whether it may execute    ← this section
+```
+
+`Automation = Approved` never authorizes the underlying business mutations. A generated `DELETE` is an asset; permission to run it is a separate, later, environment-specific decision.
+
+## 14A.1 Enforcement strength — stated honestly
+
+**This stage enforces at SUITE PREFLIGHT, and at TEST SELECTION. It does not and cannot enforce per operation.**
+
+That is a limitation of the architecture, not a choice, and overstating it would be worse than the limitation itself:
+
+| Grain | Enforceable here? | Why |
+|---|---|---|
+| **Suite preflight** | ✅ Yes | Before invoking the runner, the full planned-operation set is evaluated and any `Forbidden` group is known |
+| **Per test** | ✅ Yes | A test whose declared operations include a `Forbidden` action is **deselected from the invocation** and recorded `Skipped` — it is never handed to the runner at all |
+| **Per operation** | ❌ **No** | This stage invokes an **opaque external runner** (§15 — Maven/SHAFT, `npx playwright test`, whatever the Automation Summary names). Once that process starts, this skill has no interception point inside it. Neither `browser_provider` nor `browser_driver` sits in that path, because the runner drives its own browser |
+| **Per operation, inside the runner** | ⚠️ Only if the framework itself provides it | A framework-level hook could enforce per operation. **This platform does not currently generate one, and this stage must not claim it does.** |
+
+**The practical consequence, and it must be stated in Known Limitations on every run:** safety enforcement at Stage `5A` is *pre-execution*. If a generated test performs an operation its declared set did not mention, no mechanism here stops it mid-flight. That is why the Automation skill's declaration of what each test does (§13, §27A) is load-bearing rather than documentation.
+
+**Defence in depth, where it is genuinely available:** where a framework *does* expose a pre-action hook and the generated suite uses it, per-operation enforcement may be added — but only claimed on a run where it actually ran.
+
+## 14A.2 The sequence
+
+```text
+1. Eligibility        the suite handed over is already Review+Automation approved     (unchanged)
+2. Safety Preflight   evaluate every declared operation; write runs/{{RUN_FOLDER}}/metadata/SafetyPreflight.md
+3. Resolve approvals  one scoped question per (environment, module, action, ownership) — never per test
+4. Deselect           tests whose operations resolve Forbidden, or whose Approval Required was refused,
+                      are removed from the invocation and recorded Skipped
+5. Execute            the remaining suite, through the runner named in the Automation Summary (§15)
+```
+
+**Step 2 happens before step 5, always.** Discovering a prohibition by executing it is exactly the failure this stage exists to prevent.
+
+## 14A.3 Recording a block
+
+| Safety decision | Recorded as |
+|---|---|
+| `Allowed` | executes normally |
+| `Approval Required`, granted | executes normally; the authorization ID is recorded in Execution Metadata |
+| `Approval Required`, refused | `Skipped` (§17), reason **`Execution Safety Policy`** |
+| `Forbidden` | `Skipped` (§17), reason **`Execution Safety Policy`**, matched rule named |
+
+**A policy block is never an Application Failure, an Automation Failure, or an Environment Failure** (§17, §25.2). The application did not misbehave, the automation is not broken, and the environment is fine — the platform declined to act. Recording it under any of those three would corrupt the very health separation §25.2 exists to protect. `Skipped` already means *"deliberately not run — a decision, not a failure"*, and it is reused rather than extended.
+
+Every deselected test still appears in every total, so a run can never report a clean pass rate against a suite that was quietly shortened by policy.
 
 # 15. Framework-Agnostic Execution
 
@@ -543,7 +603,69 @@ Next step — either:
   3. Re-run as-is, no changes:   /automation-execution-skill re-run failed
 ```
 
-# 31. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+# 31. Observability — what this stage emits
+
+**This stage emits facts. It does not compute metrics.** Durations, counts and ratios are derived by
+`platform_core/tools/observability` from the events below; no formula belongs in this specification
+(`pipeline.md` §15).
+
+Every event this stage records carries `--source skill`, which is a claim about reliability, not a
+label: a Skill event is emitted because this document says to, so its presence is trustworthy and
+**its absence proves nothing**. Platform tools emit their own `platform-tool` events from code, and
+the two are never counted as one class. Recording honestly matters more than recording flatteringly —
+a missing `STAGE_COMPLETED` makes the run `Partially Instrumented`, which is the correct outcome.
+
+```bash
+node platform_core/tools/observability/cli.js record --source skill --type <TYPE> [flags]
+```
+
+## Always
+
+| When | Event |
+|---|---|
+| This stage starts | `STAGE_STARTED --stage 5A` → keep the returned `spanId` |
+| This skill starts | `SKILL_STARTED --stage 5A --skill automation-execution-skill` |
+| This skill finishes | `SKILL_COMPLETED --span-id <id>` |
+| This stage finishes | `STAGE_COMPLETED --stage 5A --span-id <id>` |
+| A Human Decision is raised (`pipeline.md` §5.5) | `HUMAN_DECISION_REQUESTED --decision-id <id> --category <Requirement\|Architecture\|Safety\|Review\|Automation\|Execution\|Other>` |
+| That decision is answered | `HUMAN_DECISION_RESOLVED --decision-id <id> --status <answer>` |
+| An artifact is first written | `ARTIFACT_CREATED --artifact <path> --artifact-class <class>` |
+| An existing artifact is revised | `ARTIFACT_UPDATED --artifact <path> --artifact-class <class>` |
+
+**Close every span you open.** An unclosed span is reported `Incomplete` and receives no duration —
+never an elapsed-time estimate. **Declare the decision category explicitly**; it is never inferred
+from the text of the question.
+
+## Specific to this stage
+
+| When | Event |
+|---|---|
+| The suite preflight completes (§14A) | `SAFETY_PREFLIGHT_COMPLETED --metadata '{…totals…}'` |
+| A test is deselected before invocation by policy | `SAFETY_BLOCKED --count <n> --test-case-id <ID>` |
+| Each test's result is read from the runner report | `TEST_EXECUTION_RESULT --test-case-id <ID> --status <…> --attempt <n> --cycle <n> --error-type <classification>` |
+| The runner itself fails to start | `TOOL_FAILED --tool <runner> --error-type <type>` |
+
+**Cycle 1 is the first attempt.** Record `--attempt 1 --cycle 1` on the first execution, and increment
+on each rerun. Getting this wrong does not produce a slightly-off metric — it silently converts
+First-Pass Success into a post-repair success rate, which flatters the run.
+
+**Per-operation telemetry is not available and must not be claimed.** §14A.1 already establishes that
+the external runner is opaque: the platform observes suite and per-test outcomes only. Emitting an
+event per browser action inside the runner is not possible, and asserting that granularity anywhere
+in a report is a specification violation for the same reason it is under §14A.
+
+## Never emitted by this stage
+
+- **Token counts or cost.** No event type exists for them. No supported run-attributable provider
+  usage source exists, and nothing is estimated from text length or hardcoded pricing (HD-OBS-002).
+- **A metric, ratio, or score.** This stage records what happened; the aggregator does the arithmetic.
+- **A secret.** No password, token, API key, session ID, cookie, authorization header, or card detail
+  reaches `--metadata`. Credential *identities* and roles are acceptable where genuinely needed.
+- **Timing invented for a test the runner did not report.** Read durations from the runner\'s own report (Surefire/Allure). A test the runner never reached has no duration, not a zero one.
+
+---
+
+# 32. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
 
 ## The module: `{{MODULE_SLUG}}`
 

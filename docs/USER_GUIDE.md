@@ -444,9 +444,151 @@ The platform distinguishes decisions that are genuinely yours from routine engin
 
 No gate ever times out into approval. Silence is not consent ([`pipeline.md` §5.3, §6 Rule 6](../workflows_and_pipelines/pipeline/pipeline.md)).
 
+### Execution Safety — what a run is allowed to *do*
+
+*(Added 2026-08-07.)*
+
+The gates above decide whether a **document** or a **code package** may proceed. Execution Safety decides, separately, whether a specific **action** may run:
+
+```text
+Review            Is the Test Case accepted?
+Automation        Should it be automated?
+Execution Safety  May this action execute here and now?
+```
+
+Three independent questions. A test case can be approved and selected for automation and still contain an operation that must not run against your current environment — approving the test never approves the mutation.
+
+Before either execution stage starts, the platform produces a **Safety Preflight**: a read-only summary of everything the run intends to do, grouped by policy scope.
+
+```text
+Execution Safety Preflight
+
+Environment: Staging
+
+UPDATE / agency / Shared
+  12 occurrences — TC-AG-004, TC-AG-005, …
+  Decision: Approval Required
+  Cleanup:  required
+
+DELETE / branch / Shared
+  1 occurrence
+  Decision: Forbidden
+
+PAYMENT
+  0 occurrences
+```
+
+You then answer **one question per scope**, not one per test case:
+
+```text
+Allow UPDATE of Shared agency records for this run?   (12 operations)
+```
+
+An approval is scoped to that run, environment, module, action, and ownership class. It carries to nothing else — not another run, not `DELETE`, not another module — and **it cannot lift a `Forbidden`**. Anything forbidden stays forbidden regardless of what you approve.
+
+A blocked test is recorded as `Skipped` with reason `Execution Safety Policy`, appears in every total, and **never** counts against Application Health. Nothing in your application misbehaved; the platform declined to act.
+
+```bash
+agentic-testing doctor          # shows the loaded policy and the standing decisions
+
+# ask the policy anything, read-only — nothing executes
+node platform_core/tools/execution_safety/cli.js evaluate \
+     --action UPDATE --ownership Shared --module agency
+```
+
+Your project's own permissions, and the evidence behind each rule, are in [`platform_core_data/knowledge_base/execution_safety_policy.md`](../platform_core_data/knowledge_base/execution_safety_policy.md). Relaxing a rule is always a decision you make, never one the platform makes for you.
+
 ### Rejection
 
 A rejected artifact is revised **in place** by the **same** stage, with your feedback — no `.v2` or `_final` sibling appears beside it. The Run Manifest records the rejection and its revision count, and git holds the prior state. A rejected artifact is copied aside only if you explicitly ask for it to be preserved ([`pipeline.md` §7](../workflows_and_pipelines/pipeline/pipeline.md)).
+
+---
+
+## 9A. Observability — what actually happened
+
+Every run created after 2026-08-07 records telemetry as it goes. Afterwards you can ask what happened
+without anyone reconstructing it from memory:
+
+```bash
+node platform_core/tools/observability/cli.js summary --run <run-folder>
+```
+
+```text
+Observability
+─────────────
+
+Run:              run-004__2026-08-08_09-14-02__UserStory__US-8610
+Instrumentation:  Fully Instrumented
+Events:           218 (147 platform-tool, 71 skill)
+
+Duration:         42m 18s
+Stages started:   5
+Human decisions:  5 requested, 0 pending
+Tool calls:       187 (6 failed, 8 retries)
+Test cases:       53 — Review approved 47, Automation approved 21
+Execution:        18 passed / 2 failed / 1 blocked
+Safety blocks:    1
+Repair cycles:    2
+
+Token usage:      Unavailable
+Cost:             Unavailable
+```
+
+**`Unavailable` is not `0`.** `Repair cycles: 0` says the run needed none. `Repair cycles:
+Unavailable` says the platform could not observe it. Every unavailable metric tells you why.
+
+**Token usage and cost are always unavailable, deliberately.** No supported source exists that can
+attribute provider usage to a run, so nothing is estimated. A guessed number that reads like a
+measured one is worse than an honest gap.
+
+### The dashboard
+
+```bash
+node platform_core/tools/observability/cli.js dashboard --run <run-folder> --out
+```
+
+Writes `runs/{RUN}/metadata/observability/ObservabilityDashboard.html`. **Open it by double-clicking
+it** — it is a single self-contained file with no scripts, no external stylesheets and no network
+calls, so it works offline, behind a proxy, and years from now. It shows KPI cards, stage durations,
+Review and Automation distributions kept separate, execution results, the automation funnel, human
+decisions, Execution Safety outcomes, tool reliability, repair activity, and drill-down tables.
+
+It is a **presentation layer**: it renders `ObservabilityMetrics.json` and calculates nothing. Where
+the dashboard and the Markdown report could ever disagree, the JSON and the Markdown win.
+
+### Checking the telemetry is complete
+
+```bash
+node platform_core/tools/observability/cli.js validate --run <run-folder>
+```
+
+Exits `2` if the stream is under-instrumented, and says exactly why — an unclosed span, a corrupt
+line, or events belonging to a different run. A stage that opened and never closed is reported
+**Incomplete** and given no duration, so a partial run can never masquerade as a fast one.
+
+### Runs from before 2026-08-07
+
+They report **Not Instrumented**, and no telemetry is invented for them. What their artifacts still
+prove — Surefire test totals, execution cycle counts, recorded run timing — is available separately:
+
+```bash
+node platform_core/tools/observability/cli.js historical --run <run-folder>
+```
+
+That output is labelled *Historical Derived Metrics* and lists what it could not recover, so it is
+never mistaken for a run that was actually measured.
+
+### Comparing runs
+
+```bash
+node platform_core/tools/observability/cli.js compare --run A --run B
+```
+
+With fewer than two instrumented runs it says `Trend data unavailable — requires multiple
+instrumented runs` rather than drawing a trend through a single point.
+
+Canonical documentation:
+[`platform_core/tools/observability/README.md`](../platform_core/tools/observability/README.md).
 
 ---
 

@@ -112,9 +112,13 @@ Result is unexecutable, so that warning is never cosmetic.
      (a step, a value, the actual expected outcome) into Notes to keep Steps short: that is hiding
      required content, not simplifying. Omit the field entirely when there is nothing to add. -->
 
-**Review:** {{REVIEW}}
+**Review:** Pending
 <!-- LIFECYCLE COLUMN (added 2026-08-01, user-mandated). The HUMAN review status of this test case
      after Stage 3 (Test Design).
+
+     THE VALUE ABOVE IS LITERAL, NOT A PLACEHOLDER (made literal 2026-08-07). Stage 3 has exactly
+     one legal value to write here, so offering a substitution slot would imply a choice it does
+     not have. A human reviewer edits it afterwards — in the workbook, then `--import-lifecycle`.
 
      Allowed values: Pending | Approved | Rejected      Default: Pending
 
@@ -143,9 +147,9 @@ Result is unexecutable, so that warning is never cosmetic.
          means Objective / Preconditions / Test Data / Steps / Expected Result changed; a typo in
          Notes does not. Record the prior verdict and the rewrite in Notes, and report it. -->
 
-**Automation:** {{AUTOMATION}}
+**Automation:** Pending
 <!-- LIFECYCLE COLUMN (added 2026-08-01, user-mandated). Whether this approved case SHOULD be
-     automated.
+     automated. THE VALUE ABOVE IS LITERAL, NOT A PLACEHOLDER — same reason as `Review`.
 
      Allowed values: Pending | Approved | Rejected      Default: Pending
 
@@ -162,7 +166,13 @@ Result is unexecutable, so that warning is never cosmetic.
        - Stage `4M` (Manual Execution) NEVER reads this column. `Automation = Rejected` means the
          case must be exercised by hand — a reason to run it manually, not a reason to skip it.
        - This column SUPERSEDES the retired advisory `AutomationCandidate` tag. There is now one
-         authoritative automation decision per case, not a hint and a decision that can disagree. -->
+         authoritative automation decision per case, not a hint and a decision that can disagree.
+       - AN INCONSISTENT PAIR IS REPORTED, NEVER RECONCILED (§6.3.4, added 2026-08-07).
+         `Automation = Approved` with `Review != Approved` is a contradiction between two HUMAN
+         decisions. The exporter and `--import-lifecycle` both warn (`--check` exits 2); NEITHER
+         value is auto-corrected, because resetting Automation destroys one reviewer's intent and
+         promoting Review manufactures an approval nobody gave. The 4A gate already excludes the
+         case on its own, so resolving it is a Human Decision. -->
 
 <!-- FIELD ORDER IS THE WORKBOOK'S COLUMN ORDER. Review and Automation are LAST, deliberately: they
      record decisions made AFTER the case is written. Everything above them is unchanged — the

@@ -157,16 +157,47 @@ interpret free-form prose to extract what it needs.
 |---|---|---|
 | {{REC_ID}} | {{RECOMMENDATION}} | {{RATIONALE}} |
 
-## 11. Automation Candidates
+## 11. Review & Automation
 
-<!-- Test cases flagged as LIKELY well-suited to automation — an ADVISORY, PRIORITIZATION-ONLY hint,
-     consumed first by the Manual Execution skill (§9.2 there).
-     The binding Automation Decision (Reuse / Generate / Partially Automatable / Manual Only) remains
-     EXCLUSIVELY the Automation skill's authority (automation-skill §13) and is never pre-empted here. -->
+<!-- CANONICAL HEADING. `Review & Automation` is the umbrella whenever a section covers BOTH
+     lifecycle columns. Do NOT title it "Automation Candidates" (retired), "Automation Status"
+     (only Automation), or "Lifecycle Status" (implies one combined state). Where a section
+     genuinely covers only one field, `Review` or `Automation` may stand alone.
 
-| Test Case ID | Module | Why a Candidate (advisory) | Priority Hint |
+     A ROLL-UP of the two binding columns each test case carries (test-design-skill §6.3, §18 #11).
+     It is a COUNT OF DECISIONS ALREADY RECORDED ON THE CASES, never a separate recommendation —
+     the advisory "Automation Candidates" list this section replaced is RETIRED (§6.3.2), because an
+     advisory hint sitting beside a binding column can disagree with it.
+
+     The two decisions are INDEPENDENT and answer different questions:
+       Review     — has this test case been reviewed and accepted?
+       Automation — should this (accepted) test case be automated?
+     Eligibility is DERIVED from the pair, never stored as a third field:
+       Stage 4M — Review = Approved                            (Automation is NOT read)
+       Stage 4A — Review = Approved AND Automation = Approved
+     Both are HUMAN decisions; no skill may write anything but `Pending` (§6.3.1). The engineering
+     Automation Decision (Reuse / Generate / Partially Automatable / Not Automatable) for a case
+     already in scope remains EXCLUSIVELY the Automation skill's authority (automation-skill §13). -->
+
+| Column | Pending | Approved | Rejected |
 |---|---|---|---|
-| {{TEST_CASE_ID}} | {{MODULE}} | {{RATIONALE}} | {{PRIORITY_HINT}} |
+| **Review** | {{REVIEW_PENDING}} | {{REVIEW_APPROVED}} | {{REVIEW_REJECTED}} |
+| **Automation** | {{AUTO_PENDING}} | {{AUTO_APPROVED}} | {{AUTO_REJECTED}} |
+
+| Decision | Count | Test Case IDs |
+|---|---|---|
+| `Review = Approved` — **executable by Stage `4M`** | {{COUNT_MANUAL}} | {{IDS_MANUAL}} |
+| `Review = Rejected` — excluded, reason `Rejected at Review` | {{COUNT_REVIEW_REJECTED}} | {{IDS_REVIEW_REJECTED}} |
+| `Review = Pending` — excluded, reason `Pending Review` | {{COUNT_REVIEW_PENDING}} | {{IDS_REVIEW_PENDING}} |
+| `Review = Approved AND Automation = Approved` — **in scope for Stage `4A`** | {{COUNT_AUTO}} | {{IDS_AUTO}} |
+| `Review = Approved AND Automation = Rejected` — manual **by decision**, *not* a coverage gap | {{COUNT_MANUAL_ONLY}} | {{IDS_MANUAL_ONLY}} |
+
+<!-- Report inconsistent pairs here, or state that there are none. An inconsistency is
+     `Automation = Approved` with `Review != Approved` — two human decisions that disagree.
+     It is NEVER reconciled here: both values stand, the case is already excluded from Stage 4A by
+     the gate above, and resolution is a Human Decision (test-design-skill §6.3.4). -->
+
+**Inconsistent pairs:** {{NONE_OR_LIST}}
 
 ## 12. Inputs for Manual Execution skill
 

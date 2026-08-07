@@ -1,5 +1,5 @@
-> **Position:** A reusable workflow specification, layered on top of [`pipeline/pipeline.md`](../pipeline/pipeline.md), [`pipeline/run_manager.md`](../pipeline/run_manager.md), and [`pipeline/run_scope.md`](../pipeline/run_scope.md). It does not modify any of those documents, does not modify any Agent specification under [`.claude/skills/`](../../.claude/skills/), and does not change the platform's 7-stage architecture — it defines one specific, narrow-scoped *invocation* of Stages 5–7 (with Stage 6 called twice) against an already-existing regression test case for a reported bug.
-> **Status:** Specification only. This document defines the workflow; it has not been executed, and no run, agent, or project artifact has been produced as part of authoring it.
+> **Position:** A reusable workflow specification, layered on top of [`pipeline/pipeline.md`](../pipeline/pipeline.md), [`pipeline/run_manager.md`](../pipeline/run_manager.md), and [`pipeline/run_scope.md`](../pipeline/run_scope.md). It does not modify any of those documents, does not modify any Skill specification under [`.claude/skills/`](../../.claude/skills/), and does not change the platform's two-pipeline, eight-stage architecture — it defines one specific, narrow-scoped *invocation* of the Automation branch (Stage `5A`, called twice, around a conditional Stage `4A`, then Stage `6A`) against an already-existing regression test case for a reported bug.
+> **Status:** Current. This document defines the workflow; authoring it produced no run or project artifact.
 
 # 1. Workflow Name
 
@@ -11,7 +11,7 @@ This workflow reproduces a reported bug against the application's **current** st
 
 It is deliberately narrow: it assumes the bug is **already a known Finding with a dispositioned regression test case** (`.claude/skills/test-design-skill/SKILL.md` §5.3, "Regression test" disposition) sitting in an already-Approved Manual Test Suite — i.e., Stage 3 has already done the work of deciding this defect gets a test case and writing its Expected Result to reflect the *corrected*, not the buggy, behavior. This workflow's job is purely to run that test case now, react to what it finds, and close the loop.
 
-**This is distinct from the Automation Repair Loop** already defined in `.claude/skills/automation-execution-skill/SKILL.md` §25, which repairs a *broken automation script* (selector drift, stale reference) when the application itself is not at fault, and which triggers automatically within a single Automation Execution Agent invocation. This workflow instead covers the case where the **application's behavior itself** is what's being validated across time — before a fix (bug confirmed) and after one (regression confirmed) — which is why it spans two separate Automation Execution Agent invocations around one Automation Agent invocation, rather than one Automation Execution Agent invocation's own internal repair loop.
+**This is distinct from Self-Healing** (Stage `5H`, [`.claude/skills/self-healing-skill/SKILL.md`](../../.claude/skills/self-healing-skill/SKILL.md)), which repairs a *broken automation script* (selector drift, stale reference) when the application itself is not at fault. Stage `5H` is **optional and never automatic** — no failing execution triggers it and no orchestrator may chain into it; a human invokes it explicitly (`pipeline.md` §3.6). This workflow instead covers the case where the **application's behavior itself** is what's being validated across time — before a fix (bug confirmed) and after one (regression confirmed) — which is why it spans two separate Stage `5A` invocations around one conditional Stage `4A` invocation, rather than a repair pass over the existing script.
 
 # 3. Precondition (checked, never assumed)
 
@@ -19,9 +19,9 @@ This workflow requires, already `Approved`, from a prior run:
 
 - A Project Context covering the affected module.
 - A Manual Test Suite / Traceability Matrix / Coverage Report containing the regression test case tied to this bug's Finding (`.claude/skills/test-design-skill/SKILL.md` §5.3).
-- An Automation Package that has a Reuse/Generate decision recorded for that test case (it may be `Manual Only` or `Partially Automatable` from a prior run — see §4 Step 2 for what happens then). Since Stage 4A (Automation Agent) can only ever have generated that decision from a prior Stage 4 (Manual Execution Agent) Automation Candidate Package, this precondition implicitly assumes Stage 4 already ran for this test case in that prior pass — this workflow does not re-invoke it.
+- An Automation Package that has a Reuse/Generate decision recorded for that test case (it may be `Manual Only` or `Partially Automatable` from a prior run — see §4 Step 2 for what happens then). That decision was taken by Stage `4A` from the approved Stage 3 suite and its own live verification — **not** from any Manual Execution outcome, and not from an Automation Candidate Package, which is removed from the platform (`pipeline.md` §3.3 #4). This precondition therefore assumes only that Stage `4A` already ran for this test case in a prior pass; whether Stage `4M` ever ran is irrelevant here, and this workflow re-invokes neither.
 
-**If no such test case exists yet** (this is a genuinely new bug report with no prior Test Design pass), this workflow does not apply. Step 1's Stage-State Check will surface that gap and ask how to proceed — e.g., routing to a Bug-scoped Stage 3 invocation first — rather than this workflow silently fabricating a test case (Test Design Agent's own exclusive responsibility, never Automation, Manual Execution, or Automation Execution Agent's).
+**If no such test case exists yet** (this is a genuinely new bug report with no prior Test Design pass), this workflow does not apply. Step 1's Stage-State Check will surface that gap and ask how to proceed — e.g., routing to a Bug-scoped Stage 3 invocation first — rather than this workflow silently fabricating a test case (the Test Design Skill's own exclusive responsibility, never the Automation, Manual Execution, or Automation Execution Skill's).
 
 # 4. Execution Flow
 
@@ -34,7 +34,7 @@ This workflow requires, already `Approved`, from a prior run:
       └─ [if precondition satisfied] Launch Stage 5A (reproduction)
               │
               ▼
- 2. Automation Execution Agent — Reproduction   [= Pipeline Stage 5A, 1st invocation]
+ 2. Automation Execution Skill — Reproduction   [= Pipeline Stage 5A, 1st invocation]
       │  runs the EXISTING automation for this bug's regression test case
       │  (mechanical — gated by the ORIGINAL Automation Approval already granted)
               │
@@ -45,9 +45,9 @@ This workflow requires, already `Approved`, from a prior run:
       │      → confirms the bug; fix is a developer action,  │
       │        outside this workflow; STOP here and report   │
       │  • Automation Failure (script broken, app unaffected) │
-      │      → out of this workflow's scope — the standard   │
-      │        Automation Repair Loop (Automation Execution   │
-      │        Agent §25) already handles this within Step 2  │
+      │      → out of this workflow's scope. Stage 5A        │
+      │        classifies it and stops there; repairing it     │
+      │        is Stage 5H, which a human must invoke          │
       │  • Passed, but no automation existed yet               │
       │      (test case was Manual Only / Partially Automatable)│
       │      → proceed to Step 3                              │
@@ -55,14 +55,14 @@ This workflow requires, already `Approved`, from a prior run:
       │      → proceed directly to Step 5 (nothing to automate) │
       └───────┬───────────────────────────────────────────┘
               ▼
- 3. Automation Agent (conditional)    [= Pipeline Stage 4A]
+ 3. Automation Skill (conditional)    [= Pipeline Stage 4A]
       │  ⛔ Automation Approval Required ⛔
               │ (approved)
               ▼
- 4. Automation Execution Agent — Verification    [= Pipeline Stage 5A, 2nd invocation]
+ 4. Automation Execution Skill — Verification    [= Pipeline Stage 5A, 2nd invocation]
       │  (mechanical — gated by Step 3's fresh Automation Approval)
               ▼
- 5. Reporting Agent                   [= Pipeline Stage 6A]
+ 5. Reporting Skill                   [= Pipeline Stage 6A]
               │
               ▼
       Stop Workflow
@@ -78,7 +78,7 @@ Per the same mechanism as `workflows_and_pipelines/workflows/user_story_run.md` 
 4. **Check drift before trusting the existing automation.** This workflow repairs automation against the application's *current* state, so run `cli.js drift --run <prior-run>` (§5.8) for the run that produced the failing script. A `moved` result names the changed paths — which is precisely the evidence distinguishing "the automation is stale" (selector drift, an `Automation Failure`) from "the application regressed" (an `Application Failure`), the judgment this workflow exists to make.
 5. Then proceed to Step 2.
 
-## Step 2 — Automation Execution Agent, Reproduction *(Pipeline Stage 5A, 1st invocation)*
+## Step 2 — Automation Execution Skill, Reproduction *(Pipeline Stage 5A, 1st invocation)*
 
 **Spec:** `.claude/skills/automation-execution-skill/SKILL.md` — unmodified.
 
@@ -91,13 +91,13 @@ Per the same mechanism as `workflows_and_pipelines/workflows/user_story_run.md` 
 | **Contract keys produced** | `execution_results`, `execution_artifacts` |
 | **Checkpoint** | *None — mechanical, gated by the Automation Approval already granted when this package was first generated* |
 
-The result's classification determines the branch taken next — see the diagram in §4. An `Automation Failure` here is handled entirely by Automation Execution Agent's own Automation Repair Loop (`.claude/skills/automation-execution-skill/SKILL.md` §25) within this same step; it does not invoke this workflow's Step 3.
+The result's classification determines the branch taken next — see the diagram in §4. Stage `5A` **classifies and hands off, never repairs** (`.claude/skills/automation-execution-skill/SKILL.md` §25). An `Automation Failure` here is therefore not fixed inside this step and does not invoke this workflow's Step 3: repairing it is Stage `5H`'s exclusive responsibility, and Stage `5H` runs only if a human explicitly invokes it (`pipeline.md` §3.6).
 
-## Step 3 — Automation Agent, Conditional *(Pipeline Stage 4A)*
+## Step 3 — Automation Skill, Conditional *(Pipeline Stage 4A)*
 
 **Spec:** `.claude/skills/automation-skill/SKILL.md` — unmodified.
 
-Invoked **only** when Step 2 shows the application now passing but the regression test case was not previously fully automated (its recorded decision was `Manual Only` or `Partially Automatable`). If the test case already had full automation and Step 2 already confirms the fix, this step is skipped and the workflow proceeds directly to Step 5 — there is nothing for Automation Agent to generate.
+Invoked **only** when Step 2 shows the application now passing but the regression test case was not previously fully automated (its recorded decision was `Manual Only` or `Partially Automatable`). If the test case already had full automation and Step 2 already confirms the fix, this step is skipped and the workflow proceeds directly to Step 5 — there is nothing for the Automation Skill to generate.
 
 | | |
 |---|---|
@@ -109,7 +109,7 @@ Invoked **only** when Step 2 shows the application now passing but the regressio
 
 Per `.claude/skills/automation-skill/SKILL.md`'s own rules: this step never modifies the Manual Test Case itself (its Expected Result was already written by Stage 3 to reflect the corrected behavior) and never invents business logic — it only generates the automation code the test case's Expected Result already specifies.
 
-## Step 4 — Automation Execution Agent, Verification *(Pipeline Stage 5A, 2nd invocation)*
+## Step 4 — Automation Execution Skill, Verification *(Pipeline Stage 5A, 2nd invocation)*
 
 **Spec:** `.claude/skills/automation-execution-skill/SKILL.md` — unmodified.
 
@@ -124,7 +124,7 @@ Per `.claude/skills/automation-skill/SKILL.md`'s own rules: this step never modi
 
 This step is skipped only in the branch where Step 3 itself was skipped (automation already existed and Step 2 already confirmed the fix) — in that case Step 2's own Execution Results are what Step 5 reports against; no redundant re-run is performed.
 
-## Step 5 — Reporting Agent *(Pipeline Stage 6A)*
+## Step 5 — Reporting Skill *(Pipeline Stage 6A — terminal)*
 
 **Spec:** `.claude/skills/reporting-skill/SKILL.md` — unmodified.
 
@@ -140,10 +140,10 @@ This step is skipped only in the branch where Step 3 itself was skipped (automat
 
 | Artifact | Path | Produced By |
 |---|---|---|
-| Execution Results (reproduction) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 2) |
-| Updated Automation Package (if Step 3 ran) | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` | Automation Agent |
-| Execution Results (verification, if Step 4 ran) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Agent (Step 4) |
-| Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | Reporting Agent |
+| Execution Results (reproduction) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Skill (Step 2) |
+| Updated Automation Package (if Step 3 ran) | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` | Automation Skill |
+| Execution Results (verification, if Step 4 ran) | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults_{Execution ID}.md` | Automation Execution Skill (Step 4) |
+| Final QA Report | `platform_core_data/runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` | Reporting Skill |
 | Run Summary | `platform_core_data/runs/{{RUN_FOLDER}}/metadata/run_summary.md` | Run Manager |
 
 `{{RUN_FOLDER}}` resolves to this run's own folder name, per `workflows_and_pipelines/pipeline/run_manager.md` §5.1 (e.g. `run-012__2026-07-27_13-05-44__Targeted__BUG-118_SeatMapCrash`) — see `platform_core_data/knowledge_base/onboarding.md`.
@@ -165,13 +165,13 @@ This step is skipped only in the branch where Step 3 itself was skipped (automat
 
 1. **This workflow never re-runs Stages 1–3.** It consumes their existing Approved outputs unchanged; if any is missing, Step 1 stops and asks (§3).
 2. **The Stage-State Check (§4 Step 1) always runs first**, per the same rule as `workflows_and_pipelines/workflows/user_story_run.md` §9 Rule 2.
-3. **Step 3 (Automation Agent) is conditional, not automatic** — it runs only when Step 2's result requires new or extended automation; it is never invoked merely because this workflow was started.
-4. **This workflow never substitutes for the Automation Repair Loop** (`.claude/skills/automation-execution-skill/SKILL.md` §25) — a broken-script `Automation Failure` is handled inside Automation Execution Agent's own invocation, not by this workflow's Step 3.
+3. **Step 3 (Automation Skill) is conditional, not automatic** — it runs only when Step 2's result requires new or extended automation; it is never invoked merely because this workflow was started.
+4. **This workflow never substitutes for Self-Healing** (Stage `5H`, `.claude/skills/self-healing-skill/SKILL.md`) — a broken-script `Automation Failure` is repaired only by Stage `5H`, on explicit human invocation, never by this workflow's Step 3 and never automatically inside Stage `5A`.
 5. **All applicable checkpoints still apply in full** — Automation Approval before Step 4, whenever Step 3 runs.
 
 # 9. Relationship to the Platform Architecture
 
-This workflow does not introduce a new pipeline, stage, or skill. It is a **reusable, scoped invocation** of Stage `4A` (conditionally) and Stage `5A` (twice, around Stage 5) plus the terminal Stage 7, conditioned on Stages 1–4 already being satisfied for this specific bug. A full pipeline run, or `workflows_and_pipelines/workflows/user_story_run.md`, remain the paths for a genuinely new requirement; Bug Fix Run exists alongside them for validating a defect already captured as a Finding with a designed regression test case.
+This workflow does not introduce a new pipeline, stage, or skill. It is a **reusable, scoped invocation** of the Automation branch — Stage `5A` (twice, around a conditional Stage `4A`) plus the terminal Stage `6A` — conditioned on Stages 1–3 and a prior Stage `4A` pass already being satisfied for this specific bug. A full pipeline run, or `workflows_and_pipelines/workflows/user_story_run.md`, remain the paths for a genuinely new requirement; Bug Fix Run exists alongside them for validating a defect already captured as a Finding with a designed regression test case.
 
 # 10. Example
 

@@ -212,10 +212,54 @@ How this tool treats them (`test-design-skill` §6.3 is the governing spec):
   decision the lifecycle does not define; silently rewriting it to `Pending` would erase their
   intent, and dropping it would hide the error.
 - **Casing is normalised** — `approved` and `Approved` are the same decision.
+- **A contradictory *pair* warns, and neither value is touched** *(added 2026-08-07)*. See below.
 
 This tool only reads and renders these values. **It never sets or advances them**, and neither does
 any skill: only a human reviewer may move `Review` off `Pending` (§6.3.1). Stage `4A` consumes a case
 only when `Review = Approved AND Automation = Approved`.
+
+#### The two decisions are independent, and eligibility is derived
+
+`Review` answers *"has this test case been reviewed and accepted?"*. `Automation` answers *"should
+this accepted case be automated?"*. They are never merged into one status, and **no third field
+stores the consequence** — it is computed, every time, from the pair:
+
+| `Review` | `Automation` | Stage `4M` manual | Stage `4A` automation |
+|---|---|---|---|
+| `Pending` | `Pending` | ✗ | ✗ |
+| `Pending` | `Approved` | ✗ | ✗ **inconsistent** |
+| `Pending` | `Rejected` | ✗ | ✗ |
+| `Approved` | `Pending` | ✓ | ✗ |
+| `Approved` | `Approved` | ✓ | ✓ |
+| `Approved` | `Rejected` | ✓ | ✗ *(manual by decision)* |
+| `Rejected` | `Pending` | ✗ | ✗ |
+| `Rejected` | `Approved` | ✗ | ✗ **inconsistent** |
+| `Rejected` | `Rejected` | ✗ | ✗ |
+
+Three exported helpers implement exactly this, so no consumer re-derives the rule:
+
+```js
+const { isManualEligible, isAutomationEligible, lifecycleInconsistency } =
+  require('./platform_core/tools/test_suite_export/parseTestCases');
+```
+
+Note the two rows that matter most: `Approved` / `Rejected` is a **legitimate, common state** — an
+accepted case that stays manual on purpose, never an automation coverage gap — and `Automation`
+never affects manual eligibility in any row.
+
+#### Inconsistent pairs
+
+`Automation = Approved` with `Review ≠ Approved` is contradictory: one human said "automate this",
+another said the case is not accepted. Both paths report it and **neither reconciles it**:
+
+- `parseTestCases` emits an `INCONSISTENT lifecycle` warning, so `--check` exits `2`.
+- `--import-lifecycle` emits the same warning on the *resulting* pair — including when the
+  contradiction is formed by combining a workbook value with one already in the Markdown.
+
+The reviewer's values are written exactly as recorded. Auto-resetting `Automation` would destroy one
+reviewer's intent; auto-promoting `Review` would manufacture an approval nobody gave. The gate above
+already keeps the case out of Stage `4A` on its own, so reporting is sufficient — resolving it is a
+Human Decision (`test-design-skill` §6.3.4).
 
 **Steps** are joined into one cell with ` | ` and **renumbered canonically** (`1. … | 2. …`). The
 numbering is not decoration: Stage 4M records a result per step and a defect cites "failed at step 3",

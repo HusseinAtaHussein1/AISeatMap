@@ -59,6 +59,13 @@ platform_core_data/
     PRD.md                          # Product Requirements Document — Stage 1 INPUT, never generated
     PRD_UserStories.md              # user-story breakdown accompanying the PRD
     run_configuration.md            # modules in scope, target URL, environment notes
+    # Execution Safety — what may actually execute here (pipeline.md §14, added 2026-08-07)
+    execution_safety_policy.json    # THE policy: action x ownership x environment -> Allowed /
+                                    #   Approval Required / Forbidden. Machine-readable, schema-validated,
+                                    #   authoritative for evaluation. Evaluated by
+                                    #   platform_core/tools/execution_safety/, which holds no rule itself
+    execution_safety_policy.md      # the same policy for a human reviewer, with the provenance of every
+                                    #   rule — migrated evidence / human decision / conservative default
     # Project reference — human-authored
     architecture.md                 # architecture of the application under test (not the platform)
     glossary.md                     # domain/product terminology
@@ -116,6 +123,13 @@ platform_core_data/
       metadata/                       # run.json (+ targetRef §5.8, + modules[]/moduleScope/
                                       #   moduleArtifactRefs[]) + run_summary.md + RunManifest.md
                                       #   + lineage.json on a refinement run (§5.9) — always created
+        SafetyPreflight.md            #   mutation footprint, written BEFORE executing (pipeline.md §14)
+        SafetyAuthorizations.json/.md #   run-scoped human approvals — never carried to another run
+        observability/                #   run telemetry (pipeline.md §15) — created on the first event.
+                                      #   Events.jsonl is evidence (append-only); Metrics.json,
+                                      #   Report.md and Dashboard.html are derived and regenerable.
+                                      #   Absent on any run created before 2026-08-07 — those report
+                                      #   Not Instrumented, and no event is fabricated for them
       manual_execution/               # Stage 4M — created only when it writes
       execution/                      # Stage 5A — results + evidence, plus any 5H rerun cycle
                                       #   (ExecutionResults.rerun-N.md, artifacts_rerun-N/)

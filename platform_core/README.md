@@ -53,10 +53,18 @@ platform_core/
     │   ├── driver.js          # resolves project paths, loads profile + credentials, launches, logs in
     │   ├── api.js             # BrowserDriver — the only surface Skills/scripts use
     │   └── README.md
+    ├── execution_safety/     # "may this action execute here, now?" — deterministic policy evaluator
+    │                         #   Allowed / Approval Required / Forbidden, plus the run preflight and
+    │                         #   run-scoped authorizations. Holds NO project rule: the policy itself
+    │                         #   lives in platform_core_data/knowledge_base/execution_safety_policy.json
     ├── init/                 # `agentic-testing init/upgrade/uninstall` — plan-then-apply installer
     ├── mcp/                  # MCP servers layer — registration + usage contract (no server code)
     │   ├── stack_docs/        # stack + pinned-dependency extractor; plans the Context7 lookups
     │   └── README.md          # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
+    ├── observability/        # "what happened during this run, and how efficiently?" — append-only
+    │                         #   events, a pure deterministic aggregator, and the Markdown report +
+    │                         #   self-contained HTML dashboard rendered from them. Decides nothing.
+    │                         #   Telemetry lives per run, in runs/{RUN}/metadata/observability/
     ├── module_manager/       # module identity — slug generation (the only place a module name is
     │                         #   formatted), the registry, the Active Module pointer, per-module
     │                         #   stage/automation state, per-module drift, the module README
@@ -101,7 +109,7 @@ platform_core/tools/      ◀── resolves platform_core_data/ at runtime
 - **Never** write a project-specific fact, business rule, or credential here — no exception for something that "seems like it'll apply everywhere."
 - **Never** add a reusable-knowledge document here; it belongs in `platform_core_data/knowledge_base/patterns/`, arriving only via the Promotion Workflow (`pipeline.md` §10.5).
 - **Only** `tools/browser_driver/` may contain the shared automation engine's code; project-specific profiles, screens, components, and credentials live under `platform_core_data/knowledge_base/browser/` and `platform_core_data/knowledge_base/credentials/` instead.
-- **Must not** duplicate a Skill's own fixed Capability logic as tooling (e.g. the Confidence Engine's base scoring rubric stays in `automation-execution-skill/SKILL.md` §27.2).
+- **Must not** duplicate a Skill's own fixed Capability logic as tooling (e.g. the Repair Confidence Engine's base scoring rubric stays in `self-healing-skill/SKILL.md` §9).
 
 ## Typical Flow
 

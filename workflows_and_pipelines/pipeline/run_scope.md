@@ -1,5 +1,5 @@
-> **Position:** Outside the 7-stage Agent pipeline defined in [`workflows_and_pipelines/pipeline/pipeline.md`](pipeline.md) and [`.claude/skills/`](../../.claude/skills/). Run Scope is a **configuration concept, not an Agent and not a pipeline stage** — it does not add a stage to `workflows_and_pipelines/pipeline/pipeline.md`'s Pipeline Overview, and this document does not alter that stage order, that count (still seven), or any agent's Inputs/Allowed-Tools/Execution-Rules tables.
-> **Relationship to existing concepts:** `.claude/skills/project-context-skill/SKILL.md` §4 already lists "Run configuration" as a required input to Stage 1, described there as "modules in scope for this run, target environment URL, credentials/roles available, environment safety constraints." Run Scope is the formal name and structure for the *scope* portion of that existing input — it does not add a new input the Project Context Agent didn't already declare, and it does not change that agent's Purpose, Responsibilities, Execution Rules, or Expected Artifacts. This document also does not alter `workflows_and_pipelines/pipeline/pipeline.md` §8's traceability chain; §6 below presents an extended, more granular view of the same Stage 1→3 handoff that document already describes, for use alongside it.
+> **Position:** Outside the eight-stage, two-pipeline Skill architecture defined in [`workflows_and_pipelines/pipeline/pipeline.md`](pipeline.md) and [`.claude/skills/`](../../.claude/skills/). Run Scope is a **configuration concept, not a Skill and not a pipeline stage** — it does not add a stage to `workflows_and_pipelines/pipeline/pipeline.md`'s Pipeline Overview, and this document does not alter that stage order, that count (still eight, across two branches), or any Skill's Inputs/Allowed-Tools/Execution-Rules tables.
+> **Relationship to existing concepts:** `.claude/skills/project-context-skill/SKILL.md` §4 already lists "Run configuration" as a required input to Stage 1, described there as "modules in scope for this run, target environment URL, credentials/roles available, environment safety constraints." Run Scope is the formal name and structure for the *scope* portion of that existing input — it does not add a new input the Project Context Skill didn't already declare, and it does not change that Skill's Purpose, Responsibilities, Execution Rules, or Expected Artifacts. This document also does not alter `workflows_and_pipelines/pipeline/pipeline.md` §8's traceability chain; §6 below presents an extended, more granular view of the same Stage 1→3 handoff that document already describes, for use alongside it.
 > **Scope of this revision:** This document defines the Run Scope concept only. No existing agent file, `workflows_and_pipelines/pipeline/pipeline.md`, or any project artifact has been modified or generated as part of authoring it.
 > **Revision note (2026-07-29, user-mandated):** Run Scope gains the concrete referent it previously lacked. "What subset of the product does this run cover?" now resolves to a **set of modules** — an explicit, inspectable list in `platform_core_data/modules/modules.json`, not a prose narrowing worked out per run ([`module_architecture.md`](module_architecture.md) §9.1). §3 gains a Module Scope column, §7 gains the registry as a recording location, and §8's chain gains the module layer. **No Type is added or removed, no Source changes, and Run Type still composes independently.**
 
@@ -9,7 +9,7 @@
 
 # 2. Purpose
 
-Run Scope defines **exactly what a given pipeline run is allowed to validate** — the boundary the Project Context Agent narrows the approved Project Knowledge down to when producing that run's Project Context.
+Run Scope defines **exactly what a given pipeline run is allowed to validate** — the boundary the Project Context Skill narrows the approved Project Knowledge down to when producing that run's Project Context.
 
 Without a named Run Scope concept, "what does this run cover" is answered ad hoc, differently, every time (as it once was in each Project Context's free-text "Scope Summary" section, worked out in prose per run). Run Scope exists so that the platform can support running against something narrower than "the entire project" — a single Epic, Feature, User Story, Bug, or an ad hoc requirement document — **without changing the pipeline, without adding an agent, and without changing how many stages exist.** The pipeline already treats "what's in scope" as data it consumes (via the Project Context); Run Scope gives that data a name, a fixed set of Types, and a documented set of Sources.
 
@@ -48,14 +48,14 @@ The third column is a **typical** mapping, not a rule. A Bug that turns out to s
 
 # 4. Run Scope Sources
 
-A Run Scope Source is **how the content of a given Type is actually delivered** to the Project Context Agent. Sources and Types are independent axes — e.g., a **User Story** Type can be sourced from pasted text today, or from an Azure DevOps User Story ID once that integration exists.
+A Run Scope Source is **how the content of a given Type is actually delivered** to the Project Context Skill. Sources and Types are independent axes — e.g., a **User Story** Type can be sourced from pasted text today, or from an Azure DevOps User Story ID once that integration exists.
 
 ## 4.1 Available now
 
 | Source | How it works | Typical Types it feeds |
 |---|---|---|
-| **Entire Project** | No specific item supplied; the Project Context Agent scopes to the full approved Project Knowledge. | Entire Project |
-| **Pasted text** | The Epic/Feature/Story/Bug description is pasted directly into the run configuration or the prompt given to the Project Context Agent. | Epic, Feature, User Story, Bug, Custom Scope |
+| **Entire Project** | No specific item supplied; the Project Context Skill scopes to the full approved Project Knowledge. | Entire Project |
+| **Pasted text** | The Epic/Feature/Story/Bug description is pasted directly into the run configuration or the prompt given to the Project Context Skill. | Epic, Feature, User Story, Bug, Custom Scope |
 | **Markdown file** | A `.md` file — e.g. under `platform_core_data/knowledge_base/requirements/` (in the Type-specific subfolder: `epics/`, `features/`, `user_stories/`, `bugs/`, `specifications/` — see that folder's own README) or `resources/notes/` — is referenced as the scope definition. The file's own `Source:` metadata line (not its folder) records that its Source was Markdown file — see §4.3 below. | Feature, User Story, Bug, Requirement Document, Custom Scope |
 | **Uploaded document** | A non-Markdown file (Word, PDF, etc.) is supplied out of band and referenced by path or attachment. | Requirement Document, Feature, Epic |
 | **Requirement document reference** | A pointer to an existing document already in the project's knowledge (e.g., a specific section of the PRD, or a file under `resources/requirements/specifications/`), rather than a newly pasted/uploaded one. | Requirement Document |
@@ -108,9 +108,9 @@ Project Context (per module)  =  Project Knowledge  +  Run Scope
 
 - **Project Knowledge** (`platform_core_data/knowledge_base/`) supplies the durable facts: what the application is, its architecture, its glossary, its available credentials/environments, and — via `run_configuration.md` — which Run Scope Sources are set up for this project at all.
 - **Run Scope** (this document) supplies the narrowing: *which* Epic/Feature/Story/Bug/Requirement Document/Custom Scope, or the Entire Project, this particular run is validating — resolved to a set of modules (§2).
-- **Project Context** (`platform_core_data/modules/{module}/context/`) is what the Project Context Agent produces by applying a specific Run Scope to the standing Project Knowledge — **one file per module in scope**. Its "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `.claude/skills/project-context-skill/SKILL.md` §8) are precisely where a resolved Run Scope materializes.
+- **Project Context** (`platform_core_data/modules/{module}/context/`) is what the Project Context Skill produces by applying a specific Run Scope to the standing Project Knowledge — **one file per module in scope**. Its "Scope Summary," "Modules In Scope," and "Modules Out of Scope" sections (per `.claude/skills/project-context-skill/SKILL.md` §8) are precisely where a resolved Run Scope materializes.
 
-This reframing does not change the Project Context Agent's Inputs table (§4 of its spec already names "Run configuration" as required) — it clarifies that the scope portion of that input is a structured Run Scope (Type + Source) rather than free text, that it resolves to a module set, and that Project Knowledge is the other half of what the agent reconciles.
+This reframing does not change the Project Context Skill's Inputs table (§4 of its spec already names "Run configuration" as required) — it clarifies that the scope portion of that input is a structured Run Scope (Type + Source) rather than free text, that it resolves to a module set, and that Project Knowledge is the other half of what the Skill reconciles.
 
 **The approved Project Context remains the operational source of truth** — per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 5, every downstream stage reads only the approved Project Context, never the PRD or Project Knowledge directly.
 
@@ -130,7 +130,7 @@ This reframing does not change the Project Context Agent's Inputs table (§4 of 
 
 # 8. Extended Traceability Model
 
-`workflows_and_pipelines/pipeline/pipeline.md` §8 already defines the traceability chain from PRD through to the Final QA Report. With Run Scope named explicitly, and Discovery's Findings shown as their own link (already an Explorer Agent output — see `.claude/skills/explorer-skill/SKILL.md` §5.11 and `workflows_and_pipelines/pipeline/run_manager.md` §6's `findings/` workspace folder, just not previously drawn as a distinct node in the pipeline-level diagram), the fuller chain reads:
+`workflows_and_pipelines/pipeline/pipeline.md` §8 already defines the traceability chain from PRD through to the Final QA Report. With Run Scope named explicitly, and Discovery's Findings shown as their own link (already an Explorer Skill output — see `.claude/skills/explorer-skill/SKILL.md` §5.11 and `workflows_and_pipelines/pipeline/run_manager.md` §6's `findings/` workspace folder, just not previously drawn as a distinct node in the pipeline-level diagram), the fuller chain reads:
 
 ```
 Project (Project Knowledge + PRD)
@@ -150,7 +150,7 @@ Project (Project Knowledge + PRD)
 
 **Run Scope sits between the decomposition and the context, and that ordering is load-bearing.** The module list is derived from the PRD once and approved once; a Run Scope then *selects* from it. A scope that names a module the registry does not hold is an error to report, never a prompt to create one (`module_architecture.md` §6.5).
 
-This is a more granular *view* of the same chain `workflows_and_pipelines/pipeline/pipeline.md` §8 already documents — it does not replace that section, add an artifact type that doesn't already exist, or change any stage's Input/Output contract. "Project" here stands in for the PRD + Project Knowledge that already feeds Stage 1; "Run Scope" is the narrowing step described in §6 above; "Findings" names the Explorer Agent's existing per-observation evidence packages explicitly rather than leaving them implicit inside "Discovery Artifacts."
+This is a more granular *view* of the same chain `workflows_and_pipelines/pipeline/pipeline.md` §8 already documents — it does not replace that section, add an artifact type that doesn't already exist, or change any stage's Input/Output contract. "Project" here stands in for the PRD + Project Knowledge that already feeds Stage 1; "Run Scope" is the narrowing step described in §6 above; "Findings" names the Explorer Skill's existing per-observation evidence packages explicitly rather than leaving them implicit inside "Discovery Artifacts."
 
 Note that Manual Execution and Automation are **siblings, not sequential** — the two branches are fully isolated after Test Design, and neither consumes the other's output (`pipeline.md` §3.3). An earlier version of this diagram chained them through an Automation Candidate Package; that artifact was removed from the platform along with the coupling it existed to carry.
 
@@ -165,17 +165,18 @@ The following are **documented as future integration targets only** — none are
 | **Xray** | Test management traceability sync — would let Manual Test Cases / Execution Results generated by this pipeline be reflected back into Xray against the originating Jira issue. |
 | **TestRail** | Test management traceability sync — would let Manual Test Cases / Execution Results be reflected back into TestRail. |
 
-Adding any of these integrations in the future is expected to extend §4.2 (new Sources) and this section, without requiring a new pipeline stage, a new agent, or a change to the seven existing agents' Inputs/Outputs — a resolved Run Scope, regardless of where it came from, is still just data flowing into the same Stage 1 input the Project Context Agent already declares.
+Adding any of these integrations in the future is expected to extend §4.2 (new Sources) and this section, without requiring a new pipeline stage, a new Skill, or a change to the eight existing Skills' Inputs/Outputs — a resolved Run Scope, regardless of where it came from, is still just data flowing into the same Stage 1 input the Project Context Skill already declares.
 
 # 10. Non-Goals
 
 To keep this concept's boundary unambiguous, Run Scope explicitly does **not**:
 
 - Add a pipeline stage. The two pipelines' stage sets are unchanged, per `workflows_and_pipelines/pipeline/pipeline.md` §3.
-- Add a new agent. Resolving a Run Scope into a Project Context remains the Project Context Agent's job, per its existing spec.
+- Add a new Skill. Resolving a Run Scope into a Project Context remains the Project Context Skill's job, per its existing spec.
 - Change any agent's Inputs, Allowed Tools, Execution Rules, or Expected Artifacts tables.
 - Implement Azure DevOps, Jira, Xray, or TestRail connectivity — §9 is documentation of future intent only.
 - Change how an already-approved Project Context is treated — `workflows_and_pipelines/pipeline/pipeline.md` §7's artifact rules (one file per artifact, edited in place; approval flips `status:` and is recorded in the Run Manifest) apply unchanged.
+- **Authorize anything** *(added 2026-08-07)*. Run Scope says which requirements and modules a run covers. It never says which **actions** that run may perform against them — that is Execution Safety (`pipeline.md` §14), decided per action against the environment's policy. A module being *in scope* is not permission to mutate its records: scope defines the subject, authorization defines the verb, and a run can legitimately have a module fully in scope while every mutating operation on it resolves `Approval Required` or `Forbidden`.
 
 # 11. Example
 
@@ -191,6 +192,6 @@ Run Scope:
                agencies."
 ```
 
-Hypothetical result: the Project Context Agent reconciles this Run Scope against the standing Project Knowledge (`platform_core_data/`) and the existing approved PRD, producing that run's own `ProjectContext.md` scoped narrowly to the Agency list's Status filter behavior — rather than the broader Agency create/search/update scope of a prior run's Project Context. No such run has actually occurred; this is shown only to make the Type/Source/Content shape concrete.
+Hypothetical result: the Project Context Skill reconciles this Run Scope against the standing Project Knowledge (`platform_core_data/`) and the existing approved PRD, producing that run's own `ProjectContext.md` scoped narrowly to the Agency list's Status filter behavior — rather than the broader Agency create/search/update scope of a prior run's Project Context. No such run has actually occurred; this is shown only to make the Type/Source/Content shape concrete.
 
 Note that no `Project:` line appears above: the platform hosts one project at a time (`pipeline.md` §1), so a run identifies its scope, never which project it belongs to.

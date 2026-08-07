@@ -83,7 +83,11 @@ This is realized coverage. The Automation Plan §9's figure was an estimate; §4
 
 ## 7. Coverage Against the Manual Suite
 
-<!-- The wider view: designed cases → manually executed → automation candidates → automated. Each
+<!-- The wider view: designed cases → Review = Approved → Automation = Approved → automated. Each
+     step narrows by a HUMAN decision recorded on the case (test-design-skill §6.3), not by a manual
+     execution outcome — the Manual branch never feeds this one (pipeline.md §3.3). A case at
+     `Automation = Rejected` is a deliberate manual-only decision and is NOT an automation coverage
+     gap; report it separately from cases that could not be automated for technical reasons. Each
      narrowing is a place cases legitimately drop out, and each drop-out count is named so the funnel
      is auditable end to end. -->
 

@@ -14,8 +14,11 @@ execution outcome. Live selector verification (§11A) is what most often drives 
 from Generate New Automation: an unreachable screen or an unlocatable control becomes Partially
 Automatable / Manual Only WITH THE ELEMENT NAMED — never an emitted script built on a guess.
 
-This stage holds the BINDING automation decision. Test Design's advisory Automation Candidates hint
-never pre-empts it.
+This stage holds the BINDING per-case automation ENGINEERING decision (Reuse / Generate /
+Partially Automatable / Not Automatable) for cases ALREADY IN SCOPE. Scope itself is set by the
+two human lifecycle decisions on the test case — `Review = Approved AND Automation = Approved`
+(test-design-skill §6.3.2) — which this stage reads and never overrides. Test Design's advisory
+Automation Candidates hint is RETIRED and no longer exists, so nothing pre-empts this decision.
 -->
 
 # Automation Decision Report — {{FRAMEWORK}} — {{RUN_FOLDER}}

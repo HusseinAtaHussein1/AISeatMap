@@ -22,7 +22,34 @@ their own text. That coupled three unrelated questions together:
 | *Library call or CLI invocation?* | the provider, internally |
 
 Separating them means a new engine is a new provider file plus one config value — never an edit to
-any of the seven Skills.
+any of the eight Skills.
+
+## 1.1 A provider is an actuator, never an authorizer
+
+*(Added 2026-08-07 — `pipeline.md` §14.7.)*
+
+There is a fourth question, and it belongs to none of the three above:
+
+| Question | Whose decision |
+|---|---|
+| *Is this action authorized to execute here, now?* | **the Execution Safety policy** — never a provider |
+
+```text
+Execution Skill → Execution Safety → authorized operation → Browser Provider
+```
+
+**No business authorization rule may live in a provider, in `browser_driver/`, or in
+`platform.config.json`.** A provider that knew "don't click Delete on staging" would be a second,
+invisible policy competing with the real one — reachable only through this interface, invisible to
+`doctor`, untested against the decision matrix, and silently bypassed the moment a stage used a
+different provider or a framework's own runner.
+
+By the time a call reaches this interface, the decision has already been made. A provider's job is to
+click the thing it was asked to click.
+
+Technical interception inside a provider (refusing a known-destructive selector, say) is legitimate
+only as **defence in depth** — never as the control itself, and never as a reason to skip evaluation
+upstream.
 
 ## 2. Provider registration
 

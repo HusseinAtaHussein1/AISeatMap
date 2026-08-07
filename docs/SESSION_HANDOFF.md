@@ -2,7 +2,20 @@
 
 _Last updated: 2026-07-05_
 
-This document is the continuity anchor for the Agentic AI Testing Platform project. Read this file first in any new session, before reading chat history (which may not be available).
+> ## ⚠️ Historical snapshot — not current architecture
+>
+> This is a dated session record from **2026-07-05**, describing the platform as it stood then: a
+> **6-agent, single-chain** pipeline under `agents/`. That architecture no longer exists. The platform
+> now has **eight Skills across two pipelines** that share Stages 1–3 and then diverge into a Manual
+> branch (`4M`, terminal) and an Automation branch (`4A` → `5A` → optional `5H` → `6A`).
+> Stage numbers, agent names, and file paths below are **preserved as written** and must not be used
+> as current guidance.
+>
+> For anything current, read [`../README.md`](../README.md),
+> [`../workflows_and_pipelines/pipeline/pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md),
+> or [`USER_GUIDE.md`](USER_GUIDE.md).
+
+This document was the continuity anchor for the Agentic AI Testing Platform project at the time it was written.
 
 ---
 

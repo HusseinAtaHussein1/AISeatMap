@@ -742,7 +742,64 @@ Next step — either:
   3. Explore further first:    /explorer-skill <additional areas>
 ```
 
-# 25. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+# 25. Observability — what this stage emits
+
+**This stage emits facts. It does not compute metrics.** Durations, counts and ratios are derived by
+`platform_core/tools/observability` from the events below; no formula belongs in this specification
+(`pipeline.md` §15).
+
+Every event this stage records carries `--source skill`, which is a claim about reliability, not a
+label: a Skill event is emitted because this document says to, so its presence is trustworthy and
+**its absence proves nothing**. Platform tools emit their own `platform-tool` events from code, and
+the two are never counted as one class. Recording honestly matters more than recording flatteringly —
+a missing `STAGE_COMPLETED` makes the run `Partially Instrumented`, which is the correct outcome.
+
+```bash
+node platform_core/tools/observability/cli.js record --source skill --type <TYPE> [flags]
+```
+
+## Always
+
+| When | Event |
+|---|---|
+| This stage starts | `STAGE_STARTED --stage 2` → keep the returned `spanId` |
+| This skill starts | `SKILL_STARTED --stage 2 --skill explorer-skill` |
+| This skill finishes | `SKILL_COMPLETED --span-id <id>` |
+| This stage finishes | `STAGE_COMPLETED --stage 2 --span-id <id>` |
+| A Human Decision is raised (`pipeline.md` §5.5) | `HUMAN_DECISION_REQUESTED --decision-id <id> --category <Requirement\|Architecture\|Safety\|Review\|Automation\|Execution\|Other>` |
+| That decision is answered | `HUMAN_DECISION_RESOLVED --decision-id <id> --status <answer>` |
+| An artifact is first written | `ARTIFACT_CREATED --artifact <path> --artifact-class <class>` |
+| An existing artifact is revised | `ARTIFACT_UPDATED --artifact <path> --artifact-class <class>` |
+
+**Close every span you open.** An unclosed span is reported `Incomplete` and receives no duration —
+never an elapsed-time estimate. **Declare the decision category explicitly**; it is never inferred
+from the text of the question.
+
+## Specific to this stage
+
+| When | Event |
+|---|---|
+| A Finding is created | `ARTIFACT_CREATED --artifact discovery/findings/<ID>.md --artifact-class discovery` |
+| A browser or platform tool fails | the tool emits its own `TOOL_FAILED`; do not emit one on its behalf |
+
+**`Timeline.md` is unchanged and is not replaced by telemetry.** It is the QA narrative — the
+human-readable reconstruction of what was explored and what was observed — and it stays exactly as
+§6 defines it. Telemetry answers a different question (how long, how many, what failed) and the two
+are complementary. Do not stop writing the Timeline because events exist, and do not copy Timeline
+prose into event metadata.
+
+## Never emitted by this stage
+
+- **Token counts or cost.** No event type exists for them. No supported run-attributable provider
+  usage source exists, and nothing is estimated from text length or hardcoded pricing (HD-OBS-002).
+- **A metric, ratio, or score.** This stage records what happened; the aggregator does the arithmetic.
+- **A secret.** No password, token, API key, session ID, cookie, authorization header, or card detail
+  reaches `--metadata`. Credential *identities* and roles are acceptable where genuinely needed.
+- **Every low-level browser interaction.** Emitting an event per click or per DOM read is telemetry noise with no analytical value, and it slows the stage it is observing (§56).
+
+---
+
+# 26. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
 
 ## The module: `{{MODULE_SLUG}}`
 

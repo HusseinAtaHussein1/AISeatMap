@@ -324,7 +324,7 @@ The resulting suite structure is recorded in the Automation Plan (§5, "Planned 
 
 # 11. Automation Knowledge Base
 
-**Distinct from the Automation Repair Knowledge Base (`.claude/skills/automation-execution-skill/SKILL.md` §28)** — that one stores execution-confirmed *repair patterns*, per the two-layer Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10): project-scoped by default at `platform_core_data/knowledge_base/repair/`, generalized into `platform_core_data/knowledge_base/patterns/repair_patterns/`/`platform_core_data/knowledge_base/patterns/reasoning/` only via explicit Promotion (§10.5); this section is about reusable *code assets* within one project's own package. Before writing any new automation, also consult both Repair Knowledge Base layers — Platform first, then this project's own — for rules relevant to the flows being automated (e.g., a Login suite checks for any rule tagged "Authentication flows") and apply a matching rule's approach proactively — this closes the loop so a pattern the platform already learned the hard way, via a prior execution's repair, doesn't have to be rediscovered by failing again first.
+**Distinct from the shared Repair Knowledge Base (`.claude/skills/self-healing-skill/SKILL.md` §10)** — that one stores execution-confirmed *repair patterns*, per the two-layer Knowledge Architecture (`workflows_and_pipelines/pipeline/pipeline.md` §10): recorded by Stage `5H` in the healed module's Repair Summary, and generalized into `platform_core_data/knowledge_base/patterns/repair_patterns/`/`platform_core_data/knowledge_base/patterns/reasoning/` only via explicit Promotion (§10.5); this section is about reusable *code assets* within one project's own package. Before writing any new automation, also consult both Repair Knowledge Base layers — Platform first, then this project's own — for rules relevant to the flows being automated (e.g., a Login suite checks for any rule tagged "Authentication flows") and apply a matching rule's approach proactively — this closes the loop so a pattern the platform already learned the hard way, via a prior execution's repair, doesn't have to be rediscovered by failing again first.
 
 This skill treats the existing automation project (§9) as a reusable knowledge base, not merely a folder to avoid clobbering. Before creating anything new, it searches for reusable:
 
@@ -783,6 +783,9 @@ No other artifact is produced by this skill. It does not execute the Automation 
 33. **Must never modify a Reference Automation Project's files** unless the human explicitly chose "Update the Reference Project directly" for *this* run (§32.2) — a prior run's choice is never carried forward as a default.
 34. **Must ask the Automation Strategy Decision Gate (§33) every run**, independently of the Target (§32.3) and Framework (§31) answers — never infer extend/new-framework/reset from either of those.
 35. **Must never generate or edit code directly inside a Workspace Automation Baseline** (§33.2, `workflows_and_pipelines/pipeline/pipeline.md` §12.1) — all generation happens in this run's own working copy, created via Working Copy Creation (§33.2); the baseline is only ever written by the Workspace Merge, after this run's automation clears Automation Approval.
+36a. **Must never treat `Automation = Approved` as authorization for the business mutations the generated code performs** (§27A). Generation permission and execution permission are different decisions, decided by different mechanisms at different stages. This skill's gate is unchanged; it simply does not extend that far.
+36b. **Must disclose, in the Decision Report's Known Limitations (§13), any generated asset whose operations are not currently executable under the Execution Safety policy** (§27A) — and must never record that restriction as `Manual Only`, which means something else entirely.
+36c. **Must keep Live Selector Verification (§11A) strictly read-only** (§27A) — locating an element is not acting on it, and a locator is never confirmed by submitting, approving, or deleting anything.
 36. **Must never decide any repository-structure question autonomously** (§31.6) — Automation Project/package/framework selection, new-package creation, merge destination, and repository structure always follow gather → analyze → recommend → wait for explicit approval, never a default or inferred decision.
 
 # 19. Expected Artifacts
@@ -911,6 +914,43 @@ Like the Test Design skill (`.claude/skills/test-design-skill/SKILL.md` §20), t
 2. For the blocked case, this skill states the **smallest missing prerequisite** that would resolve it — never a vague "cannot automate." Examples: *"Add a `data-testid` to the Airlines multi-select dropdown"*, not *"selectors unreliable"*; *"Confirm the maximum airline-selection count with the DBA (T3087 Prerequisites)"*, not *"requirements incomplete."*
 3. For a Global Stop Condition (§26), this skill still states the minimal prerequisite (e.g., *"Awaiting Test Design skill re-run — Coverage Report for RUN-20260710-001 is still Pending Review"*) rather than a bare halt message.
 4. The recommended prerequisite is recorded in the Automation Plan's "Blocked Tests" field (§5) and in the Automation Summary's Known Limitations section (§25) — never only in a narrative aside a reviewer could miss.
+
+# 27A. Generation Permission Is Not Execution Permission
+
+*(Added 2026-08-07, user-mandated — Execution Safety.)*
+
+**This skill's eligibility gate is unchanged**, and this section changes nothing about it:
+
+```text
+Review = Approved   AND   Automation = Approved      → in scope for Stage 4A
+```
+
+What it establishes is what that gate does **not** mean.
+
+```text
+TC-X — Delete Agency
+Review:      Approved      ← the test case is correct
+Automation:  Approved      ← it should be automated
+```
+
+This skill may generate the automation for it, if that is valid under §13's decision engine. **It may not thereby authorize the deletion.** Whether the generated code's `DELETE` may ever run against a live environment is a separate question, answered separately, later, by the Execution Safety policy at Stage `5A` (`.claude/skills/automation-execution-skill/SKILL.md` §14A).
+
+**Capability does not imply authorization.** That this skill *can* generate a payment test does not mean Stage `5A` may execute payment on staging.
+
+**Three independent concerns:**
+
+```text
+Review            Is the Test Case accepted?
+Automation        Should it be automated?              ← this skill's gate
+Execution Safety  May this action execute here, now?   ← not this skill's gate, and never becomes it
+```
+
+**What this means in practice for this skill:**
+
+- **Do not narrow generation scope by safety.** A case whose operations are currently `Forbidden` on this environment is still a legitimate automation asset — environments change, policies change, and an asset that exists is what makes a future authorized run possible. Excluding it here would silently convert a *this-environment* restriction into a *permanent* coverage gap.
+- **Do disclose it.** Where §13's decision is `Generate New Automation` and the case's operations are not currently executable under the policy, say so in **Known Limitations** on that decision (§13) — *"generated; `DELETE` on `Shared` is `Forbidden` on Staging under policy `ndc-admin-portal-stg` v1, so this asset is not currently executable there."* A reviewer reading the Decision Report should never be surprised at Stage `5A`.
+- **Never record a safety decision as an automation decision.** `Manual Only` (§13) means *cannot be automated with acceptable reliability*. It does not mean *not currently permitted to run*. Collapsing the two would lose the distinction between "we can't write this" and "we're not allowed to run this yet", and only one of those is ever fixed by writing better code.
+- **Live selector verification (§11A) is itself an execution.** It is read-only by construction — it locates elements and does not act on them — and so resolves `Allowed` under any policy whose reads are open. It must stay that way: §11A must never submit a form, approve a record, or click a destructive control to confirm a locator.
 
 # 28. Handoff Contract with the Automation Execution skill
 
@@ -1164,7 +1204,70 @@ Next step — either:
   3. Extend coverage first:    /automation-skill also automate {IDs}
 ```
 
-# 36. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+# 36. Observability — what this stage emits
+
+**This stage emits facts. It does not compute metrics.** Durations, counts and ratios are derived by
+`platform_core/tools/observability` from the events below; no formula belongs in this specification
+(`pipeline.md` §15).
+
+Every event this stage records carries `--source skill`, which is a claim about reliability, not a
+label: a Skill event is emitted because this document says to, so its presence is trustworthy and
+**its absence proves nothing**. Platform tools emit their own `platform-tool` events from code, and
+the two are never counted as one class. Recording honestly matters more than recording flatteringly —
+a missing `STAGE_COMPLETED` makes the run `Partially Instrumented`, which is the correct outcome.
+
+```bash
+node platform_core/tools/observability/cli.js record --source skill --type <TYPE> [flags]
+```
+
+## Always
+
+| When | Event |
+|---|---|
+| This stage starts | `STAGE_STARTED --stage 4A` → keep the returned `spanId` |
+| This skill starts | `SKILL_STARTED --stage 4A --skill automation-skill` |
+| This skill finishes | `SKILL_COMPLETED --span-id <id>` |
+| This stage finishes | `STAGE_COMPLETED --stage 4A --span-id <id>` |
+| A Human Decision is raised (`pipeline.md` §5.5) | `HUMAN_DECISION_REQUESTED --decision-id <id> --category <Requirement\|Architecture\|Safety\|Review\|Automation\|Execution\|Other>` |
+| That decision is answered | `HUMAN_DECISION_RESOLVED --decision-id <id> --status <answer>` |
+| An artifact is first written | `ARTIFACT_CREATED --artifact <path> --artifact-class <class>` |
+| An existing artifact is revised | `ARTIFACT_UPDATED --artifact <path> --artifact-class <class>` |
+
+**Close every span you open.** An unclosed span is reported `Incomplete` and receives no duration —
+never an elapsed-time estimate. **Declare the decision category explicitly**; it is never inferred
+from the text of the question.
+
+## Specific to this stage
+
+| When | Event |
+|---|---|
+| Cases are selected for automation | `AUTOMATION_GENERATED --status Selected --count <n>` |
+| Tests are newly written | `AUTOMATION_GENERATED --status Generated --count <n>` |
+| Existing tests are reused unchanged | `AUTOMATION_GENERATED --status Reused --count <n>` |
+| Existing tests are modified | `AUTOMATION_GENERATED --status Modified --count <n>` |
+| A compile or build finishes | `AUTOMATION_BUILD_RESULT --status <Passed\|Failed>` |
+| A self-review iteration revises the suite | `ARTIFACT_UPDATED --artifact-class automation` |
+
+Keep the four `AUTOMATION_GENERATED` statuses distinct. Collapsing *Generated* and *Reused* into one
+"produced" number would let a run that reused everything report the same output as one that wrote
+everything, and §26 exists to prevent precisely that.
+
+**Emitting telemetry changes nothing about eligibility.** The gate is still
+`Review = Approved AND Automation = Approved`, unchanged, and §27A's rule that generation permission
+is not execution permission is unaffected.
+
+## Never emitted by this stage
+
+- **Token counts or cost.** No event type exists for them. No supported run-attributable provider
+  usage source exists, and nothing is estimated from text length or hardcoded pricing (HD-OBS-002).
+- **A metric, ratio, or score.** This stage records what happened; the aggregator does the arithmetic.
+- **A secret.** No password, token, API key, session ID, cookie, authorization header, or card detail
+  reaches `--metadata`. Credential *identities* and roles are acceptable where genuinely needed.
+- **A coverage percentage.** Coverage belongs to the Automation Coverage Report; the aggregator publishes only the registered formulas.
+
+---
+
+# 37. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
 
 ## The module: `{{MODULE_SLUG}}`
 

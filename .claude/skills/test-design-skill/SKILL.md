@@ -338,6 +338,28 @@ Every other combination is out of scope for automation — including `Review: Pe
 
 - **An omitted field is `Pending`.** The exporter defaults it silently (`test_suite_export/parseTestCases.js`), because "no decision yet" is exactly what an absent value already says. Warning on it would fire against every suite authored before this contract existed while telling a reader nothing.
 - **An unrecognised value is reported.** Anything outside the three allowed values is exported as written and raises a parse warning — it means someone recorded a decision the lifecycle does not define, and silently rewriting it would erase their intent.
+
+### 6.3.4 Inconsistent pairs — reported, never reconciled
+
+*(Added 2026-08-07, user-mandated.)*
+
+Because the two columns are independent, one pair of combinations is **contradictory**:
+
+| `Review` | `Automation` | Why it contradicts |
+|---|---|---|
+| `Pending` | `Approved` | automation was selected before the case itself was reviewed |
+| `Rejected` | `Approved` | a rejected case cannot be selected for automation — `Review` takes precedence |
+
+Both values in such a pair are **human decisions**, and they disagree. The platform's response is fixed:
+
+1. **Detect it.** `parseTestCases.js` emits an `INCONSISTENT lifecycle` warning on export (`cli.js --check` exits `2`), and `importLifecycle.js` emits the same warning on the resulting pair when decisions are imported from the workbook.
+2. **Keep it out of automation.** No action is needed for this — §6.3.2's gate already excludes it, because `Review = Approved` is required independently.
+3. **Preserve both values exactly.** Neither column is auto-corrected in either direction.
+4. **Escalate.** Resolving it is a **Human Decision** (`pipeline.md` §5.5) — gather, analyse, recommend, then wait.
+
+**Why nothing is auto-corrected.** Resetting `Automation` to `Pending` would destroy one reviewer's recorded intent; promoting `Review` to `Approved` would manufacture an approval nobody gave, which is the single thing the review gate exists to prevent (§6.3.1). Either "fix" replaces a visible contradiction with an invisible one. A contradiction that is reported on every export is strictly safer than a silent reconciliation, so the platform preserves the evidence and asks.
+
+**No third field records this.** Eligibility and consistency are **derived** from the pair, every time, by `isManualEligible()` / `isAutomationEligible()` / `lifecycleInconsistency()` in `parseTestCases.js`. Persisting a derived verdict — `Automation Eligible`, `Ready for Automation`, `Lifecycle Status` — would create exactly the second source of truth the retired `AutomationCandidate` tag already demonstrated the cost of (§6.3.2).
 - **Casing is normalised**, so `approved` and `Approved` are the same decision.
 - **Neither column is a required field.** A case with no review decision is *unreviewed*, not *unexecutable* — and `REQUIRED_FIELDS` is reserved for content Stage `4M` cannot run without.
 
@@ -562,7 +584,7 @@ The Coverage Report (§9 Outputs #4) must contain exactly these sections, in thi
 | 8 | **Coverage Gaps** | Uncovered Requirements (§8.1), Uncovered Findings (§8.2), and Partially Covered / Unknown-Unassessed items (§8.3), each with its stated reason |
 | 9 | **Risks** | Every test case's Risk entry from the Traceability Matrix (§6.2) aggregated, with High/Critical items called out explicitly |
 | 10 | **Recommendations** | Exploratory Recommendations (§17) and any other non-fixed-case suggestion for the human reviewer |
-| 11 | **Automation Status** | *(Renamed and re-scoped 2026-08-01 — was "Automation Candidates".)* A **roll-up of the `Automation` column** across this module's cases: how many are `Pending`, `Approved`, `Rejected`, and which are which. It is a **count of decisions already recorded on the cases, never a separate recommendation** — the advisory candidate list it replaces is retired (§6.3.2), because an advisory hint sitting beside a binding column can disagree with it. Stage `4A` reads the cases themselves and gates on `Review = Approved AND Automation = Approved`; it does not take scope from this section. Stage `4M` gates on `Review` alone and does not read the `Automation` column at all (§6.3.2) |
+| 11 | **Review & Automation** | *(Renamed 2026-08-07 to the canonical umbrella heading — was "Automation Status", and before that "Automation Candidates".)* A **roll-up of BOTH lifecycle columns** across this module's cases: how many are `Pending`, `Approved`, `Rejected` on each, and which are which. **`Review & Automation` is the canonical heading whenever a section covers both fields.** Where a section genuinely covers only one, `Review` or `Automation` may stand alone — but neither name is used as the umbrella for both, and "Lifecycle Status" is not used at all, because the two decisions must not read as one combined state (§6.3). The roll-up is a **count of decisions already recorded on the cases, never a separate recommendation** — the advisory candidate list it replaces is retired (§6.3.2), because an advisory hint sitting beside a binding column can disagree with it. Report at minimum: the per-column tally, the cases eligible for Stage `4M` (`Review = Approved`), the cases eligible for Stage `4A` (`Review = Approved AND Automation = Approved`), and any **inconsistent pair** (`Automation = Approved` with `Review ≠ Approved`) — flagged for human resolution, never reconciled here (§6.3.4). Stage `4A` reads the cases themselves and never takes scope from this section; Stage `4M` gates on `Review` alone and does not read the `Automation` column at all (§6.3.2) |
 | 12 | **Inputs for Both Branches** | The explicit handoff package per §21 — confirmation that every input Stage `4M` (`manual-execution-skill` §4) **and** Stage `4A` (`automation-skill` §4) declares it needs from this stage is present and specific. One section, both consumers |
 
 # 19. Stop Conditions
@@ -651,7 +673,64 @@ Next step — approve, then choose a branch (or both):
   Or revise this stage:        /test-design-skill <your feedback>
 ```
 
-# 24. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+# 24. Observability — what this stage emits
+
+**This stage emits facts. It does not compute metrics.** Durations, counts and ratios are derived by
+`platform_core/tools/observability` from the events below; no formula belongs in this specification
+(`pipeline.md` §15).
+
+Every event this stage records carries `--source skill`, which is a claim about reliability, not a
+label: a Skill event is emitted because this document says to, so its presence is trustworthy and
+**its absence proves nothing**. Platform tools emit their own `platform-tool` events from code, and
+the two are never counted as one class. Recording honestly matters more than recording flatteringly —
+a missing `STAGE_COMPLETED` makes the run `Partially Instrumented`, which is the correct outcome.
+
+```bash
+node platform_core/tools/observability/cli.js record --source skill --type <TYPE> [flags]
+```
+
+## Always
+
+| When | Event |
+|---|---|
+| This stage starts | `STAGE_STARTED --stage 3` → keep the returned `spanId` |
+| This skill starts | `SKILL_STARTED --stage 3 --skill test-design-skill` |
+| This skill finishes | `SKILL_COMPLETED --span-id <id>` |
+| This stage finishes | `STAGE_COMPLETED --stage 3 --span-id <id>` |
+| A Human Decision is raised (`pipeline.md` §5.5) | `HUMAN_DECISION_REQUESTED --decision-id <id> --category <Requirement\|Architecture\|Safety\|Review\|Automation\|Execution\|Other>` |
+| That decision is answered | `HUMAN_DECISION_RESOLVED --decision-id <id> --status <answer>` |
+| An artifact is first written | `ARTIFACT_CREATED --artifact <path> --artifact-class <class>` |
+| An existing artifact is revised | `ARTIFACT_UPDATED --artifact <path> --artifact-class <class>` |
+
+**Close every span you open.** An unclosed span is reported `Incomplete` and receives no duration —
+never an elapsed-time estimate. **Declare the decision category explicitly**; it is never inferred
+from the text of the question.
+
+## Specific to this stage
+
+| When | Event |
+|---|---|
+| Test cases are authored | `TEST_CASES_GENERATED --count <n> --module <slug>` |
+| The suite Markdown is written or revised | `ARTIFACT_CREATED` / `ARTIFACT_UPDATED --artifact-class test-design` |
+| `test_suite_export` runs | that tool emits its own `TOOL_*` and `VALIDATION_*` events |
+
+**Do not emit an event for a `Review` or `Automation` decision.** Those are fields on the test case,
+and the platform derives every Review/Automation total by parsing the Case Index with
+`test_suite_export`'s own parser. An event carrying the same decision would be a second lifecycle
+record of it — exactly what §5.4 of this document forbids — and the two would eventually disagree.
+
+## Never emitted by this stage
+
+- **Token counts or cost.** No event type exists for them. No supported run-attributable provider
+  usage source exists, and nothing is estimated from text length or hardcoded pricing (HD-OBS-002).
+- **A metric, ratio, or score.** This stage records what happened; the aggregator does the arithmetic.
+- **A secret.** No password, token, API key, session ID, cookie, authorization header, or card detail
+  reaches `--metadata`. Credential *identities* and roles are acceptable where genuinely needed.
+- **An acceptance rate.** Test Case Acceptance Rate is a registered formula computed from the Case Index. This stage emits the count it generated and nothing more.
+
+---
+
+# 25. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
 
 ## The module: `{{MODULE_SLUG}}`
 

@@ -58,7 +58,8 @@ The Reporting skill is the final stage of the pipeline. It synthesizes the raw E
 - Read the Execution Results as the sole source of pass/fail/skip/error outcomes — never fabricate or estimate a result not present there.
 - Read the Manual Test Suites and Traceability Matrix to compute two distinct coverage measures:
   - **Requirement Coverage** — what fraction of Project Context requirements have at least one traced, executed test case
-  - **Automation Coverage** — what fraction of designed manual test cases were successfully automated and executed
+  - **Automation Coverage** — what fraction of designed manual test cases were successfully automated and executed. **Three distinct things must never be conflated here** (`test-design-skill` §6.3): the **Review decision** (was the case accepted?), the **Automation selection decision** (`Automation = Approved` — was it chosen for automation?), and the **execution result** (did the automated test pass?). `Automation = Approved` means *selected*, never *passed*: `Review = Approved`, `Automation = Approved`, `Execution Result = Failed` is a perfectly valid and important state. A case at `Automation = Rejected` is manual **by decision** and is **not** an automation coverage gap — report it as deliberately out of automation scope, separately from cases that were selected but could not be automated
+- Report **Execution Safety** outcomes as a distinct category *(added 2026-08-07)*. A test not run because the Execution Safety policy `Forbade` it — or because a required scoped authorization was refused — is **`Blocked by Execution Safety Policy`**, and is reported: (a) never as an Application Failure, an Automation Failure, or an Environment Failure, because none of those occurred; (b) never omitted, so the denominator stays honest; (c) with the matched policy rule named, so a reader can see *which* rule and act on it. Where the run's `metadata/SafetyPreflight.md` exists, its factual counts may be reported (mutating operations planned, allowed, human-authorized, forbidden, cleanup-required, cleanup-completed) — as **facts about authorization, not judgments about quality**. A high `Forbidden` count means the run was correctly constrained; it is not a defect, a coverage failure, or a score.
 - Read the Project Context to cross-reference every carried-forward assumption/risk and state whether execution confirmed it, refuted it, or left it still unverified.
 - Group defects/failures by module and assign a severity, based strictly on the failure evidence in the Execution Results.
 - Explicitly call out anything designed but never automated, and anything automated but never executed — gaps are reported, not hidden.
@@ -91,6 +92,10 @@ The Reporting skill is the final stage of the pipeline. It synthesizes the raw E
 2. Must explicitly report test cases that were designed but not automated, and automated but not executed — gaps are visible, never silently dropped.
 3. Must preserve and resolve every "Assumption-based test" flag: state whether it was confirmed, refuted, or remains unverified based on the execution outcome.
 4. Must compute Requirement Coverage and Automation Coverage as two separate, clearly labeled figures — never conflate "we tested it" with "we automated it."
+4a. Must keep the **Review decision**, the **Automation selection decision**, and the **automation execution result** as three separate reported facts, and must never present `Automation = Approved` as evidence that a test passed (§6.1). Cases excluded from automation because a human set `Automation = Rejected` are reported as *deliberately manual*, never as an automation gap or a coverage shortfall.
+4b. **Must report a policy-blocked test using the existing execution taxonomy with an explicit reason — `Skipped` / `Blocked`, reason `Execution Safety Policy`** (`automation-execution-skill` §14A.3, `manual-execution-skill` §6.1) — never as any kind of Failure, and never as a new result status invented for the purpose. A safety block **must not damage Application Health**: the application under test did nothing wrong, and a stakeholder reading a degraded health figure would be reading a governance decision misfiled as a defect.
+4c. **Must never treat safety metrics as a quality judgment** (§3). *Mutating cases planned / allowed / human-approved / forbidden / blocked / cleanup-required / cleanup-completed* are factual counts about what the run was authorized to do. They are not a score, and a run with many `Forbidden` operations is a correctly-governed run, not a failing one.
+4d. **Must keep Execution Safety separate from the two Test Case decisions** (`test-design-skill` §6.3, §6.1 above). `Review`, `Automation`, and Execution Safety are three independent facts, and a report that merges any two of them makes it impossible to tell "nobody accepted this case" from "nobody chose to automate it" from "we were not allowed to run it here."
 5. Must not recommend a specific code fix as if already applied — findings are reported as needing developer investigation.
 6. Must not re-run any test or modify upstream artifacts (Execution Results, test cases, Project Context, PRD).
 7. Must group defects by module and assign severity based only on evidence present in the Execution Results.
@@ -167,7 +172,77 @@ Next step — either:
   3. Heal remaining failures:             /self-healing-skill           (then re-report)
 ```
 
-# 13. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+# 13. Observability — what this stage emits
+
+**This stage emits facts. It does not compute metrics.** Durations, counts and ratios are derived by
+`platform_core/tools/observability` from the events below; no formula belongs in this specification
+(`pipeline.md` §15).
+
+Every event this stage records carries `--source skill`, which is a claim about reliability, not a
+label: a Skill event is emitted because this document says to, so its presence is trustworthy and
+**its absence proves nothing**. Platform tools emit their own `platform-tool` events from code, and
+the two are never counted as one class. Recording honestly matters more than recording flatteringly —
+a missing `STAGE_COMPLETED` makes the run `Partially Instrumented`, which is the correct outcome.
+
+```bash
+node platform_core/tools/observability/cli.js record --source skill --type <TYPE> [flags]
+```
+
+## Always
+
+| When | Event |
+|---|---|
+| This stage starts | `STAGE_STARTED --stage 6A` → keep the returned `spanId` |
+| This skill starts | `SKILL_STARTED --stage 6A --skill reporting-skill` |
+| This skill finishes | `SKILL_COMPLETED --span-id <id>` |
+| This stage finishes | `STAGE_COMPLETED --stage 6A --span-id <id>` |
+| A Human Decision is raised (`pipeline.md` §5.5) | `HUMAN_DECISION_REQUESTED --decision-id <id> --category <Requirement\|Architecture\|Safety\|Review\|Automation\|Execution\|Other>` |
+| That decision is answered | `HUMAN_DECISION_RESOLVED --decision-id <id> --status <answer>` |
+| An artifact is first written | `ARTIFACT_CREATED --artifact <path> --artifact-class <class>` |
+| An existing artifact is revised | `ARTIFACT_UPDATED --artifact <path> --artifact-class <class>` |
+
+**Close every span you open.** An unclosed span is reported `Incomplete` and receives no duration —
+never an elapsed-time estimate. **Declare the decision category explicitly**; it is never inferred
+from the text of the question.
+
+## Specific to this stage
+
+This stage **consumes** observability rather than producing much of it.
+
+```bash
+node platform_core/tools/observability/cli.js metrics   --run {{RUN_FOLDER}} --out
+node platform_core/tools/observability/cli.js report    --run {{RUN_FOLDER}} --out
+node platform_core/tools/observability/cli.js dashboard --run {{RUN_FOLDER}} --out
+```
+
+Include a **concise** Run Observability section in the Final QA Report — duration, human decisions,
+tool calls, retries, test case and automation counts, safety blocks, and the explicit
+`Token Usage: Unavailable` / `Cost: Unavailable` lines. Link to `ObservabilityReport.md` and
+`ObservabilityDashboard.html` for the detail; do not inline the full telemetry, which would bury the
+QA findings the report exists to deliver (§48).
+
+**Take the numbers from `ObservabilityMetrics.json`. Do not recount artifacts.** A second count is a
+second source of truth, and the two will eventually disagree about the same run.
+
+**Carry `Unavailable` through verbatim.** Never render an unavailable metric as `0`, `—`, or `N/A`;
+each one has a stated reason and the reason is the useful part.
+
+**Report an under-instrumented run as under-instrumented.** If the metrics say
+`Partially Instrumented`, the Final QA Report says so too. Presenting partial telemetry as a complete
+picture is the reporting equivalent of a fabricated metric.
+
+## Never emitted by this stage
+
+- **Token counts or cost.** No event type exists for them. No supported run-attributable provider
+  usage source exists, and nothing is estimated from text length or hardcoded pricing (HD-OBS-002).
+- **A metric, ratio, or score.** This stage records what happened; the aggregator does the arithmetic.
+- **A secret.** No password, token, API key, session ID, cookie, authorization header, or card detail
+  reaches `--metadata`. Credential *identities* and roles are acceptable where genuinely needed.
+- **A composite quality, productivity, or value score**, and **no financial ROI** without a human-provided baseline. Report the evidence and the transparent ratios (§63, §65).
+
+---
+
+# 14. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
 
 ## The module: `{{MODULE_SLUG}}`
 

@@ -22,7 +22,7 @@ It does **not** own *when* or *in what order* agents run (that is `workflows_and
 - **Orchestration or sequencing logic.** Stage order, checkpoints, approval gates, and run identity/workspace management belong in `workflows_and_pipelines/` — a Skill file never declares when it runs relative to another Skill.
 - **Reusable, cross-project engineering knowledge.** A pattern, heuristic, or repair strategy proven across projects belongs in `platform_core_data/knowledge_base/patterns/`, cited from a Skill's `dependencies` line — never restated or grown in place inside the Skill spec itself.
 - **Project-specific business rules, findings, or credentials.** Anything true of one application only belongs under `platform_core_data/`.
-- **Generated artifacts, execution results, or reports.** A Skill's *output* always lands under that run's Run Folder, `platform_core_data/runs/{{RUN_FOLDER}}/{stage}/` (`pipeline.md` §7) — never inside `.claude/` itself.
+- **Generated artifacts, execution results, or reports.** A Skill's *output* always lands in one of the two locations `pipeline.md` §7 defines — the durable Module Workspace `platform_core_data/modules/{{MODULE_SLUG}}/{stage}/` (Stages 1, 2, 3, `4A`, `5H`) or the immutable Run Folder `platform_core_data/runs/{{RUN_FOLDER}}/{stage}/` (Stages `4M`, `5A`, `6A`) — never inside `.claude/` itself.
 - **Revision history.** A Skill's own change log is not recorded inline in the `SKILL.md` file — it lives in `docs/CHANGELOG.md`, so each spec describes only its current behavior.
 
 ## Folder Structure
@@ -71,7 +71,7 @@ workflows_and_pipelines/pipeline/pipeline.md
 
 - **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the eight skills; it invokes them in a fixed order *within a branch* and enforces checkpoints. A Skill never reads `pipeline.md` to decide its own behavior — it only needs to already conform to the contract that document describes.
 - **`.claude/` → `platform_core_data/knowledge_base/patterns/` and `platform_core/tools/`:** each Skill's `dependencies` line names exactly which Platform Knowledge subfolders it consults (e.g. `automation-skill` reads `repair_patterns/`, `automation_patterns/`, `framework_patterns/`) and, where relevant, which shared tool it uses (e.g. the Browser Driver, `platform_core/tools/browser_driver/`).
-- **`.claude/` → `platform_core_data/`:** every Skill's actual Inputs and Outputs at runtime resolve to files under that run's Run Folder, `platform_core_data/runs/{{RUN_FOLDER}}/{stage}/` (and, for knowledge writes, `platform_core_data/knowledge_base/`). A Skill file names those paths literally — the only placeholder is `{{RUN_FOLDER}}`, resolved per run by the Run Manager (`run_manager.md` §5.1); there is no project-name segment to substitute, because the platform hosts one project (`pipeline.md` §1).
+- **`.claude/` → `platform_core_data/`:** every Skill's actual Inputs and Outputs at runtime resolve to files under the Module Workspace, `platform_core_data/modules/{{MODULE_SLUG}}/{stage}/`, or that run's Run Folder, `platform_core_data/runs/{{RUN_FOLDER}}/{stage}/`, per `pipeline.md` §7's two-location rule (and, for knowledge writes, `platform_core_data/knowledge_base/`). A Skill file names those paths literally — the only placeholders are `{{MODULE_SLUG}}`, resolved by the Module Manager (`module_architecture.md` §5.2), and `{{RUN_FOLDER}}`, resolved per run by the Run Manager (`run_manager.md` §5.1); there is no project-name segment to substitute, because the platform hosts one project (`pipeline.md` §1).
 
 ## Lifecycle
 
@@ -84,7 +84,7 @@ Pipeline Orchestrator invokes Stage N's Skill
         ↓
 Skill resolves Platform Knowledge + Project Knowledge (pipeline.md §10.2)
         ↓
-Skill reads its declared Inputs from platform_core_data/runs/{{RUN_FOLDER}}/{stage}/
+Skill reads its declared Inputs from modules/{{MODULE_SLUG}}/{stage}/ or runs/{{RUN_FOLDER}}/{stage}/
         ↓
 Skill produces its declared Outputs, marks itself Pending Review/Approval
         ↓
@@ -95,7 +95,7 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 
 - **Single Responsibility** — one Skill, one pipeline stage, one concern.
 - **Statelessness** — a Skill retains no memory between runs; every invocation re-supplies its declared Inputs fresh.
-- **Separation of Concerns** — contract (this folder) is deliberately split from orchestration (`workflows_and_pipelines/`), per `pipeline.md` §1's own stated architecture principle: "Agents communicate through artifacts only."
+- **Separation of Concerns** — contract (this folder) is deliberately split from orchestration (`workflows_and_pipelines/`), per `pipeline.md` §2's own stated Architecture Principle: "Agents communicate through artifacts only."
 - **Application Agnosticism** — every Skill is written once, generically, and runs unchanged if `platform_core_data/` is retargeted at a different application. A Skill must never name a screen, business rule, or requirement of the currently hosted one.
 - **Governed Extensibility** — adding a Skill means adding a pipeline stage, a deliberate architectural decision (see `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 3: no stage may be skipped, and none may be added silently).
 
@@ -108,7 +108,7 @@ Human checkpoint clears (pipeline.md §5) → Stage N+1 invoked
 - **Never** read the PRD, except `project-context-skill` — the only Skill permitted to (`pipeline.md` §6 Rule 4).
 - **Never** invoke another Skill directly — sequencing is `workflows_and_pipelines/`'s responsibility, never this folder's.
 - **Never** embed project-specific business logic, screen names, or credentials — a Skill file must remain correct for every project.
-- **Must not** grow a Skill's own scoring rubric or engine mechanics into a "promotable knowledge" category once it's fixed Capability logic (e.g. the Confidence Engine rubric in `automation-execution-skill/SKILL.md` §27.2) — that logic stays here, permanently, as Capability.
+- **Must not** grow a Skill's own scoring rubric or engine mechanics into a "promotable knowledge" category once it's fixed Capability logic (e.g. the Repair Confidence Engine rubric in `self-healing-skill/SKILL.md` §9) — that logic stays here, permanently, as Capability.
 - **Must** record revision history in `docs/CHANGELOG.md`, never inline in the `SKILL.md` itself.
 
 ## Typical Flow

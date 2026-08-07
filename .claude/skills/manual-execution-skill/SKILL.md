@@ -108,7 +108,7 @@ Three prohibitions define this stage's boundary:
 |---|---|---|---|
 | Manual Test Suite | **Primary** | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TestCases_*.md` and `.xlsx` — the exact test cases to execute; this skill never adds, removes, or reinterprets a case. **Its scope is narrowed per case by the `Review` lifecycle gate (§4.1).** |
 | Requirement Traceability Matrix | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` — carried unmodified onto every Manual Execution Result, and the basis for the QA Report's Requirement Coverage (§9.1) |
-| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`), so this stage does not attempt to execute what Stage 3 already dispositioned out of scope. Its advisory *Automation Candidates* hint is **not** consumed here — it is a hint for Stage `4A`, in the other branch |
+| Coverage Report | Secondary | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/CoverageReport.md` — read for its Coverage Gaps (§18 of `.claude/skills/test-design-skill/SKILL.md`), so this stage does not attempt to execute what Stage 3 already dispositioned out of scope. Its *Review & Automation* roll-up (§18 #11 there) is **not** consumed here either — this stage reads each case's own `Review` column (§4.1), never a report's summary of it |
 | Project Context | Governing | Required, must be `Approved` | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — target environment, credentials, and safety constraints that govern which test cases' mutating actions may actually be executed |
 | Run Scope | Governing (embedded) | Required | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4). Drives §17's strategy selection. |
 | Selector Verification KB | Secondary (read-only) | Optional | `platform_core_data/knowledge_base/browser/screens/`, `.../components/` — verified locators (`pipeline.md` §10.8). Used only to identify *which control* a step refers to when a screen offers several plausible candidates; never to change what a step does. Where its code-state anchor shows drift, it is treated as a hint, not a fact. |
@@ -158,7 +158,58 @@ Before executing a test case's Steps, this skill confirms its stated Preconditio
 
 # 6. Environment Awareness
 
-This skill confirms the target environment matches what the Project Context expects before executing anything — the same environment-match discipline every execution-capable stage in this pipeline applies (`.claude/skills/automation-execution-skill/SKILL.md` §14). It never executes a test case's mutating actions against an environment the Project Context has not explicitly marked safe for them; an unauthorized mutating action is `Skipped`, with the environment constraint named as the reason.
+This skill confirms the target environment matches what the Project Context expects before executing anything — the same environment-match discipline every execution-capable stage in this pipeline applies (`.claude/skills/automation-execution-skill/SKILL.md` §14). It never executes a test case's mutating actions against an environment not authorized for them; an unauthorized mutating action is `Skipped`, with the reason named.
+
+**Which actions are authorized is no longer this skill's judgment to make** (revised 2026-08-07). It is decided by the Execution Safety policy, evaluated deterministically — see §6.1.
+
+## 6.1 The Execution Safety Gate — which *actions* this stage may perform
+
+*(Added 2026-08-07, user-mandated.)*
+
+§4.1's `Review` gate decides which **test cases** this stage may execute. This section decides which **actions** it may perform once it starts executing one. They are different questions and neither substitutes for the other.
+
+```text
+Review = Approved
+        ↓
+Test case is eligible                    ← §4.1
+        ↓
+next step
+        ↓
+Read-only?
+   Yes → execute
+   No  → Execution Safety evaluation     ← this section
+        ↓
+Allowed            → execute
+Approval Required  → PAUSE BEFORE THE MUTATION, ask, execute only within the approved scope
+Forbidden          → do not execute
+```
+
+**Capability does not imply authorization.** That the UI exposes Delete, and that the run's credential can Approve, are facts about capability. Neither is a permission. `Review = Approved` says the *test case* is correct; it says nothing about whether its operations may run against this environment today.
+
+**The decision is not interpreted from prose.** This skill calls `platform_core/tools/execution_safety/` and uses what it returns. It does not read `run_configuration.md`'s Environment Constraints and decide for itself what "marked safe" means — two skills reading the same sentence is how two stages reach different conclusions about the same action.
+
+**Before executing anything, this skill runs the Safety Preflight** (`preflight()`), writes it to `runs/{{RUN_FOLDER}}/metadata/SafetyPreflight.md`, and resolves every required authorization **first**. Discovering that step 7 of case 12 is `Forbidden` when step 7 of case 12 is attempted is too late to be useful to anyone.
+
+**Approvals are batched by scope, never asked per test case.** Twelve cases that all perform `UPDATE` on `Shared` `agency` records are **one** question (`execution_safety` README §7). Asking twelve times trains a reviewer to stop reading them.
+
+**Each authorization is scoped to this run** — environment, module, action, ownership class. It carries to no other run, and it never lifts a `Forbidden`.
+
+**Every executed mutating action records the record it touched.** The approval is class-wide; the audit trail is per-record. Without a captured identifier, a later action cannot prove it acted within the approved scope.
+
+**A blocked action is recorded, never silently dropped:**
+
+| Safety decision | This stage records |
+|---|---|
+| `Allowed` | executes normally |
+| `Approval Required`, authorization granted | executes normally; the authorization ID is recorded with the result |
+| `Approval Required`, authorization refused | `Skipped` (§8), reason **`Execution Safety Policy`** |
+| `Forbidden` | `Skipped` (§8), reason **`Execution Safety Policy`**, with the matched rule named |
+
+**A safety block is never an Application Failure.** Nothing in the application misbehaved; the platform declined to act. Reporting it as `Failed` would manufacture a defect out of a governance decision. `Skipped` is the existing status for "a decision, not a failure" (§8), and it is reused rather than extended.
+
+**`Skipped` for safety is distinct from `Excluded` for review** — and the distinction is the same load-bearing one §8 already draws. `Excluded` means the case was never authorized to run. `Skipped` means it was authorized, and this stage declined to perform an operation inside it. Both appear in every total.
+
+**Where the policy itself is missing or malformed, this skill halts** (§18) rather than proceeding. An absent policy authorizes nothing; it does not mean everything is permitted.
 
 # 7. Evidence Collection
 
@@ -368,7 +419,10 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 1. Must execute test cases exactly as the Test Design skill authored them — no invented, skipped, or reinterpreted steps.
 2. **Must validate every stated Precondition before executing a test case's Steps** (§5) — an unmet precondition is `Blocked`, never force-run.
 3. Must confirm the target environment matches the Project Context before executing anything; halt and report on mismatch.
-4. Must not execute any test case's mutating actions against an environment not explicitly marked safe for them — classify as `Skipped` with the constraint named.
+4. **Must evaluate every mutating action against the Execution Safety policy before performing it** (§6.1), through `platform_core/tools/execution_safety/` — never by interpreting the constraint prose itself. `Forbidden` is not executed; `Approval Required` pauses **before** the mutation and waits for a scoped human authorization. A blocked action is `Skipped` with reason `Execution Safety Policy` and the matched rule named — never `Failed`, and never an Application/Automation/Environment Failure.
+4a. **Must run the Safety Preflight before executing anything** (§6.1), write it to the run's `metadata/`, and resolve every required authorization up front — never discover a `Forbidden` by attempting it.
+4b. **Must record the exact record touched by every mutating action** (§6.1). The authorization is class-scoped; the evidence is per-record, and without it a later action cannot prove it stayed inside the approved scope.
+4c. **Must never treat a test case's `Review`/`Automation` values as an execution authorization, or a safety `Allowed` as test-case eligibility** (§4.1, §6.1). Three independent gates; none substitutes for another.
 5. Must record every test case's outcome — no silent omissions. A test case that cannot run must be logged with an explicit reason.
 6. **Must classify every result using the full seven-state Result Classification** (§8) — never collapse Blocked/Skipped/Not Executed/Inconclusive/Excluded into a bare Pass/Fail.
 7. **Must produce a structured Evidence Inventory** (§7, §10) naming every evidence type captured and every one that could not be, with a reason.
@@ -477,7 +531,7 @@ Consistent with every other execution-capable stage in either pipeline: never si
 | Manual Test Suite | §9 Outputs #1–#2 |
 | Per-case `Review` decision on every case (§4.1) | §6.3 — the `Review` lifecycle column, `Pending` unless a human changed it |
 | Requirement Traceability Matrix | §9 Outputs #3 |
-| Coverage Report (Coverage Gaps only — the advisory Automation Candidates hint belongs to Stage `4A`) | §9 Outputs #4 |
+| Coverage Report (Coverage Gaps only — its *Review & Automation* roll-up is a summary, not this stage's gate; the gate is each case's own `Review` column, §4.1) | §9 Outputs #4 |
 | Project Context | Unchanged pass-through from Stage 1 |
 
 ## 20.2 Outbound — there is none
@@ -544,7 +598,70 @@ Next step — either:
                                scope from Stage 3, not from this stage's results)
 ```
 
-# 24. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
+# 24. Observability — what this stage emits
+
+**This stage emits facts. It does not compute metrics.** Durations, counts and ratios are derived by
+`platform_core/tools/observability` from the events below; no formula belongs in this specification
+(`pipeline.md` §15).
+
+Every event this stage records carries `--source skill`, which is a claim about reliability, not a
+label: a Skill event is emitted because this document says to, so its presence is trustworthy and
+**its absence proves nothing**. Platform tools emit their own `platform-tool` events from code, and
+the two are never counted as one class. Recording honestly matters more than recording flatteringly —
+a missing `STAGE_COMPLETED` makes the run `Partially Instrumented`, which is the correct outcome.
+
+```bash
+node platform_core/tools/observability/cli.js record --source skill --type <TYPE> [flags]
+```
+
+## Always
+
+| When | Event |
+|---|---|
+| This stage starts | `STAGE_STARTED --stage 4M` → keep the returned `spanId` |
+| This skill starts | `SKILL_STARTED --stage 4M --skill manual-execution-skill` |
+| This skill finishes | `SKILL_COMPLETED --span-id <id>` |
+| This stage finishes | `STAGE_COMPLETED --stage 4M --span-id <id>` |
+| A Human Decision is raised (`pipeline.md` §5.5) | `HUMAN_DECISION_REQUESTED --decision-id <id> --category <Requirement\|Architecture\|Safety\|Review\|Automation\|Execution\|Other>` |
+| That decision is answered | `HUMAN_DECISION_RESOLVED --decision-id <id> --status <answer>` |
+| An artifact is first written | `ARTIFACT_CREATED --artifact <path> --artifact-class <class>` |
+| An existing artifact is revised | `ARTIFACT_UPDATED --artifact <path> --artifact-class <class>` |
+
+**Close every span you open.** An unclosed span is reported `Incomplete` and receives no duration —
+never an elapsed-time estimate. **Declare the decision category explicitly**; it is never inferred
+from the text of the question.
+
+## Specific to this stage
+
+| When | Event |
+|---|---|
+| The Execution Safety preflight completes (§6.1) | `SAFETY_PREFLIGHT_COMPLETED --metadata '{"policyId":…,"policyVersion":…,"policyHash":…,"environment":…,"totals":{…},"cleanupCompleted":n}'` |
+| An operation is blocked by policy | `SAFETY_BLOCKED --count <n> --test-case-id <ID>` |
+| A test case reaches an outcome | `TEST_EXECUTION_RESULT --test-case-id <ID> --status <Passed\|Failed\|Skipped\|Blocked\|Inconclusive> --attempt <n> --cycle <n>` |
+| A defect report is written | `ARTIFACT_CREATED --artifact-class execution` |
+
+**Pass the structured `totals` object from `preflight()`, not a summary of it.** The platform reads
+Safety totals from this event rather than parsing `SafetyPreflight.md`, because scraping numbers back
+out of prose the platform itself formatted is the failure mode observability exists to close.
+
+**`--attempt` is load-bearing.** First-Pass Success is computed only from `attempt: 1` evidence and
+is never reconstructed from a final result.
+
+**A Safety block is `Skipped`, never `Failed`.** §6.1 already governs the recorded status; telemetry
+mirrors it exactly and never reclassifies an outcome on the way past.
+
+## Never emitted by this stage
+
+- **Token counts or cost.** No event type exists for them. No supported run-attributable provider
+  usage source exists, and nothing is estimated from text length or hardcoded pricing (HD-OBS-002).
+- **A metric, ratio, or score.** This stage records what happened; the aggregator does the arithmetic.
+- **A secret.** No password, token, API key, session ID, cookie, authorization header, or card detail
+  reaches `--metadata`. Credential *identities* and roles are acceptable where genuinely needed.
+- **A pass rate or a health verdict.** This stage records per-case outcomes; the aggregator computes rates, and §12 of this document already owns the QA judgement.
+
+---
+
+# 25. Resolving `{{MODULE_SLUG}}` and `{{RUN_FOLDER}}`
 
 ## The module: `{{MODULE_SLUG}}`
 

@@ -6,6 +6,172 @@ Each agent file now retains only its `Pipeline position` and `Traceability` line
 
 ---
 
+## 2026-08-07 — Run Observability introduced
+
+User-mandated, and deliberately **additive**: no pipeline stage was added, renumbered, or redesigned; no Skill was added or removed; `Review`, `Automation`, and Execution Safety semantics are untouched; no test outcome, artifact ownership rule, or run immutability rule changed. Observability is the fourth concern and the only one with no authority — it observes and decides nothing.
+
+**The chain.** `Facts → Telemetry → Deterministic Metrics → Transparent Reporting`. Events are evidence, metrics are derived by a pure function, and the report and dashboard are renderings. No model interprets a duration, a count, or a ratio.
+
+**Telemetry schema v1.** 24 event types, five span kinds (`RUN` → `STAGE` → `SKILL` → `TOOL`, plus `REPAIR`) with explicit parent-child links, UTC ISO-8601 timestamps, and IDs derived from sequence plus content hash rather than from timestamp uniqueness. Append-only JSONL, matching the platform's existing immutable-evidence convention.
+
+**Run telemetry ownership.** `runs/{RUN}/metadata/observability/` — `ObservabilityEvents.jsonl` (evidence), `ObservabilityMetrics.json`, `ObservabilityReport.md`, `ObservabilityDashboard.html` (all derived and regenerable). Cross-run isolation is defended twice: placement inside the run folder, plus a `runId` on every event re-checked on load, so a copied stream contributes nothing.
+
+**Instrumentation coverage.** Run, stage, skill, tool, validation, retry, human decision, artifact, test design, automation build, execution result (with `attempt` and `cycle`), repair, and Execution Safety outcomes. Safety metrics are **consumed** from existing Safety evidence, never re-evaluated.
+
+**Provenance is preserved and never merged** (HD-OBS-001). `platform-tool` events are emitted by platform code and cannot be forgotten; `skill` events are emitted because a specification requires it, so their absence proves nothing. The two counts are reported separately everywhere. An opened span with no matching completion is `Incomplete` and receives **no duration**.
+
+**CLI.** `observability record | summary | validate | metrics | report | dashboard | historical | compare`, plus a capability section in `agentic-testing doctor` that reports what the installation *could* measure and never a usage figure. Exit codes: `0` ok, `1` error, `2` under-instrumented.
+
+**Reporting.** A per-run Markdown report with a Formula Registry, an explicit Unavailable Metrics section, and a stated Measurement Limitations section. A self-contained HTML dashboard renders the same metrics: no script tag, no external stylesheet, no font, no network request — charts are HTML/CSS bars and one inline SVG donut. Zero new dependencies. OpenTelemetry was evaluated and declined: it needs an SDK, an exporter, and a collector for a file-centric platform with no service to export to.
+
+**Token and cost telemetry are `Unavailable`** (HD-OBS-002), with the reason recorded on every run. No supported run-attributable provider usage source exists; Claude Code session transcripts are deliberately not read, being session-scoped rather than run-scoped and not an official stable contract. Nothing is estimated from text length, and no pricing is hardcoded. The schema is shaped so a future official source populates tokens and cost without a redesign.
+
+**`0` and `Unavailable` are different claims** and survive as different values into the JSON, the Markdown, and the HTML. Every unavailable metric carries the reason it could not be measured.
+
+**Prospective only** (HD-OBS-003). Applies to runs created after 2026-08-07. `run-001`, `run-002`, and `run-003` report **Not Instrumented**; no event was fabricated for them and no artifact of theirs was touched. What their immutable artifacts genuinely prove is available separately as **Historical Derived Metrics**, bannered and never merged into instrumented metrics.
+
+**Tests.** 166 new tests across schema, recorder, aggregator, formulas, missing-data semantics, historical derivation, dashboard, CLI, and an end-to-end instrumented fixture run — including cross-run contamination, secret sanitization at every output surface, deterministic rendering, and assertions that observability changes no `Review`, `Automation`, Safety, or test-outcome value it reads.
+
+---
+
+## 2026-08-07 — Execution Safety & Mutation Policy introduced
+
+User-mandated. A new governance capability, deliberately **additive**: no pipeline stage was added, renumbered, or redesigned; no Skill was added or removed; `Review` and `Automation` semantics are untouched; no artifact ownership, approval semantics, or run immutability rule changed.
+
+### The third governance concern
+
+The platform already governed two things about a *test case*. This governs an *action*:
+
+```text
+Review            Is the Test Case accepted?              unchanged
+Automation        Should it be automated?                 unchanged
+Execution Safety  May this action execute here and now?   new
+```
+
+All three are independent. `Review = Approved AND Automation = Approved` authorizes **generation**, never **mutation** — a case can be correct, accepted, and worth automating while still containing an operation that must not run on the current environment. Equally, no safety decision can make an unreviewed case executable: safety runs *after* eligibility and only ever narrows it.
+
+Governing principle throughout: **capability does not imply authorization.**
+
+### Canonical decisions
+
+```text
+Allowed            execute
+Approval Required  stop, ask a human, execute only within the approved scope
+Forbidden          do not execute — and no run authorization changes that
+```
+
+These are **policy decisions, not test results**. A blocked operation is recorded with the *existing* execution taxonomy — `Skipped` / `Blocked`, reason `Execution Safety Policy`. **No new result status was introduced**, and a policy block is never an Application, Automation, Environment, Infrastructure, or Configuration Failure.
+
+### Deterministic evaluator — `platform_core/tools/execution_safety/`
+
+Reusable, project-agnostic, zero runtime dependencies, and holding **no project rule whatsoever**. Same input plus same policy version always yields the same decision; no model is consulted once an operation is structurally classified.
+
+- **23 action classifications**, grouped into `read` · `mutation` · `approval` · `notification` · `booking` · `financial` · `privileged`. Deliberately not reduced to CRUD: `UPDATE Agency Name` and `PAYMENT` are both state-changing and must be governable differently, and `BOOK` / `CANCEL_BOOKING` / `VOID` are distinct business effects, never three flavours of `UPDATE`.
+- **5 data-ownership classes** — `SelfCreated` · `DedicatedTestData` · `Shared` · `ProductionLike` · `Unknown`. **`Unknown` never becomes `SelfCreated`**, and an invariant test asserts no installed policy is ever more permissive on `Unknown` than on `SelfCreated`, for any action.
+- **8 environments**, resolved from run configuration only — **never inferred from the URL**. A policy governs exactly one named environment and refuses to decide for any other.
+- **Explainable by contract** — every decision returns `decision`, `matchedRule`, `reason`, `scope`, plus `absolute`, `cleanupRequired`, and any warnings. Never a bare boolean.
+- **Precedence, documented and tested:** absolute prohibition → a prohibition is never overridden by a *vaguer* permission → narrowest scope → highest specificity → most restrictive on a tie. The second rule is what stops *"mutation is allowed in Agency"* from silently meaning *"deleting other people's Agency records is allowed in Agency"*.
+- **Fail-safe on missing policy** — a mutating action with no rule resolves `Forbidden`; a read resolves `Approval Required`. `No rule found → Allowed` appears nowhere. A malformed policy throws with every problem listed and is never partially applied.
+
+### Policy ownership
+
+```text
+platform_core/tools/execution_safety/                 the evaluator — no project rules
+platform_core_data/knowledge_base/
+    execution_safety_policy.json                      the project's policy (authoritative for evaluation)
+    execution_safety_policy.md                        the same policy, explained, provenance per rule
+platform_core_data/runs/{RUN}/metadata/
+    SafetyAuthorizations.json / .md                   run-scoped approvals
+    SafetyPreflight.md                                the mutation footprint, captured before execution
+```
+
+The initial project policy was built **only** from verified evidence plus explicitly flagged conservative defaults. Every rule carries a `source`, and a test fails the build if any rule lacks one. `run_configuration.md` now **references** the canonical policy rather than duplicating its rules, while remaining the authoritative record of the prose grants that predate the mechanism.
+
+**No module or entity overrides are defined.** The evaluator supports both; no current project document establishes a per-module rule, and inventing one to look complete would be exactly the invented permission the policy must not contain.
+
+### Run-scoped authorization
+
+Class-scoped per `(environment, module, action, ownership)`, for **one run**. Twelve test cases sharing a scope cost one question, not twelve — while every executed action still records the exact record it touched, so the approval is class-wide and the audit trail is per-record.
+
+**No authorization ever lifts a `Forbidden`**; it only satisfies an `Approval Required`, and one that tries is ignored and reported. **No run approval ever becomes project policy.** Cross-run leakage is prevented twice over — the store lives inside the run folder, *and* every record's `runId` is re-checked on load and again in the evaluator, so even a copied file authorizes nothing. Both mechanisms are tested.
+
+No credential, token, session identifier, or card value is written into a policy, an authorization, a preflight, or run metadata; `createAuthorization()` drops any field outside its fixed schema.
+
+### Stage integration
+
+| Stage | Change |
+|---|---|
+| `4M` Manual Execution | New **§6.1** — the Execution Safety gate, distinct from §4.1's `Review` gate. Enforces **per operation**. Rules 4, 4a–4c added |
+| `4A` Automation | New **§27A** — generation permission is not execution permission. **Its eligibility gate is unchanged.** A currently-unrunnable operation is disclosed in Known Limitations, never converted into a permanent coverage gap and never mislabelled `Manual Only`. Rules 36a–36c added |
+| `5A` Automation Execution | New **§14A** — enforcement at **suite preflight and per test**, and explicitly **not** per operation, because the runner is an opaque external process with no interception point. Overclaiming this is now a named specification violation. Rules 6, 6a–6d added |
+| `6A` Reporting | `Blocked by Execution Safety Policy` as its own category; safety metrics reported as facts about authorization, never as a quality score. Rules 4b–4d added |
+| `browser_provider` / `browser_driver` | Documented as **actuators, never authorizers**. No business authorization rule may live there |
+
+### CLI and diagnostics
+
+`agentic-testing doctor` gained an **Execution Safety** section — environment, policy state, schema validity, version, hash, and the standing decisions. A missing policy is *reported*, not treated as an error, and never described as "safe".
+
+A read-only tool CLI provides `evaluate`, `validate`, `summary`, and `preflight`, with exit codes that let a caller branch on the decision without parsing prose: `0` Allowed/valid · `1` error · `2` Approval Required · `3` Forbidden. Every subcommand is read-only; only `preflight --out` writes, and only that run's own preflight record.
+
+### Prospective only
+
+The mechanism takes effect **2026-08-07** and governs runs created on or after that date. `run-001`, `run-002`, and `run-003` executed under the prose grants in `run_configuration.md`, were never evaluated by it, and **no artifact of theirs was rewritten** to suggest otherwise.
+
+### Tests
+
+**+104 tests, all passing** — `evaluator` (42), `cli` (15), `preflight` (14), `authorizations` (11), `installedPolicy` (11), `integration` (11). Covering the full action × ownership matrix, environment/module/entity overrides, precedence and conflicting rules, schema errors, unknown action/ownership/environment, missing policy, run-scoped approval, cross-run leakage, determinism, explanation shape, secret exclusion, and the composition of all three gates. `installedPolicy` asserts **invariants** rather than expected values, so no project permission is hardcoded into `platform_core/`.
+
+---
+
+## 2026-08-07 — `Review` and `Automation` governance formalized platform-wide
+
+User-mandated. **No new field, no new gate, no behavioural change to either gate** — this pass makes the two existing decision fields' meaning, ownership, defaults, consumers, derived eligibility, and section naming identical everywhere, and adds detection for the one contradictory state the model admits.
+
+### The canonical model, restated once
+
+The platform has exactly **two** authoritative test case decision fields, and they answer different questions:
+
+| Field | Question | Values | Default | Owner |
+|---|---|---|---|---|
+| **`Review`** | Has this test case been reviewed and accepted? | `Pending` · `Approved` · `Rejected` | `Pending` | **Human only** |
+| **`Automation`** | Should this accepted case be automated? | `Pending` · `Approved` · `Rejected` | `Pending` | **Human only** |
+
+They are **never merged into one lifecycle status**, and `Review = Approved` with `Automation = Rejected` is a legitimate, common state — an accepted case that stays manual on purpose, which is *not* an automation coverage gap. The gates are unchanged: Stage `4M` reads `Review` alone; Stage `4A` requires `Review = Approved AND Automation = Approved`.
+
+### Eligibility is derived, never stored
+
+Added `isManualEligible()`, `isAutomationEligible()`, and `lifecycleInconsistency()` to `parseTestCases.js`, so every consumer derives the same answer from the same place rather than re-implementing the rule. **No third field records the consequence** — a persisted `Automation Eligible` / `Ready for Automation` / `Lifecycle Status` would be a second source of truth that can disagree with the pair it came from, which is the cost the retired `AutomationCandidate` tag already demonstrated.
+
+### New: contradictory pairs are detected, reported, and never reconciled
+
+`Automation = Approved` with `Review ≠ Approved` is contradictory — two human decisions that disagree. Both the export path (`parseTestCases`, `--check` exits `2`) and the import path (`importLifecycle`, including a contradiction formed by combining a workbook value with one already in the Markdown) now emit an `INCONSISTENT lifecycle` warning.
+
+**Neither value is ever auto-corrected.** Resetting `Automation` would destroy one reviewer's recorded intent; promoting `Review` would manufacture an approval nobody gave — the single thing the review gate exists to prevent. The `4A` gate already excludes such a case on its own, so reporting is sufficient; resolution is a Human Decision (`test-design-skill` §6.3.4, new).
+
+**One live instance found and left untouched for human resolution:** `TC-AGENCY-019` (`Review: Rejected`, `Automation: Approved`), now disclosed in that module's Coverage Report.
+
+### Canonical section naming — `Review & Automation`
+
+A section covering **both** fields is titled **`Review & Automation`**. `Automation Candidates` (retired advisory list), `Automation Status` (only one field), and `Lifecycle Status` (implies one combined state) are all dropped as umbrella headings. Where a section genuinely covers one field, `Review` or `Automation` may stand alone. Applied to `test-design-skill` §18 #11, the Coverage Report template, and both live Coverage Reports.
+
+### AutomationCandidate — confirmed fully retired
+
+Repository-wide search found **no producer, no consumer, and no live test case carrying it**; the exporter, parser, and reporting logic never referenced it. The remaining mentions are either explicit "this is retired" statements or historical records, both correct as written. Five stale references that still described the advisory hint as *current* were repointed (`manual-execution-skill` ×2, two Stage `4A` templates, one live Coverage Report). No unrelated tag (`Atomic`, `Scenario`, `E2E`, `Regression`, `Smoke`, `Negative`, `Boundary`, `Blocked`, `Deferred`) was touched.
+
+### Reporting — three concepts kept apart
+
+`reporting-skill` now states explicitly that the **Review decision**, the **Automation selection decision**, and the **automation execution result** are three separate facts. `Automation = Approved` means *selected for automation*, never *passed*: `Review = Approved` + `Automation = Approved` + `Execution Result = Failed` is valid and important. Cases at `Automation = Rejected` are reported as deliberately manual, never as a coverage shortfall.
+
+### Live artifacts
+
+No migration was needed — all 134 cases across both suites already carried both fields with explicit human decisions. **No approval or rejection decision was inferred for any case.** The branch module's Coverage Report roll-up was stale (it described 39 cases all `Pending`; the suite is 81 cases with review complete) and was **recomputed from the authoritative Markdown** — a derived count, not a decision.
+
+### Tests
+
+Added a full decision-matrix suite: all nine `Review` × `Automation` combinations asserted for both manual and automation eligibility, plus `Automation` never influencing manual scope, `Automation = Approved` never bypassing `Review`, verbatim preservation of inconsistent pairs, and three import-path inconsistency cases.
+
+---
+
 ## 2026-08-01 — `Review` gates BOTH branches, and lifecycle decisions can be made in Excel
 
 User-mandated, in two parts that arrived together and belong together.

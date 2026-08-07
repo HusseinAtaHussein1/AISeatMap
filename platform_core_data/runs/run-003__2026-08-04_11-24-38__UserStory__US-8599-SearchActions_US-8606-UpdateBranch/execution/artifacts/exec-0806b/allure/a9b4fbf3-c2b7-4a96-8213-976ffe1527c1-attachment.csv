@@ -1,6 +1,0 @@
-1, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields' failed. Please investigate and open a new Issue if needed.
-2, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty' failed. Please investigate and open a new Issue if needed.
-3, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr013_mandatoryEmailConfigFieldsBlockSubmissionWhenEmpty' failed. Please investigate and open a new Issue if needed.
-4, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty' failed. Please investigate and open a new Issue if needed.
-5, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr026_warningPromptRejectsValueExceeding11Digits' failed. Please investigate and open a new Issue if needed.
-6, Test Method 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty' failed. Please investigate and open a new Issue if needed.

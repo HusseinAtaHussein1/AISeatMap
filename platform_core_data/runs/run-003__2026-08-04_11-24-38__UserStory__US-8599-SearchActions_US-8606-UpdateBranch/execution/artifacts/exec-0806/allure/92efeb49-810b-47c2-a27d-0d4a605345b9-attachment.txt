@@ -1,9 +1,0 @@
-
-[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
-                                        Starting Execution: '6 out of 13' test cases in the current suite                                        
-                Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr024_reachingPercentageRejectsValueGreaterThan100'                
-------------------------------------------------------------------------------------------------------------------------------------------------
-[0m
-[ReportManager] Get page source. @06-08-2026 10:07:21.0154 AM
-[ReportManager] Successfully created attachment 'Browser Action Test Data - Get page source - Actual Value' @06-08-2026 10:07:21.0154 AM
-[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @06-08-2026 10:07:21.0154 AM

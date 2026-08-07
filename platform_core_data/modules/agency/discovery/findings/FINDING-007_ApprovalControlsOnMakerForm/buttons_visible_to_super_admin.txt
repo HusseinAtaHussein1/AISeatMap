@@ -1,8 +1,0 @@
-Upload document *
-Add
-Upload logo *
-Set target
-Cancel
-Send For Approval
-Approve
-Reject

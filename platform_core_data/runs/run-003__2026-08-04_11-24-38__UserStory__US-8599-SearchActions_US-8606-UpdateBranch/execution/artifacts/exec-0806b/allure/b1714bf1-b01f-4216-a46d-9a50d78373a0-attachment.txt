@@ -1,7 +1,0 @@
-
-[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
-                                       Starting Execution: '11 out of 13' test cases in the current suite                                       
-                 Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr037_createBranchWithValidOutstandingThreshold'                 
-------------------------------------------------------------------------------------------------------------------------------------------------
-[0m
-[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @06-08-2026 11:38:10.0332 AM

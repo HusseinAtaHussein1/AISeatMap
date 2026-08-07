@@ -1,0 +1,38 @@
+# Tool Development boundary declaration
+
+The presence of this file marks the tree as a **Tool Development** tree: the reusable
+Agentic AI Testing Platform, with **no project-owned data tracked**.
+
+    git ls-files platform_core_data     ->     must be EMPTY
+
+Enforced by `scripts/verifyBranchBoundary.js` (`npm run verify:boundary`, and `prepack`).
+
+## Why a file and not a branch name
+
+The branches most likely to reintroduce project data are the `feature/*` branches cut
+*from* `tool-development` — a branch-name check would not cover them, and would silently
+disable itself on a detached HEAD. This declaration is inherited by anything branched from
+here, so the check follows the work rather than the label.
+
+## What this means in practice
+
+| Branch | Declaration | `platform_core_data` |
+|---|---|---|
+| `tool-development` and anything cut from it | present | **zero tracked files** |
+| `platform-testing` and anything cut from it | absent | tracked, deliberately |
+
+`platform_core_data/` may still exist **on disk** here — `git rm --cached` untracks without
+deleting — so a working copy that also does dogfooding keeps its data. It is simply not part
+of this branch's tree.
+
+## Direction of change
+
+```text
+feature/*  ->  tool-development  ->  platform-testing
+```
+
+Tool source flows down. Project evidence never flows back. If a Tool fix is made while on
+`platform-testing`, promote only the Tool-owned files — never merge that branch backward.
+
+**Do not delete this file to make a check pass.** Deleting it removes the invariant, not the
+violation.

@@ -1,8 +1,0 @@
-file input 1: accept="(none)" multiple=false
-file input 2: accept="image/*" multiple=false
-
-Attached document name rendered on the form:
-Upload document
-*
-screen-1-logo-black-and-white.png
-Contract Start Date *

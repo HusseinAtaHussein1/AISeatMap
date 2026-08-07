@@ -6,6 +6,45 @@ Each agent file now retains only its `Pipeline position` and `Traceability` line
 
 ---
 
+## 2026-08-07 — Repository split into `tool-development` and `platform-testing`
+
+User-mandated. Two long-lived branches with **intentionally different tracked contents**, so developing the reusable Tool is cleanly separated from dogfooding it against real project data. Canonical documentation: [`docs/BRANCH_MODEL.md`](BRANCH_MODEL.md).
+
+```text
+Tool Development  =  Reusable Product
+Platform Testing  =  Reusable Product + Dogfooding Environment + Project Data + Execution Evidence
+```
+
+| Branch | `platform_core_data` | Declares |
+|---|---|---|
+| `tool-development` | **zero tracked files** (hard invariant) | `.toolonly` |
+| `platform-testing` | tracked, deliberately | `.platformdata` |
+
+**This is tracked-tree separation, not a `.gitignore` trick.** 921 paths were untracked with `git rm --cached`, so nothing was deleted — the files stay on disk in a dual-purpose working copy and remain fully tracked on `platform-testing`. No versioned ignore rule was added: a branch-specific `.gitignore` would diverge between the branches, and if a `platform_core_data/` rule ever reached `platform-testing` it would silently ignore **new** data on the branch whose purpose is to track it. Local noise belongs in `.git/info/exclude`, which cannot merge anywhere.
+
+**The one-time baseline merge.** `tool-development` was created from the current state by *deleting* `platform_core_data`, so a plain `git merge tool-development` into `platform-testing` would faithfully replay that deletion and wipe every run, module and piece of execution evidence. This was proven **before it could happen**, read-only:
+
+```bash
+git merge-tree --write-tree platform-testing tool-development
+#   -> platform_core_data files in the resulting tree: 0
+```
+
+The fix is one deliberate merge that resolves the conflict by keeping `platform_core_data` and rejecting `.toolonly`. That merge commit records the decision once, becomes the merge base for every future promotion, and makes `git merge tool-development` routine and safe from then on.
+
+**Guards, in both directions.** `scripts/verifyBranchBoundary.js` (`npm run verify:boundary`, also wired into `prepack`) fails on **contamination** (a Tool tree that gained project data) *and* on **data loss** (a Platform Testing tree that lost it). The second matters more, because it happens on the *normal* promotion path. Enforcement keys off committed declaration files, never branch names: a name check misses every `feature/*` branch cut from either side and disables itself on a detached HEAD. A tree carrying both declarations is a contradiction and fails.
+
+**Normal workflow:**
+
+```text
+feature/*  ->  tool-development  ->  git merge into platform-testing  ->  real validation
+```
+
+Tool source flows down; project evidence never flows back. A Tool fix made while on `platform-testing` is promoted by cherry-picking the Tool-owned files — never by merging that branch backward.
+
+**`Tool_latest_Update` is superseded** by this model. It was an earlier attempt at the same separation (*"strip run output and remove projects/ — tooling snapshot"*) but retains 66 tracked `platform_core_data` files, so it never reached the invariant and has no enforcement. It is **left untouched, not renamed and not deleted** — it holds one commit not in the current line. No existing branch was retired: `execution_round_1` and every `feature/*` are unchanged, and the tag `pre-branch-split-2026-08-07` marks the pre-split state.
+
+---
+
 ## 2026-08-07 — Platform Knowledge relocated to `platform_core/knowledge/patterns/`
 
 User-mandated (HD-BRANCH-002), as a prerequisite for separating the reusable Tool from the dogfooding data. **Moved via `git mv`, all 13 files with full history and provenance intact.** No pattern's content changed.

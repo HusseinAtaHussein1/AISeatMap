@@ -32,6 +32,7 @@
 > |---|---|
 > | [`../README.md`](../README.md) | the current architectural reference — the primary entry point |
 > | [`USER_GUIDE.md`](USER_GUIDE.md) | how to actually install and run the platform today |
+> | [`BRANCH_MODEL.md`](BRANCH_MODEL.md) | the two long-lived branches — `tool-development` (the product) and `platform-testing` (product + dogfooding data), and how a change is promoted between them |
 > | [`BRANCH_COMPARISON.md`](BRANCH_COMPARISON.md) | exactly what changed between that model and this one, with migration notes |
 > | [`PROMPT_HISTORY.md`](PROMPT_HISTORY.md) | the decisions behind each of those changes |
 

@@ -1,0 +1,48 @@
+# Platform Testing boundary declaration
+
+The presence of this file marks the tree as a **Platform Testing** tree: the reusable
+platform **plus** the real project data used to validate it.
+
+    platform_core_data/     ->     tracked, and must stay populated
+
+Enforced by `scripts/verifyBranchBoundary.js` (`npm run verify:boundary`, and `prepack`).
+
+## What this guard is actually for
+
+The dangerous direction is the **normal** one. `tool-development` was created by deleting
+`platform_core_data` from the shared history, so promoting it here replays that deletion
+unless the one-time baseline merge already rejected it — silently wiping every run, module
+and piece of execution evidence, on a command that looks completely routine.
+
+This declaration makes that failure loud: if `platform_core_data` drops below its expected
+size on a tree that declares itself Platform Testing, the check fails before the loss can be
+committed.
+
+## Why a file and not a branch name
+
+Anything branched from here inherits the declaration, so `feature/*` work cut from
+`platform-testing` is covered too. A branch-name check would miss exactly those branches, and
+would disable itself on a detached HEAD or after a rename.
+
+| Branch | Declaration | `platform_core_data` |
+|---|---|---|
+| `platform-testing` and anything cut from it | `.platformdata` | tracked, deliberately |
+| `tool-development` and anything cut from it | `.toolonly` | zero tracked files |
+
+**A tree must never carry both.** Both present means `tool-development` was merged in without
+rejecting `.toolonly`, and the check fails on the contradiction.
+
+## Promotion
+
+```text
+feature/*  ->  tool-development  ->  git merge into platform-testing  ->  real validation
+```
+
+Tool source flows down. Project evidence never flows back — a Tool fix made while on this
+branch is promoted by cherry-picking the Tool-owned files, never by merging this branch
+backward.
+
+See [`docs/BRANCH_MODEL.md`](docs/BRANCH_MODEL.md).
+
+**Do not delete this file to make a check pass.** Deleting it removes the invariant, not the
+violation.

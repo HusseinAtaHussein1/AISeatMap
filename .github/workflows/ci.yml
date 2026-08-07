@@ -1,0 +1,123 @@
+name: CI
+
+# Runs on both long-lived branches and on any feature branch cut from either.
+#
+# The branch boundary is the thing this pipeline exists to protect. Everything else here is
+# ordinary verification; the `boundary` job is the one that catches an error nobody would notice
+# in a diff — 900+ project files entering the distributable product, or every run and module
+# silently disappearing from the dogfooding branch.
+#
+# See docs/BRANCH_MODEL.md.
+
+on:
+  push:
+    branches:
+      - tool-development
+      - platform-testing
+      - 'feature/**'
+  pull_request:
+    branches:
+      - tool-development
+      - platform-testing
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── The architectural invariant ───────────────────────────────────────────────────────────────
+  # Blocking, and deliberately first: if the boundary is broken there is no point knowing whether
+  # the tests pass. Keyed off the committed declaration files, never the branch name — a name check
+  # would miss every feature/* branch cut from either side, which are the ones most likely to
+  # breach the boundary through a bad merge.
+  boundary:
+    name: Branch boundary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # ls-files only needs the tree, but a shallow clone is enough and keeps this fast.
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify the branch boundary
+        run: node scripts/verifyBranchBoundary.js
+
+      - name: Report which side of the boundary this tree is on
+        if: always()
+        run: |
+          if [ -f .toolonly ]; then
+            echo "### 🔧 Tool Development tree" >> "$GITHUB_STEP_SUMMARY"
+            echo "\`platform_core_data\` tracked files: **$(git ls-files platform_core_data | wc -l)** (must be 0)" >> "$GITHUB_STEP_SUMMARY"
+          elif [ -f .platformdata ]; then
+            echo "### 🧪 Platform Testing tree" >> "$GITHUB_STEP_SUMMARY"
+            echo "\`platform_core_data\` tracked files: **$(git ls-files platform_core_data | wc -l)**" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### ⚠️ Undeclared tree — no boundary enforced" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # ── Platform tests ────────────────────────────────────────────────────────────────────────────
+  # The full suite, on both branches. Counts differ legitimately between them: the
+  # execution_safety installedPolicy tests read the project's real policy, so they run on
+  # platform-testing and skip on tool-development. That is correct behaviour, not flakiness.
+  test:
+    name: Platform tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # The platform carries zero runtime dependencies, so there is nothing to install for the
+      # tests themselves. `npm ci` is skipped deliberately rather than forgotten.
+      - name: Confirm the zero-runtime-dependency invariant
+        run: |
+          DEPS=$(node -p "Object.keys(require('./package.json').dependencies || {}).length")
+          echo "runtime dependencies: $DEPS"
+          if [ "$DEPS" != "0" ]; then
+            echo "::error::package.json gained a runtime dependency. The platform ships dependency-free."
+            exit 1
+          fi
+
+      - name: Run the platform test suite
+        run: npm test
+
+  # ── Packaging ─────────────────────────────────────────────────────────────────────────────────
+  # Only meaningful on a Tool Development tree. On platform-testing the data root holds one
+  # project's real PRD and run configuration, which verifyPackable correctly refuses to publish —
+  # so running it there would report a failure for a branch that is never published anyway.
+  package:
+    name: Packaging (Tool Development only)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Skip unless this is a Tool Development tree
+        id: gate
+        run: |
+          if [ -f .toolonly ]; then echo "run=true" >> "$GITHUB_OUTPUT"
+          else echo "run=false" >> "$GITHUB_OUTPUT"; echo "Not a Tool Development tree — packaging is not checked here."; fi
+
+      - name: Verify the package is publishable
+        if: steps.gate.outputs.run == 'true'
+        run: node scripts/verifyPackable.js
+
+      # `npm run test:e2e` is deliberately NOT wired in yet. It performs a real install into a
+      # throwaway target and is worth having, but scripts/e2e/verify-install.sh still asserts
+      # "7 skills installed" while the platform ships 8 — so it would fail for a reason unrelated
+      # to whatever change triggered the run. Add it here once that assertion is corrected.

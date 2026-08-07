@@ -130,13 +130,32 @@ artifact, never typed into a tool call, and never echoed in a report.
 
 ## Environment Constraints (standing, project-wide)
 
+> **⚠️ The canonical, machine-readable form of these rules is now
+> [`execution_safety_policy.json`](execution_safety_policy.json), explained for reviewers in
+> [`execution_safety_policy.md`](execution_safety_policy.md) (introduced 2026-08-07).** The prose below is
+> retained because it is the *evidence* the policy was migrated from, and because it remains the
+> authoritative record for `run-001`, `run-002`, and `run-003`, which executed before the mechanism
+> existed and were never evaluated by it.
+>
+> **For any run created on or after 2026-08-07, the policy file decides** — a Skill evaluates it through
+> `platform_core/tools/execution_safety/`, and does not interpret this prose. Where the two ever
+> disagree, the policy file is what runs, and this section is out of date. Do not add a new standing rule
+> here without adding it there.
+>
+> Print the current standing decisions with
+> `node platform_core/tools/execution_safety/cli.js summary`, or `agentic-testing doctor`.
+
 - **Shared environment** — this staging instance is not isolated to this testing effort; assume other
   teams/testers have live data on it.
 - **Standing default is read-only** — no data mutation is authorized unless a run-specific override below
   grants it. An override never loosens the default for any other run.
+  *(Now expressed as: every mutating action resolves `Approval Required` or `Forbidden`; nothing but
+  reading is `Allowed` outright.)*
 - **Negative tests that endanger a shared environment are deferred, not asked about** — lockout,
   brute-force, and similar destructive negative cases are designed in full and marked
   `Deferred / Requires Dedicated Environment` with the reason stated (`pipeline.md` §5.5).
+  *(This is a Test **Design** rule, not an execution-authorization rule, and it stays here — the policy
+  governs what may execute, not what may be written down.)*
 
 ### Run-specific mutation override — US-4222 only
 

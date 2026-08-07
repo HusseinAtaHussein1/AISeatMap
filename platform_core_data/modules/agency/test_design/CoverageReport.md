@@ -19,7 +19,7 @@
 | **Run Type** | User Story |
 | **Strategy applied** | **User Story** (§16) — narrowest and most literal: at minimum one case per enumerated acceptance criterion, no wandering into adjacent features, and every carried-forward Assumption/Risk given an explicitly tagged case or a stated disposition |
 | **Project Context designed against** | revision 2, `Approved` — the revision carrying the §1.1 Requirement Disposition taxonomy |
-| **Branch** | Manual Execution Pipeline. Cases are authored branch-agnostically; the Automation Candidates hint (§11) is advisory only |
+| **Branch** | Manual Execution Pipeline. Cases are authored branch-agnostically; §11's **Review & Automation** roll-up summarizes the two binding per-case decisions that gate each branch |
 
 **The governing design decision.** US-4222 predates later application enhancements, so per Project Context §1.1 the **running application is the primary reference where the story is clearly outdated**. Expected results are written against observed behaviour for disposition rows 1, 2 and 4; against the *requirement* for row 5; and AC-9 (row 3) is designed but Blocked. Every case whose expected result rests on the directive rather than on the story says so in its Notes.
 
@@ -197,9 +197,9 @@ Aggregated from `TraceabilityMatrix.md` §4. **Six High-risk items**, called out
 | DREC-T09 | **Exploratory charter — `Reaching Percentage` bounds** | The field is numeric with no stated range. Whether values above 100 are accepted is worth knowing before writing a boundary case |
 | DREC-T10 | Correct US-4222 once the outstanding questions are answered | The message column, `Submit for Approval` vs `Send For Approval`, the "role update process" wording, and the seven undocumented fields. Otherwise the next reader repeats this run's analysis |
 
-## 11. Lifecycle Status — Review and Automation
+## 11. Review & Automation
 
-*(Section renamed and re-scoped 2026-08-01. It was "Automation Candidates" — an advisory list. It is now a **roll-up of the binding `Review` and `Automation` columns** each test case carries, per `test-design-skill` §6.3. Renamed again the same day from "Automation Status", because `Review` now gates **both** branches and this section is no longer about automation alone.)*
+*(Section renamed and re-scoped 2026-08-01, and renamed again 2026-08-07 to the canonical umbrella heading `Review & Automation` (`test-design-skill` §18 #11). It was "Automation Candidates" — an advisory list — then "Automation Status", then "Lifecycle Status — Review and Automation". It is a **roll-up of the two binding columns** each test case carries, per `test-design-skill` §6.3. "Lifecycle Status" was dropped because the two decisions are independent and must not read as one combined state.)*
 
 **Roll-up as of the reviewer's completed review, imported 2026-08-02** (`cli.js --import-lifecycle`). The suite is **53** cases:
 
@@ -215,6 +215,8 @@ Aggregated from `TraceabilityMatrix.md` §4. **Six High-risk items**, called out
 | `Review = Approved` — **executable by Stage `4M`** | 37 | 001–003, 008, 011–018, 020–024, 027, 033–037, 039–042, 044–053 |
 | `Review = Rejected` — excluded, reason `Rejected at Review` | 16 | 004–007, 009, 010, 019, 025, 026, 028–032, 038, 043 |
 | `Review = Approved AND Automation = Approved` — in scope for Stage `4A` | 10 | 001, 002, 020, 021, 022, 040, 047, 050, 052, 053 |
+
+**Inconsistent pairs — 1, awaiting human resolution.** `TC-AGENCY-019` carries `Review: Rejected` with `Automation: Approved`. These are two recorded human decisions that disagree (`test-design-skill` §6.3.4). **Neither value has been changed.** The case is already excluded from Stage `4A` by the gate above — automation requires `Review = Approved` independently — so nothing can be generated from it; and it is excluded from Stage `4M` as `Rejected at Review`. `cli.js --check` reports this on every export (exit `2`) until a human resolves it by setting either column. Context: the case is a deliberate "designed to the requirement, not to observed behaviour" negative case (FINDING-004), which may be why its review was contested while the scenario was still judged worth automating.
 
 **Authorized Coverage: 37 ÷ 53 = 69.8%.** Of those 37, four cannot execute in this run regardless: TC-AGENCY-048, 049, 050 are `Blocked` on a second identity, and TC-AGENCY-052 is `Deferred` as destructive on a shared environment. **The executable count for this pass is therefore 33.**
 

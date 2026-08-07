@@ -1,5 +1,25 @@
 # Knowledge
 
+> ## ⚠️ Superseded — this tree is residue, and no stage reads it
+>
+> **`platform_core_data/knowledge/` was replaced by `platform_core_data/knowledge_base/`.** The
+> layout described below — `business/` + `patterns/` with the layer carried in a `scope:` frontmatter
+> field — is **not** the platform's current knowledge architecture and is not what the installer
+> scaffolds. The current model is defined canonically in
+> [`workflows_and_pipelines/pipeline/pipeline.md`](../../workflows_and_pipelines/pipeline/pipeline.md)
+> §10 and realized by `platform_core/tools/init/plan.js` (`DATA_DIRS`):
+>
+> | Layer | Current location |
+> |---|---|
+> | **Platform Knowledge** (application-agnostic, Promotion-only) | `platform_core_data/knowledge_base/patterns/` |
+> | **Project Knowledge** (this application) | `platform_core_data/knowledge_base/business_rules/`, `.../lessons_learned/` |
+>
+> This folder is empty, has no reader, and is retained only pending cleanup — see the root
+> [`README.md` §9](../../README.md#9-repository-structure) "Residue on disk, not a fifth category."
+> **Never write a new file here.** Everything below is historical.
+
+---
+
 All of the platform's runtime knowledge, in **one tree under project data**.
 
 **Canonical architecture definition:** [`workflows_and_pipelines/pipeline/pipeline.md`](../../workflows_and_pipelines/pipeline/pipeline.md) §10

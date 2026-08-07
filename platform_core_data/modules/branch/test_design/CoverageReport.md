@@ -157,9 +157,11 @@ ASM-BR-1 and ASM-BR-2 (unstated validation-message wording; Address 1/2 characte
 | REC-TD-3 | When ready, run Discovery against US6 §4's Branch Threshold Update confirmation-popup flow, then extend this suite | Explicitly deferred this pass per user instruction; no blocker exists beyond scheduling |
 | REC-TD-4 (Exploratory Recommendation, §17) | Consider a scoped exploratory charter for Unicode/emoji input across Address 1/2, Branch Email ID, and Contact Name, rather than a fixed pass/fail case | US 8605 states "free text, all character input" for several fields with no stated rejection behavior — genuinely ambiguous what "pass" means for non-ASCII input without inventing a rule |
 
-## 11. Automation Status
+## 11. Review & Automation
 
-*(Section renamed from "Automation Candidates" per the current Test Design skill specification, 2026-08-01 revision — the advisory candidate list is retired in favor of the binding `Automation` column on each test case.)*
+*(Section renamed from "Automation Candidates" per the 2026-08-01 Test Design skill revision — the advisory candidate list is retired in favor of the two binding columns on each test case — and renamed again 2026-08-07 to the canonical umbrella heading `Review & Automation` (`test-design-skill` §18 #11), since it covers both.)*
+
+> **Point-in-time record — as at run-002.** The figures below describe the suite as it stood when this run's Coverage Report was written (39 cases, review not yet started). They are **not** the current state: the suite has since grown to 81 cases and the reviewer's decisions have been imported. For the current roll-up see the run-003 section's **§11 Review & Automation** below, which is this document's live figure.
 
 Every test case in this suite carries `Automation: Pending` — no automation decision has been made for any of the 39 cases yet, since none has completed human Review.
 
@@ -332,17 +334,29 @@ The two High-risk items are both P1 and both sit on the critical path for this r
 3. **Provision an Admin-role credential** to convert TC-BR-080 from Unknown into real coverage, and to give TC-BR-059 the control case it currently lacks.
 4. **Exploratory charters:** TC-BR-078 and TC-BR-079 are recorded as exploratory rather than forced into fixed pass/fail assertions, because in both cases the correct expected result is a Product decision this stage cannot make.
 
-## 11. Automation Status
+## 11. Review & Automation
 
-Roll-up of the `Automation` column across all 81 cases in the module suite:
+*(Renamed 2026-08-07 to the canonical umbrella heading (`test-design-skill` §18 #11), since this section covers both lifecycle columns. **Roll-up recomputed 2026-08-07** from the authoritative Markdown suite: the previous table reported `Automation` as 42 Pending / 13 Approved / 26 Rejected, which predated the reviewer's completed pass. No decision was inferred to produce this table — every figure is a count of values already recorded on the cases, read via `parseTestCases.js`.)*
 
-| Value | Count |
-|---|---|
-| Pending | **42** (every run-003 case, TC-BR-040…081) |
-| Approved | 13 (run-002 cases) |
-| Rejected | 26 (run-002 cases) |
+Roll-up across all **81** cases in the module suite. **Review is complete — no case is `Pending`.**
 
-This run took the **Manual Execution branch (`4M`)**, which gates on `Review` alone and does not read this column. Every new case is `Automation: Pending` because no automation decision has been made — not because one was declined.
+| Column | Pending | Approved | Rejected |
+|---|---|---|---|
+| **Review** | **0** | **73** | **8** |
+| **Automation** | **0** | **32** | **49** |
+
+| Decision | Count | Cases (`TC-BR-…`) |
+|---|---|---|
+| `Review = Approved` — **executable by Stage `4M`** | 73 | 001–006, 010, 012–013, 016–017, 019, 021–081 |
+| `Review = Rejected` — excluded, reason `Rejected at Review` | 8 | 007–009, 011, 014–015, 018, 020 |
+| `Review = Approved AND Automation = Approved` — **in scope for Stage `4A`** | 32 | 001–002, 004, 013, 021, 024–026, 028, 030, 037–043, 045–046, 052, 054–058, 060–061, 065–069 |
+| `Review = Approved AND Automation = Rejected` — manual **by decision**, *not* an automation coverage gap | 41 | 003, 005–006, 010, 012, 016–017, 019, 022–023, 027, 029, 031–036, 044, 047–051, 053, 059, 062–064, 070–081 |
+
+**Authorized Coverage: 73 ÷ 81 = 90.1%.** Automation scope is 32 ÷ 81 = 39.5% of the suite, and 32 ÷ 73 = 43.8% of the approved cases — the remaining 41 approved cases are deliberately manual, which is a **recorded decision, not a shortfall**.
+
+This run took the **Manual Execution branch (`4M`)**, which gates on `Review` alone and does not read the `Automation` column at all.
+
+**Inconsistent pairs: none.** No case carries `Automation = Approved` with `Review ≠ Approved` (`test-design-skill` §6.3.4). Verified by `node platform_core/tools/test_suite_export/cli.js --module branch --check`, which exits `0`.
 
 ## 12. Inputs for Both Branches
 

@@ -27,7 +27,7 @@ See `INDEX.md` for the full catalog of documents currently in this layer.
 
 There is no `skills/` category here. Cross-cutting agent capability lives in `.claude/skills/` — a different platform layer entirely (Capability, not Knowledge). Meta-guidance on how to author a good `SKILL.md` belongs as documentation alongside that layer, never inside this runtime-consulted Knowledge Base.
 
-There is no `confidence_patterns/` category here (removed, 2026-07-21). The Confidence Engine's scoring rubric is fixed Capability logic in `.claude/skills/automation-execution-skill/SKILL.md` §27.2 — that spec is the sole source of truth for how confidence is derived.
+There is no `confidence_patterns/` category here (removed, 2026-07-21). The Repair Confidence Engine's scoring rubric is fixed Capability logic in `.claude/skills/self-healing-skill/SKILL.md` §9 — that spec is the sole source of truth for how confidence is derived.
 
 ## Document metadata standard
 

@@ -30,7 +30,12 @@ const fs = require('fs');
 const path = require('path');
 
 const { readWorkbook, WorkbookReadError } = require('./readWorkbook');
-const { LIFECYCLE_FIELDS, LIFECYCLE_VALUES } = require('./parseTestCases');
+const {
+  LIFECYCLE_FIELDS,
+  LIFECYCLE_VALUES,
+  lifecycleInconsistency,
+  inconsistencyMessage,
+} = require('./parseTestCases');
 
 class ImportError extends Error {}
 
@@ -145,6 +150,11 @@ function importLifecycle(markdownPath, xlsxPath, options = {}) {
 
   const changes = [];
   const seenInMarkdown = new Set();
+  // The lifecycle pair each case ends up with once the import is applied — the workbook's value
+  // where the reviewer supplied one, the Markdown's existing value otherwise. Checked for
+  // contradiction after the rewrite is planned, so the warning describes the RESULTING state rather
+  // than either input on its own.
+  const mdValues = new Map();
   let currentId = null;
   // Where a field is absent entirely, it is inserted after the last field line of that case rather
   // than appended blindly — keeping Review/Automation last, which is the workbook's column order.
@@ -183,6 +193,8 @@ function importLifecycle(markdownPath, xlsxPath, options = {}) {
 
     const existing = fieldMatch[2].trim();
     caseFields[key] = existing;
+    if (!mdValues.has(currentId)) mdValues.set(currentId, {});
+    mdValues.get(currentId)[key] = existing;
 
     const wanted = decisions.get(currentId);
     if (!wanted || !wanted[key] || wanted[key] === existing) continue;
@@ -201,6 +213,19 @@ function importLifecycle(markdownPath, xlsxPath, options = {}) {
     if (!seenInMarkdown.has(id)) {
       warnings.push(`${id}: in the workbook but not in the Markdown — no case to update. A row added in the spreadsheet is not a test case; author it in the Markdown.`);
     }
+  }
+
+  // Contradictory pair check on the post-import state. The reviewer's values are written exactly as
+  // recorded either way — this reports, it never reconciles (parseTestCases.lifecycleInconsistency).
+  for (const id of seenInMarkdown) {
+    const fromWorkbook = decisions.get(id) || {};
+    const fromMarkdown = mdValues.get(id) || {};
+    const resulting = {
+      review: fromWorkbook.review || fromMarkdown.review,
+      automation: fromWorkbook.automation || fromMarkdown.automation,
+    };
+    const clash = lifecycleInconsistency(resulting);
+    if (clash) warnings.push(inconsistencyMessage(id, clash));
   }
 
   const updated = lines.join(newline);

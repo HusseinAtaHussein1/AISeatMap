@@ -3,7 +3,10 @@
 const test = require('node:test');
 const assert = require('node:assert');
 
-const { parseTestCases, toRows, FIELDS } = require('../parseTestCases');
+const {
+  parseTestCases, toRows, FIELDS,
+  isManualEligible, isAutomationEligible, lifecycleInconsistency,
+} = require('../parseTestCases');
 
 /** A suite in the `## TC-x` + `**Title:**` shape the reference Stage 3 run produced. */
 const REFERENCE_SHAPE = `# Manual Test Suite — Search
@@ -272,4 +275,128 @@ test('lifecycle columns are not required fields', () => {
   ].join('\n');
   const { warnings } = parseTestCases(md);
   assert.strictEqual(warnings.length, 0);
+});
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+// THE REVIEW / AUTOMATION DECISION MATRIX
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+// `Review` and `Automation` are two INDEPENDENT human decisions (test-design-skill §6.3):
+//
+//   Review     — has this test case been reviewed and accepted?
+//   Automation — should this (accepted) test case be automated?
+//
+// Eligibility is DERIVED from the pair and never stored as a third field. These tests pin the whole
+// matrix so a future change cannot quietly collapse the two decisions into one lifecycle status, nor
+// let an automation decision start influencing manual scope.
+
+/** Build a minimal one-case suite carrying an explicit lifecycle pair. */
+function caseWith(review, automation) {
+  const lines = [
+    '## TC-M-001', '', '**Title:** T', '', '**Objective:** O', '',
+    '**Steps:**', '1. Go.', '', '**Expected Result:** R', '',
+    '**Priority:** P1', '', '**Tags:** Atomic', '',
+  ];
+  if (review) lines.push(`**Review:** ${review}`, '');
+  if (automation) lines.push(`**Automation:** ${automation}`, '');
+  return parseTestCases(lines.join('\n'));
+}
+
+test('decision matrix — manual and automation eligibility for every combination', () => {
+  // [Review, Automation, manual eligible, automation eligible]
+  const MATRIX = [
+    ['Pending',  'Pending',  false, false],
+    ['Pending',  'Approved', false, false], // inconsistent — automation selected before review
+    ['Pending',  'Rejected', false, false],
+    ['Approved', 'Pending',  true,  false], // approved case, automation undecided
+    ['Approved', 'Approved', true,  true ], // the only automation-eligible state
+    ['Approved', 'Rejected', true,  false], // approved case that stays manual BY DECISION
+    ['Rejected', 'Pending',  false, false],
+    ['Rejected', 'Approved', false, false], // inconsistent — Review takes precedence
+    ['Rejected', 'Rejected', false, false],
+  ];
+
+  for (const [review, automation, manual, auto] of MATRIX) {
+    const { cases } = caseWith(review, automation);
+    const c = cases[0];
+    assert.strictEqual(c.review, review, `${review}/${automation}: Review preserved verbatim`);
+    assert.strictEqual(c.automation, automation, `${review}/${automation}: Automation preserved verbatim`);
+    assert.strictEqual(
+      isManualEligible(c), manual,
+      `${review}/${automation}: manual eligibility must be ${manual} (Review gates 4M alone)`
+    );
+    assert.strictEqual(
+      isAutomationEligible(c), auto,
+      `${review}/${automation}: automation eligibility must be ${auto} (4A needs BOTH Approved)`
+    );
+  }
+});
+
+test('Automation never influences manual eligibility', () => {
+  // The whole point of two independent fields: an approved case stays manually executable whatever
+  // its automation decision says. `Automation = Rejected` is the REASON it must be run by hand.
+  for (const automation of ['Pending', 'Approved', 'Rejected']) {
+    const { cases } = caseWith('Approved', automation);
+    assert.strictEqual(
+      isManualEligible(cases[0]), true,
+      `Approved/${automation} must remain manually executable`
+    );
+  }
+});
+
+test('Automation = Approved can never bypass the Review gate', () => {
+  for (const review of ['Pending', 'Rejected']) {
+    const { cases } = caseWith(review, 'Approved');
+    assert.strictEqual(
+      isAutomationEligible(cases[0]), false,
+      `${review}/Approved must not be automatable — Review approval cannot be inferred`
+    );
+  }
+});
+
+test('an inconsistent pair is reported, and both values are preserved exactly', () => {
+  for (const review of ['Pending', 'Rejected']) {
+    const { cases, warnings } = caseWith(review, 'Approved');
+    assert.strictEqual(cases[0].review, review, 'Review is never auto-promoted to Approved');
+    assert.strictEqual(cases[0].automation, 'Approved', 'Automation is never auto-reset to Pending');
+    assert.ok(
+      warnings.some((w) => w.includes('INCONSISTENT lifecycle') && w.includes('TC-M-001')),
+      `${review}/Approved must surface an inconsistency warning`
+    );
+  }
+});
+
+test('consistent pairs raise no inconsistency warning', () => {
+  const CONSISTENT = [
+    ['Pending', 'Pending'], ['Pending', 'Rejected'],
+    ['Approved', 'Pending'], ['Approved', 'Approved'], ['Approved', 'Rejected'],
+    ['Rejected', 'Pending'], ['Rejected', 'Rejected'],
+  ];
+  for (const [review, automation] of CONSISTENT) {
+    const { warnings } = caseWith(review, automation);
+    assert.ok(
+      !warnings.some((w) => w.includes('INCONSISTENT')),
+      `${review}/${automation} is a legitimate state and must not warn`
+    );
+  }
+});
+
+test('both fields default to Pending, so a bare case is eligible for nothing', () => {
+  const { cases, warnings } = caseWith(null, null);
+  assert.strictEqual(cases[0].review, 'Pending');
+  assert.strictEqual(cases[0].automation, 'Pending');
+  assert.strictEqual(isManualEligible(cases[0]), false, 'an unreviewed case is not executable');
+  assert.strictEqual(isAutomationEligible(cases[0]), false);
+  assert.strictEqual(warnings.length, 0, 'absence is "no decision yet", not an authoring error');
+});
+
+test('lifecycleInconsistency names which decision is contradicted', () => {
+  assert.strictEqual(lifecycleInconsistency({ review: 'Approved', automation: 'Approved' }), null);
+  assert.match(
+    lifecycleInconsistency({ review: 'Rejected', automation: 'Approved' }).reason,
+    /Review takes precedence/
+  );
+  assert.match(
+    lifecycleInconsistency({ review: 'Pending', automation: 'Approved' }).reason,
+    /before the case itself was reviewed/
+  );
 });

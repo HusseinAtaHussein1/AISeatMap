@@ -253,8 +253,130 @@ function cmdDoctor(args) {
     }
   }
 
+  reportExecutionSafety(toolRoot, roots);
+  reportObservability(toolRoot, roots);
+
   paths.assertValidInstall(roots);
   console.log('\nInstallation OK.');
+}
+
+/**
+ * Reports the installation's Execution Safety posture.
+ *
+ * `doctor` already answers "is this installation sane?"; after the 2026-08-07 Execution Safety
+ * change, "what is this installation authorized to do?" is part of that question, and it should be
+ * answerable without reading three governance documents. Extended here rather than given its own
+ * command, per the existing preference for extending diagnostics over adding redundant ones.
+ *
+ * A MISSING POLICY IS REPORTED, NOT TREATED AS AN ERROR. Not every installation has run Stage 1 yet,
+ * and doctor's job is to say what is true, not to fail on an absence that may be perfectly normal.
+ * It never says "safe" — it says what the policy says.
+ */
+function reportExecutionSafety(toolRoot, roots) {
+  let safety;
+  try {
+    const local = path.join(toolRoot, 'platform_core', 'tools', 'execution_safety', 'index.js');
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    safety = require(fs.existsSync(local) ? local : '../platform_core/tools/execution_safety');
+  } catch {
+    return; // the tool is not installed in this copy; nothing to report
+  }
+
+  console.log('\nExecution Safety');
+  console.log('────────────────');
+
+  const report = safety.validatePolicyFile({ dataRoot: roots.dataRoot });
+  if (!report.exists) {
+    console.log(`  Policy:       NOT FOUND (${report.path})`);
+    console.log('  Consequence:  no operation can be authorized, and none is assumed. Every mutating');
+    console.log('                action resolves Forbidden until a policy exists.');
+    return;
+  }
+  if (!report.ok) {
+    console.log(`  Policy:       INVALID (${report.path})`);
+    for (const p of report.problems) console.log(`                - ${p}`);
+    console.log('  Consequence:  a malformed policy is never partially applied.');
+    return;
+  }
+
+  const { policy } = report;
+  console.log(`  Environment:  ${policy.environment}`);
+  console.log('  Policy:       Loaded');
+  console.log('  Schema:       Valid');
+  console.log(`  Version:      v${policy.policyVersion} (${policy.policyId})`);
+  console.log(`  Hash:         ${report.policyHash}`);
+  console.log('');
+  const probes = [
+    ['READ Shared', 'READ', 'Shared'],
+    ['UPDATE Shared', 'UPDATE', 'Shared'],
+    ['DELETE Shared', 'DELETE', 'Shared'],
+    ['APPROVE Shared', 'APPROVE', 'Shared'],
+    ['PAYMENT', 'PAYMENT', 'Shared'],
+    ['TICKET', 'TICKET', 'Shared'],
+  ];
+  const width = Math.max(...probes.map(([label]) => label.length));
+  for (const [label, action, ownership] of probes) {
+    const r = safety.evaluate({ policy, action, ownership });
+    console.log(`  ${`${label}:`.padEnd(width + 1)} ${r.decision}${r.absolute ? ' (absolute)' : ''}`);
+  }
+  console.log('');
+  console.log('  Run overrides: run-scoped, stored per run — see');
+  console.log('                 runs/{RUN_FOLDER}/metadata/SafetyAuthorizations.md');
+}
+
+/**
+ * Reports which observability CAPABILITIES this installation has — never any usage figure.
+ *
+ * `doctor` diagnoses; it does not measure. Printing a token count or a run duration here would make
+ * a diagnostic look like telemetry, and the one thing this capability must not do is let a number
+ * appear without evidence behind it. So this answers "could this install measure X?" and stops.
+ *
+ * The Active Run is named when there is one, because "instrumentation available" and "the current
+ * run is actually instrumented" are different facts and only the second one is actionable.
+ */
+function reportObservability(toolRoot, roots) {
+  let obs;
+  try {
+    const local = path.join(toolRoot, 'platform_core', 'tools', 'observability', 'index.js');
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    obs = require(fs.existsSync(local) ? local : '../platform_core/tools/observability');
+  } catch {
+    return; // not installed in this copy
+  }
+
+  console.log('\nObservability');
+  console.log('─────────────');
+  console.log(`  Schema:            v${obs.SCHEMA_VERSION}`);
+  console.log('  Instrumentation:   Available (recorder + deterministic aggregator)');
+
+  let activeRun = null;
+  try {
+    const arLocal = path.join(toolRoot, 'platform_core', 'tools', 'run_manager', 'activeRun.js');
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    const { resolveActiveRunFolder } = require(fs.existsSync(arLocal) ? arLocal : '../platform_core/tools/run_manager/activeRun');
+    activeRun = resolveActiveRunFolder(path.join(roots.dataRoot, 'runs'));
+  } catch { /* no pointer */ }
+
+  if (!activeRun) {
+    console.log('  Current run:       (no Active Run pointer)');
+  } else {
+    const read = obs.readEvents({ runFolder: activeRun, dataRoot: roots.dataRoot });
+    const metrics = obs.aggregate({ runId: activeRun, events: read.events });
+    console.log(`  Current run:       ${activeRun}`);
+    console.log(`  Telemetry:         ${metrics.instrumentation.status} (${read.events.length} event(s))`);
+    if (read.problems.length) console.log(`  Stream problems:   ${read.problems.length} — run \`observability validate\``);
+  }
+
+  console.log('');
+  console.log('  Timing:            Available');
+  console.log('  Tool metrics:      Available');
+  console.log('  Human decisions:   Available');
+  console.log('  Safety metrics:    Available (consumed from Execution Safety evidence)');
+  console.log('  Token usage:       Unavailable — no supported run-attributable provider source');
+  console.log('  Cost:              Unavailable — no authoritative pricing source');
+  console.log('');
+  console.log('  Capability report only. `doctor` never reports usage figures — see');
+  console.log('                     `agentic-testing observability summary --run <run>`.');
 }
 
 function cmdRoots(args) {

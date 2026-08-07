@@ -25,6 +25,20 @@ const path = require('path');
 
 const MANIFEST_FILENAME = 'RunManifest.md';
 
+/**
+ * Read from the observability tool rather than restated, so the Manifest cannot claim a telemetry
+ * schema version the recorder is not actually writing. Falls back only if that tool is absent from
+ * this installation.
+ */
+const OBSERVABILITY_SCHEMA_VERSION = (() => {
+  try {
+    // eslint-disable-next-line global-require
+    return require('../observability/schema').SCHEMA_VERSION;
+  } catch {
+    return 'unavailable';
+  }
+})();
+
 /** Checkpoint statuses from pipeline.md §7. */
 const CHECKPOINT_STATUSES = [
   'Pending Review',
@@ -138,6 +152,49 @@ function renderRunManifest({ runJson, now }) {
     ...(runJson.targetRef
       ? ['| _(none declared)_ | | | |']
       : ['| No code-state anchor | all | ' + fmt(runJson.targetRefReason) + ' | Drift is `unknown-no-anchor`; inherited/reused conclusions are unverified against current code |']),
+    '',
+    '## 6. Execution Safety',
+    '',
+    '<!-- pipeline.md §14. Which policy this run was evaluated under, and what it was authorized to do.',
+    '     Filled in by the executing stage (4M / 5A) at preflight — a run that has not reached an',
+    '     execution stage legitimately has nothing here, and that absence is stated rather than implied.',
+    '',
+    '     The full records live beside this file:',
+    '       metadata/SafetyPreflight.md         the run\'s mutation footprint, captured before execution',
+    '       metadata/SafetyAuthorizations.md    the scoped approvals granted for THIS run only',
+    '     This section points at them; it does not duplicate the project policy. -->',
+    '',
+    '| Field | Value |',
+    '|---|---|',
+    '| Policy ID / version | _(not yet evaluated)_ |',
+    '| Policy hash | _(not yet evaluated)_ |',
+    '| Preflight | _(not yet run)_ |',
+    '| Scoped authorizations | _(none granted)_ |',
+    '| Policy blocks | _(none)_ |',
+    '',
+    '**No run-scoped authorization carries beyond this run**, and none of them lifts a `Forbidden`.',
+    '',
+    '## 7. Observability',
+    '',
+    '<!-- pipeline.md §15. This section POINTS at the run\'s telemetry; it never restates a metric.',
+    '     Duplicating a number here would give the run a second, drifting copy of a value that is',
+    '     derived from evidence and regenerable at any time.',
+    '',
+    '       metadata/observability/ObservabilityEvents.jsonl   append-only evidence',
+    '       metadata/observability/ObservabilityMetrics.json   derived, regenerable',
+    '       metadata/observability/ObservabilityReport.md      human-readable',
+    '       metadata/observability/ObservabilityDashboard.html self-contained, offline -->',
+    '',
+    '| Field | Value |',
+    '|---|---|',
+    `| Telemetry schema | v${OBSERVABILITY_SCHEMA_VERSION} |`,
+    '| Instrumentation | _(no event recorded yet)_ |',
+    '| Events | 0 |',
+    '| Report / Dashboard | _(not yet generated)_ |',
+    '',
+    'Run `node platform_core/tools/observability/cli.js summary` for the current metrics, and',
+    '`… validate` to check the stream is complete. **A metric is never recorded here by hand** — every',
+    'number is derived from the event stream, and one typed in would have no evidence behind it.',
     '',
   ].join('\n');
 }

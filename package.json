@@ -28,6 +28,8 @@
     "./run-manager": "./platform_core/tools/run_manager/index.js",
     "./module-manager": "./platform_core/tools/module_manager/index.js",
     "./test-suite-export": "./platform_core/tools/test_suite_export/index.js",
+    "./execution-safety": "./platform_core/tools/execution_safety/index.js",
+    "./observability": "./platform_core/tools/observability/index.js",
     "./init": "./platform_core/tools/init/index.js"
   },
   "files": [

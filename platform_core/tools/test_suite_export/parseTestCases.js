@@ -70,6 +70,66 @@ function normalizeLifecycleValue(raw) {
   return LIFECYCLE_VALUES.find((v) => v.toLowerCase() === trimmed.toLowerCase()) || trimmed;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+// ELIGIBILITY — DERIVED, NEVER STORED
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+// `Review` and `Automation` are the only two authoritative decision fields on a test case
+// (test-design-skill §6.3). Everything a consumer needs to know about what may run is COMPUTED from
+// that pair — there is deliberately no third persisted field such as "Automation Eligible",
+// "Ready for Automation", or "Manual Only", because a stored derivation is a second source of truth
+// that can disagree with the pair it came from. These helpers exist so every consumer derives the
+// same answer from the same place instead of re-implementing the rule.
+//
+//   Manual Execution (4M):  Review = Approved                              — Automation irrelevant
+//   Automation      (4A):  Review = Approved AND Automation = Approved     — both required
+
+/** Stage `4M` eligibility. `Automation` is deliberately not consulted (manual-execution-skill §4.1). */
+function isManualEligible(testCase) {
+  return normalizeLifecycleValue(testCase && testCase.review) === 'Approved';
+}
+
+/** Stage `4A` eligibility. Both gates are independent and both must pass (automation-skill §11). */
+function isAutomationEligible(testCase) {
+  if (!testCase) return false;
+  return normalizeLifecycleValue(testCase.review) === 'Approved'
+    && normalizeLifecycleValue(testCase.automation) === 'Approved';
+}
+
+/**
+ * Detect the one contradictory pair the lifecycle admits: an automation decision recorded on a case
+ * whose own review did not accept it.
+ *
+ * `Automation = Approved` says "automate this case"; `Review != Approved` says "this case is not
+ * accepted (yet)". Both are HUMAN decisions, and they disagree. This is reported and never
+ * reconciled: silently resetting `Automation` to `Pending` would destroy one reviewer's recorded
+ * intent, and silently promoting `Review` to `Approved` would manufacture an approval nobody gave —
+ * which is the single thing the review gate exists to prevent. The gates above already exclude the
+ * case from Stage `4A` on their own, so surfacing it is sufficient to keep it out of automation;
+ * resolving it is a Human Decision (pipeline.md §5.5).
+ *
+ * @returns {null|{review: string, automation: string, reason: string}}
+ */
+function lifecycleInconsistency(testCase) {
+  if (!testCase) return null;
+  const review = normalizeLifecycleValue(testCase.review) || LIFECYCLE_DEFAULT;
+  const automation = normalizeLifecycleValue(testCase.automation) || LIFECYCLE_DEFAULT;
+  if (automation !== 'Approved' || review === 'Approved') return null;
+  return {
+    review,
+    automation,
+    reason: review === 'Rejected'
+      ? 'a rejected case cannot be selected for automation — Review takes precedence'
+      : 'automation was selected before the case itself was reviewed',
+  };
+}
+
+/** Human-readable warning text for an inconsistent pair, shared by the export and import paths. */
+function inconsistencyMessage(id, detail) {
+  return `${id}: INCONSISTENT lifecycle — Review is "${detail.review}" but Automation is `
+    + `"${detail.automation}" (${detail.reason}). Both values are preserved exactly as recorded; `
+    + 'the case is NOT eligible for Stage 4A. Resolving this is a human decision.';
+}
+
 /** How multi-line Steps collapse into one spreadsheet cell. */
 const STEP_JOINER = ' | ';
 
@@ -186,6 +246,10 @@ function parseTestCases(markdown, options = {}) {
         current.record[key] = normalized;
       }
     }
+    // Cross-field check, run after both values are settled. Reported, never reconciled — see
+    // `lifecycleInconsistency`. The record is pushed unchanged either way.
+    const clash = lifecycleInconsistency(current.record);
+    if (clash) warnings.push(`${source}${inconsistencyMessage(current.record.id, clash)}`);
     cases.push(current.record);
     current = null;
   };
@@ -277,4 +341,9 @@ module.exports = {
   LIFECYCLE_FIELDS,
   LIFECYCLE_VALUES,
   LIFECYCLE_DEFAULT,
+  normalizeLifecycleValue,
+  isManualEligible,
+  isAutomationEligible,
+  lifecycleInconsistency,
+  inconsistencyMessage,
 };

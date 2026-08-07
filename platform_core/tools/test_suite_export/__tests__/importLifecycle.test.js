@@ -327,3 +327,63 @@ test('readDecisions surfaces the raw per-case decisions', () => {
   const { decisions } = readDecisions(p);
   assert.deepStrictEqual(decisions.get('TC-AG-001'), { review: 'Approved', automation: 'Rejected' });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+// INCONSISTENT LIFECYCLE PAIRS ARRIVING FROM THE WORKBOOK
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+// The reviewer works in the spreadsheet, so the spreadsheet is where a contradictory pair is most
+// likely to be created. The import must WRITE WHAT THE REVIEWER RECORDED and report the conflict —
+// never quietly reconcile it, in either direction.
+
+test('an inconsistent pair imported from the workbook is written verbatim and reported', () => {
+  const dir = tmpDir();
+  const md = path.join(dir, 'TestCases_Agency.md');
+  fs.writeFileSync(md, suiteMarkdown(2));
+  writeOurWorkbook(dir, [
+    { id: 'TC-AG-001', review: 'Rejected', automation: 'Approved' },
+    { id: 'TC-AG-002', review: 'Approved', automation: 'Approved' },
+  ]);
+
+  const result = importLifecycle(md);
+  const text = fs.readFileSync(md, 'utf8');
+
+  assert.match(text, /\*\*Review:\*\* Rejected/, 'the reviewer’s Review value is written as recorded');
+  assert.match(text, /\*\*Automation:\*\* Approved/, 'Automation is NOT reset to Pending');
+  assert.ok(
+    result.warnings.some((w) => w.includes('INCONSISTENT lifecycle') && w.includes('TC-AG-001')),
+    'the contradiction is surfaced to the operator'
+  );
+  assert.ok(
+    !result.warnings.some((w) => w.includes('TC-AG-002')),
+    'the consistent case must not be flagged'
+  );
+});
+
+test('an inconsistency formed by combining workbook and Markdown values is still caught', () => {
+  // The workbook supplies only Automation; Review stays whatever the Markdown already held. The
+  // resulting PAIR is what matters, so the check runs on the post-import state, not on either input.
+  const dir = tmpDir();
+  const md = path.join(dir, 'TestCases_Agency.md');
+  fs.writeFileSync(md, suiteMarkdown(1, { 'TC-AG-001': { review: 'Rejected' } }));
+  writeOurWorkbook(dir, [{ id: 'TC-AG-001', review: '', automation: 'Approved' }]);
+
+  const result = importLifecycle(md);
+  assert.ok(
+    result.warnings.some((w) => w.includes('INCONSISTENT lifecycle')),
+    'Rejected (from Markdown) + Approved (from workbook) is still a contradiction'
+  );
+  assert.match(fs.readFileSync(md, 'utf8'), /\*\*Review:\*\* Rejected/, 'Review untouched');
+});
+
+test('a dry run reports the inconsistency without writing anything', () => {
+  const dir = tmpDir();
+  const md = path.join(dir, 'TestCases_Agency.md');
+  fs.writeFileSync(md, suiteMarkdown(1));
+  const before = fs.readFileSync(md, 'utf8');
+  writeOurWorkbook(dir, [{ id: 'TC-AG-001', review: 'Pending', automation: 'Approved' }]);
+
+  const result = importLifecycle(md, undefined, { dryRun: true });
+  assert.strictEqual(result.written, false);
+  assert.strictEqual(fs.readFileSync(md, 'utf8'), before, 'nothing written on a dry run');
+  assert.ok(result.warnings.some((w) => w.includes('INCONSISTENT lifecycle')));
+});

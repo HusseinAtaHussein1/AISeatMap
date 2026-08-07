@@ -46,7 +46,8 @@
     "selftest": "node bin/agentic-testing.js doctor",
     "detect": "node bin/agentic-testing.js detect",
     "test:e2e": "bash scripts/e2e/verify-install.sh . .e2e-workdir",
-    "prepack": "node scripts/verifyPackable.js"
+    "verify:boundary": "node scripts/verifyBranchBoundary.js",
+    "prepack": "node scripts/verifyBranchBoundary.js && node scripts/verifyPackable.js"
   },
   "devDependencies": {
     "playwright": "^1.61.1"

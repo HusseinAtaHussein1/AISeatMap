@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This folder holds **everything specific to the one application the platform is currently pointed at** — durable knowledge about the application (what it is, how to reach it, what's been learned about it) *and* every artifact the pipeline produces while validating it. Nothing application-specific lives outside this folder; nothing reusable lives inside it, with the single, explicitly-gated exception of `knowledge_base/patterns/`.
+This folder holds **everything specific to the one application the platform is currently pointed at** — durable knowledge about the application (what it is, how to reach it, what's been learned about it) *and* every artifact the pipeline produces while validating it. Nothing application-specific lives outside this folder; nothing reusable lives inside it, with the single, explicitly-gated exception of `../platform_core/knowledge/patterns/`.
 
 **The platform hosts exactly one project at a time** ([`workflows_and_pipelines/pipeline/pipeline.md`](../workflows_and_pipelines/pipeline/pipeline.md) §1). There is no project-name path segment, no project selector, and no sibling project directory. Retargeting the platform at a different application means running `agentic-testing init` in that application's repository — not adding a second folder here, and not editing any specification outside it.
 
@@ -36,11 +36,11 @@ The clearest illustration is the stack: `knowledge_base/stack.md` records what t
 
 ## Responsibility
 
-**This folder owns what the application under test *is*, everything the pipeline has produced by validating it, and the reusable engineering knowledge promoted out of that experience (`knowledge_base/patterns/`).** It does not own agent behavior (`.claude/skills/`), the shared runtime engines that operate on it (`platform_core/tools/`), or the stage sequencing and checkpoint rules that govern it (`workflows_and_pipelines/`).
+**This folder owns what the application under test *is*, everything the pipeline has produced by validating it, and the reusable engineering knowledge promoted out of that experience (`../platform_core/knowledge/patterns/`).** It does not own agent behavior (`.claude/skills/`), the shared runtime engines that operate on it (`platform_core/tools/`), or the stage sequencing and checkpoint rules that govern it (`workflows_and_pipelines/`).
 
 ## What Does NOT Belong Here
 
-- **Reusable engineering knowledge, anywhere outside `knowledge_base/patterns/`.** A pattern that would still hold against a *different* application is promoted into `patterns/` through the explicit human gate (`pipeline.md` §10.5) — never grown indefinitely in the project-scoped folders on the assumption it "probably applies everywhere," and never written straight into `patterns/` without that approval.
+- **Reusable engineering knowledge, anywhere outside `../platform_core/knowledge/patterns/`.** A pattern that would still hold against a *different* application is promoted into `patterns/` through the explicit human gate (`pipeline.md` §10.5) — never grown indefinitely in the project-scoped folders on the assumption it "probably applies everywhere," and never written straight into `patterns/` without that approval.
 - **Agent behavioral specifications.** What a Skill does belongs in `.claude/skills/`; this folder supplies a Skill's *inputs*, never its behavior.
 - **Orchestration or sequencing logic.** Stage order and checkpoint mechanics belong in `workflows_and_pipelines/`.
 - **A second project.** Adding one would reintroduce exactly the project-selection ambiguity the single-project model removes (`pipeline.md` §6 Rule 9).
@@ -196,7 +196,7 @@ node platform_core/tools/module_manager/cli.js show login       # one module's f
 
 ## Related Layers
 
-- [`../platform_core/`](../platform_core/) — the shared runtime Tools (Browser Driver, MCP layer, Run Manager, Automation Lifecycle) that resolve this folder's paths at runtime. Reusable *Knowledge* is not there: [`knowledge_base/patterns/`](knowledge_base/patterns/), inside this folder, is the only layer a pattern may be promoted into.
+- [`../platform_core/`](../platform_core/) — the shared runtime Tools (Browser Driver, MCP layer, Run Manager, Automation Lifecycle) that resolve this folder's paths at runtime. Reusable *Knowledge* is not there: [`../platform_core/knowledge/patterns/`](../platform_core/knowledge/patterns/), inside this folder, is the only layer a pattern may be promoted into.
 - [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md) — how to populate this folder's inputs and where each generated artifact lands ([§3](../docs/USER_GUIDE.md#3-prepare-your-inputs), [§7](../docs/USER_GUIDE.md#7-where-your-artifacts-live)).
 - [`../.claude/`](../.claude/) — the Skills whose declared Inputs and Outputs resolve to paths in this folder.
 - [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — where every path convention, versioning rule, and Run Workspace layout realized here is actually defined. `pipeline.md` §10.3–§10.4 is the canonical specification of this folder's shape.

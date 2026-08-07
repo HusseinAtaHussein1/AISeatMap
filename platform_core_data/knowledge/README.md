@@ -11,7 +11,7 @@
 >
 > | Layer | Current location |
 > |---|---|
-> | **Platform Knowledge** (application-agnostic, Promotion-only) | `platform_core_data/knowledge_base/patterns/` |
+> | **Platform Knowledge** (application-agnostic, Promotion-only) | `platform_core/knowledge/patterns/` |
 > | **Project Knowledge** (this application) | `platform_core_data/knowledge_base/business_rules/`, `.../lessons_learned/` |
 >
 > This folder is empty, has no reader, and is retained only pending cleanup — see the root

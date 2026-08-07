@@ -249,7 +249,7 @@ The platform is organized as five concentric layers. Reusable engineering logic 
 
 ```mermaid
 flowchart TD
-    PLAT["Platform<br/><small>.claude/skills/ · workflows_and_pipelines/pipeline/ · platform_core_data/knowledge_base/patterns/ · platform_core/tools/</small>"]
+    PLAT["Platform<br/><small>.claude/skills/ · workflows_and_pipelines/pipeline/ · platform_core/knowledge/patterns/ · platform_core/tools/</small>"]
     PROJ["Project Data<br/><small>platform_core_data/ — the one hosted application, fully self-contained</small>"]
     PIPE["Pipelines<br/><small>two branches sharing Stages 1-3: execution order, gates, artifact contracts</small>"]
     SKILLS["Skills<br/><small>the eight specialized Skills that do the actual work of each stage</small>"]
@@ -840,7 +840,7 @@ The platform tests one project at a time, but splits what it learns into two lay
 
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
-| **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | Reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting, pipeline decisions | Anything application-specific |
+| **Platform Knowledge** | `platform_core/knowledge/patterns/` | Reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting, pipeline decisions | Anything application-specific |
 | **Project Knowledge** | `platform_core_data/knowledge_base/business_rules/`, `lessons_learned/` | This application's own business rules and cross-run lessons | Anything that would still be true after retargeting — that belongs at the Platform layer instead |
 
 ### Resolution order
@@ -873,11 +873,11 @@ Knowledge is written project-scoped by default. When a Skill recognizes a lesson
 
 ### Repair Knowledge Base
 
-A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): a confirmed repair is recorded in the healed module's Repair Summary (`platform_core_data/modules/{module}/healing/RepairSummary.md`) at the moment the repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-NNN.md` or `platform_core_data/knowledge_base/patterns/reasoning/REASON-NNN.md`. The project-scoped `knowledge_base/repair/` folder this used to write to was removed on 2026-07-27, so **Promotion is now the only path for a repair to outlive its run**. See the current catalog in [`platform_core_data/knowledge_base/patterns/INDEX.md`](platform_core_data/knowledge_base/patterns/INDEX.md).
+A specific instance of this model, used by the Automation Repair Loop ([§8](#8-automation-package-lifecycle)): a confirmed repair is recorded in the healed module's Repair Summary (`platform_core_data/modules/{module}/healing/RepairSummary.md`) at the moment the repair is verified fixed — never for a proposed-but-unexecuted repair, and never for one that stayed failing. Promotion candidates become `platform_core/knowledge/patterns/repair_patterns/REPAIR-NNN.md` or `platform_core/knowledge/patterns/reasoning/REASON-NNN.md`. The project-scoped `knowledge_base/repair/` folder this used to write to was removed on 2026-07-27, so **Promotion is now the only path for a repair to outlive its run**. See the current catalog in [`platform_core/knowledge/patterns/INDEX.md`](platform_core/knowledge/patterns/INDEX.md).
 
 ### Future expansion
 
-The category folders for `automation_patterns/`, `diagnosis_patterns/`, `execution_patterns/`, `framework_patterns/`, and `reporting/` already exist at the Platform layer — they simply have no promoted content yet. `pipeline_decision_patterns/` also exists but is held deliberately empty until a defined reader and a project-level promotion source exist for it (see `platform_core_data/knowledge_base/patterns/README.md`). Nothing about the model changes as the populated categories fill in; promotion is the only path population ever takes.
+The category folders for `automation_patterns/`, `diagnosis_patterns/`, `execution_patterns/`, `framework_patterns/`, and `reporting/` already exist at the Platform layer — they simply have no promoted content yet. `pipeline_decision_patterns/` also exists but is held deliberately empty until a defined reader and a project-level promotion source exist for it (see `platform_core/knowledge/patterns/README.md`). Nothing about the model changes as the populated categories fill in; promotion is the only path population ever takes.
 
 ---
 
@@ -1044,7 +1044,7 @@ These are deliberately blank rather than pre-filled with samples: Stage 1 reads 
 **Retargeting at a different application** means running `agentic-testing init` in that repository. There is no clear-and-repopulate ritual any more, and no second project directory ([`pipeline.md` §1](workflows_and_pipelines/pipeline/pipeline.md)). Two things are worth knowing if you do reuse an installation in place:
 
 - `platform_core_data/` is **never** overwritten by `init` or `upgrade`, even with `--force`. It holds your PRD and every artifact produced so far; clearing `runs/` is your decision, not the installer's. If you do clear it, also clear the Active Run pointer (`node platform_core/tools/run_manager/cli.js clear`) — a pointer left naming a deleted run makes every stage stop and ask, by design (`workflows_and_pipelines/pipeline/run_manager.md` §5.7 Rule 2).
-- `knowledge_base/patterns/` is **Platform Knowledge** and survives retargeting by design — it is the accumulated engineering knowledge, not the application's specifics. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you are leaving behind ([§11](#11-knowledge-base), [`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)).
+- `platform_core/knowledge/patterns/` is **Platform Knowledge** and is unaffected by retargeting by design — it is the accumulated engineering knowledge, not the application's specifics. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you are leaving behind ([§11](#11-knowledge-base), [`pipeline.md` §10.6](workflows_and_pipelines/pipeline/pipeline.md)).
 
 ### 3. Set up the Browser Driver (if the application needs live browser access)
 
@@ -1106,7 +1106,7 @@ Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/w
 | [`platform_core/tools/browser_provider/interface.md`](platform_core/tools/browser_provider/interface.md) | The Browser Provider contract — the only browser surface a Skill may use, and how a concrete provider is resolved |
 | [`platform_core/tools/test_suite_export/README.md`](platform_core/tools/test_suite_export/README.md) | Stage 3's Markdown ⇄ Excel rendering, and `--import-lifecycle` — the one inverse pass, carrying `Review`/`Automation` decisions back |
 | [`platform_core/tools/project_paths/README.md`](platform_core/tools/project_paths/README.md) | The platform-independence layer — every path derived from the project root, and the rule against hardcoding a project folder name |
-| [`platform_core_data/knowledge_base/patterns/README.md`](platform_core_data/knowledge_base/patterns/README.md) | Platform Knowledge layer — structure and promotion rules |
+| [`platform_core/knowledge/patterns/README.md`](platform_core/knowledge/patterns/README.md) | Platform Knowledge layer — structure and promotion rules |
 | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) | Shared browser automation engine, Browser Profile, Screen/Component knowledge, credentials handling |
 | [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md) | The two registered MCP servers: `playwright` as a second, selectable browser mode alongside the Browser Driver (and the hard rule against credential values in MCP tool calls), and `context7` for version-accurate documentation of a project's own extracted stack |
 | [`platform_core_data/README.md`](platform_core_data/README.md) | The layout of the hosted project's knowledge base, run history, and automation baseline |

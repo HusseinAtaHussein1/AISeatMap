@@ -8,18 +8,18 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 
 ## Responsibility
 
-**This folder owns orchestration and process governance** — control flow, approval gates, run identity, and reusable named invocations of a subset of stages. It owns none of the behavioral logic of any individual stage (that's `.claude/`'s), none of the reusable cross-project engineering knowledge a stage consults (`platform_core_data/knowledge_base/patterns/`'s), and none of the hosted application's business content (`platform_core_data/`'s).
+**This folder owns orchestration and process governance** — control flow, approval gates, run identity, and reusable named invocations of a subset of stages. It owns none of the behavioral logic of any individual stage (that's `.claude/`'s), none of the reusable cross-project engineering knowledge a stage consults (`platform_core/knowledge/patterns/`'s), and none of the hosted application's business content (`platform_core_data/`'s).
 
 ## What Lives Here
 
-- **The pipeline specification** — the invariant execution model for **both** pipelines: the shared Stages 1–3, the two branches that diverge from them, stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the two end-to-end traceability chains, and the Knowledge Architecture governing `platform_core_data/knowledge_base/patterns/` (including the two shared knowledge bases both branches read, §10.8).
+- **The pipeline specification** — the invariant execution model for **both** pipelines: the shared Stages 1–3, the two branches that diverge from them, stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the two end-to-end traceability chains, and the Knowledge Architecture governing `platform_core/knowledge/patterns/` (including the two shared knowledge bases both branches read, §10.8).
 - **Orchestration component specifications** — mechanical (non-judgment) components the pipeline specification delegates full detail to: run identity/workspace/status management, and the Run Scope concept (what a given run is allowed to validate).
 - **Named, reusable workflows** — specific, narrower-than-full-pipeline invocations layered on top of the pipeline specification (e.g. a three-stage smoke check), never modifying it.
 
 ## What Does NOT Belong Here
 
 - **Skill behavioral logic.** What a Skill actually does belongs in `.claude/skills/` — this folder only sequences and gates it.
-- **Reusable engineering knowledge.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core_data/knowledge_base/patterns/`, cited by a Skill, never encoded as pipeline logic here.
+- **Reusable engineering knowledge.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core/knowledge/patterns/`, cited by a Skill, never encoded as pipeline logic here.
 - **Application-specific business content.** Nothing here ever names the hosted application's screens, business rules, or requirements. Paths are written literally against `platform_core_data/`, which is a *location*, not an application identity.
 - **Generated run artifacts.** Execution output lives under `platform_core_data/runs/` — this folder only defines the rules governing that structure, it never contains a run's actual output.
 
@@ -56,11 +56,11 @@ workflows/{name}.md  ──layers on top of──▶  pipeline/pipeline.md
                                                     │
                                      resolves ──────┼────── governs the rules of
                                                     ▼                  ▼
-                                     platform_core_data/knowledge_base/patterns/   platform_core_data/runs/{{RUN_FOLDER}}/
+                                     platform_core/knowledge/patterns/   platform_core_data/runs/{{RUN_FOLDER}}/
 ```
 
 - **`workflows_and_pipelines/` → `.claude/`:** one-directional. `pipeline.md`'s header states it "Governs" the eight Skills — it invokes each in sequence within a branch and enforces its checkpoints. A Skill never reads `pipeline.md` at runtime to decide its own behavior; it only needs to already conform to the contract this folder describes.
-- **`workflows_and_pipelines/` → `platform_core_data/knowledge_base/patterns/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core_data/knowledge_base/patterns/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
+- **`workflows_and_pipelines/` → `platform_core/knowledge/patterns/`:** `pipeline.md` §10 is the *canonical specification* of the Knowledge Architecture that `platform_core/knowledge/patterns/` implements — that folder's own `README.md` is explicitly a pointer back here, not a duplicate.
 - **`workflows_and_pipelines/` → `platform_core_data/`:** this folder defines every artifact path convention, artifact-lifecycle rule, Module/Run Workspace layout, and Run Scope concept that governs how `platform_core_data/modules/` (durable design output — Stages 1, 2, 3, `4A`, `5H`) and `platform_core_data/runs/` (per-run execution output — Stages `4M`, `5A`, `6A`) are organized, per `pipeline.md` §7 and [`pipeline/module_architecture.md`](pipeline/module_architecture.md) — but it never contains the generated content itself.
 - **`.claude/` never depends back on this folder.** The dependency direction is strictly one-way: orchestration invokes behavior, behavior never invokes orchestration.
 
@@ -78,7 +78,7 @@ pipeline.md invokes Stage 1 → checkpoint (§5.1) → Stage 2 → checkpoint �
         └─ AUTOMATION: → Stage 4A → checkpoint (§5.2) → Stage 5A (mechanical, no gate)
                         → [Stage 5H — optional, opt-in only, gate §5.6] → Stage 6A
         ↓
-Each stage resolves Knowledge (platform_core_data/knowledge_base/patterns/ + platform_core_data/knowledge_base/, §10)
+Each stage resolves Knowledge (platform_core/knowledge/patterns/ + platform_core_data/knowledge_base/, §10)
         ↓
 Each stage writes to modules/{module}/{stage}/ (design) or runs/{{RUN_FOLDER}}/{stage}/ (execution), per pipeline.md §7
         ↓

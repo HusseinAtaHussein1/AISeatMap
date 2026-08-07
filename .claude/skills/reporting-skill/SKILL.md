@@ -25,7 +25,7 @@ outputs:
     description: "Stakeholder-facing report — Executive Summary, Requirement Coverage, Automation Coverage, Defect Summary, Risks, Recommendations."
 dependencies:
   - automation-execution-skill, test-design-skill, project-context-skill (upstream skills)
-  - "platform_core_data/knowledge_base/patterns/reporting/ (Platform Knowledge patterns, if any promoted)"
+  - "platform_core/knowledge/patterns/reporting/ (Platform Knowledge patterns, if any promoted)"
 ---
 
 > **Pipeline position:** Stage `6A` — the **Automation Pipeline's** terminal stage. Consumes automation Execution Results, produces the Final QA Report.

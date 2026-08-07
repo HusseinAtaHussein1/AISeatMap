@@ -608,13 +608,13 @@ If you reuse an installation in place, two things matter:
 
   Stopping is the correct behaviour, not a bug: silently redirecting a stage's output into some other module or run would corrupt both records.
 - **`modules/` belongs to the application you are leaving behind.** Its content is that app's decomposition, context, discovery, and suites — none of it is true of a different application. Retargeting means a fresh Stage 1 pass proposes a new decomposition.
-- **`knowledge_base/patterns/` survives retargeting by design.** It is Platform Knowledge — accumulated engineering knowledge, application-agnostic. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you're leaving behind.
+- **`platform_core/knowledge/patterns/` is unaffected by retargeting by design.** It is Platform Knowledge — accumulated engineering knowledge, application-agnostic. Everything else under `knowledge_base/` is Project Knowledge and belongs to the application you're leaving behind.
 
 ### The two knowledge layers
 
 | Layer | Location | Contains |
 |---|---|---|
-| **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting |
+| **Platform Knowledge** | `platform_core/knowledge/patterns/` | reusable strategies: automation, repair, diagnosis, execution, framework, reasoning, reporting |
 | **Project Knowledge** | `platform_core_data/knowledge_base/business_rules/`, `lessons_learned/` | this application's own business rules and cross-run lessons — the things no single module or run owns. The other seven categories were removed 2026-07-27; that output lives with the module or run that produced it |
 | **Module output** | `platform_core_data/modules/{module}/` | what earlier stages established about *this module specifically*. Not a knowledge layer — per-module engineering output, which is why it resolves last |
 | **Shared execution KBs** | `knowledge_base/browser/screens/` + `.../patterns/repair_patterns/` | **read by both pipelines** (`pipeline.md` §10.8): verified locators (written by `4A`) and confirmed repair patterns (written by `5H`). This is the only thing the two branches share beyond Stages 1–3 — and it is knowledge, not a deliverable, which is why sharing it does not break branch isolation |

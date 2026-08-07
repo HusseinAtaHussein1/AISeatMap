@@ -34,7 +34,7 @@ outputs:
 dependencies:
   - automation-skill (upstream skill)
   - The test runner/framework CLI named in the Automation Summary's Execution Instructions
-  - "platform_core_data/knowledge_base/patterns/execution_patterns/ (Platform Knowledge — execution/runner patterns only; repair_patterns/ and diagnosis_patterns/ moved to self-healing-skill with the repair engine)"
+  - "platform_core/knowledge/patterns/execution_patterns/ (Platform Knowledge — execution/runner patterns only; repair_patterns/ and diagnosis_patterns/ moved to self-healing-skill with the repair engine)"
   - "self-healing-skill (OPTIONAL downstream skill, Stage 5H — human-invoked only, never auto-chained)"
 ---
 

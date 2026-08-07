@@ -36,7 +36,7 @@ requireExists(path.join('bin', 'agentic-testing.js'), 'the package bin entry');
 requireExists(path.join('scripts', 'init.sh'), 'the git-clone install route');
 requireExists(path.join('scripts', 'init.ps1'), 'the Windows git-clone install route');
 requireExists(
-  path.join('platform_core_data', 'knowledge_base', 'patterns'),
+  path.join('platform_core', 'knowledge', 'patterns'),
   'Platform Knowledge ships with the tool and is copied on install (pipeline.md §10.6)',
 );
 requireExists(

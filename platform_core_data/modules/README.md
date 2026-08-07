@@ -85,7 +85,7 @@ node platform_core/tools/module_manager/cli.js drift [login] [--json]  # has the
 
 - **A copy of anything in `../knowledge_base/`.** The PRD is read by Stage 1 and cited, never copied into a module.
 - **Execution results of any kind.** Manual and automation execution evidence belongs to the run that produced it. A module's `README.md` *links* to those runs; it never restates their results.
-- **Application-agnostic engineering knowledge.** A repair pattern that would hold against a *different* application is promoted into `../knowledge_base/patterns/` through the explicit human gate, never left to accumulate in a module as though it were general.
+- **Application-agnostic engineering knowledge.** A repair pattern that would hold against a *different* application is promoted into `../../platform_core/knowledge/patterns/` through the explicit human gate, never left to accumulate in a module as though it were general.
 - **A second copy of the automation baseline.** `{module}/automation/` holds this module's suite while it is developed and approved; `../automation_baseline/` holds the assembled whole-project suite.
 - **Debug output.** Scratch scripts and raw dumps go to a temp location, or to the run's `_debug/` folder when Debug Mode is on — never here, because a Module Workspace is durable and would outlive every reason the scratch file was written.
 

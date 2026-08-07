@@ -25,7 +25,7 @@ This document defines the **execution workflow** of the Agentic AI Testing Platf
 
 The **Target Project** is the application repository under test. It is a distinct root, `{{TARGET_ROOT}}` (§1.1), and it has exactly one role in this pipeline: it is where the *generated automation code* lives, and it is the authority on its own technology stack and coding conventions. It is never a source of requirements or business rules — those come exclusively from the approved Project Context (§6 Rule 5). §13 defines precisely what the platform may read from it, what it may write to it, and what it must never touch.
 
-The stage order, checkpoints, and rules below remain reusable process logic. Retargeting the platform at a different application means running `agentic-testing init` against that repository — which replaces `platform_core_data/`'s *contents* (PRD, run configuration, resources, knowledge base), clears `modules/`, `runs/`, and `automation_baseline/`, and re-resolves `{{TARGET_ROOT}}` — never editing this specification. `knowledge_base/patterns/` is the one subtree deliberately preserved across a retarget (§10.6).
+The stage order, checkpoints, and rules below remain reusable process logic. Retargeting the platform at a different application means running `agentic-testing init` against that repository — which replaces `platform_core_data/`'s *contents* (PRD, run configuration, resources, knowledge base), clears `modules/`, `runs/`, and `automation_baseline/`, and re-resolves `{{TARGET_ROOT}}` — never editing this specification. Platform Knowledge is untouched by a retarget because it does not live under the data root at all — it sits in `platform_core/knowledge/patterns/`, ships with the tool, and is reinstalled rather than preserved (§10.6).
 
 ### 1.1 Root resolution
 
@@ -780,14 +780,14 @@ Note (2026-07-25): this section previously justified the split by cross-project 
 
 | Layer | Location | Contains | Never contains |
 |---|---|---|---|
-| **Platform Knowledge** | `platform_core_data/knowledge_base/patterns/` | Reusable, application-agnostic engineering knowledge: automation strategies, repair strategies, diagnosis strategies, proven exceptions to Execution Engine defaults (not the engine's core retry/concurrency/stop-condition mechanics — fixed capability logic in `.claude/skills/automation-execution-skill/SKILL.md` §5, §19–§20), framework best practices, synchronization patterns, locator recovery strategies, reporting conventions, AI reasoning patterns, pipeline decision patterns, shared engineering lessons | Anything application-specific (a named screen, a specific business rule, a specific app's redirect behavior); anything that is Capability rather than Knowledge (agent skill definitions, orchestration/engine mechanics, runtime configuration) — those belong in `.claude/skills/` or `workflows_and_pipelines/`, never here |
+| **Platform Knowledge** | `platform_core/knowledge/patterns/` | Reusable, application-agnostic engineering knowledge: automation strategies, repair strategies, diagnosis strategies, proven exceptions to Execution Engine defaults (not the engine's core retry/concurrency/stop-condition mechanics — fixed capability logic in `.claude/skills/automation-execution-skill/SKILL.md` §5, §19–§20), framework best practices, synchronization patterns, locator recovery strategies, reporting conventions, AI reasoning patterns, pipeline decision patterns, shared engineering lessons | Anything application-specific (a named screen, a specific business rule, a specific app's redirect behavior); anything that is Capability rather than Knowledge (agent skill definitions, orchestration/engine mechanics, runtime configuration) — those belong in `.claude/skills/` or `workflows_and_pipelines/`, never here |
 | **Project Knowledge** | `platform_core_data/knowledge_base/` | Knowledge discovered from the hosted application only: business rules, UI observations, application findings, known behaviors, module relationships, navigation knowledge, screen inventory, discovery artifacts, execution history, automation history, repair history, known workarounds, application-specific locator rules, lessons learned | Anything that would still be true after the platform is retargeted at a different application — that belongs in Platform Knowledge instead, via Promotion (§10.5) |
 
 ### 10.2 Knowledge Resolution
 
 Whenever any agent needs knowledge to do its job, it resolves in this fixed order and merges every applicable layer into its working context — never one layer alone:
 
-1. **Platform Knowledge** (`platform_core_data/knowledge_base/patterns/`) — application-agnostic, promotion-only
+1. **Platform Knowledge** (`platform_core/knowledge/patterns/`) — application-agnostic, promotion-only
 2. **Project Knowledge** (`platform_core_data/knowledge_base/`) — this application, all modules
 3. **Module output** (`platform_core_data/modules/{module}/`) — this module specifically
 
@@ -852,18 +852,18 @@ Not every lesson learned becomes Platform Knowledge. Whichever Skill writes a ne
 
 > "This lesson looks application-independent. Promote it to Platform Knowledge?"
 
-- **Approved:** the agent authors a new (or updates an existing) Platform Knowledge document in the matching `platform_core_data/knowledge_base/patterns/` subfolder, generalized beyond this application, and the project-level document is updated to reference it (§10.2's merge, made explicit) rather than duplicating its content.
+- **Approved:** the agent authors a new (or updates an existing) Platform Knowledge document in the matching `platform_core/knowledge/patterns/` subfolder, generalized beyond this application, and the project-level document is updated to reference it (§10.2's merge, made explicit) rather than duplicating its content.
 - **Declined:** the knowledge stays exactly where it is, project-scoped, and is never silently re-proposed on every subsequent run of the same pattern. It may be re-proposed only on genuinely new evidence of generality — most obviously, the same pattern recurring after the platform has been retargeted at a different application.
 
 This is a Human Decision (`§5.5`), never inferred, never defaulted to "yes" because a pattern merely looks generic.
 
 ### 10.6 Layer separation guarantee
 
-Application-specific knowledge must never end up in `platform_core_data/knowledge_base/patterns/` — this extends §6 Rule 9 (Two Roots, One Project) to the knowledge layer explicitly. An agent writes to Platform Knowledge only by passing the §10.5 Promotion Workflow's explicit human gate; it never writes there directly, and never "generalizes on the way in" to justify skipping the gate. The failure this prevents: a Platform layer quietly accumulating this application's screens and business rules, so that retargeting the platform carries the old application's assumptions along with it.
+Application-specific knowledge must never end up in `platform_core/knowledge/patterns/` — this extends §6 Rule 9 (Two Roots, One Project) to the knowledge layer explicitly. An agent writes to Platform Knowledge only by passing the §10.5 Promotion Workflow's explicit human gate; it never writes there directly, and never "generalizes on the way in" to justify skipping the gate. The failure this prevents: a Platform layer quietly accumulating this application's screens and business rules, so that retargeting the platform carries the old application's assumptions along with it.
 
-Note (2026-07-26): the Platform layer now sits **nested inside** the Project layer — Platform Knowledge at `platform_core_data/knowledge_base/patterns/`, Project Knowledge in the folders surrounding it (`knowledge_base/business_rules/` and `lessons_learned/`, after the 2026-07-27 removal of the seven empty categories — see §10.3). It reached this location in two steps, from `platform_core/knowledge/` via `platform_core_data/patterns/`. **The nesting is structural only and confers nothing semantically:** `patterns/` is not a category of Project Knowledge and does not inherit its application scope. Two consequences follow, and both are unchanged in force:
+Note (2026-07-26): the Platform layer now sits **nested inside** the Project layer — Platform Knowledge at `platform_core/knowledge/patterns/`, Project Knowledge in the folders surrounding it (`knowledge_base/business_rules/` and `lessons_learned/`, after the 2026-07-27 removal of the seven empty categories — see §10.3). It reached this location in two steps, from `platform_core/knowledge/` via `platform_core_data/patterns/`. **The nesting is structural only and confers nothing semantically:** `patterns/` is not a category of Project Knowledge and does not inherit its application scope. Two consequences follow, and both are unchanged in force:
 
-- **§10.2 resolution order is unaffected.** `knowledge_base/patterns/` still resolves *first*, then the project-scoped folders around it. An agent walking `knowledge_base/` must treat `patterns/` as a separate layer, not as one more project category to merge in at the same precedence.
+- **§10.2 resolution order is unaffected.** `platform_core/knowledge/patterns/` still resolves *first*, then the project-scoped folders under `knowledge_base/`. Since 2026-08-07 the two layers are also physically separate, so an agent walking `knowledge_base/` can no longer mistake Platform Knowledge for one more project category at the same precedence — the separation is now structural rather than a rule to remember.
 - **This §10.6 rule binds regardless of parent folder.** `patterns/` is application-agnostic and Promotion-only wherever it lives. Because it now sits inside the folder that gets emptied on retarget, the isolation guarantee is *more* dependent on convention than before, not less — see `README.md` §16 step 4/5, where `patterns/` is the one subtree inside `knowledge_base/` that is deliberately **not** cleared.
 
 The duplicate `diagnosis/` folder this move created alongside `diagnosis_patterns/` was removed on 2026-07-27 (§10.3) — the category has one folder, `diagnosis_patterns/`.
@@ -891,7 +891,7 @@ This sharing does **not** violate branch isolation (§3.3). Isolation forbids on
 | KB | Location | Written by | Read by | Holds |
 |---|---|---|---|---|
 | **Selector Verification KB** | `platform_core_data/knowledge_base/browser/screens/`, `.../browser/components/` | Stage `4A` (sole writer) | Stage `4A`, Stage `4M`, Stage `5H` | Per screen/component: the locator confirmed to resolve, the strategy used, its fallback chain, the verification timestamp, and the code-state anchor it was verified against |
-| **Repair KB** | `platform_core_data/knowledge_base/patterns/repair_patterns/`, `.../patterns/diagnosis_patterns/`, `.../patterns/reasoning/` (Platform layer) + prior runs' Repair Summaries | Stage `5H` (sole writer; `patterns/` only via §10.5 Promotion) | Stage `4A`, Stage `4M`, Stage `5H` | Failure pattern → what fix worked, under what conditions, backed by which real executions |
+| **Repair KB** | `platform_core/knowledge/patterns/repair_patterns/`, `.../patterns/diagnosis_patterns/`, `.../patterns/reasoning/` (Platform layer) + prior runs' Repair Summaries | Stage `5H` (sole writer; `patterns/` only via §10.5 Promotion) | Stage `4A`, Stage `4M`, Stage `5H` | Failure pattern → what fix worked, under what conditions, backed by which real executions |
 
 **How each branch benefits:**
 

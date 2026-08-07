@@ -1,6 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const path = require('node:path');
+const fs = require('node:fs');
+const os = require('node:os');
 
 const {
   DEFAULT_PROJECT_ROOT,
@@ -98,8 +100,21 @@ test('assertProjectRoot fails fast with an actionable message', () => {
   );
 });
 
-test('assertProjectRoot passes for the configured root', () => {
-  withoutEnv(() => {
-    assert.strictEqual(assertProjectRoot(), path.join(REPO, DEFAULT_PROJECT_ROOT));
-  });
+test('assertProjectRoot passes for a project root that exists', () => {
+  // Isolated against a temp directory rather than the repository's own project root.
+  //
+  // This used to assert against `REPO/platform_core_data`, which quietly required that directory to
+  // physically exist — so the test passed or failed depending on whether the checkout happened to
+  // carry project data, not on whether assertProjectRoot works. On a tool-only checkout it failed
+  // for a reason that had nothing to do with the code under test.
+  //
+  // What is actually being verified is the contract: given a root that exists, return its resolved
+  // absolute path instead of throwing. A temp directory demonstrates that without depending on the
+  // shape of the surrounding repository.
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'project-root-'));
+  try {
+    assert.strictEqual(assertProjectRoot(root), path.normalize(root));
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });

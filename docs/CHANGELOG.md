@@ -6,6 +6,26 @@ Each agent file now retains only its `Pipeline position` and `Traceability` line
 
 ---
 
+## 2026-08-07 — Platform Knowledge relocated to `platform_core/knowledge/patterns/`
+
+User-mandated (HD-BRANCH-002), as a prerequisite for separating the reusable Tool from the dogfooding data. **Moved via `git mv`, all 13 files with full history and provenance intact.** No pattern's content changed.
+
+```text
+platform_core_data/knowledge_base/patterns/   →   platform_core/knowledge/patterns/
+```
+
+**Why.** Platform Knowledge is reusable *product* — it ships with the tool, and `scripts/verifyPackable.js` requires it. `platform_core_data/` is project-owned data the tool must be distributable **without**. Keeping the reusable layer physically inside the data root made the two inseparable: the tool could not be packaged without shipping a directory whose entire purpose is to hold one project's data. The ownership rule is now structural rather than a convention: `platform_core/` is product, `platform_core_data/` is project.
+
+**The two-layer Knowledge Architecture is unchanged.** Only the physical location of the reusable layer moved. `pipeline.md` §10.2 resolution order still puts Platform Knowledge first; the separation is simply no longer a rule an agent has to remember while walking `knowledge_base/`.
+
+**A latent install bug is fixed as a side effect.** `init` copies `TOOL_PAYLOAD_DIRS = ['platform_core', 'workflows_and_pipelines']`, and `platform_core_data/knowledge_base/patterns/` was in neither — so the git-clone install route never copied Platform Knowledge at all. It now travels with `platform_core/`.
+
+**Updated:** `package.json` `files[]` (the explicit entry is now redundant and was removed — `platform_core/` covers it), `scripts/verifyPackable.js`, `scripts/e2e/verify-install.sh`, `pipeline.md` §10 and its retarget note, `module_architecture.md`, `README.md`, `docs/USER_GUIDE.md`, `platform_core/README.md`, `platform_core_data/README.md`, and five Skill specifications.
+
+**Deliberately not rewritten:** `docs/PROMPT_HISTORY.md`, `docs/BRANCH_COMPARISON.md`, the earlier entries in this file, and `modules/branch/healing/RepairSummary.md`. Each records where Platform Knowledge *was* at the time of writing, and the RepairSummary is immutable run evidence. Rewriting them would falsify the history they exist to hold.
+
+---
+
 ## 2026-08-07 — Run Observability introduced
 
 User-mandated, and deliberately **additive**: no pipeline stage was added, renumbered, or redesigned; no Skill was added or removed; `Review`, `Automation`, and Execution Safety semantics are untouched; no test outcome, artifact ownership rule, or run immutability rule changed. Observability is the fourth concern and the only one with no authority — it observes and decides nothing.

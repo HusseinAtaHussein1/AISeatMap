@@ -39,7 +39,6 @@
     "platform_core/",
     "workflows_and_pipelines/",
     ".claude/skills/",
-    "platform_core_data/knowledge_base/patterns/",
     "README.md"
   ],
   "scripts": {

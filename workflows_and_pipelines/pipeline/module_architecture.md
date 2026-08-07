@@ -473,7 +473,7 @@ A downstream stage that requires an approved input (Stage 4M and Stage 4A both r
 Resolution order for a stage is now three deep, and the precedence is unchanged from §10.2 — Platform Knowledge first, then Project Knowledge:
 
 ```
-1. knowledge_base/patterns/    Platform Knowledge — application-agnostic, promotion-only
+1. platform_core/knowledge/patterns/  Platform Knowledge — application-agnostic, promotion-only
 2. knowledge_base/             Project Knowledge  — this application, all modules
 3. modules/{module}/           Module output      — this module specifically
 ```

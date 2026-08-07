@@ -337,7 +337,7 @@ Confidence is built additively from **only** these observed-evidence factors, an
 Per `pipeline.md` §10.8, the Repair KB is **shared across both pipelines** — Stage `4A` reads it to pre-empt known failure modes at generation time, Stage `4M` reads it to recognize a known quirk during manual execution, and **this skill is its sole writer**.
 
 - **This run's record (always written):** the Repair Summary in `platform_core_data/modules/{{MODULE_SLUG}}/healing/` — the full per-pass narrative of what failed, what was considered, what was applied, and what happened.
-- **Platform Knowledge (read always; written only via Promotion):** `platform_core_data/knowledge_base/patterns/repair_patterns/REPAIR-{NNN}.md`, `.../diagnosis_patterns/`, `.../reasoning/REASON-{NNN}.md`.
+- **Platform Knowledge (read always; written only via Promotion):** `platform_core/knowledge/patterns/repair_patterns/REPAIR-{NNN}.md`, `.../diagnosis_patterns/`, `.../reasoning/REASON-{NNN}.md`.
 
 ## 10.1 Read rule — consult before deriving
 

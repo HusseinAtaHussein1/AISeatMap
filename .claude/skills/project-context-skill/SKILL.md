@@ -135,6 +135,7 @@ There is no `PROJECT_NAME` key: the platform tests one Target Project at a time,
 10. **Must edit an existing module's context in place.** Never write a `.v2`, never fork a copy into a run folder, and never leave two files claiming to be the same module's context (`pipeline.md` §7).
 11. **Must record its progress through the Module Manager**, never by hand-editing `modules.json`: `cli.js` records the stage's status, artifact path, revision count, and the run that produced it (`module_architecture.md` §6.5 Rule 3).
 12. **Must not scaffold a module that has not been approved.** A `Proposed` module has no folder, and creating one would assert an approval no human gave.
+13. **Must run the Simple English Communication Standard check on the Project Context before treating it as finished** (`workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 10): short, direct sentences; any hard word replaced with an easier one where meaning stays the same; every necessary technical term briefly explained; confirmed PRD statements kept visibly separate from carried-forward assumptions; and a first-read check for whether a Business Analyst or Product Owner, not just this skill, would understand it. Requirement IDs, module names, and PRD section references are never altered by this check.
 
 # 8. Expected Artifacts
 

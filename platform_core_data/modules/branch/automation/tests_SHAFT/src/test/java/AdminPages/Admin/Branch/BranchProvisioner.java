@@ -38,7 +38,7 @@ public final class BranchProvisioner {
      * still-unresolved question of the Branch Name character set (RISK-BR-7) is not on the path of
      * any test that merely needs a record to act on.
      */
-    private static final String RUN_TAG = "QARUN003";
+    private static final String RUN_TAG = "QA";
 
     private BranchProvisioner() {
     }

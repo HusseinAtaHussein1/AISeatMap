@@ -539,6 +539,7 @@ The Repair Summary must contain exactly these sections, so Stage `6A` never has 
 20. **Must never read the PRD** (`pipeline.md` §6 Rule 4) or any Manual Execution artifact (§3.3).
 21. **Must report "nothing to heal" as a success**, never widen scope to manufacture work (§16).
 22. **Must continue on Local stop conditions** rather than halting the whole pass (§16).
+23. **Must run the Simple English Communication Standard check on the Repair Summary, Repair Confidence Report, and Before/After Comparison before presenting the Batch Repair Approval gate** (`workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 10): short, direct sentences; any hard word replaced with an easier one where meaning stays the same; every necessary technical term briefly explained; a confirmed root cause kept visibly separate from a still-uncertain one; and a first-read check for whether an Automation Lead could approve or reject the batch without asking this skill to re-explain it. Test Case IDs, root-cause names tied to code, and KB rule IDs are never altered by this check.
 
 # 21. Operational Contract
 

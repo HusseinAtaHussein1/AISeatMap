@@ -61,7 +61,9 @@ public class UpdateBranch_TC extends TestBase {
     @Story("Pre-fill")
     @Description("TC-BR-065: Update Branch pre-fills every stored value")
     public void tcBr065_updateBranchPreFillsEveryStoredValue() {
+        System.out.println("[DIAG-SYNC] tcBr065 before clickSearch rowCount=" + searchBranchPage.rowCount());
         searchBranchPage.clickSearch();
+        System.out.println("[DIAG-SYNC] tcBr065 after clickSearch rowCount=" + searchBranchPage.rowCount());
         Assert.assertTrue(searchBranchPage.rowCount() > 0, "Expected results to open a record from.");
 
         UpdateBranch_Page updateBranchPage = searchBranchPage.clickEditPenInRow(1);

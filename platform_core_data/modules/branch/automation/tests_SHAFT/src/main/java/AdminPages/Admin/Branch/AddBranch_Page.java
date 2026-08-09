@@ -2,6 +2,7 @@ package AdminPages.Admin.Branch;
 
 import com.shaft.driver.SHAFT;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -703,15 +704,32 @@ public class AddBranch_Page {
         driver.assertThat().browser().url().contains("/admin/branch/add").perform();
     }
 
+    /** Bounded wait for the post-submit outcome signal, per REPAIR-001 (see {@link #assertSubmissionSucceeded}). */
+    private static final Duration SUBMIT_OUTCOME_TIMEOUT = Duration.ofSeconds(10);
+
     /**
      * Asserts submission succeeded: either the browser navigated away from the Add Branch URL, or
      * the page source contains "Pending for approval". Reads the page source directly (see
      * assertReachingPercentageCapMessageShown's note on this SHAFT_ENGINE version's validation
      * builder not exposing a text()/pageSource() fluent check).
+     *
+     * <p><b>REPAIR-001 (applied here 2026-08-09):</b> both signals used to be read once, immediately
+     * after {@code clickSubmit()} returns. Diagnosis (healing/evidence_0806/diagnosis6.log) established
+     * the submission does succeed and does navigate away, but asynchronously -- the earlier immediate
+     * read observed the pre-navigation state and reported a false failure. This now polls, bounded, for
+     * either signal to become true rather than asserting on whatever is on screen the instant the click
+     * returns. No expected value changed: {@code navigatedAway || pendingApprovalShown} is the same
+     * condition as before, only no longer read too early.</p>
      */
     public void assertSubmissionSucceeded() {
-        boolean navigatedAway = !driver.browser().getCurrentURL().contains("/admin/branch/add");
-        boolean pendingApprovalShown = driver.browser().getPageSource().contains("Pending for approval");
+        boolean succeeded;
+        try {
+            succeeded = new WebDriverWait(driver.getDriver(), SUBMIT_OUTCOME_TIMEOUT)
+                    .until(d -> !driver.browser().getCurrentURL().contains("/admin/branch/add")
+                            || driver.browser().getPageSource().contains("Pending for approval"));
+        } catch (TimeoutException notObserved) {
+            succeeded = false;
+        }
         System.out.println("[DIAG8] url=" + driver.browser().getCurrentURL());
         System.out.println("[DIAG8] errors=" + ((org.openqa.selenium.JavascriptExecutor) driver.getDriver())
                 .executeScript("return Array.from(document.querySelectorAll('.p-error,.invalid-feedback,[class*=error]'))"
@@ -727,7 +745,7 @@ public class AddBranch_Page {
                         + "  for(var i=0;i<5&&p;i++){var l=p.querySelector('label');if(l){lbl=l.textContent.trim();break;}p=p.parentElement;}"
                         + "  return (lbl||e.id||e.placeholder||e.tagName);"
                         + "}).slice(0,25).join(' | ');"));
-        Assert.assertTrue(navigatedAway || pendingApprovalShown,
+        Assert.assertTrue(succeeded,
                 "Expected the Branch to be saved with status \"Pending for approval.\"");
     }
 }

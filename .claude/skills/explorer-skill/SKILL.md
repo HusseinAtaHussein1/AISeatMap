@@ -546,6 +546,7 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 30. **Must classify every Finding's Evidence Category** (§17) and record it in the Finding's metadata (§5.14), and must apply the Discovery Strategy matching the run's Run Scope Type (§16) rather than one default depth/breadth regardless of scope.
 31. **Must recognize and act on the named Stop Conditions** (§20), and must attempt the mid-run Recovery Strategy (§21) for a per-area block before recording that area as Blocked/Unreachable.
 32. **Must verify Handoff completeness** (§22) before treating a run's Discovery Artifacts as finished — every input the Test Design skill's specification declares it needs must actually be present and unambiguous.
+33. **Must run the Simple English Communication Standard check on the QA Assessment Report and every Finding before treating a run's Discovery Artifacts as finished** (`workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 10): short, direct sentences; any hard word replaced with an easier one where meaning stays the same; every necessary technical term briefly explained; Confirmed Behaviour kept visibly separate from Assumptions and Open Questions; and a first-read check for whether a QA Lead would understand it. Finding IDs, module names, and evidence file names are never altered by this check.
 
 # 12. Expected Artifacts
 

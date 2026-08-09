@@ -647,6 +647,18 @@ Mechanically:
     **Requirements, business rules, acceptance criteria, and test cases are never sourced from the Target Project.** A source file, a comment, an existing test's assertions, or a commit message found in the Target Project is evidence of *what the code currently does* — never evidence of what it *should* do. A discrepancy between the Target Project's code and the approved Project Context is a **Finding to report**, never a requirement to adopt. This is the same discipline §32 already applies to a Reference Automation Project, generalized: read for structure and style, never for intent.
 
     Nothing outside these two roots may be read or written, with one registered exception: a **Reference Automation Project** (`platform_core_data/knowledge_base/reference_automation_project.md`) — a read-only structural reference for automation *style*, never a source of functional requirements, business rules, test cases, or domain knowledge, and never modified except via the explicit gate at `.claude/skills/automation-skill/SKILL.md` §32.3.
+10. **Simple English Communication Standard applies to every stage, in both branches, with no opt-out.** This governs *all* user-facing text any agent, skill, or the orchestrator itself produces — a report, a summary, a checkpoint question, a recommendation, a defect record, an artifact's prose, a closing message — from Stage 1 through `6A`. It is not a Stage `4A`/Automation-only convention; it binds Discovery findings, Manual QA Reports, Repair Summaries, and everything else equally. Full statement:
+
+    - Use common, familiar words and short sentences. Explain one idea at a time and prefer direct wording.
+    - Avoid complex, academic, legal, or overly technical language. Do not reach for an advanced term when a simpler one carries the same meaning.
+    - If a technical term is genuinely necessary, explain it briefly the first time it appears.
+    - **Never rename or simplify identifiers**: test IDs, code names, class names, method names, file names, and official system terms are copied verbatim, exactly as they appear in the artifact or system they come from.
+    - In any report or summary, clearly separate: what happened, why it happened, what was changed, what is still not fixed, and what should happen next.
+    - Never state a finding more confidently than the evidence supports — this rule narrows *wording*, it never loosens the evidence, hedging, or Defect Documentation Standard requirements a stage's own spec already imposes.
+    - Keep the result professional and readable by testers, developers, product owners, and managers alike, without cutting evidence that matters just to shorten the text.
+    - Before finishing any user-facing output, check it: Can a tester understand it on first read? Can any hard word be replaced with an easier one? Are long sentences split into shorter ones? Are technical terms explained where needed? Is it still accurate and backed by evidence?
+
+    This rule constrains *wording only* — it never changes what an artifact must contain, what evidence it must cite, or which template or section structure a skill's own spec requires. Where a stage's own spec mandates specific terminology (a Result Classification value, a column header, a status like `Pending Automation Approval`), that literal term is kept unchanged; only the surrounding prose explaining it is written in simple English. No skill may bypass or relax this rule for its own output — it is the shared floor every stage writes to, alongside Rules 1–9.
 
 ## 7. Artifact & Versioning Conventions
 

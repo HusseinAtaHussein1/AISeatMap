@@ -438,6 +438,374 @@ the pending action is a diagnosis-grounded mechanics fix at a fresh gate, not an
 Both promotions are **proposed, not written** — §10.3 requires asking once, and that question has not yet
 been put to the user.
 
+---
+
+# Pass HEAL-BR-20260809-01
+
+## 1. Healing Metadata
+
+| Field | Value |
+|---|---|
+| Healing Pass ID | `HEAL-BR-20260809-01` |
+| Module | `branch` |
+| Triggering run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Source Execution ID | `EXEC-BR-20260806-03` (`rerun-5`) |
+| Rerun cycles written | `execution/ExecutionResults.rerun-6.md` (Headless), `.rerun-7.md` (Headed) |
+| Scope | Every `Automation Failure` in `rerun-5` (unscoped invocation): TC-BR-001, 043, 046, 054, 055, 060, 061, 065, 066, 067, 068, 069 |
+| Environment | Staging (STG), shared internal/LAN, `http://192.168.1.70` |
+| Framework | SHAFT Engine 7.4.20231015 / TestNG |
+| Invocation Path | Direct |
+| Run-scoped instruction | User, verbatim: "Restore `platform_core/knowledge/patterns/` from HEAD before proceeding... apply Option A for Clusters A, B, and C, perform diagnosis only for Cluster D, rerun only the 12 affected tests. Do not repair TC-BR-065 without an evidence-backed root cause... Report the before/after result per test, the repair applied, and whether TC-BR-001 must be quarantined." |
+
+## 2. Eligibility Summary
+
+| Stage 5A Classification | Count | Eligible? | Disposition |
+|---|---|---|---|
+| Automation Failure | 12 | Yes | Analysed below, 4 clusters |
+| Application Failure | 2 (TC-BR-026, TC-BR-052) | Never | Out of scope, unchanged, never healed |
+| Not Executed | 3 (`BranchActions_TC`, KL-01) | No | Out of scope — a Stage 4A fix (missing class), not a repair |
+
+## 3. Per-Failure Analysis
+
+### Cluster A — TC-BR-001, 066, 067, 068, 069 — missing post-submit wait
+
+| Field | Value |
+|---|---|
+| Root Cause Confidence | High |
+| Evidence consulted | `AddBranch_Page.java:712-731` read directly: `assertSubmissionSucceeded()` asserted `navigatedAway \|\| pendingApprovalShown`, both read immediately after `clickSubmit()`, no wait. `healing/evidence_0806/diagnosis6.log` confirms the app does navigate away, asynchronously |
+| KB consulted | `REPAIR-001` ("Bounded poll for post-submit redirect state, not an immediate assertion") — confirmed 1 execution/1 project, and the same idiom is already used elsewhere in this file (`clickSearch()`, `waitForPageContentToChange()`) |
+| Strategy selected | Option A — bounded `WebDriverWait` (10s) polling the same `navigatedAway \|\| pendingApprovalShown` condition, no expected value changed |
+| Confidence | 90% (directly observed +50, targets cause +15, reproduced across 5 tests +10, matches KB rule REPAIR-001 +15) |
+
+### Cluster B — TC-BR-043, 054, 055, 060, 061 — `StaleElementReference` in the Search grid
+
+| Field | Value |
+|---|---|
+| Root Cause Confidence | High |
+| Evidence consulted | Traced directly in code: `Branch_Common.textOf/valueOfInput/visibleTextsOf/hasClass` and `SearchBranch_Page.branchCodesOnCurrentPage/columnHeaders/actionsAvailableFor/actionsAvailableInRow/highestOfferedPageNumber` all call `findElements()` then perform nested reads with no re-render guard |
+| KB consulted | No confirmed KB rule matched this exact pattern — novel to this project |
+| Strategy selected | Option A — bounded retry-on-`StaleElementReferenceException` (`Branch_Common.withStaleRetry`, 3 attempts), applied to all listed read paths |
+| Confidence | 60% (capped — novel pattern, no prior confirmation anywhere, per §9.2) |
+
+### Cluster C — TC-BR-046 — country-filter option click
+
+| Field | Value |
+|---|---|
+| Root Cause Confidence | **Revised to Medium after code inspection** — originally assessed High on the assumption this is the same PrimeNG autocomplete race `REPAIR-BR-008` fixed. Reading `SearchBranch_Page.java:85-86` shows `COUNTRY_DROPDOWN_ANCESTOR` is a plain `p-dropdown` (static option list), not the filtering `p-autocomplete` REPAIR-BR-008 addressed. **Citing that rule here was an unverified assumption of identical mechanism, corrected in-line in the code comment** |
+| Strategy applied | Option A — bounded reopen+click retry (3 attempts) |
+| Confidence (pre-rerun) | 80% (based on the now-corrected assumption) — **not achieved; see §5** |
+
+### Cluster D — TC-BR-065 — Update screen 30s timeout
+
+| Field | Value |
+|---|---|
+| Root Cause Confidence | Low |
+| Action | Diagnosis only, no repair — per explicit user instruction not to repair without an evidence-backed root cause |
+| Outcome | Both rerun cycles show TC-BR-065 failing on a **different, upstream** cause (0-rows search precondition) before ever reaching the original 30s-timeout code path. The original TC-BR-065 symptom was not reproduced in either cycle, so no new evidence toward its root cause was gathered this pass |
+
+## 4. Applied Repairs
+
+| Test Case(s) | File changed | Nature of change | Strategy |
+|---|---|---|---|
+| TC-BR-001, 066, 067, 068, 069 | `AddBranch_Page.java` (`assertSubmissionSucceeded`) | Replaced an immediate read with a 10s bounded `WebDriverWait` polling the same condition; no assertion value changed | Cluster A, Option A |
+| TC-BR-043, 054, 055, 060, 061 | `Branch_Common.java` (new `withStaleRetry` helper; `textOf`, `valueOfInput`, `visibleTextsOf`, `hasClass`), `SearchBranch_Page.java` (`branchCodesOnCurrentPage`, `columnHeaders`, `actionsAvailableFor`, `actionsAvailableInRow`, `highestOfferedPageNumber`) | Wrapped each read in a bounded (3-attempt) retry on `StaleElementReferenceException` | Cluster B, Option A |
+| TC-BR-046 | `SearchBranch_Page.java` (`selectCountry`) | Added a bounded (3-attempt) reopen+click retry with a settle wait before the click, replacing an unguarded double-click with no wait | Cluster C, Option A |
+
+**Batch approval reference:** user, this conversation, "Apply Option A for Clusters A, B, and C, perform diagnosis only for Cluster D" — covers exactly this batch, nothing more.
+
+## 5. Rerun Outcome
+
+Two targeted rerun cycles (`rerun-6` Headless, `rerun-7` Headed) of the same 12 tests, run back-to-back against the same live shared STG instance with no data reset between them.
+
+| Column | Count | Test Case IDs |
+|---|---|---|
+| **Fixed** (`Automation Repaired`) | 1 | TC-BR-043 — passed cleanly in both cycles, no `StaleElementReference` in either |
+| **Remaining Failures** | 6 | TC-BR-046 (repair applied, confirmed not working) plus TC-BR-054, 055, 060, 061, 065 (original `StaleElementReference`/timeout symptoms did not recur, but each fails on a **different, unrepaired automation defect** — see the corrected §6) |
+| **New Failures** | 0 | None — no test that passed pre-repair regressed |
+| **Flaky** | 1 | TC-BR-001 — passed Headless, failed Headed on an unrelated upstream cause |
+| **Unverified — never reached the repaired code** | 4 | TC-BR-066, 067, 069 (consistently, both cycles) and TC-BR-068 (reached it only in `rerun-7`, then timed out on the new 10s wait) |
+| **Quarantined** | 1 | TC-BR-001 — see §8 |
+
+**This pass's honest yield is 1 confirmed fix out of 12.** TC-BR-054/055/060/061/065 no longer show the
+pre-repair symptom (`StaleElementReference`) — that specific defect this pass targeted appears
+addressed. But each now fails on a **different, still-unrepaired automation defect** in the
+search/pagination logic itself (see the corrected §6) — an initial write-up of this section wrongly
+called these "Environment Failure" (data gap) on the strength of each test's own assertion message,
+without independently checking the live application. A human reviewer caught this; a live DOM check
+retracted it. These 6 stay in Remaining Failures, not resolved, not blamed on the environment.
+
+TC-BR-066/067/069 never reached `assertSubmissionSucceeded()` at all in either cycle — both failed 20 seconds into `AddBranch_Page.open()`, a step this pass's Cluster A repair does not touch. TC-BR-068 reached it only once (`rerun-7`) and then exhausted the new 10-second wait without either signal appearing. **None of the four Update-suite repairs this pass targeted were actually exercised against the code that changed**, in a majority of attempts.
+
+## 6. Reclassifications — RETRACTED, see correction below
+
+**This section originally reclassified TC-BR-054/055/060/061/065 as `Environment Failure` ("data gap" /
+"data volatility"). That reclassification was wrong and is retracted.** It was based on trusting each
+test's own assertion message text (e.g. "This is an environment data gap, not an application defect")
+without independently verifying against the live application — exactly the mistake the human reviewer
+caught. A live, unfiltered DOM check of `/admin/branch` via `platform_core/tools/browser_driver/`
+(2026-08-09, after this pass's initial write-up) shows:
+
+```
+rowCount: 10, summary: "Showing 10 results of 498 results"
+rowSample includes: BRN309 | ... | Egypt | Cairo | Approved | ...
+pageButtons: ["1", "2", "50"]
+```
+
+498 real records exist, "Approved" rows are plainly present, and the grid renders correctly with no
+filter applied — directly contradicting TC-BR-054's claim that no "Approved"/"Pending for approval"
+row could be found, and TC-BR-055/065's implicit claim that a plain search returns 0 rows. **These are
+automation-side defects, not environment data gaps.** Corrected findings:
+
+| Test Case | Corrected status | Evidence-backed hypothesis | Repair applied this pass |
+|---|---|---|---|
+| TC-BR-054 | **Automation Failure — unresolved** | Its own status-filtered search (via `selectStatus()`/`clickSearch()`) is very likely not finding rows that plainly exist unfiltered — the search/filter path itself is suspect, not the data | None — root cause not yet established at the needed precision |
+| TC-BR-055 | **Automation Failure — unresolved** | Same: a plain search reporting 0 rows contradicts the unfiltered grid having 10+ | None |
+| TC-BR-060 | **Automation Failure — unresolved** | `BRN309` (confirmed row 1 of page 1 in the live check) appearing on "page 2" too means the next-page click is very likely not changing pages at all, or `waitForPageContentToChange()`'s comparison is defective | None |
+| TC-BR-061 | **Automation Failure — unresolved** | Pagination buttons are `["1", "2", "50"]`, not sequential — `highestOfferedPageNumber()` should jump straight to "50" in one click. Running 420s through 80 hops without converging means `currentPageNumber()`/`SELECTED_PAGE_BUTTON` most likely misreads the selected page after a jump, so the loop's own termination check never fires | None |
+| TC-BR-065 | **Automation Failure — unresolved** | Same 0-rows pattern as TC-BR-055; original 30s-timeout cause still not reached | None |
+
+**None of these were repaired this pass** — Root Cause Confidence for each is now Medium at best (a
+plausible, evidence-consistent hypothesis, not a confirmed mechanism), which gates to diagnosis first
+per §7.1, not a guessed repair. **No Application Failure was found or considered** — this remains an
+automation-code question, not an application defect.
+
+### Second diagnosis round, same day — live Playwright cross-check narrows it further
+
+Using `platform_core/tools/browser_driver/` (Playwright-based, independent of the suite's own
+Selenium/SHAFT stack), the exact interaction sequences were replicated directly against STG:
+
+- `selectStatus(Status.BOTH)` + `clickSearch()` equivalent: the grid correctly returns 636 results, with
+  "Pending for approval" visible in the first row — the filter mechanism itself works.
+- Clicking page-button "2": `firstCode` changed from `BRN707` to `BRN471`, and the `.selected` class
+  correctly moved to the "2" button — the pagination click mechanism itself works.
+- `TestBase.java` confirmed: `@BeforeMethod` creates a fresh `SHAFT.GUI.WebDriver()` per test method, so
+  cross-test browser-state contamination (e.g. a dropdown left open by a failing `tcBr046`) is ruled out.
+
+**This disproves a structurally broken locator or filter/pagination algorithm** — the same operations,
+performed the same way, work correctly when driven by Playwright. It does **not** disprove an automation
+defect: it narrows the hypothesis to a **Selenium/SHAFT-specific synchronization gap** — `clickSearch()`
+and `goToNextPage()`'s own wait conditions (`resultSummaryText` change / row-count change, both bounded
+by `RESULT_TIMEOUT`) most likely resolve on a transient intermediate DOM state that Selenium's polling
+observes but Playwright's own actionability/network-idle heuristics do not hit the same way. This is
+still squarely an **Automation Failure** classification — the fix, if confirmed, belongs in this suite's
+own wait logic, not the application. Confidence remains Medium (a well-evidenced narrowing, not a
+confirmed mechanism) — a repair is not proposed yet; the next step is instrumenting an actual SHAFT run
+(DOM/log capture at the moment `rowCount()`/`approvalStatusInRow()` are called) rather than a further
+guess from Playwright-side evidence, which cannot observe Selenium's own timing.
+
+### Third round, same day — Selenium-side instrumentation confirms and fixes the root cause
+
+Per explicit user authorization (diagnosis-only first), `[DIAG-SYNC]`-tagged timestamped logging was
+added to `clickSearch()`, `goToNextPage()`/`goToLastPage()`, `currentPageNumber()`,
+`highestOfferedPageNumber()`, `waitForPageContentToChange()`, and the `assertIconsForStatus`/TC-BR-055/
+TC-BR-065 call sites (no behavior changed). A scoped run of exactly the 5 tests in question
+(TC-BR-054/055/060/061/065 — TC-BR-001 stayed quarantined, TC-BR-046/066/067/068/069 excluded as not
+needed) reproduced all 5 failures identically, with the instrumentation showing the mechanism directly:
+
+```
+clickSearch clicked t=178ms
+clickSearch poll t=198ms empty=true summaryNow="" changed=true rowCountNow=0
+clickSearch resolved t=213ms
+clickSearch end t=213ms summaryAfter="" rowCountAfter=0
+```
+
+**Root Cause Confidence: High, directly observed.** `clickSearch()`'s wait condition returns `true`
+the instant `isEmptyStateShown()` is observed, in ~200-250ms — far faster than any genuine page-content
+change elsewhere in the same run (1-2.5s). The empty-state placeholder renders **both** for a genuine
+zero-result search **and** transiently while the grid clears its previous rows before the new set
+streams in; the bare presence check cannot distinguish the two. Every downstream read inherits the
+false-empty race: `rowCount()==0` immediately (TC-BR-055, TC-BR-065), pagination controls absent from
+the empty DOM so `hasNextPage()==false` (TC-BR-060, TC-BR-061), and TC-BR-054's first page-scan
+iteration recording a false 0-row page before permanently advancing past the real page 1.
+
+**Repair applied and confirmed working (`REPAIR-BR-009`):** `clickSearch()` now requires
+`isEmptyStateShown()` to hold continuously for `EMPTY_STATE_SETTLE` (600ms, ≈2 poll cycles) before
+accepting it as final, rather than the instant it appears — the same "wait for a stable signal, not
+mere appearance" principle already confirmed by `REPAIR-BR-008`, applied to disappearance instead.
+A verification rerun of the same 5 tests showed **zero false-empty reads across the entire run** —
+every `clickSearch()` call resolved on real data (`rowCount=10`, real summary text).
+
+**This confirms the race is fixed, and simultaneously reveals it was masking three separate, previously
+unreachable issues:**
+
+| Test | Before this fix | After this fix | Status |
+|---|---|---|---|
+| TC-BR-054 | False 0-row page 0 (race) | Genuinely reads 10 "Approved" rows on page 1 — but `[DIAG-SYNC] goToNextPage before=[...] page=1` / `after=[same list] page=1 totalMs=21707` repeats identically, dozens of times, across the full run. **Retracting the "legitimate data limitation" call made earlier in this same document** — the page-scan loop never actually advances past page 1 at all | **Race confirmed fixed. New root cause found — see below, not a data limitation** |
+| TC-BR-055 | `rowCount()==0` immediately (race) | Passes the row-count check; now times out 30s waiting for `UpdateBranch_Page` to load after the edit-pen click | **Race confirmed fixed.** New, distinct, undiagnosed issue exposed underneath |
+| TC-BR-065 | Same as TC-BR-055 | Same new `UpdateBranch_Page` load timeout | **Race confirmed fixed.** Same new issue as TC-BR-055 |
+| TC-BR-060 | `hasNextPage()==false` (race) | Pagination controls found; `BRN309` appears on both page 1 and page 2 | **Race confirmed fixed.** New, distinct pagination-content bug exposed underneath |
+| TC-BR-061 | Same as TC-BR-060 | "No further next-page navigation... expected false but found true" | **Race confirmed fixed.** Related to TC-BR-060's new finding |
+
+**Knowledge recorded:** `REPAIR-BR-009` (bounded-empty-state-settle pattern) — confirmed by this
+targeted verification rerun, 1 execution, 1 project. Generalises to any grid/list read whose "no
+results" placeholder can also render transiently during a data refresh — the same class of defect as
+`REPAIR-BR-008` and `REPAIR-001`, now confirmed a third time in this codebase alone.
+
+### Fourth round, same day — pagination and edit-pen click delivery (diagnosis only, no repair applied)
+
+Continued instrumentation on the two newly-exposed issues found a **unified root cause for three of
+them**, not two separate bugs:
+
+`goToNextPage()`'s own `[DIAG-SYNC]` log shows the smoking gun directly:
+
+```
+goToNextPage before=[BRN309, BRN2, BRN298, ...] page=1
+goToNextPage clicked t=750ms
+goToNextPage after=[BRN309, BRN2, BRN298, ...] page=1 totalMs=21707   <- identical list, identical page
+```
+
+This exact before/after/totalMs≈21.5s pattern repeats **dozens of times consecutively** across the run
+— `NEXT_PAGE_BUTTON` is clicked, 21+ seconds pass (`waitForPageContentToChange` timing out on
+`RESULT_TIMEOUT`), and the grid never changes at all. This is what TC-BR-054's page-scan loop was
+actually doing the whole time: never advancing past page 1. **The "legitimate data/scope limitation"
+call made earlier in this document, three sections up, is retracted** — it was written before this
+log was examined.
+
+**Root Cause Confidence: High.** This is not a new hypothesis — it is the *same, already-documented,
+already-fixed* issue in `AddBranch_Page.clickVia()`: *"a driver-issued click on these controls is
+reported as delivered and changes nothing... dispatching the events the component actually binds to is
+what works"* (confirmed there for the list screen's `routerLink` button and the autocomplete option).
+`SearchBranch_Page`'s `NEXT_PAGE_BUTTON`/`PAGE_NUMBER_BUTTONS` clicks, and `clickEditPen`/
+`clickEditPenInRow`'s row-icon clicks, all still use plain `driver.element().click()` — the same raw
+click this application's PrimeNG-family components are already confirmed not to reliably respond to.
+TC-BR-055/065's new `UpdateBranch_Page` load timeout is very plausibly the same mechanism on the
+edit-pen icon click, though this has not yet been directly log-confirmed the way the pagination click
+has.
+
+**No repair applied yet** — reported for approval:
+
+| Option | Strategy | Basis | Confidence |
+|---|---|---|---|
+| A | Replicate `AddBranch_Page.clickVia()`'s JS-dispatched mouse-event click for `NEXT_PAGE_BUTTON`, `PAGE_NUMBER_BUTTONS`, and the row-action icon locators (`actionIconInRow`) | Matches an already-confirmed pattern in this exact application — not a novel guess | 90% (pagination), 70% (edit-pen, unconfirmed by direct log evidence) |
+
+**Scope note:** this would plausibly resolve TC-BR-054, TC-BR-060, TC-BR-061 outright, and TC-BR-055/065
+if the edit-pen hypothesis holds — but it has not been applied or verified, per this round's diagnosis-
+only authorization.
+
+### Fifth round, same day — clickVia() applied and verified (`REPAIR-BR-010`)
+
+Per explicit approval, Option A applied: `Branch_Common.clickVia()` added (ported from
+`AddBranch_Page.clickVia`) and used in `goToNextPage()`, `goToLastPage()`, `clickEditPen()`,
+`clickEditPenInRow()`, `clickThumbsUp()`, `clickThumbsDown()`. Verification rerun of the same 5 tests:
+
+| Test | Result | Detail |
+|---|---|---|
+| TC-BR-060 | **Passed** | Confirms the pagination click-delivery hypothesis outright |
+| TC-BR-065 | **Passed** | Confirms the edit-pen click-delivery hypothesis outright |
+| TC-BR-054 | Still fails, different signature | Now finds "Approved" and "Pending for approval" successfully (both earlier `assertIconsForStatus` calls in the same test passed) — fails only on "Rejected" not found within 10 pages. Pagination genuinely works now; this may be a real data-scarcity fact rather than a defect |
+| TC-BR-055 | Still fails, different signature | No longer times out — reaches `UpdateBranch_Page`, but reads the City dropdown label as `"loading..."` instead of `"Hurghada"`. A distinct, smaller timing gap: the City dropdown label is read before it repopulates, unlike `waitUntilLoaded()`'s Branch Name check which does wait |
+| TC-BR-061 | Still fails, same signature | `goToLastPage()`'s convergence/final-page detection remains broken even though the click itself now registers |
+
+**Knowledge recorded:** `REPAIR-BR-010` (JS-dispatched click for components that don't respond to a
+driver-issued click) — confirmed a second and third time in this project (TC-BR-060, TC-BR-065), on top
+of its original two confirmations in `AddBranch_Page`. Strong promotion candidate.
+
+**Health impact:** Automation Health improves by 2 (TC-BR-060, TC-BR-065 now pass). Application Health
+unchanged. Two of the three remaining failures are now materially smaller and more specific than at the
+start of this pass — not yet fixed, but no longer explained by either the search race or the click
+delivery defect.
+
+### Sixth round, same day — the three narrowed leads closed out
+
+**TC-BR-054 — data fact established, read-only, no code/expectation change.** Per explicit instruction,
+the actual dataset was queried directly (not via the UI) by capturing the Branch search API's real
+request/response (`POST .../Branch/search`) through the browser driver and replaying it with a page
+size covering the full result set. Confirmed: **637 total records, `approvalStatus` codes `{0: 87,
+1: 499, 2: 51}`**. Cross-checked one `approvalStatus: 2` record (`BRN466`) against its rendered grid
+row: `["BRN466", "testThread", "Libya", "Tarablous", "Rejected", ""]` — **code 2 is confirmed
+"Rejected", and 51 such records genuinely exist.** The data fact is therefore: Rejected records exist,
+but apparently not within the first 10 pages (100 of 637 rows) of the default sort order — a scan-bound
+question, not a missing-data question. **No code or test expectation changed** — this is reported for
+a human decision (raise `MAX_PAGES_SCANNED_FOR_APPROVAL_STATES`, or search/sort by status directly)
+rather than resolved unilaterally.
+
+**TC-BR-055 — confirmed and fixed (`REPAIR-BR-012`).** `UpdateBranch_Page.city()`/`waitUntilLoaded()`
+instrumented with a load-relative timestamp. Confirmed directly: at t=623ms (when `waitUntilLoaded()`
+resolved on Branch Name populating), the City dropdown label still read literally `"loading..."`
+(`placeholder=true`); 213ms later, still `"loading..."`. **Root Cause Confidence: High, directly
+observed.** City (and State, the identical PrimeNG-dependent-dropdown pattern) populate on an
+independent, slower async timeline than the Branch Name input — `waitUntilLoaded()` never waited for
+either. Repair: `waitUntilLoaded()` now also waits, bounded, for City's and State's labels to move past
+the literal `"loading..."` text. **Verification: TC-BR-055 passed.**
+
+**TC-BR-061 — confirmed and fixed (`REPAIR-BR-011`).** With click delivery already fixed
+(`REPAIR-BR-010`), instrumentation showed `goToLastPage()` itself converging correctly (`highestOffered
+=50, current=50, "converged at hop=1"`) — but the very next `hasNextPage()` call still returned `true`
+on that genuine last page. Live DOM inspection of the Next button on the confirmed last page (via the
+browser driver, read-only, no automation-code assumption): `<button class="next"><i class="pi
+pi-angle-right"></i></button>` — **no `disabled` attribute, no disabled class, identical markup whether
+or not a next page exists.** `hasNextPage()`'s `hasClass(NEXT_PAGE_BUTTON, "disabled")` check was
+looking for a signal this paginator never emits, on any page. Repair: `hasNextPage()` now compares
+`currentPageNumber() < highestOfferedPageNumber()` — the same technique `goToLastPage()` already uses
+successfully for its own convergence, rather than a disabled-state check. **Verification: TC-BR-061
+passed.**
+
+**Knowledge recorded:** `REPAIR-BR-011` (paginator "more pages available" must be inferred from
+current-vs-highest page number, not a disabled-state check, when the component provides none) and
+`REPAIR-BR-012` (a dependent PrimeNG dropdown's own async population must be waited for explicitly, not
+inferred from an unrelated field on the same form) — both confirmed by this run, 1 execution each.
+
+**Updated tally, this healing pass:** 5 of 12 original `Automation Failure` results now confirmed fixed
+(TC-BR-043, TC-BR-060, TC-BR-065, TC-BR-055, TC-BR-061). TC-BR-054 has a confirmed root cause but no
+repair (awaiting a human scan-bound/strategy decision). TC-BR-046 remains a Remaining Failure
+(untouched, per scope). TC-BR-001 remains quarantined (untouched, per scope). TC-BR-066/067/068/069
+remain unverified (untouched, per scope — never reached any of this pass's repaired code).
+
+`[DIAG-SYNC]` instrumentation remains in place pending a cleanup decision.
+
+**Instrumentation status:** `[DIAG-SYNC]` logging remains in `SearchBranch_Page.java`,
+`SearchBranch_TC.java`, and `UpdateBranch_TC.java` per explicit instruction, pending a decision on the
+two newly-exposed issues.
+
+## 7. Disclosed Discrepancies
+
+None newly disclosed this pass. (TC-BR-001's pre-existing "Pending for approval." vs "Added Successfully" question — see the Pass `HEAL-BR-20260806-01` addendum — is now understood differently: `assertSubmissionSucceeded()`'s `navigatedAway || pendingApprovalShown` condition never required literal text match in the first place, so there was no genuine assertion-value conflict to disclose. That prior disclosure is superseded by this correction.)
+
+## 8. Quarantine
+
+| Test Case | Attempts | Why withdrawn | Recommendation |
+|---|---|---|---|
+| TC-BR-001 | 4 (3 prior + this pass) | Reaches the §14 limit. This pass's repair is evidence-backed and passed cleanly once (Headless), but failed once (Headed) on an unrelated upstream cause (Add Branch button not found within 20s) — the outcome is not a clean, repeatable confirmation. A 5th guess would compound rather than resolve the ambiguity | Verify in isolation (not bundled with 11 other tests against a loaded shared environment) before any further repair attempt; investigate whether the button-open timeout is itself the same data-volume/list-rendering issue affecting §6's reclassified tests |
+
+Cross-referenced to `QuarantineRegister.md` (created this pass).
+
+## 9. Knowledge Recorded
+
+| Test Case | Confirmed repair recorded | Promotion proposed? | Outcome |
+|---|---|---|---|
+| TC-BR-043 | Yes — bounded retry-on-`StaleElementReferenceException` when a grid read races a re-render, confirmed passing in 2/2 cycles | Proposed — generalises to any Selenium/SHAFT read that locates then immediately reads a WebElement without a re-render guard, framework-independent | **Not yet decided — asking the user (see closing message)** |
+
+No other test in Fixed this pass — nothing else is written to the KB (§10.2: confirmed repairs only).
+
+## 10. Health Impact
+
+| Figure | Before (`rerun-5`) | After (this pass) | Note |
+|---|---|---|---|
+| **Application Health** | 2 failures | 2 failures | **Unchanged**, as required — TC-BR-026/052 untouched throughout the entire pass |
+| Automation Health | 12 failures | **2 confirmed remaining** (TC-BR-046 Remaining; TC-BR-001 Flaky/Quarantined), **5 confirmed Fixed** (TC-BR-043/055/060/061/065), **1 confirmed root cause, no repair applied** (TC-BR-054 — data fact established, awaiting a scan-bound decision) | 4 unverified, out of scope for this pass (TC-BR-066/067/068/069, never reached any repaired code) |
+| Environment Health | 0 failures | 0 failures | **Corrected mid-pass** — an earlier draft wrongly moved 5 tests here as "Environment Failure" on the strength of unverified assertion-message text; a live DOM check retracted that (§6). Every subsequent finding in this pass (click delivery, City/State async load, paginator disabled-state) was confirmed as an automation-code cause, not an environment one |
+
+## 11. Recommendations
+
+| Item | Recommendation |
+|---|---|
+| TC-BR-046 | Do not guess a third repair. Live DOM diagnosis needed: does clicking `COUNTRY_DROPDOWN_ANCESTOR` reliably open the panel at all, and does re-clicking it on retry close an already-open panel? Consider replicating `AddBranch_Page.clickVia()`'s JS-dispatched click if a raw driver click is confirmed not to commit on this control, matching the precedent already established for the Add Branch screen |
+| TC-BR-001 (quarantined) | Re-verify in isolation, single-test, before any further repair attempt |
+| TC-BR-054/055/065 | Live-verify `selectStatus()`/`clickSearch()`/`searchByName()` against the real filter form — an unfiltered grid plainly returns rows (confirmed 498 total, "Approved" rows present), so a plain/status-filtered search reporting 0 rows or "no matching status" points at the search/filter interaction itself, not the data |
+| TC-BR-060/061 | Live-verify `goToNextPage()`/`goToLastPage()`'s convergence logic. Pagination buttons are non-sequential (`["1","2","50"]`, not `1..N`) — `highestOfferedPageNumber()`'s jump-to-highest approach is structurally sound for this, but `currentPageNumber()`/`SELECTED_PAGE_BUTTON` most likely misreads the selected page after a jump, since BRN309 appearing on both "page 1" and "page 2" indicates the next-page click may not be changing pages at all |
+| TC-BR-066/067/069 | Never exercised the repaired code in either cycle (20s upstream timeout). Needs its own diagnosis, out of this pass's original scope; do not fold into Cluster A's outcome |
+| TC-BR-068 | Reached the repair once and exhausted its 10s wait. One data point is not enough to judge the wait's sufficiency — recommend a longer bound (matching `COMMIT_TIMEOUT`'s 6s × `SELECT_COMMIT_ATTEMPTS` precedent, or similar) once the environment is stable enough to test it cleanly |
+| Evidence tooling | `target/surefire-reports/` and root `allure-results/` are not partitioned per invocation (KL-09) — two cycles run back-to-back lost the first cycle's XML report and merged screenshots. Recommend `mvn clean` (or an explicit results-directory override) between cycles in any future multi-cycle pass |
+
+## 12. Approval Status
+
+| Field | Value |
+|---|---|
+| Repaired suite status | **Pending Automation Approval** — this pass's changes do not extend the 2026-08-05 approval, same as the 2026-08-06 pass before it |
+| May merge to baseline? | No |
+| May project into Target Project? | No |
+| Reviewer | Not yet reviewed |
+
 ### Updated §10 Health Impact
 
 | Figure | Before pass | After pass (per `EXEC-BR-20260806-03`) |

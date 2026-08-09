@@ -210,6 +210,7 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 20. **Must always report Application Health, Automation Health, and Environment Health as three separate figures** (§25.2) — never a single merged "Failed" count that would let a genuine application defect hide behind (or be mistaken for) an automation-authoring gap, or vice versa.
 20a. **Must classify `Inconclusive` rather than guess `Automation Failure`** when the evidence does not clearly separate an automation fault from an application fault (§25.2) — a misclassification here is what could later expose a genuine application defect to a repair pass.
 20b. **Must capture failure evidence rich enough to reason from** (§16, §25.1) — an exit code alone forces a Stage `5H` diagnosis pass that adequate evidence would have made unnecessary.
+21. **Must run the Simple English Communication Standard check on the Execution Results and the Health summary before treating a run as finished** (`workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 10): short, direct sentences; any hard word replaced with an easier one where meaning stays the same; every necessary technical term briefly explained; a raw outcome kept visibly separate from any inference about its cause; and a first-read check for whether an Automation Lead could read the Health figures without needing this skill to explain them further. Test Case IDs, Automation Script IDs, and Result Classification values are never altered by this check.
 
 # 9. Expected Artifacts
 

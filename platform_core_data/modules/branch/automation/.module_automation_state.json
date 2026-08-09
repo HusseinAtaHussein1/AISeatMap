@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "module": "branch",
-  "state": "Executed",
+  "state": "Healed",
   "framework": "SHAFT",
   "baselineRef": null,
   "sourceRuns": [
@@ -11,7 +11,7 @@
   "assembledAt": null,
   "approvedBy": "ahmed.ayman@tildetech.ae",
   "approvedAt": "2026-08-05T10:41:55.310Z",
-  "updatedAt": "2026-08-06T09:14:33.549Z",
+  "updatedAt": "2026-08-09T11:17:17.182Z",
   "history": [
     {
       "state": "Generated",
@@ -62,6 +62,11 @@
       "state": "Executed",
       "at": "2026-08-06T09:14:33.549Z",
       "run": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
+    },
+    {
+      "state": "Healed",
+      "at": "2026-08-09T11:17:17.182Z",
+      "run": "run-003"
     }
   ]
 }

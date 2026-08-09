@@ -667,6 +667,7 @@ This skill validates:
 - **Compilation/syntax readiness** — the generated code is syntactically valid and, where a lint/type-check/compile tool is available (§17), passes it; a failure here is a defect this skill must fix before declaring generation complete, not a note left for the Automation Execution skill to discover.
 - **Framework compliance** — the generated code actually follows the selected framework's conventions (e.g., SHAFT Engine's DriverFactory/Page Object Model/TestNG/Allure per §8, not generic unwrapped Selenium) — a compliance gap here is exactly the "specification violation" §8 already names, caught before handoff rather than after.
 - **Traceability** — every generated script's Test Case ID, and the Requirement/Discovery/Finding/Evidence References it inherited (§12), are actually present and resolvable — distinct from "broken references" above, which checks internal code references (page objects/fixtures); this checks the external traceability chain specifically.
+- **Simple English wording** — every user-facing artifact this skill produces (Automation Decision Report, Coverage Report, Automation Summary, Self Review Report) uses short, direct sentences, replaces a hard word with an easier one wherever meaning stays the same, briefly explains any necessary technical term, and keeps a verified fact (e.g. a confirmed selector) visibly separate from a recommendation or limitation (`pipeline.md` §6 Rule 10). Test Case IDs, class/method/file names, and framework terms are never altered by this check.
 
 **This skill generates recommendations whenever improvements are identified** — it does not silently fix everything it finds without recording what it found and why, and it does not silently ship known rough edges without disclosing them. Self Review findings are recorded in the Automation Manifest (§16) and, per iteration, in the Self Review Report (§15A).
 
@@ -787,6 +788,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 36b. **Must disclose, in the Decision Report's Known Limitations (§13), any generated asset whose operations are not currently executable under the Execution Safety policy** (§27A) — and must never record that restriction as `Manual Only`, which means something else entirely.
 36c. **Must keep Live Selector Verification (§11A) strictly read-only** (§27A) — locating an element is not acting on it, and a locator is never confirmed by submitting, approving, or deleting anything.
 36. **Must never decide any repository-structure question autonomously** (§31.6) — Automation Project/package/framework selection, new-package creation, merge destination, and repository structure always follow gather → analyze → recommend → wait for explicit approval, never a default or inferred decision.
+37. **Must perform the Simple English wording check (§15) on every user-facing artifact before declaring generation complete** — this is part of Self Review, not a separate pass, and its findings are disclosed exactly like any other Self Review finding (§15A.3).
 
 # 19. Expected Artifacts
 

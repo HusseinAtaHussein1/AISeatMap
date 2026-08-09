@@ -5,6 +5,38 @@
 
 ---
 
+# Pass HEAL-BR-20260809-01 (2026-08-09)
+
+**Source execution:** `EXEC-BR-20260806-03` — `runs/run-003__.../execution/ExecutionResults.rerun-5.md`
+**Scope:** `branch`, all 12 `Automation Failure` results from `rerun-5` (Create/Search/Update).
+**Reruns performed:** 2 (`rerun-6` Headless, `rerun-7` Headed — deliberately run in both modes to
+isolate the repair effect from the execution-mode variable, after the two were initially confounded).
+
+## Outcome
+
+| Column | Count | Tests |
+|---|---|---|
+| **Fixed** (`Automation Repaired`) | 1 | TC-BR-043 |
+| **Remaining Failures** | 6 | TC-BR-046 (repair applied, confirmed not working) plus TC-BR-054, 055, 060, 061, 065 (original symptoms gone, but each fails on a different, unrepaired defect — see below) |
+| **New Failures** | 0 | — |
+| **Flaky → Quarantined** | 1 | TC-BR-001 (see `QuarantineRegister.md`) |
+| **Unverified — never reached repaired code** | 4 | TC-BR-066, 067, 068, 069 |
+
+**Correction (2026-08-09, same day):** an earlier version of this table classified TC-BR-054/055/060/061/065
+as `Environment Failure`, reasoning from each test's own assertion-message text ("environment data gap")
+without independently checking the live application. **A human reviewer correctly challenged this.** A
+live DOM check of `/admin/branch` (unfiltered) via `platform_core/tools/browser_driver/` showed a
+normally-rendering grid with 498 real records, "Approved" rows plainly present, and non-sequential
+pagination buttons (`["1","2","50"]`) — directly contradicting the "no data"/"data gap" framing. These
+5 tests are real, unrepaired automation defects in the search/filter and pagination logic, not an
+environment problem. Full corrected analysis: `RepairSummary.md`, Pass `HEAL-BR-20260809-01` §6.
+
+**Honest headline: 1 of 12 confirmed fixed this pass.** Not a data-volume story — an unresolved
+automation-code story, with concrete, evidence-backed leads (§11 of the Repair Summary) for the next
+diagnosis pass.
+
+---
+
 # Pass HEAL-BR-20260806-01 (2026-08-06)
 
 **Source execution:** `EXEC-BR-20260806-01` — `runs/run-003__.../execution/ExecutionResults.rerun-3.md`

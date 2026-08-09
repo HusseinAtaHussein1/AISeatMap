@@ -2,6 +2,7 @@ package AdminPages.Admin.Branch;
 
 import com.shaft.driver.SHAFT;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import utilities.EnvironmentConfig;
@@ -111,6 +112,9 @@ public class SearchBranch_Page extends Branch_Common {
     private static final int MAX_PAGINATION_HOPS = 80;
     /** Bounded re-search attempts when waiting for a persisted approval-status change. */
     private static final int MAX_STATUS_REFRESH_ATTEMPTS = 3;
+    /** REPAIR-BR-008 (applied here 2026-08-09): re-drive attempts for an autocomplete/dropdown option
+     * click lost to a re-rendering overlay. */
+    private static final int SELECT_ATTEMPTS = 3;
 
     private static final Pattern TOTAL_RESULTS = Pattern.compile("of\\s+([\\d,]+)");
 
@@ -150,10 +154,33 @@ public class SearchBranch_Page extends Branch_Common {
         return this;
     }
 
+    /**
+     * Attempted repair, 2026-08-09, targeted rerun did NOT confirm it (TC-BR-046 still fails
+     * identically: {@code NoSuchElement option never became clickable}) -- left in place ahead of a
+     * real fix because it is strictly more correct than the original (a wait before the click, where
+     * there was none), but the underlying cause is NOT confirmed to be REPAIR-BR-008's autocomplete
+     * race. This control is verified ({@code COUNTRY_DROPDOWN_ANCESTOR}, above) to be a plain PrimeNG
+     * {@code p-dropdown} -- a static option list, not the filtering {@code p-autocomplete} REPAIR-BR-008
+     * fixed on the Add Branch screen. Citing that rule here was an unverified assumption of identical
+     * mechanism; the actual cause needs live DOM diagnosis (does the ancestor click reliably open the
+     * panel? does re-clicking it on retry toggle it closed again?) before another repair attempt.
+     */
     public SearchBranch_Page selectCountry(String country) {
-        driver.element().click(COUNTRY_DROPDOWN_ANCESTOR);
-        driver.element().click(By.xpath("//li[normalize-space(.)='" + country + "']"));
-        return this;
+        By option = By.xpath("//li[normalize-space(.)='" + country + "']");
+        NoSuchElementException lastFailure = null;
+        for (int attempt = 1; attempt <= SELECT_ATTEMPTS; attempt++) {
+            try {
+                driver.element().click(COUNTRY_DROPDOWN_ANCESTOR);
+                waitFor(TRANSIENT_TIMEOUT).until(d -> !selenium().findElements(option).isEmpty());
+                driver.element().click(option);
+                return this;
+            } catch (NoSuchElementException | TimeoutException notCommitted) {
+                lastFailure = (notCommitted instanceof NoSuchElementException)
+                        ? (NoSuchElementException) notCommitted
+                        : new NoSuchElementException("option never became clickable", notCommitted);
+            }
+        }
+        throw lastFailure;
     }
 
     /** A PrimeNG widget signals "unusable" with a {@code p-disabled} class on its container. */
@@ -174,25 +201,64 @@ public class SearchBranch_Page extends Branch_Common {
 
     // ── Searching ──────────────────────────────────────────────────────────────────────────────
 
+    /** REPAIR-BR-009: how long {@code isEmptyStateShown()} must hold continuously before it is
+     * accepted as the search's real outcome, rather than a transient flash while the grid clears
+     * old rows before the new result set streams in (diagnosed 2026-08-09, `healing/RepairSummary.md`
+     * Pass HEAL-BR-20260809-01, second round — confirmed via timestamped instrumentation: every
+     * false-empty read resolved in ~200-250ms, far faster than a real page-content change elsewhere
+     * in the same suite). Two poll cycles at {@link #POLL_INTERVAL} (250ms) is the settle window. */
+    private static final Duration EMPTY_STATE_SETTLE = Duration.ofMillis(600);
+
     /**
      * Clicks Search and waits, bounded, for the result set to actually change (REPAIR-001) rather
      * than reading the previous search's rows. An identical repeat search legitimately produces an
      * identical summary, so a timeout here is a normal outcome, not a failure.
+     *
+     * <p><b>REPAIR-BR-009:</b> {@code isEmptyStateShown()} is no longer accepted the instant it is
+     * observed -- it must hold continuously for {@link #EMPTY_STATE_SETTLE} first. The empty-state
+     * placeholder renders both when a search genuinely returns zero rows AND transiently while the
+     * grid clears its previous rows before the new set streams in; a bare presence check could not
+     * tell the two apart, and every downstream read (row count, pagination controls, which do not
+     * exist while the empty state shows) inherited the false-empty race.</p>
      */
     public SearchBranch_Page clickSearch() {
         String summaryBefore = resultSummaryText();
+        long t0 = System.currentTimeMillis();
+        System.out.println("[DIAG-SYNC] clickSearch start t=0ms summaryBefore=\"" + summaryBefore + "\"");
         driver.element().click(SEARCH_BUTTON);
+        System.out.println("[DIAG-SYNC] clickSearch clicked t=" + (System.currentTimeMillis() - t0) + "ms");
         try {
+            long[] emptySince = {-1};
             waitFor(RESULT_TIMEOUT).until(d -> {
-                if (isEmptyStateShown()) {
-                    return true;
+                boolean empty = isEmptyStateShown();
+                String now = empty ? "" : resultSummaryText();
+                boolean summaryChanged = !empty && !now.isEmpty() && !now.equals(summaryBefore);
+                boolean settled = false;
+                if (empty) {
+                    if (emptySince[0] < 0) {
+                        emptySince[0] = System.currentTimeMillis();
+                    }
+                    settled = System.currentTimeMillis() - emptySince[0] >= EMPTY_STATE_SETTLE.toMillis();
+                } else {
+                    emptySince[0] = -1;
                 }
-                String now = resultSummaryText();
-                return !now.isEmpty() && !now.equals(summaryBefore);
+                boolean done = summaryChanged || settled;
+                System.out.println("[DIAG-SYNC] clickSearch poll t=" + (System.currentTimeMillis() - t0)
+                        + "ms empty=" + empty + " emptySettled=" + settled + " summaryNow=\"" + now
+                        + "\" summaryChanged=" + summaryChanged + " done=" + done
+                        + " rowCountNow=" + selenium().findElements(GRID_BODY_ROWS).size());
+                return done;
             });
+            System.out.println("[DIAG-SYNC] clickSearch resolved t=" + (System.currentTimeMillis() - t0) + "ms");
         } catch (TimeoutException expectedWhenResultsAreUnchanged) {
             // Same criteria as the previous search — the grid is already showing the correct rows.
+            System.out.println("[DIAG-SYNC] clickSearch timed out t=" + (System.currentTimeMillis() - t0)
+                    + "ms summaryNow=\"" + resultSummaryText() + "\" rowCountNow="
+                    + selenium().findElements(GRID_BODY_ROWS).size());
         }
+        System.out.println("[DIAG-SYNC] clickSearch end t=" + (System.currentTimeMillis() - t0)
+                + "ms summaryAfter=\"" + resultSummaryText() + "\" rowCountAfter="
+                + selenium().findElements(GRID_BODY_ROWS).size());
         return this;
     }
 
@@ -211,27 +277,37 @@ public class SearchBranch_Page extends Branch_Common {
     // ── Reading the grid ───────────────────────────────────────────────────────────────────────
 
     public List<String> columnHeaders() {
-        List<String> headers = new ArrayList<>();
-        for (WebElement header : selenium().findElements(GRID_HEADER_CELLS)) {
-            headers.add(header.getText().trim());
-        }
-        return headers;
+        return withStaleRetry(() -> {
+            List<String> headers = new ArrayList<>();
+            for (WebElement header : selenium().findElements(GRID_HEADER_CELLS)) {
+                headers.add(header.getText().trim());
+            }
+            return headers;
+        });
     }
 
     public int rowCount() {
         return selenium().findElements(GRID_BODY_ROWS).size();
     }
 
-    /** Branch Codes visible on the page currently displayed, in grid order. */
+    /**
+     * Branch Codes visible on the page currently displayed, in grid order.
+     *
+     * <p><b>REPAIR-BR (2026-08-09):</b> retries on {@code StaleElementReferenceException} — the grid
+     * can re-render between {@code findElements(GRID_BODY_ROWS)} locating a row and this same read
+     * calling {@code row.findElements(...)}/{@code getText()} on it (TC-BR-043/054/055/060/061).
+     */
     public List<String> branchCodesOnCurrentPage() {
-        List<String> codes = new ArrayList<>();
-        for (WebElement row : selenium().findElements(GRID_BODY_ROWS)) {
-            List<WebElement> cells = row.findElements(By.tagName("td"));
-            if (!cells.isEmpty()) {
-                codes.add(cells.get(0).getText().trim());
+        return withStaleRetry(() -> {
+            List<String> codes = new ArrayList<>();
+            for (WebElement row : selenium().findElements(GRID_BODY_ROWS)) {
+                List<WebElement> cells = row.findElements(By.tagName("td"));
+                if (!cells.isEmpty()) {
+                    codes.add(cells.get(0).getText().trim());
+                }
             }
-        }
-        return codes;
+            return codes;
+        });
     }
 
     public boolean isEmptyStateShown() {
@@ -301,26 +377,30 @@ public class SearchBranch_Page extends Branch_Common {
 
     /** The action icons actually offered by one row, as a set of {@link RowAction}. */
     public Set<RowAction> actionsAvailableFor(String branchCode) {
-        Set<RowAction> actions = new LinkedHashSet<>();
-        for (RowAction action : RowAction.values()) {
-            if (!selenium().findElements(actionIconInRow(branchCode, action)).isEmpty()) {
-                actions.add(action);
+        return withStaleRetry(() -> {
+            Set<RowAction> actions = new LinkedHashSet<>();
+            for (RowAction action : RowAction.values()) {
+                if (!selenium().findElements(actionIconInRow(branchCode, action)).isEmpty()) {
+                    actions.add(action);
+                }
             }
-        }
-        return actions;
+            return actions;
+        });
     }
 
     /** The action icons offered by the row at {@code rowIndex} (1-based) on the current page. */
     public Set<RowAction> actionsAvailableInRow(int rowIndex) {
-        Set<RowAction> actions = new LinkedHashSet<>();
-        for (RowAction action : RowAction.values()) {
-            By icon = By.xpath("(//table//tbody//tr)[" + rowIndex
-                    + "]//i[contains(@class,'" + action.iconClass() + "')]");
-            if (!selenium().findElements(icon).isEmpty()) {
-                actions.add(action);
+        return withStaleRetry(() -> {
+            Set<RowAction> actions = new LinkedHashSet<>();
+            for (RowAction action : RowAction.values()) {
+                By icon = By.xpath("(//table//tbody//tr)[" + rowIndex
+                        + "]//i[contains(@class,'" + action.iconClass() + "')]");
+                if (!selenium().findElements(icon).isEmpty()) {
+                    actions.add(action);
+                }
             }
-        }
-        return actions;
+            return actions;
+        });
     }
 
     public String approvalStatusInRow(int rowIndex) {
@@ -333,24 +413,28 @@ public class SearchBranch_Page extends Branch_Common {
 
     // ── Row actions ────────────────────────────────────────────────────────────────────────────
 
+    /** REPAIR-BR-010 (2026-08-09): raw driver clicks on row-action icons are an evidence-consistent
+     * hypothesis for TC-BR-055/065's UpdateBranch_Page load timeout (unconfirmed by direct log
+     * evidence, unlike the pagination click failure) -- applied on the strength of the same confirmed
+     * pattern (`Branch_Common.clickVia`, ported from `AddBranch_Page`). */
     public UpdateBranch_Page clickEditPen(String branchCode) {
-        driver.element().click(actionIconInRow(branchCode, RowAction.EDIT));
+        clickVia(actionIconInRow(branchCode, RowAction.EDIT));
         return new UpdateBranch_Page(driver).waitUntilLoaded();
     }
 
     public UpdateBranch_Page clickEditPenInRow(int rowIndex) {
-        driver.element().click(By.xpath(
+        clickVia(By.xpath(
                 "(//table//tbody//tr)[" + rowIndex + "]//i[contains(@class,'pi-pencil')]"));
         return new UpdateBranch_Page(driver).waitUntilLoaded();
     }
 
     public SearchBranch_Page clickThumbsUp(String branchCode) {
-        driver.element().click(actionIconInRow(branchCode, RowAction.APPROVE));
+        clickVia(actionIconInRow(branchCode, RowAction.APPROVE));
         return this;
     }
 
     public SearchBranch_Page clickThumbsDown(String branchCode) {
-        driver.element().click(actionIconInRow(branchCode, RowAction.REJECT));
+        clickVia(actionIconInRow(branchCode, RowAction.REJECT));
         return this;
     }
 
@@ -396,19 +480,41 @@ public class SearchBranch_Page extends Branch_Common {
     // ── Pagination ─────────────────────────────────────────────────────────────────────────────
 
     public int currentPageNumber() {
-        return parsePageNumber(textOf(SELECTED_PAGE_BUTTON));
+        String raw = textOf(SELECTED_PAGE_BUTTON);
+        int parsed = parsePageNumber(raw);
+        System.out.println("[DIAG-SYNC] currentPageNumber selectedButtonText=\"" + raw + "\" parsed=" + parsed);
+        return parsed;
     }
 
+    /**
+     * REPAIR-BR-011 (2026-08-09): {@code button.next} carries no disabled attribute or class on this
+     * app even on the genuine last page -- live-verified: {@code <button class="next"><i
+     * class="pi pi-angle-right"></i></button>}, identical whether or not a next page exists. The
+     * previous {@code hasClass(NEXT_PAGE_BUTTON, "disabled")} check was looking for a signal this
+     * paginator never emits. "Is there a next page" is instead answered the same way
+     * {@link #goToLastPage()} already answers its own convergence: is the current page already the
+     * highest one offered.
+     */
     public boolean hasNextPage() {
         List<WebElement> next = selenium().findElements(NEXT_PAGE_BUTTON);
-        return !next.isEmpty() && next.get(0).isEnabled() && !hasClass(NEXT_PAGE_BUTTON, "disabled");
+        int current = currentPageNumber();
+        int highest = highestOfferedPageNumber();
+        boolean result = !next.isEmpty() && (highest < 0 || current < highest);
+        System.out.println("[DIAG-SYNC] hasNextPage present=" + !next.isEmpty()
+                + " current=" + current + " highestOffered=" + highest + " result=" + result);
+        return result;
     }
 
     /** Advances one page and waits, bounded, for the displayed records to actually change. */
     public SearchBranch_Page goToNextPage() {
+        long t0 = System.currentTimeMillis();
         List<String> before = branchCodesOnCurrentPage();
-        driver.element().click(NEXT_PAGE_BUTTON);
+        System.out.println("[DIAG-SYNC] goToNextPage before=" + before + " page=" + currentPageNumber());
+        clickVia(NEXT_PAGE_BUTTON);
+        System.out.println("[DIAG-SYNC] goToNextPage clicked t=" + (System.currentTimeMillis() - t0) + "ms");
         waitForPageContentToChange(before);
+        System.out.println("[DIAG-SYNC] goToNextPage after=" + branchCodesOnCurrentPage()
+                + " page=" + currentPageNumber() + " totalMs=" + (System.currentTimeMillis() - t0));
         return this;
     }
 
@@ -424,30 +530,55 @@ public class SearchBranch_Page extends Branch_Common {
     public SearchBranch_Page goToLastPage() {
         for (int hop = 0; hop < MAX_PAGINATION_HOPS; hop++) {
             int highestOffered = highestOfferedPageNumber();
-            if (highestOffered < 0 || highestOffered == currentPageNumber()) {
+            int current = currentPageNumber();
+            System.out.println("[DIAG-SYNC] goToLastPage hop=" + hop + " highestOffered=" + highestOffered
+                    + " current=" + current);
+            if (highestOffered < 0 || highestOffered == current) {
+                System.out.println("[DIAG-SYNC] goToLastPage converged at hop=" + hop);
                 return this;
             }
             List<String> before = branchCodesOnCurrentPage();
-            driver.element().click(By.xpath("//button[contains(@class,'page-no')][normalize-space()='"
+            clickVia(By.xpath("//button[contains(@class,'page-no')][normalize-space()='"
                     + highestOffered + "']"));
+            System.out.println("[DIAG-SYNC] goToLastPage clicked button=\"" + highestOffered + "\" hop=" + hop);
             waitForPageContentToChange(before);
         }
+        System.out.println("[DIAG-SYNC] goToLastPage exhausted MAX_PAGINATION_HOPS=" + MAX_PAGINATION_HOPS
+                + " final page=" + currentPageNumber());
         return this;
     }
 
     private int highestOfferedPageNumber() {
-        int highest = -1;
-        for (WebElement pageButton : selenium().findElements(PAGE_NUMBER_BUTTONS)) {
-            highest = Math.max(highest, parsePageNumber(pageButton.getText()));
-        }
-        return highest;
+        return withStaleRetry(() -> {
+            int highest = -1;
+            List<String> texts = new ArrayList<>();
+            for (WebElement pageButton : selenium().findElements(PAGE_NUMBER_BUTTONS)) {
+                String raw = pageButton.getText();
+                texts.add(raw);
+                highest = Math.max(highest, parsePageNumber(raw));
+            }
+            System.out.println("[DIAG-SYNC] highestOfferedPageNumber buttonTexts=" + texts + " highest=" + highest);
+            return highest;
+        });
     }
 
     private void waitForPageContentToChange(List<String> previousCodes) {
+        long t0 = System.currentTimeMillis();
+        System.out.println("[DIAG-SYNC] waitForPageContentToChange start previous=" + previousCodes);
         try {
-            waitFor(RESULT_TIMEOUT).until(d -> !branchCodesOnCurrentPage().equals(previousCodes));
+            waitFor(RESULT_TIMEOUT).until(d -> {
+                List<String> now = branchCodesOnCurrentPage();
+                boolean changed = !now.equals(previousCodes);
+                System.out.println("[DIAG-SYNC] waitForPageContentToChange poll t="
+                        + (System.currentTimeMillis() - t0) + "ms now=" + now + " changed=" + changed);
+                return changed;
+            });
+            System.out.println("[DIAG-SYNC] waitForPageContentToChange resolved t="
+                    + (System.currentTimeMillis() - t0) + "ms");
         } catch (TimeoutException unchanged) {
             // Bounded and non-fatal: the assertion in the test decides whether this matters.
+            System.out.println("[DIAG-SYNC] waitForPageContentToChange TIMED OUT t="
+                    + (System.currentTimeMillis() - t0) + "ms stillShowing=" + branchCodesOnCurrentPage());
         }
     }
 

@@ -94,8 +94,27 @@ public class UpdateBranch_Page extends Branch_Common {
      * have landed in the form. A fixed delay here produced a false "form is empty" reading twice
      * during Discovery; this method exists specifically so that cannot recur.
      */
+    /** Diagnosis-only (2026-08-09): timestamp anchor for [DIAG-SYNC] reads below, reset each load. */
+    private long diagLoadedAt = -1;
+
+    /**
+     * REPAIR-BR-012 (2026-08-09): the Branch Name field populating is not proof the City dropdown has
+     * -- confirmed via timestamped instrumentation: Name held a value at t=623ms while City still read
+     * literally {@code "loading..."} (placeholder=true), and remained {@code "loading..."} 213ms later
+     * with no further wait in between. City (and State, the same PrimeNG-dependent-dropdown pattern)
+     * populate on their own, independent async timeline. Now waited for explicitly, not inferred from
+     * Name.
+     */
     public UpdateBranch_Page waitUntilLoaded() {
+        long t0 = System.currentTimeMillis();
         waitFor(LOAD_TIMEOUT).until(d -> !valueOfInput(BRANCH_NAME).isEmpty());
+        waitFor(LOAD_TIMEOUT).until(d -> !"loading...".equalsIgnoreCase(textOf(CITY_DROPDOWN_LABEL).trim()));
+        waitFor(LOAD_TIMEOUT).until(d -> !"loading...".equalsIgnoreCase(textOf(STATE_DROPDOWN_LABEL).trim()));
+        diagLoadedAt = System.currentTimeMillis();
+        System.out.println("[DIAG-SYNC] UpdateBranch_Page.waitUntilLoaded resolved t="
+                + (diagLoadedAt - t0) + "ms cityLabel=\"" + textOf(CITY_DROPDOWN_LABEL)
+                + "\" cityPlaceholder=" + hasClass(CITY_DROPDOWN_LABEL, "p-placeholder")
+                + " stateLabel=\"" + textOf(STATE_DROPDOWN_LABEL) + "\"");
         return this;
     }
 
@@ -122,7 +141,12 @@ public class UpdateBranch_Page extends Branch_Common {
     }
 
     public String city() {
-        return textOf(CITY_DROPDOWN_LABEL);
+        String raw = textOf(CITY_DROPDOWN_LABEL);
+        System.out.println("[DIAG-SYNC] UpdateBranch_Page.city() t="
+                + (diagLoadedAt < 0 ? -1 : System.currentTimeMillis() - diagLoadedAt)
+                + "ms sinceLoaded value=\"" + raw + "\" placeholder="
+                + hasClass(CITY_DROPDOWN_LABEL, "p-placeholder"));
+        return raw;
     }
 
     public String postOfficeBox() {

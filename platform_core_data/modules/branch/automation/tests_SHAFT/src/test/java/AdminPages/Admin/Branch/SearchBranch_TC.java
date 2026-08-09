@@ -248,6 +248,12 @@ public class SearchBranch_TC extends TestBase {
 
         for (int page = 0; page < MAX_PAGES_SCANNED_FOR_APPROVAL_STATES; page++) {
             int rows = searchBranchPage.rowCount();
+            List<String> statusesOnPage = new ArrayList<>();
+            for (int row = 1; row <= rows; row++) {
+                statusesOnPage.add(searchBranchPage.approvalStatusInRow(row));
+            }
+            System.out.println("[DIAG-SYNC] assertIconsForStatus(\"" + approvalStatus + "\") page=" + page
+                    + " rowCount=" + rows + " statusesSeen=" + statusesOnPage);
             for (int row = 1; row <= rows; row++) {
                 if (approvalStatus.equalsIgnoreCase(searchBranchPage.approvalStatusInRow(row))) {
                     Set<RowAction> actual = searchBranchPage.actionsAvailableInRow(row);
@@ -282,7 +288,9 @@ public class SearchBranch_TC extends TestBase {
     @Story("Row actions")
     @Description("TC-BR-055: Edit pen opens Update Branch with the record's details pre-filled")
     public void tcBr055_editPenOpensUpdateBranchPreFilled() {
+        System.out.println("[DIAG-SYNC] tcBr055 before clickSearch rowCount=" + searchBranchPage.rowCount());
         searchBranchPage.clickSearch();
+        System.out.println("[DIAG-SYNC] tcBr055 after clickSearch rowCount=" + searchBranchPage.rowCount());
         Assert.assertTrue(searchBranchPage.rowCount() > 0, "Expected results to open a record from.");
 
         String code = searchBranchPage.branchCodeInRow(1);

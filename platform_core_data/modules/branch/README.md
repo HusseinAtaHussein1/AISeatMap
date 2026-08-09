@@ -5,7 +5,7 @@
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
 **Slug:** `branch` · **Status:** Active
-**Last generated:** 2026-08-06T09:14:33.549Z
+**Last generated:** 2026-08-09T11:17:17.182Z
 
 ## Scope
 
@@ -32,7 +32,7 @@ Branch creation under Company with credit limit, top-up limit, credit terms, own
 
 ## Automation
 
-**Lifecycle state:** Executed · **Framework:** SHAFT
+**Lifecycle state:** Healed · **Framework:** SHAFT
 
 - Assembled into the baseline: never
 - Generated against shared ref: —

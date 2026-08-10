@@ -511,15 +511,26 @@ public class AddBranch_Page {
     }
 
     /**
-     * TC-BR-026: asserts Warning Prompt (Days) was capped at 11 digits, OR that a length-related
-     * validation message is shown. This is a regression assertion for FINDING-004, which is still an
-     * open defect as of this run's own Stage 4M pass (RISK-AUTO-2) -- expected to fail honestly until
-     * that defect is fixed, not a sign of a broken test.
+     * ORPHANED 2026-08-10 -- no caller. TC-BR-026 was removed from automation scope by module-owner
+     * instruction (FINDING-004, Rejected/Dropped). Retained, unused, only because the flaw recorded
+     * below is worth not re-learning; delete it whenever this file is next tidied.
+     *
+     * <p><b>This assertion could never have been valid, independently of FINDING-004.</b> It reads back
+     * the field's retained value to decide whether the application capped the input -- but every setter
+     * on this page writes through {@code setValueAndNotify}, which assigns {@code element.value} in
+     * JavaScript, and a JS assignment <b>bypasses HTML {@code maxlength} entirely</b> (the browser
+     * enforces {@code maxlength} only against real keystrokes). So the read-back always returns the full
+     * string that was written, whether or not the application enforces a cap: the assertion cannot fail
+     * a broken app and cannot pass a correct one. The module owner has since confirmed the sibling
+     * fields (Post Office Box, Credit Limit) do enforce their caps, which is exactly what this method's
+     * technique is incapable of observing -- see FINDING-002 and FINDING-003, both closed as Not
+     * Reproducible for this reason. Any future length-cap check must drive real keystrokes
+     * ({@code sendKeys}) rather than assign a value.</p>
      */
     public void assertWarningPromptCappedAt11DigitsOrMessageShown() {
         String actual = readValue(WARNING_PROMPT_DAYS);
-        Assert.assertTrue(actual.length() <= 11,
-                "Warning Prompt (Days) should be capped at 11 digits, but retained " + actual.length()
+        Assert.assertTrue(actual.length() <= 8,
+                "Warning Prompt (Days) should be capped at 8 digits, but retained " + actual.length()
                         + " characters: \"" + actual + "\" (FINDING-004, still open)");
     }
 
@@ -709,7 +720,7 @@ public class AddBranch_Page {
 
     /**
      * Asserts submission succeeded: either the browser navigated away from the Add Branch URL, or
-     * the page source contains "Pending for approval". Reads the page source directly (see
+     * the page source contains "Added Successfully". Reads the page source directly (see
      * assertReachingPercentageCapMessageShown's note on this SHAFT_ENGINE version's validation
      * builder not exposing a text()/pageSource() fluent check).
      *
@@ -718,15 +729,20 @@ public class AddBranch_Page {
      * the submission does succeed and does navigate away, but asynchronously -- the earlier immediate
      * read observed the pre-navigation state and reported a false failure. This now polls, bounded, for
      * either signal to become true rather than asserting on whatever is on screen the instant the click
-     * returns. No expected value changed: {@code navigatedAway || pendingApprovalShown} is the same
-     * condition as before, only no longer read too early.</p>
+     * returns.</p>
+     *
+     * <p><b>Corrected 2026-08-10 by user instruction (Stage 3 decision):</b> the text signal was
+     * "Pending for approval", the expected value the earlier diagnosis had refused to change pending
+     * that decision (see {@code healing/RepairSummary.md}). The application's actual post-submit
+     * success message is "Added Successfully" -- "Pending for approval" is the Approval Status
+     * column's value shown later in the results grid, a separate signal this method never checked.</p>
      */
     public void assertSubmissionSucceeded() {
         boolean succeeded;
         try {
             succeeded = new WebDriverWait(driver.getDriver(), SUBMIT_OUTCOME_TIMEOUT)
                     .until(d -> !driver.browser().getCurrentURL().contains("/admin/branch/add")
-                            || driver.browser().getPageSource().contains("Pending for approval"));
+                            || driver.browser().getPageSource().contains("Added Successfully"));
         } catch (TimeoutException notObserved) {
             succeeded = false;
         }
@@ -746,6 +762,6 @@ public class AddBranch_Page {
                         + "  return (lbl||e.id||e.placeholder||e.tagName);"
                         + "}).slice(0,25).join(' | ');"));
         Assert.assertTrue(succeeded,
-                "Expected the Branch to be saved with status \"Pending for approval.\"");
+                "Expected the Branch to be saved with the success message \"Added Successfully.\"");
     }
 }

@@ -28,7 +28,19 @@ public class CreateBranch_Admin_TC extends TestBase_TC {
     /**
      * TC-BR-001 -- Create Branch with all mandatory Branch Details fields.
      * Requirement: PRD_UserStories.md US 5 §Branch Details. Discovery: DiscoverySnapshot_CreateBranch.md §3-4.
-     * Finding: N/A. Expected Result: Branch saved, status "Pending for approval."
+     * Finding: N/A. Expected Result: Branch saved, success message "Added Successfully" (corrected
+     * 2026-08-10 by user instruction; was "Pending for approval", which is the record's later Approval
+     * Status value, not the submit-time success message).
+     *
+     * <p><b>Known coverage gap (2026-08-10).</b> The test case's Expected Result also requires the new
+     * Branch to be retrievable under the {@code Inactive} status filter and absent from {@code Active}.
+     * That assertion was added, then <b>reverted on instruction</b> after its first run: the submit
+     * itself was blocked under headless with mandatory Product Access Description fields left empty,
+     * while {@code BranchProvisioner}'s identical fill sequence succeeded in the same run -- so the cause
+     * sits in the fill/headless interaction, not in the placement assertion. <b>This method therefore
+     * verifies submit-time success only, not persistence</b>, which is the same gap that let an
+     * unretrievable-record condition report green. Re-add the placement check once the create flow is
+     * reliable; do not treat a pass here as proof a Branch was created.</p>
      */
     @Test
     @Story("Happy path")
@@ -135,23 +147,19 @@ public class CreateBranch_Admin_TC extends TestBase_TC {
         addBranchPage.assertReachingPercentageValueEquals("99.123");
     }
 
-    /**
-     * TC-BR-026 -- Warning Prompt (Days) rejects a value exceeding 11 digits.
-     * Requirement: PRD_UserStories.md US 5 §Branch Sales Configuration. Finding: FINDING-004 (Confirmed,
-     * still open as of this run's Stage 4M pass). Regression test -- asserts the CORRECTED behavior
-     * (automation-skill §13), so this test is EXPECTED TO FAIL until FINDING-004 is fixed
-     * (AutomationPlan_SHAFT.md RISK-AUTO-2 -- disclosed, not a broken script). Credit Terms is set to
-     * the same 15-digit value so the separate, already-confirmed cross-field rule (TC-BR-027, out of
-     * this run's automation scope) cannot itself be the source of any resulting message.
+    /*
+     * TC-BR-026 (Warning Prompt (Days) rejects a value exceeding 11 digits) was REMOVED from this
+     * suite on 2026-08-10 by module-owner instruction -- "leave this one alone and take it out of the
+     * automation test cases" (FINDING-004, now Rejected/Dropped). The Stage 3 test case itself is
+     * retained, unchanged, in the manual suite with Automation = Rejected; only its automation is gone.
+     *
+     * Not left disabled-in-place, because the instruction was to remove it from automation scope, and a
+     * dormant @Test still reads as "in scope, temporarily off". Two independent reasons it should not be
+     * resurrected as it stood: FINDING-016 (Credit Terms' 7-digit cap makes the 11-digit boundary
+     * unreachable with legal data) is still open, and the assertion it used could never have been valid
+     * anyway -- see the note on assertWarningPromptCappedAt11DigitsOrMessageShown in AddBranch_Page,
+     * which reads back a value this suite sets via JS, bypassing the very maxlength it aims to test.
      */
-    @Test
-    @Story("Regression - FINDING-004")
-    @Description("TC-BR-026: Warning Prompt (Days) rejects a value exceeding 11 digits")
-    public void tcBr026_warningPromptRejectsValueExceeding11Digits() {
-        addBranchPage.setCreditTermsDays("999999999999999");
-        addBranchPage.setWarningPromptDays("999999999999999");
-        addBranchPage.assertWarningPromptCappedAt11DigitsOrMessageShown();
-    }
 
     /**
      * TC-BR-028 -- Select at least one Payment Option.

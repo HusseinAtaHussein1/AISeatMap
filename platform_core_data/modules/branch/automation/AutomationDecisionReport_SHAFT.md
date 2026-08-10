@@ -159,8 +159,8 @@
 | **Justification** | Regression test for FINDING-004; asserts the corrected behavior per §13's guidance for Finding-backed regression cases, even though it is known to fail against the current, still-open defect |
 | **Reused Assets** | None |
 | **Generated Assets** | `AddBranchPage.assertWarningPromptCappedAt11DigitsOrMessageShown`, `CreateBranchTests.tcBr026_warningPromptRejectsValueExceeding11Digits` |
-| **Automation Readiness** | Ready — compiles and runs; **will report Failed against the live application until FINDING-004 is fixed** (AutomationPlan_SHAFT.md RISK-AUTO-2). This is disclosed, expected behavior, not a blocked/broken script. |
-| **Known Limitations** | Will fail until FINDING-004 is fixed (by design) |
+| **Automation Readiness** | **Blocked — Needs Clarification (2026-08-10).** `@Test(enabled = false)`; compiles but is not executed and contributes no result. Its test case's Test Data is no longer legal business data — Credit Terms(Days) caps at 7 digits — and no legal substitute satisfies both documented rules (FINDING-016). Previously "Ready, expected to Fail by design"; that no longer holds because the case cannot be run at all with valid data. |
+| **Known Limitations** | Not executable until the business resolves FINDING-016. **Deliberately not rescoped** to whatever remained technically runnable: narrowing the assertion to ignore which validation message appears would drop the isolation from TC-BR-027's cross-field rule, which is the case's stated objective rather than an implementation detail. Automation follows the approved business behaviour; it does not redefine the case around testability. Consequence: Warning Prompt's 11-digit rule has **no coverage**, which is a coverage gap, not a passing result |
 
 **Traceability:**
 
@@ -286,7 +286,7 @@ Every case below carries exactly one Automation Decision with a stated justifica
 | TC-BR-045 | Search | Arithmetic relation (Both = Active + Inactive) is stable under a shared, changing dataset — the fixed 491/125/616 counts deliberately are not asserted. |
 | TC-BR-046 | Search | Cascade enable/disable is observable via the `p-disabled` class. |
 | TC-BR-052 | Search | Regression for FINDING-012. **Expected to fail** — see Risk. |
-| TC-BR-054 | Search | Icon set per approval state is fully observable; bounded page scan. |
+| TC-BR-054 | Search | Icon set per selected Status filter is fully observable on page 1 of each filter's results (corrected 2026-08-10). |
 | TC-BR-055 | Search | Grid-to-form comparison; routed through the pre-fill poll. |
 | TC-BR-060 | Search | Page-1/page-2 disjointness is a clean assertion. |
 | TC-BR-061 | Search | Last page reachable via verified numbered buttons. |

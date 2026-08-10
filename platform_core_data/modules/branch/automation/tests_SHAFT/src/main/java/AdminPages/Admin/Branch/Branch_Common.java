@@ -73,6 +73,36 @@ public abstract class Branch_Common {
                 element);
     }
 
+    /**
+     * REPAIR-BR-013 (2026-08-10): sets an input's value the way this application's Angular controls
+     * actually register it, rather than asking the driver to type. Ported from
+     * {@code AddBranch_Page.setValueAndNotify} — the same port, for the same reason, as
+     * {@link #clickVia(By)} above.
+     *
+     * <p><b>Directly observed, not inferred.</b> A diagnostic probe on 2026-08-10 read the DOM
+     * immediately after SHAFT reported {@code Type "BRN2" into "Branch code"} as delivered: the input's
+     * {@code value} was still {@code ""} and the control was still {@code ng-pristine}. The text never
+     * landed. Every search built on it therefore ran with **no criteria at all** and the application
+     * correctly returned the full, unfiltered record set — which is what TC-BR-041 and TC-BR-043 were
+     * really failing on, and what made TC-BR-040 pass for the wrong reason (its expected code happened
+     * to sit on page 1 of the unfiltered grid).</p>
+     *
+     * <p>Dispatching {@code input} alone is not enough — verified in the same probe: the control went
+     * {@code ng-dirty} while {@code value} stayed {@code ""}. The assignment must happen first, then the
+     * events, so Angular reads a populated field.</p>
+     */
+    protected void typeVia(By locator, String value) {
+        WebElement element = selenium().findElement(locator);
+        ((org.openqa.selenium.JavascriptExecutor) selenium()).executeScript(
+                "var e = arguments[0];"
+                + "e.focus();"
+                + "e.value = arguments[1];"
+                + "e.dispatchEvent(new Event('input', {bubbles: true}));"
+                + "e.dispatchEvent(new Event('change', {bubbles: true}));"
+                + "e.blur();",
+                element, value);
+    }
+
     /** Named {@code waitFor}, not {@code wait} — {@code Object.wait} must not be shadowed. */
     protected WebDriverWait waitFor(Duration timeout) {
         WebDriverWait webDriverWait = new WebDriverWait(selenium(), timeout);

@@ -42,9 +42,6 @@ public class SearchBranch_TC extends TestBase {
     private static final String NON_MATCHING_BRANCH_CODE = "ZZZZQQ9";
     private static final String CASCADE_COUNTRY = "Egypt";
 
-    /** Bound on how far TC-BR-054 will page looking for a row in each approval state. */
-    private static final int MAX_PAGES_SCANNED_FOR_APPROVAL_STATES = 10;
-
     private SearchBranch_Page searchBranchPage;
 
     @Override
@@ -213,66 +210,46 @@ public class SearchBranch_TC extends TestBase {
     }
 
     /**
-     * TC-BR-054 -- Row action icons match the record's approval state.
+     * TC-BR-054 -- Row action icons match the selected Status filter.
      * Requirement: PRD_UserStories.md US 7 §Actions &amp; Functionalities.
      *
-     * <p>A record never offers a transition to the state it is already in: Approved omits thumbs-up,
-     * Rejected omits thumbs-down, Pending offers both. Read-only -- it locates existing rows in each
-     * state by paging, bounded, rather than creating records to guarantee them.</p>
+     * <p>Corrected 2026-08-10 by user instruction: the icon set is driven by the Status filter
+     * (Active/Inactive/Both) applied to the search, uniformly across every row it returns -- not by
+     * each row's own Approval Status. Active omits thumbs-up; Inactive and Both offer all three.</p>
      */
     @Test
     @Story("Row actions")
-    @Description("TC-BR-054: Row action icons match the record's approval state")
-    public void tcBr054_rowActionIconsMatchApprovalState() {
-        searchBranchPage.selectStatus(Status.BOTH);
-        searchBranchPage.clickSearch();
+    @Description("TC-BR-054: Row action icons match the selected Status filter")
+    public void tcBr054_rowActionIconsMatchStatusFilter() {
+        Set<RowAction> activeExpected = EnumSet.of(RowAction.EDIT, RowAction.REJECT);
+        Set<RowAction> allThreeExpected = EnumSet.of(RowAction.EDIT, RowAction.APPROVE, RowAction.REJECT);
 
-        Set<RowAction> approvedExpected = EnumSet.of(RowAction.EDIT, RowAction.REJECT);
-        Set<RowAction> pendingExpected = EnumSet.of(RowAction.EDIT, RowAction.APPROVE, RowAction.REJECT);
-        Set<RowAction> rejectedExpected = EnumSet.of(RowAction.EDIT, RowAction.APPROVE);
-
-        assertIconsForStatus("Approved", approvedExpected);
-        assertIconsForStatus("Pending for approval", pendingExpected);
-        assertIconsForStatus("Rejected", rejectedExpected);
+        assertIconsForStatusFilter(Status.ACTIVE, activeExpected);
+        assertIconsForStatusFilter(Status.INACTIVE, allThreeExpected);
+        assertIconsForStatusFilter(Status.BOTH, allThreeExpected);
     }
 
     /**
-     * Finds the first row in the given approval state, paging up to a bound, and asserts its icon set.
-     * If no such row is reachable the test fails naming that explicitly as an unmet precondition --
-     * an environment gap, not an application defect, and not something to quietly skip.
+     * Selects the given Status filter, searches, and asserts every row on page 1 offers exactly the
+     * expected icon set. Fails naming an empty result set explicitly as an unmet precondition --
+     * an environment data gap, not an application defect.
      */
-    private void assertIconsForStatus(String approvalStatus, Set<RowAction> expectedIcons) {
+    private void assertIconsForStatusFilter(Status statusFilter, Set<RowAction> expectedIcons) {
         searchBranchPage.open();
-        searchBranchPage.selectStatus(Status.BOTH);
+        searchBranchPage.selectStatus(statusFilter);
         searchBranchPage.clickSearch();
 
-        for (int page = 0; page < MAX_PAGES_SCANNED_FOR_APPROVAL_STATES; page++) {
-            int rows = searchBranchPage.rowCount();
-            List<String> statusesOnPage = new ArrayList<>();
-            for (int row = 1; row <= rows; row++) {
-                statusesOnPage.add(searchBranchPage.approvalStatusInRow(row));
-            }
-            System.out.println("[DIAG-SYNC] assertIconsForStatus(\"" + approvalStatus + "\") page=" + page
-                    + " rowCount=" + rows + " statusesSeen=" + statusesOnPage);
-            for (int row = 1; row <= rows; row++) {
-                if (approvalStatus.equalsIgnoreCase(searchBranchPage.approvalStatusInRow(row))) {
-                    Set<RowAction> actual = searchBranchPage.actionsAvailableInRow(row);
-                    Assert.assertEquals(actual, expectedIcons,
-                            "Row " + searchBranchPage.branchCodeInRow(row) + " is \"" + approvalStatus
-                                    + "\" and should offer exactly " + expectedIcons + " but offered " + actual);
-                    return;
-                }
-            }
-            if (!searchBranchPage.hasNextPage()) {
-                break;
-            }
-            searchBranchPage.goToNextPage();
-        }
+        int rows = searchBranchPage.rowCount();
+        Assert.assertTrue(rows > 0, "Unmet precondition: Status \"" + statusFilter
+                + "\" returned no rows, so its icon set could not be verified. This is an environment "
+                + "data gap, not an application defect.");
 
-        Assert.fail("Unmet precondition: no row with Approval Status \"" + approvalStatus
-                + "\" was found within " + MAX_PAGES_SCANNED_FOR_APPROVAL_STATES
-                + " pages, so its icon set could not be verified. This is an environment data gap, "
-                + "not an application defect.");
+        for (int row = 1; row <= rows; row++) {
+            Set<RowAction> actual = searchBranchPage.actionsAvailableInRow(row);
+            Assert.assertEquals(actual, expectedIcons,
+                    "Row " + searchBranchPage.branchCodeInRow(row) + " under Status \"" + statusFilter
+                            + "\" should offer exactly " + expectedIcons + " but offered " + actual);
+        }
     }
 
     /**

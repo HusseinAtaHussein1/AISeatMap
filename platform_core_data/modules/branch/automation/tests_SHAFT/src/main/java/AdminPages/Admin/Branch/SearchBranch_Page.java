@@ -100,6 +100,17 @@ public class SearchBranch_Page extends Branch_Common {
                     + "[not(.//*[contains(normalize-space(.), 'results of')])]");
     /** The Remarks control a grid-level approve/reject may raise. Verified on the Update screen. */
     private static final By REMARKS_TEXTAREA = By.cssSelector("textarea[placeholder='remarks...']");
+    /**
+     * Live-verified 2026-08-10 (diagnostic probe against STG): clicking thumbs-up/thumbs-down always
+     * raises a PrimeNG {@code p-dialog} titled "Remark *" (mandatory) containing {@link
+     * #REMARKS_TEXTAREA} and two buttons, Cancel and Submit. Without submitting it, the record's
+     * Approval Status does not change -- confirmed by re-searching after a click with no remarks
+     * entered, which still read "Pending for approval". This resolves TC-BR-058's open question
+     * (Discovery could not establish whether the grid raises a Remarks prompt): it always does, and
+     * it is not optional.
+     */
+    private static final By REMARKS_DIALOG_SUBMIT_BUTTON =
+            By.xpath("//div[contains(@class,'p-dialog')]//button[normalize-space()='Submit']");
 
     // ── Pagination (custom <tilde-paginator>) ──────────────────────────────────────────────────
     private static final By NEXT_PAGE_BUTTON = By.cssSelector("button.next");
@@ -139,13 +150,20 @@ public class SearchBranch_Page extends Branch_Common {
 
     // ── Filters ────────────────────────────────────────────────────────────────────────────────
 
+    /**
+     * REPAIR-BR-013 (2026-08-10): routed through {@link Branch_Common#typeVia} because
+     * {@code driver.element().type()} is reported as delivered on this screen while leaving the input
+     * empty and {@code ng-pristine} — see that method's own note for the probe evidence. Every search
+     * this page performs depended on it, so the filter was never applied.
+     */
     public SearchBranch_Page setBranchCode(String code) {
-        driver.element().type(BRANCH_CODE_INPUT, code);
+        typeVia(BRANCH_CODE_INPUT, code);
         return this;
     }
 
+    /** See {@link #setBranchCode(String)} — same repair, same reason. */
     public SearchBranch_Page setBranchName(String name) {
-        driver.element().type(BRANCH_NAME_INPUT, name);
+        typeVia(BRANCH_NAME_INPUT, name);
         return this;
     }
 
@@ -225,7 +243,7 @@ public class SearchBranch_Page extends Branch_Common {
         String summaryBefore = resultSummaryText();
         long t0 = System.currentTimeMillis();
         System.out.println("[DIAG-SYNC] clickSearch start t=0ms summaryBefore=\"" + summaryBefore + "\"");
-        driver.element().click(SEARCH_BUTTON);
+        clickVia(SEARCH_BUTTON);
         System.out.println("[DIAG-SYNC] clickSearch clicked t=" + (System.currentTimeMillis() - t0) + "ms");
         try {
             long[] emptySince = {-1};
@@ -475,6 +493,18 @@ public class SearchBranch_Page extends Branch_Common {
         } catch (TimeoutException noPrompt) {
             return false;
         }
+    }
+
+    /**
+     * Fills the Remarks prompt raised by clickThumbsUp/clickThumbsDown and clicks Submit. Callers
+     * must confirm {@link #remarksPromptShown()} first -- this does not itself wait for the prompt to
+     * appear, since the two are always used together and a caller that skips the check wants that
+     * failure surfaced immediately rather than absorbed here.
+     */
+    public SearchBranch_Page completeRemarksPrompt(String remarks) {
+        driver.element().type(REMARKS_TEXTAREA, remarks);
+        clickVia(REMARKS_DIALOG_SUBMIT_BUTTON);
+        return this;
     }
 
     // ── Pagination ─────────────────────────────────────────────────────────────────────────────

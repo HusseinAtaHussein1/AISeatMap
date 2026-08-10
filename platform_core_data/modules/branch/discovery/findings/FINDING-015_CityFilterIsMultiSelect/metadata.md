@@ -5,9 +5,15 @@
 - **Category:** Requirement Gap
 - **Severity:** N/A
 - **Severity Reason:** Automatic `N/A` per §5.4 — Category is `Requirement Gap`. The control is functional and its cascade behaves as specified; what differs is its selection cardinality against the story's wording.
-- **Confidence Score:** 94%
-- **Evidence Category:** Direct Observation
-- **Status:** Needs Human Review
+- **Confidence Score:** ~~94%~~ → **Withdrawn**
+- **Evidence Category:** ~~Direct Observation~~ → contradicted by module-owner observation
+- **Status:** **Rejected — Not Reproducible** (was `Needs Human Review`, 2026-08-04 → 2026-08-10)
+
+- **Human Review Update (2026-08-10, module owner):** *"هو dropdown list مش multi-select"* — the City filter **is** a dropdown, not a multi-select. **This Finding's observation was wrong**, so there is no specification drift and nothing for the business to decide: the acceptance criteria and the built control agree. Closed as Not Reproducible.
+
+  *Reading this as a statement about what the control actually is, matching the identical correction made to FINDING-002 the same day. If the intent was instead "it ought to be a dropdown" — i.e. confirming the AC and leaving the mismatch open — say so and this reverts to `Needs Human Review`.*
+
+  **Consequence:** `TC-BR-079` (exploratory — "does the City filter accept and apply multiple cities?") existed only to answer the question this Finding raised. With the premise withdrawn the case has nothing left to explore; retiring it is a Stage 3 decision and has **not** been actioned here.
 - **Business Risk:** None identified as a harm — a multi-select is a superset of a single-select, so no search a dropdown could perform is prevented. The only business consequence is specification drift: US 8599's stated behaviour and the built behaviour differ, and whichever is stale will keep generating mismatches.
 - **Technical Risk:** None identified. Worth noting for downstream test authoring rather than for engineering: a multi-select and a dropdown are driven differently, so any test or automation written against the story's wording would target the wrong interaction model.
 - **Module:** branch

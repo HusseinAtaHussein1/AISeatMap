@@ -2,12 +2,20 @@
 
 - **Finding ID:** FINDING-011
 - **Title:** Submit button reads "Send For Approval" instead of the AC's "Submit for Approval"
-- **Category:** Bug
-- **Severity:** Low
-- **Severity Reason:** Matches the Low criterion "UI/cosmetic issues" — a copy/label mismatch with no functional impact on the workflow.
-- **Confidence Score:** 95%
+- **Category:** ~~Bug~~ → **Requirement Gap (Outdated Requirement)**
+- **Severity:** ~~Low~~ → **N/A**
+- **Severity Reason:** Not a defect. The application's label is the correct one; the acceptance criteria are out of date.
+- **Confidence Score:** 95% (that the label reads "Send For Approval" — unchanged and not in dispute; only its disposition changed)
 - **Evidence Category:** Direct Observation
-- **Status:** Confirmed
+- **Status:** **Rejected — Outdated Requirement** (was `Confirmed`, 2026-08-03 → 2026-08-10)
+
+- **Human Review Update (2026-08-10, module owner):** *"هو Send For Approval"* — **"Send For Approval" is the correct, intended label.** The application is right and the acceptance criteria are stale. Same disposition class as FINDING-005/006/007: an Outdated Requirement, not a bug. The observation itself is unchanged and remains accurate — the button does read "Send For Approval"; what changes is which side of the mismatch is wrong.
+
+  **Two consequences, neither actioned here:**
+  1. **`PRD_UserStories.md` should be corrected** to read "Send For Approval" wherever it specifies the Create/Update Branch submit label, so this does not get re-raised as a defect on the next Discovery pass.
+  2. **`TC-BR-035`** ("Submit action button displays the label \"Submit for Approval\"") now asserts the stale wording and would fail against correct behaviour. It has **not** been rewritten — that is a Stage 3 decision. Flagged in `TestCases_Branch.md`.
+
+  Worth noting for anyone reading the automation: `UpdateBranch_TC` already drives the real button via `clickSendForApproval()` and its own comment records that it deliberately targets "the label that actually exists" rather than the AC's wording — so no automation change is needed, and that earlier judgement is now confirmed correct.
 - **Business Risk:** Minimal — could cause minor confusion if the business specifically expects the literal label "Submit for Approval" to appear (e.g. for training materials or other stories that reference that exact wording).
 - **Technical Risk:** None identified.
 - **Module:** branch

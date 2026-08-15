@@ -2,12 +2,16 @@
 
 - **Finding ID:** FINDING-002
 - **Title:** Post Office Box field has no 8-character max-length enforcement
-- **Category:** Bug
-- **Severity:** Medium
-- **Severity Reason:** Matches the Medium criterion "Validation issues" — a documented input-length business rule is not enforced, though it does not block the overall Create Branch workflow.
-- **Confidence Score:** 90%
-- **Evidence Category:** Direct Observation
-- **Status:** Confirmed
+- **Category:** ~~Bug~~ → **Observation (Not Reproducible)**
+- **Severity:** ~~Medium~~ → **N/A**
+- **Severity Reason:** No defect exists. The module owner confirmed on 2026-08-10 that the field **does** stop at 8 characters in real use — see Human Review Update.
+- **Confidence Score:** ~~90%~~ → **Withdrawn.** The 90% rested on a probe method now known to be capable of producing exactly this false result.
+- **Evidence Category:** ~~Direct Observation~~ → Direct Observation **of a probe artefact**, not of application behaviour
+- **Status:** **Rejected — Not Reproducible** (was `Confirmed`, 2026-08-03 → 2026-08-10)
+
+- **Human Review Update (2026-08-10, module owner):** *"دي اخرها 8 ch فعلا"* — the Post Office Box field **does** enforce its 8-character maximum; typing stops at 8. **This Finding's core observation was wrong**, and it is closed as Not Reproducible rather than as a fixed defect, because there was nothing to fix.
+
+- **Why the original observation was wrong — probable, and it matters beyond this Finding:** the recorded evidence is "the field's `maxlength` attribute is `null`" plus "a 12-character value is retained in full". A probe that sets a field's value by **assigning `element.value` in JavaScript bypasses HTML `maxlength` entirely** — the browser only enforces `maxlength` against real keystrokes. Such a probe will always report the full string retained, on a field that caps correctly for a human typist. That is consistent with everything recorded here and with the module owner's contradicting observation. **The same method underlies FINDING-003 and FINDING-004**, both of which the module owner has also now contradicted or dropped — three for three, which is what turns this from a one-off mistake into a method defect. It equally affects this suite's own automation: `Branch_Common.typeVia` / `AddBranch_Page.setValueAndNotify` set `.value` in JS, so **any max-length test built on them cannot fail an app that enforces the cap, and cannot pass one that does** — it will always read back the full string. Any future length-cap check must drive real keystrokes (`sendKeys`) instead.
 - **Business Risk:** Branch records could be created with a Post Office Box value far longer than the business rule allows, producing inconsistent data and potential downstream formatting/display issues wherever Post Office Box is printed or matched (e.g. correspondence, reports).
 - **Technical Risk:** The field carries no `maxlength` attribute and no client-side length validation; if the same absence extends server-side, arbitrarily long values could reach the database and any dependent report/label rendering.
 - **Module:** branch

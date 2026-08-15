@@ -30,8 +30,11 @@ coverage of this run's scope); the generated project compiles cleanly (`mvn test
 classes, 0 errors) after a self-review pass caught and fixed an invalid `pom.xml` XML comment, a
 wrong Maven coordinate, and a materially incorrect assumption about SHAFT_ENGINE's API surface
 (corrected by inspecting the resolved jar directly with `javap`, since Context7 was unavailable).
-One generated test (`TC-BR-026`) is expected to fail when actually executed, by design — it is a
-regression check for a still-open defect (FINDING-004).
+One generated test (`TC-BR-026`) was a deliberately-failing regression check for a still-open defect
+(FINDING-004). **As of 2026-08-10 it is disabled, not executed:** its test case is `Blocked — Needs
+Clarification` upstream because its Test Data is no longer legal business data (Credit Terms(Days)
+caps at 7 digits) and the two documented rules cannot both be satisfied — FINDING-016. It was
+deliberately **not** rescoped to whatever remained technically runnable.
 
 ## 2. Generated Files
 
@@ -102,7 +105,7 @@ All 13 in-scope test cases: Generate New Automation. Zero Partially Automatable,
 
 | Item | Detail |
 |---|---|
-| TC-BR-026 expected failure | Regression test for FINDING-004 (Warning Prompt length cap), still an open defect as of this run's own Stage 4M execution — will report Failed until fixed, by design |
+| TC-BR-026 disabled (was: expected failure) | Regression test for FINDING-004 (Warning Prompt length cap). **Disabled 2026-08-10** — its test case is `Blocked — Needs Clarification`: Credit Terms(Days)'s newly-confirmed 7-digit cap makes the case's Test Data illegal, and no legal substitute satisfies both documented rules (FINDING-016). It contributes no result at all now — not a pass, not a failure. Coverage for Warning Prompt's 11-digit rule is therefore **absent**, not merely failing, until the business resolves FINDING-016 |
 | SHAFT_ENGINE version | Pinned to 7.4.20231015 (2026-08-05, user-mandated realignment to the pre-existing `NDC-Automation` reference project) — not the latest published (10.3.20260707), which requires a JDK 25 compiler this environment does not have |
 | Context7 unavailable | No version-specific documentation was fetched; the API used was confirmed via direct `javap` inspection of the resolved jar instead — real and verified, but not documentation-guideline-informed beyond raw method signatures |
 

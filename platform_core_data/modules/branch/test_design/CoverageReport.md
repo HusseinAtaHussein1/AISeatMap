@@ -4,7 +4,7 @@
 |---|---|
 | Module | `branch` |
 | Produced by run | `run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch` |
-| Revision | 2 (in place — RISK-BR-2/TC-BR-027 assumption resolved; TC-BR-026 re-isolated from the confirmed cross-field rule) |
+| Revision | 3 (in place — 2026-08-10: TC-BR-026 moved to `Blocked — Needs Clarification` per FINDING-016, so Warning Prompt's 11-digit rule is now an open coverage gap; Credit Terms' 7-digit cap documented and TC-BR-082 added for it. Revision 2: RISK-BR-2/TC-BR-027 assumption resolved; TC-BR-026 re-isolated from the confirmed cross-field rule) |
 | Generated | 2026-08-03 |
 | Status | Approved — Test Design closed 2026-08-03 with 31/39 test cases Approved, 8 Rejected (module owner decision — Rejected cases retained in the suite, out of Stage 4 scope) |
 
@@ -68,7 +68,7 @@ No requirement in `ProjectContext.md` for this module is stated with a `BR-`pref
 | Post Office Box length | Max 8 alphanumeric characters | TC-BR-007, TC-BR-008 | Covered (TC-BR-008 currently fails against observed behavior — regression pending fix) |
 | Credit Limit numeric + length | Numeric only, max 15 characters | TC-BR-022, TC-BR-023 | Covered (TC-BR-023 currently fails against observed behavior — regression pending fix) |
 | Reaching Percentage cap | Must not exceed 100%, up to 3 decimal places | TC-BR-024, TC-BR-025 | Covered |
-| Warning Prompt length + cross-field | Max 11 digits, must not be greater than Credit Terms (Days) | TC-BR-026, TC-BR-027 | Covered (TC-BR-026 re-isolated 2026-08-03 from the now-confirmed cross-field rule — still fails against observed behavior, regression pending fix; TC-BR-027 confirmed enforced via module-owner evidence, not yet formally executed) |
+| Warning Prompt length + cross-field | Max 11 digits, must not be greater than Credit Terms (Days) | TC-BR-026, TC-BR-027 | **Partially covered (changed 2026-08-10).** The cross-field half is covered by TC-BR-027 (confirmed enforced via module-owner evidence, not yet formally executed). **The 11-digit length half is NOT covered** — TC-BR-026 is `Blocked — Needs Clarification` (FINDING-016): Credit Terms(Days)'s 7-digit cap makes its Test Data illegal and no legal substitute exists, so it contributes no result at all. Previously reported as Covered-but-failing; a blocked case is a coverage gap, not a failing one |
 | Add Target gating | Add Target enabled only once Target Amount, Month, Year are all entered | TC-BR-020 | Covered |
 | Description enable/mandatory rule | Description enabled and mandatory only once a Supplier row is selected | TC-BR-030, TC-BR-031 | Covered |
 

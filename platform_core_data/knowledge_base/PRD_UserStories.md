@@ -340,9 +340,11 @@ As a System Administrator, I want to add a new branch with required details, con
 - The user may click "Add Target" to set multiple targets, but only after entering Target Amount, Month, and Year. (Optional)
 - The user must enter a Credit Limit (numeric input only). It has a max length of 15 characters. (Mandatory)
 - The user must enter a Top-Up Limit (numeric input only). (Mandatory)
-- The user must enter Credit Terms (Days) (numeric input only). (Mandatory)
+- The user must enter Credit Terms (Days) (numeric input only). **It has a max length of 7 digits.** (Mandatory) <!-- 7-digit cap added 2026-08-10 per business clarification; see FINDING-016 -->
 - The user may enter a Reaching Percentage (free text, input allows numeric values with up to 3 decimal places and must not be greater than 100%). (Optional)
-- The user may enter a Warning Prompt (Days) (free text, numeric input, max length 11, and should be less than Credit Terms (Days)). (Optional)
+- The user may enter a Warning Prompt (Days) (free text, numeric input, max length 11, and should be less than Credit Terms (Days)). (Optional) <!-- CONFLICT (FINDING-016): unreachable given Credit Terms' 7-digit cap — needs a requirements decision -->
+
+> **Open conflict (2026-08-10, FINDING-016 — Needs Human Review).** Credit Terms (Days)'s newly-confirmed 7-digit cap and Warning Prompt (Days)'s 11-digit cap cannot both be exercised: any Warning Prompt value long enough to reach 11+ digits necessarily exceeds the largest legal Credit Terms value (9999999), so the "should be less than Credit Terms (Days)" rule always fires first. Credit Terms is Mandatory and cannot be left blank to avoid the comparison. A decision is needed on whether Warning Prompt's 11-digit maximum remains a meaningful requirement.
 - The user may select Payment Options (multi-select checkboxes). If Credit Card is selected, a Payment Gateway dropdown shall appear as mandatory. (Mandatory if Credit Card is selected)
 
 #### Product Access Details
@@ -528,9 +530,11 @@ As a System Administrator, I want to update an existing branch with required det
 - The user may click "Add Target" to set multiple targets, but only after entering Target Amount, Month, and Year. (Optional)
 - The user must enter a Credit Limit (numeric input only). It has a max length of 15 characters. (Mandatory)
 - The user must enter a Top-Up Limit (numeric input only). (Mandatory)
-- The user must enter Credit Terms (Days) (numeric input only). (Mandatory)
+- The user must enter Credit Terms (Days) (numeric input only). **It has a max length of 7 digits.** (Mandatory) <!-- 7-digit cap added 2026-08-10 per business clarification; see FINDING-016 -->
 - The user may enter a Reaching Percentage (free text, input allows numeric values with up to 3 decimal places and must not be greater than 100%). (Optional)
-- The user may enter a Warning Prompt (Days) (free text, numeric input, it has a max length of 11 number and should be less than Credit Terms (Days)). (Optional)
+- The user may enter a Warning Prompt (Days) (free text, numeric input, it has a max length of 11 number and should be less than Credit Terms (Days)). (Optional) <!-- CONFLICT (FINDING-016): unreachable given Credit Terms' 7-digit cap — needs a requirements decision -->
+
+> **Open conflict (2026-08-10, FINDING-016 — Needs Human Review).** Same conflict as US 5 §Branch Sales Configuration: Credit Terms (Days)'s 7-digit cap and Warning Prompt (Days)'s 11-digit cap cannot both be exercised, since any Warning Prompt value reaching 11+ digits necessarily exceeds the largest legal Credit Terms value. A requirements decision is needed.
 - The user may select Payment Options (multi-select checkboxes). If Credit Card is selected, a Payment Gateway dropdown shall appear as mandatory. (Mandatory if Credit Card is selected)
 
 #### Product Access Details

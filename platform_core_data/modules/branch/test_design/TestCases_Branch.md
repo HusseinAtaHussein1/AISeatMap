@@ -7,7 +7,7 @@
 | Revision | 3 (in place — run-003 extended the suite from Create-only to Create + Search & Actions + Update, adding TC-BR-040…081. The 39 existing cases are unchanged.) |
 | Run Scope Type / Run Type | User Story / User Story |
 | Project Context | `modules/branch/context/ProjectContext.md` |
-| Total Test Cases | 81 |
+| Total Test Cases | 82 |
 | Generated | 2026-08-03 (TC-BR-001…039) · 2026-08-04 (TC-BR-040…081) |
 | Status | **Approved** — 2026-08-04, ahmed.ayman@tildetech.ae. TC-BR-040…081 approved for execution; TC-BR-001…039 retain their 2026-08-03 review decisions (31 Approved, 8 Rejected). |
 
@@ -40,7 +40,7 @@
 | TC-BR-023 | Credit Limit rejects a value exceeding 15 characters | Atomic | P1 | Atomic, Negative-BoundaryValues, Regression | Approved | Rejected |
 | TC-BR-024 | Reaching Percentage rejects a value greater than 100% | Atomic | P2 | Atomic, Negative-BoundaryValues | Approved | Approved |
 | TC-BR-025 | Reaching Percentage accepts a value with up to 3 decimal places | Atomic | P3 | Atomic, Positive, Boundary | Approved | Approved |
-| TC-BR-026 | Warning Prompt (Days) rejects a value exceeding 11 digits | Atomic | P1 | Atomic, Negative-BoundaryValues, Regression | Approved | Approved |
+| TC-BR-026 | Warning Prompt (Days) rejects a value exceeding 11 digits | Atomic | P1 | Atomic, Negative-BoundaryValues, Regression | Approved | **Rejected — removed from automation scope 2026-08-10** |
 | TC-BR-027 | Warning Prompt (Days) rejects a value greater than Credit Terms (Days) | Atomic | P2 | Atomic, Negative-InvalidInputs | Approved | Rejected |
 | TC-BR-028 | Select at least one Payment Option | Atomic | P3 | Atomic, Positive | Approved | Approved |
 | TC-BR-029 | Product Access grid displays the required columns | Atomic | P2 | Atomic, Positive | Approved | Rejected |
@@ -68,7 +68,7 @@
 | TC-BR-051 | Search filters handle security-payload-shaped input safely | Atomic | P2 | Atomic, Negative-SecurityInputs | Approved | Rejected |
 | TC-BR-052 | Results grid displays all specified columns | Atomic | P1 | Atomic, Regression | Approved | Approved |
 | TC-BR-053 | Approval Status column reflects each record's approval state | Atomic | P2 | Atomic, Positive | Approved | Rejected |
-| TC-BR-054 | Row action icons match the record's approval state | Atomic | P2 | Atomic, Positive | Approved | Approved |
+| TC-BR-054 | Row action icons match the selected Status filter | Atomic | P2 | Atomic, Positive, BusinessRule | Approved | Approved |
 | TC-BR-055 | Edit pen opens Update Branch with the record's details pre-filled | Scenario | P1 | Scenario, Positive, Smoke | Approved | Approved |
 | TC-BR-056 | Approve a Pending branch from the results grid | Scenario | P1 | Scenario, Positive, SelfCreatedRecord | Approved | Approved |
 | TC-BR-057 | Reject a Pending branch from the results grid | Scenario | P1 | Scenario, Positive, SelfCreatedRecord | Approved | Approved |
@@ -96,8 +96,9 @@
 | TC-BR-079 | Exploratory — does the City filter accept and apply multiple cities? | Atomic | P3 | Atomic, Exploratory | Approved | Rejected |
 | TC-BR-080 | Admin-role operator sees the same grid columns and row actions | Atomic | P3 | Atomic, Permissions, NotCovered-SingleAccountRun | Approved | Rejected |
 | TC-BR-081 | Repeated failed login attempts lock the account | Atomic | P3 | Atomic, Security, Deferred-RequiresDedicatedEnvironment | Approved | Rejected |
+| TC-BR-082 | Credit Terms (Days) rejects a value exceeding 7 digits | Atomic | P2 | Atomic, Negative-BoundaryValues | Approved | Rejected |
 
-**Tier breakdown:** 71 Atomic · 10 Scenario
+**Tier breakdown:** 72 Atomic · 10 Scenario
 
 **Lifecycle breakdown:** Review — 0 Pending · 73 Approved · 8 Rejected · Automation — 0 Pending · 32 Approved · 49 Rejected
 
@@ -132,11 +133,17 @@
 9. Complete the remaining mandatory sections (Branch Email Configuration, Branch Contact Info, Branch Sales Configuration) with valid data.
 10. Click **Submit for Approval**.
 
-**Expected Result:** The Branch is saved and its status shows "Pending for approval."
+**Expected Result:** After clicking **Send For Approval**, the Branch is created successfully and the application shows the success message "Added Successfully." The new Branch is then **retrievable under the `Inactive` Status filter**, and **must not** appear under the `Active` Status filter at this stage.
 
 **Priority:** P1
 
 **Tags:** Atomic, Positive
+
+**Notes:** Corrected twice on 2026-08-10 by business instruction (both Stage 3 decisions):
+1. **Success message.** The application's actual post-submit success message is "Added Successfully," not "Pending for approval." — the original expected value asserted a message this screen never shows. "Pending for approval" remains the correct, separate value of the Approval Status *column* in the results grid (TC-BR-053/054), which this correction does not touch.
+2. **Persistence and placement (added).** The expected result now requires the created Branch to be **found under `Inactive`**, and explicitly not under `Active`, at this stage. This is a deliberate strengthening: the prior version asserted only submit-time signals (navigation or toast), which pass even when nothing retrievable was created — the precise reason the "record reports success but is not retrievable" condition went unnoticed by a green TC-BR-001. Verifying placement necessarily also verifies persistence, so this closes that gap rather than needing a separate case.
+
+**Open verification note:** the automation's provisioning previously searched with Status `Both` and found nothing after a successful submit. Under this clarified rule the correct filter is `Inactive`. Whether `Both` failing to return a newly created Inactive record is itself an application defect has **not** been established — if a follow-up run shows `Inactive` returns the record while `Both` does not, that is a new finding about the `Both` filter, not a test problem, and must be raised rather than absorbed.
 
 **Review:** Approved
 
@@ -880,6 +887,8 @@
 
 ### TC-BR-026 — Warning Prompt (Days) rejects a value exceeding 11 digits
 
+> **Status: retained as a manual case; REMOVED from automation scope (2026-08-10).** Superseding the same day's `Blocked — Needs Clarification` marking: the module owner dropped FINDING-004 and instructed that this case be taken out of the automation test cases. Its `tcBr026_…` method is deleted from `CreateBranch_Admin_TC`. **The case itself and its business intent below are retained unchanged** — removing it from automation is a scope decision, not a decision to discard or rewrite the case. The conflict recorded in Blocking Reason below still stands unresolved (FINDING-016, closed as dropped rather than fixed), which is why the case is not simply marked ready to run manually either.
+
 **Objective:** Verify that Warning Prompt (Days) rejects a value longer than 11 digits, isolated from the separate cross-field rule verified by TC-BR-027.
 
 **Preconditions:** User is logged in as Super Admin and has opened Admin → Branch → Add branch.
@@ -901,13 +910,15 @@
 
 **Priority:** P1
 
-**Tags:** Atomic, Negative-BoundaryValues, Regression
+**Tags:** Atomic, Negative-BoundaryValues, Regression, Blocked-NeedsClarification
 
-**Notes:** Module-owner-supplied evidence (2026-08-03) confirmed the live application also enforces a separate cross-field rule — "Warning prompt days should not be greater than credit terms days" (see TC-BR-027) — that fires whenever Warning Prompt (Days) > Credit Terms (Days). The original version of this test case entered only Warning Prompt(Days) with Credit Terms(Days) left blank, which the module owner flagged as incorrect: with Credit Terms unset, any resulting message could be the cross-field rule rather than a length-specific one, so the test did not actually isolate FINDING-004's length-cap defect. Test Data now sets Credit Terms(Days) to the same value as Warning Prompt(Days) so the cross-field rule is satisfied (not violated) and cannot mask the length check. Regression test for FINDING-004 — as of Discovery 2026-08-03, a 14-digit value was fully accepted with no truncation or error; this case must fail against that observed behavior and pass only once the max-length rule is enforced.
+**Blocking Reason (2026-08-10):** This case's own Test Data is no longer valid business data. It sets Credit Terms(Days) to 15 digits specifically so the cross-field rule is satisfied and cannot mask the length check — but Credit Terms(Days) was confirmed on 2026-08-10 to have a **7-digit maximum**, so a 15-digit value is not legal input. And no legal substitute exists: reaching Warning Prompt's 11-digit boundary needs 12+ digits, which necessarily exceeds the largest legal Credit Terms value (9999999), and Credit Terms is Mandatory so it cannot be left blank to avoid the comparison. **The two documented rules cannot both be satisfied by any valid business data** — see FINDING-016 (`Needs Human Review`). Do not execute, do not automate, and do not substitute a value that makes the case runnable at the cost of its stated intent: the isolation from TC-BR-027's cross-field rule *is* the objective, not an implementation detail of it. **Required to unblock:** a business decision on whether Warning Prompt (Days)'s 11-digit maximum remains a real requirement given Credit Terms' 7-digit cap, and if so, how it is intended to be reachable.
+
+**Notes:** Module-owner-supplied evidence (2026-08-03) confirmed the live application also enforces a separate cross-field rule — "Warning prompt days should not be greater than credit terms days" (see TC-BR-027) — that fires whenever Warning Prompt (Days) > Credit Terms (Days). The original version of this test case entered only Warning Prompt(Days) with Credit Terms(Days) left blank, which the module owner flagged as incorrect: with Credit Terms unset, any resulting message could be the cross-field rule rather than a length-specific one, so the test did not actually isolate FINDING-004's length-cap defect. Test Data therefore sets Credit Terms(Days) to the same value as Warning Prompt(Days) so the cross-field rule is satisfied (not violated) and cannot mask the length check — the intent that the 7-digit Credit Terms cap has now made unsatisfiable. Regression test for FINDING-004 — as of Discovery 2026-08-03, a 14-digit value was fully accepted with no truncation or error; this case must fail against that observed behavior and pass only once the max-length rule is enforced.
 
 **Review:** Approved
 
-**Automation:** Approved
+**Automation:** Blocked — Needs Clarification (was Approved; suspended 2026-08-10, not rejected on merit)
 
 ---
 
@@ -936,7 +947,7 @@
 
 **Tags:** Atomic, Negative-InvalidInputs
 
-**Notes:** Confirmed via module-owner-supplied screenshot (2026-08-03) showing the exact live behavior and message text with these Test Data values — this closes Discovery's OQ-BR-2 and resolves RISK-BR-2 in full (ProjectContext.md §6). No longer assumption-based; Evidence Category is Human Observation (module-owner-provided, not independently reproduced by Explorer this run). The rule is strictly-greater-than — equal values (e.g. both 10000) are not expected to be rejected; that boundary is not separately re-verified here and remains an assumption if a future case needs it.
+**Notes:** Confirmed via module-owner-supplied screenshot (2026-08-03) showing the exact live behavior and message text with these Test Data values — this closes Discovery's OQ-BR-2 and resolves RISK-BR-2 in full (ProjectContext.md §6). No longer assumption-based; Evidence Category is Human Observation (module-owner-provided, not independently reproduced by Explorer this run). The rule is strictly-greater-than — equal values (e.g. both 10000) are not expected to be rejected; that boundary is not separately re-verified here and remains an assumption if a future case needs it. **Added 2026-08-10 (user instruction):** Credit Terms (Days) additionally has its own **7-digit maximum length**, a constraint not stated in PRD_UserStories.md (which documents Credit Terms only as "numeric input only, Mandatory"). That cap interacts with TC-BR-026's 11-digit Warning Prompt case in a way that makes isolation impossible — see FINDING-016 and TC-BR-026 Notes.
 
 **Review:** Approved
 
@@ -1639,32 +1650,33 @@
 
 ---
 
-### TC-BR-054 — Row action icons match the record's approval state
+### TC-BR-054 — Row action icons match the selected Status filter
 
-**Objective:** Verify that each row offers only the actions valid for its approval state.
+**Objective:** Verify that the row action icons offered in the results grid depend on the selected Status filter (Active / Inactive / Both), not on each record's individual Approval Status.
 
-**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch, with Status set to Both and results displayed.
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch.
 
 **Test Data:**
 
-| Approval Status | Expected icons |
+| Status filter selected | Expected icons (every row) |
 |---|---|
-| Approved | edit pen, thumbs-down |
-| Pending for approval | edit pen, thumbs-up, thumbs-down |
-| Rejected | edit pen, thumbs-up |
+| Active | edit pen, thumbs-down |
+| Inactive | edit pen, thumbs-up, thumbs-down |
+| Both | edit pen, thumbs-up, thumbs-down |
 
 **Steps:**
 
-1. Locate a row for each Approval Status in the Test Data.
-2. Read the icons in that row's Actions column.
+1. Select Status **Active**, click **Search**, and read the icons in the Actions column for several rows.
+2. Select Status **Inactive**, click **Search**, and read the icons in the Actions column for several rows.
+3. Select Status **Both**, click **Search**, and read the icons in the Actions column for several rows.
 
-**Expected Result:** Each row shows exactly the icons listed for its Approval Status — a record never offers a transition to the state it is already in.
+**Expected Result:** Every row's icon set matches the Test Data for the Status filter that produced it, regardless of that row's own Approval Status column value.
 
 **Priority:** P2
 
-**Tags:** Atomic, Positive
+**Tags:** Atomic, Positive, BusinessRule
 
-**Notes:** Pending and Rejected rows may not appear on page 1; page through the results or search for a known record to find one.
+**Notes:** Corrected 2026-08-10 by user instruction — the prior revision of this case tied icons to each row's Approval Status (Approved/Pending/Rejected) rather than to the Status filter selection. That version and its rationale are superseded; the rule verified here is filter-driven, uniform across all rows in a given result set.
 
 **Review:** Approved
 
@@ -2319,6 +2331,8 @@
 
 ### TC-BR-077 — Stored Branch Email Password is not recoverable from the Update form
 
+> **Status: `Blocked — Needs Clarification` (2026-08-10).** This case asserts the **opposite** of a decision the module owner has since made. Its business intent below is left unchanged and has **not** been rewritten — revising or retiring an approved test case is a Stage 3 decision. See Blocking Reason.
+
 **Objective:** Verify that a branch's stored email password is not returned to the browser when the Update screen loads.
 
 **Preconditions:** User is logged in as Super Admin and has opened any branch via the edit pen.
@@ -2332,13 +2346,15 @@
 
 **Priority:** P1
 
-**Tags:** Atomic, Security, Regression
+**Tags:** Atomic, Security, Regression, Blocked-NeedsClarification
 
-**Notes:** Asserts the corrected behaviour. Discovery confirmed the stored password is currently returned and populated into this field (FINDING-013), so this case is expected to fail until that is fixed. **Never record the observed password value in a result, defect, or screenshot** — report only whether a recoverable value was present.
+**Blocking Reason (2026-08-10):** The module owner dispositioned **FINDING-013** as *"not a bug but business needs"* — returning and pre-filling the stored Branch Email Password is **intended behaviour**. This case's Expected Result asserts the redacted behaviour, which that decision rules out, so as written it can now only ever fail against an application that is behaving as the business intends. Do not execute it as a pass/fail gate, and do not weaken its Expected Result to match the intended behaviour — either would be a Stage 3 change made at the wrong stage. **Required to unblock:** a Stage 3 decision to retire this case, or to rewrite it against the now-intended behaviour (for example, asserting that the field is present and populated, and that no other surface leaks the value), plus documenting the credential-handling expectation in `PRD_UserStories.md` US 8606, which is currently silent on it.
+
+**Notes:** Asserts the corrected behaviour. Discovery confirmed the stored password is returned and populated into this field (FINDING-013) — an observation that remains factually accurate; only its disposition changed, from `Security Concern / Confirmed` to `Observation / Rejected — Confirmed Intended Behaviour`. **Never record the observed password value in a result, defect, or screenshot** — report only whether a recoverable value was present. That rule stands regardless of the disposition.
 
 **Review:** Approved
 
-**Automation:** Rejected
+**Automation:** Rejected — and now also `Blocked — Needs Clarification` (was Rejected on scope grounds alone)
 
 ---
 
@@ -2445,6 +2461,37 @@
 **Tags:** Atomic, Security, Deferred-RequiresDedicatedEnvironment
 
 **Notes:** **Deferred — Requires Dedicated Environment.** Designed in full but not for execution on the shared staging environment: locking a shared account would block other teams, and the lock is not self-reversing. Execute only on an isolated environment with a disposable account.
+
+**Review:** Approved
+
+**Automation:** Rejected
+
+---
+
+### TC-BR-082 — Credit Terms (Days) rejects a value exceeding 7 digits
+
+**Objective:** Verify that Credit Terms (Days) rejects a numeric value longer than 7 digits.
+
+**Preconditions:** User is logged in as Super Admin and has opened Admin → Branch → Add branch.
+
+**Test Data:**
+
+| Field | Value |
+|---|---|
+| Credit Terms(Days) | 99999999 (8 digits) |
+
+**Steps:**
+
+1. Enter the Test Data value into Credit Terms (Days).
+2. Move focus away from the field.
+
+**Expected Result:** The system truncates the input to 7 digits, blocks the 8th digit, or displays a validation message that the maximum length is 7 digits.
+
+**Priority:** P2
+
+**Tags:** Atomic, Negative-BoundaryValues
+
+**Notes:** Added 2026-08-10 from a business clarification that Credit Terms (Days) has a 7-digit maximum — a rule PRD_UserStories.md did not previously state (it documented Credit Terms only as "numeric input only … Mandatory"; the requirement text has now been updated). **The cap itself has not been independently verified live against STG** — it is business-stated, so this case's first execution is also what confirms whether the application actually enforces it. If an 8-digit value is accepted in full, that is a new defect to raise, not a broken test. Leave Automation Rejected until the rule is live-verified, so a fresh unverified expectation is not encoded into the suite ahead of evidence. Related: FINDING-016, where this cap conflicts with Warning Prompt (Days)'s documented 11-digit maximum.
 
 **Review:** Approved
 

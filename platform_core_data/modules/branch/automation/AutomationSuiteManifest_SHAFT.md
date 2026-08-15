@@ -44,7 +44,7 @@
 | TC-BR-021 | `tests/CreateBranchTests.tcBr021_mandatorySalesConfigFieldsBlockSubmissionWhenEmpty` | Generate | Ready |
 | TC-BR-024 | `tests/CreateBranchTests.tcBr024_reachingPercentageRejectsValueGreaterThan100` | Generate | Ready |
 | TC-BR-025 | `tests/CreateBranchTests.tcBr025_reachingPercentageAcceptsThreeDecimalPlaces` | Generate | Ready |
-| TC-BR-026 | `tests/CreateBranchTests.tcBr026_warningPromptRejectsValueExceeding11Digits` | Generate | Ready (expected to Fail against the live app until FINDING-004 is fixed) |
+| TC-BR-026 | `tests/CreateBranchTests.tcBr026_warningPromptRejectsValueExceeding11Digits` | Generate | **Blocked — Needs Clarification (2026-08-10).** `@Test(enabled = false)`; not executed. The test case's own Test Data is no longer legal business data (Credit Terms(Days) caps at 7 digits) and no legal substitute can satisfy both documented rules — FINDING-016. Not rescoped: the body is intact and only `enabled` flips back once the business confirms the intended rule |
 | TC-BR-028 | `tests/CreateBranchTests.tcBr028_selectAtLeastOnePaymentOption` | Generate | Ready |
 | TC-BR-030 | `tests/CreateBranchTests.tcBr030_descriptionEnabledOnlyWhenSupplierRowSelected` | Generate | Ready |
 | TC-BR-037 | `tests/CreateBranchTests.tcBr037_createBranchWithValidOutstandingThreshold` | Generate | Ready |
@@ -102,11 +102,11 @@
 | TC-BR-045 | `tcBr045_statusFilterReturnsOnlyRecordsMatchingSelectedStatus` |
 | TC-BR-046 | `tcBr046_stateFilterStaysDisabledUntilCountrySelected` |
 | TC-BR-052 | `tcBr052_resultsGridDisplaysAllSpecifiedColumns` |
-| TC-BR-054 | `tcBr054_rowActionIconsMatchApprovalState` |
+| TC-BR-054 | `tcBr054_rowActionIconsMatchStatusFilter` |
 | TC-BR-055 | `tcBr055_editPenOpensUpdateBranchPreFilled` |
-| TC-BR-056 | `tcBr056_approvePendingBranchFromResultsGrid` |
-| TC-BR-057 | `tcBr057_rejectPendingBranchFromResultsGrid` |
-| TC-BR-058 | `tcBr058_approveAndRejectCaptureRemarksEntry` |
+| TC-BR-056 | `BranchActions_TC::tcBr056_approvePendingBranchFromResultsGrid` (written 2026-08-10, closing KL-01) |
+| TC-BR-057 | `BranchActions_TC::tcBr057_rejectPendingBranchFromResultsGrid` (written 2026-08-10, closing KL-01) |
+| TC-BR-058 | `BranchActions_TC::tcBr058_approveAndRejectCaptureRemarksEntry` (written 2026-08-10, closing KL-01) |
 | TC-BR-060 | `tcBr060_navigateToNextPage` |
 | TC-BR-061 | `tcBr061_navigateToLastPage` |
 | TC-BR-065 | `tcBr065_updateBranchPreFillsEveryStoredValue` |
@@ -119,7 +119,7 @@
 
 1. `BRANCH_QA_USERNAME` and `BRANCH_QA_PASSWORD` set as environment variables. The suite throws a named error if absent — credentials are never read from a file.
 2. Network reachability to `http://192.168.1.70` (STG).
-3. The dataset must contain rows in **Approved**, **Pending for approval**, and **Rejected** states within 10 pages, or TC-BR-054 reports an unmet precondition.
+3. Each of the Active, Inactive and Both Status filters must return at least one row on page 1, or TC-BR-054 reports an unmet precondition for that filter.
 4. Enough records for at least two pages, or TC-BR-060/061 report the same.
 
 ## Expected outcome, stated in advance

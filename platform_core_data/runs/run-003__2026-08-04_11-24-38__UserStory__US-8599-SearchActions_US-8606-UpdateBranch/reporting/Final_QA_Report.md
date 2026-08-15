@@ -311,13 +311,42 @@ all, while the method name, its description, and the Suite Manifest all still sa
 still say the test is expected to fail.
 
 **Both edits were committed on 2026-08-15**, flagged in the commit message as needing review. They
-appear in no healing record. The
-2026-08-06 healing pass explicitly instructed that TC-BR-026 is an Application Failure and *must not*
-be repaired. This change is not recorded as a repair by anyone.
+appear in no healing record. The 2026-08-06 healing pass explicitly instructed that TC-BR-026 is an
+Application Failure and *must not* be repaired.
 
-**Needs developer and QA investigation.** Either FINDING-004 was fixed — in which case the test should
-be restored to prove it — or it is still open, in which case the test should go back to failing
-honestly. No code fix is proposed or applied here.
+### Correction — what the 2026-08-15 merge revealed
+
+**Merging `origin/platform-testing` brought in facts that change this finding, and they are recorded
+here rather than quietly folded in.** Two of them matter:
+
+**1. The test was formally dropped from automation scope, by the module owner.** On the remote branch
+(commit `e789ae1`, 2026-08-10) TC-BR-026 was deleted and its assertion method left orphaned, with the
+note: *"TC-BR-026 was removed from automation scope by module-owner instruction (FINDING-004,
+Rejected/Dropped)."* So the decision to stop testing this rule is not undocumented — it has owner
+backing on the other branch. What is undocumented is *this* branch keeping the test alive in a form
+that always passes.
+
+**2. The assertion could never have worked, whatever the numbers were.** Every setter on
+`AddBranch_Page` writes through `setValueAndNotify`, which assigns `element.value` in JavaScript. A JS
+assignment **bypasses HTML `maxlength` entirely** — browsers enforce `maxlength` only against real
+keystrokes. The read-back therefore always returns the full string that was written, so the assertion
+*cannot fail a broken application and cannot pass a correct one*. FINDING-002 and FINDING-003 were
+both closed as Not Reproducible for exactly this reason.
+
+**What this means for the finding.** The heart of it stands: the passing result carries no information
+about whether the application enforces the rule. But the framing has to be corrected on two points —
+lowering the numbers did not turn a working test into a broken one, because it was never capable of
+detecting the cap; and the underlying decision to drop the case does have owner approval on record.
+
+**The disagreement that remains is real.** The remote branch removed the test. This branch keeps it,
+green. Both cannot be right, and the merge preserved this branch's version, so the contradiction is
+now live in the code.
+
+**Needs developer and QA investigation**, and the question has changed. It is no longer "restore the
+15-digit input" — that would restore a check that cannot work. It is: *does anyone still need this
+rule tested, and if so it must drive real keystrokes (`sendKeys`) rather than assign a value.* If not,
+the test should be removed as the remote branch removed it, rather than left passing. No code fix is
+proposed or applied here.
 
 ### DEF-REP-02 — TC-BR-052 was deleted, its documentation left behind (High concern)
 

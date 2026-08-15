@@ -2,12 +2,18 @@
 
 - **Finding ID:** FINDING-004
 - **Title:** Warning Prompt (Days) field has no 11-digit max-length enforcement
-- **Category:** Bug
-- **Severity:** Medium
+> **DISPOSITION (2026-08-10, module owner): dropped, and removed from automation scope.** *"دي سيبك منها وشيلها من التيست كيسز بتاعت الاوتوميشن"* — leave this one alone and take it out of the automation test cases. Accordingly: **`TC-BR-026` has been removed from the automation suite** (the `tcBr026_…` method is deleted, not merely disabled) and its `Automation` flag set to `Rejected — removed from scope`. The Stage 3 test case itself is **retained, unchanged**, in the manual suite — removing it from automation is a scope decision, not a decision to discard the case.
+>
+> **Status changed to `Rejected — Dropped by module owner`.** Note this Finding rests on the **same probe-method defect** that made FINDING-002 and FINDING-003 false: assigning `element.value` in JavaScript bypasses HTML `maxlength`, so "14 digits accepted with no truncation" is what that probe would report even against a field that correctly caps at 11. Three findings, one method, all three now contradicted or dropped by the module owner. This one is closed on instruction rather than on re-verification — the field's real behaviour was **not** re-probed with keystrokes, so whether it enforces 11 digits remains genuinely unverified, not confirmed-good.
+>
+> **Also still open and untouched by this disposition:** **FINDING-016**, the conflict between Warning Prompt's documented 11-digit cap and Credit Terms' 7-digit cap. That is a requirements contradiction, independent of whether the app enforces either cap, and it does not go away by dropping this Finding.
+
+- **Category:** ~~Bug~~ → **Observation (Dropped)**
+- **Severity:** ~~Medium~~ → **N/A**
 - **Severity Reason:** Matches the Medium criterion "Validation issues" — a documented input-length business rule is not enforced.
 - **Confidence Score:** 88%
 - **Evidence Category:** Direct Observation
-- **Status:** Confirmed
+- **Status:** **Rejected — Dropped by module owner** (was `Confirmed`, 2026-08-03 → 2026-08-10)
 - **Business Risk:** An unreasonably large Warning Prompt value could be configured, undermining the intent of an early-warning threshold ahead of Credit Terms (Days) expiry.
 - **Technical Risk:** No `maxlength` attribute is present on this field.
 - **Module:** branch

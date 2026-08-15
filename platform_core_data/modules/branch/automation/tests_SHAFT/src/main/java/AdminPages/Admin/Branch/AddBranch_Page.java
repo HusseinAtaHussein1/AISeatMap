@@ -525,13 +525,29 @@ public class AddBranch_Page {
     }
 
     /**
-     * TC-BR-026: asserts Warning Prompt (Days) retains no more than 11 digits of input. This checks
+     * TC-BR-026: reads back Warning Prompt (Days) and asserts a maximum retained length. This checks
      * the field's own retained value length only -- it does not read or accept any validation message.
      * In particular, the application's separate "Warning prompt days should not be greater than credit
      * terms days" message validates a different rule (relational, against Credit Terms) and must never
-     * be treated as evidence that the 11-digit maximum-length rule holds. This is a regression assertion
-     * for FINDING-004, which is still an open defect as of this run's own Stage 4M pass (RISK-AUTO-2) --
-     * expected to fail honestly until that defect is fixed, not a sign of a broken test.
+     * be treated as evidence that a maximum-length rule holds.
+     *
+     * <p><b>This assertion technique cannot work, independently of FINDING-004. Preserved from the
+     * origin/platform-testing branch during the 2026-08-15 merge, because it is worth not
+     * re-learning.</b> Every setter on this page writes through {@code setValueAndNotify}, which
+     * assigns {@code element.value} in JavaScript, and a JS assignment <b>bypasses HTML
+     * {@code maxlength} entirely</b> -- the browser enforces {@code maxlength} only against real
+     * keystrokes. So the read-back always returns the full string that was written, whether or not the
+     * application enforces a cap: this assertion cannot fail a broken application and cannot pass a
+     * correct one. The module owner has since confirmed the sibling fields (Post Office Box, Credit
+     * Limit) do enforce their caps, which is precisely what this technique is incapable of observing --
+     * see FINDING-002 and FINDING-003, both closed as Not Reproducible for this reason. <b>Any future
+     * length-cap check must drive real keystrokes ({@code sendKeys}) rather than assign a value.</b></p>
+     *
+     * <p><b>Scope status, unresolved.</b> On {@code origin/platform-testing} (2026-08-10) TC-BR-026 was
+     * removed from automation scope by module-owner instruction (FINDING-004 Rejected/Dropped) and this
+     * method was left orphaned with no caller. On this branch the test still exists and still calls
+     * this method, with both its input and its bound lowered so that it passes. Those two positions
+     * disagree and the disagreement is not settled here -- see {@code Final_QA_Report.md} DEF-REP-01.</p>
      */
     public void assertWarningPromptCappedAt11Digits() {
         String actual = readValue(WARNING_PROMPT_DAYS);

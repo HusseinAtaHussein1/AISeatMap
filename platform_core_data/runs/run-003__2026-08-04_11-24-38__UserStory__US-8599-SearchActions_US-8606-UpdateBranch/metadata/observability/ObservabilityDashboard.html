@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Observability — run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch</title>
+<style>
+:root{
+  --bg:#f6f7f9; --panel:#fff; --ink:#151922; --muted:#5b6472; --line:#e2e6ec;
+  --success:#1a7f5a; --warning:#a86a00; --failure:#b3261e; --blocked:#5b4bc4;
+  --neutral:#3a6ea5; --unavail:#8a929e;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f1216; --panel:#171b21; --ink:#e7ebf0; --muted:#9aa4b2; --line:#262c35;
+    --success:#3ecf8e; --warning:#e0a33a; --failure:#ff6b60; --blocked:#9c8cff;
+    --neutral:#6aa9e9; --unavail:#78818e; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 64px}
+h1{font-size:24px;margin:0 0 4px} h2{font-size:16px;margin:0 0 14px;letter-spacing:.01em}
+h3{font-size:13px;margin:20px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+a{color:var(--neutral)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0}
+.note{color:var(--muted);font-size:13px;margin:-6px 0 14px}
+.empty{color:var(--muted);font-style:italic;margin:4px 0}
+.banner{border-radius:12px;padding:14px 18px;margin:16px 0;border:1px solid var(--line);font-size:14px}
+.banner--warn{background:color-mix(in srgb,var(--warning) 12%,transparent);border-color:var(--warning)}
+.banner--info{background:color-mix(in srgb,var(--neutral) 12%,transparent);border-color:var(--neutral)}
+.banner--fixture{background:color-mix(in srgb,var(--blocked) 14%,transparent);border-color:var(--blocked)}
+.banner strong{display:block;margin-bottom:4px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px 22px;margin-top:12px}
+.meta div{font-size:13px} .meta dt{color:var(--muted);font-size:12px} .meta dd{margin:2px 0 0;font-weight:600}
+.status-pill{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;
+  border:1px solid currentColor}
+.status-pill--full{color:var(--success)} .status-pill--partial{color:var(--warning)}
+.status-pill--none{color:var(--unavail)} .status-pill--historical{color:var(--blocked)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--neutral);
+  border-radius:9px;padding:13px 15px}
+.kpi--success{border-left-color:var(--success)} .kpi--warning{border-left-color:var(--warning)}
+.kpi--failure{border-left-color:var(--failure)} .kpi--blocked{border-left-color:var(--blocked)}
+.kpi--unavail{border-left-color:var(--unavail)}
+.kpi__label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi__value{font-size:23px;font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums}
+.unavail{color:var(--unavail);font-size:14px;font-weight:600;font-style:italic}
+.bar{display:grid;grid-template-columns:minmax(120px,220px) 1fr minmax(92px,auto);
+  gap:12px;align-items:center;margin:7px 0;font-size:13.5px}
+.bar__track{background:color-mix(in srgb,var(--ink) 8%,transparent);border-radius:5px;height:19px;overflow:hidden}
+.bar__fill{height:100%;border-radius:5px}
+.bar__fill--success{background:var(--success)} .bar__fill--failure{background:var(--failure)}
+.bar__fill--warning{background:var(--warning)} .bar__fill--blocked{background:var(--blocked)}
+.bar__fill--neutral{background:var(--neutral)} .bar__fill--unavail{background:var(--unavail)}
+.bar__value{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.bar__label{color:var(--muted);overflow-wrap:anywhere}
+.donut-wrap{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.donut{width:150px;height:150px;transform:rotate(-90deg)}
+.donut__bg{fill:none;stroke:color-mix(in srgb,var(--ink) 8%,transparent);stroke-width:16}
+.donut__seg{fill:none;stroke-width:16}
+.donut__seg--success{stroke:var(--success)} .donut__seg--warning{stroke:var(--warning)}
+.donut__seg--failure{stroke:var(--failure)} .donut__seg--neutral{stroke:var(--neutral)}
+.donut__total,.donut__caption{transform:rotate(90deg);transform-origin:70px 70px;text-anchor:middle;
+  fill:var(--ink)}
+.donut__total{font-size:22px;font-weight:700} .donut__caption{font-size:9px;fill:var(--muted)}
+.legend{list-style:none;padding:0;margin:0;font-size:13.5px}
+.legend li{margin:5px 0} .legend strong{margin-left:6px;font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px}
+.dot--success{background:var(--success)} .dot--warning{background:var(--warning)}
+.dot--failure{background:var(--failure)} .dot--neutral{background:var(--neutral)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+tbody tr:last-child td{border-bottom:none}
+code{font:12.5px ui-monospace,SFMono-Regular,Consolas,monospace;
+  background:color-mix(in srgb,var(--ink) 6%,transparent);padding:1px 5px;border-radius:4px}
+details{margin-top:12px} summary{cursor:pointer;color:var(--muted);font-size:13px;padding:5px 0}
+summary:hover{color:var(--ink)}
+.funnel{display:flex;flex-direction:column;gap:6px}
+.tag{font-size:11px;padding:2px 7px;border-radius:4px;border:1px solid currentColor;font-weight:600}
+.tag--incomplete{color:var(--warning)} .tag--completed{color:var(--success)}
+footer{color:var(--muted);font-size:12.5px;margin-top:26px;line-height:1.7}
+@media print{ body{background:#fff} .card{break-inside:avoid} }
+</style>
+</head>
+<body><div class="wrap">
+<header>
+    <h1>Observability — run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch</h1>
+    <p class="note">Read-only view of <code>ObservabilityMetrics.json</code>. Presentation only —
+      the JSON metrics and <a href="ObservabilityReport.md">the Markdown report</a> remain authoritative.</p>
+    <dl class="meta"><div><dt>Run ID</dt><dd><code>run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch</code></dd></div><div><dt>Scope / Target</dt><dd>UserStory / US-8599-SearchActions_US-8606-UpdateBranch</dd></div><div><dt>Environment</dt><dd>—</dd></div><div><dt>Workflow</dt><dd>unversioned</dd></div><div><dt>Started</dt><dd>2026-08-04T08:24:38.821Z</dd></div><div><dt>Completed</dt><dd>Not recorded</dd></div><div><dt>Total duration</dt><dd><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></dd></div><div><dt>Instrumentation</dt><dd><span class="status-pill status-pill--partial">Partially Instrumented</span></dd></div><div><dt>Schema version</dt><dd>v1</dd></div><div><dt>Events recorded</dt><dd>73 <span class="unavail" style="font-style:normal">(0 tool · 73 skill)</span></dd></div></dl>
+  </header>
+<div class="banner banner--warn"><strong>Partially Instrumented — this is not a complete picture</strong>
+      <ul><li>No RUN_STARTED event — run-level timing is not measured.</li></ul></div>
+<section class="card"><h2>Executive Summary</h2><div class="kpis">
+    <div class="kpi kpi--unavail">
+      <div class="kpi__label">Total Duration</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+    <div class="kpi kpi--neutral">
+      <div class="kpi__label">Test Cases in Scope</div>
+      <div class="kpi__value">134</div>
+    </div>
+    <div class="kpi kpi--success">
+      <div class="kpi__label">Review Approved</div>
+      <div class="kpi__value">110</div>
+    </div>
+    <div class="kpi kpi--success">
+      <div class="kpi__label">Automation Approved</div>
+      <div class="kpi__value">43</div>
+    </div>
+    <div class="kpi kpi--neutral">
+      <div class="kpi__label">Tests Executed</div>
+      <div class="kpi__value">52</div>
+    </div>
+    <div class="kpi kpi--success">
+      <div class="kpi__label">Passed</div>
+      <div class="kpi__value">52</div>
+    </div>
+    <div class="kpi kpi--failure">
+      <div class="kpi__label">Failed</div>
+      <div class="kpi__value">0</div>
+    </div>
+    <div class="kpi kpi--blocked">
+      <div class="kpi__label">Blocked</div>
+      <div class="kpi__value">0</div>
+    </div>
+    <div class="kpi kpi--neutral">
+      <div class="kpi__label">Human Decisions</div>
+      <div class="kpi__value">0</div>
+    </div>
+    <div class="kpi kpi--blocked">
+      <div class="kpi__label">Safety Blocks</div>
+      <div class="kpi__value">0</div>
+    </div>
+    <div class="kpi kpi--failure">
+      <div class="kpi__label">Tool Failures</div>
+      <div class="kpi__value">0</div>
+    </div>
+    <div class="kpi kpi--warning">
+      <div class="kpi__label">Retries</div>
+      <div class="kpi__value">0</div>
+    </div>
+    <div class="kpi kpi--success">
+      <div class="kpi__label">First-Pass Automation</div>
+      <div class="kpi__value">100.0%</div>
+    </div>
+    <div class="kpi kpi--warning">
+      <div class="kpi__label">Repair Cycles</div>
+      <div class="kpi__value">0</div>
+    </div>
+  </div></section>
+<section id="stages" class="card">
+    <h2>Stage Duration</h2>
+    <p class="note">Measured timing only. A stage that opened and never closed is marked <strong>Incomplete</strong> and receives no duration.</p>
+    <div class="bar"><div class="bar__label">Stage 5A — Automation Execution</div>
+        <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:100.00%"></div></div>
+        <div class="bar__value">18m 20s</div></div><div class="bar"><div class="bar__label">Stage 6A — Reporting</div>
+        <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:25.93%"></div></div>
+        <div class="bar__value">4m 45s</div></div><p class="note" style="margin-top:14px">Not reached by this run:
+        Stage 1 — Project Context · Stage 2 — Discovery · Stage 3 — Test Design · Stage 4M — Manual Execution · Stage 4A — Automation · Stage 5H — Self-Healing. A stage with no bar was never started — that is different from a
+        stage that took no time.</p>
+  </section>
+<section id="governance" class="card">
+    <h2>Test Case Governance</h2>
+    <p class="note">Review and Automation are independent decisions and are never merged into a single lifecycle status.</p>
+    
+    <h3>Review</h3>
+    <div class="bar"><div class="bar__label">Approved</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--success" style="width:100.00%"></div></div>
+      <div class="bar__value">110</div></div>
+    <div class="bar"><div class="bar__label">Rejected</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--failure" style="width:21.82%"></div></div>
+      <div class="bar__value">24</div></div>
+    <div class="bar"><div class="bar__label">Pending</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--warning" style="width:0.60%"></div></div>
+      <div class="bar__value">0</div></div>
+    <h3>Automation</h3>
+    <div class="bar"><div class="bar__label">Approved</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--success" style="width:49.43%"></div></div>
+      <div class="bar__value">43</div></div>
+    <div class="bar"><div class="bar__label">Rejected</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--failure" style="width:100.00%"></div></div>
+      <div class="bar__value">87</div></div>
+    <div class="bar"><div class="bar__label">Pending</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--warning" style="width:4.60%"></div></div>
+      <div class="bar__value">4</div></div>
+    <p class="note" style="margin-top:14px">Acceptance rate 82.1%
+      &nbsp;·&nbsp; <code>Review Approved / (Review Approved + Review Rejected)</code>. Human acceptance, not correctness.</p>
+    <p class="note">Derived from the module Case Index, which is the canonical record of these decisions.</p>
+  </section>
+<section id="execution" class="card">
+    <h2>Execution Results</h2>
+    
+    
+    <div class="bar"><div class="bar__label">Passed</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--success" style="width:100.00%"></div></div>
+      <div class="bar__value">52</div></div>
+    <div class="bar"><div class="bar__label">Failed</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--failure" style="width:0.60%"></div></div>
+      <div class="bar__value">0</div></div>
+    <div class="bar"><div class="bar__label">Skipped</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--warning" style="width:11.54%"></div></div>
+      <div class="bar__value">6</div></div>
+    <div class="bar"><div class="bar__label">Blocked</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--blocked" style="width:0.60%"></div></div>
+      <div class="bar__value">0</div></div>
+    <p class="note" style="margin-top:12px">Of the blocked total, 0 were blocked by
+      <strong>Execution Safety policy</strong> — never executed, and never counted as an application,
+      automation, or environment failure. Pass rate 100.0%.</p>
+  </section>
+<section id="funnel" class="card">
+    <h2>Automation Funnel</h2>
+    
+    <div class="funnel"><div class="bar"><div class="bar__label">Approved Test Cases</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:82.69%"></div></div>
+      <div class="bar__value">43</div></div><div class="bar"><div class="bar__label">Automation Selected</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:0.60%"></div></div>
+      <div class="bar__value">0</div></div><div class="bar"><div class="bar__label">Generated</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:0.60%"></div></div>
+      <div class="bar__value">0</div></div><div class="bar"><div class="bar__label">Compiled</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:0.60%"></div></div>
+      <div class="bar__value">0</div></div><div class="bar"><div class="bar__label">Executed</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:100.00%"></div></div>
+      <div class="bar__value">52</div></div><div class="bar"><div class="bar__label">First-Pass Passed</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:100.00%"></div></div>
+      <div class="bar__value">52</div></div><div class="bar"><div class="bar__label">Final Passed</div>
+      <div class="bar__track"><div class="bar__fill bar__fill--neutral" style="width:100.00%"></div></div>
+      <div class="bar__value">52</div></div></div>
+    <p class="note" style="margin-top:12px">No step is skipped. A step the platform could not measure is shown
+      as <em>Unavailable</em> rather than inferred from the steps around it.</p>
+  </section>
+<section id="human" class="card">
+    <h2>Human Governance</h2>
+    
+    <div class="kpis" style="margin-bottom:16px">
+      <div class="kpi kpi--neutral">
+      <div class="kpi__label">Requested</div>
+      <div class="kpi__value">0</div>
+    </div> <div class="kpi kpi--success">
+      <div class="kpi__label">Resolved</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--warning">
+      <div class="kpi__label">Pending</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--neutral">
+      <div class="kpi__label">Per Stage</div>
+      <div class="kpi__value">0.0%</div>
+    </div>
+    </div>
+    <p class="empty">No Human Decision was recorded for this run.</p>
+    <p class="note" style="margin-top:12px">A fact, not a quality score. Some decisions exist deliberately for governance; more of them is not worse. Categories come from the recorded
+      event, never inferred from free text.</p>
+  </section>
+<section id="safety" class="card">
+    <h2>Execution Safety</h2>
+    
+    <div class="donut-empty">No operations were evaluated.</div>
+    <div class="kpis" style="margin-top:18px">
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Pre-Authorized</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div> <div class="kpi kpi--blocked">
+      <div class="kpi__label">Blocked by Safety</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Cleanup Required</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Cleanup Completed</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Cleanup Rate</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+    </div>
+    <p class="note" style="margin-top:14px">Policy
+      —
+      .
+      Consumed from Execution Safety evidence and never re-evaluated. A high block count means the
+      policy did its job.</p>
+    <div class="tablewrap"><table>
+    <thead><tr><th>Authorization</th><th>Action</th><th>Ownership</th><th>Module</th><th>Approved by</th><th>Approved at</th></tr></thead>
+    <tbody><tr><td><code>AUTH-BRANCH-CREATE-SelfCreated</code></td><td>CREATE</td><td>SelfCreated</td><td>branch</td><td>ahmed.ayman@tildetech.ae</td><td>2026-08-14T16:20:39.627Z</td></tr><tr><td><code>AUTH-BRANCH-UPDATE-SelfCreated</code></td><td>UPDATE</td><td>SelfCreated</td><td>branch</td><td>ahmed.ayman@tildetech.ae</td><td>2026-08-14T16:20:39.627Z</td></tr><tr><td><code>AUTH-BRANCH-SUBMIT-SelfCreated</code></td><td>SUBMIT</td><td>SelfCreated</td><td>branch</td><td>ahmed.ayman@tildetech.ae</td><td>2026-08-14T16:20:39.627Z</td></tr><tr><td><code>AUTH-BRANCH-APPROVE-SelfCreated</code></td><td>APPROVE</td><td>SelfCreated</td><td>branch</td><td>ahmed.ayman@tildetech.ae</td><td>2026-08-14T16:20:39.627Z</td></tr></tbody>
+  </table></div>
+  </section>
+<section id="tools" class="card">
+    <h2>Tool Reliability</h2>
+    
+    <div class="kpis" style="margin-bottom:16px">
+      <div class="kpi kpi--neutral">
+      <div class="kpi__label">Total Calls</div>
+      <div class="kpi__value">0</div>
+    </div> <div class="kpi kpi--success">
+      <div class="kpi__label">Succeeded</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--failure">
+      <div class="kpi__label">Failed</div>
+      <div class="kpi__value">0</div>
+    </div> <div class="kpi kpi--warning">
+      <div class="kpi__label">Retries</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--warning">
+      <div class="kpi__label">Timeouts</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Failure Rate</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+    </div>
+    <p class="empty">No tool activity was recorded. Only tools actually observed are listed.</p>
+  </section>
+<section id="validation" class="card">
+    <h2>Platform Validation</h2>
+    <p class="note">Platform validation only. A failing application test is a QA result, not a validation failure — the two are never summed.</p>
+    <div class="kpis">
+      <div class="kpi kpi--neutral">
+      <div class="kpi__label">Validation Runs</div>
+      <div class="kpi__value">0</div>
+    </div> <div class="kpi kpi--success">
+      <div class="kpi__label">Passed</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--failure">
+      <div class="kpi__label">Failed</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Failure Rate</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+    </div>
+    
+  </section>
+<section id="repair" class="card">
+    <h2>Repair / Rework</h2>
+    
+    <div class="kpis">
+      <div class="kpi kpi--neutral">
+      <div class="kpi__label">Repair Cycles</div>
+      <div class="kpi__value">0</div>
+    </div> <div class="kpi kpi--neutral">
+      <div class="kpi__label">Attempts</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--success">
+      <div class="kpi__label">Successes</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--success">
+      <div class="kpi__label">Tests Repaired</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--failure">
+      <div class="kpi__label">Remaining Failures</div>
+      <div class="kpi__value">0</div>
+    </div>
+      <div class="kpi kpi--warning">
+      <div class="kpi__label">Artifacts Re-edited</div>
+      <div class="kpi__value">2</div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Human Corrections</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+    </div>
+    <p class="note" style="margin-top:14px">Explicit counters only — there is no <em>Rework Score</em>,
+      because no defensible formula for one exists. Human corrections are unavailable: a git diff
+      proves a change, not its author.</p>
+  </section>
+<section id="ai" class="card">
+    <h2>AI Usage</h2>
+    
+    <div class="kpis">
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Token Usage</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Cost</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Provider</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+      <div class="kpi kpi--unavail">
+      <div class="kpi__label">Model</div>
+      <div class="kpi__value"><span class="unavail" title="Measured as unavailable — not zero">Unavailable</span></div>
+    </div>
+    </div>
+    <p class="note" style="margin-top:14px"><strong>Reason:</strong> No supported run-attributable provider usage source. The platform carries zero runtime dependencies and no provider SDK, and its tools run as child processes with no model context. Claude Code session transcripts are deliberately not read: they are session-scoped rather than run-scoped, and are not an official stable contract (HD-OBS-002).</p>
+    <p class="note">No token count is estimated from text length and no cost is computed from hardcoded
+      pricing. This section is shown rather than hidden so the measurement boundary stays visible.</p>
+  </section>
+
+<section id="trends" class="card">
+    <h2>Trends</h2>
+    
+    <p class="empty">Trend data unavailable — requires multiple instrumented runs.</p>
+    <p class="note">The metrics schema is versioned and stable across runs, so run duration, human
+      decisions, acceptance rate, first-pass success, retry rate, tool failure rate, safety blocks and
+      repair cycles will all be comparable once more than one instrumented run exists. No trend is
+      fabricated from a single data point.</p>
+  </section>
+<section id="detail" class="card">
+    <h2>Detail Tables</h2>
+    
+    
+    <details><summary>Stage details</summary><div class="tablewrap"><table>
+    <thead><tr><th>Stage</th><th>Started</th><th>Completed</th><th>Duration</th><th>Status</th></tr></thead>
+    <tbody><tr><td>Stage 5A — Automation Execution</td><td>2026-08-15T14:11:08.743Z</td><td>2026-08-15T14:29:28.891Z</td><td>18m 20s</td><td><span class="tag tag--completed">Completed</span></td></tr><tr><td>Stage 6A — Reporting</td><td>2026-08-15T14:30:37.780Z</td><td>2026-08-15T14:35:23.087Z</td><td>4m 45s</td><td><span class="tag tag--completed">Completed</span></td></tr></tbody>
+  </table></div></details>
+
+    <details><summary>Human Decisions</summary><p class="empty">No Human Decision was recorded.</p></details>
+
+    <details><summary>Tool activity</summary><p class="empty">No tool activity was recorded.</p></details>
+
+    <details><summary>Execution results</summary><div class="tablewrap"><table>
+    <thead><tr><th>Test ID</th><th>Status</th><th>Attempt</th><th>Cycle</th><th>Classification</th></tr></thead>
+    <tbody><tr><td><code>TC-BR-001</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-002</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-004</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-013</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-021</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-024</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-025</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-026</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-028</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-030</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-037</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-038</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-039</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-040</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-041</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-042</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-043</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-045</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-046</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-054</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-055</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-060</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-061</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-065</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-066</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-067</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-068</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-069</code></td><td>Passed</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-052</code></td><td>Skipped</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-056</code></td><td>Skipped</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-057</code></td><td>Skipped</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-058</code></td><td>Skipped</td><td>1</td><td>27</td><td>—</td></tr><tr><td><code>TC-BR-001</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-002</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-004</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-013</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-021</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-024</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-025</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-026</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-028</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-030</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-037</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-038</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-039</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-040</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-041</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-042</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-043</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-045</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-046</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-054</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-055</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-060</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-061</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-056</code></td><td>Passed</td><td>1</td><td>28</td><td>—</td></tr><tr><td><code>TC-BR-057</code></td><td>Skipped</td><td>1</td><td>28</td><td>EnvironmentFailure</td></tr><tr><td><code>TC-BR-058</code></td><td>Skipped</td><td>1</td><td>28</td><td>EnvironmentFailure</td></tr></tbody>
+  </table></div></details>
+  </section>
+<footer>Generated 2026-08-15T15:14:11.025Z from <code>ObservabilityMetrics.json</code>
+      (schema v1, 73 events).<br>
+      Self-contained: no external scripts, styles, fonts or network access. Presentation layer only —
+      it renders canonical metrics and computes nothing.</footer>
+</div></body>
+</html>

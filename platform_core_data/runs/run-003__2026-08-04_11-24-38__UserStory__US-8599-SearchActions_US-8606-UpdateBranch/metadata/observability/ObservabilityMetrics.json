@@ -1,0 +1,1106 @@
+{
+  "schemaVersion": 1,
+  "runId": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch",
+  "instrumentation": {
+    "status": "Partially Instrumented",
+    "reasons": [
+      "No RUN_STARTED event — run-level timing is not measured."
+    ],
+    "eventCount": 73,
+    "bySource": {
+      "platform-tool": 0,
+      "skill": 73
+    },
+    "provenanceNote": "platform-tool events are emitted by platform code as a side effect of the work itself and cannot be forgotten. skill events are emitted because a Skill specification requires it; their presence is reliable, their ABSENCE proves nothing. The two are not the same reliability class and are never presented as one.",
+    "unclosedSpans": []
+  },
+  "run": {
+    "runId": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch",
+    "folderName": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch",
+    "scope": "UserStory",
+    "target": "US-8599-SearchActions_US-8606-UpdateBranch",
+    "workflow": "unversioned",
+    "environment": null,
+    "status": "Preparing",
+    "startedTime": "2026-08-04T08:24:38.821Z",
+    "finishedTime": null,
+    "durationMs": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "This run has started but not finished. An in-progress run has an elapsed time, not a duration, and the two are not reported as the same thing (§15)."
+    }
+  },
+  "stagesStarted": {
+    "value": 2,
+    "available": true,
+    "provenance": "emitted"
+  },
+  "stages": {
+    "5A": {
+      "id": "5A",
+      "name": "Stage 5A — Automation Execution",
+      "startedAt": "2026-08-15T14:11:08.743Z",
+      "completedAt": "2026-08-15T14:29:28.891Z",
+      "durationMs": {
+        "value": 1100148,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "status": "Completed",
+      "source": "skill"
+    },
+    "6A": {
+      "id": "6A",
+      "name": "Stage 6A — Reporting",
+      "startedAt": "2026-08-15T14:30:37.780Z",
+      "completedAt": "2026-08-15T14:35:23.087Z",
+      "durationMs": {
+        "value": 285307,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "status": "Completed",
+      "source": "skill"
+    }
+  },
+  "skills": [
+    {
+      "skill": "automation-execution-skill",
+      "stage": "5A",
+      "startedAt": "2026-08-15T14:11:08.803Z",
+      "completedAt": "2026-08-15T14:29:28.819Z",
+      "durationMs": {
+        "value": 1100016,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "status": "Completed",
+      "source": "skill"
+    },
+    {
+      "skill": "reporting-skill",
+      "stage": "6A",
+      "startedAt": "2026-08-15T14:30:37.853Z",
+      "completedAt": "2026-08-15T14:35:22.992Z",
+      "durationMs": {
+        "value": 285139,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "status": "Completed",
+      "source": "skill"
+    }
+  ],
+  "tools": {
+    "totals": {
+      "calls": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "succeeded": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "failed": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "incomplete": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "retries": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "timeouts": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      }
+    },
+    "byTool": []
+  },
+  "validation": {
+    "runs": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "passed": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "failed": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "byKind": []
+  },
+  "humanDecisions": {
+    "requested": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "resolved": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "pending": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "byCategory": {},
+    "entries": [],
+    "interpretation": "A fact, not a quality score. Some decisions exist deliberately for governance; more of them is not worse."
+  },
+  "testDesign": {
+    "totalCases": {
+      "value": 134,
+      "available": true,
+      "provenance": "derived"
+    },
+    "generatedThisRun": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "provenanceNote": "Derived from the module Case Index, which is the canonical record of these decisions.",
+    "review": {
+      "approved": {
+        "value": 110,
+        "available": true,
+        "provenance": "derived"
+      },
+      "rejected": {
+        "value": 24,
+        "available": true,
+        "provenance": "derived"
+      },
+      "pending": {
+        "value": 0,
+        "available": true,
+        "provenance": "derived"
+      }
+    },
+    "automation": {
+      "approved": {
+        "value": 43,
+        "available": true,
+        "provenance": "derived"
+      },
+      "rejected": {
+        "value": 87,
+        "available": true,
+        "provenance": "derived"
+      },
+      "pending": {
+        "value": 4,
+        "available": true,
+        "provenance": "derived"
+      }
+    },
+    "contradictions": {
+      "value": 1,
+      "available": true,
+      "provenance": "derived"
+    },
+    "modules": [
+      {
+        "module": "agency",
+        "cases": 53,
+        "review": {
+          "Approved": 37,
+          "Rejected": 16,
+          "Pending": 0
+        },
+        "automation": {
+          "Approved": 11,
+          "Rejected": 38,
+          "Pending": 4
+        }
+      },
+      {
+        "module": "branch",
+        "cases": 81,
+        "review": {
+          "Approved": 73,
+          "Rejected": 8,
+          "Pending": 0
+        },
+        "automation": {
+          "Approved": 32,
+          "Rejected": 49,
+          "Pending": 0
+        }
+      }
+    ]
+  },
+  "automation": {
+    "eligible": {
+      "value": 43,
+      "available": true,
+      "provenance": "derived"
+    },
+    "selected": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "generated": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "reused": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "modified": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "compileAttempts": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "compilePassed": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "compileFailed": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    }
+  },
+  "execution": {
+    "planned": {
+      "value": 58,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "executed": {
+      "value": 52,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "passed": {
+      "value": 52,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "failed": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "skipped": {
+      "value": 6,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "blocked": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "inconclusive": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "blockedBySafety": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "firstAttempt": {
+      "executed": {
+        "value": 52,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "passed": {
+        "value": 52,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "failed": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      }
+    },
+    "byTest": [
+      {
+        "testCaseId": "TC-BR-001",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-002",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-004",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-013",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-021",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-024",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-025",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-026",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-028",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-030",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-037",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-038",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-039",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-040",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-041",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-042",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-043",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-045",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-046",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-054",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-055",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-060",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-061",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-065",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-066",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-067",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-068",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-069",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-052",
+        "status": "Skipped",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-056",
+        "status": "Skipped",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-057",
+        "status": "Skipped",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-058",
+        "status": "Skipped",
+        "attempt": 1,
+        "cycle": 27,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-001",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-002",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-004",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-013",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-021",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-024",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-025",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-026",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-028",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-030",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-037",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-038",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-039",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-040",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-041",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-042",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-043",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-045",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-046",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-054",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-055",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-060",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-061",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-056",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-057",
+        "status": "Skipped",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": "EnvironmentFailure",
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-058",
+        "status": "Skipped",
+        "attempt": 1,
+        "cycle": 28,
+        "classification": "EnvironmentFailure",
+        "durationMs": null
+      }
+    ]
+  },
+  "repair": {
+    "cycles": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "attempts": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "successes": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "testsRepaired": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "remainingFailures": {
+      "value": 0,
+      "available": true,
+      "provenance": "emitted"
+    },
+    "rework": {
+      "artifactsUpdatedAfterCreation": {
+        "value": 2,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "validationFailures": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "repairCycles": {
+        "value": 0,
+        "available": true,
+        "provenance": "emitted"
+      },
+      "humanCorrections": {
+        "value": null,
+        "available": false,
+        "provenance": "unavailable",
+        "reason": "The platform cannot attribute an edit to a human. A git diff proves a change, not its author (§61), and inferring authorship would make the metric confidently wrong."
+      }
+    }
+  },
+  "safety": {
+    "preflightCompleted": {
+      "value": true,
+      "available": true,
+      "provenance": "derived"
+    },
+    "operationsEvaluated": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "The preflight record carries no operation total."
+    },
+    "allowed": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "The preflight record carries no allowed total."
+    },
+    "approvalRequired": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "The preflight record carries no approval-required total."
+    },
+    "preAuthorized": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "The preflight record carries no pre-authorized total."
+    },
+    "forbidden": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "The preflight record carries no forbidden total."
+    },
+    "blocks": {
+      "value": 0,
+      "available": true,
+      "provenance": "derived"
+    },
+    "cleanupRequired": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "The preflight record carries no cleanup-required total."
+    },
+    "cleanupCompleted": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "Cleanup completion is recorded by the executing stage and was not reported for this run."
+    },
+    "policyId": null,
+    "policyVersion": null,
+    "policyHash": null,
+    "environment": null,
+    "authorizations": [
+      {
+        "authorizationId": "AUTH-BRANCH-CREATE-SelfCreated",
+        "action": "CREATE",
+        "ownership": "SelfCreated",
+        "module": "branch",
+        "approvedBy": "ahmed.ayman@tildetech.ae",
+        "approvedAt": "2026-08-14T16:20:39.627Z",
+        "revoked": false
+      },
+      {
+        "authorizationId": "AUTH-BRANCH-UPDATE-SelfCreated",
+        "action": "UPDATE",
+        "ownership": "SelfCreated",
+        "module": "branch",
+        "approvedBy": "ahmed.ayman@tildetech.ae",
+        "approvedAt": "2026-08-14T16:20:39.627Z",
+        "revoked": false
+      },
+      {
+        "authorizationId": "AUTH-BRANCH-SUBMIT-SelfCreated",
+        "action": "SUBMIT",
+        "ownership": "SelfCreated",
+        "module": "branch",
+        "approvedBy": "ahmed.ayman@tildetech.ae",
+        "approvedAt": "2026-08-14T16:20:39.627Z",
+        "revoked": false
+      },
+      {
+        "authorizationId": "AUTH-BRANCH-APPROVE-SelfCreated",
+        "action": "APPROVE",
+        "ownership": "SelfCreated",
+        "module": "branch",
+        "approvedBy": "ahmed.ayman@tildetech.ae",
+        "approvedAt": "2026-08-14T16:20:39.627Z",
+        "revoked": false
+      }
+    ]
+  },
+  "aiUsage": {
+    "available": false,
+    "source": null,
+    "reason": "No supported run-attributable provider usage source. The platform carries zero runtime dependencies and no provider SDK, and its tools run as child processes with no model context. Claude Code session transcripts are deliberately not read: they are session-scoped rather than run-scoped, and are not an official stable contract (HD-OBS-002).",
+    "tokens": {
+      "input": {
+        "value": null,
+        "available": false,
+        "provenance": "unavailable",
+        "reason": "No supported token source."
+      },
+      "output": {
+        "value": null,
+        "available": false,
+        "provenance": "unavailable",
+        "reason": "No supported token source."
+      },
+      "total": {
+        "value": null,
+        "available": false,
+        "provenance": "unavailable",
+        "reason": "No supported token source."
+      },
+      "cached": {
+        "value": null,
+        "available": false,
+        "provenance": "unavailable",
+        "reason": "No supported token source."
+      }
+    },
+    "cost": {
+      "total": {
+        "value": null,
+        "available": false,
+        "provenance": "unavailable",
+        "reason": "No authoritative pricing source. Cost is never computed from hardcoded prices."
+      },
+      "currency": null,
+      "pricingSource": null
+    },
+    "provider": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "Not exposed to platform code."
+    },
+    "model": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "Not exposed to platform code."
+    }
+  },
+  "integrity": {
+    "ok": true,
+    "problems": [],
+    "foreignEventsRejected": 0
+  },
+  "formulas": {
+    "TC_ACCEPTANCE_RATE": {
+      "value": 0.8208955223880597,
+      "available": true,
+      "provenance": "derived",
+      "name": "Test Case Acceptance Rate",
+      "expression": "Review Approved / (Review Approved + Review Rejected)"
+    },
+    "AUTOMATION_APPROVAL_RATE": {
+      "value": 0.33076923076923076,
+      "available": true,
+      "provenance": "derived",
+      "name": "Automation Approval Rate",
+      "expression": "Automation Approved / (Automation Approved + Automation Rejected)"
+    },
+    "TOOL_FAILURE_RATE": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "No tool call completed, so there is no failure rate.",
+      "name": "Tool Failure Rate",
+      "expression": "Failed Tool Calls / (Succeeded Tool Calls + Failed Tool Calls)"
+    },
+    "RETRY_RATE": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "No tool call was started, so there is no retry rate.",
+      "name": "Retry Rate",
+      "expression": "Retries / Tool Calls Started"
+    },
+    "FIRST_PASS_AUTOMATION_SUCCESS": {
+      "value": 1,
+      "available": true,
+      "provenance": "derived",
+      "name": "First-Pass Automation Success",
+      "expression": "Tests Passed on Attempt 1 / Tests Executed on Attempt 1"
+    },
+    "EXECUTION_PASS_RATE": {
+      "value": 1,
+      "available": true,
+      "provenance": "derived",
+      "name": "Execution Pass Rate",
+      "expression": "Passed / (Passed + Failed)"
+    },
+    "VALIDATION_FAILURE_RATE": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "No validation ran.",
+      "name": "Platform Validation Failure Rate",
+      "expression": "Validation Failed / (Validation Passed + Validation Failed)"
+    },
+    "HUMAN_DECISIONS_PER_STAGE": {
+      "value": 0,
+      "available": true,
+      "provenance": "derived",
+      "name": "Human Decisions per Stage",
+      "expression": "Human Decisions Requested / Stages Started"
+    },
+    "SAFETY_BLOCK_RATE": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "This run has no Execution Safety preflight evidence.",
+      "name": "Safety Block Rate",
+      "expression": "Operations Forbidden / Operations Evaluated at Preflight"
+    },
+    "CLEANUP_COMPLETION_RATE": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "This run has no Execution Safety cleanup evidence.",
+      "name": "Cleanup Completion Rate",
+      "expression": "Cleanup Completed / Cleanup Required"
+    },
+    "REPAIR_SUCCESS_RATE": {
+      "value": null,
+      "available": false,
+      "provenance": "unavailable",
+      "reason": "No repair was attempted.",
+      "name": "Repair Success Rate",
+      "expression": "Repair Successes / Repair Attempts"
+    }
+  }
+}

@@ -37,6 +37,17 @@ public class EnvironmentConfig {
     }
 
     /**
+     * Path fragment identifying the Add Branch screen, for recognising whether the browser is still
+     * on that screen after a submit. Added 2026-08-15: {@code AddBranch_Page} carried this path as a
+     * literal in two places, a third copy of a value {@code environment.properties} already held, so
+     * repointing the suite at an environment with a different route would have left those two checks
+     * silently testing the old path.
+     */
+    public static String addBranchPath() {
+        return PROPS.getProperty("addBranchPath");
+    }
+
+    /**
      * Path fragment identifying the Update Branch screen. Used only to recognise whether the browser
      * is still on that screen after a submit -- the screen itself is always reached by clicking a
      * row's edit pen, never by direct navigation, because it needs a record id this suite does not

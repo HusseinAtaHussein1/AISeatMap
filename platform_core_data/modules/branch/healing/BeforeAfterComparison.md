@@ -5,6 +5,116 @@
 
 ---
 
+
+# Before/After — Healing Pass HEAL-BR-20260815-01 (2026-08-15)
+
+**Scope:** `SearchBranch_TC` + `SearchBranch_Page`
+**Before:** `EXEC-BR-20260815-01` (cycle 23, diagnosis, no code change)
+**After:** `EXEC-BR-20260815-02` (`execution/ExecutionResults.rerun-24.md`, cycle 24)
+**Mode:** Headed, Java 24.0.1, Chrome 150, STG
+
+## Summary
+
+| Column | Count | Tests |
+|---|---|---|
+| **Fixed** (`Automation Repaired`) | **6** | TC-BR-040, 041, 042, 043, 045, 046 |
+| **Remaining Failures** | **1** | TC-BR-054 — but on a *different, non-automation* cause (see below) |
+| **New Failures** | **0** | — |
+| **Reclassified** | **1** | TC-BR-054 → Environment data gap |
+| **Quarantined** | **0** | — |
+
+## Per test
+
+| Test | Before | After | Status |
+|---|---|---|---|
+| TC-BR-040 | Failed — `Branch Code input did not retain "BRN2". Actual value: ""` | Passed | **Automation Repaired** |
+| TC-BR-041 | Failed — `Branch Name input did not retain "Emirates NDC". Actual value: ""` | Passed | **Automation Repaired** |
+| TC-BR-042 | Failed — `Search did not produce a fresh result cycle within 20s` | Passed | **Automation Repaired** |
+| TC-BR-043 | Failed — `Branch Code input did not retain "ZZZZQQ9". Actual value: ""` | Passed | **Automation Repaired** |
+| TC-BR-045 | Failed — `Search did not produce a fresh result cycle within 20s` | Passed | **Automation Repaired** |
+| TC-BR-046 | Failed — `option never became clickable` | Passed | **Automation Repaired** |
+| TC-BR-054 | Failed — `Status filter "Both" was not selected after 3 click attempt(s)` | Failed — `No row with Approval Status "Rejected" ... within the configured 10-page scan limit` | **Remaining, reclassified** |
+
+## TC-BR-054 read honestly
+
+The repair worked for this test too: the Status filter now commits, and the test reaches its own logic for the first time. It then stops on a precondition it cannot satisfy — the environment holds no `Rejected` branch within 10 pages. That is a data gap, not an automation defect and not an application defect, and §5 makes it ineligible for healing.
+
+**This is not counted as a fix.** It stays in Remaining Failures. Counting it as fixed because "the original error is gone" would misreport a test that still does not verify what it exists to verify.
+
+## Regression check
+
+**Zero New Failures.** No test that passed before this pass fails after it.
+
+**Gap closed, 2026-08-15T15:07.** TC-BR-055, TC-BR-060 and TC-BR-061 were not repaired, so §12 kept them out of the cycle above. They were run separately straight afterwards, purely to confirm the repair caused them no harm:
+
+```
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0   (88.21 s)   BUILD SUCCESS
+```
+
+All three passed. Their logs also show them using the repaired fallback paths and needing them — `selectStatus Both selected on attempt 1 of 3 (dispatched click fallback)` and `clickSearch normal click produced no result cycle t=3594ms; applying the dispatched click fallback`. The repair therefore helps these three as well, which the scoped rerun could not have shown.
+
+**Zero regressions across the whole Search suite.**
+
+## Health
+
+| Figure | Before | After |
+|---|---|---|
+| **Application Health** | Unchanged | **Unchanged.** No assertion, expected value or timeout was modified. TC-BR-052 / FINDING-012 remains open and deliberately red |
+| **Automation Health** (7-test scope) | 7 failures | **1** |
+| **Environment Health** | 0 recorded | **1** — TC-BR-054's missing `Rejected` record |
+
+
+---
+
+# Before/After — Healing Pass HEAL-BR-20260815-02 (2026-08-15)
+
+**Scope:** TC-BR-052 and TC-BR-054
+**After:** `EXEC-BR-20260815-03` (`execution/ExecutionResults.rerun-25.md`) — full `SearchBranch_TC` class, 11 tests
+**Mode:** Headed, Java 24.0.1, Chrome 150, STG
+
+## Summary
+
+| Column | Count | Tests |
+|---|---|---|
+| **Fixed** (`Automation Repaired`) | **1** | TC-BR-054 |
+| **Remaining Failures** | **1** | TC-BR-052 — partially repaired, still red on the State column **by design** |
+| **New Failures** | **0** | — |
+| **Reclassified** | **0** | — |
+| **Quarantined** | **0** | — |
+
+## Per test
+
+| Test | Before | After | Status |
+|---|---|---|---|
+| TC-BR-054 | Failed — `No row with Approval Status "Rejected" was found within the configured 10-page scan limit` | Passed | **Automation Repaired** |
+| TC-BR-052 | Failed — missing `[Branch Code, State]` | Failed — missing `[State]` | **Partially repaired, deliberately still failing** |
+
+## Full-class regression
+
+```
+Tests run: 11, Failures: 1, Errors: 0, Skipped: 0   (318.5 s)
+```
+
+Passing: TC-BR-040, 041, 042, 043, 045, 046, 054, 055, 060, 061.
+Failing: TC-BR-052 only.
+
+**Zero regressions.** Every test that passed after HEAL-BR-20260815-01 still passes.
+
+## Why TC-BR-052 is counted as Remaining and not as a win
+
+Half of it was genuinely repaired: the expected column label `Branch Code` was our error, and the grid has always rendered `Code`. Correcting it removed one of the two reported failures.
+
+The other half was left alone on purpose. `State` stays in the expected list because three independent observations say the column is not rendered, while the business owner states it is. Removing the expectation would make the test green and would quietly record that disagreement as settled.
+
+**A test that is red for one honest, open reason is a better result than a test that is green because the question was deleted.** Counting this as Fixed would misreport it.
+
+## Health
+
+| Figure | Before | After |
+|---|---|---|
+| **Application Health** | Unchanged | **Unchanged.** The one corrected assertion was an automation-side expected value the business owner had already ruled on |
+| **Automation Health** (SearchBranch_TC, 11 tests) | 2 failures | **1** |
+| **Environment Health** | 1 — TC-BR-054's missing Rejected record | **0** — resolved by configuring the fixture |
 # Pass HEAL-BR-20260809-01 (2026-08-09)
 
 **Source execution:** `EXEC-BR-20260806-03` — `runs/run-003__.../execution/ExecutionResults.rerun-5.md`
@@ -164,3 +274,5 @@ reaching the Add Branch Angular route via the list screen's `routerLink` button 
 reversed on 2026-08-05 — see `AddBranch_Page.open()`'s own note. TC-BR-001's `Inconclusive` verdict was
 superseded on 2026-08-06 by `EXEC-BR-20260806-01`, which reproduced it as a diagnosable
 `Automation Failure`.
+
+---

@@ -48,7 +48,7 @@
 | TC-BR-028 | `tests/CreateBranchTests.tcBr028_selectAtLeastOnePaymentOption` | Generate | Ready |
 | TC-BR-030 | `tests/CreateBranchTests.tcBr030_descriptionEnabledOnlyWhenSupplierRowSelected` | Generate | Ready |
 | TC-BR-037 | `tests/CreateBranchTests.tcBr037_createBranchWithValidOutstandingThreshold` | Generate | Ready |
-| TC-BR-038 | `tests/CreateBranchTests.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty` | Generate | Ready |
+| TC-BR-038 | `tests/CreateBranchTests.tcBr038_outstandingThresholdPrefilledWithDefaultValue` | Generate | Ready |
 | TC-BR-039 | `tests/CreateBranchTests.tcBr039_outstandingThresholdAcceptsNumericValue` | Generate | Ready |
 
 **Shared elements (§10):**

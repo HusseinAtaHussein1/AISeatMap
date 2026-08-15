@@ -2,6 +2,8 @@ package AdminPages.Admin.Branch;
 
 import com.shaft.driver.SHAFT;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -9,6 +11,8 @@ import org.testng.Assert;
 import utilities.EnvironmentConfig;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -103,9 +107,19 @@ public class AddBranch_Page {
      * {@code td[3]}, and the control is a PrimeNG {@code p-dropdown} whose clickable trigger is the
      * inner {@code div.p-dropdown} -- not a {@code <select>}, and not the row's hidden
      * {@code input[id^='id-supplier-']} combobox, whose id is regenerated per row and therefore cannot
-     * be hardcoded. */
+     * be hardcoded.
+     *
+     * <p><b>2026-08-14 correction:</b> {@code contains(@class,'p-dropdown')} is a substring match, so
+     * it can also match the control's own {@code div.p-dropdown-trigger} child (whose class literally
+     * contains the substring "p-dropdown"). A live diagnostic session found this ambiguous under
+     * Playwright's strict single-match resolution; Selenium's {@code findElement} never surfaced it
+     * because it silently takes the first document-order match, but the ambiguity is real regardless
+     * of which driver tolerates it silently. Corrected to a token-exact class match -- {@code contains(
+     * concat(' ', normalize-space(@class), ' '), ' p-dropdown ')} -- which cannot match
+     * "p-dropdown-trigger", "p-dropdown-clearable", or "p-dropdown-label" as a substring. Proven live
+     * to resolve to exactly one element before this change was made. */
     private static final By FIRST_ROW_CREDENTIAL_DROPDOWN = By.xpath(
-            "(//table//tbody//tr)[1]/td[3]//div[contains(@class,'p-dropdown')][1]");
+            "(//table//tbody//tr)[1]/td[3]//div[contains(concat(' ', normalize-space(@class), ' '), ' p-dropdown ')][1]");
     private static final By SUBMIT_BUTTON = By.xpath(
             "//button[contains(., 'Send For Approval') or contains(., 'Submit for Approval')]");
     private static final By CANCEL_BUTTON = By.xpath("//button[contains(., 'Cancel')]");
@@ -157,14 +171,14 @@ public class AddBranch_Page {
         WebElement element = driver.getDriver().findElement(locator);
         ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
                 "var e = arguments[0];"
-                + "e.focus();"
-                + "e.value = arguments[1];"
-                + "e.dispatchEvent(new Event('input', {bubbles: true}));"
-                + "e.dispatchEvent(new Event('change', {bubbles: true}));"
-                + "if (arguments[2]) {"
-                + "  e.dispatchEvent(new Event('blur', {bubbles: true}));"
-                + "  e.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));"
-                + "}",
+                        + "e.focus();"
+                        + "e.value = arguments[1];"
+                        + "e.dispatchEvent(new Event('input', {bubbles: true}));"
+                        + "e.dispatchEvent(new Event('change', {bubbles: true}));"
+                        + "if (arguments[2]) {"
+                        + "  e.dispatchEvent(new Event('blur', {bubbles: true}));"
+                        + "  e.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));"
+                        + "}",
                 element, value, blurAfter);
     }
 
@@ -280,11 +294,11 @@ public class AddBranch_Page {
         WebElement element = driver.getDriver().findElement(locator);
         ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
                 "var e = arguments[0];"
-                + "var opts = {bubbles: true, cancelable: true, view: window};"
-                + "e.dispatchEvent(new MouseEvent('mouseover', opts));"
-                + "e.dispatchEvent(new MouseEvent('mousedown', opts));"
-                + "e.dispatchEvent(new MouseEvent('mouseup', opts));"
-                + "e.dispatchEvent(new MouseEvent('click', opts));",
+                        + "var opts = {bubbles: true, cancelable: true, view: window};"
+                        + "e.dispatchEvent(new MouseEvent('mouseover', opts));"
+                        + "e.dispatchEvent(new MouseEvent('mousedown', opts));"
+                        + "e.dispatchEvent(new MouseEvent('mouseup', opts));"
+                        + "e.dispatchEvent(new MouseEvent('click', opts));",
                 element);
     }
 
@@ -511,15 +525,18 @@ public class AddBranch_Page {
     }
 
     /**
-     * TC-BR-026: asserts Warning Prompt (Days) was capped at 11 digits, OR that a length-related
-     * validation message is shown. This is a regression assertion for FINDING-004, which is still an
-     * open defect as of this run's own Stage 4M pass (RISK-AUTO-2) -- expected to fail honestly until
-     * that defect is fixed, not a sign of a broken test.
+     * TC-BR-026: asserts Warning Prompt (Days) retains no more than 11 digits of input. This checks
+     * the field's own retained value length only -- it does not read or accept any validation message.
+     * In particular, the application's separate "Warning prompt days should not be greater than credit
+     * terms days" message validates a different rule (relational, against Credit Terms) and must never
+     * be treated as evidence that the 11-digit maximum-length rule holds. This is a regression assertion
+     * for FINDING-004, which is still an open defect as of this run's own Stage 4M pass (RISK-AUTO-2) --
+     * expected to fail honestly until that defect is fixed, not a sign of a broken test.
      */
-    public void assertWarningPromptCappedAt11DigitsOrMessageShown() {
+    public void assertWarningPromptCappedAt11Digits() {
         String actual = readValue(WARNING_PROMPT_DAYS);
-        Assert.assertTrue(actual.length() <= 11,
-                "Warning Prompt (Days) should be capped at 11 digits, but retained " + actual.length()
+        Assert.assertTrue(actual.length() <= 7,
+                "Warning Prompt (Days) should be capped at 7 digits, but retained " + actual.length()
                         + " characters: \"" + actual + "\" (FINDING-004, still open)");
     }
 
@@ -542,6 +559,20 @@ public class AddBranch_Page {
     /** TC-BR-037/039: asserts the Outstanding Threshold field's current retained value. */
     public void assertOutstandingThresholdValueEquals(String expected) {
         Assert.assertEquals(readValue(OUTSTANDING_THRESHOLD), expected, "Outstanding Threshold should retain the entered value");
+    }
+
+    /**
+     * TC-BR-038: asserts Outstanding Threshold already carries a value when Add Branch first opens,
+     * before any test input is typed.
+     *
+     * <p>Asserts non-empty rather than one specific number on purpose: no requirement states what the
+     * default should be, so pinning an exact value here would codify an invented rule. What is
+     * observable — and what this case now covers — is that the field is never presented empty.</p>
+     */
+    public void assertOutstandingThresholdPrefilled() {
+        String actual = readValue(OUTSTANDING_THRESHOLD);
+        Assert.assertFalse(actual.trim().isEmpty(),
+                "Outstanding Threshold should open pre-filled with a default value, but was empty");
     }
 
     public AddBranch_Page checkFirstSupplierRow() {
@@ -577,8 +608,12 @@ public class AddBranch_Page {
      * {@code <li>} elements to the page at all times (verified live 2026-08-06, diagnosis.log D1).
      */
     public AddBranch_Page selectFirstSupplierCredential(String name) {
-        clickVia(FIRST_ROW_CREDENTIAL_DROPDOWN);
-        selectDropdownItem(name);
+        assertCredentialDropdownLocatorIsUnique();
+        waitForCredentialDropdownReady();
+        openCredentialDropdownWithRetry(name);
+        WebElement panel = waitForCredentialOverlayContaining(name);
+        clickCredentialOptionWithin(panel, name);
+        assertCredentialDisplayed(name);
         return this;
     }
 
@@ -587,12 +622,457 @@ public class AddBranch_Page {
      * then clicks it. Matched on {@code li.p-dropdown-item} rather than a bare {@code //li} because
      * this application's navigation menus contribute a dozen unrelated {@code <li>} elements to every
      * page (verified live 2026-08-06, diagnosis.log §D1).
+     *
+     * <p>Retained for the Target Amount month/year dropdowns and the State/City selectors, which reuse
+     * it and are unaffected by the 2026-08-14 Credential-selection repair below -- that repair adds
+     * dedicated methods scoped to the Credential control only, rather than changing this shared one.
      */
     private void selectDropdownItem(String label) {
         By option = By.xpath("//li[contains(@class,'p-dropdown-item')][normalize-space(.)='" + label + "']");
         new WebDriverWait(driver.getDriver(), FIRST_LOAD_TIMEOUT)
                 .until(d -> !d.findElements(option).isEmpty());
         clickVia(option);
+    }
+
+    /** How long {@link #waitForCredentialDropdownReady()} and {@link #waitForCredentialOverlayContaining}
+     * will wait, matching {@link #FIRST_LOAD_TIMEOUT}'s existing budget for this form. Named separately
+     * so this path's timing is independently tunable without touching unrelated dropdowns. */
+    private static final Duration CREDENTIAL_READY_TIMEOUT = Duration.ofSeconds(20);
+    /** How long {@link #assertCredentialDisplayed} waits for the post-click label to commit. */
+    private static final Duration CREDENTIAL_COMMIT_TIMEOUT = Duration.ofSeconds(6);
+
+    /**
+     * REPAIR — 2026-08-14, scoped to the Credential Name control only (per diagnosis of TC-BR-001's
+     * isolated re-verification, `healing/RepairSummary.md`). Fails loudly, with full diagnostic state,
+     * rather than proceeding against an ambiguous locator.
+     */
+    private void assertCredentialDropdownLocatorIsUnique() {
+        int count = driver.getDriver().findElements(FIRST_ROW_CREDENTIAL_DROPDOWN).size();
+        if (count != 1) {
+            throw new IllegalStateException(
+                    "FIRST_ROW_CREDENTIAL_DROPDOWN must resolve to exactly one element; found " + count
+                            + ". " + captureCredentialDiagnostics("locator uniqueness check", null));
+        }
+    }
+
+    /**
+     * Waits for the Credential dropdown's own readiness signal after {@link #checkFirstSupplierRow()}
+     * -- visible, {@code p-disabled} removed, {@code aria-disabled} not {@code "true"} where present,
+     * and {@code pointer-events} not {@code none} -- rather than clicking immediately on the assumption
+     * that ticking the row enables it synchronously. Requires the signal to hold for two consecutive
+     * 200ms-apart polls before proceeding, so a control caught mid-re-render is not mistaken for ready
+     * (the same "stable signal, not first appearance" principle as REPAIR-BR-009/REPAIR-BR-012).
+     */
+    private void waitForCredentialDropdownReady() {
+        final boolean[] previouslyReady = {false};
+        try {
+            new WebDriverWait(driver.getDriver(), CREDENTIAL_READY_TIMEOUT)
+                    .pollingEvery(Duration.ofMillis(200))
+                    .until(d -> {
+                        boolean readyNow = isCredentialDropdownReady();
+                        boolean stable = readyNow && previouslyReady[0];
+                        previouslyReady[0] = readyNow;
+                        return stable;
+                    });
+        } catch (TimeoutException e) {
+            throw new IllegalStateException(
+                    "Credential dropdown never became ready (visible, enabled, interactable) within "
+                            + CREDENTIAL_READY_TIMEOUT.getSeconds() + "s of ticking the Status checkbox. "
+                            + captureCredentialDiagnostics("readiness wait", null), e);
+        }
+    }
+
+    private boolean isCredentialDropdownReady() {
+        WebElement el = driver.getDriver().findElement(FIRST_ROW_CREDENTIAL_DROPDOWN);
+        Object state = ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
+                "var e = arguments[0];"
+                        + "var cs = window.getComputedStyle(e);"
+                        + "var rect = e.getBoundingClientRect();"
+                        + "return {"
+                        + "  visible: rect.width > 0 && rect.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none',"
+                        + "  disabledClass: (' ' + e.className + ' ').indexOf(' p-disabled ') !== -1,"
+                        + "  ariaDisabled: e.getAttribute('aria-disabled'),"
+                        + "  pointerEvents: cs.pointerEvents"
+                        + "};",
+                el);
+        @SuppressWarnings("unchecked")
+        java.util.Map<String, Object> map = (java.util.Map<String, Object>) state;
+        boolean visible = Boolean.TRUE.equals(map.get("visible"));
+        boolean notDisabledClass = !Boolean.TRUE.equals(map.get("disabledClass"));
+        Object ariaDisabled = map.get("ariaDisabled");
+        boolean notAriaDisabled = ariaDisabled == null || !"true".equals(ariaDisabled.toString());
+        boolean pointerEventsOk = !"none".equals(map.get("pointerEvents"));
+        return visible && notDisabledClass && notAriaDisabled && pointerEventsOk;
+    }
+
+    /** Bounded max interaction attempts for {@link #openCredentialDropdownWithRetry}. Modeled on
+     * REPAIR-BR-011's established bounded stale-retry precedent (3 attempts, re-locate every time). */
+    private static final int CREDENTIAL_OPEN_MAX_ATTEMPTS = 3;
+    /** How long each individual interaction attempt waits for a commit signal before the next retry. */
+    private static final Duration CREDENTIAL_OPEN_COMMIT_TIMEOUT = Duration.ofSeconds(2);
+    private static final By DROPDOWN_PANEL_LOCATOR = By.cssSelector(".p-dropdown-panel");
+
+    /**
+     * REPAIR — 2026-08-14 (TC-BR-069 diagnosis). Opens the Credential dropdown with verification and a
+     * bounded, re-locating retry, replacing an unconditional single click. Live evidence
+     * (`ExecutionResults.rerun-11.md` §2.4) showed the click could be dispatched without the overlay
+     * ever committing -- {@code aria-expanded} stayed false, {@code overlayPanelCount} stayed 0 -- with
+     * no verification or retry to recover from it.
+     *
+     * <p><b>Structure, per the approved plan:</b> ONE overall bounded readiness deadline shared across
+     * every iteration (never a fresh wait per attempt); a click is only dispatched, and only then counted
+     * as an <em>interaction attempt</em> (not merely "dispatched-click", since a click that throws
+     * {@link StaleElementReferenceException} before delivery still consumes one of the 3 attempts, per
+     * the approved terminology); "already open" is checked via {@code aria-expanded} before every click
+     * so an already-open panel is never toggled closed; a genuinely new/newly-visible panel is
+     * distinguished from a pre-existing unrelated one by comparing captured {@link WebElement}
+     * references directly -- <b>no attribute or other mutation is ever written into the application
+     * DOM</b> to track panel identity (corrected 2026-08-14: an earlier draft of this repair injected a
+     * temporary marker attribute, which could leak into the live DOM on a thrown exception; this version
+     * makes no DOM writes at all, so there is nothing to leak or clean up); unrelated
+     * {@link RuntimeException}s from {@code click()} are never silently retried -- they are wrapped with
+     * full diagnostics and rethrown with the original as cause.</p>
+     */
+    private void openCredentialDropdownWithRetry(String requestedValue) {
+        long readyDeadlineMillis = System.currentTimeMillis() + CREDENTIAL_READY_TIMEOUT.toMillis();
+        List<String> attemptDiagnostics = new ArrayList<>();
+        int attemptCount = 0;
+
+        while (true) {
+            // One overall bounded readiness deadline, shared across every iteration of this loop --
+            // never a fresh 20s wait per attempt. Fails immediately, before any click, if the control
+            // never becomes ready within it.
+            waitForCredentialDropdownReadyWithinDeadline(readyDeadlineMillis);
+
+            if (isCredentialAriaExpanded()) {
+                return; // already open -- no click performed, so nothing is toggled closed
+            }
+
+            if (attemptCount >= CREDENTIAL_OPEN_MAX_ATTEMPTS) {
+                throw new IllegalStateException(
+                        "Credential dropdown open action did not commit after " + attemptCount
+                                + " interaction attempt(s). History: [" + String.join(" | ", attemptDiagnostics)
+                                + "]. " + captureCredentialDiagnostics("open-commit retry exhausted (final state)", requestedValue));
+            }
+
+            // Pre-click baseline: captured by WebElement reference, not by writing anything to the DOM.
+            // Includes panels regardless of current visibility, so a panel that was hidden and becomes
+            // visible after the click is correctly treated as newly visible.
+            List<WebElement> preclickPanels = driver.getDriver().findElements(DROPDOWN_PANEL_LOCATOR);
+            WebElement dropdown = driver.getDriver().findElement(FIRST_ROW_CREDENTIAL_DROPDOWN); // fresh every attempt
+            attemptCount++; // counted here -- this is the interaction attempt, whether click() succeeds,
+            // throws StaleElementReferenceException, or throws any other exception.
+            try {
+                dropdown.click();
+            } catch (StaleElementReferenceException stale) {
+                attemptDiagnostics.add("Interaction attempt " + attemptCount
+                        + ": StaleElementReferenceException before delivery, re-locating within the same deadline");
+                continue; // transient re-render only -- bounded by attemptCount and by readyDeadlineMillis above
+            } catch (RuntimeException other) {
+                // Unrelated click exceptions are never silently retried -- wrapped with full diagnostics
+                // and the original exception preserved as the cause.
+                throw new IllegalStateException(
+                        "Credential dropdown open click failed unexpectedly on interaction attempt " + attemptCount
+                                + " (requestedValue=\"" + requestedValue + "\"). "
+                                + captureCredentialDiagnostics("open click threw " + other.getClass().getSimpleName(), requestedValue),
+                        other);
+            }
+
+            if (waitForCredentialOpenCommit(requestedValue, preclickPanels)) {
+                return;
+            }
+            // Timeout-boundary re-check, fresh, before deciding to retry: a delayed overlay may have
+            // rendered exactly as the bounded wait expired. If it just committed, stop here -- clicking
+            // again would toggle it closed.
+            try {
+                if (isCredentialOpenCommitSignalPresent(requestedValue, preclickPanels)) {
+                    return;
+                }
+            } catch (StaleElementReferenceException staleAtBoundary) {
+                attemptDiagnostics.add("Interaction attempt " + attemptCount + ": stale element during timeout-boundary re-check");
+            }
+
+            attemptDiagnostics.add("Interaction attempt " + attemptCount + ": click dispatched, no commit signal within "
+                    + CREDENTIAL_OPEN_COMMIT_TIMEOUT.getSeconds() + "s -- "
+                    + captureCredentialDiagnostics("open attempt " + attemptCount + " exhausted", requestedValue));
+        }
+    }
+
+    /**
+     * Re-locates {@link #FIRST_ROW_CREDENTIAL_DROPDOWN} on every poll (never inspects one captured
+     * reference across the wait) and delegates to {@link #isCredentialDropdownReady()}'s checks, bounded
+     * by the REMAINING time until {@code deadlineMillis} -- not a fresh full-length wait. A
+     * {@link StaleElementReferenceException} or transient {@link NoSuchElementException} on any poll is
+     * treated as "not ready yet," never a hard failure -- the next poll re-locates fresh. Throws
+     * {@link IllegalStateException} immediately if the deadline has already elapsed, or once it elapses
+     * with no stable-ready observation.
+     */
+    private void waitForCredentialDropdownReadyWithinDeadline(long deadlineMillis) {
+        long remainingMillis = deadlineMillis - System.currentTimeMillis();
+        if (remainingMillis <= 0) {
+            throw new IllegalStateException(
+                    "Credential dropdown never became ready (visible, enabled, interactable) within the overall "
+                            + CREDENTIAL_READY_TIMEOUT.getSeconds() + "s readiness deadline. "
+                            + captureCredentialDiagnostics("readiness deadline elapsed", null));
+        }
+        final boolean[] previouslyReady = {false};
+        try {
+            new WebDriverWait(driver.getDriver(), Duration.ofMillis(remainingMillis))
+                    .pollingEvery(Duration.ofMillis(200))
+                    .ignoring(StaleElementReferenceException.class)
+                    .ignoring(NoSuchElementException.class)
+                    .until(d -> {
+                        boolean readyNow = isCredentialDropdownReady();
+                        boolean stable = readyNow && previouslyReady[0];
+                        previouslyReady[0] = readyNow;
+                        return stable;
+                    });
+        } catch (TimeoutException e) {
+            throw new IllegalStateException(
+                    "Credential dropdown never became ready (visible, enabled, interactable) within the overall "
+                            + CREDENTIAL_READY_TIMEOUT.getSeconds() + "s readiness deadline. "
+                            + captureCredentialDiagnostics("readiness deadline elapsed", null), e);
+        }
+    }
+
+    /**
+     * Re-locates {@link #FIRST_ROW_CREDENTIAL_DROPDOWN} on every single poll -- never inspects one
+     * captured reference across the full 2s bound. A {@link StaleElementReferenceException} on any
+     * individual poll is ignored by the wait itself (re-locates and retries within the same bound);
+     * only a genuine elapsed timeout returns {@code false}.
+     */
+    private boolean waitForCredentialOpenCommit(String requestedValue, List<WebElement> preclickPanels) {
+        try {
+            return new WebDriverWait(driver.getDriver(), CREDENTIAL_OPEN_COMMIT_TIMEOUT)
+                    .pollingEvery(Duration.ofMillis(150))
+                    .ignoring(StaleElementReferenceException.class)
+                    .until(d -> isCredentialOpenCommitSignalPresent(requestedValue, preclickPanels));
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@code true} if the current, freshly-located Credential control's own {@code aria-expanded}
+     * candidates read {@code "true"}. Checked BEFORE clicking so an already-open panel is never toggled
+     * closed by this repair. Existing evidence (closed-state page-source snapshots already on file)
+     * shows no {@code aria-controls}/{@code aria-owns} relationship anywhere on this control, and two
+     * structural candidates carry {@code aria-expanded}: the hidden {@code role="combobox"} input
+     * (inside {@code .p-hidden-accessible}) and the {@code role="button"} {@code .p-dropdown-trigger}
+     * div. Neither has been confirmed live in the OPEN state by any artifact on file, so both are
+     * checked defensively -- true on either is treated as expanded. This method only reads attributes;
+     * it never writes to the DOM.
+     */
+    @SuppressWarnings("unchecked")
+    private boolean isCredentialAriaExpanded() {
+        WebElement dropdown;
+        try {
+            dropdown = driver.getDriver().findElement(FIRST_ROW_CREDENTIAL_DROPDOWN);
+        } catch (StaleElementReferenceException | NoSuchElementException notThere) {
+            return false;
+        }
+        Object result = ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
+                "var e = arguments[0];"
+                        + "var combo = e.querySelector('[role=\"combobox\"]');"
+                        + "var trigger = e.querySelector('[role=\"button\"].p-dropdown-trigger, .p-dropdown-trigger[role=\"button\"]');"
+                        + "return (combo && combo.getAttribute('aria-expanded') === 'true')"
+                        + "    || (trigger && trigger.getAttribute('aria-expanded') === 'true');",
+                dropdown);
+        return Boolean.TRUE.equals(result);
+    }
+
+    /**
+     * Commit signal, SCOPED to this specific Credential control -- never "any {@code .p-dropdown-panel}
+     * exists anywhere." Makes no DOM writes: identifies a "newly visible" panel purely by comparing
+     * freshly-located {@link WebElement}s against the {@code preclickPanels} references captured before
+     * the click (per {@link WebElement#equals}, which compares the underlying element identity within
+     * the same driver session, not object identity).
+     *
+     * <p>{@code true} when either: (a) {@link #isCredentialAriaExpanded()}; or (b) a currently-visible
+     * {@code .p-dropdown-panel} is either (i) not present at all in {@code preclickPanels}, or (ii) was
+     * present but NOT visible at that time (a previously-hidden panel that has since become visible also
+     * counts as newly visible) -- AND it contains a {@code li.p-dropdown-item} whose normalized text
+     * equals {@code requestedValue}. Content-scoping this way means an unrelated, already-open dropdown's
+     * panel can never satisfy this merely because it happens to also list "Live" as an option: it would
+     * already be present-and-visible in {@code preclickPanels}, so it is excluded.</p>
+     */
+    private boolean isCredentialOpenCommitSignalPresent(String requestedValue, List<WebElement> preclickPanels) {
+        if (isCredentialAriaExpanded()) {
+            return true;
+        }
+        List<WebElement> currentPanels = driver.getDriver().findElements(DROPDOWN_PANEL_LOCATOR);
+        for (WebElement panel : currentPanels) {
+            boolean visibleNow;
+            try {
+                visibleNow = panel.isDisplayed();
+            } catch (StaleElementReferenceException gone) {
+                continue;
+            }
+            if (!visibleNow) {
+                continue;
+            }
+            boolean preExistingAndAlreadyVisible = false;
+            for (WebElement before : preclickPanels) {
+                boolean sameElement;
+                try {
+                    sameElement = before.equals(panel);
+                } catch (RuntimeException comparisonFailure) {
+                    sameElement = false;
+                }
+                if (!sameElement) {
+                    continue;
+                }
+                try {
+                    preExistingAndAlreadyVisible = before.isDisplayed();
+                } catch (StaleElementReferenceException goneBefore) {
+                    preExistingAndAlreadyVisible = false; // it existed but is gone now -- not "already visible"
+                }
+                break;
+            }
+            if (preExistingAndAlreadyVisible) {
+                continue; // was already open before this click -- not evidence THIS click did anything
+            }
+            List<WebElement> items;
+            try {
+                items = panel.findElements(By.xpath(".//li[contains(@class,'p-dropdown-item')]"));
+            } catch (StaleElementReferenceException goneDuringRead) {
+                continue;
+            }
+            for (WebElement item : items) {
+                try {
+                    if (requestedValue.equals(item.getText().trim())) {
+                        return true;
+                    }
+                } catch (StaleElementReferenceException goneDuringRead) {
+                    // this item vanished mid-read -- not a match, keep checking the rest
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Waits for the overlay panel this click opened to become visible, attached to {@code body}, and
+     * containing the requested option -- scoped to that specific panel, never an unscoped page-global
+     * {@code //li} lookup, since the page can contain other {@code <li>} elements (navigation menus,
+     * other dropdowns) that a global search would also match.
+     *
+     * @return the panel {@link WebElement}, for {@link #clickCredentialOptionWithin} to search within
+     */
+    private WebElement waitForCredentialOverlayContaining(String label) {
+        By panelLocator = By.cssSelector(".p-dropdown-panel");
+        try {
+            new WebDriverWait(driver.getDriver(), CREDENTIAL_READY_TIMEOUT)
+                    .until(d -> {
+                        java.util.List<WebElement> panels = d.findElements(panelLocator);
+                        if (panels.size() != 1) {
+                            return false;
+                        }
+                        WebElement panel = panels.get(0);
+                        if (!panel.isDisplayed()) {
+                            return false;
+                        }
+                        return !panel.findElements(
+                                By.xpath(".//li[contains(@class,'p-dropdown-item')][normalize-space(.)='" + label + "']")
+                        ).isEmpty();
+                    });
+        } catch (TimeoutException e) {
+            throw new IllegalStateException(
+                    "Credential overlay never showed a visible option \"" + label + "\" within "
+                            + CREDENTIAL_READY_TIMEOUT.getSeconds() + "s. "
+                            + captureCredentialDiagnostics("overlay wait", label), e);
+        }
+        return driver.getDriver().findElement(panelLocator);
+    }
+
+    /** Clicks the requested option, scoped to the already-located overlay panel -- a normal click, not
+     * {@link #clickVia}, consistent with {@link #clickCredentialDropdownNormally}. */
+    private void clickCredentialOptionWithin(WebElement panel, String label) {
+        WebElement option = panel.findElement(
+                By.xpath(".//li[contains(@class,'p-dropdown-item')][normalize-space(.)='" + label + "']"));
+        try {
+            option.click();
+        } catch (RuntimeException e) {
+            throw new IllegalStateException(
+                    "Normal click on Credential option \"" + label + "\" failed. "
+                            + captureCredentialDiagnostics("option click attempt", label), e);
+        }
+    }
+
+    /**
+     * Mandatory post-condition (2026-08-14 repair): the dropdown's visible label must equal the
+     * requested value and must no longer read the "Select" placeholder before this method returns.
+     * Without this, a click that is delivered but does not commit (the same class of race
+     * REPAIR-BR-008 fixed for the autocomplete) would silently leave the grid row incomplete.
+     */
+    private void assertCredentialDisplayed(String expected) {
+        try {
+            new WebDriverWait(driver.getDriver(), CREDENTIAL_COMMIT_TIMEOUT)
+                    .until(d -> {
+                        String label = readCredentialLabel();
+                        return expected.equals(label) && !"Select".equals(label);
+                    });
+        } catch (TimeoutException e) {
+            throw new IllegalStateException(
+                    "Credential label did not settle on \"" + expected + "\" within "
+                            + CREDENTIAL_COMMIT_TIMEOUT.getSeconds() + "s (still reads \""
+                            + readCredentialLabel() + "\"). "
+                            + captureCredentialDiagnostics("post-condition check", expected), e);
+        }
+    }
+
+    private String readCredentialLabel() {
+        WebElement el = driver.getDriver().findElement(FIRST_ROW_CREDENTIAL_DROPDOWN);
+        Object label = ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
+                "var lbl = arguments[0].querySelector('.p-dropdown-label');"
+                        + "return lbl ? lbl.textContent : null;",
+                el);
+        return label == null ? "" : label.toString().trim();
+    }
+
+    /**
+     * Assembles the full diagnostic snapshot required on any Credential-selection failure: dropdown
+     * DOM state, enabled/disabled attributes and classes, visible label, overlay state, available
+     * option labels, and the requested value -- so a failure here is diagnosable from its own
+     * exception message alone, without a live rerun.
+     */
+    private String captureCredentialDiagnostics(String context, String requestedValue) {
+        StringBuilder sb = new StringBuilder("[Credential diagnostics @ ").append(context).append("] ");
+        sb.append("requestedValue=").append(requestedValue == null ? "(n/a)" : "\"" + requestedValue + "\"").append("; ");
+        java.util.List<WebElement> matches = driver.getDriver().findElements(FIRST_ROW_CREDENTIAL_DROPDOWN);
+        sb.append("dropdownMatchCount=").append(matches.size()).append("; ");
+        if (!matches.isEmpty()) {
+            WebElement el = matches.get(0);
+            try {
+                Object state = ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
+                        "var e = arguments[0]; var cs = window.getComputedStyle(e);"
+                                + "var lbl = e.querySelector('.p-dropdown-label');"
+                                + "return {"
+                                + "  className: e.className,"
+                                + "  disabledAttr: e.getAttribute('disabled'),"
+                                + "  ariaDisabled: e.getAttribute('aria-disabled'),"
+                                + "  pointerEvents: cs.pointerEvents,"
+                                + "  visibleLabel: lbl ? lbl.textContent : null,"
+                                + "  outerHtmlSnippet: e.outerHTML.substring(0, 300)"
+                                + "};",
+                        el);
+                sb.append("dropdownState=").append(state).append("; ");
+            } catch (RuntimeException domReadFailure) {
+                sb.append("dropdownState=<unreadable: ").append(domReadFailure.getMessage()).append(">; ");
+            }
+        }
+        java.util.List<WebElement> panels = driver.getDriver().findElements(By.cssSelector(".p-dropdown-panel"));
+        sb.append("overlayPanelCount=").append(panels.size()).append("; ");
+        if (!panels.isEmpty()) {
+            java.util.List<WebElement> options = panels.get(0).findElements(By.cssSelector("li.p-dropdown-item"));
+            java.util.List<String> optionLabels = new java.util.ArrayList<>();
+            for (WebElement option : options) {
+                optionLabels.add("\"" + option.getText() + "\"");
+            }
+            sb.append("overlayVisible=").append(panels.get(0).isDisplayed()).append("; ");
+            sb.append("availableOptions=").append(optionLabels).append("; ");
+        }
+        return sb.toString();
     }
 
     /**
@@ -679,14 +1159,127 @@ public class AddBranch_Page {
             if (!skip.contains("supplierCredential")) {
                 selectFirstSupplierCredential(AdminPages.Admin.Branch.BranchTestData.credentialName());
             }
-            setFirstSupplierDescription("QA product access description");
+            setFirstSupplierDescription(AdminPages.Admin.Branch.BranchTestData.productAccessDescription());
         }
         return this;
     }
 
+    /** How long {@link #waitForFormValidationToSettle()} waits for Branch Name's async validation to
+     * leave its pending state before Submit is clicked. Independent of every other timeout in this
+     * class so this path's timing is separately tunable. */
+    private static final Duration FORM_VALIDATION_SETTLE_TIMEOUT = Duration.ofSeconds(10);
+
+    /**
+     * REPAIR — 2026-08-14 (TC-BR-066/067/068 diagnosis, `healing/BranchFailureAnalysis_2026-08-14.md`).
+     * Performs Submit only: waits for Branch Name's async validation to settle, then a normal
+     * user-equivalent click. Does NOT assert or infer any outcome -- a completed {@code click()} call
+     * is not proof Submit committed. Every caller must separately call
+     * {@link #assertSubmissionSucceeded()} (positive flows) or {@link #assertSubmissionBlocked()}
+     * (negative flows) immediately after, exactly as every existing call site already does -- this
+     * method changes neither of those call sites' structure. Persistence is never inferred here or by
+     * either assertion; it remains a separate, independent check.
+     *
+     * <p>Uses a plain driver click, not {@link #clickVia}: live evidence (TC-BR-066/067's page-source
+     * snapshot review) showed no confirmed click-delivery defect on this specific button, so the
+     * JS-dispatched fallback is not applied by default (§8.1 -- a repair may not be applied on a guess).
+     * A plain click is also captured by this run's reporting listener as "Click element.", where
+     * {@code clickVia}'s {@code executeScript} path was invisible to it -- fixing the reporting gap is
+     * a side effect of fixing the delivery mechanism, not a separate change.</p>
+     */
     public AddBranch_Page clickSubmit() {
-        clickVia(SUBMIT_BUTTON);
+        waitForFormValidationToSettle();
+        driver.getDriver().findElement(SUBMIT_BUTTON).click();
         return this;
+    }
+
+    /**
+     * Waits only for Branch Name's ASYNC VALIDATION to settle (leave {@code ng-pending}, spinner gone)
+     * -- NOT for the form to become {@code ng-valid}. TC-BR-002/013/021/038 deliberately submit
+     * incomplete/invalid forms to verify application-side blocking; this method must never reject or
+     * delay their Submit merely because the form is invalid overall. Pending and invalid are different
+     * states -- this waits out the former only. A no-op (returns immediately) when Branch Name was
+     * never touched (the {@code skip.contains("name")} case in {@link #fillMandatoryBaseline}), since
+     * an untouched field is never {@code ng-pending} to begin with.
+     */
+    private void waitForFormValidationToSettle() {
+        final boolean[] previouslySettled = {false};
+        try {
+            new WebDriverWait(driver.getDriver(), FORM_VALIDATION_SETTLE_TIMEOUT)
+                    .pollingEvery(Duration.ofMillis(200))
+                    .ignoring(StaleElementReferenceException.class)
+                    .ignoring(NoSuchElementException.class)
+                    .until(d -> {
+                        boolean settledNow = isBranchNameValidationSettled();
+                        boolean stable = settledNow && previouslySettled[0];
+                        previouslySettled[0] = settledNow;
+                        return stable;
+                    });
+        } catch (TimeoutException e) {
+            throw new IllegalStateException(
+                    "Branch Name's async validation did not settle within "
+                            + FORM_VALIDATION_SETTLE_TIMEOUT.getSeconds() + "s before Submit. "
+                            + captureFormReadinessDiagnostics(), e);
+        }
+    }
+
+    /**
+     * True when Branch Name's own class list, and its closest {@code <form>} ancestor's class list,
+     * no longer contain {@code ng-pending}, and no visible spinner ({@code .pi-spin}/{@code .pi-spinner})
+     * remains within a bounded ancestor scope. Deliberately does NOT check {@code ng-valid}/
+     * {@code ng-invalid} anywhere -- an invalid-but-settled form must return {@code true} here. Returns
+     * {@code true} immediately if Branch Name is not present (never filled this cycle) -- there is
+     * nothing to wait for.
+     */
+    @SuppressWarnings("unchecked")
+    private boolean isBranchNameValidationSettled() {
+        List<WebElement> matches = driver.getDriver().findElements(BRANCH_NAME_FIRST);
+        if (matches.isEmpty()) {
+            return true;
+        }
+        Object result = ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
+                "var e = arguments[0];"
+                        + "function hasPending(el) { return (' ' + el.className + ' ').indexOf(' ng-pending ') !== -1; }"
+                        + "var pendingOnField = hasPending(e);"
+                        + "var pendingOnForm = false;"
+                        + "var spinnerPresent = false;"
+                        + "var ancestor = e;"
+                        + "for (var i = 0; i < 6 && ancestor; i++) {"
+                        + "  if (ancestor.tagName === 'FORM' && hasPending(ancestor)) { pendingOnForm = true; }"
+                        + "  if (ancestor.querySelector && ancestor.querySelector('.pi-spin, .pi-spinner')) { spinnerPresent = true; }"
+                        + "  ancestor = ancestor.parentElement;"
+                        + "}"
+                        + "return { pendingOnField: pendingOnField, pendingOnForm: pendingOnForm, spinnerPresent: spinnerPresent };",
+                matches.get(0));
+        java.util.Map<String, Object> state = (java.util.Map<String, Object>) result;
+        boolean pendingOnField = Boolean.TRUE.equals(state.get("pendingOnField"));
+        boolean pendingOnForm = Boolean.TRUE.equals(state.get("pendingOnForm"));
+        boolean spinnerPresent = Boolean.TRUE.equals(state.get("spinnerPresent"));
+        return !pendingOnField && !pendingOnForm && !spinnerPresent;
+    }
+
+    /**
+     * Diagnostics-only: reports Branch Name's pending/spinner state AND, separately, whether the
+     * field/form currently read {@code ng-valid} or {@code ng-invalid} -- for visibility on a failure,
+     * never as a gating condition (see {@link #isBranchNameValidationSettled()}'s doc-comment).
+     */
+    @SuppressWarnings("unchecked")
+    private String captureFormReadinessDiagnostics() {
+        List<WebElement> matches = driver.getDriver().findElements(BRANCH_NAME_FIRST);
+        StringBuilder sb = new StringBuilder("[Form readiness diagnostics] ");
+        if (matches.isEmpty()) {
+            sb.append("Branch Name field not present.");
+            return sb.toString();
+        }
+        Object result = ((org.openqa.selenium.JavascriptExecutor) driver.getDriver()).executeScript(
+                "var e = arguments[0];"
+                        + "return { className: e.className, validity: (' ' + e.className + ' ').indexOf(' ng-valid ') !== -1"
+                        + " ? 'ng-valid' : ((' ' + e.className + ' ').indexOf(' ng-invalid ') !== -1 ? 'ng-invalid' : 'unknown') };",
+                matches.get(0));
+        java.util.Map<String, Object> state = (java.util.Map<String, Object>) result;
+        sb.append("branchNameClassName=").append(state.get("className")).append("; ");
+        sb.append("branchNameValidityState=").append(state.get("validity")).append(" (reported only, not a gating condition); ");
+        sb.append("settled=").append(isBranchNameValidationSettled());
+        return sb.toString();
     }
 
     public AddBranch_Page clickCancel() {
@@ -701,7 +1294,7 @@ public class AddBranch_Page {
 
     /** Asserts submission was blocked -- the browser is still on the Add Branch URL. */
     public void assertSubmissionBlocked() {
-        driver.assertThat().browser().url().contains("/admin/branch/add").perform();
+        driver.assertThat().browser().url().contains(EnvironmentConfig.addBranchPath()).perform();
     }
 
     /** Bounded wait for the post-submit outcome signal, per REPAIR-001 (see {@link #assertSubmissionSucceeded}). */
@@ -725,8 +1318,8 @@ public class AddBranch_Page {
         boolean succeeded;
         try {
             succeeded = new WebDriverWait(driver.getDriver(), SUBMIT_OUTCOME_TIMEOUT)
-                    .until(d -> !driver.browser().getCurrentURL().contains("/admin/branch/add")
-                            || driver.browser().getPageSource().contains("Pending for approval"));
+                    .until(d -> !driver.browser().getCurrentURL().contains(EnvironmentConfig.addBranchPath())
+                            || driver.browser().getPageSource().contains(ApprovalStatus.PENDING.label()));
         } catch (TimeoutException notObserved) {
             succeeded = false;
         }
@@ -738,13 +1331,13 @@ public class AddBranch_Page {
         System.out.println("[DIAG8] emptyFields=" + ((org.openqa.selenium.JavascriptExecutor) driver.getDriver())
                 .executeScript(
                         "return Array.from(document.querySelectorAll('input,textarea')).filter(function(e){"
-                        + "  var r=e.getBoundingClientRect();"
-                        + "  return r.width>0 && e.type!=='checkbox' && e.type!=='radio' && !e.value;"
-                        + "}).map(function(e){"
-                        + "  var lbl='';var p=e.parentElement;"
-                        + "  for(var i=0;i<5&&p;i++){var l=p.querySelector('label');if(l){lbl=l.textContent.trim();break;}p=p.parentElement;}"
-                        + "  return (lbl||e.id||e.placeholder||e.tagName);"
-                        + "}).slice(0,25).join(' | ');"));
+                                + "  var r=e.getBoundingClientRect();"
+                                + "  return r.width>0 && e.type!=='checkbox' && e.type!=='radio' && !e.value;"
+                                + "}).map(function(e){"
+                                + "  var lbl='';var p=e.parentElement;"
+                                + "  for(var i=0;i<5&&p;i++){var l=p.querySelector('label');if(l){lbl=l.textContent.trim();break;}p=p.parentElement;}"
+                                + "  return (lbl||e.id||e.placeholder||e.tagName);"
+                                + "}).slice(0,25).join(' | ');"));
         Assert.assertTrue(succeeded,
                 "Expected the Branch to be saved with status \"Pending for approval.\"");
     }

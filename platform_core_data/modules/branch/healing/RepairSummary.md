@@ -771,11 +771,19 @@ Cross-referenced to `QuarantineRegister.md` (created this pass).
 
 ## 9. Knowledge Recorded
 
-| Test Case | Confirmed repair recorded | Promotion proposed? | Outcome |
+| Test Case / Repair | Confirmed repair recorded | Promotion proposed? | Outcome |
 |---|---|---|---|
-| TC-BR-043 | Yes — bounded retry-on-`StaleElementReferenceException` when a grid read races a re-render, confirmed passing in 2/2 cycles | Proposed — generalises to any Selenium/SHAFT read that locates then immediately reads a WebElement without a re-render guard, framework-independent | **Not yet decided — asking the user (see closing message)** |
+| TC-BR-043 (stale-retry) | Yes — bounded retry-on-`StaleElementReferenceException` when a grid read races a re-render, confirmed passing in 2/2 cycles | Proposed | **Approved, with guardrails (2026-08-14, ahmed.ayman@tildetech.ae)** — promoted as a bounded, re-locating stale-read recovery technique, not a universal retry: every attempt discards prior `WebElement` references and re-locates from the current DOM; retries only on `StaleElementReferenceException`; bounded to 3 attempts with a condition-based wait between them; persistent staleness fails with the original diagnostic evidence rather than being masked. Recorded as `REPAIR-011 (source: TC-BR-043)` |
+| REPAIR-BR-001 (stale listener poll) | Yes (`HEAL-BR-20260806-01`) | Proposed | **Approved (2026-08-14)** — recorded as `REPAIR-005 (source: REPAIR-BR-001)` |
+| REPAIR-BR-008 (autocomplete commit signal) | Yes (`HEAL-BR-20260806-01` addendum) | Proposed | **Approved (2026-08-14)** — recorded as `REPAIR-006 (source: REPAIR-BR-008)` |
+| REPAIR-BR-009 (empty-state settle) | Yes (this pass) | Proposed | **Approved (2026-08-14)** — recorded as `REPAIR-007 (source: REPAIR-BR-009)` |
+| REPAIR-BR-010 (JS-dispatched click) | Yes (this pass, 3rd confirmation) | Proposed | **Approved, with guardrails (2026-08-14)** — promoted narrowly as a fallback for a *confirmed* click-delivery defect, never the default click strategy: a normal click must be attempted and confirmed non-functional first; the target must be verified visible, enabled, and unobstructed; the expected post-click outcome must be verified; it must never be used to click through a disabled control or bypass business validation. Recorded as `REPAIR-008 (source: REPAIR-BR-010)` |
+| REPAIR-BR-011 (paginator page-number comparison) | Yes (this pass) | Proposed | **Approved (2026-08-14)** — recorded as `REPAIR-009 (source: REPAIR-BR-011)` |
+| REPAIR-BR-012 (dependent-dropdown async wait) | Yes (this pass) | Proposed | **Approved (2026-08-14)** — recorded as `REPAIR-010 (source: REPAIR-BR-012)` |
 
 No other test in Fixed this pass — nothing else is written to the KB (§10.2: confirmed repairs only).
+
+**Note (2026-08-14):** platform IDs are independent sequential identifiers; module-local `REPAIR-BR-0NN` IDs preserve the repair's origin. `REPAIR-011` (platform, this pass's stale-retry promotion) and `REPAIR-BR-011` (module, the paginator pattern promoted as `REPAIR-009`) are correctly two different patterns that happen to share the number "011" under different, unrelated numbering schemes. Every promoted platform pattern file now carries a `## Provenance` block naming its `Source Pattern ID` / `Source Test Case`, `Source Module`, and `Source Run` — see `platform_core/knowledge/patterns/repair_patterns/REPAIR-005.md` through `REPAIR-011.md`.
 
 ## 10. Health Impact
 
@@ -801,10 +809,23 @@ No other test in Fixed this pass — nothing else is written to the KB (§10.2: 
 
 | Field | Value |
 |---|---|
-| Repaired suite status | **Pending Automation Approval** — this pass's changes do not extend the 2026-08-05 approval, same as the 2026-08-06 pass before it |
-| May merge to baseline? | No |
-| May project into Target Project? | No |
-| Reviewer | Not yet reviewed |
+| Repaired suite status | **Approved — 2026-08-14, ahmed.ayman@tildetech.ae** |
+| May merge to baseline? | **Yes — cleared this approval** |
+| May project into Target Project? | **Yes — cleared this approval** |
+| Reviewer | ahmed.ayman@tildetech.ae |
+| What was weighed at approval | 5 confirmed fixes (TC-BR-043/055/060/061/065), 0 regressions, Application Health unchanged. TC-BR-046 and TC-BR-054 remain open (see §11); TC-BR-001 remains quarantined; TC-BR-066/067/068/069 remain unverified — none of these block this approval, they continue as separate follow-up work |
+
+**Follow-on decisions made at this approval (2026-08-14):**
+
+| Item | Decision |
+|---|---|
+| TC-BR-054 | Fix approach selected: **search/sort by status directly**, not raising `MAX_PAGES_SCANNED_FOR_APPROVAL_STATES`. Not yet implemented — see closing message |
+| `[DIAG-SYNC]` instrumentation | **Keep in place** until TC-BR-046 and TC-BR-066/067/068/069 are diagnosed, then remove |
+| KB Promotion | All 7 candidates approved — see updated §9 |
+
+### Addendum — Group 1 formal verification (2026-08-14)
+
+The Fifth/Sixth-round confirmations above for TC-BR-055, TC-BR-060, and TC-BR-061 were narrative-only — no dedicated `ExecutionResults.rerun-N.md` existed for them, which does not satisfy this skill's own §12.1 requirement. A standalone, human-approved formal verification was run 2026-08-14 (Headed, exactly these 3 tests, no code change): all 3 **Passed**. TC-BR-060 and TC-BR-061 each hit one internal `StaleElementReferenceException`, caught and resolved by the already-approved `withStaleRetry` retry mechanism (the REPAIR-011/`REPAIR-009` pattern) — recorded as 2 attempts each, not silently reported as a clean single pass. Full detail, exact command, timestamps, and both retried stack traces: `execution/ExecutionResults.rerun-8.md`. Human authorization for the CREATE/SelfCreated mutation class (each test provisions its own Branch record) was granted for this run only: `metadata/SafetyAuthorizations.json`, `AUTH-BRANCH-CREATE-SelfCreated`.
 
 ### Updated §10 Health Impact
 
@@ -813,3 +834,412 @@ No other test in Fixed this pass — nothing else is written to the KB (§10.2: 
 | **Application Health** | 1 failure | **2 failures — and unchanged by healing.** The second (TC-BR-052 / FINDING-012) appeared only because Search was executed for the first time this session; it is a pre-existing disclosed defect, not a healing side-effect |
 | **Automation Health** | 1 failure (Create scope only) | Create scope: 1 (TC-BR-001). Whole cycle: 12, across Search and Update — screens this pass was **never scoped to touch** |
 | **Environment Health** | 0 | 0 |
+
+---
+
+# Healing Pass HEAL-BR-20260815-01 — Branch Search screen action delivery
+
+**Status:** Pending Automation Approval
+
+## 1. Healing Metadata
+
+| Field | Value |
+|---|---|
+| Healing Pass ID | HEAL-BR-20260815-01 |
+| Module | `branch` |
+| Triggering run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Source Execution ID(s) | EXEC-BR-20260815-01 (diagnosis, cycle 23) |
+| Rerun cycle written | `execution/ExecutionResults.rerun-24.md` |
+| Scope | `SearchBranch_TC` and `SearchBranch_Page` only — named in the invocation |
+| Environment | Staging (STG), `http://192.168.1.70` |
+| Framework | SHAFT Engine 7.4.20231015 / TestNG / Java 24.0.1 / Chrome 150 |
+| Mode | Headed (human-selected; §12 deviation recorded in the rerun file) |
+| Completed | 2026-08-15T15:00 (+03:00) |
+| Invocation Path | Direct — `/self-healing-skill` |
+| Code drift at pass start | **`moved`** — 15 commits since this run was anchored. All inherited repair knowledge was therefore treated as unverified and re-confirmed against live evidence before use |
+
+## 2. Eligibility Summary
+
+| Classification | Count | Eligible? | Disposition |
+|---|---|---|---|
+| Automation Failure | 7 | **Yes** | All 7 shared one root cause; repaired and rerun |
+| Application Failure | 1 (TC-BR-052 / FINDING-012) | **Never (§8)** | Untouched. This test is deliberately red and must stay red |
+| Environment / data dependency | 3 (TC-BR-055, 060, 061) | No | Not automation defects; not in this pass |
+
+**Stale-evidence correction.** The failure list supplied at invocation came from cycle 23, produced **before** `SearchBranch_TC` and `SearchBranch_Page` were rewritten by the module owner earlier the same day. TC-BR-043's recorded failure belonged to a code path that no longer existed. A current-evidence diagnosis run was executed first, with no code change, and every strategy below is derived from that run — not from the stale list.
+
+## 3. Per-Failure Analysis
+
+**Root Cause Confidence: High** — one cause across all 7 failures.
+
+### Root cause
+
+On the Branch Search screen only, SHAFT 7.4's `driver.element().type()` and `driver.element().click()` are reported as delivered and change nothing. The text inputs stay empty, the Status radio never becomes selected, the Search button starts no result cycle, and the Country dropdown never opens.
+
+### Evidence
+
+| # | Evidence | Source |
+|---|---|---|
+| 1 | Three inputs reported `Actual value: ""` immediately after a successful `type()` call | Cycle 23, TC-BR-040/041/043 |
+| 2 | Status radios all present and readable, requested one never selected, across 3 attempts | Cycle 23, TC-BR-054 diagnostics |
+| 3 | Search click produced no grid re-render within 20s | Cycle 23, TC-BR-042/045 |
+| 4 | Field stays `ng-pristine ng-untouched` with zero events after `type()` | `DIAG-BR-20260814-02`, 2026-08-14 |
+| 5 | Native Selenium `clear()+sendKeys()` also leaves the field empty — so the fault is not the keystroke method | `rerun-21`, 2026-08-14 |
+| 6 | The same driver types successfully into Login and into every Add Branch field in the same session | 2026-08-15 runs, 4 passing tests |
+| 7 | Every control on this page already routed through `clickVia` works; the three still on the plain click were exactly the three failing | `REPAIR-008`, 3 confirmations |
+
+### Why this is an automation defect and not an application defect (§8)
+
+Checked before any repair was proposed. The 2026-08-14 live diagnosis drove these same filters with real keystrokes and every one worked — Branch Name to 1 result, Branch Code to 1 result, `ZZZZQQ9` to the empty state, Active/Inactive/Both to 509/172/681, which reconcile. Application, API and UI binding were ruled out then, and nothing observed since contradicts it. The application works; SHAFT's action delivery to this screen does not.
+
+### Strategies enumerated
+
+| | Strategy | Risk | Confidence | Outcome |
+|---|---|---|---|---|
+| **A** | Reuse the proven pattern — port `AddBranch_Page.setValueAndNotify` to the filter inputs; add a verified `clickVia` fallback to Status, Search and Country | Low | **90%** | **Selected and applied** |
+| B | Clicks only | Low | 45% | Rejected — leaves TC-BR-040/041/043 dead |
+| C | Upgrade SHAFT past 7.4 | Med–High | 30% | Rejected — 7.4 is pinned by explicit decision; would touch all 29 tests |
+
+**Selection rule:** human choice, presented as the recommendation ("Apply Strategy A in full").
+
+### Repair Confidence Report
+
+```
+Test Cases:            TC-BR-040, 041, 042, 043, 045, 046, 054
+Automation Script:     AdminPages/Admin/Branch/SearchBranch_Page.java
+Classification:        Automation Failure
+Root Cause Confidence: High
+
+Root Cause:
+SHAFT 7.4's type() and click() do not reach this screen's PrimeNG controls; they report
+success and change nothing.
+
+Proposed Repair:
+Try the normal interaction first; when it is observed not to have arrived, set the value
+through the DOM with input/change/blur events, or dispatch the click, then verify the
+result committed.
+
+Confidence: 90%
+
+Reasoning:
+- Root cause directly observed in the guards' own runtime output (+55) -- cycle 23
+- Repair targets that exact mechanism, not an adjacent one (+12)
+- Reproduced 4x with the same signature (+10) -- cycle 23, DIAG-BR-20260814-02, rerun-21, rerun-22
+- REPAIR-008 matches the click half, 3 confirmations in this codebase (+8)
+- Statically verified: mvn test-compile clean, exit 0 (+5)
+- Not a novel pattern: setValueAndNotify already proven across 13 AddBranch tests
+
+Regression Risk: Low -- the normal path is attempted first and used whenever it works;
+no assertion, expected value or timeout was modified.
+
+Evidence: ExecutionResults.rerun-24.md (confirmed by rerun)
+```
+
+## 4. Applied Repairs
+
+**One file changed: `src/main/java/AdminPages/Admin/Branch/SearchBranch_Page.java`.** No test class was modified. No shared class was modified — `Branch_Common` was deliberately left alone because `UpdateBranch_Page` also depends on it and that is outside this pass's scope (§4.1).
+
+| Method | Change |
+|---|---|
+| `setBranchCode`, `setBranchName` | Now call `typeWithDeliveryFallback` instead of `driver.element().type()` |
+| `typeWithDeliveryFallback` *(new)* | Types normally; if the value did not arrive within a short probe, sets it through the DOM and dispatches `input`, `change`, `blur`, `focusout` — the `AddBranch_Page.setValueAndNotify` pattern |
+| `valueArrived` *(new)* | Bounded, non-throwing check that an input holds the expected value |
+| `selectStatus` | Normal click, verify radio selected; only then `clickVia`, verify again. Bounded at 3 rounds |
+| `clickSearch` | Normal click; if no result cycle starts within a 3s probe, `clickVia`. The existing staleness proof still has to hold afterwards |
+| `cycleStarted` *(new)* | Bounded, non-throwing probe for "a new grid cycle began" |
+| `selectCountry` | Rewritten. Opens the panel with a normal click, falls back to `clickVia` if it stays closed, and **checks whether the panel is already open before re-clicking** — the previous retry loop could toggle its own successful click shut, a hazard its own code comment had already flagged. Commit is proven by the panel closing, never by the State filter enabling, which is what TC-BR-046 asserts |
+| `isDropdownPanelOpen`, `awaitPanelOpen`, `awaitPanelClosed` *(new)* | Panel-state helpers supporting the above |
+
+**Guard rails honoured (`REPAIR-008`):** normal interaction always attempted first; fallback engages only after the normal one is observed to have failed; the post-interaction outcome is always verified rather than assuming the JS call succeeding means the action worked; nothing is forced through a disabled or blocked control.
+
+## 5. Rerun Outcome
+
+```
+Tests run: 7, Failures: 1, Errors: 0, Skipped: 0
+```
+
+**6 Automation Repaired · 1 Remaining (reclassified) · 0 New Failures · 0 Quarantined.**
+Full detail: `execution/ExecutionResults.rerun-24.md`; comparison: `BeforeAfterComparison.md`.
+
+## 6. Reclassifications
+
+**TC-BR-054** — its Automation Failure is resolved: it no longer fails at the Status filter. It now reaches its own logic and stops on an unmet precondition — no `Rejected` record within the 10-page scan limit. That is an **environment data gap**, ineligible for healing under §5, and it is the next problem rather than a failed repair. The fix approach was already chosen at the 2026-08-14 approval (search by status directly rather than raising the scan limit) and remains unimplemented.
+
+## 7. Disclosed Discrepancies
+
+None. No repair required changing an assertion's expected value.
+
+## 8. Quarantine
+
+None this pass. No test in scope reached the attempt limit.
+
+## 9. Knowledge Recorded
+
+One confirmed repair, eligible for the KB because it is in the Fixed column (§10.2):
+
+```
+Implements Platform Pattern:  extends REPAIR-008 (click half); the typing half is new
+Execution Context:            EXEC-BR-20260815-02, SearchBranch_TC,
+                              TC-BR-040/041/042/043/045/046
+What Happened:                A framework's element actions were reported as delivered while
+                              reaching nothing on one screen. Attempting the normal interaction,
+                              detecting non-arrival by reading the control's own state, and
+                              falling back to a DOM write plus the events the framework listens
+                              for, restored 6 tests with no assertion changed.
+```
+
+**Promotion proposed, not yet approved.** `REPAIR-008`'s confirmation count is **not** incremented by this pass: this repair extends it rather than re-confirming it unchanged.
+
+## 10. Health Impact
+
+| Figure | Before | After |
+|---|---|---|
+| **Application Health** | Unchanged | **Unchanged** — no defect suppressed or introduced; no assertion touched |
+| **Automation Health** (7-test scope) | 7 failures | **1** |
+| **Environment Health** | 0 recorded | **1** — TC-BR-054's missing `Rejected` record |
+
+## 11. Recommendations
+
+| Item | Smallest corrective action |
+|---|---|
+| TC-BR-054 | Implement the already-agreed approach: filter by Approval Status directly instead of paging for it |
+| ~~The other three Search tests~~ | **Closed 2026-08-15T15:07.** TC-BR-055 / 060 / 061 run separately: `Tests run: 3, Failures: 0` — BUILD SUCCESS. Zero regressions across the whole Search suite. Their logs show them using the repaired fallback paths too, so the repair's reach is wider than the 7 tests it was scoped to |
+| `UpdateBranch_Page` | It still uses plain `driver.element()` actions. If the same delivery failure appears there, this pass's pattern applies — out of scope here, deliberately not applied |
+| SHAFT 7.4 | The underlying delivery defect is worked around, not fixed. Worth a decision on the pinned version separately |
+
+## 12. Approval Status
+
+**The repaired suite is `Pending Automation Approval` (§15).** Stage `4A`'s original approval does not cover this code. It may not merge to the Workspace Automation Baseline, and may not be projected into the Target Project, until it clears that gate.
+
+
+---
+
+# Healing Pass HEAL-BR-20260815-02 — TC-BR-052 and TC-BR-054
+
+**Status:** Pending Automation Approval
+
+## 1. Healing Metadata
+
+| Field | Value |
+|---|---|
+| Healing Pass ID | HEAL-BR-20260815-02 |
+| Module | `branch` |
+| Triggering run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Rerun cycle written | `execution/ExecutionResults.rerun-25.md` (EXEC-BR-20260815-03) |
+| Scope | TC-BR-052 and TC-BR-054, named in the invocation |
+| Environment | Staging (STG), `http://192.168.1.70` · Headed · Java 24.0.1 · Chrome 150 |
+| Completed | 2026-08-15T15:33 (+03:00) |
+| Invocation Path | Direct |
+
+## 2. Eligibility Summary
+
+| Test | Classification at pass start | Eligible? |
+|---|---|---|
+| TC-BR-052 | **Automation Defect / Needs Diagnosis** — reclassified 2026-08-14 when FINDING-012 was retracted | **Yes** |
+| TC-BR-054 | Automation Failure — scan-bound precondition | **Yes** |
+
+**Correction to an earlier statement in this session.** During HEAL-BR-20260815-01, TC-BR-052 was listed as an `Application Failure` that must never be healed. That was wrong: `FINDING-012` was retracted on 2026-08-14 and the test reclassified as an Automation Defect. The stale "expected to fail, do not soften" note in `AutomationSuiteManifest_SHAFT.md` is what carried the old classification forward. The test was eligible, and is repaired below — partially, and for reasons that are not the stale note's.
+
+## 3. Per-Failure Analysis
+
+### TC-BR-054 — Rejected records sit beyond the scan bound
+
+**Root Cause Confidence: High** (established by a diagnosis probe, not inferred).
+
+The test paged for one record in each approval state, bounded at 10 pages. A probe that temporarily raised the bound to 60 — applied, run once, and reverted — located the states precisely:
+
+```
+Approved             BRN801   page 1
+Pending for approval BRN800   page 1
+Rejected             BRN466   page 18   of roughly 52
+```
+
+So the failure was never about the icons. `Rejected` records simply sit deep in the default ordering, far past a bound that is generous for the other two.
+
+**The approach agreed on 2026-08-14 is not implementable.** That decision read "search/sort by status directly". The Branch Search form has six controls and none filters on Approval Status — the `Status` filter is Active/Inactive/Both, a different property (Discovery §3). Reported rather than quietly substituted.
+
+| | Strategy | Risk | Confidence | Outcome |
+|---|---|---|---|---|
+| **A** | Configure the Rejected fixture and reach it by direct code search; keep scanning for the two states found on page 1 | Low | **85%** | **Selected and applied** |
+| B | Provision all three states in the test | Med | 55% | Rejected by the human — turns a read-only suite mutating, and the approve/reject-from-grid flow has never been built or verified (TC-BR-056/057 were never implemented) |
+| C | Raise the page-scan limit permanently | Low | 40% | Rejected — moves the threshold without making the test deterministic; already rejected on 2026-08-14 |
+| D | Sort by the Approval Status column | Unknown | — | Not pursued; column sortability was never established |
+
+```
+Repair Confidence Report
+
+Test Case:            TC-BR-054
+Automation Script:    SearchBranch_TC.java, branch_baseline.properties, BranchTestData.java
+Classification:       Automation Failure
+Root Cause Confidence:High
+
+Root Cause:
+Rejected records sit at roughly page 18 of 52 in the grid's default order, past the
+10-page scan bound. Approved and Pending are on page 1.
+
+Proposed Repair:
+Configure the Rejected fixture by Branch Code and address it with one search instead of
+18 page hops. Verify the record is still in that state before judging its icons.
+
+Confidence: 85%
+
+Reasoning:
+- Root cause directly located by probe: BRN466 at page 18 (+55)
+- Repair targets exactly that (+12)
+- Consistent with the fixture-externalisation pattern this module already adopted for
+  knownBranchCode / knownBranchName (+8)
+- Statically verified: mvn test-compile clean (+5)
+- Capped below 95% pre-rerun
+
+Regression Risk: Low -- the assertion, the expected icon sets, and the two scanned states
+are unchanged.
+
+Evidence: ExecutionResults.rerun-25.md -- Passed.
+```
+
+### TC-BR-052 — one automation error, one unresolved disagreement
+
+**Root Cause Confidence: High for the label; the State column is not a root-cause question at all.**
+
+**Repaired.** The expected first column was `Branch Code`. The grid renders `Code` and always has — Discovery 2026-08-03 §4, re-confirmed by a live read on 2026-08-15. The business owner confirmed on 2026-08-14 that the grid's columns are correct, which resolves the §8.3 disagreement in the application's favour, so the expected value was corrected. Approved explicitly by the human before it was applied.
+
+**Deliberately not repaired.** `State` stays in the expected list. Removing it would turn this test green and record an open disagreement as settled — the §8.1 forbidden repair. Evidence:
+
+| Source | Says |
+|---|---|
+| Discovery 2026-08-03 §4 — explicit `offsetParent`/`display` check, two page loads | State absent, not responsive-hidden |
+| This suite's own column indices — `cityOf` = column 4, `approvalStatusOf` = column 5 | A six-column grid; TC-BR-055 passes on those indices, which it could not if State existed |
+| Live read 2026-08-15 | `[Code, Branch Name, Country Name, City, Approval Status, Actions]` |
+| Business owner 2026-08-14 | State is present; no application defect |
+
+Three independent observations contradict the fourth. Disclosed, not resolved.
+
+## 4. Applied Repairs
+
+| File | Change |
+|---|---|
+| `SearchBranch_TC.java` | TC-BR-052: expected column `"Branch Code"` corrected to `"Code"`; `"State"` left in place; assertion message rewritten to state why it must not be weakened; stale `@Story("Regression - FINDING-012")` corrected. TC-BR-054: Rejected now reached via new `assertIconsForKnownRecord`; scan bound restored to 10 with a note; permanent `[DIAG-SYNC]` line recording which record satisfied each state |
+| `branch_baseline.properties` | Added `knownRejectedBranchCode=BRN466`, with the evidence for it and instructions for replacing it |
+| `BranchTestData.java` | Added `knownRejectedBranchCode()` |
+
+**Temporary diagnosis change, applied and reverted:** `MAX_PAGES_SCANNED_FOR_APPROVAL_STATES` was raised 10 to 60 for one probe run and restored to 10 in the same pass. It is not in the delivered code.
+
+## 5. Rerun Outcome
+
+Full-class regression run, all 11 tests:
+
+```
+Tests run: 11, Failures: 1, Errors: 0, Skipped: 0   (318.5 s)
+```
+
+**1 Automation Repaired (TC-BR-054) · 1 partially repaired and still failing by design (TC-BR-052) · 0 New Failures · 0 Quarantined.**
+
+## 6. Reclassifications
+
+None this pass. TC-BR-052's reclassification happened on 2026-08-14 and is honoured here rather than repeated.
+
+## 7. Disclosed Discrepancies
+
+1. **The State column.** Three independent observations say absent; the business owner says present. Unresolved, left to a human. TC-BR-052 stays red on it.
+2. **Stage 3 documents still say "Branch Code".** `TestCases_Branch.md` and `TraceabilityMatrix.md` specify a label the application does not render. The automation now matches the application; the documents do not. This skill has no write access to Stage 1-3 artifacts (§11), so that correction is a human action.
+3. **`AutomationSuiteManifest_SHAFT.md`'s "expected to fail / do not soften" note for TC-BR-052 is stale** — it predates the FINDING-012 retraction and caused this test to be misclassified earlier in this session.
+
+## 8. Quarantine
+
+None. Neither test reached the attempt limit.
+
+## 9. Knowledge Recorded
+
+One confirmed repair (TC-BR-054, in the Fixed column):
+
+```
+Implements Platform Pattern:  none yet -- promotion proposed
+Execution Context:            EXEC-BR-20260815-03, SearchBranch_TC, TC-BR-054
+What Happened:                A test scanned a paginated list for a record in a required state and
+                              failed when that state sat beyond the scan bound. Locating the state
+                              once by probe, configuring it as a named fixture, addressing it
+                              directly, and verifying it still holds that state before asserting on
+                              it, made the test deterministic and faster.
+```
+
+TC-BR-052's label correction is **not** written to the KB: it corrected a project-specific expected value, and it did not move the test to the Fixed column.
+
+## 10. Health Impact
+
+| Figure | Before | After |
+|---|---|---|
+| **Application Health** | Unchanged | **Unchanged** — no defect suppressed or introduced |
+| **Automation Health** (SearchBranch_TC) | 2 failures | **1** |
+| **Environment Health** | 1 | **0** — the data gap is resolved by configuration |
+
+## 11. Recommendations
+
+| Item | Smallest corrective action |
+|---|---|
+| TC-BR-052 / State | Settle the contradiction with the business owner against the live grid. Until then the test correctly stays red |
+| Stage 3 documents | Correct "Branch Code" to "Code" in `TestCases_Branch.md` and `TraceabilityMatrix.md` |
+| Suite Manifest | Remove the stale "expected to fail" note for TC-BR-052 |
+| `knownRejectedBranchCode` | If BRN466 is ever approved, TC-BR-054 will name it and say what to change |
+
+## 12. Approval Status
+
+**Pending Automation Approval (§15).** Covers both passes run this session. The suite may not merge to the baseline until it clears that gate.
+
+---
+
+## Addendum to both 2026-08-15 passes — full-suite verification blocked, and a JDK correction
+
+**Added 2026-08-15T15:45. This does not change any repair, any verdict, or any confidence figure.**
+
+### 1. The requested full-suite run did not happen
+
+A full 29-test run was launched at 15:35 to confirm `CreateBranch_Admin_TC` and `UpdateBranch_TC` were
+unaffected by this session's work. **It produced no test results.** Authentication failed, so TestNG
+skipped every test method:
+
+```
+Tests run: 87, Failures: 3, Errors: 0, Skipped: 84
+TestBase.setUp:37 -- Timeout waiting for the URL to leave /auth/login (30s, three attempts)
+```
+
+Classified **Environment Failure** (§5) — not eligible for healing, and no repair was proposed. The
+server answers (`HTTP 200`), the page loads, and the login submission never redirects. Login worked
+normally for every run up to 15:33, and nothing this session touched `LogIn_Page`, `TestBase`, or
+authentication.
+
+**Leading hypothesis, unconfirmed:** roughly 40 separate logins were performed against the one QA
+account today, since every test builds its own driver and authenticates. Lockout or rate limiting
+would match this signature exactly. It was not confirmed, because confirming it means more login
+attempts against an account that may already be limited. Testing stopped instead.
+
+Full record: `execution/ExecutionResults.rerun-26.md`.
+
+### 2. What remains unverified
+
+| Suite | Status |
+|---|---|
+| `SearchBranch_TC` | **Verified** — `rerun-25`, 11 tests, 10 passing, 15:33 |
+| `CreateBranch_Admin_TC` | **Unverified since the refactor and both healing passes.** Last confirmed 13:24 today, 3 targeted tests |
+| `UpdateBranch_TC` | **Unverified since the refactor and both healing passes.** Last confirmed 13:24 today, 2 targeted tests |
+
+Neither healing pass modified either of those classes. The refactor earlier in the session did touch
+`CreateBranch_Admin_TC` and `UpdateBranch_TC`, and those changes were verified at the time. What has
+not been done is a single clean run of everything together.
+
+### 3. JDK correction
+
+Both passes' artifacts recorded the runtime as **Java 21**. That was carried over from this module's
+earlier run records and was never verified for these runs.
+
+**Every run this session used Java 24.0.1**, confirmed by `mvn -version` (`runtime:
+C:\Program Files\Java\jdk-24`) and by the Selenium capabilities block in `rerun-26`'s report
+(`java.version: '24.0.1'`). All six occurrences are corrected in place, in
+`ExecutionResults.rerun-24.md`, `rerun-25.md`, and both 2026-08-15 sections of this file and
+`BeforeAfterComparison.md`.
+
+This matters here more than it would elsewhere: this module's own history treats the JDK as a
+variable that changed which tests failed (`rerun-16` under Java 24 versus `rerun-19` under Java 21).
+An unverified runtime claim would have made those comparisons unsound.
+
+**No repair verdict depends on the JDK.** Every fix in both passes was confirmed by a live rerun on
+the same runtime that produced the failure it addressed.

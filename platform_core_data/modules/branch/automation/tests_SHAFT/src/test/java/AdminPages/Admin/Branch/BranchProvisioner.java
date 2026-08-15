@@ -40,6 +40,15 @@ public final class BranchProvisioner {
      */
     private static final String RUN_TAG = "QA";
 
+    /**
+     * REPAIR-BR-014: how many times the post-create lookup may be re-issued while waiting for a
+     * just-submitted record to become returnable by a search. Bounded on purpose — a record that
+     * genuinely was not created still fails the calling test rather than looping. This is an attempt
+     * count, not a pause: nothing sleeps between attempts, and each attempt's own waits are already
+     * bounded inside {@link SearchBranch_Page}.
+     */
+    private static final int LOOKUP_ATTEMPTS = 4;
+
     private BranchProvisioner() {
     }
 
@@ -93,19 +102,75 @@ public final class BranchProvisioner {
         addBranchPage.clickSubmit();
         addBranchPage.assertSubmissionSucceeded();
 
-        SearchBranch_Page searchBranchPage = new SearchBranch_Page(driver).open();
-        searchBranchPage.searchByName(branchName, SearchBranch_Page.Status.BOTH);
+        SearchBranch_Page searchBranchPage = new SearchBranch_Page(driver);
 
-        Assert.assertTrue(searchBranchPage.rowCount() > 0,
-                "Provisioning failed: no Branch named \"" + branchName + "\" was found after creating it. "
-                        + "No test may proceed, because acting on any other record would be outside this "
-                        + "run's mutation authorisation.");
+        // REPAIR-BR-014, adapted 2026-08-15. Two separate faults were fixed here:
+        //
+        // 1. A single search straight after submitting is too early. The record is created — the
+        //    browser navigates to /admin/branch and the success message shows — but a search issued
+        //    immediately afterwards does not yet return it. Verified 2026-08-10: a `QA_` prefix search
+        //    run after a "failing" suite returned 39 QA records, including every one that suite had
+        //    just reported it could not find. The lookup is now re-issued, bounded.
+        //
+        // 2. Reading row 1 of the result set is unsafe on its own. It assumes the only row returned is
+        //    ours. Identity is now proven per row by reading each candidate's Branch Name and matching
+        //    it against the exact name this call generated, so an unrelated record can never be handed
+        //    back and then approved or rejected by the caller.
+        //
+        // Status INACTIVE, not BOTH (business clarification 2026-08-10): a freshly submitted Branch is
+        // expected under Inactive and explicitly not under Active. If INACTIVE returns the record while
+        // BOTH does not, that is a defect in the BOTH filter and must be raised as a finding — it is
+        // not something this change quietly works around.
+        //
+        // Bounded by attempt count, not by any fixed pause: each attempt re-opens and re-searches, and
+        // every wait inside that search is already bounded by SearchBranch_Page.
+        String branchCode = "";
+        for (int attempt = 1; attempt <= LOOKUP_ATTEMPTS && branchCode.isEmpty(); attempt++) {
+            searchBranchPage.open();
+            searchBranchPage.searchByName(branchName, SearchBranch_Page.Status.INACTIVE);
+            branchCode = codeOfExactlyThisBranch(searchBranchPage, branchName);
+        }
 
-        String branchCode = searchBranchPage.branchCodeInRow(1);
         Assert.assertFalse(branchCode.isEmpty(),
-                "Provisioning failed: the Branch named \"" + branchName
-                        + "\" was found but its Branch Code cell was empty, so no action can be scoped to it.");
+                "Provisioning failed: no Branch named \"" + branchName + "\" was found after creating it, "
+                        + "across " + LOOKUP_ATTEMPTS + " searches on the " + SearchBranch_Page.Status.INACTIVE.label()
+                        + " filter. No test may proceed, because acting on any other record would be outside "
+                        + "this run's mutation authorisation.");
+
+        // Final confirmation, scoped to the exact code the caller will act on: search by that code and
+        // require the record it returns to still be the branch this call created. Everything the caller
+        // does is addressed by this code, so this is the identity that has to hold.
+        searchBranchPage.open();
+        searchBranchPage.searchByCode(branchCode, SearchBranch_Page.Status.INACTIVE);
+        Assert.assertTrue(searchBranchPage.isRowPresent(branchCode),
+                "Provisioning failed: Branch Code \"" + branchCode + "\" was read from the grid but a search "
+                        + "for that exact code returned no row, so the record the caller would act on cannot "
+                        + "be confirmed.");
+        Assert.assertEquals(searchBranchPage.branchNameOf(branchCode), branchName,
+                "Provisioning failed: Branch Code \"" + branchCode + "\" belongs to a different record than the "
+                        + "one this run created. No action may be taken on it — approving or rejecting another "
+                        + "team's branch is exactly what this run's mutation authorisation forbids.");
 
         return new ProvisionedBranch(branchCode, branchName);
+    }
+
+    /**
+     * The Branch Code of the row whose Branch Name is exactly {@code branchName}, or {@code ""} when
+     * the current result set holds no such row.
+     *
+     * <p>Every candidate is checked by name. A row is never accepted because of its position, so a
+     * result set that happens to contain other records — or one the filter failed to narrow at all —
+     * cannot yield a code this run does not own.</p>
+     */
+    private static String codeOfExactlyThisBranch(SearchBranch_Page searchBranchPage, String branchName) {
+        for (String candidateCode : searchBranchPage.branchCodesOnCurrentPage()) {
+            if (candidateCode.isEmpty()) {
+                continue;
+            }
+            if (branchName.equals(searchBranchPage.branchNameOf(candidateCode))) {
+                return candidateCode;
+            }
+        }
+        return "";
     }
 }

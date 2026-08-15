@@ -93,7 +93,7 @@ Follows the company's standard NDC automation layout (`AdminPages.<Module>.<SubM
 
 ```
 src/main/java/AdminPages/Login/LogIn_Page.java
-src/main/java/AdminPages/Admin/Branch/{AddBranch_Page,SearchBranch_Page,UpdateBranch_Page,Branch_Common,BranchTestData}.java
+src/main/java/AdminPages/Admin/Branch/{AddBranch_Page,SearchBranch_Page,UpdateBranch_Page,Branch_Common,BranchTestData,ApprovalStatus}.java
 src/main/java/utilities/{EnvironmentConfig,BranchDataFactory}.java
 src/test/java/AdminPages/Login/{TestBase,TestBase_TC}.java
 src/test/java/AdminPages/Admin/Branch/{CreateBranch_Admin_TC,SearchBranch_TC,UpdateBranch_TC,BranchProvisioner}.java
@@ -103,6 +103,27 @@ src/test/java/AdminPages/Admin/Branch/{CreateBranch_Admin_TC,SearchBranch_TC,Upd
 
 `src/test/resources/environment.properties` — non-secret (base URL, paths only). Change this file,
 never the test logic, to point the suite at a different environment.
+
+## Test data
+
+`src/test/resources/branch_baseline.properties` holds every value shared by more than one test:
+the creation baseline, the environment's master data (Operating Country → Country, State, City,
+Credential Name), and the two pre-existing STG records the read-only Search suite refers to.
+Test-case-specific values — boundary inputs, the non-matching search code, per-case remarks — stay
+in the test class that uses them.
+
+Two consistency rules are enforced by comment in that file, not by code, so read them before
+editing:
+
+- `operatingCountry` and `country` are one mapping. TC-BR-004 asserts that selecting the first
+  auto-fills the second.
+- `targetAmount` must stay below `creditLimit`; the application rejects a target that is not.
+
+`knownBranchCode` and `knownBranchName` are **independent fixtures, not a code/name pair** — they
+name two different branches, used by two different test cases. Do not reconcile one to the other.
+
+Approval-state labels (`Pending for approval`, `Approved`, `Rejected`) are defined once in
+`ApprovalStatus.java` and read from there by both the tests and `AddBranch_Page`.
 
 ---
 

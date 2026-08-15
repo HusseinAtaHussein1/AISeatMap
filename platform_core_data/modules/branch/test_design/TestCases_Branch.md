@@ -52,7 +52,7 @@
 | TC-BR-035 | Submit action button displays the label "Submit for Approval" | Atomic | P4 | Atomic, Negative-UILabel, Regression | Approved | Rejected |
 | TC-BR-036 | Cancel exits the Create Branch form without saving | Atomic | P2 | Atomic, Positive | Approved | Rejected |
 | TC-BR-037 | Create Branch with a valid Child Agencies Threshold Amount value | Atomic | P2 | Atomic, Positive, ExpectedImplementation | Approved | Approved |
-| TC-BR-038 | Child Agencies Threshold Amount blocks submission when empty | Atomic | P3 | Atomic, Negative-EmptyValues, AssumptionBased, ExpectedImplementation | Approved | Approved |
+| TC-BR-038 | Child Agencies Threshold Amount opens pre-filled with a default value | Atomic | P3 | Atomic, Positive, ExpectedImplementation | Approved | Approved |
 | TC-BR-039 | Child Agencies Threshold Amount accepts a numeric value | Atomic | P3 | Atomic, Positive, ExpectedImplementation | Approved | Approved |
 | TC-BR-040 | Search Branch by Branch Code returns the matching record | Atomic | P1 | Atomic, Positive, Smoke | Approved | Approved |
 | TC-BR-041 | Search Branch by Branch Name returns the matching record | Atomic | P1 | Atomic, Positive, Smoke | Approved | Approved |
@@ -1199,25 +1199,24 @@
 
 ---
 
-### TC-BR-038 — Child Agencies Threshold Amount blocks submission when empty
+### TC-BR-038 — Child Agencies Threshold Amount opens pre-filled with a default value
 
-**Objective:** Verify that the Outstanding Threshold field blocks submission when left empty.
+**Objective:** Verify that the Outstanding Threshold field already carries a value when the Add Branch form first opens.
 
 **Preconditions:** User is logged in as Super Admin and has opened Admin → Branch → Add branch.
 
 **Steps:**
 
-1. Complete every other mandatory field with valid data.
-2. Leave the Outstanding Threshold field empty.
-3. Click **Submit for Approval**.
+1. Open Admin → Branch → Add branch.
+2. Read the Outstanding Threshold field's value without typing anything into it.
 
-**Expected Result:** The system blocks submission and shows a required-field validation message for Outstanding Threshold.
+**Expected Result:** The Outstanding Threshold field is not empty — it holds a system-supplied default value.
 
 **Priority:** P3
 
-**Tags:** Atomic, Negative-EmptyValues, AssumptionBased, ExpectedImplementation
+**Tags:** Atomic, Positive, ExpectedImplementation
 
-**Notes:** Assumption-based test: US 51489 §2 does not explicitly state whether Child Agencies Threshold Amount is Mandatory or Optional; the live UI marks the field Mandatory with an asterisk. This case assumes Mandatory per the observed UI convention, pending confirmation — see CoverageReport.md §8 for the corresponding Coverage Gap.
+**Notes:** Revised 2026-08-15 by the module owner. This case previously read "blocks submission when empty." That scenario is not reachable: the application pre-fills Outstanding Threshold with a default value as soon as Add Branch opens, so the field is never presented empty and the empty-value case could not be exercised as written. The empty-value scenario is dropped rather than rewritten to clear the field first. The expected value is stated as "not empty" and not as one specific number, because no requirement states what the default should be — see CoverageReport.md §8.
 
 **Review:** Approved
 

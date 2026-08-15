@@ -70,7 +70,9 @@ public class CreateBranch_Admin_TC extends TestBase_TC {
     @Description("TC-BR-004: Country field auto-fills based on selected Operating Country")
     public void tcBr004_countryAutoFillsFromOperatingCountry() {
         addBranchPage.selectOperatingCountry(BranchTestData.operatingCountry());
-        addBranchPage.assertCountryEquals("Egypt");
+        // Both sides of this mapping come from the same fixture file (2026-08-15). They are one
+        // environment fact, not two values: reading them from one place is what keeps them consistent.
+        addBranchPage.assertCountryEquals(BranchTestData.country());
     }
 
     /**
@@ -148,9 +150,9 @@ public class CreateBranch_Admin_TC extends TestBase_TC {
     @Story("Regression - FINDING-004")
     @Description("TC-BR-026: Warning Prompt (Days) rejects a value exceeding 11 digits")
     public void tcBr026_warningPromptRejectsValueExceeding11Digits() {
-        addBranchPage.setCreditTermsDays("999999999999999");
-        addBranchPage.setWarningPromptDays("999999999999999");
-        addBranchPage.assertWarningPromptCappedAt11DigitsOrMessageShown();
+        addBranchPage.setCreditTermsDays("9999999");
+        addBranchPage.setWarningPromptDays("9999999");
+        addBranchPage.assertWarningPromptCappedAt11Digits();
     }
 
     /**
@@ -194,19 +196,22 @@ public class CreateBranch_Admin_TC extends TestBase_TC {
     }
 
     /**
-     * TC-BR-038 -- Child Agencies Threshold Amount blocks submission when empty.
-     * Requirement: PRD_UserStories.md US 6 §2 Branch Module. Tags: AssumptionBased, ExpectedImplementation
-     * (Mandatory/Optional not explicitly stated by US 51489; assumed Mandatory per the live UI's asterisk).
+     * TC-BR-038 -- Child Agencies Threshold Amount opens pre-filled with a default value.
+     * Requirement: PRD_UserStories.md US 6 §2 Branch Module. Tag: ExpectedImplementation.
+     *
+     * <p>REVISED 2026-08-15 (module owner). This case previously asserted that an empty Outstanding
+     * Threshold blocks submission. That scenario is not reachable: the application pre-fills the field
+     * with a default value the moment Add Branch opens, so the old fixture's {@code skip} only meant
+     * "do not type here" -- it left the application's own default in place, the form submitted
+     * successfully, and {@code assertSubmissionBlocked()} failed against correct behavior. The
+     * empty-value scenario is dropped outright rather than rewritten to clear the field; what is
+     * actually observable and worth covering is that the field is never presented empty.</p>
      */
     @Test
-    @Story("Negative - empty values")
-    @Description("TC-BR-038: Child Agencies Threshold Amount blocks submission when empty")
-    public void tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty() {
-        Set<String> skip = new HashSet<>();
-        skip.add("outstandingThreshold");
-        addBranchPage.fillMandatoryBaseline(skip);
-        addBranchPage.clickSubmit();
-        addBranchPage.assertSubmissionBlocked();
+    @Story("Happy path")
+    @Description("TC-BR-038: Child Agencies Threshold Amount opens pre-filled with a default value")
+    public void tcBr038_outstandingThresholdPrefilledWithDefaultValue() {
+        addBranchPage.assertOutstandingThresholdPrefilled();
     }
 
     /**

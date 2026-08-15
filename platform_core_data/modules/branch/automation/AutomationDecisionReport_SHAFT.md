@@ -219,16 +219,17 @@
 |---|---|---|---|
 | PRD_UserStories.md US 6 §2 Branch Module | discovery/findings/FINDING-010_UndocumentedOutstandingThreshold/metadata.md | FINDING-010 | discovery/findings/FINDING-010_UndocumentedOutstandingThreshold/failure.png |
 
-### TC-BR-038 — Child Agencies Threshold Amount blocks submission when empty
+### TC-BR-038 — Child Agencies Threshold Amount opens pre-filled with a default value
 
 | Field | Value |
 |---|---|
 | **Decision** | Generate New Automation |
-| **Justification** | Directly automatable, despite being an Assumption-Based test case (Mandatory/Optional not stated by US 51489) — the assumption itself (Mandatory, per the live UI's asterisk) is what this test asserts, and that is a legitimate, codifiable assertion, not an invented one |
-| **Reused Assets** | `AddBranchPage.fillMandatoryBaseline` |
-| **Generated Assets** | `CreateBranchTests.tcBr038_outstandingThresholdBlocksSubmissionWhenEmpty` |
+| **Justification** | Field-default check, directly observable on form open |
+| **Reused Assets** | None |
+| **Generated Assets** | `AddBranchPage.assertOutstandingThresholdPrefilled`, `CreateBranchTests.tcBr038_outstandingThresholdPrefilledWithDefaultValue` |
 | **Automation Readiness** | Ready |
-| **Known Limitations** | If the assumption is ever refuted (i.e., the field turns out to be genuinely Optional), this test would need to be revised at Test Design's level first — this skill does not modify an approved test case (Execution Rule 15) |
+| **Known Limitations** | Asserts non-empty, not one specific default value — no requirement states what the default should be, so asserting an exact number would codify an invented rule |
+| **Revision** | 2026-08-15, module-owner decision. The earlier version asserted that an empty Outstanding Threshold blocks submission and used `AddBranchPage.fillMandatoryBaseline` with the field skipped. That was wrong at the fixture level: skipping only meant "do not type here" and left the application's own pre-filled default in place, so the form submitted successfully and `assertSubmissionBlocked()` failed against correct application behavior. The empty-value scenario was dropped at Test Design's level first (see `test_design/TestCases_Branch.md` TC-BR-038), then re-automated here |
 
 **Traceability:**
 

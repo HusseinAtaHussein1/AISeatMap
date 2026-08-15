@@ -4,6 +4,7 @@ import com.shaft.driver.SHAFT;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import AdminPages.Login.LogIn_Page;
+import utilities.BrowserSession;
 
 /**
  * Shared WebDriver lifecycle and authentication for every test class in this suite
@@ -23,9 +24,19 @@ import AdminPages.Login.LogIn_Page;
 public abstract class TestBase {
     protected SHAFT.GUI.WebDriver driver;
 
+    /**
+     * <p><b>2026-08-15:</b> driver construction moved to {@link BrowserSession#start()}. The browser
+     * is no longer built with {@code new SHAFT.GUI.WebDriver()} here, because a bare SHAFT driver
+     * leaves Chrome's password-manager leak detection on -- which raises a tab-modal
+     * "Change your password" dialog over the application after login, invisible to WebDriver and
+     * blocking every interaction underneath while SHAFT still logs each one as delivered. That is
+     * the root cause of the long-standing Credential-dropdown intermittency. See
+     * {@link BrowserSession} for the full mechanism. Do not reintroduce a direct
+     * {@code new SHAFT.GUI.WebDriver()} call anywhere in this project.</p>
+     */
     @BeforeMethod
     public void setUp() {
-        driver = new SHAFT.GUI.WebDriver();
+        driver = BrowserSession.start();
         new LogIn_Page(driver).open().loginAsSuperAdmin();
         navigateToStartScreen();
     }

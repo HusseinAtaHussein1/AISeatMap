@@ -5,7 +5,7 @@
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
 **Slug:** `branch` · **Status:** Active
-**Last generated:** 2026-08-15T14:29:40.001Z
+**Last generated:** 2026-08-15T15:39:55.839Z
 
 ## Scope
 
@@ -27,7 +27,7 @@ Branch creation under Company with credit limit, top-up limit, credit terms, own
 
 | Measure | Value | Source |
 |---|---|---|
-| Test cases designed | 81 | [`test_design/`](test_design/) |
+| Test cases designed | 82 | [`test_design/`](test_design/) |
 | Findings recorded | 0 | [`discovery/findings/`](discovery/findings/) |
 
 ## Automation

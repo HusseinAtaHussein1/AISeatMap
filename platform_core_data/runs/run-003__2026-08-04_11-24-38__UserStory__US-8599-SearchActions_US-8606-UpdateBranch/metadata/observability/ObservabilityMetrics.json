@@ -6,10 +6,10 @@
     "reasons": [
       "No RUN_STARTED event — run-level timing is not measured."
     ],
-    "eventCount": 73,
+    "eventCount": 81,
     "bySource": {
       "platform-tool": 0,
-      "skill": 73
+      "skill": 81
     },
     "provenanceNote": "platform-tool events are emitted by platform code as a side effect of the work itself and cannot be forgotten. skill events are emitted because a Skill specification requires it; their presence is reliable, their ABSENCE proves nothing. The two are not the same reliability class and are never presented as one.",
     "unclosedSpans": []
@@ -32,7 +32,7 @@
     }
   },
   "stagesStarted": {
-    "value": 2,
+    "value": 3,
     "available": true,
     "provenance": "emitted"
   },
@@ -167,7 +167,7 @@
   },
   "testDesign": {
     "totalCases": {
-      "value": 134,
+      "value": 135,
       "available": true,
       "provenance": "derived"
     },
@@ -179,7 +179,7 @@
     "provenanceNote": "Derived from the module Case Index, which is the canonical record of these decisions.",
     "review": {
       "approved": {
-        "value": 110,
+        "value": 111,
         "available": true,
         "provenance": "derived"
       },
@@ -196,7 +196,7 @@
     },
     "automation": {
       "approved": {
-        "value": 43,
+        "value": 42,
         "available": true,
         "provenance": "derived"
       },
@@ -233,14 +233,14 @@
       },
       {
         "module": "branch",
-        "cases": 81,
+        "cases": 82,
         "review": {
-          "Approved": 73,
+          "Approved": 74,
           "Rejected": 8,
           "Pending": 0
         },
         "automation": {
-          "Approved": 32,
+          "Approved": 31,
           "Rejected": 49,
           "Pending": 0
         }
@@ -249,7 +249,7 @@
   },
   "automation": {
     "eligible": {
-      "value": 43,
+      "value": 42,
       "available": true,
       "provenance": "derived"
     },
@@ -291,17 +291,17 @@
   },
   "execution": {
     "planned": {
-      "value": 58,
+      "value": 60,
       "available": true,
       "provenance": "emitted"
     },
     "executed": {
-      "value": 52,
+      "value": 54,
       "available": true,
       "provenance": "emitted"
     },
     "passed": {
-      "value": 52,
+      "value": 54,
       "available": true,
       "provenance": "emitted"
     },
@@ -332,12 +332,12 @@
     },
     "firstAttempt": {
       "executed": {
-        "value": 52,
+        "value": 54,
         "available": true,
         "provenance": "emitted"
       },
       "passed": {
-        "value": 52,
+        "value": 54,
         "available": true,
         "provenance": "emitted"
       },
@@ -811,6 +811,22 @@
         "cycle": 28,
         "classification": "EnvironmentFailure",
         "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-057",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 29,
+        "classification": null,
+        "durationMs": null
+      },
+      {
+        "testCaseId": "TC-BR-058",
+        "status": "Passed",
+        "attempt": 1,
+        "cycle": 29,
+        "classification": null,
+        "durationMs": null
       }
     ]
   },
@@ -842,7 +858,7 @@
     },
     "rework": {
       "artifactsUpdatedAfterCreation": {
-        "value": 2,
+        "value": 4,
         "available": true,
         "provenance": "emitted"
       },
@@ -957,6 +973,15 @@
         "approvedBy": "ahmed.ayman@tildetech.ae",
         "approvedAt": "2026-08-14T16:20:39.627Z",
         "revoked": false
+      },
+      {
+        "authorizationId": "AUTH-BRANCH-REJECT-SelfCreated",
+        "action": "REJECT",
+        "ownership": "SelfCreated",
+        "module": "branch",
+        "approvedBy": "ahmed.ayman@tildetech.ae",
+        "approvedAt": "2026-08-15T15:40:00.000Z",
+        "revoked": false
       }
     ]
   },
@@ -1020,14 +1045,14 @@
   },
   "formulas": {
     "TC_ACCEPTANCE_RATE": {
-      "value": 0.8208955223880597,
+      "value": 0.8222222222222222,
       "available": true,
       "provenance": "derived",
       "name": "Test Case Acceptance Rate",
       "expression": "Review Approved / (Review Approved + Review Rejected)"
     },
     "AUTOMATION_APPROVAL_RATE": {
-      "value": 0.33076923076923076,
+      "value": 0.32558139534883723,
       "available": true,
       "provenance": "derived",
       "name": "Automation Approval Rate",

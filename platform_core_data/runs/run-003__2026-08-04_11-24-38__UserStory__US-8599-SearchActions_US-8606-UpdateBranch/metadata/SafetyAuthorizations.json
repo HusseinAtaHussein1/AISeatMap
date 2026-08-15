@@ -72,6 +72,24 @@
       "cleanupRequired": false,
       "note": "Fresh explicit re-authorization, requested for the Java 21 full execution of all 29 currently executable Branch test cases (rerun-19), 2026-08-14. Java 21 is the officially approved JDK for this project; prior Java 24 results are non-canonical. Not reused from any prior grant. SelfCreated records only.",
       "revoked": false
+    },
+    {
+      "authorizationId": "AUTH-BRANCH-REJECT-SelfCreated",
+      "runId": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch",
+      "environment": "Staging",
+      "module": "branch",
+      "action": "REJECT",
+      "ownership": "SelfCreated",
+      "targetScope": "all SelfCreated records in branch for this run",
+      "decision": "Allowed",
+      "approvedAt": "2026-08-15T15:40:00.000Z",
+      "approvedBy": "ahmed.ayman@tildetech.ae",
+      "policyId": null,
+      "policyVersion": null,
+      "policyHash": null,
+      "cleanupRequired": false,
+      "note": "Granted 2026-08-15 for TC-BR-057 (reject a branch from the results grid). Requested explicitly at the Safety Preflight after the preflight found no REJECT grant among the four existing authorizations. Scoped to records this run created; rejecting any pre-existing branch remains forbidden.",
+      "revoked": false
     }
   ]
 }

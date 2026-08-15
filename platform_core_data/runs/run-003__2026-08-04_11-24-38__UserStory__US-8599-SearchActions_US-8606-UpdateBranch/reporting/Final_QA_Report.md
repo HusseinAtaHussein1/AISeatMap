@@ -7,24 +7,26 @@
 | Scope | User Story — US 8599 (Search & Actions Branch), US 8606 (Update Branch), plus the US 8605 (Create Branch) suite carried in the same project |
 | Environment | Staging (STG), `http://192.168.1.70` |
 | Branch of the pipeline | **Automation** — this report covers automated testing only |
-| Basis | Execution Results `rerun-27` (`EXEC-BR-20260815-05`) and `rerun-28` (`EXEC-BR-20260815-06`), Test Cases and Traceability Matrix for `branch`, Project Context, Repair Summary, Quarantine Register |
-| Report date | 2026-08-15 (revised the same day after `rerun-28`) |
+| Basis | Execution Results `rerun-27`, `rerun-28` and `rerun-29` (`EXEC-BR-20260815-05/06/07`), Test Cases and Traceability Matrix for `branch`, Project Context, Repair Summary, Quarantine Register |
+| Report date | 2026-08-15 (revised twice the same day, after `rerun-28` and `rerun-29`) |
 
 ---
 
 ## 1. Executive Summary
 
-**Across two executions today, every automated test that ran, passed — 28 of 28, then 24 of 24.** No
-application defect was found in either. No automation broke in either.
+**Across three executions today, every automated test that ran, passed — 28 of 28, then 24 of 24, then
+2 of 2.** No application defect was found in any of them. No automation broke in any of them.
 
 Two things were achieved today that had never been achieved before in this module:
 
 1. **The full suite ran end to end** (`rerun-27`, headless, 12 min 38 s). Two healing passes had
    repaired the Search screen, but Create, Search and Update had never been run together to prove
    nothing regressed. An attempt at 15:35 died at login and proved nothing. This one succeeded.
-2. **TC-BR-056 executed and passed** (`rerun-28`, 21.3 s) — the first approve-from-grid test ever to
-   run in this module. It followed the recovery of `BranchActions_TC`, a suite that `testng.xml` had
-   declared for weeks without any class existing behind it.
+2. **`BranchActions_TC` went from non-existent to fully verified in one day.** The suite that
+   `testng.xml` had declared for weeks with no class behind it was recovered, and all three of its
+   cases now pass on real evidence: TC-BR-056 in `rerun-28`, then TC-BR-057 and TC-BR-058 in
+   `rerun-29`. **Approving and rejecting a branch from the results grid are both under automated test
+   for the first time.**
 
 **Three things stop this being a clean bill of health, and they matter more than the pass rate:**
 
@@ -33,21 +35,25 @@ Two things were achieved today that had never been achieved before in this modul
    longer fail. The other was deleted outright while its documentation was left behind. Both changes
    were committed on 2026-08-15 with the concern recorded in the commit message, and neither is
    recorded in any healing document. Details in §6.
-2. **3 of the 32 test cases chosen for automation have still never run.** TC-BR-052 has no test
-   method. TC-BR-057 and TC-BR-058 exist and compile, but their run was cut short when the login
-   screen stopped working — they were skipped before their first line, so they are neither passed
-   nor failed.
-3. **TC-BR-001 is still quarantined.** It passed in both runs, and in `rerun-27` it passed under
+2. **1 of the 32 test cases chosen for automation has still never run.** TC-BR-052 has no test method
+   at all — the code was deleted while its documentation was left in place.
+3. **TC-BR-001 is still quarantined.** It passed in both full runs, and in `rerun-27` it passed under
    exactly the conditions the Quarantine Register asked for — but lifting a quarantine is a human
    decision, not something a passing run does by itself.
 
 **A fourth point is about the environment, not the software:** the application stopped accepting
 logins mid-session three separate times today, always after roughly 25 logins. Every test signs in
-separately, so a full suite is close to that number. Two tests were lost to it. It is unconfirmed but
-consistent with a limit on the QA account, and it puts the tail of every long run at risk.
+separately, so a full suite is close to that number. Two tests were lost to it at the time, though
+both have since passed when run on their own. It is unconfirmed but consistent with a limit on the QA
+account, and it puts the tail of every long run at risk.
+
+**A safety gap was also caught before it could act.** The preflight for `rerun-29` found that no
+`REJECT` authorization existed, even though TC-BR-057 rejects a branch. The test was held until you
+granted one, scoped to records the run creates. Detail in §7.
 
 **Bottom line for a stakeholder:** the Branch module's automated checks are green, the suite now runs
-end to end, and grid approval is under test for the first time. But two known problems are no longer
+end to end, and approving and rejecting a branch from the grid are both under test for the first time.
+But two known problems are no longer
 being watched by the tests meant to watch them, and that needs a decision before this suite is treated
 as a safety net.
 
@@ -65,7 +71,7 @@ what each one did and where its output lives, so the report can be read without 
 | **3 — Test Design** | Turns requirements and discovery into traceable test cases | **Complete** — 81 cases designed, 73 review-approved, 32 selected for automation | `modules/branch/test_design/` |
 | **4M — Manual Execution** | Runs manual cases by hand. A separate branch of the pipeline that reports itself | **Ran in run-002** for Create Branch. Its results are its own delivery and are **not** counted here | `runs/run-002…/manual_execution/` |
 | **4A — Automation Engineering** | Builds the automated suite from the approved cases | **Complete and Approved** 2026-08-14 — SHAFT Engine project, 4 suites | `modules/branch/automation/` |
-| **5A — Automation Execution** | Runs the suite and records raw results. Never repairs | **Complete — 28 executions** to date. This report is based on the last two | `runs/…/execution/ExecutionResults*.md` |
+| **5A — Automation Execution** | Runs the suite and records raw results. Never repairs | **Complete — 29 executions** to date. This report is based on the last three | `runs/…/execution/ExecutionResults*.md` |
 | **5H — Self-Healing** *(optional)* | Diagnoses automation failures and repairs them, with human approval | **Ran 4 times**, 2026-08-05 to 2026-08-15. `REPAIR-BR-001`…`014` applied | `modules/branch/healing/` |
 | **6A — Reporting** | Turns execution results into this report. Never re-runs or diagnoses | **This document** | `runs/…/reporting/Final_QA_Report.md` |
 
@@ -82,54 +88,63 @@ judgement, not something this report performs.
 
 ## 3. Detailed Execution Report
 
-Two executions are reported. Every test that ran in either one passed. Full per-test detail is in
-`execution/ExecutionResults.rerun-27.md` and `…rerun-28.md`.
+Three executions are reported. Every test that ran in any of them passed. Full per-test detail is in
+`execution/ExecutionResults.rerun-27.md`, `…rerun-28.md` and `…rerun-29.md`.
 
-### 3.1 The two runs
+### 3.1 The three runs
 
-| | `rerun-27` | `rerun-28` |
-|---|---|---|
-| Execution ID | `EXEC-BR-20260815-05` | `EXEC-BR-20260815-06` |
-| Run by | Stage 5A | **Operator, directly** |
-| Window | 17:12 – 17:24 | 17:54 – 18:05 |
-| Mode | Headless | Not recorded |
-| Executed | 28 | 24 |
-| Result | **28 Passed** | **24 Passed**, 2 skipped |
-| Purpose | First end-to-end run of the whole suite | Verify the recovered `BranchActions_TC` |
+| | `rerun-27` | `rerun-28` | `rerun-29` |
+|---|---|---|---|
+| Execution ID | `EXEC-BR-20260815-05` | `EXEC-BR-20260815-06` | `EXEC-BR-20260815-07` |
+| Run by | Stage 5A | **Operator, directly** | Stage 5A |
+| Window | 17:12 – 17:24 | 17:54 – 18:05 | 18:35 – 18:39 |
+| Mode | Headless | Not recorded | **Headed** |
+| Executed | 28 | 24 | 2 |
+| Result | **28 Passed** | **24 Passed**, 2 skipped | **2 Passed** |
+| Purpose | First end-to-end run of the whole suite | Verify the recovered `BranchActions_TC` | Close the two cases the login failure cost |
 
-### 3.2 By suite, across both runs
+### 3.2 By suite, across all three runs
 
 | Suite | User Story | Cases | Best recorded result |
 |---|---|---|---|
-| `CreateBranch_Admin_TC` | US 8605 — Create Branch | 13 | 13 Passed (both runs) |
-| `SearchBranch_TC` | US 8599 — Search & Actions | 10 | 10 Passed (both runs) |
+| `CreateBranch_Admin_TC` | US 8605 — Create Branch | 13 | 13 Passed (rerun-27, rerun-28) |
+| `SearchBranch_TC` | US 8599 — Search & Actions | 10 | 10 Passed (rerun-27, rerun-28) |
 | `UpdateBranch_TC` | US 8606 — Update Branch | 5 | 5 Passed (`rerun-27`; not in `rerun-28`) |
-| `BranchActions_TC` | US 8599 — Approve / Reject | 3 | **1 Passed** (TC-BR-056), 2 never ran |
-| **Distinct cases with a passing result** | | | **29 of 32** |
+| `BranchActions_TC` | US 8599 — Approve / Reject | 3 | **3 Passed** (`rerun-28` + `rerun-29`) |
+| **Distinct cases with a passing result** | | | **31 of 32** |
 
-### 3.3 TC-BR-056 — the one genuinely new result
+### 3.3 BranchActions_TC — the genuinely new coverage
 
-**`tcBr056_approvePendingBranchFromResultsGrid` — Passed, 21.3 s.**
+| Test Case ID | Script | Result | Run |
+|---|---|---|---|
+| TC-BR-056 | `tcBr056_approvePendingBranchFromResultsGrid` | **Passed**, 21.3 s | `rerun-28` |
+| TC-BR-058 | `tcBr058_approveAndRejectCaptureRemarksEntry` | **Passed**, 51.3 s | `rerun-29` |
+| TC-BR-057 | `tcBr057_rejectPendingBranchFromResultsGrid` | **Passed**, 51.8 s | `rerun-29` |
 
-This is the first approve-from-grid test ever executed in this module. Until today `testng.xml`
-declared a `BranchActionsSuite` whose class had never been written, so TC-BR-056, 057 and 058 were
-listed as automated while nothing existed to run.
+**Until today, none of these had ever run.** `testng.xml` declared a `BranchActionsSuite` whose class
+had never been written, so all three were listed as automated while nothing existed to execute them.
+The class was recovered on 2026-08-15 and all three passed within hours of each other.
 
-Passing exercised the whole newly recovered path: the provisioner created a Branch and confirmed by
-its exact Branch Code that the record was its own, then the mandatory Remarks dialog was filled and
-submitted, after which the grid showed the record as `Approved`. It also confirms the application
-behaves correctly here — approval from the grid works, and it does require a remark.
+**What this proves about the application**, which is the part that matters to a stakeholder:
+
+- Approving a branch from the results grid works, and moves the record to `Approved`.
+- **Rejecting a branch from the results grid works, and moves the record to `Rejected`** — never
+  tested by automation before.
+- Both actions **require a remark**. The prompt is mandatory, and a click without one leaves the
+  record unchanged. This settles an open question from Discovery, which could not establish whether a
+  Remarks prompt appeared at all.
+
+Each test provisioned its own Branch and confirmed by exact Branch Code that the record was its own
+before acting, so no pre-existing record was touched.
 
 ### 3.4 Cases in the automated scope that have still never run
 
 | Test Case ID | What it covers | Why it has not run | Classification |
 |---|---|---|---|
 | TC-BR-052 | Results grid displays all specified columns | **Its test method no longer exists.** The full description is still in `SearchBranch_TC.java`, but the code beneath it was removed, so the file reads as though the case is covered | Not Executed |
-| TC-BR-057 | Reject a branch from the grid | **The code now exists and compiles.** Its run was cut short — the login screen stopped rendering, so TestNG skipped it before its first line | Not Executed |
-| TC-BR-058 | Approve and Reject capture a Remarks entry | Same | Not Executed |
 
-**None of these is a pass and none is a failure.** TC-BR-057 and TC-BR-058 are a different kind of
-gap from TC-BR-052: they are ready to run and simply have not, whereas TC-BR-052 has nothing to run.
+**This is neither a pass nor a failure.** It is the only case in the automated scope with nothing to
+run. TC-BR-057 and TC-BR-058 were in this table until `rerun-29`; both now pass.
 
 ### 3.5 Passes of a repaired suite, not first-attempt passes
 
@@ -151,7 +166,8 @@ distinction is real coverage either way, but a reader is entitled to see that it
 **TC-BR-001** (`createBranchWithAllMandatoryFields`) remains **quarantined** — 6 repair attempts on
 record, and the original fault that caused the quarantine was never diagnosed to a confirmed cause.
 
-It **passed in both runs today**. That is meaningful, because the Quarantine Register's own
+It **passed in both full-suite runs today** (`rerun-29` ran only the two action tests, so it did not
+include this case). That is meaningful, because the Quarantine Register's own
 recommendation was to retry it "as the first test in a fresh JVM fork within a larger suite run" —
 which is exactly what `rerun-27` was, and `rerun-28` repeated the result.
 
@@ -163,28 +179,28 @@ call belongs to a human, working through Stage 5H.
 
 ## 4. Passed / Failed Statistics
 
-| Result | `rerun-27` | `rerun-28` |
-|---|---|---|
-| Passed | 28 | 24 |
-| Failed | 0 | 0 |
-| Application Failure | 0 | 0 |
-| Automation Failure | 0 | 0 |
-| **Environment Failure** | 0 | **1** (the login fixture) |
-| Skipped / Not Executed | 4 (of the 32-case scope) | 2 |
-| Blocked | 0 | 0 |
-| Blocked by Execution Safety Policy | **0** | **0** |
-| Inconclusive | 0 | 0 |
-| Flaky | 0 | 0 |
+| Result | `rerun-27` | `rerun-28` | `rerun-29` |
+|---|---|---|---|
+| Passed | 28 | 24 | 2 |
+| Failed | 0 | 0 | 0 |
+| Application Failure | 0 | 0 | 0 |
+| Automation Failure | 0 | 0 | 0 |
+| **Environment Failure** | 0 | **1** (the login fixture) | 0 |
+| Skipped / Not Executed | 4 (of the 32-case scope) | 2 | 0 |
+| Blocked | 0 | 0 | 0 |
+| Blocked by Execution Safety Policy | **0** | **0** | **0** |
+| Inconclusive | 0 | 0 | 0 |
+| Flaky | 0 | 0 | 0 |
 
-**Across both runs, 29 of the 32 automated cases now have a passing result** and 3 have never run.
+**Across the three runs, 31 of the 32 automated cases now have a passing result** and 1 has never run.
 
 ### 4.1 The three health figures, kept separate
 
 | Health figure | Result | What it tells you |
 |---|---|---|
-| **Application Health** | **0 failures** across both runs | The application behaved correctly in every check that ran, including grid approval for the first time. Read with §6 — two checks that used to guard known defects no longer do |
-| **Automation Health** | **0 failures** across both runs | Nothing in the suite is broken. Nothing is waiting for repair. The recovered `BranchActions_TC` compiled and ran correctly on first use |
-| **Environment Health** | **1 failure** (`rerun-28`) | The login screen stopped rendering partway through the session, costing 2 tests. `rerun-27` saw no environment problem |
+| **Application Health** | **0 failures** across all three runs | The application behaved correctly in every check that ran — including approving *and* rejecting a branch from the grid, both now tested for the first time, and both correctly requiring a remark. Read with §6 — two checks that used to guard known defects no longer do |
+| **Automation Health** | **0 failures** across all three runs | Nothing in the suite is broken. Nothing is waiting for repair. The recovered `BranchActions_TC` worked on first use in both directions |
+| **Environment Health** | **1 failure** (`rerun-28`) | The login screen stopped rendering partway through that session, costing 2 tests at the time. Both passed later when run on their own |
 
 These are never added together. An automation problem and an application defect are facts about
 different systems, and the login failure is a fact about neither.
@@ -198,11 +214,15 @@ This is the clearest operational risk in the module and it is not a software def
 | `rerun-26` | 15:35 | ~40 that day | Page served, login submission never redirected |
 | `rerun-27` | 17:12 – 17:24 | 28, all succeeded | No failure |
 | `rerun-28` | 17:54 – 18:05 | **24 succeeded, then broke** | Login page did not render its fields at all |
+| `rerun-29` | 18:35 – 18:39 | 2, both succeeded | No failure |
 
 Every test builds its own browser and signs in separately, so one full suite is 25–30 logins on a
 single account. The failure appears late in a session, after roughly that many. This is **consistent
 with rate limiting or lockout on the QA account, but unconfirmed** — confirming it means more login
 attempts against an account that may already be limited, so testing stopped instead both times.
+
+`rerun-29` supports the theory without proving it: the same two tests that failed at login inside a
+long session both passed when run on their own, 30 minutes later, at 2 logins instead of 25.
 
 ### 4.3 Execution stability
 
@@ -255,21 +275,20 @@ Three separate facts, kept apart:
 | Test cases designed for `branch` | **81** | Everything Stage 3 wrote |
 | Review decision | **73 Approved · 8 Rejected** | Whether the case was accepted at all |
 | Automation selection decision | **32 Approved · 49 Rejected** | Whether the case was *chosen* for automation |
-| Automated and executed | **29** | Of the 32 selected, across both runs |
-| Automated and passed | **29** | Of the 29 executed |
+| Automated and executed | **31** | Of the 32 selected, across all three runs |
+| Automated and passed | **31** | Of the 31 executed |
 
 | Measure | Value |
 |---|---|
 | Automation selection rate | 32 of 73 review-approved cases = **43.8%** |
-| **Execution rate within automated scope** | 29 of 32 = **90.6%** (was 87.5% before TC-BR-056 ran) |
-| **Pass rate within executed scope** | 29 of 29 = **100%** |
+| **Execution rate within automated scope** | 31 of 32 = **96.9%** (87.5% → 90.6% → 96.9% across today's three runs) |
+| **Pass rate within executed scope** | 31 of 31 = **100%** |
 
 **The 49 cases at `Automation = Rejected` are deliberately manual.** They are a decision, not a
 coverage shortfall, and they are not counted as an automation gap anywhere in this report.
 
-**The remaining automation gap is 3 cases** — TC-BR-052, 057, 058 (§3.4). All three were selected for
-automation and none has run. Two of them (057, 058) now have working code and need only a run;
-TC-BR-052 has no code at all.
+**The remaining automation gap is 1 case** — TC-BR-052 (§3.4). It was selected for automation and has
+no code at all: the test method was deleted while its documentation was left behind.
 
 ### 5.3 What these runs did not cover
 
@@ -382,7 +401,7 @@ with the business owner, then decide whether the test returns.
 | FINDING-004 (Warning Prompt cap) | **Unverified.** Its regression test no longer tests it — see DEF-REP-01 |
 | FINDING-012 | Retracted as a confirmed application defect on 2026-08-14. Not re-raised |
 | `State` column disagreement | **Still open, and now untested** — see DEF-REP-02 |
-| TC-BR-001 original fault | **Still open.** Passed in both runs, but never diagnosed to a confirmed cause. Quarantine stands |
+| TC-BR-001 original fault | **Still open.** Passed in both full-suite runs, but never diagnosed to a confirmed cause. Quarantine stands |
 | Stage 3 documents say "Branch Code" | The grid renders "Code". `TestCases_Branch.md` and `TraceabilityMatrix.md` still carry the wrong label — a Stage 3 correction nobody has made |
 | **`BranchActionsSuite` had no class** | **Resolved 2026-08-15.** `BranchActions_TC` was recovered from the remote branch, integrated with `ApprovalStatus`, and TC-BR-056 passed on first use. It stays commented out of `testng.xml` pending review of its isolated execution |
 | **Login exhaustion** | **New, open.** Three occurrences today, always after ~25 logins — see §4.2. Not a software defect; needs the environment owner |
@@ -396,12 +415,36 @@ Facts about what this run was authorized to do. **These are not a quality score*
 
 | Measure | Value |
 |---|---|
-| Safety preflight completed before any test ran | **Yes** — `metadata/SafetyPreflight.md` |
-| Authorizations in force | 4 — CREATE, UPDATE, SUBMIT, APPROVE, all on self-created records only |
+| Safety preflight completed before any test ran | **Yes**, for every run — `metadata/SafetyPreflight.md` |
+| Authorizations in force | **5** — CREATE, UPDATE, SUBMIT, APPROVE, REJECT, all on self-created records only |
 | Operations forbidden | 0 |
 | Tests blocked by policy | **0** — no test was deselected |
+| **Tests held pending authorization** | **1** — TC-BR-057, see below |
 | DELETE operations in the suite | **None**, confirmed by searching the whole test source |
-| Records created | Branch records named `QARUN003_<nanoTime>`, left in place; deletion is not authorized |
+| Records created | Branch records named `QARUN003_` / `QA_<nanoTime>`, left in place; deletion is not authorized |
+
+### 7.1 The preflight caught a real gap before it could act
+
+**Before `rerun-29`, only four authorizations existed: CREATE, UPDATE, SUBMIT and APPROVE. None
+covered `REJECT`** — and TC-BR-057 rejects a branch.
+
+This is the case the Execution Safety layer exists for. `Automation = Approved` had made the test an
+approved asset, but that decision never authorized the business change the test performs on a live
+environment. The two are decided by different mechanisms, deliberately, and discovering the gap by
+performing the rejection would have defeated the whole point of checking.
+
+| Test | Preflight outcome |
+|---|---|
+| TC-BR-058 | **Allowed** — every action it performs was already granted, so it ran immediately |
+| TC-BR-057 | **Held**, authorization requested, granted, then run |
+
+`AUTH-BRANCH-REJECT-SelfCreated` was granted scoped to records the run creates. The narrower of the
+two options was taken deliberately: **rejecting any pre-existing branch remains forbidden**, which
+matters on a shared Staging environment where other teams' records sit in the same grid.
+
+**Note this is not a defect and not a coverage failure.** A run that pauses for an authorization is a
+correctly governed run. It is recorded here because the gap was real and would otherwise have gone
+unnoticed until something was rejected that should not have been.
 
 **One limitation to be honest about:** safety here is enforced *before* the run starts — at preflight
 and at test selection. Maven and SHAFT run as an external process, so once testing begins there is no
@@ -422,13 +465,14 @@ Every item from the Project Context, with what this execution actually settled.
 | RISK-BR-3 | Supplier Credentials PCC removal | **Still unverified** — not observable from the UI |
 | RISK-BR-4 | Outstanding Threshold is US 51489's field | **Resolved** (2026-08-03, module owner). Unchanged |
 | RISK-BR-5 | Do the Create-screen dispositions extend to Update? | **Still unverified** — no executed case addresses it |
-| RISK-BR-6(a) | Do row action icons change with approval state? | **Confirmed** — TC-BR-054 passed, checking icons against a record's approval state |
+| RISK-BR-6(a) | Do row action icons change with approval state? | **Confirmed, and now more strongly** — TC-BR-054 passed on the icons themselves, and TC-BR-056/057 confirm the underlying actions work and change the record's state |
 | RISK-BR-6(b) | Do action rights differ by role? | **Still untested** — only one privileged account exists. (a) passing must not be read as (b) checked |
 | RISK-BR-7 | Branch Name search accepts a different character set than Create | **Still unverified** — TC-BR-041 searches by name but does not probe characters |
-| RISK-BR-8 | Is "Approval Status" the same axis as the Status filter? | **Partly informed, not resolved** — TC-BR-045 (status filter) and TC-BR-054 (approval status) both pass, but neither settles whether the two are one axis |
+| RISK-BR-8 | Is "Approval Status" the same axis as the Status filter? | **Partly informed, not resolved** — TC-BR-045 (status filter) and TC-BR-054 (approval status) both pass, but neither settles whether the two are one axis. `BranchProvisioner` now finds a freshly submitted branch under the `Inactive` filter, which is a data point for them being separate axes, but not a test of it |
 | RISK-BR-9 | Pagination behaviour is unspecified | **Partly confirmed** — TC-BR-060 and TC-BR-061 confirm Next and Last page navigation work. Filter-persistence across pages (PRD XC-13) is still unchecked |
 
-**Two of twelve moved.** RISK-BR-6(a) is now confirmed and RISK-BR-9 is partly confirmed. Everything
+**Two of twelve moved.** RISK-BR-6(a) is now confirmed, with stronger evidence after `rerun-29`, and
+RISK-BR-9 is partly confirmed. Everything
 else stands where it did, which is expected — most of these need cases that were never selected for
 automation.
 
@@ -444,14 +488,15 @@ Taken from `metadata/observability/ObservabilityMetrics.json`. Full detail:
 |---|---|
 | Instrumentation status | **Partially Instrumented** |
 | Why | No `RUN_STARTED` event exists, so run-level timing was never measured. Every span opened by Stages 5A and 6A was closed |
-| Events recorded | 73 — all from skills, 0 from platform tools |
+| Events recorded | 81 — all from skills, 0 from platform tools |
 | Stage 5A duration | 18 min 20 s |
 | Stage 6A duration | measured across two reporting passes |
 | Human decisions requested / resolved | 0 / 0 |
 | Tool calls / retries | 0 / 0 |
-| **Tests planned / executed / passed / failed** | **58 / 52 / 52 / 0** — cumulative across both cycles |
-| Tests skipped | 6 — 4 in cycle 27, 2 in cycle 28 |
+| **Tests planned / executed / passed / failed** | **60 / 54 / 54 / 0** — cumulative across all three cycles |
+| Tests skipped | 6 — 4 in cycle 27, 2 in cycle 28, 0 in cycle 29 |
 | Repair cycles in these runs | 0 |
+| Authorizations granted mid-run | 1 — `AUTH-BRANCH-REJECT-SelfCreated` (§7.1) |
 | Safety preflight completed | Yes. Operation counts: **Unavailable** — the preflight record carries no operation total |
 | **Token Usage** | **Unavailable** — no supported run-attributable provider usage source exists |
 | **Cost** | **Unavailable** — same reason; nothing is estimated from text length or assumed pricing |
@@ -460,9 +505,9 @@ Taken from `metadata/observability/ObservabilityMetrics.json`. Full detail:
 
 **Two counting differences worth knowing, so the numbers here are not read against §5's:**
 
-1. **These totals are cumulative across execution cycles, not distinct test cases.** 58 planned means
-   32 in cycle 27 plus 26 in cycle 28 — the same case counted once per cycle it appeared in. §5.2's
-   "29 of 32" counts each case once. Both are correct; they answer different questions.
+1. **These totals are cumulative across execution cycles, not distinct test cases.** 60 planned means
+   32 in cycle 27, 26 in cycle 28 and 2 in cycle 29 — the same case counted once per cycle it appeared
+   in. §5.2's "31 of 32" counts each case once. Both are correct; they answer different questions.
 2. **The test-design totals cover every module.** The tool reports 134 cases, 110 review-approved and
    43 automation-approved across the whole project, `agency` included. §5.2's figures are `branch`
    alone: 81 cases, 73 review-approved, 32 automation-approved.
@@ -487,10 +532,9 @@ All of these need human follow-up. **No code fix has been made or is implied as 
 
 ### Coverage
 
-4. **Re-run TC-BR-057 and TC-BR-058 on their own.** This is the cheapest item on the list and the one
-   that closes the most. The code works — TC-BR-056 proved the same path — and two tests is 2 logins
-   rather than 25, so the failure that stopped them is unlikely to recur. Until they run, the module
-   has no verified coverage of grid rejection.
+4. **Restore `BranchActionsSuite` in `testng.xml`.** All three of its cases now pass on real evidence,
+   which was the condition for reviewing their isolated execution. Leaving the block commented out
+   recreates the original problem — a suite that looks covered and never runs.
 5. **Correct "Branch Code" to "Code"** in `TestCases_Branch.md` and `TraceabilityMatrix.md`, and remove
    the stale "expected to fail" note for TC-BR-052 from the Suite Manifest.
 6. **Add a requirement roll-up for US 8599 and US 8606** to the Traceability Matrix, so requirement
@@ -530,6 +574,7 @@ All of these need human follow-up. **No code fix has been made or is implied as 
 |---|---|---|
 | Execution Results (`rerun-27`) | Yes | §3, §4 |
 | Execution Results (`rerun-28`) | Yes — **reconstructed from Allure result files** | §3, §4 |
+| Execution Results (`rerun-29`) | Yes | §3, §4, §7 |
 | Test Cases (`TestCases_Branch.md`) | Yes | §5.2 |
 | Traceability Matrix | Yes | §5.1 |
 | Project Context | Yes | §8 |

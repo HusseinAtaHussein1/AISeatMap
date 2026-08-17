@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "module": "branch",
-  "state": "Executed",
+  "state": "Approved",
   "framework": "SHAFT",
-  "baselineRef": null,
+  "baselineRef": "33a6ff1e6d9c3a45592ca5183a8c50095b365e75",
   "sourceRuns": [
     "run-003",
     "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
   ],
-  "assembledAt": null,
+  "assembledAt": "2026-08-17T06:57:56.988Z",
   "approvedBy": "ahmed.ayman@tildetech.ae",
-  "approvedAt": "2026-08-14T09:04:23.175Z",
-  "updatedAt": "2026-08-15T15:39:55.839Z",
+  "approvedAt": "2026-08-17T06:53:48.676Z",
+  "updatedAt": "2026-08-17T06:57:56.988Z",
   "history": [
     {
       "state": "Generated",
@@ -82,6 +82,15 @@
       "state": "Executed",
       "at": "2026-08-15T15:39:55.839Z",
       "run": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
+    },
+    {
+      "state": "Approved",
+      "at": "2026-08-17T06:53:48.676Z"
+    },
+    {
+      "state": "Assembled",
+      "at": "2026-08-17T06:57:56.988Z"
     }
-  ]
+  ],
+  "lastMergeSummary": "platform_core_data/modules/branch/automation/automation_promotion.md"
 }

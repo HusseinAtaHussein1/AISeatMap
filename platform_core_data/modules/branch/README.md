@@ -5,7 +5,7 @@
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
 **Slug:** `branch` · **Status:** Active
-**Last generated:** 2026-08-17T06:53:48.676Z
+**Last generated:** 2026-08-17T08:52:59.076Z
 
 ## Scope
 
@@ -32,11 +32,16 @@ Branch creation under Company with credit limit, top-up limit, credit terms, own
 
 ## Automation
 
-**Lifecycle state:** Approved · **Framework:** SHAFT
+**Lifecycle state:** Promoted · **Framework:** SHAFT
 
-- Assembled into the baseline: never
-- Generated against shared ref: —
+- Assembled into the baseline: 2026-08-17T06:57:56.988Z
+- Generated against shared ref: 09bafbd91bbe3873328248a3d9688684e2e1914b
 - Executed by: `run-003`, `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch`
+
+> **Promoted — the code is not in this folder.** This module's executable automation lives in the Workspace Automation Baseline at `platform_core_data/automation_baseline/shaft/tests_SHAFT`, which is its single source of truth. The working copy at `platform_core_data/modules/branch/automation/tests_SHAFT` was retired on 2026-08-17T08:49:32.512Z by ahmed.ayman@tildetech.ae. Everything else here — plans, reports, healing records, evidence — is permanent module history and stays.
+
+- Baseline paths owned by this module: `src/main/java/AdminPages/Admin/Branch/**`, `src/test/java/AdminPages/Admin/Branch/**`, `src/test/resources/branch_baseline.properties`, `testng-branch.xml`
+- If a `tests_*` directory ever reappears under this module, it is not usable — stop and report it (pipeline.md §12.10, safety rule 3).
 
 ## Runs that touched this module
 

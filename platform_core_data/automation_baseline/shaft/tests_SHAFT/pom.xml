@@ -25,6 +25,19 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shaft_engine.version>7.4.20231015</shaft_engine.version>
         <aspectjweaver.version>1.9.19</aspectjweaver.version>
+        <!--
+            Which TestNG suite `mvn test` runs. Defaults to the whole-project suite, so a plain
+            `mvn test` is unchanged. Overridable on the command line for a MODULE-SCOPED run:
+
+                mvn test -DsuiteXmlFile=testng-branch.xml
+
+            Needed since promotion became terminal (pipeline.md §12.9): every promoted module's code
+            lives in this one baseline, so "run just this module" has to be expressed as a suite file
+            rather than as a separate project directory. surefire's own `surefire.suiteXmlFiles` user
+            property cannot serve here — an explicit <suiteXmlFiles> value in the POM wins over it —
+            which is why the indirection is declared rather than assumed.
+        -->
+        <suiteXmlFile>testng.xml</suiteXmlFile>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <surefire-testng.version>3.1.2</surefire-testng.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -76,7 +89,7 @@
                 </dependencies>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemPropertyVariables>
                         <testng.dtd.http>true</testng.dtd.http>

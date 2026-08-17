@@ -30,7 +30,7 @@
 | Version | `9.4.20251220` (real groupId `io.github.shafthq`; verified via Maven Central search + `javap` against the resolved jar, not Context7 — see Detection Gaps) |
 | Pinned? | Yes |
 | Language | Java 17 (`maven.compiler.release`) — confirmed compilable against this environment's JDK 23 toolchain via a real `mvn test-compile` pass |
-| Automation root | `platform_core_data/modules/branch/automation/tests_SHAFT/` (module project; not yet merged to `platform_core_data/automation_baseline/SHAFT/`) |
+| Automation root | `platform_core_data/automation_baseline/shaft/tests_SHAFT/` (Workspace Automation Baseline). **Updated 2026-08-17:** the module project this previously pointed at was retired when `branch` was promoted, and the baseline is now its single source of truth (`pipeline.md` §12.9). Resolve per module with `automation_lifecycle/cli.js resolve-root` rather than reading a fixed path from here. |
 
 ## Dependency Table
 

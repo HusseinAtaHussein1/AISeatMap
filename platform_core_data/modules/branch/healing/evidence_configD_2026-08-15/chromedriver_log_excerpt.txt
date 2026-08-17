@@ -1,0 +1,21 @@
+ChromeDriver verbose-log excerpt, Configuration D (2026-08-15).
+Curated from the four full verbose logs, which were temporary and are not kept.
+
+==================================================================
+D - staged Chrome 151.0.7922.138 + exact ChromeDriver 151.0.7922.138 - LOST
+==================================================================
+[08-15-2026 12:23:14.556][INFO]: Starting ChromeDriver 151.0.7922.138 (41fa82442390a4d4456c78f2d69a832d5720cb27-refs/branch-heads/7922@{#2891}) on port 19181
+[08-15-2026 12:23:32.276][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=583) 
+   "type": "mouseMoved",
+[08-15-2026 12:23:32.276][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=583) 
+[08-15-2026 12:23:32.380][INFO]: COMMAND ClickElement {
+[08-15-2026 12:23:32.404][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=639) 
+   "type": "mouseMoved",
+[08-15-2026 12:23:32.404][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=640) 
+   "type": "mousePressed",
+[08-15-2026 12:23:32.404][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=641) 
+   "type": "mouseReleased",
+[08-15-2026 12:23:32.404][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=639) 
+[08-15-2026 12:23:32.404][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=640) 
+[08-15-2026 12:23:32.404][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=641) 
+[08-15-2026 12:23:32.404][INFO]: RESPONSE ClickElement

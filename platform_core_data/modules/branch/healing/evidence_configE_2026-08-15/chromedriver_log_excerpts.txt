@@ -1,0 +1,30 @@
+ChromeDriver verbose-log excerpts, Configuration E (2026-08-15).
+Same browser binary and same driver in both excerpts; only the session differs.
+
+=== E session 1, probe 1 - DELIVERED (mouseReleased ack +7ms) ===
+   "type": "mouseMoved",
+[08-15-2026 12:58:09.825][INFO]: COMMAND ClickElement {
+[08-15-2026 12:58:09.851][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=639) 
+   "type": "mouseMoved",
+[08-15-2026 12:58:09.851][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=640) 
+   "type": "mousePressed",
+[08-15-2026 12:58:09.851][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=641) 
+   "type": "mouseReleased",
+[08-15-2026 12:58:09.851][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=639) 
+[08-15-2026 12:58:09.853][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=640) 
+[08-15-2026 12:58:09.858][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=641) 
+[08-15-2026 12:58:09.858][INFO]: RESPONSE ClickElement
+
+=== E session 2, probe 1 - LOST (all acks same millisecond) ===
+   "type": "mouseMoved",
+[08-15-2026 12:58:32.769][INFO]: COMMAND ClickElement {
+[08-15-2026 12:58:32.796][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=645) 
+   "type": "mouseMoved",
+[08-15-2026 12:58:32.796][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=646) 
+   "type": "mousePressed",
+[08-15-2026 12:58:32.796][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=647) 
+   "type": "mouseReleased",
+[08-15-2026 12:58:32.797][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=645) 
+[08-15-2026 12:58:32.797][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=646) 
+[08-15-2026 12:58:32.797][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=647) 
+[08-15-2026 12:58:32.797][INFO]: RESPONSE ClickElement

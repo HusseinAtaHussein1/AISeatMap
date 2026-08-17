@@ -1,0 +1,303 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '22 out of 28' test cases in the current suite                                       
+                                Test Method: 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Moved the mouse to the middle of the element. @15-08-2026 17:21:14.0378 PM
+[ReportManager] Click "By.cssSelector: label[for='id-Status-Both']". @15-08-2026 17:21:14.0415 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 516 results". @15-08-2026 17:21:14.0535 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 516 results". @15-08-2026 17:21:14.0561 PM
+[ReportManager] Moved the mouse to the middle of the element. @15-08-2026 17:21:14.0746 PM
+[ReportManager] Click "Search". @15-08-2026 17:21:14.0785 PM
+[ReportManager] Is enabled action failed. @15-08-2026 17:21:15.0305 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803675433_tcBr060_navigateToNextPage_isEnabled_failed' @15-08-2026 17:21:15.0748 PM
+[ReportManager] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:119)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$laHzE9FB.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:544)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:503)
+ AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage(SearchBranch_TC.java:484)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.187)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '24.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [eca1dca6ffde649e2bbc4b654143495d, isElementEnabled {id=f.48BC44B19028DEBAB2B8287C8C2DD105.d.E06A642013FD422E727F438CE9E19428.e.522}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.187, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Aymoon\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:61999}, goog:processID: 20312, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:61999/devtoo..., se:cdpVersion: 150.0.7871.187, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:41847/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (eca1dca6ffde649e2bbc4b654143495d)] -> css selector: table tbody tr]
+Session ID: eca1dca6ffde649e2bbc4b654143495d
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$laHzE9FB.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:544)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:503)
+ AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage(SearchBranch_TC.java:484)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) @15-08-2026 17:21:15.0749 PM
+[ReportManager] Is enabled action failed. @15-08-2026 17:21:15.0762 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803675901_tcBr060_navigateToNextPage_isEnabled_failed' @15-08-2026 17:21:16.0203 PM
+[ReportManager] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:119)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$laHzE9FB.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:562)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:509)
+ AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage(SearchBranch_TC.java:484)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.187)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '24.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [eca1dca6ffde649e2bbc4b654143495d, isElementEnabled {id=f.48BC44B19028DEBAB2B8287C8C2DD105.d.E06A642013FD422E727F438CE9E19428.e.522}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.187, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Aymoon\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:61999}, goog:processID: 20312, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:61999/devtoo..., se:cdpVersion: 150.0.7871.187, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:41847/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (eca1dca6ffde649e2bbc4b654143495d)] -> css selector: table tbody tr]
+Session ID: eca1dca6ffde649e2bbc4b654143495d
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$laHzE9FB.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:562)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:509)
+ AdminPages.Admin.Branch.SearchBranch_TC.tcBr060_navigateToNextPage(SearchBranch_TC.java:484)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:664)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) @15-08-2026 17:21:16.0203 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 714 results". @15-08-2026 17:21:16.0284 PM
+[ReportManager] Get Text from element, text is "Showing 10 results of 714 results". @15-08-2026 17:21:16.0308 PM
+[ReportManager] Get Text from "1", text is "1". @15-08-2026 17:21:16.0381 PM
+[ReportManager] Get Text from "1", text is "1". @15-08-2026 17:21:16.0408 PM
+[ReportManager] Get Text from "2", text is "2". @15-08-2026 17:21:16.0414 PM
+[ReportManager] Get Text from "72", text is "72". @15-08-2026 17:21:16.0419 PM
+[ReportManager] Get Text from "1", text is "1". @15-08-2026 17:21:16.0440 PM
+[ReportManager] Get Text from "BRN815", text is "BRN815". @15-08-2026 17:21:16.0508 PM
+[ReportManager] Get Text from "BRN814", text is "BRN814". @15-08-2026 17:21:16.0534 PM
+[ReportManager] Get Text from "BRN813", text is "BRN813". @15-08-2026 17:21:16.0561 PM
+[ReportManager] Get Text from "BRN812", text is "BRN812". @15-08-2026 17:21:16.0589 PM
+[ReportManager] Get Text from "BRN811", text is "BRN811". @15-08-2026 17:21:16.0616 PM
+[ReportManager] Get Text from "BRN810", text is "BRN810". @15-08-2026 17:21:16.0645 PM
+[ReportManager] Get Text from "BRN809", text is "BRN809". @15-08-2026 17:21:16.0673 PM
+[ReportManager] Get Text from "BRN808", text is "BRN808". @15-08-2026 17:21:16.0703 PM
+[ReportManager] Get Text from "BRN807", text is "BRN807". @15-08-2026 17:21:16.0729 PM
+[ReportManager] Get Text from "BRN806", text is "BRN806". @15-08-2026 17:21:16.0758 PM
+[ReportManager] Get Text from "BRN815", text is "BRN815". @15-08-2026 17:21:16.0822 PM
+[ReportManager] Get Text from "BRN814", text is "BRN814". @15-08-2026 17:21:16.0848 PM
+[ReportManager] Get Text from "BRN813", text is "BRN813". @15-08-2026 17:21:16.0873 PM
+[ReportManager] Get Text from "BRN812", text is "BRN812". @15-08-2026 17:21:16.0902 PM
+[ReportManager] Get Text from "BRN811", text is "BRN811". @15-08-2026 17:21:16.0928 PM
+[ReportManager] Get Text from "BRN810", text is "BRN810". @15-08-2026 17:21:16.0954 PM
+[ReportManager] Get Text from "BRN809", text is "BRN809". @15-08-2026 17:21:16.0981 PM
+[ReportManager] Get Text from "BRN808", text is "BRN808". @15-08-2026 17:21:17.0009 PM
+[ReportManager] Get Text from "BRN807", text is "BRN807". @15-08-2026 17:21:17.0039 PM
+[ReportManager] Get Text from "BRN806", text is "BRN806". @15-08-2026 17:21:17.0069 PM
+[ReportManager] Get Text from "1", text is "1". @15-08-2026 17:21:17.0088 PM
+[ReportManager] Get Text from "BRN815", text is "BRN815". @15-08-2026 17:21:17.0191 PM
+[ReportManager] Get Text from "BRN814", text is "BRN814". @15-08-2026 17:21:17.0217 PM
+[ReportManager] Get Text from "BRN813", text is "BRN813". @15-08-2026 17:21:17.0245 PM
+[ReportManager] Get Text from "BRN812", text is "BRN812". @15-08-2026 17:21:17.0273 PM
+[ReportManager] Get Text from "BRN811", text is "BRN811". @15-08-2026 17:21:17.0298 PM
+[ReportManager] Get Text from "BRN810", text is "BRN810". @15-08-2026 17:21:17.0328 PM
+[ReportManager] Get Text from "BRN809", text is "BRN809". @15-08-2026 17:21:17.0357 PM
+[ReportManager] Get Text from "BRN808", text is "BRN808". @15-08-2026 17:21:17.0385 PM
+[ReportManager] Get Text from "BRN807", text is "BRN807". @15-08-2026 17:21:17.0411 PM
+[ReportManager] Get Text from "BRN806", text is "BRN806". @15-08-2026 17:21:17.0451 PM
+[ReportManager] Get Text from "BRN805", text is "BRN805". @15-08-2026 17:21:17.0769 PM
+[ReportManager] Get Text from "BRN804", text is "BRN804". @15-08-2026 17:21:17.0800 PM
+[ReportManager] Get Text from "BRN803", text is "BRN803". @15-08-2026 17:21:17.0829 PM
+[ReportManager] Get Text from "BRN802", text is "BRN802". @15-08-2026 17:21:17.0856 PM
+[ReportManager] Get Text from "BRN801", text is "BRN801". @15-08-2026 17:21:17.0882 PM
+[ReportManager] Get Text from "BRN800", text is "BRN800". @15-08-2026 17:21:17.0910 PM
+[ReportManager] Get Text from "BRN799", text is "BRN799". @15-08-2026 17:21:17.0935 PM
+[ReportManager] Get Text from "BRN798", text is "BRN798". @15-08-2026 17:21:17.0961 PM
+[ReportManager] Get Text from "BRN797", text is "BRN797". @15-08-2026 17:21:17.0989 PM
+[ReportManager] Get Text from "BRN796", text is "BRN796". @15-08-2026 17:21:18.0017 PM
+[ReportManager] Get Text from "BRN805", text is "BRN805". @15-08-2026 17:21:18.0083 PM
+[ReportManager] Get Text from "BRN804", text is "BRN804". @15-08-2026 17:21:18.0112 PM
+[ReportManager] Get Text from "BRN803", text is "BRN803". @15-08-2026 17:21:18.0138 PM
+[ReportManager] Get Text from "BRN802", text is "BRN802". @15-08-2026 17:21:18.0168 PM
+[ReportManager] Get Text from "BRN801", text is "BRN801". @15-08-2026 17:21:18.0195 PM
+[ReportManager] Get Text from "BRN800", text is "BRN800". @15-08-2026 17:21:18.0221 PM
+[ReportManager] Get Text from "BRN799", text is "BRN799". @15-08-2026 17:21:18.0253 PM
+[ReportManager] Get Text from "BRN798", text is "BRN798". @15-08-2026 17:21:18.0283 PM
+[ReportManager] Get Text from "BRN797", text is "BRN797". @15-08-2026 17:21:18.0311 PM
+[ReportManager] Get Text from "BRN796", text is "BRN796". @15-08-2026 17:21:18.0340 PM
+[ReportManager] Get Text from "2", text is "2". @15-08-2026 17:21:18.0359 PM
+[ReportManager] Get Text from "2", text is "2". @15-08-2026 17:21:18.0380 PM
+[ReportManager] Get Text from "BRN805", text is "BRN805". @15-08-2026 17:21:18.0445 PM
+[ReportManager] Get Text from "BRN804", text is "BRN804". @15-08-2026 17:21:18.0472 PM
+[ReportManager] Get Text from "BRN803", text is "BRN803". @15-08-2026 17:21:18.0499 PM
+[ReportManager] Get Text from "BRN802", text is "BRN802". @15-08-2026 17:21:18.0527 PM
+[ReportManager] Get Text from "BRN801", text is "BRN801". @15-08-2026 17:21:18.0555 PM
+[ReportManager] Get Text from "BRN800", text is "BRN800". @15-08-2026 17:21:18.0583 PM
+[ReportManager] Get Text from "BRN799", text is "BRN799". @15-08-2026 17:21:18.0611 PM
+[ReportManager] Get Text from "BRN798", text is "BRN798". @15-08-2026 17:21:18.0639 PM
+[ReportManager] Get Text from "BRN797", text is "BRN797". @15-08-2026 17:21:18.0666 PM
+[ReportManager] Get Text from "BRN796", text is "BRN796". @15-08-2026 17:21:18.0694 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @15-08-2026 17:21:18.0695 PM

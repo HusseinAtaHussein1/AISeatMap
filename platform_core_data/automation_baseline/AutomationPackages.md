@@ -6,12 +6,20 @@
 | Packages registered | 1 |
 | Last updated | 2026-08-17 |
 | Last updated by run | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Ownership manifest | `shaft/tests_SHAFT/.baseline_ownership.json` — which module owns which paths (`pipeline.md` §12.9) |
 
 ## 1. Packages
 
-| Framework | Location | Language | Suites | Test Cases | Module | Baseline Ref | Last Assembled | Last Merged Run |
-|---|---|---|---|---|---|---|---|---|
-| SHAFT Engine | `automation_baseline/shaft/tests_SHAFT/` | Java 17 | 4 | 31 | `branch` | `33a6ff1` | 2026-08-17 | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Framework | Location | Language | Suites | Test Cases | Module | State | Baseline Ref | Last Assembled | Last Merged Run |
+|---|---|---|---|---|---|---|---|---|---|
+| SHAFT Engine | `automation_baseline/shaft/tests_SHAFT/` | Java 17 | 4 | 31 | `branch` | **Promoted** — this is the module's single source of truth | `09bafbd` | 2026-08-17 | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+
+**`branch` is Promoted (2026-08-17).** Its module working copy at
+`modules/branch/automation/tests_SHAFT/` was verified byte-identical here, proven by a 31/31 Headed
+run from this baseline, and then **permanently deleted**. Generation, execution, repair and
+self-healing for `branch` now happen in this baseline, scoped by `.baseline_ownership.json` and run
+with `testng-branch.xml`. Resolve the path with
+`automation_lifecycle/cli.js resolve-root --module branch`; never hardcode either location.
 
 ## 2. Package Detail
 
@@ -19,8 +27,10 @@
 
 | Field | Value |
 |---|---|
-| Location | `platform_core_data/automation_baseline/shaft/tests_SHAFT/` (Workspace Automation Baseline) |
-| Source module project | `platform_core_data/modules/branch/automation/tests_SHAFT/` |
+| Location | `platform_core_data/automation_baseline/shaft/tests_SHAFT/` (Workspace Automation Baseline — **and `branch`'s single source of truth**) |
+| Source module project | **Retired 2026-08-17.** Was `platform_core_data/modules/branch/automation/tests_SHAFT/`; permanently deleted after verification and a passing live run. Must never be recreated (`pipeline.md` §12.10 rule 3) |
+| Module-scoped suite | `testng-branch.xml` — `mvn test -DsuiteXmlFile=testng-branch.xml` |
+| Whole-project regression | `testng.xml` — `mvn test` |
 | Summary artifact | `modules/branch/automation/AutomationSummary_SHAFT.md` |
 | Promotion record | `modules/branch/automation/automation_promotion.md` |
 | Created by run | `run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch` |
@@ -43,6 +53,23 @@
 |---|---|---|---|---|---|---|---|---|
 | 2026-08-05 | `eedfaa2` | `branch` | `run-003` | 46 | 0 | 0 | 0 | 0 |
 | 2026-08-17 | `33a6ff1` | `branch` | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` | 7 | 21 | 16 | 0 | 0 |
+
+**No further merges will happen for `branch`.** It was promoted the same day, so its future changes are
+**in-place baseline updates** recorded by `recordBaselineUpdate()` rather than merges — there is no
+second copy to merge from. Merge History stays as the record of how the code got here.
+
+## 3.1 Promotion (2026-08-17)
+
+| Field | Value |
+|---|---|
+| Module | `branch` |
+| Verification | **PASSED** — 38 files byte-identical, 0 missing, 0 differing |
+| Standalone compile | **PASSED** — `mvn test-compile`, 0 errors |
+| Acceptance run | **31/31 passed**, Headed, from this baseline, 2026-08-17 11:36, 984.6 s, BUILD SUCCESS |
+| Accepted exceptions | **None** |
+| Retired path | `modules/branch/automation/tests_SHAFT/` — permanently deleted |
+| Approved by | ahmed.ayman@tildetech.ae |
+| Full record | `modules/branch/automation/automation_promotion.md` |
 
 The 2026-08-17 assembly carried the delta produced since the first one by `81cff38` (Search/Actions
 and Update Branch self-healing) and `01c7edf` (`BranchActions_TC` recovery and full-suite run). It

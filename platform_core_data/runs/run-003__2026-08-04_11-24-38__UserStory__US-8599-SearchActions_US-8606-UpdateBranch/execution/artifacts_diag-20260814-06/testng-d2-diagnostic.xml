@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  DIAG-BR-20260814-06. Temporary diagnosis harness only, scoping file only.
+  The approved testng.xml is not modified and not used by this run.
+-->
+<suite name="D2KeystrokeDeliveryDiagnostic" verbose="1">
+  <test name="KeystrokeDelivery">
+    <classes>
+      <class name="AdminPages.Admin.Branch.SearchDeliveryDiagnostic_TC"/>
+    </classes>
+  </test>
+</suite>

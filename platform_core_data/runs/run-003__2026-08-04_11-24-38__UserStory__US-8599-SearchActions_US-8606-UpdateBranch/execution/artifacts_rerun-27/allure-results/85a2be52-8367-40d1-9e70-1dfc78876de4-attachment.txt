@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '3 out of 28' test cases in the current suite                                        
+                    Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr004_countryAutoFillsFromOperatingCountry'                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @15-08-2026 17:14:29.0924 PM

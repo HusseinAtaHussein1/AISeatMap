@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Group verification, requested 2026-08-14: exactly TC-BR-066, TC-BR-067, TC-BR-068, TC-BR-069 —
+    the four Update-Branch tests that share BranchProvisioner.createPendingBranch() -> the same
+    fillMandatoryBaseline()/selectFirstSupplierCredential() path just repaired and verified for
+    TC-BR-001 (rerun-10). This run exists to determine, per test, whether provisioning now completes
+    and whether each test reaches and passes its own business assertion. No code change accompanies
+    this run (self-healing-skill Sec12: rerun only, no repair). No other test case is included.
+    TC-BR-001's quarantine remains open independently of this group's outcome.
+-->
+<suite name="BranchUpdateGroupVerification" verbose="1">
+    <test name="UpdateGroup_Verification">
+        <classes>
+            <class name="AdminPages.Admin.Branch.UpdateBranch_TC">
+                <methods>
+                    <include name="tcBr066_updateBranchAndSubmitForApproval"/>
+                    <include name="tcBr067_remarksIsMandatoryBeforeAnyUpdateAction"/>
+                    <include name="tcBr068_cancelDiscardsUnsavedChanges"/>
+                    <include name="tcBr069_approveBranchUpdateRequestFromUpdateScreen"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Headed comparison run, requested 2026-08-14: exactly TC-BR-066, TC-BR-067, TC-BR-068, same 3 tests
+    that all failed at the identical Credential-provisioning step in rerun-17 (Headless). Purpose: verify
+    the Address test-data correction ("2 Test Street") that rerun-17 never reached, and compare directly
+    against rerun-17 to check whether the Credential-dropdown intermittency is mode-dependent. No other
+    test case is included. No code change accompanies this run.
+-->
+<suite name="BranchVerify066to068Headed" verbose="1">
+    <test name="TC-BR-066_067_068_HeadedComparison">
+        <classes>
+            <class name="AdminPages.Admin.Branch.UpdateBranch_TC">
+                <methods>
+                    <include name="tcBr066_updateBranchAndSubmitForApproval"/>
+                    <include name="tcBr067_remarksIsMandatoryBeforeAnyUpdateAction"/>
+                    <include name="tcBr068_cancelDiscardsUnsavedChanges"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

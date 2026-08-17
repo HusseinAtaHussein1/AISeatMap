@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  D1 instrumented confirmation run (DIAG-BR-20260814-02).
+  Scoping only. The approved testng.xml is NOT modified by this file and is NOT used by this run.
+  Scoped to exactly the four Branch Search filter tests named by the human:
+  TC-BR-040, TC-BR-041, TC-BR-043, TC-BR-045. All four are read only; SearchBranch_TC mutates nothing.
+-->
+<suite name="D1DiagnosticConfirmation" verbose="1">
+  <test name="SearchFilterDiagnosis">
+    <classes>
+      <class name="AdminPages.Admin.Branch.SearchBranch_TC">
+        <methods>
+          <include name="tcBr040_searchByBranchCodeReturnsMatchingRecord"/>
+          <include name="tcBr041_searchByBranchNameReturnsMatchingRecord"/>
+          <include name="tcBr043_searchWithNonMatchingCriteriaShowsEmptyState"/>
+          <include name="tcBr045_statusFilterReturnsOnlyRecordsMatchingSelectedStatus"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

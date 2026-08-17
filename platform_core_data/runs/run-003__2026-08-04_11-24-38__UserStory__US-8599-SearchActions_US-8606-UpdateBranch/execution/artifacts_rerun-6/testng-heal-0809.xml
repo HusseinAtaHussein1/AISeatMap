@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Self-Healing targeted rerun, healing pass HEAL-BR-20260809-01: only the 12 tests affected by
+    Clusters A/B/C (repaired) and D (diagnosis-only, TC-BR-065). BranchActionsSuite is excluded
+    (KL-01, class does not exist) and every other Create/Search/Update case is excluded, per
+    self-healing-skill §12 "rerun only the affected tests, never the full suite".
+-->
+<suite name="BranchHealingRerunSuite" verbose="1">
+    <test name="ClusterA_PostSubmitWait">
+        <classes>
+            <class name="AdminPages.Admin.Branch.CreateBranch_Admin_TC">
+                <methods>
+                    <include name="tcBr001_createBranchWithAllMandatoryFields"/>
+                </methods>
+            </class>
+            <class name="AdminPages.Admin.Branch.UpdateBranch_TC">
+                <methods>
+                    <include name="tcBr065_updateBranchPreFillsEveryStoredValue"/>
+                    <include name="tcBr066_updateBranchAndSubmitForApproval"/>
+                    <include name="tcBr067_remarksIsMandatoryBeforeAnyUpdateAction"/>
+                    <include name="tcBr068_cancelDiscardsUnsavedChanges"/>
+                    <include name="tcBr069_approveBranchUpdateRequestFromUpdateScreen"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="ClusterBC_SearchGrid">
+        <classes>
+            <class name="AdminPages.Admin.Branch.SearchBranch_TC">
+                <methods>
+                    <include name="tcBr043_searchWithNonMatchingCriteriaShowsEmptyState"/>
+                    <include name="tcBr046_stateFilterStaysDisabledUntilCountrySelected"/>
+                    <include name="tcBr054_rowActionIconsMatchApprovalState"/>
+                    <include name="tcBr055_editPenOpensUpdateBranchPreFilled"/>
+                    <include name="tcBr060_navigateToNextPage"/>
+                    <include name="tcBr061_navigateToLastPage"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

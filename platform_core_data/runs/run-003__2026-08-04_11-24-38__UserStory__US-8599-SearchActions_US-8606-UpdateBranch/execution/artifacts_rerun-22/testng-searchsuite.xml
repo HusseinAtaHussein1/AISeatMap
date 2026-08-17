@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  Headed verification of the complete SearchBranchSuite on the restored SearchBranch_Page.java.
+  Scoping file only. The approved testng.xml is not modified and is not used by this run.
+  Unfiltered class: every currently implemented Search Branch test runs exactly once.
+-->
+<suite name="SearchBranchSuiteVerification" verbose="1">
+  <test name="SearchBranchSuite">
+    <classes>
+      <class name="AdminPages.Admin.Branch.SearchBranch_TC"/>
+    </classes>
+  </test>
+</suite>

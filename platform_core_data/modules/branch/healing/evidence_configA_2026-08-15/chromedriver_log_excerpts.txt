@@ -1,0 +1,68 @@
+ChromeDriver verbose-log excerpts, Configuration A (2026-08-15).
+Curated from the four full verbose logs (~4.9 MB each), which were temporary and are not kept.
+Session ids, DevTools session_id and target id suffixes trimmed for readability; timestamps verbatim.
+
+==================================================================
+A. Driver / browser identity (session 1; identical in sessions 2-4)
+==================================================================
+[08-15-2026 11:16:08.438][INFO]: Starting ChromeDriver 150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}) on port 39487
+[08-15-2026 11:16:08.438][INFO]: Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+[08-15-2026 11:16:08.443][INFO]: ChromeDriver was started successfully on port 39487
+            "binary": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+
+==================================================================
+B. SUCCESSFUL real-input click - Login button, session 1
+   (the click that lands: the app issues its login request)
+==================================================================
+[08-15-2026 11:16:24.087][INFO]: COMMAND ClickElement {
+[08-15-2026 11:16:24.124][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=467) 
+   "type": "mouseMoved",
+   "x": 1443,
+   "y": 702
+[08-15-2026 11:16:24.124][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=468) 
+   "type": "mousePressed",
+   "x": 1443,
+   "y": 702
+[08-15-2026 11:16:24.124][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=469) 
+   "type": "mouseReleased",
+   "x": 1443,
+   "y": 702
+[08-15-2026 11:16:24.125][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=467) 
+[08-15-2026 11:16:24.126][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=468) 
+[08-15-2026 11:16:24.135][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=469) 
+[08-15-2026 11:16:24.135][INFO]: RESPONSE ClickElement
+
+==================================================================
+C. LOST real-input click - Status 'Both' label, session 1, probe 1
+   (first real-input interaction after reaching the Branch list)
+==================================================================
+[08-15-2026 11:16:26.296][INFO]: RESPONSE ExecuteScript "DIAG_MARKER_S1_P1_BEFORE"
+   "x": 638.8125,
+   "y": 538.0
+[08-15-2026 11:16:26.344][INFO]: COMMAND PerformActions {
+         "x": 0,
+         "y": 0
+[08-15-2026 11:16:26.348][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=580) 
+   "type": "mouseMoved",
+   "x": 653,
+   "y": 549
+[08-15-2026 11:16:26.348][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=580) 
+[08-15-2026 11:16:26.449][INFO]: RESPONSE PerformActions
+[08-15-2026 11:16:26.451][INFO]: COMMAND ClickElement {
+[08-15-2026 11:16:26.483][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=636) 
+   "type": "mouseMoved",
+   "x": 653,
+   "y": 549
+[08-15-2026 11:16:26.483][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=637) 
+   "type": "mousePressed",
+   "x": 653,
+   "y": 549
+[08-15-2026 11:16:26.483][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=638) 
+   "type": "mouseReleased",
+   "x": 653,
+   "y": 549
+[08-15-2026 11:16:26.483][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=636) 
+[08-15-2026 11:16:26.483][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=637) 
+[08-15-2026 11:16:26.483][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=638) 
+[08-15-2026 11:16:26.483][INFO]: RESPONSE ClickElement
+   "script": "return 'DIAG_MARKER_S1_P1_AFTER';"

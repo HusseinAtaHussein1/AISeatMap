@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- REPAIR-BR-012 verification, stage 3. Full SearchBranchSuite regression. Scoping only. -->
+<suite name="SearchBranchSuiteRegression" verbose="1">
+  <test name="SearchBranchSuite">
+    <classes>
+      <class name="AdminPages.Admin.Branch.SearchBranch_TC"/>
+    </classes>
+  </test>
+</suite>

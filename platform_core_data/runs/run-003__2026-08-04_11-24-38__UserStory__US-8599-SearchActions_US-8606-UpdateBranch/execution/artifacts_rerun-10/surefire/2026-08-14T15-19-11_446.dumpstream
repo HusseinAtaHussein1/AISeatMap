@@ -1,0 +1,5 @@
+# Created at 2026-08-14T15:19:11.586
+Boot Manifest-JAR contains absolute paths in classpath 'E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\branch\automation\tests_SHAFT\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

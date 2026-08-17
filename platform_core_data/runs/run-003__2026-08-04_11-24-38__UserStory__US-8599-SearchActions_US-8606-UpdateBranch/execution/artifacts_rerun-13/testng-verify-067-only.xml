@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Single-test verification, requested 2026-08-14: exactly TC-BR-067, following the approved
+    Remarks-scoped validation-message locator repair to UpdateBranch_Page.java/UpdateBranch_TC.java.
+    No other test case is included. No code change accompanies this execution.
+-->
+<suite name="BranchUpdate067Verification" verbose="1">
+    <test name="TC-BR-067_Verification">
+        <classes>
+            <class name="AdminPages.Admin.Branch.UpdateBranch_TC">
+                <methods>
+                    <include name="tcBr067_remarksIsMandatoryBeforeAnyUpdateAction"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

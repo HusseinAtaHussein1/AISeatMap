@@ -1,0 +1,48 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '19 out of 28' test cases in the current suite                                       
+                   Test Method: 'AdminPages.Admin.Branch.SearchBranch_TC.tcBr046_stateFilterStaysDisabledUntilCountrySelected'                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Get Attribute "class" from element, value is "p-dropdown p-component p-disabled". @15-08-2026 17:20:11.0552 PM
+[ReportManager] Moved the mouse to the middle of the element. @15-08-2026 17:20:11.0700 PM
+[ReportManager] Click "By.xpath: //*[@id='id-Country']/ancestor::div[contains(@class,'p-dropdown')][1]". @15-08-2026 17:20:11.0745 PM
+[ReportManager] Moved the mouse to the middle of the element. @15-08-2026 17:20:11.0931 PM
+[ReportManager] Click "Egypt". @15-08-2026 17:20:11.0973 PM
+[ReportManager] Get Attribute "class" from element, value is "p-dropdown p-component p-dropdown-clearable". @15-08-2026 17:20:12.0275 PM
+[ReportManager] Moved the mouse to the middle of the element. @15-08-2026 17:20:12.0409 PM
+[ReportManager] Click "By.xpath: //*[@id='id-State']/ancestor::div[contains(@class,'p-dropdown')][1]". @15-08-2026 17:20:12.0449 PM
+[ReportManager] Get Text from "Cairo", text is "Cairo". @15-08-2026 17:20:12.0716 PM
+[ReportManager] Get Text from "giza", text is "giza". @15-08-2026 17:20:12.0725 PM
+[ReportManager] Get Text from "sharqia", text is "sharqia". @15-08-2026 17:20:12.0732 PM
+[ReportManager] Get Text from "al-Buhayrah", text is "al-Buhayrah". @15-08-2026 17:20:12.0738 PM
+[ReportManager] Get Text from "Sawhaj", text is "Sawhaj". @15-08-2026 17:20:12.0745 PM
+[ReportManager] Get Text from "Sina ash-Shamaliyah", text is "Sina ash-Shamaliyah". @15-08-2026 17:20:12.0751 PM
+[ReportManager] Get Text from "al-Qalyubiyah", text is "al-Qalyubiyah". @15-08-2026 17:20:12.0757 PM
+[ReportManager] Get Text from "al-Minufiyah", text is "al-Minufiyah". @15-08-2026 17:20:12.0763 PM
+[ReportManager] Get Text from "Qina", text is "Qina". @15-08-2026 17:20:12.0770 PM
+[ReportManager] Get Text from "Muhafazat al Iskandariyah", text is "Muhafazat al Iskandariyah". @15-08-2026 17:20:12.0776 PM
+[ReportManager] Get Text from "Kafr-ash-Shaykh", text is "Kafr-ash-Shaykh". @15-08-2026 17:20:12.0782 PM
+[ReportManager] Get Text from "ad-Daqahliyah", text is "ad-Daqahliyah". @15-08-2026 17:20:12.0788 PM
+[ReportManager] Get Text from "al-Iskandariyah", text is "al-Iskandariyah". @15-08-2026 17:20:12.0794 PM
+[ReportManager] Get Text from "Bani Suwayf", text is "Bani Suwayf". @15-08-2026 17:20:12.0800 PM
+[ReportManager] Get Text from "al-Minya", text is "al-Minya". @15-08-2026 17:20:12.0806 PM
+[ReportManager] Get Text from "ash-Sharqiyah", text is "ash-Sharqiyah". @15-08-2026 17:20:12.0812 PM
+[ReportManager] Get Text from "al-Gharbiyah", text is "al-Gharbiyah". @15-08-2026 17:20:12.0819 PM
+[ReportManager] Get Text from "Sina al-Janubiyah", text is "Sina al-Janubiyah". @15-08-2026 17:20:12.0825 PM
+[ReportManager] Get Text from "Dumyat", text is "Dumyat". @15-08-2026 17:20:12.0831 PM
+[ReportManager] Get Text from "Muhafazat ad Daqahliyah", text is "Muhafazat ad Daqahliyah". @15-08-2026 17:20:12.0837 PM
+[ReportManager] Get Text from "Matruh", text is "Matruh". @15-08-2026 17:20:12.0843 PM
+[ReportManager] Get Text from "as-Suways", text is "as-Suways". @15-08-2026 17:20:12.0849 PM
+[ReportManager] Get Text from "al-Bahr-al-Ahmar", text is "al-Bahr-al-Ahmar". @15-08-2026 17:20:12.0854 PM
+[ReportManager] Get Text from "al-Uqsur", text is "al-Uqsur". @15-08-2026 17:20:12.0860 PM
+[ReportManager] Get Text from "Muhafazat al Gharbiyah", text is "Muhafazat al Gharbiyah". @15-08-2026 17:20:12.0865 PM
+[ReportManager] Get Text from "Muhafazat al Fayyum", text is "Muhafazat al Fayyum". @15-08-2026 17:20:12.0871 PM
+[ReportManager] Get Text from "al-Ismailiyah", text is "al-Ismailiyah". @15-08-2026 17:20:12.0876 PM
+[ReportManager] Get Text from "al-Fayyum", text is "al-Fayyum". @15-08-2026 17:20:12.0881 PM
+[ReportManager] Get Text from "al-Wadi al-Jadid", text is "al-Wadi al-Jadid". @15-08-2026 17:20:12.0887 PM
+[ReportManager] Get Text from "Port Said", text is "Port Said". @15-08-2026 17:20:12.0894 PM
+[ReportManager] Get Text from "Red Sea", text is "Red Sea". @15-08-2026 17:20:12.0901 PM
+[ReportManager] Get Text from "Alexandria", text is "Alexandria". @15-08-2026 17:20:12.0907 PM
+[ReportManager] Get Text from "Bur Sa'id", text is "Bur Sa'id". @15-08-2026 17:20:12.0915 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @15-08-2026 17:20:12.0916 PM

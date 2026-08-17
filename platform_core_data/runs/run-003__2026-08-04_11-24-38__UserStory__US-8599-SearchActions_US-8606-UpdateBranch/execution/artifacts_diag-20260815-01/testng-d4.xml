@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- DIAG-BR-20260815-02. First-interaction-per-fresh-session probe. Scoping only. -->
+<suite name="D4FirstInteraction" verbose="1">
+  <test name="FirstInteraction">
+    <classes>
+      <class name="AdminPages.Admin.Branch.ClickDeliveryDiagnostic_TC">
+        <methods>
+          <include name="d4_firstInteractionOfAFreshSession"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

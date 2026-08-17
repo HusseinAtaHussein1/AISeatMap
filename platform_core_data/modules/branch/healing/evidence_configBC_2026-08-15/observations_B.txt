@@ -1,0 +1,236 @@
+
+################ CONFIG B — SESSION 1 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Program Files (x86)/Google/Chrome/Application/chrome.exe
+driverConstructionStart wall=2026-08-15 12:08:33.233
+loginComplete wall=2026-08-15 12:08:50.008
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.115 (25f5b661e5b08141ec24b17d1ce96c5ceb5828da-refs/branch-heads/7871@{#2956}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir37316_1354838511}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:53091}
+capability.goog:processID=22592
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:53091/devtools/browser/70d665d8-e4f9-4f42-956d-99a28f5d5b83
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:24311/session/ff55b0081e11a39fdcb91fdb6b186ab0
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:08:51.127
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:08:51.204
+PROBE 1 clickEnd wall=2026-08-15 12:08:51.410 clickMs=206 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:08:51.506
+PROBE 2 clickEnd wall=2026-08-15 12:08:51.707 clickMs=201 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:08:51.799
+PROBE 3 clickEnd wall=2026-08-15 12:08:51.989 clickMs=191 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir37316_1354838511" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 150.0.7871.187
+              (Official Build)
+              
+              (32-bit)
+  
+              (cohort: Stable)
+reportedExecutablePath C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+
+################ CONFIG B — SESSION 2 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Program Files (x86)/Google/Chrome/Application/chrome.exe
+driverConstructionStart wall=2026-08-15 12:08:52.670
+loginComplete wall=2026-08-15 12:09:08.282
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.115 (25f5b661e5b08141ec24b17d1ce96c5ceb5828da-refs/branch-heads/7871@{#2956}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir28284_1497359859}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:53850}
+capability.goog:processID=22960
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:53850/devtools/browser/a4339c79-1bfa-47b6-9f53-a2c043ba68a4
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:28270/session/a8a1d99feed5ea0f43aaf6ba6abdd4c0
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:09:09.057
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:09:09.101
+PROBE 1 clickEnd wall=2026-08-15 12:09:09.291 clickMs=190 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:09:09.357
+PROBE 2 clickEnd wall=2026-08-15 12:09:09.536 clickMs=179 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:09:09.609
+PROBE 3 clickEnd wall=2026-08-15 12:09:09.806 clickMs=197 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir28284_1497359859" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 150.0.7871.187
+              (Official Build)
+              
+              (32-bit)
+  
+              (cohort: Stable)
+reportedExecutablePath C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+
+################ CONFIG B — SESSION 3 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Program Files (x86)/Google/Chrome/Application/chrome.exe
+driverConstructionStart wall=2026-08-15 12:09:10.332
+loginComplete wall=2026-08-15 12:09:26.084
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.115 (25f5b661e5b08141ec24b17d1ce96c5ceb5828da-refs/branch-heads/7871@{#2956}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir24664_1464364166}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:55842}
+capability.goog:processID=5696
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:55842/devtools/browser/9a56836d-9272-4031-bd82-f0f710e97e1b
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:20111/session/103bdc7e7e4c8a4f24040e9f8e156362
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:09:26.879
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:09:26.918
+PROBE 1 clickEnd wall=2026-08-15 12:09:27.098 clickMs=180 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:09:27.158
+PROBE 2 clickEnd wall=2026-08-15 12:09:27.333 clickMs=175 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:09:27.397
+PROBE 3 clickEnd wall=2026-08-15 12:09:27.575 clickMs=179 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir24664_1464364166" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 150.0.7871.187
+              (Official Build)
+              
+              (32-bit)
+  
+              (cohort: Stable)
+reportedExecutablePath C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+
+################ CONFIG B — SESSION 4 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Program Files (x86)/Google/Chrome/Application/chrome.exe
+driverConstructionStart wall=2026-08-15 12:09:28.071
+loginComplete wall=2026-08-15 12:09:43.819
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries/B_driver150/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.115 (25f5b661e5b08141ec24b17d1ce96c5ceb5828da-refs/branch-heads/7871@{#2956}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir30312_1000988853}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:55223}
+capability.goog:processID=12628
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:55223/devtools/browser/8492d97d-4fc4-4671-bd5f-4d1163976a25
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:34107/session/6ae91a1a4a8cad16f50571c827d46ea1
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:09:44.541
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:09:44.576
+PROBE 1 clickEnd wall=2026-08-15 12:09:44.760 clickMs=184 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:09:44.822
+PROBE 2 clickEnd wall=2026-08-15 12:09:45.000 clickMs=178 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:09:45.056
+PROBE 3 clickEnd wall=2026-08-15 12:09:45.233 clickMs=177 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir30312_1000988853" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 150.0.7871.187
+              (Official Build)
+              
+              (32-bit)
+  
+              (cohort: Stable)
+reportedExecutablePath C:\Program Files (x86)\Google\Chrome\Application\chrome.exe

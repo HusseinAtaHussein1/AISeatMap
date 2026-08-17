@@ -1,0 +1,184 @@
+
+################ SESSION 1 ################
+driverConstructionStart wall=2026-08-15 11:16:05.561
+loginComplete wall=2026-08-15 11:16:25.294
+java.runtime=21.0.11+10-LTS vendor=Microsoft os=Windows 11 10.0 arch=amd64
+selenium.releaseLabel=4.13.0 buildRevision=ba948ece5b*
+shaft.codeSource=file:/C:/Users/Aymoon/.m2/repository/io/github/shafthq/SHAFT_ENGINE/7.4.20231015/SHAFT_ENGINE-7.4.20231015.jar
+selenium.codeSource=file:/C:/Users/Aymoon/.m2/repository/org/seleniumhq/selenium/selenium-api/4.13.0/selenium-api-4.13.0.jar
+shaft.headlessExecution=false targetBrowserName=chrome executionAddress=local flags.disableCache=false flags.clickUsingJavascriptWhenWebDriverClickFails=false
+chromedriver.logfile=C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\configA_evidence\chromedriver-session-1.log
+driver.class=net.bytebuddy.renamed.java.lang.Object$ByteBuddy$FFj8dgCv unwrapped=org.openqa.selenium.chrome.ChromeDriver
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir8808_1904287864}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:50316}
+capability.goog:processID=19288
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:50316/devtools/browser/c979b29e-7c33-4367-a231-889f534f6eff
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:39487/session/c8d9c0f4006ed53e746a942ad7aee75a
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 11:16:26.258
+instrumentationInstalled labelFound=true radioFound=true labelDesc=LABEL.ng-star-inserted radioChecked=false labelRect=639,538 30x22 topmostAtLabelCentre=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 clickStart wall=2026-08-15 11:16:26.297
+PROBE 1 clickEnd wall=2026-08-15 11:16:26.485 clickMs=188 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 clickStart wall=2026-08-15 11:16:26.535
+PROBE 2 clickEnd wall=2026-08-15 11:16:26.716 clickMs=181 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 clickStart wall=2026-08-15 11:16:26.761
+PROBE 3 clickEnd wall=2026-08-15 11:16:26.944 clickMs=183 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+
+################ SESSION 2 ################
+driverConstructionStart wall=2026-08-15 11:16:27.404
+loginComplete wall=2026-08-15 11:16:43.284
+java.runtime=21.0.11+10-LTS vendor=Microsoft os=Windows 11 10.0 arch=amd64
+selenium.releaseLabel=4.13.0 buildRevision=ba948ece5b*
+shaft.codeSource=file:/C:/Users/Aymoon/.m2/repository/io/github/shafthq/SHAFT_ENGINE/7.4.20231015/SHAFT_ENGINE-7.4.20231015.jar
+selenium.codeSource=file:/C:/Users/Aymoon/.m2/repository/org/seleniumhq/selenium/selenium-api/4.13.0/selenium-api-4.13.0.jar
+shaft.headlessExecution=false targetBrowserName=chrome executionAddress=local flags.disableCache=false flags.clickUsingJavascriptWhenWebDriverClickFails=false
+chromedriver.logfile=C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\configA_evidence\chromedriver-session-2.log
+driver.class=net.bytebuddy.renamed.java.lang.Object$ByteBuddy$aD7N7EAX unwrapped=org.openqa.selenium.chrome.ChromeDriver
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir17876_1001451431}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:56203}
+capability.goog:processID=14596
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:56203/devtools/browser/75c40b9e-96df-417c-9c48-ebe8acade7d7
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:31052/session/530c14e4541a529a80b1c4d2a292b46d
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 11:16:44.346
+instrumentationInstalled labelFound=true radioFound=true labelDesc=LABEL.ng-star-inserted radioChecked=false labelRect=639,538 30x22 topmostAtLabelCentre=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 clickStart wall=2026-08-15 11:16:44.374
+PROBE 1 clickEnd wall=2026-08-15 11:16:44.564 clickMs=190 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 clickStart wall=2026-08-15 11:16:44.603
+PROBE 2 clickEnd wall=2026-08-15 11:16:44.779 clickMs=176 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 clickStart wall=2026-08-15 11:16:44.823
+PROBE 3 clickEnd wall=2026-08-15 11:16:45.007 clickMs=184 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+
+################ SESSION 3 ################
+driverConstructionStart wall=2026-08-15 11:16:45.395
+loginComplete wall=2026-08-15 11:17:02.792
+java.runtime=21.0.11+10-LTS vendor=Microsoft os=Windows 11 10.0 arch=amd64
+selenium.releaseLabel=4.13.0 buildRevision=ba948ece5b*
+shaft.codeSource=file:/C:/Users/Aymoon/.m2/repository/io/github/shafthq/SHAFT_ENGINE/7.4.20231015/SHAFT_ENGINE-7.4.20231015.jar
+selenium.codeSource=file:/C:/Users/Aymoon/.m2/repository/org/seleniumhq/selenium/selenium-api/4.13.0/selenium-api-4.13.0.jar
+shaft.headlessExecution=false targetBrowserName=chrome executionAddress=local flags.disableCache=false flags.clickUsingJavascriptWhenWebDriverClickFails=false
+chromedriver.logfile=C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\configA_evidence\chromedriver-session-3.log
+driver.class=net.bytebuddy.renamed.java.lang.Object$ByteBuddy$zhqUrQ4m unwrapped=org.openqa.selenium.chrome.ChromeDriver
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir14908_1685182909}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:49672}
+capability.goog:processID=4116
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:49672/devtools/browser/866e19ba-c6f7-4c65-891d-b136d87f1762
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:14695/session/d3d5f79ac69e4a66a4ed716a765ded27
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 11:17:03.804
+instrumentationInstalled labelFound=true radioFound=true labelDesc=LABEL.ng-star-inserted radioChecked=false labelRect=639,538 30x22 topmostAtLabelCentre=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 clickStart wall=2026-08-15 11:17:03.835
+PROBE 1 clickEnd wall=2026-08-15 11:17:04.016 clickMs=181 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 clickStart wall=2026-08-15 11:17:04.054
+PROBE 2 clickEnd wall=2026-08-15 11:17:04.231 clickMs=177 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 clickStart wall=2026-08-15 11:17:04.269
+PROBE 3 clickEnd wall=2026-08-15 11:17:04.448 clickMs=179 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+
+################ SESSION 4 ################
+driverConstructionStart wall=2026-08-15 11:17:04.806
+loginComplete wall=2026-08-15 11:17:21.163
+java.runtime=21.0.11+10-LTS vendor=Microsoft os=Windows 11 10.0 arch=amd64
+selenium.releaseLabel=4.13.0 buildRevision=ba948ece5b*
+shaft.codeSource=file:/C:/Users/Aymoon/.m2/repository/io/github/shafthq/SHAFT_ENGINE/7.4.20231015/SHAFT_ENGINE-7.4.20231015.jar
+selenium.codeSource=file:/C:/Users/Aymoon/.m2/repository/org/seleniumhq/selenium/selenium-api/4.13.0/selenium-api-4.13.0.jar
+shaft.headlessExecution=false targetBrowserName=chrome executionAddress=local flags.disableCache=false flags.clickUsingJavascriptWhenWebDriverClickFails=false
+chromedriver.logfile=C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\configA_evidence\chromedriver-session-4.log
+driver.class=net.bytebuddy.renamed.java.lang.Object$ByteBuddy$xOXFzVlb unwrapped=org.openqa.selenium.chrome.ChromeDriver
+capabilities.browserName=chrome browserVersion=150.0.7871.187 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=150.0.7871.187
+capability.chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir24180_916445793}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:51209}
+capability.goog:processID=22300
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:51209/devtools/browser/62df4d4f-9b2b-4403-9b6a-844b2adfff77
+capability.se:cdpVersion=150.0.7871.187
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:33338/session/43b8aa39ec3d51e7491da131f514321a
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 11:17:21.923
+instrumentationInstalled labelFound=true radioFound=true labelDesc=LABEL.ng-star-inserted radioChecked=false labelRect=639,538 30x22 topmostAtLabelCentre=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 clickStart wall=2026-08-15 11:17:21.948
+PROBE 1 clickEnd wall=2026-08-15 11:17:22.128 clickMs=180 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 clickStart wall=2026-08-15 11:17:22.164
+PROBE 2 clickEnd wall=2026-08-15 11:17:22.336 clickMs=172 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 clickStart wall=2026-08-15 11:17:22.373
+PROBE 3 clickEnd wall=2026-08-15 11:17:22.547 clickMs=174 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioStillConnected=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}

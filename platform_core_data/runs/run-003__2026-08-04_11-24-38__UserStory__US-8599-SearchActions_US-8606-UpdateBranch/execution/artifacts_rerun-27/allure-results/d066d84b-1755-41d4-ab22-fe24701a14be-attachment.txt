@@ -1,0 +1,105 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '2 out of 28' test cases in the current suite                                        
+            Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty'            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:13.0061 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:13.0078 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:13.0689 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @15-08-2026 17:13:14.0676 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @15-08-2026 17:13:14.0676 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803194301_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' @15-08-2026 17:13:14.0691 PM
+[ReportManager] Click element. @15-08-2026 17:13:17.0444 PM
+[ReportManager] Click "Live". @15-08-2026 17:13:17.0690 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:13:18.0207 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:18.0317 PM
+[ReportManager] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:18.0318 PM
+[ReportManager] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". @15-08-2026 17:13:18.0999 PM
+[ReportManager] Assertion Passed: The Browser URL contains "/admin/branch/add". @15-08-2026 17:13:19.0001 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803198632_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' @15-08-2026 17:13:19.0002 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:19.0011 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:19.0022 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:19.0646 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @15-08-2026 17:13:20.0745 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @15-08-2026 17:13:20.0745 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803200335_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' @15-08-2026 17:13:20.0748 PM
+[ReportManager] Click element. @15-08-2026 17:13:31.0348 PM
+[ReportManager] Click "Live". @15-08-2026 17:13:31.0537 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:13:32.0058 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:32.0145 PM
+[ReportManager] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:32.0145 PM
+[ReportManager] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". @15-08-2026 17:13:32.0794 PM
+[ReportManager] Assertion Passed: The Browser URL contains "/admin/branch/add". @15-08-2026 17:13:32.0794 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803212409_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' @15-08-2026 17:13:32.0796 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:32.0806 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:32.0816 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:33.0422 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @15-08-2026 17:13:34.0298 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @15-08-2026 17:13:34.0298 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803213927_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' @15-08-2026 17:13:34.0301 PM
+[ReportManager] Click element. @15-08-2026 17:13:37.0324 PM
+[ReportManager] Click "Live". @15-08-2026 17:13:37.0519 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:13:38.0041 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:38.0127 PM
+[ReportManager] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:38.0127 PM
+[ReportManager] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". @15-08-2026 17:13:38.0748 PM
+[ReportManager] Assertion Passed: The Browser URL contains "/admin/branch/add". @15-08-2026 17:13:38.0749 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803218405_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' @15-08-2026 17:13:38.0751 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:38.0757 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:38.0769 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:39.0377 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @15-08-2026 17:13:40.0289 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @15-08-2026 17:13:40.0289 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803219882_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' @15-08-2026 17:13:40.0293 PM
+[ReportManager] Click element. @15-08-2026 17:13:50.0609 PM
+[ReportManager] Click "Live". @15-08-2026 17:13:50.0793 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:13:51.0293 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:51.0373 PM
+[ReportManager] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:51.0373 PM
+[ReportManager] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". @15-08-2026 17:13:52.0193 PM
+[ReportManager] Assertion Passed: The Browser URL contains "/admin/branch/add". @15-08-2026 17:13:52.0193 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803231651_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' @15-08-2026 17:13:52.0195 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:52.0202 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:52.0212 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:52.0819 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @15-08-2026 17:13:53.0705 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @15-08-2026 17:13:53.0705 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803233339_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' @15-08-2026 17:13:53.0708 PM
+[ReportManager] Click element. @15-08-2026 17:13:57.0123 PM
+[ReportManager] Click "Live". @15-08-2026 17:13:57.0316 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:13:57.0825 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:57.0915 PM
+[ReportManager] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:57.0916 PM
+[ReportManager] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". @15-08-2026 17:13:58.0551 PM
+[ReportManager] Assertion Passed: The Browser URL contains "/admin/branch/add". @15-08-2026 17:13:58.0551 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803238177_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' @15-08-2026 17:13:58.0552 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:58.0560 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:13:58.0571 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:13:59.0194 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @15-08-2026 17:14:00.0090 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @15-08-2026 17:14:00.0091 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803239695_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' @15-08-2026 17:14:00.0093 PM
+[ReportManager] Click element. @15-08-2026 17:14:03.0439 PM
+[ReportManager] Click "Live". @15-08-2026 17:14:03.0632 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:14:04.0139 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:14:04.0219 PM
+[ReportManager] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" @15-08-2026 17:14:04.0219 PM
+[ReportManager] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". @15-08-2026 17:14:04.0846 PM
+[ReportManager] Assertion Passed: The Browser URL contains "/admin/branch/add". @15-08-2026 17:14:04.0847 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803244492_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' @15-08-2026 17:14:04.0848 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:14:04.0858 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch/add" @15-08-2026 17:14:04.0871 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:14:05.0652 PM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @15-08-2026 17:14:06.0535 PM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @15-08-2026 17:14:06.0536 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803246172_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateElementExists_passed' @15-08-2026 17:14:06.0547 PM
+[ReportManager] Click element. @15-08-2026 17:14:10.0022 PM
+[ReportManager] Click "Live". @15-08-2026 17:14:10.0227 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:14:10.0725 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:14:10.0806 PM
+[ReportManager] Expected "/admin/branch/add", and actual "http://192.168.1.70/admin/branch/add" @15-08-2026 17:14:10.0807 PM
+[ReportManager] Assertion "ValidateBrowserAttribute" PASSED. Expected "Value Should be '/admin/branch/add' for the 'currenturl' attribute" and Actual "http://192.168.1.70/admin/branch/add". Comparison Type "CONTAINS". Validation Type "POSITIVE". @15-08-2026 17:14:11.0456 PM
+[ReportManager] Assertion Passed: The Browser URL contains "/admin/branch/add". @15-08-2026 17:14:11.0457 PM
+[ReportManager] Successfully created attachment 'Screenshot - 1786803251063_tcBr002_mandatoryBranchDetailsFieldsBlockSubmissionWhenEmpty_ValidateBrowserAttribute_passed' @15-08-2026 17:14:11.0458 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @15-08-2026 17:14:11.0459 PM

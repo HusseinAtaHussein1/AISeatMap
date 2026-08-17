@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- REPAIR-BR-012 verification, stage 1. Scoping only; the approved testng.xml is untouched. -->
+<suite name="TcBr045Isolated" verbose="1">
+  <test name="TcBr045">
+    <classes>
+      <class name="AdminPages.Admin.Branch.SearchBranch_TC">
+        <methods>
+          <include name="tcBr045_statusFilterReturnsOnlyRecordsMatchingSelectedStatus"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "module": "branch",
-  "state": "Approved",
+  "state": "Promoted",
   "framework": "SHAFT",
-  "baselineRef": "33a6ff1e6d9c3a45592ca5183a8c50095b365e75",
+  "baselineRef": "09bafbd91bbe3873328248a3d9688684e2e1914b",
   "sourceRuns": [
     "run-003",
     "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
@@ -11,7 +11,7 @@
   "assembledAt": "2026-08-17T06:57:56.988Z",
   "approvedBy": "ahmed.ayman@tildetech.ae",
   "approvedAt": "2026-08-17T06:53:48.676Z",
-  "updatedAt": "2026-08-17T06:57:56.988Z",
+  "updatedAt": "2026-08-17T08:49:32.512Z",
   "history": [
     {
       "state": "Generated",
@@ -90,7 +90,29 @@
     {
       "state": "Assembled",
       "at": "2026-08-17T06:57:56.988Z"
+    },
+    {
+      "state": "Promoted",
+      "at": "2026-08-17T08:49:32.512Z",
+      "note": "Acceptance: 31/31 Headed from the baseline, 2026-08-17 11:36, 16.4 min, BUILD SUCCESS"
     }
   ],
-  "lastMergeSummary": "platform_core_data/modules/branch/automation/automation_promotion.md"
+  "lastMergeSummary": "platform_core_data/modules/branch/automation/automation_promotion.md",
+  "sourceOfTruth": "baseline",
+  "baselinePath": "platform_core_data/automation_baseline/shaft/tests_SHAFT",
+  "ownedPaths": [
+    "src/main/java/AdminPages/Admin/Branch/**",
+    "src/test/java/AdminPages/Admin/Branch/**",
+    "src/test/resources/branch_baseline.properties",
+    "testng-branch.xml"
+  ],
+  "retiredPath": "platform_core_data/modules/branch/automation/tests_SHAFT",
+  "promotedAt": "2026-08-17T08:49:32.512Z",
+  "promotedBy": "ahmed.ayman@tildetech.ae",
+  "promotionVerification": {
+    "passed": true,
+    "fileCount": 38,
+    "reportPath": null,
+    "verifiedAt": "2026-08-17T08:49:32.512Z"
+  }
 }

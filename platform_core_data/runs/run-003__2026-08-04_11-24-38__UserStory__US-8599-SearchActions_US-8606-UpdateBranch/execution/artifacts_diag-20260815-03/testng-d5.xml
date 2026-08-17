@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- DIAG-BR-20260815-03. Mechanism-separation probe. Scoping only; testng.xml untouched. -->
+<suite name="D5ClickBoundary" verbose="1">
+  <test name="ClickBoundary">
+    <classes>
+      <class name="AdminPages.Admin.Branch.ClickBoundaryDiagnostic_TC"/>
+    </classes>
+  </test>
+</suite>

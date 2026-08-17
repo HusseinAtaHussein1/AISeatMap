@@ -1,0 +1,216 @@
+
+################ CONFIG E — SESSION 1 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe
+driverConstructionStart wall=2026-08-15 12:57:36.014
+loginComplete wall=2026-08-15 12:58:08.404
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=151.0.7922.138 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=151.0.7922.138
+capability.chrome={chromedriverVersion=151.0.7922.138 (41fa82442390a4d4456c78f2d69a832d5720cb27-refs/branch-heads/7922@{#2891}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir22572_2107810788}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:56907}
+capability.goog:processID=19772
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:56907/devtools/browser/9bcbfe56-836e-4658-8136-3a011c8f91f8
+capability.se:cdpVersion=151.0.7922.138
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:23016/session/1f71ffe2d747827c0715634aca513384
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:58:09.596
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:58:09.654
+PROBE 1 clickEnd wall=2026-08-15 12:58:09.860 clickMs=206 exception=none
+PROBE 1 events=[LABEL.ng-star-inserted:pointerdown(t)@238ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:mousedown(t)@238ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:pointerup(t)@239ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:mouseup(t)@239ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:click(t)@239ms [ORIGINAL_LABEL] | INPUT#id-Status-Both:click(t)@241ms [ORIGINAL_RADIO] | INPUT#id-Status-Both:input(t)@242ms [ORIGINAL_RADIO] | INPUT#id-Status-Both:change(t)@242ms [ORIGINAL_RADIO]] mutations=[attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-focused +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:DIV.p-radiobutton-box.p-focus +0/-0@241ms | attributes:P-RADIOBUTTON.p-element.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms | attributes:P-RADIOBUTTON.p-element.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms | attributes:P-RADIOBUTTON.p-element.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms | attributes:P-RADIOBUTTON.p-element.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:DIV.p-radiobutton.p-component +0/-0@242ms | attributes:INPUT#id-Status-Active +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:DIV.p-radiobutton-box +0/-0@242ms | attributes:P-RADIOBUTTON.p-element.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms | attributes:P-RADIOBUTTON.p-element.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@242ms | attributes:INPUT#id-Status-Both +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@242ms | attributes:FORM.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms | attributes:FORM.ng-untouched.ng-valid.ng-star-inserted.ng-dirty +0/-0@242ms] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=true radios{Active=false Inactive=false Both=true}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:58:09.947
+PROBE 2 clickEnd wall=2026-08-15 12:58:10.140 clickMs=193 exception=none
+PROBE 2 events=[LABEL.ng-star-inserted:pointerdown(t)@520ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:mousedown(t)@520ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:pointerup(t)@522ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:mouseup(t)@522ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:click(t)@522ms [ORIGINAL_LABEL] | INPUT#id-Status-Both:click(t)@523ms [ORIGINAL_RADIO]] mutations=[attributes:P-RADIOBUTTON.p-element.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:P-RADIOBUTTON.p-element.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:P-RADIOBUTTON.p-element.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:P-RADIOBUTTON.p-element.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:P-RADIOBUTTON.p-element.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:P-RADIOBUTTON.p-element.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@521ms | attributes:FORM.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:FORM.ng-valid.ng-star-inserted.ng-dirty.ng-touched +0/-0@521ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@523ms] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=true radios{Active=false Inactive=false Both=true}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:58:10.223
+PROBE 3 clickEnd wall=2026-08-15 12:58:10.406 clickMs=183 exception=none
+PROBE 3 events=[LABEL.ng-star-inserted:pointerdown(t)@786ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:mousedown(t)@786ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:pointerup(t)@787ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:mouseup(t)@787ms [ORIGINAL_LABEL] | LABEL.ng-star-inserted:click(t)@787ms [ORIGINAL_LABEL] | INPUT#id-Status-Both:click(t)@788ms [ORIGINAL_RADIO]] mutations=[attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton-box.p-highlight +0/-0@787ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton.p-component.p-radiobutton-checked.p-radiobutton-focused +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms | attributes:DIV.p-radiobutton-box.p-highlight.p-focus +0/-0@788ms] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=true radios{Active=false Inactive=false Both=true}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir22572_2107810788" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 151.0.7922.138 (Official Build) (64-bit)
+reportedExecutablePath C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\isolated_binaries_E\E_pair151\chrome-win64\chrome.exe
+
+################ CONFIG E — SESSION 2 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe
+driverConstructionStart wall=2026-08-15 12:58:11.010
+loginComplete wall=2026-08-15 12:58:31.484
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=151.0.7922.138 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=151.0.7922.138
+capability.chrome={chromedriverVersion=151.0.7922.138 (41fa82442390a4d4456c78f2d69a832d5720cb27-refs/branch-heads/7922@{#2891}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir1612_1015460968}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:64888}
+capability.goog:processID=8344
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:64888/devtools/browser/9e02181b-0c71-4fd7-80db-4a646f104135
+capability.se:cdpVersion=151.0.7922.138
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:42817/session/23bf7cb62cc265c3cbc854190e35781c
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:58:32.557
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:58:32.611
+PROBE 1 clickEnd wall=2026-08-15 12:58:32.798 clickMs=187 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:58:32.869
+PROBE 2 clickEnd wall=2026-08-15 12:58:33.048 clickMs=179 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:58:33.114
+PROBE 3 clickEnd wall=2026-08-15 12:58:33.289 clickMs=175 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir1612_1015460968" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 151.0.7922.138 (Official Build) (64-bit)
+reportedExecutablePath C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\isolated_binaries_E\E_pair151\chrome-win64\chrome.exe
+
+################ CONFIG E — SESSION 3 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe
+driverConstructionStart wall=2026-08-15 12:58:33.801
+loginComplete wall=2026-08-15 12:58:53.570
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=151.0.7922.138 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=151.0.7922.138
+capability.chrome={chromedriverVersion=151.0.7922.138 (41fa82442390a4d4456c78f2d69a832d5720cb27-refs/branch-heads/7922@{#2891}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir28900_90162725}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:55635}
+capability.goog:processID=35492
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:55635/devtools/browser/64547b46-d43c-435a-bfe8-ce5f2754cf11
+capability.se:cdpVersion=151.0.7922.138
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:24220/session/f4281a10e1ad63bf96f5481df932a379
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:58:54.664
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:58:54.703
+PROBE 1 clickEnd wall=2026-08-15 12:58:54.874 clickMs=171 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:58:54.938
+PROBE 2 clickEnd wall=2026-08-15 12:58:55.107 clickMs=169 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:58:55.175
+PROBE 3 clickEnd wall=2026-08-15 12:58:55.345 clickMs=170 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir28900_90162725" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 151.0.7922.138 (Official Build) (64-bit)
+reportedExecutablePath C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\isolated_binaries_E\E_pair151\chrome-win64\chrome.exe
+
+################ CONFIG E — SESSION 4 ################
+pinned.driverPath=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+pinned.browserBinary=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe
+driverConstructionStart wall=2026-08-15 12:58:55.835
+loginComplete wall=2026-08-15 12:59:19.904
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false
+systemProperty.webdriver.chrome.driver=C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chromedriver-win64/chromedriver.exe
+capabilities.browserName=chrome browserVersion=151.0.7922.138 platformName=windows
+capability.acceptInsecureCerts=true
+capability.browserName=chrome
+capability.browserVersion=151.0.7922.138
+capability.chrome={chromedriverVersion=151.0.7922.138 (41fa82442390a4d4456c78f2d69a832d5720cb27-refs/branch-heads/7922@{#2891}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir16124_179808318}
+capability.fedcm:accounts=true
+capability.goog:chromeOptions={debuggerAddress=localhost:49753}
+capability.goog:processID=39080
+capability.networkConnectionEnabled=false
+capability.pageLoadStrategy=none
+capability.platformName=windows
+capability.proxy=Proxy()
+capability.se:cdp=ws://localhost:49753/devtools/browser/ec84f2d9-062c-4ec6-9532-6ea6fafc526d
+capability.se:cdpVersion=151.0.7922.138
+capability.setWindowRect=true
+capability.strictFileInteractability=false
+capability.timeouts={implicit=0, pageLoad=60000, script=30000}
+capability.unhandledPromptBehavior=ignore
+capability.webSocketUrl=ws://localhost:3858/session/7f89a4293776daa2cff8dc516ce9457e
+capability.webauthn:extension:credBlob=true
+capability.webauthn:extension:largeBlob=true
+capability.webauthn:extension:minPinLength=true
+capability.webauthn:extension:prf=true
+capability.webauthn:virtualAuthenticators=true
+branchListReady wall=2026-08-15 12:59:21.804
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 12:59:21.842
+PROBE 1 clickEnd wall=2026-08-15 12:59:22.014 clickMs=172 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 12:59:22.071
+PROBE 2 clickEnd wall=2026-08-15 12:59:22.239 clickMs=168 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 12:59:22.300
+PROBE 3 clickEnd wall=2026-08-15 12:59:22.469 clickMs=169 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true labelStillConnected=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine C:/Users/Aymoon/AppData/Local/Temp/claude/e--Projects-agentic-ai-testing-platform/a57485ac-4f95-42c8-8788-74518c12f4d3/scratchpad/isolated_binaries_E/E_pair151/chrome-win64/chrome.exe --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir16124_179808318" --flag-switches-begin --flag-switches-end data:,
+reportedBrowserVersion 151.0.7922.138 (Official Build) (64-bit)
+reportedExecutablePath C:\Users\Aymoon\AppData\Local\Temp\claude\e--Projects-agentic-ai-testing-platform\a57485ac-4f95-42c8-8788-74518c12f4d3\scratchpad\isolated_binaries_E\E_pair151\chrome-win64\chrome.exe

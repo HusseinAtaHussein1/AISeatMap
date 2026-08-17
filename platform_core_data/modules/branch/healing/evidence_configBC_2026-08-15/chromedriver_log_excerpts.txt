@@ -1,0 +1,41 @@
+ChromeDriver verbose-log excerpts, Configurations B and C (2026-08-15).
+Curated from the eight full verbose logs, which were temporary and are not kept.
+Session/target id suffixes trimmed for readability; timestamps verbatim.
+
+==============================================================
+B - Chrome 150.0.7871.187 + ChromeDriver 150.0.7871.115 - LOST
+==============================================================
+[08-15-2026 12:08:33.677][INFO]: Starting ChromeDriver 150.0.7871.115 (25f5b661e5b08141ec24b17d1ce96c5ceb5828da-refs/branch-heads/7871@{#2956}) on port 24311
+[08-15-2026 12:08:51.267][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=580) 
+   "type": "mouseMoved",
+[08-15-2026 12:08:51.267][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=580) 
+[08-15-2026 12:08:51.370][INFO]: COMMAND ClickElement {
+[08-15-2026 12:08:51.408][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=636) 
+   "type": "mouseMoved",
+[08-15-2026 12:08:51.408][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=637) 
+   "type": "mousePressed",
+[08-15-2026 12:08:51.408][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=638) 
+   "type": "mouseReleased",
+[08-15-2026 12:08:51.408][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=636) 
+[08-15-2026 12:08:51.408][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=637) 
+[08-15-2026 12:08:51.408][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=638) 
+[08-15-2026 12:08:51.408][INFO]: RESPONSE ClickElement
+
+==============================================================
+C - Chrome 117.0.5938.149 + ChromeDriver 117.0.5938.149 - DELIVERED
+==============================================================
+[08-15-2026 12:12:22.368][INFO]: Starting ChromeDriver 117.0.5938.149 (e3344ddefa12e60436fa28c81cf207c1afb4d0a9-refs/branch-heads/5938@{#1539}) on port 16201
+[08-15-2026 12:12:40.181][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=600) 
+   "type": "mouseMoved",
+[08-15-2026 12:12:40.183][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=600) 
+[08-15-2026 12:12:40.285][INFO]: COMMAND ClickElement {
+[08-15-2026 12:12:40.306][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=631) 
+   "type": "mouseMoved",
+[08-15-2026 12:12:40.306][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=632) 
+   "type": "mousePressed",
+[08-15-2026 12:12:40.307][DEBUG]: DevTools WebSocket Command: Input.dispatchMouseEvent (id=633) 
+   "type": "mouseReleased",
+[08-15-2026 12:12:40.307][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=631) 
+[08-15-2026 12:12:40.308][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=632) 
+[08-15-2026 12:12:40.314][DEBUG]: DevTools WebSocket Response: Input.dispatchMouseEvent (id=633) 
+[08-15-2026 12:12:40.314][INFO]: RESPONSE ClickElement

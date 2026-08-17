@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- DIAG-BR-20260815-01. Temporary diagnosis harness, scoping file only. testng.xml untouched. -->
+<suite name="D3ClickDelivery" verbose="1">
+  <test name="ClickDelivery">
+    <classes>
+      <class name="AdminPages.Admin.Branch.ClickDeliveryDiagnostic_TC"/>
+    </classes>
+  </test>
+</suite>

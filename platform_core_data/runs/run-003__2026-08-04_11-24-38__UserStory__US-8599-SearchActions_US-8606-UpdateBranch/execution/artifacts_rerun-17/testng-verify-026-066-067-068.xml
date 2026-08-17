@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    Targeted verification, requested 2026-08-14: exactly TC-BR-026 (method rename, no assertion-logic
+    change) and TC-BR-066/067/068 (Address test-data correction, "Updated by QA run-003" to
+    "2 Test Street"). No other test case is included.
+-->
+<suite name="BranchVerify026And066to068" verbose="1">
+    <test name="TC-BR-026_Verification">
+        <classes>
+            <class name="AdminPages.Admin.Branch.CreateBranch_Admin_TC">
+                <methods>
+                    <include name="tcBr026_warningPromptRejectsValueExceeding11Digits"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="TC-BR-066_067_068_Verification">
+        <classes>
+            <class name="AdminPages.Admin.Branch.UpdateBranch_TC">
+                <methods>
+                    <include name="tcBr066_updateBranchAndSubmitForApproval"/>
+                    <include name="tcBr067_remarksIsMandatoryBeforeAnyUpdateAction"/>
+                    <include name="tcBr068_cancelDiscardsUnsavedChanges"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

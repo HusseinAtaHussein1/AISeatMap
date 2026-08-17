@@ -100,3 +100,111 @@ the NDC-Automation reference project.
 
 **Plan said 22 modified, git recorded 21.** `src/main/resources/properties/default/customWebdriverCapabilities.properties` differed only in
 line endings, so the copy landed but produced no committed change. Baseline and module copies are byte-identical after the merge.
+
+---
+
+# Retirement — the module working copy is gone, the baseline is the source of truth
+
+**Recorded 2026-08-17.** `pipeline.md` §12.5.1 (Verification and Retirement), §12.9, §12.10.
+
+| Field | Value |
+|---|---|
+| Promotion Status | **Promoted — terminal** |
+| Source of truth | `platform_core_data/automation_baseline/shaft/tests_SHAFT/` |
+| Retired path | `platform_core_data/modules/branch/automation/tests_SHAFT/` — **permanently deleted** |
+| Retired at | 2026-08-17T08:49:32Z |
+| Promoted by | ahmed.ayman@tildetech.ae |
+| Baseline commit at retirement | `09bafbd` |
+| Accepted failures / exceptions | **None.** The acceptance run was clean |
+
+## Why this module may no longer be edited under `modules/`
+
+The Workspace Automation Baseline is now the only copy of this module's automation that exists. Every
+later change — generation, execution, repair, self-healing — happens there, scoped by
+`.baseline_ownership.json`. `modules/branch/automation/tests_SHAFT/` must never be recreated; if it
+reappears, `resolveAutomationRoot()` throws `MODULE_DIR_RESURRECTED` and work stops rather than
+continuing in a directory nothing executes from (§12.10 rule 3).
+
+Everything else in this module folder is **permanent history and stays**: this record, the Automation
+Plan / Manifest / Decision Report / Coverage Report / Suite Manifest / Summary / Selector Verification
+/ Self Review / Target Write Plan / Stack Documentation Context, `.module_automation_state.json`,
+`healing/`, `discovery/`, `test_design/`, and `README.md`.
+
+## Ownership inside the shared baseline
+
+| Classification | Paths |
+|---|---|
+| **Owned by `branch`** | `src/main/java/AdminPages/Admin/Branch/**`, `src/test/java/AdminPages/Admin/Branch/**`, `src/test/resources/branch_baseline.properties`, `testng-branch.xml` |
+| **Shared** (whole-project gate, declared in the Decision Report) | `pom.xml`, `testng.xml`, `src/main/java/AdminPages/Login/**`, `src/test/java/AdminPages/Login/**`, `src/main/java/utilities/**`, `src/main/resources/properties/**`, `src/test/resources/environment.properties`, `src/test/resources/META-INF/**`, `README.md`, `run-tests.bat`, `generate_allure_report.bat`, `.gitignore` |
+| **Module-scoped suite** | `testng-branch.xml` — `mvn test -DsuiteXmlFile=testng-branch.xml` |
+
+## Verification evidence
+
+**Byte-identity — PASSED.** 38 files present in the baseline with identical SHA-256; 0 missing, 0
+differing. 86 build/IDE files correctly excluded from comparison. Re-run immediately before deletion,
+not carried over from an earlier check.
+
+**Standalone compile — PASSED.** `mvn test-compile` in the baseline, 0 errors; all 4 test classes and
+8 page objects produced.
+
+**Live proof — three runs, and the disagreement between them is the point.**
+
+| # | Location | Mode | Scope | Result |
+|---|---|---|---|---|
+| 1 | Baseline | Headless | 31 cases | **29 passed, 2 failed** — TC-BR-045 (`Both (534) != Active+Inactive (755)`), TC-BR-055 (`City = "loading..."`) |
+| 2a | **Module copy** | Headed | TC-BR-045, TC-BR-055 | **both FAILED** — action-delivery signatures, 368 s |
+| 2b | Baseline | Headed | TC-BR-045, TC-BR-055 | **both PASSED**, 73 s |
+| 3 | Baseline | Headed | 31 cases | **31 PASSED — BUILD SUCCESS**, 984.6 s, 2026-08-17 11:36 |
+
+Run 1's two failures reproduced signatures documented in `healing/BranchFailureAnalysis_2026-08-14.md`
+— TC-BR-045's "Both equals Active alone" relationship (reproduced across `rerun-15`, `rerun-16`,
+`rerun-19`, root cause never established, repair direction stopped by human decision on 2026-08-14)
+and TC-BR-055's pre-REPAIR-BR-012 dependent-dropdown race.
+
+Run 2 was the A/B that settled whether the promotion caused them. With the trees byte-identical and
+the mode held constant, **the module copy failed and the baseline passed**. The promotion is therefore
+not the cause of anything — the new location outperformed the old one on the same code.
+
+**What is deliberately not claimed:** why identical bytes behaved differently. The module copy's
+`target/` dated from 2026-08-15 while the baseline's was rebuilt that morning, the runs were
+sequential rather than simultaneous, and the underlying Search action-delivery defect has been
+intermittent since 2026-08-14. Those three cannot be separated from this evidence, and no single cause
+is asserted. What run 3 establishes is narrower and sufficient: the full suite passes 31/31 from the
+baseline in Headed mode.
+
+## Two shared-asset changes, declared per §12.1
+
+1. **`pom.xml` — `<suiteXmlFiles>` parameterized** to `${suiteXmlFile}` with `testng.xml` as the
+   default. Plain `mvn test` is unchanged; `-DsuiteXmlFile=testng-branch.xml` now scopes a run to one
+   module. Required because promoted modules share one project, so "run just this module" has to be a
+   suite file rather than a separate directory. Surefire's own `surefire.suiteXmlFiles` user property
+   cannot serve — an explicit POM value wins over it.
+2. **`.gitignore` — extended** to cover `allure-report/`, `extent-reports/`, `performanceReport/`,
+   `execution-summary/`, `generatedReport_*.zip` and `.idea/`, with matching rules added to the
+   repository root for `automation_baseline/**`. A promoted module executes *in* the baseline, so
+   Maven, Allure, Extent and the SHAFT performance hook now write there; without these rules the first
+   post-promotion run commits roughly 23 MB of report output into the authoritative source tree.
+
+Both are whole-project surface and clear the whole-project gate, not `branch`'s. `branch` is currently
+the only module in this baseline, so neither has cross-module impact today.
+
+## Operational notes worth keeping
+
+**Deleting the directory took three attempts.** The first two failed with `EPERM`. The holders were 14
+orphaned `chromedriver` processes left behind by test runs on 2026-08-07 through 2026-08-15, whose
+working directory was inside the module project. IntelliJ was a red herring — it did have the project
+open and did recreate `.idea/` mid-deletion, but closing it was not sufficient; killing the stale
+chromedrivers was. **Kill leftover driver processes before any retirement**, and expect a stale-run
+process leak to be the default cause of a locked automation directory on Windows.
+
+**A `git checkout --` restore reintroduced a false verification failure.** Restoring the module tree
+mid-retirement rewrote four `properties/default/*.properties` files with CRLF line endings, while the
+baseline held LF copies written byte-for-byte by the merge. Content was identical; `verifyPromotion()`
+is byte-exact by design and correctly refused. Resolved by copying the baseline's — the promoted —
+versions into the module before deleting it, never by relaxing the check. If this recurs often, a
+line-ending-normalizing comparison mode is worth considering; it was not added here because weakening
+a guard during the operation it guards is the wrong time to do it.
+
+**A safety archive was taken** before deletion (module tree including `.idea/`, 739 KB) and retained
+for this session. Tracked files remain recoverable from git at `09bafbd`; `.idea/` never was, which is
+why the archive existed.

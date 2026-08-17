@@ -17,7 +17,7 @@ asked every run per Execution Rule 29.
 
 Maven-conventional: `pom.xml` + `testng.xml` at the project root, `src/test/java/{pages,base,data,
 utils,tests}`, `src/test/resources/` (test data + `environment.properties`), `src/main/resources/
-properties/` (SHAFT's own `execution.properties`). See `modules/branch/automation/tests_SHAFT/` for
+properties/` (SHAFT's own `execution.properties`). See `automation_baseline/shaft/tests_SHAFT/` (the retired `modules/branch/automation/tests_SHAFT/` was its home until `branch` was promoted on 2026-08-17) for
 the realized example.
 
 ## Page Object Pattern

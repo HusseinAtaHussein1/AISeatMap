@@ -1,0 +1,24 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '1 out of 28' test cases in the current suite                                        
+                     Test Method: 'AdminPages.Admin.Branch.CreateBranch_Admin_TC.tcBr001_createBranchWithAllMandatoryFields'                     
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Click element. @15-08-2026 17:12:51.0687 PM
+[ReportManager] Click "Live". @15-08-2026 17:12:51.0954 PM
+[ReportManager] Click "Send For Approval". @15-08-2026 17:12:52.0462 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:12:52.0556 PM
+[ReportManager] Get page source. @15-08-2026 17:12:52.0598 PM
+[ReportManager] Successfully created attachment 'Browser Action Test Data - Get page source - Actual Value' @15-08-2026 17:12:52.0601 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:12:53.0115 PM
+[ReportManager] Get page source. @15-08-2026 17:12:53.0155 PM
+[ReportManager] Successfully created attachment 'Browser Action Test Data - Get page source - Actual Value' @15-08-2026 17:12:53.0157 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:12:53.0668 PM
+[ReportManager] Get page source. @15-08-2026 17:12:53.0707 PM
+[ReportManager] Successfully created attachment 'Browser Action Test Data - Get page source - Actual Value' @15-08-2026 17:12:53.0709 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch/add". @15-08-2026 17:12:54.0222 PM
+[ReportManager] Get page source. @15-08-2026 17:12:54.0260 PM
+[ReportManager] Successfully created attachment 'Browser Action Test Data - Get page source - Actual Value' @15-08-2026 17:12:54.0262 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch". @15-08-2026 17:12:54.0781 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/branch". @15-08-2026 17:12:54.0795 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @15-08-2026 17:12:54.0828 PM

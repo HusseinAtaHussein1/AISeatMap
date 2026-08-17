@@ -1,0 +1,116 @@
+
+################ SESSION 1 ################
+driverConstructionStart wall=2026-08-15 11:53:25.518
+loginComplete wall=2026-08-15 11:53:46.118
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false autoMaximizeBrowserWindow=true
+capabilities.browserVersion=150.0.7871.187 chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir344_1941260454} goog:chromeOptions={debuggerAddress=localhost:54645}
+branchListReady wall=2026-08-15 11:53:47.170
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 11:53:47.215
+PROBE 1 clickEnd wall=2026-08-15 11:53:47.413 clickMs=198 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 11:53:47.480
+PROBE 2 clickEnd wall=2026-08-15 11:53:47.673 clickMs=193 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 11:53:47.723
+PROBE 3 clickEnd wall=2026-08-15 11:53:47.913 clickMs=190 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir344_1941260454" --flag-switches-begin --flag-switches-end data:,
+featureSwitchesAsChromeSawThem
+                       --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions
+                       --enable-features=NetworkService,NetworkServiceInProcess
+
+################ SESSION 2 ################
+driverConstructionStart wall=2026-08-15 11:53:48.525
+loginComplete wall=2026-08-15 11:54:05.213
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false autoMaximizeBrowserWindow=true
+capabilities.browserVersion=150.0.7871.187 chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir31936_1623979172} goog:chromeOptions={debuggerAddress=localhost:56611}
+branchListReady wall=2026-08-15 11:54:05.980
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 11:54:06.017
+PROBE 1 clickEnd wall=2026-08-15 11:54:06.213 clickMs=196 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 11:54:06.261
+PROBE 2 clickEnd wall=2026-08-15 11:54:06.437 clickMs=176 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 11:54:06.487
+PROBE 3 clickEnd wall=2026-08-15 11:54:06.665 clickMs=178 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir31936_1623979172" --flag-switches-begin --flag-switches-end data:,
+featureSwitchesAsChromeSawThem
+                       --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions
+                       --enable-features=NetworkService,NetworkServiceInProcess
+
+################ SESSION 3 ################
+driverConstructionStart wall=2026-08-15 11:54:07.255
+loginComplete wall=2026-08-15 11:54:24.282
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false autoMaximizeBrowserWindow=true
+capabilities.browserVersion=150.0.7871.187 chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir30272_574128053} goog:chromeOptions={debuggerAddress=localhost:60285}
+branchListReady wall=2026-08-15 11:54:25.062
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 11:54:25.094
+PROBE 1 clickEnd wall=2026-08-15 11:54:25.281 clickMs=187 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 11:54:25.322
+PROBE 2 clickEnd wall=2026-08-15 11:54:25.497 clickMs=175 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 11:54:25.544
+PROBE 3 clickEnd wall=2026-08-15 11:54:25.725 clickMs=181 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir30272_574128053" --flag-switches-begin --flag-switches-end data:,
+featureSwitchesAsChromeSawThem
+                       --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions
+                       --enable-features=NetworkService,NetworkServiceInProcess
+
+################ SESSION 4 ################
+driverConstructionStart wall=2026-08-15 11:54:26.473
+loginComplete wall=2026-08-15 11:54:42.436
+java.runtime=21.0.11+10-LTS vendor=Microsoft
+selenium.releaseLabel=4.13.0
+shaft.headlessExecution=false autoMaximizeBrowserWindow=true
+capabilities.browserVersion=150.0.7871.187 chrome={chromedriverVersion=150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359}), userDataDir=C:\Users\Aymoon\AppData\Local\Temp\scoped_dir27032_2044331821} goog:chromeOptions={debuggerAddress=localhost:59945}
+branchListReady wall=2026-08-15 11:54:43.176
+instrumentationInstalled labelFound=true radioFound=true radioChecked=false labelRect=639,538 30x22 labelCentre=654,549 elementFromPoint=LABEL.ng-star-inserted [IS TARGET] readyState=complete
+PROBE 1 windowBefore visibilityState=visible hidden=false hasFocus=false activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 1 clickStart wall=2026-08-15 11:54:43.202
+PROBE 1 clickEnd wall=2026-08-15 11:54:43.388 clickMs=186 exception=none
+PROBE 1 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 1 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 2 clickStart wall=2026-08-15 11:54:43.429
+PROBE 2 clickEnd wall=2026-08-15 11:54:43.611 clickMs=182 exception=none
+PROBE 2 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 2 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 windowBefore visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+PROBE 3 clickStart wall=2026-08-15 11:54:43.645
+PROBE 3 clickEnd wall=2026-08-15 11:54:43.820 clickMs=175 exception=none
+PROBE 3 events=[] mutations=[] labelIdentitySame=true radioIdentitySame=true radioCheckedNow=false radios{Active=true Inactive=false Both=false}
+PROBE 3 windowAfter visibilityState=visible hidden=false hasFocus=true activeElement=BODY inner=1920x889 outer=1920x1032 screenPos=0,0 devicePixelRatio=1
+effectiveCommandLine "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-default-apps --disable-dev-shm-usage --disable-device-discovery-notifications --disable-domain-reliability --disable-extensions --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions --disable-field-trial-config --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-sync --enable-automation --enable-features=NetworkService,NetworkServiceInProcess --enable-logging --enable-use-zoom-for-dsf --force-color-profile=srgb --hide-scrollbars --host-resolver-rules --ignore-certificate-errors --log-level=0 --log-net-log --metrics-recording-only --mute-audio --net-log-capture-mode --no-default-browser-check --no-first-run --no-pings --no-service-autorun --password-store=basic --remote-allow-origins=* --remote-debugging-port=0 --silent-debugger-extension-api --start-maximized --test-type=webdriver --use-mock-keychain --user-data-dir="C:\Users\Aymoon\AppData\Local\Temp\scoped_dir27032_2044331821" --flag-switches-begin --flag-switches-end data:,
+featureSwitchesAsChromeSawThem
+                       --disable-features=IgnoreDuplicateNavs,Prewarm,CalculateNativeWinOcclusion,AutofillServerCommunication,MediaRouter,Translate,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,OptimizationHints,DialMediaRouteProvider,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,InterestFeedContentSuggestions
+                       --enable-features=NetworkService,NetworkServiceInProcess

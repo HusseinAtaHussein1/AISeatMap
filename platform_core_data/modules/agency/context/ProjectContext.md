@@ -14,8 +14,8 @@
 | Revision | 3 <!-- rev 3, 2026-08-17: new independent run; branch changed to Automation; safety policy now governs; mutation narrowed to self-created records; Branch-module knowledge reuse recorded --> |
 | Target ref at write | `b0a6eb1` |
 | Generated | 2026-08-17 |
-| Status | **Pending Review** |
-| Approved by | Revisions 1–2: Ahmed Ayman — Stage 1 Human Review gate, 2026-07-31. **Revision 3 is not yet approved.** |
+| Status | **Approved** |
+| Approved by | Revisions 1–2: Ahmed Ayman — Stage 1 Human Review gate, 2026-07-31. **Revision 3: Ahmed Ayman — Stage 1 Human Review gate, 2026-08-17**, after review of the full document and the twelve product-owner decisions at §1.2. |
 | Revision 2 authored by | Ahmed Ayman (directive), 2026-07-31 — the application becomes the primary reference where US-4222 is clearly outdated; disposition taxonomy added at §1.1; Threshold fields confirmed as later enhancements |
 | Revision 3 authored by | Stage 1, run-004, 2026-08-17 — see §0.1 for exactly what changed and what did not |
 | Revision 3 amended | 2026-08-17 — **twelve product-owner decisions applied** (§1.2) plus five document corrections. Still `Pending Review`; the decisions are recorded, the approval of the document is not yet given. |

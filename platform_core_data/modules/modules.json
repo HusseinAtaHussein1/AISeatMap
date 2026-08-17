@@ -12,6 +12,8 @@
   ],
   "activeScope": "single",
   "spansEveryModule": false,
+  "activeFeature": null,
+  "previousActiveFeature": null,
   "switchedAt": "2026-08-17T11:35:25.353Z",
   "setBy": "Module Manager",
   "previousActiveModules": [
@@ -285,14 +287,14 @@
       "status": "Active",
       "derivedFromSections": [],
       "createdAt": "2026-07-31T08:55:57.892Z",
-      "updatedAt": "2026-08-17T11:44:59.739Z",
+      "updatedAt": "2026-08-17T12:40:16.613Z",
       "supersededBy": null,
       "stages": {
         "context": {
-          "status": "Pending Review",
+          "status": "Approved",
           "artifactPath": "platform_core_data/modules/agency/context/ProjectContext.md",
           "lastRun": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency",
-          "lastUpdated": "2026-08-17T11:44:59.739Z",
+          "lastUpdated": "2026-08-17T12:40:16.613Z",
           "revisionCount": 3,
           "targetRefAtWrite": null
         },

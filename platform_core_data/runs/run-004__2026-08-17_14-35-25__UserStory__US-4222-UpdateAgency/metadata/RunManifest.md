@@ -7,7 +7,7 @@
 | Workflow | unversioned |
 | Status | Preparing |
 | Created | 2026-08-17T11:35:25.430Z |
-| Last updated | 2026-08-17T11:45:07.757Z |
+| Last updated | 2026-08-17T12:40:16.696Z |
 
 ## 1. Code-State Anchor
 
@@ -28,7 +28,7 @@
 
 | Stage | Artifact | Timestamp | Checkpoint Status | Reviewer | Revisions | Invocation Path | Run-Scoped Instruction |
 |---|---|---|---|---|---|---|---|
-| Stage 1 — Project Context | — | 2026-08-17T11:45:07.757Z | Pending Review | — | 0 | — | — |
+| Stage 1 — Project Context | — | 2026-08-17T12:40:16.696Z | Approved | Ahmed Ayman | 0 | — | — |
 
 ## 3. Cross-Run Reuse / Source Runs
 
@@ -50,6 +50,7 @@
 |---|---|---|---|---|---|
 | 1 | 2026-08-17T11:35:25.430Z | — | Run created (`Preparing`) | Run Manager | ad hoc run |
 | 2 | 2026-08-17T11:45:07.757Z | Stage 1 — Project Context | Pending Review | Run Manager | — |
+| 3 | 2026-08-17T12:40:16.696Z | Stage 1 — Project Context | Pending Review → Approved | Ahmed Ayman | — |
 
 ## 5. Declared Gaps
 

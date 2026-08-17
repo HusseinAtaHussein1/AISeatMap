@@ -1428,10 +1428,16 @@ it.
 
 ## 12. Approval Status
 
-**The repaired suite is `Pending Automation Approval`** (§15). Stage `4A`'s approval covered the code
-as it was before this pass. Because `branch` is Promoted, there is no merge to hold back — the change
-is already in the only copy that exists — so the gate applies to *recording* the change, and the
-in-place baseline update is not recorded as approved until a human approves it.
+**APPROVED 2026-08-17 by ahmed.ayman@tildetech.ae** (§15, §5.2).
+
+Stage `4A`'s approval covered the code as it was before this pass and did not carry over. Because
+`branch` is Promoted there was no merge to hold back — the change was already in the only copy that
+exists — so the gate applied to *recording* the change as approved. That approval is now recorded
+against this specific change in `.module_automation_state.json` → `baselineUpdates[].approvedBy`,
+naming the one file it covers.
+
+**What the approval does NOT cover:** the two open failures (`TC-BR-061`, `TC-BR-057`) and the
+intermittent login failure in §11. Those are unresolved findings, not approved behaviour.
 
 ---
 

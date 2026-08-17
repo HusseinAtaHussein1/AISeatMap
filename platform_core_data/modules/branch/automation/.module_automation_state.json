@@ -11,7 +11,7 @@
   "assembledAt": "2026-08-17T06:57:56.988Z",
   "approvedBy": "ahmed.ayman@tildetech.ae",
   "approvedAt": "2026-08-17T06:53:48.676Z",
-  "updatedAt": "2026-08-17T10:44:52.086Z",
+  "updatedAt": "2026-08-17T10:46:29.352Z",
   "history": [
     {
       "state": "Generated",
@@ -100,6 +100,10 @@
       "state": "BaselineUpdated",
       "at": "2026-08-17T10:44:52.086Z",
       "run": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
+    },
+    {
+      "state": "BaselineUpdateApproved",
+      "at": "2026-08-17T10:46:29.352Z"
     }
   ],
   "lastMergeSummary": "platform_core_data/modules/branch/automation/automation_promotion.md",
@@ -137,7 +141,9 @@
         ],
         "updateBranchSuite": "5/5 passed"
       },
-      "note": "REPAIR-BR-013 (HEAL-BR-20260817-01) — re-keyed the Update Branch readiness wait from the \"loading...\" status string onto the p-placeholder class. PENDING AUTOMATION APPROVAL per pipeline.md 15."
+      "note": "REPAIR-BR-013 (HEAL-BR-20260817-01) — re-keyed the Update Branch readiness wait from the \"loading...\" status string onto the p-placeholder class. APPROVED 2026-08-17 per pipeline.md 5.2/15 — fresh approval covering the code as changed by this pass, not inherited from Stage 4A.",
+      "approvedBy": "ahmed.ayman@tildetech.ae",
+      "approvedAt": "2026-08-17T10:46:29.352Z"
     }
   ]
 }

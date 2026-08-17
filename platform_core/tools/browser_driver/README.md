@@ -41,6 +41,18 @@ await driver.navigate('/master/supplier/credential-routes-filter/add');
 await driver.click('supplierDropdown');
 await driver.screenshot('add-routes-filter', { dir: '<scratchpad>/screenshots' });
 
+// Discovery found two things it could not understand on this screen. Both the original and the
+// annotated copy are written; the overlay is gone before the next interaction.
+const { originalPath, annotatedPath, missing } = await driver.annotatedScreenshot(
+  'payment-settings',
+  [
+    { selector: '#reachingPercentage', label: 'Q1', note: 'no units shown' },
+    { selector: '.pcc-table thead th:nth-child(3)', label: 'Q2' },
+  ],
+  { dir: '<evidence dir>' },
+);
+if (missing.length) throw new Error(`no element matched: ${missing.join(', ')}`);
+
 const dialog = driver.takePendingDialog();
 if (dialog) { /* stop and ask the human — see project constraints */ }
 
@@ -150,6 +162,7 @@ platform_core_data/knowledge_base/
 | `type(keyOrSelector, text)` | Fills a field. |
 | `select(keyOrSelector, optionLabel)` | Picks a `<select>` option by visible label. |
 | `screenshot(name, {dir, fullPage})` | Saves a PNG, returns its path. |
+| `annotatedScreenshot(name, rects, {dir, fullPage})` | **Discovery evidence for something the run could not understand.** Saves the pristine original **first**, then a copy with a labelled, high-contrast rectangle around each unclear element, and removes the overlay in a `finally`. Returns `{originalPath, annotatedPath, drawn, missing}`. Each rect is `{selector, label, note?}` and **every rect must carry a label** (`Q1`, `Q2`, or an Open Question / Finding ID) that maps to a written question — an unlabelled box is a smudge nobody can refer to. A selector matching nothing comes back in `missing`; that is a missing question, so act on it before publishing. See `explorer-skill/SKILL.md` §5.11.1–§5.11.3. |
 | `captureBaseline(screenName, {navigationPath, accessRoles, refresh})` | Captures the canonical baseline screenshot for a screen into `platform_core_data/knowledge_base/ui/screenshots/{screenName}.png` (created on demand) and records its metadata in that screen's knowledge file. Idempotent — an existing baseline is left alone unless `refresh: true`. |
 | `extractText(keyOrSelector)` | Returns trimmed inner text. |
 | `extractTable(keyOrSelector)` | Returns `string[][]` (rows × cells, header row included). |

@@ -89,9 +89,36 @@ metadata.md is always present in an evidence package, even when evidence capture
   <!-- How many times this exact underlying condition was encountered this run (§5.9). Starts at 1
        and is incremented on each duplicate rather than raising a second Finding. -->
 
+- **Unclear Items:**
+  <!-- REQUIRED whenever §5.11.1 applies — an Open Question, an ambiguous UI observation, a control
+       whose purpose could not be determined, unclear wording/validation/status/icon/column/section
+       behaviour, a product-owner decision needed about a visual element, or a mismatch that could
+       not yet be classified. OMIT THIS WHOLE BULLET otherwise; never leave an empty table.
+
+       One row per rectangle in the annotated screenshot, and every rectangle appears exactly once.
+       A rectangle with no row, or a row with no rectangle, is an incomplete Finding.
+
+       "Why the answer matters" is not padding — it is what tells the reviewer whether this blocks
+       Stage 3 or can wait. A row that cannot state an impact is usually an Observation, not an
+       Open Question.
+
+       Under §5.11.3 (no live page — supplied screenshot, recording, document, static artifact) the
+       Annotated cell carries the verbatim string
+         Annotated evidence not capturable — Discovery Mode: <mode>
+       and "What exactly is unclear" describes the location as precisely as the evidence allows
+       (section heading, row and column, field label, neighbouring text). EVERY OTHER COLUMN STAYS
+       MANDATORY. Never fabricate or estimate a rectangle, and never use this route when a live
+       browser page was available. -->
+
+  | Rect | What was observed | What exactly is unclear | The question | Why the answer matters | Original | Annotated |
+  |---|---|---|---|---|---|---|
+  | {{RECT_LABEL}} | {{OBSERVED}} | {{UNCLEAR}} | {{QUESTION}} | {{WHY_IT_MATTERS}} | `{{ORIGINAL_PATH}}` | `{{ANNOTATED_PATH}}` |
+
 - **Evidence Links:** {{EVIDENCE_LINKS}}
   <!-- Every evidence file in this package (§5.12), AND a note on any item that could not be
-       captured, with the reason. Never overwrite an existing evidence file. -->
+       captured, with the reason. Never overwrite an existing evidence file.
+       An annotated copy is listed ALONGSIDE the original it was taken from, never instead of it —
+       a reviewer disputing the annotation needs the unmarked image to check it against. -->
 
 - **Recommendation:** {{RECOMMENDATION}}
   <!-- A suggested next step for the human reviewer (e.g. "confirm with Product Owner whether X is

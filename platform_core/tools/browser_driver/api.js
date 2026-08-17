@@ -2,7 +2,7 @@
 //
 // Agents must never call Playwright directly. They request an authenticated `BrowserDriver`
 // session (`BrowserDriver.authenticate(...)`) and then use its operation-level methods —
-// navigate/click/type/screenshot/extractText/extractTable/waitFor/captureNetwork.
+// navigate/click/type/screenshot/annotatedScreenshot/extractText/extractTable/waitFor/captureNetwork.
 //
 // This module (like driver.js) is shared platform infrastructure ONLY — it contains no
 // project-specific data itself. Locator knowledge is deliberately kept OUT of the Browser
@@ -23,6 +23,14 @@
 const fs = require('fs');
 const path = require('path');
 const { launchAuthenticated, projectBrowserDir, projectUiScreenshotsDir } = require('./driver');
+const {
+  OVERLAY_ID,
+  validateRects,
+  buildOverlayScript,
+  buildCleanupScript,
+  buildOverlayPayload,
+  annotatedName,
+} = require('./annotate');
 
 function knowledgeFilePath(kind, name) {
   return path.join(projectBrowserDir(), kind, `${name}.json`);
@@ -147,6 +155,74 @@ class BrowserDriver {
     const filePath = path.join(outDir, name.endsWith('.png') ? name : `${name}.png`);
     await this.page.screenshot({ path: filePath, fullPage: opts.fullPage !== false });
     return filePath;
+  }
+
+  /**
+   * Discovery evidence for something this run could NOT understand: the original screenshot, plus an
+   * annotated copy with a high-contrast rectangle around each unclear element.
+   *
+   * See .claude/skills/explorer-skill/SKILL.md §5.10–§5.12 and §11 rule 34. Required whenever
+   * Discovery raises an Open Question, records an ambiguous UI observation, cannot determine a
+   * control's purpose, or finds a mismatch it cannot yet classify — because a full-page screenshot
+   * of a 45-field form does not tell a reviewer WHICH field the question is about.
+   *
+   * ORDER IS PART OF THE CONTRACT. The original is captured FIRST, before a single node is injected,
+   * so the unmodified evidence exists on disk even if annotation then fails entirely. Capturing the
+   * annotated copy first and "cleaning up afterwards" would mean a mid-capture failure leaves only a
+   * marked-up image and no pristine one.
+   *
+   * CLEANUP IS GUARANTEED. Removal runs in a `finally`, so the overlay is gone whether the capture
+   * succeeded, threw, or timed out. It is idempotent and swallows its own errors, so it can never
+   * mask the original failure with a second one. A stray rectangle surviving into a LATER Finding's
+   * evidence would be worse than no annotation at all — it would be a rectangle pointing at the
+   * wrong question.
+   *
+   * @param {string} name - base evidence name, e.g. "failure" or "failure.png"
+   * @param {Array<{selector: string, label: string, note?: string}>} rects - one per unclear item;
+   *        every rect MUST carry a label (Q1, Q2, or the Open Question ID) that maps to a written
+   *        question in the Finding
+   * @param {{dir?: string, fullPage?: boolean}} [opts]
+   * @returns {Promise<{originalPath: string, annotatedPath: string, drawn: object[], missing: string[]}>}
+   *          `missing` names any label whose selector matched nothing — a missing rectangle is a
+   *          missing question, so the caller must act on it rather than publishing silently.
+   */
+  async annotatedScreenshot(name, rects, opts = {}) {
+    const validated = validateRects(rects);
+
+    // 1. The pristine original, before anything is injected.
+    const originalPath = await this.screenshot(name, opts);
+
+    const outDir = opts.dir || process.cwd();
+    const annotatedPath = path.join(outDir, annotatedName(name));
+
+    let result = { drawn: [], missing: validated.map((r) => r.label) };
+    try {
+      // 2. Inject, capture, and — in the finally — always remove.
+      result = await this.page.evaluate(buildOverlayScript(), buildOverlayPayload(validated));
+      await this.page.screenshot({ path: annotatedPath, fullPage: opts.fullPage !== false });
+    } finally {
+      await this._removeAnnotationOverlay();
+    }
+
+    return { originalPath, annotatedPath, drawn: result.drawn, missing: result.missing };
+  }
+
+  /**
+   * Removes the annotation overlay. Idempotent, never throws.
+   *
+   * Separate and public-ish so a caller that annotated through some other path — or that suspects a
+   * previous run died mid-capture — can guarantee a clean page before the next interaction.
+   * @returns {Promise<boolean>} whether removal ran cleanly
+   */
+  async _removeAnnotationOverlay() {
+    try {
+      return await this.page.evaluate(buildCleanupScript(), OVERLAY_ID);
+    } catch {
+      // The page may be closed, navigated, or crashed. Cleanup failing here is not worth surfacing:
+      // this method is called from a `finally`, and throwing would replace a real capture error with
+      // a cleanup error. A navigated-away page has already discarded the overlay anyway.
+      return false;
+    }
   }
 
   async extractText(keyOrSelector) {

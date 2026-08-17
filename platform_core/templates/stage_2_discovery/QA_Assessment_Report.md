@@ -91,11 +91,24 @@ that Finding's own metadata.md (see findings/FINDING_metadata.md).
 
 <!-- Every candidate that could not be validated/reproduced and has no other supporting evidence
      (§5.1 step 2), PLUS every carried-forward Project Context Assumption/Risk left genuinely
-     unresolved by this run. -->
+     unresolved by this run.
 
-| ID | Open Question | What Would Resolve It | Project Context Ref |
-|---|---|---|---|
-| {{OQ_ID}} | {{QUESTION}} | {{RESOLUTION_PATH}} | {{CONTEXT_REF}} |
+     ANNOTATED EVIDENCE (§5.11.1). An Open Question about something VISIBLE — a field, control,
+     message, column, icon, section, value, or behaviour on screen — must cite the annotated
+     screenshot and the rectangle label that marks it. "A field on the Payment Settings form is
+     unclear" is not answerable; "Q2 on payment_settings.annotated.png" is.
+
+     A question about something non-visual (a business rule, a missing requirement, an
+     authorization model) has nothing to box, and its Evidence columns read "—".
+
+     Where no live page was available (§5.11.3), the Annotated column carries the verbatim
+       Annotated evidence not capturable — Discovery Mode: <mode>
+     and the question itself describes the location as precisely as the evidence allows. The
+     question and its impact stay mandatory either way. -->
+
+| ID | Open Question | Rect | Why the Answer Matters | What Would Resolve It | Original | Annotated | Project Context Ref |
+|---|---|---|---|---|---|---|---|
+| {{OQ_ID}} | {{QUESTION}} | {{RECT_LABEL}} | {{WHY_IT_MATTERS}} | {{RESOLUTION_PATH}} | `{{ORIGINAL_PATH}}` | `{{ANNOTATED_PATH}}` | {{CONTEXT_REF}} |
 
 ## 9. Discovered Risks
 

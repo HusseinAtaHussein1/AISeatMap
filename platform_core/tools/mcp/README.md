@@ -68,6 +68,20 @@ Therefore, for any flow behind a login:
 Every constraint the consuming Skill already carries applies unchanged — the Explorer's "Not permitted" list (`explorer-skill/SKILL.md` §10) and the Project Context's Environment Constraints govern MCP tool calls exactly as they govern driver calls. Specifically:
 
 - `browser_run_code_unsafe` and `browser_evaluate` are **not** used to mutate application state, only to read it — and `browser_run_code_unsafe` requires the same explicit authorization any destructive action would.
+- **One narrow exception, added 2026-08-17 (user-mandated): a transient, self-removing, view-only annotation overlay during Discovery evidence capture** (`explorer-skill/SKILL.md` §5.11.1–§5.11.2). Discovery must mark *which* element it could not understand, and drawing that rectangle means touching the rendered page. The overlay is permitted **only** while every one of these holds:
+
+  | | |
+  |---|---|
+  | 1 | Changes **no application data and no application state** |
+  | 2 | Triggers **no input, submission, navigation, or business behaviour** |
+  | 3 | Contains **only visual annotation elements** |
+  | 4 | Is **removed immediately** after the annotated screenshot is captured |
+  | 5 | Is **also removed through a guaranteed cleanup path if capture fails** (`finally`) |
+  | 6 | Is **never present during any later interaction or evidence capture** |
+
+  The original screenshot is captured **before** the overlay is injected, so pristine evidence exists on disk even if annotation then fails. `platform_core/tools/browser_driver/annotate.js` enforces (2) mechanically by giving every injected node `pointer-events: none`, and (4)–(6) by scoping the whole overlay to one container id removed in a `finally` that swallows its own errors.
+
+  **This does not widen the rule.** A view-layer overlay that submits nothing and is gone before the next action is the same class of act as scrolling or resizing the viewport, both already permitted. Anything that writes to the application — a value typed, a form submitted, a request issued — remains forbidden exactly as before.
 - An unexpected dialog is reported and escalated, never blind-accepted — mirroring `takePendingDialog()`'s contract.
 - Stage 4A may drive this server **only** for selector verification. Executing a generated suite through it is a specification violation of `automation-skill/SKILL.md` §17's "never for running the suite."
 

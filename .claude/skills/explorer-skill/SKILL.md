@@ -274,6 +274,7 @@ The complete set of evidence types available to this skill. Which subset is requ
 
 - Full-page screenshot
 - Focused screenshot (the specific element/region relevant to the Finding)
+- **Annotated screenshot** — a copy of a screenshot carrying a high-contrast rectangle around each element the run could not understand, each rectangle labelled (`Q1`, `Q2`, or the Open Question / Finding ID) and mapped to a written question. **Mandatory for unclear-item Findings** (§5.11.1). The original is always preserved alongside it; the annotated copy never replaces it.
 - Screenshot before the triggering action
 - Screenshot after the triggering action
 - Screenshot at the failure state (where applicable)
@@ -313,6 +314,64 @@ Rather than always collecting the full inventory, this skill tailors the minimum
 
 Any candidate touching Navigation (per §5.8) additionally requires video recording where technically feasible, regardless of Category.
 
+## 5.11.1 The unclear-item floor — annotated evidence *(added 2026-08-17, user-mandated)*
+
+**This floor overrides the Category row above whenever it applies, and it always raises it, never lowers it.**
+
+**The problem it fixes.** An unclear item lands in `Observation` by default (Execution Rule 9), and `Observation` has one of the *lowest* evidence floors in the table. So the least-understood Findings were carrying the weakest evidence: a full-page screenshot of a 45-field form, and a sentence saying something on it was unclear. The reviewer then has to guess which element — and a guess is precisely what raising the Finding was meant to avoid.
+
+**When it applies.** Whenever this stage:
+
+- raises an **Open Question**;
+- records an **ambiguous UI observation**;
+- **cannot determine the purpose** of a field or control;
+- finds **unclear wording, validation, status, icon, table column, or section behaviour**;
+- needs a **product-owner decision based on a visual element**;
+- records a **mismatch it cannot yet classify** as defect / outdated requirement / intended behaviour / misunderstanding.
+
+**What is required.** Both files, always:
+
+| | |
+|---|---|
+| **Original** | the unmodified screenshot |
+| **Annotated** | a copy with a **high-contrast rectangle** around **only** the unclear element or area |
+
+Rules for the rectangle:
+
+- **A rectangle, not an arrow, circle, or freehand mark** — wherever a rectangle can identify the area precisely, it is the required form.
+- **Surround only the relevant element or area.** Never highlight the whole page when one control is unclear.
+- **Never obscure** the element's text, value, icon, or surrounding context — the annotation is an outline over a transparent fill, never a filled or dimmed box.
+- **Keep enough surrounding UI visible** that a reviewer can tell where on the screen the element sits.
+- **Label every rectangle** — `Q1`, `Q2`, or the related Finding / Open Question ID.
+- **Several unclear items on one screen get several separately numbered rectangles**, never one box around all of them.
+- **Every rectangle maps to a written question** in the Finding or the QA Assessment Report. A rectangle with no question, or a question with no rectangle, is an incomplete Finding.
+
+**A screenshot without a precise visual highlight is not sufficient evidence for an unclear-item Finding.**
+
+This supplements written evidence and live observation; it never replaces either.
+
+### 5.11.2 The mechanism
+
+`platform_core/tools/browser_driver/api.js` → **`annotatedScreenshot(name, rects, opts)`**, which captures the original, injects a transient overlay, captures the annotated copy, and removes the overlay in a `finally`.
+
+**Order is part of the contract:** the original is written to disk *before* any node is injected, so a failure during annotation still leaves pristine evidence. Cleanup is guaranteed and idempotent, and swallows its own errors so it can never mask the real capture failure. See `platform_core/tools/mcp/README.md` §1.4 for why a view-only overlay is permitted under the read-mostly rule.
+
+A rectangle whose selector matched nothing comes back in the call's `missing` list. **That is a missing question, not a cosmetic gap** — resolve it (better selector, or record it under §5.11.3) before publishing the Finding.
+
+### 5.11.3 When annotation is technically unavailable
+
+Discovery Modes with **no live page** — supplied screenshots, recordings, documents, other static artifacts (§8.1 #2, #3, #5, #7) — cannot produce a precise rectangle, and there is no honest way to draw one on someone else's image without guessing at coordinates.
+
+In that case, and **only** in that case:
+
+- **Do not fabricate an annotation.** Do not draw an estimated or approximate rectangle.
+- **Preserve the original evidence** unchanged.
+- Record, verbatim: **`Annotated evidence not capturable — Discovery Mode: <mode>`**
+- **Describe the unclear item's location as precisely as the available evidence allows** — section heading, row and column, field label, neighbouring text.
+- **The written Open Question and its impact remain mandatory.** The exception removes the rectangle, never the question.
+
+**This exception must never be used to skip annotation during live-browser Discovery.** Where a live page exists and the element can be located reliably, the rectangle is required.
+
 ## 5.12 Evidence Package
 
 Every Finding must generate its own dedicated evidence package, stored under a per-Finding directory:
@@ -325,6 +384,7 @@ platform_core_data/modules/{{MODULE_SLUG}}/discovery/
       before.png
       after.png
       failure.png
+      failure.annotated.png        # unclear-item Findings only (§5.11.1) — NEVER replaces the original
       recording.webm
       console.log
       network.har
@@ -338,6 +398,7 @@ platform_core_data/modules/{{MODULE_SLUG}}/discovery/
 - File names above are the standard names when that evidence type applies; a Finding that only warrants one screenshot (e.g., a static Observation) omits the files that don't apply rather than producing empty placeholders.
 - A recurring Finding (§5.9) does not get a new directory for each occurrence — new evidence, if material, is added into the existing Finding's directory, and the occurrence is tracked in its metadata.
 - **Existing evidence files are never overwritten** (§11) — if a later occurrence or recovery attempt produces evidence with the same conceptual role (e.g., another "failure" screenshot), it is saved under a distinguishing name (e.g., `failure_2.png`) rather than replacing the original, and both are listed in `Evidence Links`.
+- **An annotated copy is named `{original}.annotated.png`** and sits beside the file it was taken from, so the pair is derivable in both directions and neither can be mistaken for the other. **Both are always kept** — the annotated copy supplements the original, never substitutes for it, because a reviewer disputing the annotation needs the unmarked image to check it against. The never-overwrite rule applies to both halves.
 
 ## 5.13 Root Cause Hypothesis
 
@@ -376,6 +437,13 @@ Every `metadata.md` must contain the following fields, in this order:
 - **Investigation Notes** — what boundary conditions or surrounding behaviors were probed per Investigation Mode (§5.8), what each probe revealed, and any probe or recovery step skipped due to Environment Constraints
 - **Root Cause Hypothesis** — per §5.13, if one is warranted; omitted otherwise
 - **Occurrence Count** — how many times this exact underlying condition was encountered during the run (§5.9), starting at 1
+- **Unclear Items** — **required whenever §5.11.1 applies**, omitted entirely otherwise. One row per rectangle, and every rectangle in the annotated screenshot must appear here exactly once:
+
+  | Rect | What was observed | What exactly is unclear | The question | Why the answer matters | Original | Annotated |
+  |---|---|---|---|---|---|---|
+  | `Q1` | factual, no interpretation | the specific ambiguity | the question needing an answer | which of scope / expected behaviour / severity / test design it changes | path | path |
+
+  *"Why the answer matters"* is not narrative padding — it is what tells the reviewer whether this blocks Stage 3 or can wait. A row that cannot state an impact is usually an observation, not an Open Question. Under §5.11.3 the `Annotated` cell carries `Annotated evidence not capturable — Discovery Mode: <mode>` and the location is described in words instead; **every other column stays mandatory**.
 - **Evidence Links** — every evidence file included in the package (§5.12), and a note on any item that could not be captured
 - **Recommendation** — a suggested next step for the human reviewer (e.g., "confirm with Product Owner whether X is intended," "reproduce in staging," "no action needed if intentional") — a suggestion, never a directive, and never a claim that the Finding is definitely a defect. (Note: this field exists on every Finding regardless of Category, including Findings whose Category is itself `Recommendation` — see §5.3's disambiguation of the two.)
 
@@ -501,7 +569,7 @@ Discovery — validating and enriching the Project Context against actual applic
 
 Which tools are actually used depends on the Discovery Mode selected (§8.1) for a given run or in-scope area — this skill is not limited to the first row below, and may use more than one row's tools within the same run:
 
-- **Browser automation** (preferred mode, §8.1 #1): either the **Browser Driver** (`platform_core/tools/browser_driver/api.js` — `navigate`, `click`, `type`, `select`, `screenshot`, `extractText`, `extractTable`, `waitFor`, `captureNetwork`, `takePendingDialog`) or the **`playwright` MCP server** (`browser_navigate`, `browser_click`, `browser_type`, `browser_snapshot`, `browser_take_screenshot`, `browser_console_messages`, `browser_network_requests`, `browser_wait_for`, `browser_handle_dialog`, `browser_tabs`, `browser_resize`), chosen per the Mode Selection Rule in `platform_core/tools/mcp/README.md` §1.2 — navigate, click, type, snapshot/accessibility-tree capture, DOM snapshot capture, full-page and element-scoped screenshot capture, video/session recording, wait, console log capture, network request/response capture (including HAR-equivalent export and request/response header/body inspection), dialog handling, refresh/back/forward navigation, direct URL navigation, and — where the tool supports it — launching a fresh/clean browser context for clean-state recovery attempts (§5.7). `browser_evaluate`/`browser_run_code_unsafe` are read-only here: they observe state, never mutate it, and never carry a credential value (`mcp/README.md` §1.3–§1.4).
+- **Browser automation** (preferred mode, §8.1 #1): either the **Browser Driver** (`platform_core/tools/browser_driver/api.js` — `navigate`, `click`, `type`, `select`, `screenshot`, **`annotatedScreenshot`** (§5.11.2), `extractText`, `extractTable`, `waitFor`, `captureNetwork`, `takePendingDialog`) or the **`playwright` MCP server** (`browser_navigate`, `browser_click`, `browser_type`, `browser_snapshot`, `browser_take_screenshot`, `browser_console_messages`, `browser_network_requests`, `browser_wait_for`, `browser_handle_dialog`, `browser_tabs`, `browser_resize`), chosen per the Mode Selection Rule in `platform_core/tools/mcp/README.md` §1.2 — navigate, click, type, snapshot/accessibility-tree capture, DOM snapshot capture, full-page and element-scoped screenshot capture, video/session recording, wait, console log capture, network request/response capture (including HAR-equivalent export and request/response header/body inspection), dialog handling, refresh/back/forward navigation, direct URL navigation, and — where the tool supports it — launching a fresh/clean browser context for clean-state recovery attempts (§5.7). `browser_evaluate`/`browser_run_code_unsafe` are read-only here: they observe state, never mutate it, and never carry a credential value (`mcp/README.md` §1.3–§1.4).
 - **Existing screenshots / recordings / documentation / static artifacts** (§8.1 #2, #3, #5, #7): Read (to ingest supplied images, video files, docs, exported HTML/logs/config); no live interaction is possible under these modes, per §8.3
 - **User-guided exploration** (§8.1 #4): conversational exchange with a human operator who drives the live application on this skill's behalf, plus Read for any screenshots/descriptions they supply back
 - **APIs** (§8.1 #6): read-only API-calling tools against the application's own authorized endpoints, where available
@@ -547,6 +615,7 @@ Which tools are actually used depends on the Discovery Mode selected (§8.1) for
 31. **Must recognize and act on the named Stop Conditions** (§20), and must attempt the mid-run Recovery Strategy (§21) for a per-area block before recording that area as Blocked/Unreachable.
 32. **Must verify Handoff completeness** (§22) before treating a run's Discovery Artifacts as finished — every input the Test Design skill's specification declares it needs must actually be present and unambiguous.
 33. **Must run the Simple English Communication Standard check on the QA Assessment Report and every Finding before treating a run's Discovery Artifacts as finished** (`workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 10): short, direct sentences; any hard word replaced with an easier one where meaning stays the same; every necessary technical term briefly explained; Confirmed Behaviour kept visibly separate from Assumptions and Open Questions; and a first-read check for whether a QA Lead would understand it. Finding IDs, module names, and evidence file names are never altered by this check.
+34. **Must capture annotated evidence for every unclear item** (§5.11.1). Whenever this stage raises an Open Question, records an ambiguous UI observation, cannot determine a control's purpose, finds unclear wording/validation/status/icon/column/section behaviour, needs a product-owner decision about a visual element, or records a mismatch it cannot yet classify, it must produce **both** the original screenshot **and** an annotated copy carrying a labelled, high-contrast rectangle around only the unclear element — and must record the matching `Unclear Items` rows in the Finding's metadata (§5.14). **A screenshot with no precise visual highlight is not sufficient evidence for an unclear-item Finding.** The only exception is a Discovery Mode with no live page (§5.11.3), which requires the verbatim `Annotated evidence not capturable — Discovery Mode: <mode>` note plus a precise written location — never a fabricated or estimated rectangle, and never a silent omission. This rule **never** applies as an excuse during live-browser Discovery.
 
 # 12. Expected Artifacts
 

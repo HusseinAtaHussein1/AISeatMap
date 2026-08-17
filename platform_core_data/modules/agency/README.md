@@ -5,7 +5,7 @@
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
 **Slug:** `agency` · **Status:** Active
-**Last generated:** 2026-08-02T07:00:28.102Z
+**Last generated:** 2026-08-17T11:44:59.739Z
 
 ## Scope
 
@@ -17,7 +17,7 @@ Agency lifecycle under a Branch: multi-section create and update (Agency Master,
 
 | Stage | Status | Artifact | Revisions | Last updated | Last run |
 |---|---|---|---|---|---|
-| Stage 1 — Project Context | Approved | [ProjectContext.md](context/ProjectContext.md) | rev 2 | 2026-07-31 | run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency |
+| Stage 1 — Project Context | Pending Review | [ProjectContext.md](context/ProjectContext.md) | rev 3 | 2026-08-17 | run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency |
 | Stage 2 — Discovery | Approved | [QA_Assessment_Report.md](discovery/QA_Assessment_Report.md) | rev 2 | 2026-08-01 | run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency |
 | Stage 3 — Test Design | Approved | [TestCases_Agency.md](test_design/TestCases_Agency.md) | rev 2 | 2026-08-02 | run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency |
 | Stage 4A — Automation | Not Started | — | — | — | — |
@@ -37,6 +37,7 @@ Agency lifecycle under a Branch: multi-section create and update (Agency Master,
 ## Runs that touched this module
 
 - [`run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency`](../../runs/run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency/)
+- [`run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency`](../../runs/run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency/)
 
 ---
 

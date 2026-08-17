@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "activeRun": {
-    "folderName": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch",
-    "index": 3,
+    "folderName": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency",
+    "index": 4,
     "scope": "UserStory",
-    "target": "US-8599-SearchActions_US-8606-UpdateBranch",
+    "target": "US-4222-UpdateAgency",
     "status": "Preparing",
     "title": null,
-    "startedTime": "2026-08-04T08:24:38.821Z",
+    "startedTime": "2026-08-17T11:35:25.430Z",
     "stagesPresent": [],
-    "path": "platform_core_data/runs/run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
+    "path": "platform_core_data/runs/run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
   },
-  "switchedAt": "2026-08-04T08:24:38.821Z",
+  "switchedAt": "2026-08-17T11:35:25.430Z",
   "setBy": "Run Manager",
-  "previousRun": "run-002__2026-08-03_10-26-17__UserStory__US-8605CreateBranch"
+  "previousRun": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
 }

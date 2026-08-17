@@ -357,7 +357,7 @@ Notes:
 
 | | |
 |---|---|
-| **Input** | Execution Results (with ≥1 Automation Failure) · Automation Suite · Project Context · Repair KB · Selector Verification KB · prior runs' Repair Summaries |
+| **Input** | Execution Results (with ≥1 Automation Failure) **or**, where Stages `4A`/`5A` never ran, the suite's own last three execution reports (`SKILL.md` §4.2) · Automation Suite · Project Context · Repair KB · Selector Verification KB · prior runs' Repair Summaries |
 | **Output** | Repair Summary · Repair Confidence Reports · repaired Automation Suite · Before/After Comparison · Quarantine Register · KB promotion proposals |
 | **Checkpoint** | **Batch Repair Approval** (§5.6) before any code change · **Automation Approval** (§5.2) before a repaired suite re-merges to the baseline |
 | **Artifact path** | `platform_core_data/modules/{module}/healing/RepairSummary.md`, `.../healing/RepairConfidenceReport.md`, `.../healing/BeforeAfterComparison.md`, `.../healing/QuarantineRegister.md` · repair **code** applied in place to `modules/{module}/automation/tests_{Framework}/` · rerun results appended to `runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-N.md` |
@@ -370,6 +370,7 @@ Notes:
 - **It is the single owner of all repair reasoning in the platform.** The Automation Repair Loop, Repair Strategy Decision Engine, Repair Confidence Engine, and Repair Knowledge Base — previously §25–§28 of `automation-execution-skill` — live here now, and nowhere else. There is exactly one repair engine, so there is no boundary to police between a "tactical" and a "strategic" one.
 - **Only `Automation Failure` is in scope.** An `Application Failure` is a real defect and is never "healed" — healing it would mean editing a test until it stops reporting a genuine bug, which is the single most dangerous thing this stage could do. `Environment`/`Infrastructure`/`Configuration Failure` are likewise out of scope. An `Inconclusive` result may be admitted to a diagnosis pass only by explicit human choice, never to a repair pass by default.
 - **Diagnosis and repair are separate decisions.** Below a High root-cause confidence, this stage gathers evidence rather than changing code — it never repairs on a guess.
+- **A human-written suite may be healed without Stages `4A`/`5A` having run** (`SKILL.md` §4.2–§4.3). Where a human generated and ran the automation in their own IDE, this stage reads the framework's **last three** execution reports (Allure, TestNG/JUnit XML, Playwright), derives each classification from that evidence and labels it `Derived`, and repairs **only failures belonging to new or changed tests** — a pre-existing baseline failure is reported and left untouched. A report on its own never reaches High root-cause confidence without live reproduction, and a `Derived — Application Failure` is refused exactly as a Stage `5A` one is. This is a fallback, not a substitute: where Execution Results exist, they always win.
 - **A repaired suite re-enters the normal gate.** Because Stage `4A`'s approval covered the code as it was then, changed code requires a fresh Automation Approval before it merges to the baseline (§12.4) or projects into the Target Project (§13.3).
 
 ### Stage 6A — Reporting Skill *(Automation branch · terminal)*
@@ -577,6 +578,7 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 2. **Every candidate failure is classified `Automation Failure`.** `Application Failure` is categorically out of scope (§5.6.4). `Environment`/`Infrastructure`/`Configuration Failure` are out of scope — they are not automation defects. An `Inconclusive` result appears only if the human explicitly admitted it, and then only to a diagnosis pass.
 3. **Each proposed repair carries a Repair Confidence Report** with an evidence-derived confidence percentage, a named root cause, a stated regression risk, and its cited evidence. A proposal without one is not presentable.
 4. **Root-cause confidence is High for anything proposed as a repair.** At Medium or Low, the only thing `5H` may propose is *diagnosis* — evidence gathering with no code change (§5.6.3).
+5. **Where the evidence came from external reports** (`SKILL.md` §4.2), the gate additionally shows the reports read with their timestamps, every `Derived` classification with its cited evidence for the human to confirm, and the new-vs-baseline split — in scope, pre-existing, and ambiguous. Approval then covers the classification and the boundary as well as the repair.
 
 #### 5.6.2 The question, asked once
 

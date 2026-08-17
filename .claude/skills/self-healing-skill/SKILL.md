@@ -1,11 +1,15 @@
 ---
 name: self-healing-skill
-description: Stage 5H of the Agentic AI Testing Platform's Automation Pipeline — OPTIONAL and opt-in only. Applies evidence-grounded reasoning to Automation Failures from an execution run, proposes repair strategies with derived confidence, applies human-approved repairs to the automation suite, reruns only the affected tests, and records confirmed repairs to the shared Repair Knowledge Base. Use when an automation execution produced Automation Failures and a human explicitly asks to enhance/repair the suite for named modules or scope.
+description: Stage 5H of the Agentic AI Testing Platform's Automation Pipeline — OPTIONAL and opt-in only. Applies evidence-grounded reasoning to Automation Failures from an execution run, proposes repair strategies with derived confidence, applies human-approved repairs to the automation suite, reruns only the affected tests, and records confirmed repairs to the shared Repair Knowledge Base. Works from Stage 5A Execution Results, or — when the human generated and ran the automation themselves in an IDE — from the suite's own last three execution reports (Allure/TestNG/JUnit/Playwright), repairing only failures in the new or changed tests and never the baseline. Use when an automation execution produced Automation Failures and a human explicitly asks to enhance/repair the suite for named modules or scope.
 inputs:
   - name: execution_results
     type: file_path
-    required: true
-    description: Stage 5A Execution Results containing at least one `Automation Failure`, with its full Result Classification and Evidence Inventory.
+    required: false
+    description: Stage 5A Execution Results containing at least one `Automation Failure`, with its full Result Classification and Evidence Inventory. Required unless `external_execution_reports` is used instead (§4.2) — exactly one of the two must be present.
+  - name: external_execution_reports
+    type: file_path
+    required: false
+    description: "Fallback evidence source when Stage 4A/5A never ran for this suite because a human generated and ran the automation themselves in an IDE (§4.2). The framework's own report output — Allure results/report, TestNG/JUnit XML, Playwright JSON/HTML. The three most recent runs are read, never only the newest. Failures derived this way are `Derived` classifications, not Stage 5A classifications, and are healed only where they belong to new or changed tests rather than to the baseline (§4.3)."
   - name: automation_suite
     type: file_path
     required: true
@@ -91,6 +95,7 @@ Three prohibitions define this skill more sharply than its capabilities do:
 
 # 3. Responsibilities
 
+- **Fall back to the framework's own reports when Stage `4A`/`5A` never ran** (§4.2) — read the last three runs, derive and label each classification as `Derived`, and repair only what belongs to new or changed code, never the baseline (§4.3).
 - **Accept only `Automation Failure` as repair scope** (§5) — and refuse `Application Failure` categorically, `Environment`/`Infrastructure`/`Configuration Failure` as out of scope, and `Inconclusive` unless a human explicitly admits it to a diagnosis pass.
 - **Consult the shared Repair KB and Selector Verification KB before deriving anything new** (§10, `pipeline.md` §10.8) — a confirmed prior repair is a candidate strategy citing its Rule ID, never re-derived from scratch.
 - **Establish Root Cause Confidence before proposing any repair** (§7.1) — and propose diagnosis rather than repair at Medium or Low.
@@ -110,8 +115,9 @@ Three prohibitions define this skill more sharply than its capabilities do:
 
 | Input | Role | Required? | Description |
 |---|---|---|---|
-| Execution Results | **Primary** | Required | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` — with full Result Classification and Evidence Inventory. At least one `Automation Failure` must be present, or there is nothing to heal (§16). |
-| Automation Suite | **Primary** | Required | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` — the run's working copy. **Never the baseline directly** (`pipeline.md` §12.3). |
+| Execution Results | **Primary** | Required *(unless §4.2 applies)* | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` — with full Result Classification and Evidence Inventory. At least one `Automation Failure` must be present, or there is nothing to heal (§16). |
+| External Execution Reports | **Primary fallback** | Required *only* when there are no Stage `5A` Execution Results (§4.2) | The framework's own reports from a human-run execution — Allure, TestNG/JUnit XML, Playwright JSON/HTML. The **three most recent runs** are read. Produces `Derived` classifications, never Stage `5A` ones. |
+| Automation Suite | **Primary** | Required | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` — the run's working copy. **Never the baseline directly** (`pipeline.md` §12.3). Under §4.2 this may instead be the human's own automation project, at the path they name. |
 | Project Context | Governing | Required, must be `Approved` | Target environment, credentials, safety constraints governing the rerun. |
 | Repair KB | Secondary | Optional (read) | Platform `repair_patterns/`, `diagnosis_patterns/`, `reasoning/` + prior runs' Repair Summaries (`pipeline.md` §10.8). Absent means no prior art — reasoning proceeds from evidence alone, and every strategy's confidence is capped accordingly (§9.2). |
 | Selector Verification KB | Secondary | Optional (read) | `knowledge_base/browser/screens/`, `.../components/` — verified locators with their code-state anchors (`pipeline.md` §10.8). |
@@ -129,6 +135,55 @@ A healing pass is bounded by its invocation and reports its own bounds:
 - **Unscoped invocation** (`/self-healing-skill`) — every `Automation Failure` in the Execution Results is analysed.
 - **Scope never widens mid-pass.** Discovering that a `Login` repair would also fix an `Agency` test does not authorize touching `Agency`; it is recorded as a recommendation for a later pass.
 
+## 4.2 External Execution Evidence — healing a human-run suite
+
+Stage `4A` and Stage `5A` are the normal path, but they are not the only way automation reaches a failing state. A human may write or extend the suite in their own IDE and run it there. When such a human then asks for `5H`, the failures are real and the suite is real — only the platform's paperwork is missing. This skill does not refuse that pass. It falls back to the framework's own execution reports.
+
+**When this mode is entered.** All three must hold:
+
+1. The invocation asks for `5H` on a named module or suite, and
+2. no `runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` exists for it — or the human states outright that they generated and ran the automation themselves, and
+3. at least one machine-readable execution report exists for that suite.
+
+If (3) fails, the pass halts per §16. This mode is never used to *replace* Execution Results that do exist: a present Stage `5A` artifact always wins, and a human-run report is then only supporting evidence.
+
+**Where the reports are found.** The suite's own output folders, by framework:
+
+| Framework | Read | Run identity comes from |
+|---|---|---|
+| SHAFT / TestNG / JUnit (Java) | `allure-results/`, `allure-report/`, `target/surefire-reports/`, `test-output/` | Allure `*-result.json` `start`/`stop` fields; XML `timestamp` |
+| Playwright | `playwright-report/`, `test-results/`, `results.json` | Report `startTime` |
+| Any | Whatever the human names in the invocation | The report's own timestamps |
+
+**Read the last three runs, not the last one.** A single report says which tests are red now. Three consecutive reports say *when each one turned red* — and that is the evidence this mode depends on to tell a new break from an old one (§4.3). If fewer than three exist, work with what exists and state the count; confidence is capped accordingly (§9.2). Reports are read **read-only**; this skill never deletes, regenerates, or overwrites a human's report folder, and no raw report dump is copied into the project tree (`pipeline.md` §11).
+
+**What is derived, and how it is labelled.** With no Stage `5A` pass, no Result Classification exists, so this skill derives one per failure from the report evidence — stack trace, failure message, screenshot, attached DOM, retry history. Every such classification is written as **`Derived — {class}`**, never as a plain classification, and every derived classification carries its evidence citation. The rules that follow are unchanged by derivation:
+
+- **A `Derived — Application Failure` is still never healed** (§8). Deriving the class does not soften the prohibition — it makes it more important, because no Stage `5A` reviewer saw it first.
+- **A derived classification is a *proposal to the human*, not a fact.** It is shown at the §6.2 gate as derived, and the gate's approval covers the classification as well as the repair.
+- **Derivation is capped at Medium Root Cause Confidence when the report is the only evidence.** To reach High, the failure must be reproduced live through the Playwright MCP server, exactly as any other failure must (§7.1). A report alone is a record of someone else's run, not an observation of this one.
+
+## 4.3 New code versus baseline — the boundary of an external pass
+
+In this mode the pass repairs **only failures that belong to new or changed tests**. A test that was already failing before the human's change is a pre-existing baseline failure: it is reported, and it is left alone.
+
+**Why the boundary exists.** The human asked for help with what they just built. A baseline failure predates that work, may be a known issue, may be an application defect nobody has triaged, and may be owned by someone else entirely. Silently repairing it spends an approval on unrequested work and hides a signal the team may be deliberately carrying.
+
+**How a failure is placed on one side of it.** Two independent sources, and they must agree:
+
+1. **Code evidence** — `git diff` / `git log` on the suite: which test files, methods, page objects, and data files are new or modified relative to the baseline commit (`pipeline.md` §12.3). A failing test that touches only untouched code is baseline-side.
+2. **Report evidence** — the three reports (§4.2): a test red in all three, including runs that predate the change, is baseline-side. A test that passed in an earlier report and is red in the newest is change-side.
+
+**When the two disagree, the failure is not classified — it is asked about.** It is listed at the gate as *Ambiguous — needs your call*, with both sources shown. This skill never resolves the disagreement by preferring the answer that gives it more to repair.
+
+**Reporting the boundary is mandatory.** The Repair Summary lists, separately and by ID:
+
+- **In scope — change-side failures**, with the evidence placing each there,
+- **Out of scope — pre-existing baseline failures**, untouched, so nobody reads the pass as having cleared them,
+- **Ambiguous**, with the human's decision recorded against each.
+
+If a repair to a change-side test would also require editing baseline code, that is not an automatic widening: it is presented as a named strategy with its blast radius, and the human decides at the gate (§7.2).
+
 # 5. Eligibility — what may be healed
 
 Stage `5A` classifies every result by *cause*. That classification is this skill's gate, and it is applied before any reasoning begins:
@@ -142,6 +197,8 @@ Stage `5A` classifies every result by *cause*. That classification is this skill
 | **Configuration Failure** | No | Misconfiguration (credentials, base URL, profile). Corrected in configuration, not by patching tests. |
 | **Inconclusive** | **Diagnosis only, by explicit human choice** | The cause is not yet known to be automation-side. It may be admitted to a *diagnosis* pass to establish cause; it is never admitted to a *repair* pass by default. |
 | **Flaky** | Diagnosis first, then repair if automation-side | Non-determinism is often a genuine automation defect (a race, a missing wait), but the root cause must be established before a repair — a "fix" that merely lowers failure frequency is not a fix (§14.1). |
+
+**Under §4.2 this table is applied to `Derived` classifications in exactly the same way** — a `Derived — Application Failure` is refused as categorically as a Stage `5A` one, and a `Derived — Automation Failure` still has to clear the §4.3 change-side boundary before it is eligible.
 
 **A misclassification discovered mid-pass is corrected, not worked around.** If reasoning establishes that a failure labelled `Automation Failure` is in fact any other class, this skill stops work on that test, records the reclassification with its evidence, and reports it — even where the batch containing it was already approved (§8.2).
 
@@ -178,6 +235,21 @@ Proceed?
   2. Diagnose only — gather evidence, change no code
   3. Mark as Known Automation Issue (no change, recorded)
   4. Skip — leave results exactly as Stage 5A reported them
+```
+
+**When the evidence came from external reports (§4.2), the gate carries three extra blocks, above the options** — because the human is approving a classification and a boundary, not only a repair:
+
+```
+Evidence source: external reports (no Stage 5A run)
+  Reports read:   {N} runs — {report paths + their timestamps}
+  Baseline ref:   {commit / tag the change is measured against}
+
+Derived classifications — your confirmation needed:
+  {TC-ID}  Derived — {class}   from {evidence cited}
+
+In scope (change-side):        {IDs} — {code evidence + report evidence}
+Out of scope (pre-existing):   {IDs} — red since {report/date}, untouched
+Ambiguous — needs your call:   {IDs} — code says {X}, reports say {Y}
 ```
 
 - **One question per pass, never per test case.** A 14-failure suite produces one question. Per-case prompting reliably trains a reviewer to approve without reading, which is worse than not asking.
@@ -466,7 +538,10 @@ Treating the original approval as still covering repaired code is the most likel
 
 | Condition | Scope | Required Action |
 |---|---|---|
-| **No Execution Results** | Global | Halt — there is nothing to analyse. Recommend running Stage `5A` first. |
+| **No Execution Results** | Global | Do **not** halt yet — first look for external execution reports (§4.2). Halt only if none exist, and then recommend running Stage `5A` first. |
+| **No Execution Results *and* no readable external report** | Global | Halt — there is nothing to analyse. Say which report locations were checked, so the human can point at the right folder instead of guessing. |
+| **External reports exist but every failure is baseline-side** (§4.3) | Global | Halt healing and report it plainly: nothing in the new work is failing. List the pre-existing failures as findings, repair none of them. |
+| **Code evidence and report evidence disagree on new-vs-baseline** | Local — that failure only | Ask at the gate as *Ambiguous* (§4.3). Never resolve it unilaterally. Continue with other failures. |
 | **No `Automation Failure` in the results** | Global | Halt, and report it as a *success*, not a gap: there is nothing to heal. Never manufacture work by widening into other classifications (§5). |
 | **Every candidate failure is `Application Failure`** | Global | Halt healing and report the defects (§8.2). This is the correct outcome, not a failed pass. |
 | **Automation Suite missing** | Global | Halt — there is no code to repair. Recommend confirming Stage `4A` output exists. |
@@ -480,9 +555,10 @@ Treating the original approval as still covering repaired code is the most likel
 # 17. Allowed Tools
 
 - **Playwright MCP server (headless)** — for diagnosis evidence (DOM snapshots, console/network capture, screenshots) and targeted reruns. A credential value is **never** typed into an MCP tool call; authenticate per the platform's credential contract, then act against that session.
-- **File tools:** Read (Execution Results, Automation Suite, Project Context, both KBs, prior Repair Summaries), Write (Repair Summary, Before/After Comparison, Quarantine Register, repaired automation files in the run's working copy, Repair KB entries per §10.2).
+- **`git` (read-only: `diff`, `log`, `show`, `status`)** — to establish which tests are new or changed against the baseline under §4.3. Never `checkout`, `reset`, `commit`, or any history-altering command.
+- **File tools:** Read (Execution Results, external execution reports per §4.2, Automation Suite, Project Context, both KBs, prior Repair Summaries), Write (Repair Summary, Before/After Comparison, Quarantine Register, repaired automation files in the run's working copy, Repair KB entries per §10.2).
 
-**Not permitted:** editing any Stage 1–3 artifact (Project Context, PRD, Discovery, Test Suite, Traceability Matrix, Coverage Report) · editing any Manual branch artifact · editing the Workspace Automation Baseline directly · writing to the Selector Verification KB (Stage `4A` is its sole writer, `pipeline.md` §10.8 rule 1) · merging to the baseline or projecting into the Target Project before fresh Automation Approval (§15) · running the full suite when only a subset was repaired (§12) · modifying the application under test.
+**Not permitted:** deleting, regenerating, or overwriting a human's report folder read under §4.2 · editing any Stage 1–3 artifact (Project Context, PRD, Discovery, Test Suite, Traceability Matrix, Coverage Report) · editing any Manual branch artifact · editing the Workspace Automation Baseline directly · writing to the Selector Verification KB (Stage `4A` is its sole writer, `pipeline.md` §10.8 rule 1) · merging to the baseline or projecting into the Target Project before fresh Automation Approval (§15) · running the full suite when only a subset was repaired (§12) · modifying the application under test.
 
 # 18. Expected Artifacts
 
@@ -502,8 +578,8 @@ The Repair Summary must contain exactly these sections, so Stage `6A` never has 
 
 | # | Section | Must contain, at minimum |
 |---|---|---|
-| 1 | **Healing Metadata** | Healing Pass ID, Run Folder, source Execution ID(s), scope (§4.1), environment, timestamps, invocation path and any run-scoped instruction |
-| 2 | **Eligibility Summary** | Per §5: how many failures of each classification were present, which were eligible, which were excluded and why, which were out of scope for this pass |
+| 1 | **Healing Metadata** | Healing Pass ID, Run Folder, source Execution ID(s), scope (§4.1), environment, timestamps, invocation path and any run-scoped instruction. **Plus, under §4.2:** evidence source (`Stage 5A` or `External reports`), every report path read with its timestamp, how many runs were available, and the baseline reference used for §4.3 |
+| 2 | **Eligibility Summary** | Per §5: how many failures of each classification were present, which were eligible, which were excluded and why, which were out of scope for this pass. **Under §4.2:** every classification marked `Derived` with its cited evidence, and the §4.3 split — In scope (change-side) / Out of scope (pre-existing baseline) / Ambiguous with the human's decision on each |
 | 3 | **Per-Failure Analysis** | Per eligible failure: Root Cause Confidence (§7.1), Diagnosis and/or Repair strategies enumerated (§7.2), strategy selected and by which rule (§7.3), full Repair Confidence Report (§9.1) |
 | 4 | **Applied Repairs** | Exactly which files changed, per test, and the nature of each change — reviewable without reading a diff |
 | 5 | **Rerun Outcome** | The Before/After Comparison's figures, cross-referenced to the standalone artifact (§13) |
@@ -536,6 +612,9 @@ The Repair Summary must contain exactly these sections, so Stage `6A` never has 
 17. **Must write only confirmed repairs to the KB** (§10.2).
 18. **Must obtain fresh Automation Approval before any re-merge** (§15).
 19. **Must stay within the invoked healing scope** (§4.1).
+19a. **Must fall back to external execution reports before halting for missing Execution Results** (§4.2), read the **last three** runs rather than only the newest, and label every classification it derives as `Derived` with its evidence.
+19b. **Must repair only change-side failures in an external pass** (§4.3) — a pre-existing baseline failure is reported and left untouched, and a code-vs-report disagreement is asked about, never decided alone.
+19c. **Must never treat a `Derived` classification as licence to relax §8** — a derived Application Failure is refused exactly as a Stage `5A` one is, and a report on its own never reaches High Root Cause Confidence without live reproduction (§7.1).
 20. **Must never read the PRD** (`pipeline.md` §6 Rule 4) or any Manual Execution artifact (§3.3).
 21. **Must report "nothing to heal" as a success**, never widen scope to manufacture work (§16).
 22. **Must continue on Local stop conditions** rather than halting the whole pass (§16).
@@ -575,7 +654,7 @@ The `Application Failure` is reported as a defect and never healed (§8). Applic
 
 This skill is **only** ever directly invoked — it has no pipeline-driven entry point (§6.1). Full rules: `pipeline.md` §5.3.1.
 
-- **Forms:** `/self-healing-skill` (every eligible failure) · `/self-healing-skill Login, Agency` (module scope) · `/self-healing-skill TC-LOGIN-004..009` (test-ID scope) · `/self-healing-skill diagnose only` (evidence gathering, no repair proposal).
+- **Forms:** `/self-healing-skill` (every eligible failure) · `/self-healing-skill Login, Agency` (module scope) · `/self-healing-skill TC-LOGIN-004..009` (test-ID scope) · `/self-healing-skill diagnose only` (evidence gathering, no repair proposal) · `/self-healing-skill {path to my suite}` — the external-evidence form (§4.2), used when the human wrote and ran the automation in their own IDE and there is no Stage `5A` artifact.
 - **Instruction prompts are run-scoped, never spec-overriding** (§5.3.1 #3). An instruction may narrow scope, prefer a strategy axis, or restrict to diagnosis. It never authorizes repairing an `Application Failure` (§8), weakening an assertion (§8.1), skipping the batch gate (§6.2), repairing at Low confidence (§7.1), exceeding the attempt limit (§14), re-merging without approval (§15), or reading the PRD.
 - **Upstream `Pending Review` → request approval, then recommend** (§5.3.1 #4).
 - **Missing upstream → run degraded, declare the gap** (§5.3.1 #5):

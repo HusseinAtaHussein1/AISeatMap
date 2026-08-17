@@ -39,6 +39,9 @@ test STOPS, it is reclassified, and it is reported as a defect — recorded in s
 | Triggering run | `{{RUN_FOLDER}}` <!-- the run whose failures prompted this pass, and whose execution/ folder receives the rerun --> |
 | Revision | {{REVISION_COUNT}} <!-- in-place edits since creation; this artifact belongs to the module, not the run --> |
 | Source Execution ID(s) | {{EXECUTION_IDS}} |
+| Evidence source | {{EVIDENCE_SOURCE}} <!-- "Stage 5A Execution Results" | "External reports (§4.2)" — the second only when no Stage 5A artifact exists and a human ran the suite themselves --> |
+| Reports read | {{REPORTS_READ}} <!-- §4.2 only: each report path + its run timestamp, newest first; state the count if fewer than three were available --> |
+| Baseline reference | {{BASELINE_REF}} <!-- §4.3 only: the commit/tag the new work is measured against --> |
 | Rerun cycle written | `runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-{{N}}.md` <!-- the original results file is NEVER edited --> |
 | Scope | {{HEALING_SCOPE}} <!-- the test IDs within THIS module, or "all Automation Failures in this module" (§4.1) --> |
 | Module lifecycle state after | {{AUTOMATION_STATE}} <!-- Healed on approval — then re-enters the §5.2 gate before assembly (pipeline.md §13.7) --> |
@@ -52,7 +55,7 @@ test STOPS, it is reclassified, and it is reported as a defect — recorded in s
 
 <!-- §19 #2 / §5 — what was present, what was eligible, what was excluded and why. -->
 
-| Stage 5A Classification | Count | Eligible for repair? | Disposition |
+| Classification | Count | Eligible for repair? | Disposition |
 |---|---|---|---|
 | Automation Failure | {{N_AUTO}} | **Yes** | {{DISPOSITION_AUTO}} |
 | Application Failure | {{N_APP}} | **Never (§8)** | Reported as defects — see §6 |
@@ -63,6 +66,28 @@ test STOPS, it is reclassified, and it is reported as a defect — recorded in s
 | Flaky | {{N_FLAKY}} | Diagnosis first | {{DISPOSITION_FLAKY}} |
 
 **Out of scope for this pass:** {{OUT_OF_SCOPE_IDS}} <!-- present but outside the invoked scope; untouched, never mistaken for resolved (§4.1) -->
+
+<!-- The two tables below are filled ONLY in an external-evidence pass (§4.2/§4.3). Delete them
+     when the pass ran from Stage 5A Execution Results. -->
+
+### 2a. Derived classifications (§4.2)
+
+<!-- No Stage 5A pass classified these — this skill derived each one from report evidence, and the
+     human confirmed them at the batch gate. A "Derived — Application Failure" is refused exactly as
+     a Stage 5A one is (§8). A report alone never reaches High Root Cause Confidence (§7.1). -->
+
+| Test ID | Derived classification | Evidence cited | Confirmed by human? |
+|---|---|---|---|
+| {{TEST_ID}} | Derived — {{CLASS}} | {{EVIDENCE}} | {{CONFIRMED}} |
+
+### 2b. New code vs. baseline (§4.3)
+
+<!-- Only change-side failures are repaired. A pre-existing baseline failure is reported and left
+     alone — it predates the human's work and may be owned by someone else. -->
+
+| Test ID | Side | Code evidence (git) | Report evidence (last 3 runs) | Disposition |
+|---|---|---|---|---|
+| {{TEST_ID}} | Change-side \| Baseline \| Ambiguous | {{GIT_EVIDENCE}} | {{REPORT_EVIDENCE}} | {{DISPOSITION}} <!-- Repaired \| Untouched (pre-existing) \| Human decided: {{DECISION}} --> |
 
 ## 3. Per-Failure Analysis
 

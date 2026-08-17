@@ -208,3 +208,57 @@ a guard during the operation it guards is the wrong time to do it.
 **A safety archive was taken** before deletion (module tree including `.idea/`, 739 KB) and retained
 for this session. Tracked files remain recoverable from git at `09bafbd`; `.idea/` never was, which is
 why the archive existed.
+
+---
+
+# Post-Promotion Verification Log
+
+Runs against the promoted baseline, recorded after retirement. This section grows; it is never
+rewritten.
+
+## 2026-08-17 — independent operator run
+
+| Field | Value |
+|---|---|
+| Run by | **The operator, directly from their IDE** — not through this platform |
+| Window | 11:56:26 – 12:19:11 (22 min 44 s) |
+| Location | `platform_core_data/automation_baseline/shaft/tests_SHAFT/` |
+| Scope | 31 cases (the full Branch suite) |
+| Result | **29 passed, 2 failed — 93.55%** |
+| Validations | 44 of 44 passed |
+| Execution mode | **Not recorded.** The report does not capture it and the operator was not asked at the time |
+| Evidence | `execution-summary/ExecutionSummaryReport_17-08-2026_12-19-11-0346-PM.html`, `extent-reports/ExtentReports_17-08-2026_11-56-26-0238-AM.html` |
+
+**Why this run matters more than its pass rate.** It is the first execution of the promoted baseline
+by a human, through their own tooling, with no involvement from this platform. It found the code,
+resolved its configuration, authenticated, and executed all 31 cases from the baseline. That is
+independent confirmation that the promotion holds — the retirement did not leave a suite only this
+platform can run.
+
+**How it was identified as an IDE run:** the Extent and Execution Summary reports were regenerated,
+while `target/surefire-reports/` still carries the 11:36 timestamps of the platform's own acceptance
+run. Maven was not the entry point.
+
+### The two failures
+
+| Case | Message |
+|---|---|
+| `tcBr055_editPenOpensUpdateBranchPreFilled` | `Update Branch opened with a different City. expected [Cairo] but found []` |
+| `tcBr065_updateBranchPreFillsEveryStoredValue` | `Expected "State" to show the branch's stored value, but it was blank. expected [false] but found [true]` |
+
+**`tcBr065` is new information.** It passed in both platform runs earlier the same day (Headless
+29/31, Headed 31/31) and had not failed at any point during the promotion. Its appearance here means
+the Update Branch pre-fill behaviour is **intermittent**, not a single broken case.
+
+**Both failures share one shape:** a field read while still empty or still loading — `[]` in one,
+`blank` in the other, and `"loading..."` in the Headless run earlier that morning. All three are the
+Update Branch dependent-field population path, which is the same area REPAIR-BR-012 addressed on
+2026-08-14.
+
+**This is not a promotion defect.** `tcBr055` failed from the *module copy* too during the A/B, and
+the whole class of symptom predates the promotion by three days. Recorded here because it is what the
+baseline currently does, not because the move caused it.
+
+**Disposition:** taken into Stage `5H` for diagnosis and repair, on the operator's instruction, the
+same day. That work happens **in the baseline**, scoped to `branch`'s owned paths — the first
+self-healing pass under the promoted model.

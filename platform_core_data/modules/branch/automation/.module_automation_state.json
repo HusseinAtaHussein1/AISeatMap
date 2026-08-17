@@ -11,7 +11,7 @@
   "assembledAt": "2026-08-17T06:57:56.988Z",
   "approvedBy": "ahmed.ayman@tildetech.ae",
   "approvedAt": "2026-08-17T06:53:48.676Z",
-  "updatedAt": "2026-08-17T08:49:32.512Z",
+  "updatedAt": "2026-08-17T10:44:52.086Z",
   "history": [
     {
       "state": "Generated",
@@ -95,6 +95,11 @@
       "state": "Promoted",
       "at": "2026-08-17T08:49:32.512Z",
       "note": "Acceptance: 31/31 Headed from the baseline, 2026-08-17 11:36, 16.4 min, BUILD SUCCESS"
+    },
+    {
+      "state": "BaselineUpdated",
+      "at": "2026-08-17T10:44:52.086Z",
+      "run": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
     }
   ],
   "lastMergeSummary": "platform_core_data/modules/branch/automation/automation_promotion.md",
@@ -114,5 +119,25 @@
     "fileCount": 38,
     "reportPath": null,
     "verifiedAt": "2026-08-17T08:49:32.512Z"
-  }
+  },
+  "baselineUpdates": [
+    {
+      "at": "2026-08-17T10:44:52.086Z",
+      "changedPaths": [
+        "src/main/java/AdminPages/Admin/Branch/UpdateBranch_Page.java"
+      ],
+      "run": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch",
+      "verification": {
+        "rerun": "ExecutionResults.rerun-30.md",
+        "tcBr055": "Automation Repaired",
+        "tcBr065": "Automation Repaired",
+        "modes": [
+          "Headed",
+          "Headless"
+        ],
+        "updateBranchSuite": "5/5 passed"
+      },
+      "note": "REPAIR-BR-013 (HEAL-BR-20260817-01) — re-keyed the Update Branch readiness wait from the \"loading...\" status string onto the p-placeholder class. PENDING AUTOMATION APPROVAL per pipeline.md 15."
+    }
+  ]
 }

@@ -276,3 +276,85 @@ superseded on 2026-08-06 by `EXEC-BR-20260806-01`, which reproduced it as a diag
 `Automation Failure`.
 
 ---
+
+---
+
+# Before / After — `HEAL-BR-20260817-01` (2026-08-17)
+
+Repair: `REPAIR-BR-013` — re-key the Update Branch readiness wait from the `"loading..."` status
+string onto the `p-placeholder` class. One file changed, `UpdateBranch_Page.java`.
+
+## Outcome
+
+| Column | Count | Tests |
+|---|---|---|
+| **Fixed — `Automation Repaired`** | **2** | `TC-BR-055`, `TC-BR-065` |
+| **Remaining Failures** | 0 | — |
+| **New Failures** | **0 attributable** | see the note below on `TC-BR-061` and `TC-BR-057` |
+| **Reclassified** | 0 | — |
+| **Quarantined** | 0 | — |
+
+Both fixed tests are labelled **`Automation Repaired`**, never `Passed`, so any later reader can see
+the result required a fix.
+
+## Per test
+
+### `TC-BR-055` — edit pen opens Update Branch pre-filled
+
+| | Before | After |
+|---|---|---|
+| Result | **Failed** | **Automation Repaired** |
+| Message | `Update Branch opened with a different City. expected [Cairo] but found []` | — |
+| Wait resolved at | 697–967 ms, `cityPlaceholder=true` | 2688–7494 ms, `cityPlaceholder=false` |
+| Verified in | — | Headed, Headless, and the full-suite Headless regression |
+| Root cause | Readiness wait released before the dependent dropdown began loading | Confirmed fixed |
+| Confidence | 90% proposed | **Confirmed by rerun** |
+
+### `TC-BR-065` — Update Branch pre-fills every stored value
+
+| | Before | After |
+|---|---|---|
+| Result | **Failed** | **Automation Repaired** |
+| Message | `Expected "State" to show the branch's stored value, but it was blank` | — |
+| Wait resolved at | 697 ms, `placeholder=true` | 843–2425 ms, `placeholder=false` |
+| Verified in | — | Headed, Headless, and a dedicated `UpdateBranch_TC` run (5/5) |
+| Root cause | Same | Confirmed fixed |
+| Confidence | 90% proposed | **Confirmed by rerun** |
+
+## The evidence that matters most
+
+The pass/fail flip is not the strongest evidence here — the **mechanism visibly changed**:
+
+```
+before:  waitUntilLoaded resolved t=697ms   cityLabel=""       cityPlaceholder=true
+after:   waitUntilLoaded resolved t=3980ms  cityLabel="Cairo"  cityPlaceholder=false
+```
+
+Before the repair the wait released in under a second without waiting for anything. After it, the
+same wait takes 0.8 – 7.5 seconds and the value is bound before the read. Had both tests passed while
+that line still read `placeholder=true`, this would have been recorded as luck, not a repair.
+
+## Two failures observed in the same session, not attributed
+
+`TC-BR-061` (`navigateToLastPage`) and `TC-BR-057` (`rejectPendingBranchFromResultsGrid`) failed in
+the full-suite regression. Both passed in the 31/31 run earlier the same day, so they are new relative
+to it.
+
+They are **not** recorded as New Failures caused by this repair, and they are **not** dismissed:
+
+- Neither test opens the Update Branch screen, and `waitUntilLoaded()` is only reachable from it, so
+  the changed code cannot execute during either test.
+- Their messages are data-shaped — "the result set does not contain multiple pages", "self-created
+  branch was not found on the grid" — not synchronization-shaped.
+- One run does not establish causation in either direction.
+
+They are carried as **open, needing an isolating run**. Netting them off against the two fixes, in
+either direction, would misrepresent what is known.
+
+## Health
+
+| Dimension | Before | After |
+|---|---|---|
+| **Application Health** | — | **Unchanged.** No assertion was weakened, removed, widened, or skipped |
+| **Automation Health** | 2 failures in the Update Branch pre-fill path | **0** |
+| **Environment Health** | — | 1 intermittent login failure observed, self-resolved on the next run |

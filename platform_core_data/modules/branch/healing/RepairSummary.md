@@ -1243,3 +1243,212 @@ An unverified runtime claim would have made those comparisons unsound.
 
 **No repair verdict depends on the JDK.** Every fix in both passes was confirmed by a live rerun on
 the same runtime that produced the failure it addressed.
+
+---
+
+# Healing Pass — 2026-08-17 (`HEAL-BR-20260817-01`)
+
+**The first self-healing pass run against a Promoted module.** The code repaired here lives in the
+Workspace Automation Baseline, not in a module working copy — that copy was retired earlier the same
+day (`automation/automation_promotion.md`).
+
+## 1. Healing Metadata
+
+| Field | Value |
+|---|---|
+| Healing Pass ID | `HEAL-BR-20260817-01` |
+| Module | `branch` (state `Promoted`, `sourceOfTruth: baseline`) |
+| Suite location | `platform_core_data/automation_baseline/shaft/tests_SHAFT/` — resolved via `automation_lifecycle/cli.js resolve-root`, never hardcoded |
+| Run Folder | `run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch` |
+| Rerun record | `execution/ExecutionResults.rerun-30.md` |
+| **Evidence source** | **External reports (§4.2)** — no Stage `5A` run produced these failures |
+| Reports read | 3 runs: operator IDE run 12:19 (29/31), platform Headed 11:36 (31/31), platform A/B 11:16 (2/2) |
+| Invocation | Human, explicit, in-session |
+| Scope | `tcBr055`, `tcBr065` only |
+
+## 2. Eligibility Summary
+
+| Failure | Derived classification | Eligible? |
+|---|---|---|
+| `tcBr055_editPenOpensUpdateBranchPreFilled` | **Derived — Automation Failure** | Yes |
+| `tcBr065_updateBranchPreFillsEveryStoredValue` | **Derived — Automation Failure** | Yes |
+
+Both classifications were **derived**, presented to the human as derived, and approved as part of the
+batch gate. The evidence behind each: the Allure step attachments recorded the City/State dropdown
+carrying class `p-placeholder` with empty text at the moment of the read, while sibling text inputs in
+the same form held real values.
+
+**Not the application's fault, and that was checked before anything was touched.** The §8 prohibition
+was the open question for most of this pass: if the application simply never populates City/State for
+that record, the tests were correctly reporting a real defect and must not be "repaired". Two pieces
+of evidence closed it — the field was observed entering `"loading..."` (so a fetch was genuinely in
+flight), and the same field read `"Cairo"` in the 31/31 run earlier that day. The value does arrive;
+the test was reading too early.
+
+**Change-side vs baseline (§4.3):** not meaningfully applicable here. The §4.2 fallback exists for a
+human who wrote new tests in their own IDE; in this case the human ran platform-generated code that
+had not changed since the promotion. Both failures are in pre-existing code, and both were taken in
+scope on the human's explicit instruction rather than by the change-side rule.
+
+## 3. Per-Failure Analysis
+
+### Root Cause Confidence
+
+**Medium at first, deliberately.** The report evidence alone caps derivation at Medium (§4.2), so the
+pass proposed **diagnosis, not repair**, and no code was touched until the failure had been reproduced
+live. That gate did real work here — it is what forced the question of whether the application was at
+fault.
+
+**High after live reproduction.** Two diagnosis runs, one Headed and one Headless, both reproduced the
+failure with timestamped instrumentation.
+
+### Root cause
+
+`UpdateBranch_Page.waitUntilLoaded()` waited for the City and State dropdown labels to stop reading
+the literal string `"loading..."`. A dependent PrimeNG dropdown passes through three states in order:
+
+```
+""   ->   "loading..."   ->   the stored value
+```
+
+An empty label is not the string `"loading..."`, so the condition was **already satisfied in the first
+state** and the wait released before the fetch had even started. Proven directly:
+
+```
+waitUntilLoaded resolved t=697ms  cityLabel=""  cityPlaceholder=true
+city()          t=498ms sinceLoaded  value="loading..."  placeholder=true
+```
+
+498 ms *after* the form was declared ready, the field entered the loading state.
+
+**This was an ordering defect, not a slow-load defect.** The distinction matters: lengthening the
+timeout — the obvious first instinct — would have changed nothing at all, because the wait was
+exiting immediately rather than expiring.
+
+`REPAIR-BR-012` (2026-08-14) addressed the same area and was correct about the `"loading..."` state.
+It watched the wrong edge of it.
+
+### Strategies enumerated
+
+| Option | Strategy | Risk | Confidence |
+|---|---|---|---|
+| **A** *(selected)* | Wait for the `p-placeholder` class to clear on City and State, each independently | Low | **88%** |
+| B | Wait for the label text to be neither empty nor `"loading..."` | Medium | 72% |
+| C | Two-phase wait: wait to enter the loading state, then to leave it | Medium | 65% |
+| D | Read the bound value from the DOM instead of the label text | High | 60% |
+
+**Why A.** `p-placeholder` was observed present in **both** unready states, and PrimeNG removes it only
+when a real value is bound. The condition therefore *means* "a value is selected" rather than
+approximating it through label text — and no future label string can slip through the way `""` did.
+B keeps the dependency on text that caused the bug. C replaces one race with another. D is the most
+robust long-term but changes read methods many other tests depend on, which is disproportionate.
+
+Each dropdown is waited for **separately**, per `REPAIR-010`: in the same Headless run State already
+read `"Cairo"` while City was still empty.
+
+### Confidence derivation (§9.2)
+
+| Factor | Contribution | Cited evidence |
+|---|---|---|
+| Root cause directly observed | 55% | `[DIAG-SYNC]` timestamps, both modes |
+| Repair targets that observed cause | +15% | Condition changed to the state that was observed differing |
+| Reproduced more than once, same signature | +10% | 4 runs: operator 12:19, platform Headless 10:41, diagnosis Headed + Headless |
+| Repair KB `REPAIR-010` matches the pattern | +10% | Dependent-dropdown readiness, confirmed prior art |
+| Static verification clean | +5% | `mvn test-compile`, 0 errors |
+| **Total** | **90%** | Capped below 95% until the rerun confirmed it |
+
+## 4. Applied Repairs
+
+**One file: `src/main/java/AdminPages/Admin/Branch/UpdateBranch_Page.java`.** Ownership verified with
+`cli.js check-ownership --module branch` before the change: `owned`, with no `shared` and no `foreign`
+path touched.
+
+Two lines added to `waitUntilLoaded()`:
+
+```java
+waitFor(LOAD_TIMEOUT).until(d -> !hasClass(CITY_DROPDOWN_LABEL,  "p-placeholder"));
+waitFor(LOAD_TIMEOUT).until(d -> !hasClass(STATE_DROPDOWN_LABEL, "p-placeholder"));
+```
+
+The existing `"loading..."` conditions were **kept**. They are redundant under the placeholder
+condition, but removing them is an unrelated change.
+
+**No assertion was changed.** This alters *when* the test reads, never *what* it asserts. Where a
+record genuinely has no City or State, the bounded wait expires and the caller's own assertion fails
+with its own message — nothing passes that should not (§8.1).
+
+## 5. Rerun Outcome
+
+See `BeforeAfterComparison.md` and `ExecutionResults.rerun-30.md`. Both repaired tests passed in three
+independent runs across both modes. The full-suite regression left `tcBr065` unverified because an
+intermittent login failure skipped its whole class; a dedicated `UpdateBranch_TC` run completed it,
+5/5 passed.
+
+## 6. Reclassifications
+
+None. Neither failure turned out to be an Application Failure — though that was the live question
+until the diagnosis runs answered it.
+
+## 7. Disclosed Discrepancies
+
+None. No automation-vs-test-case disagreement arose.
+
+## 8. Quarantine
+
+None. Neither test reached the attempt limit; both are first-attempt repairs.
+
+## 9. Knowledge Recorded
+
+`REPAIR-BR-013` recorded below. Promotion to Platform Knowledge proposed — see §12.
+
+## 10. Health Impact
+
+| Dimension | Before | After |
+|---|---|---|
+| **Application Health** | — | **Unchanged.** No assertion weakened, removed, widened, or skipped |
+| **Automation Health** | 2 failures in the Update Branch pre-fill path | **0** |
+
+## 11. Recommendations
+
+Three items are left open by this pass, and none of them is the repair:
+
+1. **`tcBr061_navigateToLastPage`** failed in the regression — "the result set does not contain
+   multiple pages". Data-dependent, and it does not open the Update Branch screen, so the repaired
+   code path cannot reach it. Needs an isolating run to separate cause from coincidence.
+2. **`tcBr057_rejectPendingBranchFromResultsGrid`** failed in the same regression — a self-created
+   branch was not found on the grid. Same reasoning, same recommendation.
+3. **The intermittent login failure** (`#id-Username` not found) cost five tests in the regression and
+   then did not recur. It is the highest-value thing to investigate next: it can void any full-suite
+   result at random, which makes every green run harder to trust.
+
+**A note on the two failures above.** Both passed in the 31/31 run earlier that day, so they are new
+relative to it. The code path says the repair cannot reach them. One run does not establish causation
+in either direction, so they are recorded as open rather than attributed — to the repair or away from
+it.
+
+## 12. Approval Status
+
+**The repaired suite is `Pending Automation Approval`** (§15). Stage `4A`'s approval covered the code
+as it was before this pass. Because `branch` is Promoted, there is no merge to hold back — the change
+is already in the only copy that exists — so the gate applies to *recording* the change, and the
+in-place baseline update is not recorded as approved until a human approves it.
+
+---
+
+## Confirmed Repair Record — `REPAIR-BR-013`
+
+```
+Implements Platform Pattern:  REPAIR-010 (extends it — see below)
+Execution Context:            EXEC-BR-20260817-5H-01 · BranchModuleSuite ·
+                              TC-BR-055, TC-BR-065
+What Happened:                A readiness wait keyed on a transient status STRING released before the
+                              field began loading, because the field's initial empty state also
+                              satisfied "not loading". Re-keying the wait onto the class that marks
+                              "no value bound" (p-placeholder) fixed both tests in both modes.
+```
+
+**Relationship to `REPAIR-010`.** `REPAIR-010` says to wait for each dependent field's own loading
+placeholder to clear, and that is right. This pass found that implementing it against the *text* of
+the loading state leaves a hole: the state before loading also satisfies "not loading". The general
+lesson extends `REPAIR-010` rather than replacing it — **wait on a signal that changes when the value
+binds, not on the absence of a transient status string.**

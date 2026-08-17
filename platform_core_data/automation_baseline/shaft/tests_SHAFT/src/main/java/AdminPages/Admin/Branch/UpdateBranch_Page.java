@@ -126,11 +126,45 @@ public class UpdateBranch_Page extends Branch_Common {
      * populate on their own, independent async timeline. Now waited for explicitly, not inferred from
      * Name.
      */
+    /**
+     * REPAIR-BR-013 (2026-08-17): REPAIR-BR-012's wait was watching the wrong edge, and could pass
+     * BEFORE the dropdown had even begun loading.
+     *
+     * Confirmed live, both Headed and Headless, with timestamped instrumentation: at
+     * {@code waitUntilLoaded} resolution City read {@code ""} with {@code p-placeholder} present, and
+     * 498ms LATER the same field read {@code "loading..."}. So a dependent dropdown passes through
+     * three states in order:
+     *
+     * <pre>  ""  ->  "loading..."  ->  the stored value  </pre>
+     *
+     * An empty label is not the string {@code "loading..."}, so the old condition was already
+     * satisfied in state one and the form was declared ready before the fetch started. The failure
+     * was therefore an ORDERING defect, not a slow-load defect — which is why lengthening the timeout
+     * would have changed nothing.
+     *
+     * The fix waits on {@code p-placeholder} instead, because that class was observed present in BOTH
+     * unready states and PrimeNG removes it only once a real value is bound to the dropdown. The
+     * condition therefore means "a value is actually selected" rather than approximating it through
+     * label text — and no future label string can slip through the way {@code ""} did.
+     *
+     * Each dependent field is waited for SEPARATELY, per REPAIR-010: in the same Headless run State
+     * already read {@code "Cairo"} while City was still empty, so one field's readiness is not
+     * evidence about another's.
+     *
+     * The {@code "loading..."} checks are kept. They are redundant under the placeholder condition,
+     * but removing them is an unrelated change and they cost nothing.
+     *
+     * This changes WHEN the test reads, never WHAT it asserts. Where a record genuinely has no City
+     * or State, the bounded wait expires and the caller's own assertion fails with its own message —
+     * no assertion is weakened and nothing passes that should not.
+     */
     public UpdateBranch_Page waitUntilLoaded() {
         long t0 = System.currentTimeMillis();
         waitFor(LOAD_TIMEOUT).until(d -> !valueOfInput(BRANCH_NAME).isEmpty());
         waitFor(LOAD_TIMEOUT).until(d -> !"loading...".equalsIgnoreCase(textOf(CITY_DROPDOWN_LABEL).trim()));
         waitFor(LOAD_TIMEOUT).until(d -> !"loading...".equalsIgnoreCase(textOf(STATE_DROPDOWN_LABEL).trim()));
+        waitFor(LOAD_TIMEOUT).until(d -> !hasClass(CITY_DROPDOWN_LABEL, "p-placeholder"));
+        waitFor(LOAD_TIMEOUT).until(d -> !hasClass(STATE_DROPDOWN_LABEL, "p-placeholder"));
         diagLoadedAt = System.currentTimeMillis();
         System.out.println("[DIAG-SYNC] UpdateBranch_Page.waitUntilLoaded resolved t="
                 + (diagLoadedAt - t0) + "ms cityLabel=\"" + textOf(CITY_DROPDOWN_LABEL)

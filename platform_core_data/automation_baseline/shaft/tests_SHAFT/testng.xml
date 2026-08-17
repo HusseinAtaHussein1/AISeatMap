@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <!--
-    Four suites, one per business workflow (automation-skill §10 -- suites are organised around
+    Four suites, one per business workflow (automation-skill §10: suites are organised around
     workflows, not around screens). They are declared in dependency order for a human reading the
     file, but each is independent: every test authenticates for itself, and every mutating test
     provisions the record it acts on.
 
-    CreateBranchSuite       US 8605 -- 13 dual-approved cases (unchanged by this run)
-    SearchBranchSuite       US 8599 -- read-only search, grid, and pagination cases
-    BranchActionsSuite      US 8599 -- approve/reject from the grid (mutating, self-created records)
-    UpdateBranchSuite       US 8606 -- update, cancel, and approve-from-Update (mutating)
+    CreateBranchSuite       US 8605: 13 dual-approved cases (unchanged by this run)
+    SearchBranchSuite       US 8599: read-only search, grid, and pagination cases
+    BranchActionsSuite      US 8599: approve/reject from the grid (mutating, self-created records)
+    UpdateBranchSuite       US 8606: update, cancel, and approve-from-Update (mutating)
 -->
 <suite name="BranchAutomationSuite" verbose="1">
     <test name="CreateBranchSuite">

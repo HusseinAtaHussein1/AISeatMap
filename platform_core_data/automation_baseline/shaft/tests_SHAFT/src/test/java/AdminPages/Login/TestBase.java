@@ -20,6 +20,14 @@ import utilities.BrowserSession;
  * <p>{@link TestBase_TC} extends this class and supplies the Add Branch navigation the pre-existing
  * {@code CreateBranch_Admin_TC} has always relied on, so that suite's behaviour is unchanged by this
  * extraction.</p>
+ *
+ * <p><b>2026-08-05:</b> a speculative "JVM warm-up" (an extra throwaway WebDriver/login cycle before
+ * the first real test) was tried here and reverted the same day. It made things worse, not better:
+ * SHAFT's own listener started reporting all 13 tests as {@code Skipped} (confirmed via its
+ * "Test Execution Summary Results" tally), while Surefire's separate TestNG summary kept claiming
+ * "12 PASS" -- a direct contradiction that only appeared after adding the second WebDriver
+ * construction. The extra driver instance was interfering with SHAFT's own internal per-test driver
+ * tracking. Removed; do not reintroduce this pattern without first explaining that contradiction.</p>
  */
 public abstract class TestBase {
     protected SHAFT.GUI.WebDriver driver;

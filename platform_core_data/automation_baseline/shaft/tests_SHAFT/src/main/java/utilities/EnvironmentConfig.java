@@ -37,6 +37,17 @@ public class EnvironmentConfig {
     }
 
     /**
+     * Path fragment identifying the Add Branch screen, for recognising whether the browser is still
+     * on that screen after a submit. Added 2026-08-15: {@code AddBranch_Page} carried this path as a
+     * literal in two places, a third copy of a value {@code environment.properties} already held, so
+     * repointing the suite at an environment with a different route would have left those two checks
+     * silently testing the old path.
+     */
+    public static String addBranchPath() {
+        return PROPS.getProperty("addBranchPath");
+    }
+
+    /**
      * Path fragment identifying the Update Branch screen. Used only to recognise whether the browser
      * is still on that screen after a submit -- the screen itself is always reached by clicking a
      * row's edit pen, never by direct navigation, because it needs a record id this suite does not
@@ -48,8 +59,8 @@ public class EnvironmentConfig {
 
     /**
      * Super Admin credentials for the QA environment, held here rather than in environment
-     * variables so a generated suite runs from any terminal or IDE with no setup step. They live in
-     * this one class only -- never inside a test -- so pointing a suite at a different environment
+     * variables so the suite runs from any terminal or IDE with no setup step. They live in this
+     * one class only -- never inside a test -- so pointing the suite at a different environment
      * stays a single-file change alongside {@code environment.properties}.
      */
     private static final String USERNAME = "odeysysadmin";

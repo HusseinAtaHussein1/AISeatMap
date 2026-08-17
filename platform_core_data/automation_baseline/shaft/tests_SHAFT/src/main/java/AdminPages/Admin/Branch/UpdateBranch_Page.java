@@ -81,6 +81,27 @@ public class UpdateBranch_Page extends Branch_Common {
     private static final By TOAST_MESSAGES = By.cssSelector(
             ".p-toast-message, .p-message, .toast, .alert-success, .snackbar");
 
+    /**
+     * <b>Verified live 2026-08-14</b> (Self-Healing diagnosis, TC-BR-067) against Remarks' own
+     * rendered "Required" message. This application's actual required-field message markup is
+     * {@code <ndc-fg-input>...<span class="fg-error has-error"><ul class="error-list"><li>Required
+     * </li></ul></span></ndc-fg-input>} — none of {@link #VALIDATION_MESSAGES}'s five guessed class
+     * names ({@code .p-error}, {@code .invalid-feedback}, {@code .error-message}, {@code small.error},
+     * {@code .field-error}) exist anywhere in it. {@code fg-error} alone is not sufficient to anchor
+     * on: it is a generic wrapper class present, usually empty, on every field's {@code ndc-fg-input}
+     * on this screen — only {@code fg-error} combined with {@code has-error} signals an active
+     * message. This locator is therefore anchored on {@link #REMARKS}'s own nearest
+     * {@code ndc-fg-input} ancestor, so it can never match another field's message.
+     */
+    private static final By REMARKS_VALIDATION_MESSAGE = By.xpath(
+            "//textarea[@placeholder='remarks...']/ancestor::ndc-fg-input[1]"
+                    + "//span[contains(concat(' ',normalize-space(@class),' '),' fg-error ')"
+                    + " and contains(concat(' ',normalize-space(@class),' '),' has-error ')]"
+                    + "//ul[contains(concat(' ',normalize-space(@class),' '),' error-list ')]//li");
+
+    private static final By REMARKS_WRAPPER = By.xpath(
+            "//textarea[@placeholder='remarks...']/ancestor::ndc-fg-input[1]");
+
     private static final Duration LOAD_TIMEOUT = Duration.ofSeconds(30);
     private static final Duration TRANSIENT_TIMEOUT = Duration.ofSeconds(8);
 
@@ -94,8 +115,27 @@ public class UpdateBranch_Page extends Branch_Common {
      * have landed in the form. A fixed delay here produced a false "form is empty" reading twice
      * during Discovery; this method exists specifically so that cannot recur.
      */
+    /** Diagnosis-only (2026-08-09): timestamp anchor for [DIAG-SYNC] reads below, reset each load. */
+    private long diagLoadedAt = -1;
+
+    /**
+     * REPAIR-BR-012 (2026-08-09): the Branch Name field populating is not proof the City dropdown has
+     * -- confirmed via timestamped instrumentation: Name held a value at t=623ms while City still read
+     * literally {@code "loading..."} (placeholder=true), and remained {@code "loading..."} 213ms later
+     * with no further wait in between. City (and State, the same PrimeNG-dependent-dropdown pattern)
+     * populate on their own, independent async timeline. Now waited for explicitly, not inferred from
+     * Name.
+     */
     public UpdateBranch_Page waitUntilLoaded() {
+        long t0 = System.currentTimeMillis();
         waitFor(LOAD_TIMEOUT).until(d -> !valueOfInput(BRANCH_NAME).isEmpty());
+        waitFor(LOAD_TIMEOUT).until(d -> !"loading...".equalsIgnoreCase(textOf(CITY_DROPDOWN_LABEL).trim()));
+        waitFor(LOAD_TIMEOUT).until(d -> !"loading...".equalsIgnoreCase(textOf(STATE_DROPDOWN_LABEL).trim()));
+        diagLoadedAt = System.currentTimeMillis();
+        System.out.println("[DIAG-SYNC] UpdateBranch_Page.waitUntilLoaded resolved t="
+                + (diagLoadedAt - t0) + "ms cityLabel=\"" + textOf(CITY_DROPDOWN_LABEL)
+                + "\" cityPlaceholder=" + hasClass(CITY_DROPDOWN_LABEL, "p-placeholder")
+                + " stateLabel=\"" + textOf(STATE_DROPDOWN_LABEL) + "\"");
         return this;
     }
 
@@ -122,7 +162,12 @@ public class UpdateBranch_Page extends Branch_Common {
     }
 
     public String city() {
-        return textOf(CITY_DROPDOWN_LABEL);
+        String raw = textOf(CITY_DROPDOWN_LABEL);
+        System.out.println("[DIAG-SYNC] UpdateBranch_Page.city() t="
+                + (diagLoadedAt < 0 ? -1 : System.currentTimeMillis() - diagLoadedAt)
+                + "ms sinceLoaded value=\"" + raw + "\" placeholder="
+                + hasClass(CITY_DROPDOWN_LABEL, "p-placeholder"));
+        return raw;
     }
 
     public String postOfficeBox() {
@@ -221,6 +266,59 @@ public class UpdateBranch_Page extends Branch_Common {
 
     public List<String> validationErrorMessages() {
         return visibleTextsOf(VALIDATION_MESSAGES);
+    }
+
+    /** True while a visible, Remarks-specific required-field message is rendered. See {@link #REMARKS_VALIDATION_MESSAGE}. */
+    public boolean remarksValidationMessageVisible() {
+        return anyVisibleTextAppears(REMARKS_VALIDATION_MESSAGE);
+    }
+
+    public List<String> remarksValidationMessageTexts() {
+        return visibleTextsOf(REMARKS_VALIDATION_MESSAGE);
+    }
+
+    public String remarksValidationMessageText() {
+        List<String> texts = remarksValidationMessageTexts();
+        return texts.isEmpty() ? "" : texts.get(0);
+    }
+
+    public int remarksValidationMessageCount() {
+        return withStaleRetry(() -> selenium().findElements(REMARKS_VALIDATION_MESSAGE).size());
+    }
+
+    /** True when Remarks itself carries both {@code ng-invalid} and {@code ng-touched}. */
+    public boolean isRemarksMarkedInvalidAndTouched() {
+        return hasClass(REMARKS, "ng-invalid") && hasClass(REMARKS, "ng-touched");
+    }
+
+    public String remarksClassAttribute() {
+        return withStaleRetry(() -> {
+            List<WebElement> elements = selenium().findElements(REMARKS);
+            if (elements.isEmpty()) {
+                return "";
+            }
+            String classAttribute = elements.get(0).getAttribute("class");
+            return classAttribute == null ? "" : classAttribute;
+        });
+    }
+
+    /** Truncated {@code outerHTML} of Remarks' own {@code ndc-fg-input} wrapper, for failure diagnostics only. */
+    public String remarksWrapperOuterHtmlSnippet() {
+        return withStaleRetry(() -> {
+            List<WebElement> wrappers = selenium().findElements(REMARKS_WRAPPER);
+            if (wrappers.isEmpty()) {
+                return "";
+            }
+            String html = wrappers.get(0).getAttribute("outerHTML");
+            if (html == null) {
+                return "";
+            }
+            return html.length() > 500 ? html.substring(0, 500) + "...(truncated)" : html;
+        });
+    }
+
+    public String currentUrl() {
+        return driver.browser().getCurrentURL();
     }
 
     /** REPAIR-002: transient success toast, detected the same way and equally non-throwing. */

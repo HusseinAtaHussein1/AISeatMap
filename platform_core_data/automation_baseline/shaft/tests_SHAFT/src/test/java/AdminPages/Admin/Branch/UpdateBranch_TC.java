@@ -31,11 +31,14 @@ import AdminPages.Admin.Branch.BranchProvisioner.ProvisionedBranch;
 @Feature("Update Branch")
 public class UpdateBranch_TC extends TestBase {
 
-    private static final String UPDATED_ADDRESS = "Updated by QA run-003";
+    private static final String UPDATED_ADDRESS = "2 Test Street";
     private static final String UPDATE_REMARKS = "Address corrected";
     private static final String APPROVAL_REMARKS = "Update approved by QA run-003";
-    private static final String PENDING_STATUS = "Pending for approval";
-    private static final String APPROVED_STATUS = "Approved";
+    /** Expected approval states, read from {@link ApprovalStatus} (2026-08-15) rather than repeated as
+     * literals here -- the same two labels are asserted in {@code SearchBranch_TC} and matched in
+     * {@code AddBranch_Page}, and the label text is unchanged by that move. */
+    private static final String PENDING_STATUS = ApprovalStatus.PENDING.label();
+    private static final String APPROVED_STATUS = ApprovalStatus.APPROVED.label();
 
     private SearchBranch_Page searchBranchPage;
 
@@ -61,7 +64,9 @@ public class UpdateBranch_TC extends TestBase {
     @Story("Pre-fill")
     @Description("TC-BR-065: Update Branch pre-fills every stored value")
     public void tcBr065_updateBranchPreFillsEveryStoredValue() {
+        System.out.println("[DIAG-SYNC] tcBr065 before clickSearch rowCount=" + searchBranchPage.rowCount());
         searchBranchPage.clickSearch();
+        System.out.println("[DIAG-SYNC] tcBr065 after clickSearch rowCount=" + searchBranchPage.rowCount());
         Assert.assertTrue(searchBranchPage.rowCount() > 0, "Expected results to open a record from.");
 
         UpdateBranch_Page updateBranchPage = searchBranchPage.clickEditPenInRow(1);
@@ -139,13 +144,27 @@ public class UpdateBranch_TC extends TestBase {
         updateBranchPage.clickSendForApproval();
 
         Assert.assertTrue(updateBranchPage.isStillOnUpdateScreen(),
-                "Expected submission to be blocked while Remarks is empty, but the screen was left.");
-        Assert.assertTrue(updateBranchPage.validationErrorShown(),
-                "Expected a visible required-field validation message for Remarks. Messages rendered: "
-                        + updateBranchPage.validationErrorMessages()
-                        + ". Note: the validation-message container classes are disclosed as UNVERIFIED "
-                        + "(never triggered during the read-only live verification pass), so a failure "
-                        + "here may indicate a wrong locator rather than a missing message.");
+                "Expected submission to be blocked while Remarks is empty, but the screen was left. "
+                        + "Current URL: " + updateBranchPage.currentUrl());
+        Assert.assertTrue(updateBranchPage.remarks().isEmpty(),
+                "Expected Remarks to remain empty after the blocked submission; value=\""
+                        + updateBranchPage.remarks() + "\"");
+        Assert.assertTrue(updateBranchPage.isRemarksMarkedInvalidAndTouched(),
+                "Expected Remarks to carry ng-invalid and ng-touched after the blocked submission; classes=\""
+                        + updateBranchPage.remarksClassAttribute() + "\"");
+        Assert.assertTrue(updateBranchPage.remarksValidationMessageVisible(),
+                "Expected a visible Remarks-specific required-field validation message "
+                        + "(locator live-verified 2026-08-14 against <li> inside .fg-error.has-error "
+                        + ".error-list, scoped to Remarks' own ndc-fg-input ancestor). "
+                        + "Current URL: " + updateBranchPage.currentUrl()
+                        + ". Remarks value=\"" + updateBranchPage.remarks() + "\", classes=\""
+                        + updateBranchPage.remarksClassAttribute() + "\". "
+                        + "Matched message count: " + updateBranchPage.remarksValidationMessageCount()
+                        + ". Rendered texts: " + updateBranchPage.remarksValidationMessageTexts()
+                        + ". Remarks wrapper: " + updateBranchPage.remarksWrapperOuterHtmlSnippet());
+        Assert.assertEquals(updateBranchPage.remarksValidationMessageText(), "Required",
+                "Expected the Remarks validation message text to equal \"Required\"; got: \""
+                        + updateBranchPage.remarksValidationMessageText() + "\"");
     }
 
     /**

@@ -152,3 +152,36 @@ test('the module, run, and generic entry points are one implementation, not thre
     assert.throws(() => fn('/baseline', '/dest', { execFileSync: () => '' }), TypeError);
   }
 });
+
+test('copyBaselineIntoModule refuses to re-seed a PROMOTED module', () => {
+  // Re-seeding would recreate the directory promotion retired, and the resurrected copy would look
+  // authoritative while being a dead end — nothing executes from it (pipeline.md §12.9).
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'reseed-promoted-'));
+  try {
+    assert.throws(
+      () => copyBaselineIntoModule(path.join(dir, 'baseline'), path.join(dir, 'modules/branch/automation/tests_SHAFT'), {
+        now: new Date('2026-08-17T00:00:00Z'),
+        execFileSync: () => '',
+        moduleState: { module: 'branch', state: 'Promoted', sourceOfTruth: 'baseline' },
+      }),
+      /Promoted/,
+    );
+    assert.equal(fs.existsSync(path.join(dir, 'modules')), false);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('copyBaselineIntoModule still seeds a module that has not been promoted', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'reseed-draft-'));
+  try {
+    const result = copyBaselineIntoModule(
+      path.join(dir, 'baseline'),
+      path.join(dir, 'modules/branch/automation/tests_SHAFT'),
+      { now: new Date('2026-08-17T00:00:00Z'), execFileSync: () => '', moduleState: { module: 'branch', state: 'Approved', sourceOfTruth: 'module' } },
+    );
+    assert.equal(result.copied, false, 'no baseline to copy in this fixture, but the call is allowed');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

@@ -48,7 +48,9 @@ platform_core/
 │   └── stage_6a_reporting/    #   Final_QA_Report
 └── tools/
     ├── automation_lifecycle/ # seeds a module project from the baseline, merge plan/apply,
-    │                         #   promotion record, scoped cleanup
+    │                         #   promotion record, scoped cleanup; and — once a module is
+    │                         #   promoted — root resolution, baseline ownership scoping,
+    │                         #   byte-identity verification, and module retirement (§12.9)
     ├── browser_driver/       # shared browser automation engine — zero project-specific data
     │   ├── driver.js          # resolves project paths, loads profile + credentials, launches, logs in
     │   ├── api.js             # BrowserDriver — the only surface Skills/scripts use

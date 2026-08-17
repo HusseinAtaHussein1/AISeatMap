@@ -176,3 +176,130 @@ test('a newer schemaVersion fails loudly rather than being misread', () => {
   assert.throws(() => readAutomationState(modulesDir, 'login'), AutomationStateError);
   cleanup(modulesDir);
 });
+
+// --- Promoted: the terminal state (2026-08-17, user-mandated) ----------------------------------
+
+const { recordPromotion, recordBaselineUpdate } = require('../automationState');
+
+const PROMOTION_OPTS = {
+  baselinePath: 'platform_core_data/automation_baseline/shaft/tests_SHAFT',
+  ownedPaths: ['src/main/java/AdminPages/Admin/Login/**'],
+  retiredPath: 'modules/login/automation/tests_SHAFT',
+  verification: { passed: true, fileCount: 36 },
+  promotedBy: 'reviewer@example.com',
+};
+
+/** Drives a module to Approved + assembled, the only launchpad for promotion. */
+function approvedAndAssembled(modulesDir) {
+  setAutomationState(modulesDir, 'login', 'Generated', { now: NOW });
+  setAutomationState(modulesDir, 'login', 'Approved', { now: NOW, approvedBy: 'reviewer@example.com' });
+  recordAssembly(modulesDir, 'login', { now: NOW, baselineRef: 'abc123' });
+}
+
+test('recordPromotion sets Promoted and flips the source of truth to the baseline', () => {
+  const modulesDir = makeModulesDir();
+  approvedAndAssembled(modulesDir);
+  const state = recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS });
+  assert.equal(state.state, 'Promoted');
+  assert.equal(state.sourceOfTruth, 'baseline');
+  assert.equal(state.promotionVerification.passed, true);
+  assert.equal(state.retiredPath, 'modules/login/automation/tests_SHAFT');
+  cleanup(modulesDir);
+});
+
+test('promotion is refused without a PASSING verification — otherwise it is a deletion', () => {
+  const modulesDir = makeModulesDir();
+  approvedAndAssembled(modulesDir);
+  assert.throws(
+    () => recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS, verification: { passed: false } }),
+    AutomationStateError,
+  );
+  assert.equal(readAutomationState(modulesDir, 'login').state, 'Approved');
+  cleanup(modulesDir);
+});
+
+test('promotion is refused for a module that was never assembled', () => {
+  // Nothing would be in the baseline for the baseline to be the source of truth OF.
+  const modulesDir = makeModulesDir();
+  setAutomationState(modulesDir, 'login', 'Generated', { now: NOW });
+  setAutomationState(modulesDir, 'login', 'Approved', { now: NOW, approvedBy: 'r@example.com' });
+  assert.throws(() => recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS }), /never been assembled/);
+  cleanup(modulesDir);
+});
+
+test('promotion is refused without owned paths — an unlocatable module cannot be edited later', () => {
+  const modulesDir = makeModulesDir();
+  approvedAndAssembled(modulesDir);
+  assert.throws(() => recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS, ownedPaths: [] }), /ownedPaths/);
+  cleanup(modulesDir);
+});
+
+test('promotion is refused for anything but Approved', () => {
+  const modulesDir = makeModulesDir();
+  setAutomationState(modulesDir, 'login', 'Generated', { now: NOW });
+  assert.throws(() => recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS }), /not Approved/);
+  cleanup(modulesDir);
+});
+
+test('Promoted is terminal — no state transition can move a module back to a working copy', () => {
+  // Every other state implies a module directory to act on, and after promotion none exists.
+  const modulesDir = makeModulesDir();
+  approvedAndAssembled(modulesDir);
+  recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS });
+  for (const target of ['Generated', 'Executed', 'Healed', 'Approved']) {
+    assert.throws(
+      () => setAutomationState(modulesDir, 'login', target, { now: LATER, approvedBy: 'r@example.com' }),
+      /Promoted/,
+    );
+  }
+  cleanup(modulesDir);
+});
+
+test('Promoted cannot be declared through setAutomationState', () => {
+  // It is the outcome of a verified promotion, never an assertion a caller can make.
+  const modulesDir = makeModulesDir();
+  approvedAndAssembled(modulesDir);
+  assert.throws(() => setAutomationState(modulesDir, 'login', 'Promoted', { now: LATER }), /recordPromotion/);
+  cleanup(modulesDir);
+});
+
+test('recordBaselineUpdate is the only write path for a promoted module', () => {
+  const modulesDir = makeModulesDir();
+  approvedAndAssembled(modulesDir);
+  recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS });
+  const state = recordBaselineUpdate(modulesDir, 'login', {
+    now: LATER,
+    changedPaths: ['src/main/java/AdminPages/Admin/Login/LogIn_Page.java'],
+    approvedBy: 'reviewer@example.com',
+    run: 'run-004',
+  });
+  assert.equal(state.state, 'Promoted', 'an in-place update is not a second promotion');
+  assert.equal(state.baselineUpdates.length, 1);
+  assert.ok(state.sourceRuns.includes('run-004'));
+  cleanup(modulesDir);
+});
+
+test('recordBaselineUpdate refuses a module that still has its own working copy', () => {
+  const modulesDir = makeModulesDir();
+  setAutomationState(modulesDir, 'login', 'Generated', { now: NOW });
+  assert.throws(
+    () => recordBaselineUpdate(modulesDir, 'login', { now: LATER, changedPaths: ['a.java'] }),
+    /not Promoted/,
+  );
+  cleanup(modulesDir);
+});
+
+test('recordBaselineUpdate refuses an update that names no files', () => {
+  const modulesDir = makeModulesDir();
+  approvedAndAssembled(modulesDir);
+  recordPromotion(modulesDir, 'login', { now: LATER, ...PROMOTION_OPTS });
+  assert.throws(() => recordBaselineUpdate(modulesDir, 'login', { now: LATER, changedPaths: [] }), /changed baseline paths/);
+  cleanup(modulesDir);
+});
+
+test('a pre-promotion module carries sourceOfTruth "module" by default', () => {
+  const modulesDir = makeModulesDir();
+  const state = setAutomationState(modulesDir, 'login', 'Generated', { now: NOW });
+  assert.equal(state.sourceOfTruth, 'module');
+  cleanup(modulesDir);
+});

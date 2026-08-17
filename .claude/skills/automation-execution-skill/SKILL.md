@@ -17,7 +17,7 @@ inputs:
   - name: execution_mode
     type: environment_var
     required: false
-    description: "Headless | Headed | Debug, sourced from the Run Configuration. If absent, this skill halts and requests it explicitly before running anything — never defaulted."
+    description: "Headless | Headed | Debug. CONFIRMED WITH THE HUMAN IMMEDIATELY BEFORE EVERY EXECUTION (pipeline.md §6 Rule 11) — never defaulted, never inferred, never carried over from a previous run. A value in the Run Configuration is a proposal to confirm, not an authorization."
   - name: execution_scope
     type: environment_var
     required: false
@@ -51,7 +51,7 @@ dependencies:
 >
 > | Module scope | What is executed |
 > |---|---|
-> | `single` / `multi` | each named module's **standalone project**, `platform_core_data/modules/{module}/automation/tests_{Framework}/` |
+> | `single` / `multi` | each named module's resolved root — the **standalone project** `platform_core_data/modules/{module}/automation/tests_{Framework}/` while it is `Draft`, or the **baseline's module-scoped suite** (`testng-{module}.xml`) once it is `Promoted` (§12.9). Resolve with `cli.js resolve-root`; never assume |
 > | `full-project` | the **assembled baseline**, `platform_core_data/automation_baseline/{framework}/tests_{Framework}/`, as one system |
 >
 > Full-project execution running the assembled baseline is the *point* of assembly: it is the only way cross-module interaction is exercised at all. A module-scoped execution runs the module project directly, which is why that project is required to be standalone (`automation-skill` §11D.1).
@@ -80,7 +80,7 @@ The Automation Execution skill runs the automated test suite produced by Stage `
 - Read the Automation Suite and confirm its structure before running anything.
 - Read the Project Context to confirm the target environment, credentials, and which actions are safe to perform against it.
 - Verify that the target environment for this run matches what the Project Context expects; halt and report a mismatch rather than proceeding blindly.
-- **Determine the Execution Mode before running anything** (§5.1): read it from the approved Run Configuration if present; if absent, halt and request it from the user — never assume Headless, Headed, or Debug as a silent default.
+- **Confirm the Execution Mode with the human before running anything** (§5.1), every single time — including reruns, verification runs and regression runs. Never assume Headless, Headed or Debug, and never reuse the previous run's mode.
 - Execute the automated test suite (in full, or a specified scope) using its configured test runner, invoked with whichever Execution Mode was determined above.
 - Record, for every test executed, at minimum:
   - **Executed Test Case ID** — the manual Test Case ID this run traces back to (from the Traceability Matrix)
@@ -113,7 +113,7 @@ The Automation Execution skill runs the automated test suite produced by Stage `
 | Run Scope | Required (embedded) | Not a separate file — the Type/Source recorded in the Project Context's own Scope Summary (`workflows_and_pipelines/pipeline/run_scope.md` §3–§4), plus the Run Type (Full Regression/Smoke/etc., §5 there). Drives §13's strategy selection. |
 | Project Context | Required | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` — environment, credentials, safety constraints |
 | Execution Configuration | Required, composite | Not a single file — the set of run-time execution parameters this skill must resolve before running anything: Execution Mode (§5.1), Concurrency Mode (§5.3), Retry Policy (§5.4), and Resume state (§5.5). Named explicitly here so none of these is a silent default — each has its own determination rule below. |
-| Execution Mode | Required, but not necessarily pre-supplied — see §5.1 | Sourced from the approved Run Configuration if it defines one; otherwise obtained by pausing and asking the user before execution begins. One of: `Headless`, `Headed`, `Debug` — no other value is valid. |
+| Execution Mode | Required, and **never pre-supplied** — see §5.1 | Obtained by asking the human immediately before execution begins, every time. A Run Configuration value is stated back for confirmation, never used unconfirmed. One of: `Headless`, `Headed`, `Debug` — no other value is valid. |
 | Framework Configuration | Required, not assumed | Not this skill's decision — sourced from the Automation Summary's Framework Used / Execution Instructions sections (§15). This skill never independently selects or assumes a framework; it only reads what Stage 4A already decided and justified. |
 | Environment Configuration | Required (embedded) | The named environment (§14) this run targets, drawn from the Project Context's Environment Constraints — not a hidden default, and never inferred from where this skill itself happens to be running. |
 | Execution scope / Execution Parameters | Optional | Which subset of the suite to run (defaults to the full suite); for a Selective Re-run or Failed Test Re-run (§13), this is the specific test case ID list or "previously Failed" filter. |
@@ -126,9 +126,14 @@ The Automation Execution skill runs the automated test suite produced by Stage `
 
 Before invoking the test runner on any test, this skill must determine exactly one Execution Mode:
 
-1. **Check the approved Run Configuration** for an explicit Execution Mode value. If it defines one of `Headless`, `Headed`, or `Debug`, use it. No further confirmation is needed — an explicitly configured mode is treated as already authorized.
-2. **If the Run Configuration does not define an Execution Mode, halt.** Do not proceed with any default, and do not infer a mode from the environment (e.g., "CI implies Headless"). Ask the user directly which of the three supported modes to use, and wait for an explicit answer before taking any further action.
-3. Once determined — whether from the Run Configuration or from the user's direct answer — proceed to execution using that mode, and record it per §5.2.
+> **Revision (2026-08-17, user-mandated) — the mode is confirmed with the human before EVERY execution.** Step 1 below previously let an Execution Mode configured in the Run Configuration stand as pre-authorization. It no longer does. `pipeline.md` §6 Rule 11 now binds every run against a live application — first execution, rerun, verification run, regression run, self-healing rerun, post-promotion live proof, one-off diagnostic — with no exception and no inference.
+
+1. **Ask the human, immediately before the run starts.** Present the supported modes and wait for an explicit answer. Not at the start of the session, not bundled into an earlier planning question, and not carried over from a previous execution in this same session.
+2. **Never infer or reuse the mode.** Not from the Run Configuration, not from a properties file, not from the environment ("CI implies Headless"), not from what the last run used, not from a config default. A configured value is a *proposal to confirm*, never an authorization: state it and ask, e.g. *"The Run Configuration says Headless — confirm Headless, or choose Headed/Debug?"*
+3. **Silence is not an answer, and neither is an unrelated approval.** "Go ahead", an approved Run Configuration, or an approved repair plan do not answer this question. The run does not start until the mode is stated explicitly.
+4. Once answered, proceed using that mode and record it per §5.2, so a later reader knows how the evidence was produced.
+
+**Why this one gate is stricter than the rest.** Most gates ask once per artifact. This asks once per execution, because it is the single setting that decides what the human can see while their application is being driven — whether they are watching, sharing a screen, on a machine with no display, or checking behaviour that only appears headed.
 
 **Supported Execution Modes** and what each means, independent of framework:
 
@@ -185,7 +190,7 @@ A **Dry Run** mode — validating that the suite *would* execute (environment re
 # 8. Execution Rules
 
 1. Must confirm the target environment matches the Project Context before running anything; halt and report on mismatch.
-2. **Must determine an explicit Execution Mode before running anything** (§5.1) — Headless, Headed, or Debug, sourced only from the approved Run Configuration.
+2. **Must confirm an explicit Execution Mode with the human before running anything** (§5.1) — Headless, Headed, or Debug, asked immediately before each execution and never inferred or reused (`pipeline.md` §6 Rule 11).
 3. **Must never assume a default Execution Mode.** If the Run Configuration does not define one, this skill must halt and request it from the user, and must not proceed until an explicit answer is given.
 4. **Must record the determined Execution Mode in the Execution Metadata** (§5.2, §9) on every Execution Results artifact — an artifact missing this field is incomplete, per the same standard already applied to the other required fields in Rule 8 below.
 5. Must not modify automation scripts to force a pass or hide a failure.
@@ -225,7 +230,9 @@ No new artifact paths are introduced by this revision — the Standard Output Co
 
 The Execution Results document's run-identity header must include the Execution Mode, Concurrency Mode, and Retry Policy used, alongside the existing run-identity fields (Execution ID, environment, timestamps).
 
-**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12, added 2026-07-24):** the Automation Suite this skill executes (§4) is always this run's own **working copy** (`platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/`), never the Workspace Automation Baseline directly — this skill never reads from or writes to the baseline location. Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this skill produces — Execution Results and evidence — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
+**Relationship to the Automation Asset Lifecycle (`workflows_and_pipelines/pipeline/pipeline.md` §12):** the Automation Suite this skill executes (§4) is **whatever `automation_lifecycle/cli.js resolve-root --module {{MODULE_SLUG}}` returns** — the module project for a `Draft` module, and the Workspace Automation Baseline for a `Promoted` one (§12.9). This skill never builds either path itself.
+
+**Before promotion** it executes the module working copy and never touches the baseline, exactly as before. **After promotion** the baseline IS the module's suite, so executing it is not a violation of that rule but the direct consequence of it: there is no other copy. Two things still hold in the promoted case — this skill runs the **module-scoped suite** (`testng-{module}.xml` or the framework equivalent) unless a whole-project regression is explicitly asked for, and it **still writes no automation code**, so nothing it does can alter the baseline's source. If the resolver reports a retired module directory has reappeared, this skill halts and reports rather than running anything from it (§12.10 rule 3). Execution happens strictly *before* the Workspace Merge (§12.4), which only ever runs after Automation Approval; everything this skill produces — Execution Results and evidence — is exactly what Cleanup (§12.5) preserves forever once the run's source code is later removed, since none of it lives inside the merged package directory.
 
 # 10. Operational Contract
 

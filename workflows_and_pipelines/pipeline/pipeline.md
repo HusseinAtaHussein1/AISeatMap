@@ -317,7 +317,7 @@ Notes:
 | **Input** | Approved Manual Test Suites (scope **and** content) · Traceability Matrix · Coverage Report · Project Context · Discovery Artifacts · Selector Verification KB · Repair KB |
 | **Output** | Automation Suite · Automation Plan/Manifest/Decision Report/Coverage Report/Summary · Target Write Plan · Selector Verification records |
 | **Checkpoint** | **Automation Approval Required** *(per module)* |
-| **Artifact path** | `platform_core_data/modules/{module}/automation/` — a **standalone, independently runnable project** (§12.1) → `platform_core_data/automation_baseline/` (assembled whole-project suite, on approval, §12.4) |
+| **Artifact path** | `platform_core_data/modules/{module}/automation/` — a **standalone, independently runnable project** (§12.1) → `platform_core_data/automation_baseline/` (assembled whole-project suite, on approval, §12.4). **For an already-promoted module the module path does not exist**: generation happens directly in the baseline, scoped by ownership (§12.9) |
 
 Notes:
 - **Scope comes directly from the approved Stage 3 Manual Test Suite**, narrowed by the run's own scope/module filter **and by the Review/Automation lifecycle gate** — never from a manual execution outcome (§3.3 #1). A case is in scope only when `Review = Approved AND Automation = Approved` (`test-design-skill` §6.3.2, `automation-skill` revision note 2026-08-01). `Automation = Rejected` means the case stays manual by decision and is **not** reported as an automation coverage gap; `Pending` on either column means no decision has been made yet and the case is skipped. Generating nothing because no case is dual-approved is a correct, reportable outcome.
@@ -343,7 +343,7 @@ Notes:
 | **Artifact path** | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md`, `.../execution/artifacts/` |
 
 Notes:
-- **What it executes depends on the run's module scope** (`module_architecture.md` §9.1): a single- or multi-module run executes each named module's own standalone project under `modules/{module}/automation/`; a **full-project** run executes the assembled baseline as one system, which is the point of assembly and the only way cross-module interaction is exercised at all.
+- **What it executes depends on the run's module scope** (`module_architecture.md` §9.1): a single- or multi-module run executes each named module's own standalone project under `modules/{module}/automation/` — or, for a **promoted** module, the baseline's module-scoped suite `testng-{module}.xml` (§12.9), since its working copy no longer exists; a **full-project** run executes the assembled baseline as one system, which is the point of assembly and the only way cross-module interaction is exercised at all. The root is always resolved through `automation_lifecycle/automationRoot.js`, never assumed.
 - **This stage is a pure mechanical runner.** It runs the approved suite, classifies each result by cause (Application / Automation / Environment / Infrastructure / Configuration Failure, Passed, Inconclusive, Flaky), captures evidence, and reports the three separated health figures — Application Health, Automation Health, Environment Health. **It never modifies automation code.**
 - **All repair reasoning has moved out of this stage** into Stage `5H` (`self-healing-skill`). This stage's job ends at an accurate, well-evidenced classification. Diagnosing *why* automation failed and changing code to fix it is `5H`'s responsibility, and only on explicit human invocation (§3.6).
 - Project Context remains a standing reference (target environment, credentials, safety constraints) — this stage confirms the target environment against it before running anything.
@@ -360,7 +360,7 @@ Notes:
 | **Input** | Execution Results (with ≥1 Automation Failure) **or**, where Stages `4A`/`5A` never ran, the suite's own last three execution reports (`SKILL.md` §4.2) · Automation Suite · Project Context · Repair KB · Selector Verification KB · prior runs' Repair Summaries |
 | **Output** | Repair Summary · Repair Confidence Reports · repaired Automation Suite · Before/After Comparison · Quarantine Register · KB promotion proposals |
 | **Checkpoint** | **Batch Repair Approval** (§5.6) before any code change · **Automation Approval** (§5.2) before a repaired suite re-merges to the baseline |
-| **Artifact path** | `platform_core_data/modules/{module}/healing/RepairSummary.md`, `.../healing/RepairConfidenceReport.md`, `.../healing/BeforeAfterComparison.md`, `.../healing/QuarantineRegister.md` · repair **code** applied in place to `modules/{module}/automation/tests_{Framework}/` · rerun results appended to `runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-N.md` |
+| **Artifact path** | `platform_core_data/modules/{module}/healing/RepairSummary.md`, `.../healing/RepairConfidenceReport.md`, `.../healing/BeforeAfterComparison.md`, `.../healing/QuarantineRegister.md` · repair **code** applied in place to `modules/{module}/automation/tests_{Framework}/` — or, for a **promoted** module, to its owned paths inside `automation_baseline/{framework}/tests_{Framework}/` (§12.9), never to a recreated working copy · rerun results appended to `runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-N.md` |
 
 Notes:
 - **Never runs automatically** (§3.6). No failing execution triggers it; no orchestrator chains into it. It runs only on explicit human invocation, optionally scoped to named modules (`/self-healing-skill Login, Agency`).
@@ -473,6 +473,8 @@ This gate is named distinctly from "Human Review Required" because approving it 
 **Approval is per module, and it authorizes assembly.** This gate approves *this module's* suite; approving Login's automation says nothing about Booking's. An approved module project moves to `Approved` in its `.module_automation_state.json` and becomes eligible for assembly into the whole-project baseline (§12.4) — approval and assembly are two steps, and the second never happens without the first.
 
 **A `5H` repair does not inherit `4A`'s approval.** Stage `4A`'s Automation Approval covered the code *as it was at that moment*. Once Stage `5H` changes that code, the changed suite requires a fresh Automation Approval before it merges into the baseline (§12.4) or projects into the Target Project (§13.3). Treating the original approval as still covering repaired code is the single most likely way for unreviewed code to reach a real environment.
+
+**Promotion does not weaken this gate — it changes only what the gate protects.** For a `Promoted` module (§12.9) there is no merge to hold back, because the approved code is already in the only copy that exists. The approval therefore moves to the *recording* step: an in-place baseline change is reviewed, run module-scoped, regression-checked to the extent its blast radius demands, and only then recorded with `recordBaselineUpdate()`. An unapproved in-place edit is the post-promotion equivalent of an unapproved merge, and is treated as one.
 
 ### 5.3 Gate Mechanics
 
@@ -658,6 +660,14 @@ Mechanically:
     - In any report or summary, clearly separate: what happened, why it happened, what was changed, what is still not fixed, and what should happen next.
     - Never state a finding more confidently than the evidence supports — this rule narrows *wording*, it never loosens the evidence, hedging, or Defect Documentation Standard requirements a stage's own spec already imposes.
     - Keep the result professional and readable by testers, developers, product owners, and managers alike, without cutting evidence that matters just to shorten the text.
+11. **Headed or Headless is confirmed with the human before *every* execution, with no exceptions and no inference** (added 2026-08-17, user-mandated). This binds **every** run of anything against a live application: Stage `4M` manual execution, Stage `5A` automation execution, Stage `5H` self-healing reruns, verification runs, regression runs, post-promotion live proofs, and one-off diagnostic runs.
+
+    - **Ask immediately before the run starts**, not at the start of the session and not bundled into an earlier planning question. The answer must still be true when the browser opens.
+    - **Never infer the mode** from the previous execution, from the run folder, from a config default, from a properties file, or from what the last session used. A mode that was right yesterday is not evidence about today: the human may be watching this one, sharing a screen, on a machine with no display, or deliberately checking behaviour that only shows headed.
+    - **Never treat silence, an unrelated approval, or "go ahead" as the answer.** The question is answered explicitly or the run does not start.
+    - Record the selected mode in the execution artifact, so a later reader knows how the evidence was produced.
+
+    This is deliberately stricter than the surrounding approval model: most gates ask once per artifact, this one asks once per execution, because it is the one setting that changes what the human can see while their application is being driven.
     - Before finishing any user-facing output, check it: Can a tester understand it on first read? Can any hard word be replaced with an easier one? Are long sentences split into shorter ones? Are technical terms explained where needed? Is it still accurate and backed by evidence?
 
     This rule constrains *wording only* — it never changes what an artifact must contain, what evidence it must cite, or which template or section structure a skill's own spec requires. Where a stage's own spec mandates specific terminology (a Result Classification value, a column header, a status like `Pending Automation Approval`), that literal term is kept unchanged; only the surrounding prose explaining it is written in simple English. No skill may bypass or relax this rule for its own output — it is the shared floor every stage writes to, alongside Rules 1–9.
@@ -891,8 +901,8 @@ The duplicate `diagnosis/` folder this move created alongside `diagnosis_pattern
 | Test Design Skill (Stage 3) | shared | Platform Knowledge + Project Knowledge + `modules/{module}/context/` + `.../discovery/` | `modules/{module}/test_design/`. Project Knowledge (`lessons_learned/`) where a design decision surfaces one |
 | Manual Execution Skill (Stage `4M`) | Manual | Platform Knowledge + Project Knowledge + `modules/{module}/test_design/` (approved) + **Selector Verification KB** (read-only, §10.8) + **Repair KB** (read-only, for known application/environment quirks) | This run's `manual_execution/` folder (Results, CSV, QA Report, evidence). Project Knowledge (`lessons_learned/`) where an execution surfaces one. **Writes nothing under `modules/`** |
 | Automation Skill (Stage `4A`) | Automation | Platform Knowledge (`automation_patterns/`, `framework_patterns/`, `repair_patterns/`) + `knowledge_base/stack.md` + `modules/{module}/test_design/` (approved) + `.../discovery/` + **Selector Verification KB** + **Repair KB** — both **mandatory reads before generation** (§10.8) | `modules/{module}/automation/` — a standalone module project; `automation_baseline/{framework}/shared/` for genuinely shared assets; **Selector Verification KB** (§10.8) — the only writer of verified locator records |
-| Automation Execution Skill (Stage `5A`) | Automation | Platform Knowledge (`execution_patterns/`) + Project Context + the suite it runs (`modules/{module}/automation/` or the assembled baseline) | This run's `execution/` folder (Execution Results, evidence, Health Summary); `.module_automation_state.json` → `Executed`. **Writes no automation code and no repair knowledge** — it no longer diagnoses or repairs (§4, Stage `5A`) |
-| Self-Healing Skill (Stage `5H`) | Automation | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `reasoning/`) + prior modules' Repair Summaries + **Repair KB** + **Selector Verification KB** | `modules/{module}/healing/` (Repair Summary, Confidence Report, Before/After Comparison, Quarantine Register); the repaired code in place in `modules/{module}/automation/`; **one appended rerun file** in the triggering run's `execution/`; **Repair KB** — confirmed repairs only, and `patterns/` only via the §10.5 Promotion gate |
+| Automation Execution Skill (Stage `5A`) | Automation | Platform Knowledge (`execution_patterns/`) + Project Context + the suite it runs (`modules/{module}/automation/` for a Draft module, the baseline for a Promoted one — resolved via `automationRoot.js`, §12.9) | This run's `execution/` folder (Execution Results, evidence, Health Summary); `.module_automation_state.json` → `Executed`. **Writes no automation code and no repair knowledge** — it no longer diagnoses or repairs (§4, Stage `5A`) |
+| Self-Healing Skill (Stage `5H`) | Automation | Platform Knowledge (`repair_patterns/`, `diagnosis_patterns/`, `reasoning/`) + prior modules' Repair Summaries + **Repair KB** + **Selector Verification KB** | `modules/{module}/healing/` (Repair Summary, Confidence Report, Before/After Comparison, Quarantine Register); the repaired code in place in `modules/{module}/automation/` (Draft) or the module's owned paths in the baseline (Promoted, §12.9); **one appended rerun file** in the triggering run's `execution/`; **Repair KB** — confirmed repairs only, and `patterns/` only via the §10.5 Promotion gate |
 | Reporting Skill (Stage `6A`) | Automation | Platform Knowledge (`reporting/`) + Project Knowledge | — (terminal stage) |
 | Pipeline Orchestrator (tooling) | both | *(none — no read dependency on `pipeline_decision_patterns/` is defined yet)* | — |
 
@@ -949,6 +959,8 @@ This must remain a permanent platform capability, not a habit built around the c
 > **Path revision (2026-07-27):** the baseline moved from `platform_core_data/workspace/automation/{framework}/` to `platform_core_data/automation_baseline/{framework}/` when §7 removed `workspace/`. Only the path changed. The baseline is deliberately *not* inside a Run Folder: it is long-lived automation *source code* under a three-way-merge lifecycle that must outlive any single run, which is the opposite of the per-run, single-file-in-place discipline §7 applies to Markdown artifacts.
 >
 > **Source revision (2026-07-29, user-mandated):** the *middle* location changed. Generation no longer happens in a temporary per-run working copy; it happens in a **durable, standalone Module Automation Project** under `modules/{module}/automation/` (§12.1). **The merge mechanism is entirely unchanged** — the same hard pre-check, three-way classification, lock guard, untracked-file classification, and Merge Summary. Only what feeds the merge changed: an *approved module project* rather than an approved run working copy. `module_architecture.md` §7 gives the derivation and §7.6 the section-by-section disposition.
+>
+> **Terminal-promotion revision (2026-08-17, user-mandated):** the module project is **no longer durable**. It is a *pre-promotion* workspace. On the first successful promotion — merge, then byte-identity verification, then a passing live run — it is **permanently deleted**, and the Workspace Automation Baseline becomes that module's single source of truth for everything afterwards: generation, execution, repair, self-healing. §12.9 defines how a module is located and edited inside the shared baseline, and §12.10 lists the safety rules. What the 2026-07-29 revision achieved physically — one module's work cannot reach another's — is now achieved by declared ownership plus scoped suites, because after promotion every module's code shares one tree.
 
 **Generated automation needs a home between "just written" and "part of the whole-project suite."** Before this revision it had only two: a temporary run working copy, and the whole-project baseline. That left no place for a module's suite to be developed, executed, healed, and approved as a coherent unit — so the process kept reaching for the wrong one, either hand-editing a run folder across several later runs (defeating run immutability) or editing the baseline directly (defeating the merge protection). `platform_core_data/automation_baseline/{Framework}/` remains the **Workspace Automation Baseline** — the single authoritative, persistent copy of the project's automation code — and it is now assembled from approved module projects rather than merged from a temporary copy.
 
@@ -956,8 +968,8 @@ This must remain a permanent platform capability, not a habit built around the c
 
 | Location | Path | Role |
 |---|---|---|
-| **Module Automation Project** | `platform_core_data/modules/{module}/automation/tests_{Framework}/` | Where Stage `4A` generates, Stage `5A` executes from, and Stage `5H` heals. A **standalone, independently runnable project** — its own config and dependency manifest — and the module's durable automation home. **Not deleted after assembly** (§12.5). |
-| **Workspace Automation Baseline** | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` | Unchanged in role: the authoritative, persistent, whole-project suite. Never edited directly during generation — only ever written by the Workspace Merge (§12.4). Now assembled *from approved module projects*. |
+| **Module Automation Project** *(pre-promotion only)* | `platform_core_data/modules/{module}/automation/tests_{Framework}/` | Where Stage `4A` generates, Stage `5A` executes from, and Stage `5H` heals — **until the module is promoted**. A **standalone, independently runnable project** with its own config and dependency manifest. **Permanently deleted at promotion** (§12.5); a module has this home exactly once in its life. |
+| **Workspace Automation Baseline** | `platform_core_data/automation_baseline/{framework}/tests_{Framework}/` | The authoritative, persistent, whole-project suite. Before a module's promotion it is written **only** by the Workspace Merge (§12.4). After that module's promotion it is that module's **single source of truth**, edited in place and scoped by ownership (§12.9). |
 | **Shared assets** | `platform_core_data/automation_baseline/{framework}/shared/` | Base page objects, auth fixtures, common utilities, test-data factories — generated **once** and referenced by each module project through a relative path. The one direction in which a module project reads outside itself. |
 | **Target Project** | `{{TARGET_ROOT}}/<automationRoot>/` | Unchanged: the projection of an approved baseline, per §13.3. |
 
@@ -971,10 +983,15 @@ This composes with, and does not replace, `.claude/skills/automation-skill/SKILL
 
 ### 12.2 The four steps
 
-1. **Module Project Creation** (§12.3) — right after §33.1's gate resolves the package identity, before any generation.
+**Before the first promotion — four steps, then a fifth that ends the module's life in the workspace:**
+
+1. **Module Project Creation** (§12.3) — right after §33.1's gate resolves the package identity, before any generation. **Skipped entirely for an already-promoted module**, which has no working copy and must not be given one (§12.10).
 2. **Automation Review** — the *existing*, unmodified §5.2 Automation Approval Required gate, **per module**. Only `Approved` triggers step 3.
 3. **Workspace Merge / Assembly** (§12.4) — only after Approved.
-4. **Cleanup** (§12.5) — narrowed: build/IDE output only. The module project itself is kept.
+4. **Cleanup** (§12.5) — build/IDE output only.
+5. **Verification and Retirement** (§12.5) — byte-identity proof, a passing live run of the module-scoped suite from the baseline, then permanent deletion of the module project. The module becomes `Promoted`.
+
+**After promotion there are no steps, because there is no second copy to move.** Every later change is an in-place baseline update under §12.9, recorded rather than merged.
 
 ```
   Workspace Automation Baseline                     Module Automation Project
@@ -993,9 +1010,22 @@ This composes with, and does not replace, `.claude/skills/automation-skill/SKILL
               └───────  (after Approved) ◀───────────────────────  ┘   same module project)
                          │
                          ▼
-               Step 4: Cleanup — build/IDE output only.
-               The module project STAYS: it is the module's
-               durable automation home (§12.5)
+               Step 4: Cleanup — build/IDE output only (§12.5)
+                         │
+                         ▼
+               Step 5: Verify byte-identity  ──▶ live module-scoped run passes
+                         │                                    │
+                         │                              ▼ fails: module project
+                         ▼                                 is KEPT, nothing deleted
+               RETIRE modules/{m}/automation/tests_{FW}/
+               state := Promoted, sourceOfTruth := baseline
+                         │
+                         ▼
+   ┌─────────────────────────────────────────────────────────────────────┐
+   │  From here the baseline IS the module (§12.9). Later work — 4A, 5A,  │
+   │  5H — happens in automation_baseline/, scoped by .baseline_          │
+   │  ownership.json and run with testng-{module}.xml. No copy back.      │
+   └─────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 12.3 Step 1 — Module Project Creation
@@ -1010,7 +1040,7 @@ Once §33.1's consolidated gate has resolved which package this module targets:
 
 #### 12.3.1 The module automation lifecycle
 
-`.module_automation_state.json`, alongside the module project, tracks it through exactly four states:
+`.module_automation_state.json`, in the module's `automation/` folder, tracks it through exactly five states:
 
 | State | Meaning | Set by |
 |---|---|---|
@@ -1018,8 +1048,13 @@ Once §33.1's consolidated gate has resolved which package this module targets:
 | `Executed` | Stage `5A` ran it; results are in a run folder, referenced here | Stage `5A` |
 | `Healed` | Stage `5H` applied approved repairs and re-ran the affected tests | Stage `5H` |
 | `Approved` | Cleared the §5.2 gate; eligible for assembly into the baseline | The gate, recorded by the Module Manager |
+| `Promoted` | Assembled, verified, live-proven, and retired from the workspace. **Terminal.** | `automation_lifecycle/cli.js retire-module`, never by hand |
 
-It also carries `sourceRuns[]` (every run that executed this project), `baselineRef` (the `shared/` commit it was generated against), and `assembledAt` (when it last joined the baseline, `null` if never). **`Approved` is a prerequisite for assembly and is never inferred** — a state file cannot approve itself.
+It also carries `sourceRuns[]` (every run that executed this project), `baselineRef`, `assembledAt`, and — from the terminal-promotion revision — **`sourceOfTruth`** (`module` or `baseline`), `ownedPaths[]`, `retiredPath`, `promotedAt` / `promotedBy`, `promotionVerification`, and `baselineUpdates[]`.
+
+**`Approved` is a prerequisite for assembly and is never inferred** — a state file cannot approve itself. **`Promoted` is likewise never declared**: `setAutomationState` refuses it outright, because it is the *outcome* of a verified promotion rather than an assertion a caller can make. And `Promoted` is **terminal in both directions** — no transition leads out of it, since every other state implies a working copy that no longer exists. Post-promotion work is recorded with `recordBaselineUpdate()` (§12.9).
+
+**`sourceOfTruth` is the field every path resolver reads**, never the state name. One field, one question, one answer — `automation_lifecycle/automationRoot.js` is the only implementation of it.
 
 ### 12.4 Step 3 — Workspace Merge / Assembly
 
@@ -1061,15 +1096,65 @@ In brownfield the module project is generated to match the **detected** layout, 
 
 Implemented by `platform_core/tools/automation_lifecycle/mergePlan.js` (plan computation, side-effect-free) and `mergeApply.js` (the actual writes, gated behind an explicit `apply` flag — dry-run by default, mirroring `run_manager/migrate.js`'s own `--apply` convention).
 
-### 12.5 Step 4 — Cleanup
+### 12.5 Step 4 — Cleanup, and Step 5 — Verification and Retirement
 
-**Narrowed by this revision.** A module project is **not** deleted after assembly — it is the module's durable automation home, the thing Stage `5A` executes and Stage `5H` heals next time. Deleting it would recreate exactly the problem §12.1 solved.
+**Cleanup** applies only to **build and IDE output already classified as Discarded Untracked** by the Merge Summary — `target/`, `allure-results/`, `execution-summary/`, `generatedReport*.zip`, and their equivalents. Anything still held back for an unresolved conflict stays where it is until a follow-up merge resolves it.
 
-Cleanup therefore applies only to **build and IDE output already classified as Discarded Untracked** by the Merge Summary — `target/`, `allure-results/`, `execution-summary/`, `generatedReport*.zip`, and their equivalents. Anything still held back for an unresolved conflict stays where it is until a follow-up merge resolves it.
+- **Never touches source.** Test files, page objects, fixtures, helpers, config, and dependency manifests survive cleanup: until retirement the project must stay runnable, and after retirement there is nothing to clean.
+- **Never touches anything outside the package directory** — every one of the following is permanent history and is never deleted by this step *or by retirement*: the Automation Plan/Manifest/Decision Report/Coverage Report/Suite Manifest/Summary (`.claude/skills/automation-skill/SKILL.md` §19), Automation Review notes, Stage `5A` execution results and all evidence (screenshots/videos/logs/traces/network captures), Stage `5H` healing reports, and `automation_promotion.md` itself.
+- **Never targets the baseline.** `cleanupPackage()` refuses any path inside `automation_baseline/` outright (§12.10 rule 1).
+- Implemented by `platform_core/tools/automation_lifecycle/cleanup.js` — deletion is always driven by the Merge Summary's own accounted-for file list, never a blind recursive directory delete.
 
-- **Never touches source.** Test files, page objects, fixtures, helpers, config, and dependency manifests inside the module project all survive cleanup, because the project must stay runnable.
-- **Never touches anything outside the package directory** — every one of the following is permanent history and is never deleted by this step: the Automation Plan/Manifest/Decision Report/Coverage Report/Suite Manifest/Summary (`.claude/skills/automation-skill/SKILL.md` §19), Automation Review notes, Stage `5A` execution results and all evidence (screenshots/videos/logs/traces/network captures), Stage `5H` healing reports, and `automation_promotion.md` itself.
-- Implemented by `platform_core/tools/automation_lifecycle/cleanup.js` — deletion is always driven by the Merge Summary's own accounted-for file list, never a blind recursive directory delete, so nothing can vanish without a corresponding line in that Merge Summary.
+#### 12.5.1 Step 5 — Verification and Retirement (added 2026-08-17, user-mandated)
+
+Retirement is a **different act from cleanup**, with a different precondition, and it is deliberately not expressed as a cleanup scope: a caller must not be able to reach "delete the entire module suite" with the same argument shape that empties a `target/` directory. It has its own function, `retireModulePackage()`, and its own required proof.
+
+**The required order. Every step gates the next, and nothing is deleted until all of them have passed:**
+
+| # | Step | Gate |
+|---|---|---|
+| 1 | Lifecycle and ownership protection in place | Unit tests green |
+| 2 | **Byte-identity verification** — every non-ignored module file exists in the baseline with an identical SHA-256 | `promoteVerify.js` reports `passed: true`. No threshold, no "close enough": one missing test class is one test that silently stops running |
+| 3 | **The baseline compiles independently** at its own path | `mvn test-compile`, 0 errors |
+| 4 | **The module-scoped suite runs live from the baseline**, in the execution mode the human selects (§6 Rule 11) | Results reviewed and accepted |
+| 5 | Results confirmed valid against the approved acceptance criteria | Human confirmation |
+| 6 | **Retire** `modules/{module}/automation/tests_{Framework}/` | All of the above |
+| 7 | Record retirement, baseline commit, evidence, and any accepted failures | `automation_promotion.md`, `AutomationPackages.md`, `.module_automation_state.json` |
+| 8 | Confirm the retired directory was not recreated | `cli.js check-retired` |
+| 9 | Final broken-reference and ownership checks | `cli.js check-ownership`, doc reference sweep |
+
+**A failed live run means nothing is deleted.** The module project stays exactly where it is, and the promotion is simply not finished. Retirement is the reward for a proven baseline, never a step that runs on schedule.
+
+**What retirement removes, and what it must not.** Only `automation/tests_{Framework}/`. Everything else under `modules/{module}/` is permanent module history and evidence and stays: `automation/*.md`, `.module_automation_state.json`, `healing/`, `discovery/`, `test_design/`, `README.md`. `retireModulePackage()` enforces this by checking the *shape* of the path it was handed — a `tests_*` directory whose parent is `automation/` — and refusing anything else, because pointed one level up it would take the governance artifacts with it.
+
+### 12.9 Working on a Promoted module (added 2026-08-17, user-mandated)
+
+Once a module is `Promoted`, the Workspace Automation Baseline is where its code is generated, executed, repaired, and healed. There is no copy-out and no copy-back.
+
+**Locating the module inside a shared tree.** `{baseline}/.baseline_ownership.json` records, per module, the paths it owns and the module-scoped suite file that runs it. Every path a stage intends to write is classified against it:
+
+| Classification | Meaning | What happens |
+|---|---|---|
+| `owned` | This module's own code | Proceed |
+| `shared` | Whole-project surface — `pom.xml`, base page objects, auth fixtures, common utilities | Proceed **and declare** in the run's Decision Report. §12.1's existing rule is unchanged: shared code clears the whole-project gate, not one module's |
+| `foreign` | Owned by a **different** module | **Hard stop.** Never a warning, never a silent write |
+| `unowned` | Not claimed by anyone | Proceed — a genuinely new file has no owner yet, and treating "new" as "someone else's" would make it impossible to add anything |
+
+Two modules may never claim the same path: `registerModuleOwnership()` refuses an overlapping claim rather than merging it, because with two owners the foreign guard answers "owned" for both and stops protecting anything.
+
+**Execution is module-scoped by default.** `mvn test -DsuiteXmlFile=testng-{module}.xml` runs just that module; plain `mvn test` runs the whole-project regression. Both are expected — the scoped suite for iteration, the full one before a promotion-equivalent change is recorded.
+
+**Approval, verification, and recording — the §5.2 gate does not weaken.** An in-place change to a promoted module still needs an Automation Approval before it is recorded, still runs the module-scoped suite plus whatever regression the change's blast radius calls for, and is then recorded with `recordBaselineUpdate()`: changed files, verification results, approver, run, and baseline commit. `automation_promotion.md` and `AutomationPackages.md` are updated the same way. What does **not** happen is a second module-to-baseline copy — there is no second copy to move, and treating an in-place edit as a merge would invent a source that does not exist.
+
+**What is lost, stated plainly.** Before promotion the three-way merge protected one module's code from another's. An in-place edit has no merge, so that protection is now the ownership check plus review. This is the cost of the single-source-of-truth model and is the reason `check-ownership` runs after every post-promotion change rather than occasionally.
+
+### 12.10 Safety rules for promoted modules (added 2026-08-17, user-mandated)
+
+1. **The baseline is never deleted by cleanup or retirement.** Both entry points refuse any path inside `automation_baseline/`, checked on the resolved path so a relative walk cannot slip past. After promotion the baseline is the only copy that exists.
+2. **The module working copy is never modified after promotion**, because it must no longer exist. `copyBaselineIntoModule()` refuses a `Promoted` module outright rather than re-seeding one.
+3. **If the module directory is recreated, stop and report it — never use it.** `resolveAutomationRoot()` throws `MODULE_DIR_RESURRECTED` rather than quietly preferring the baseline, because a resurrected directory looks authoritative while being a dead end: nothing executes from it, so work done there is lost silently. `cli.js check-retired` is the standalone form of this assertion.
+4. **Draft or Promoted is read from state before any edit**, never guessed from what happens to be on disk. `Draft` → module workspace. `Promoted` → baseline. One resolver, one answer.
+5. **Changes stay scoped** to the requested module and its genuinely shared dependencies. Unrelated modules in the baseline are never overwritten.
 
 ### 12.6 `automation_promotion.md`
 
@@ -1094,6 +1179,18 @@ For readers holding the pre-revision version of this section, the disposition is
 | §12.5 Cleanup | **Narrowed** to build/IDE output; the module project is kept |
 | §12.6 `automation_promotion.md` | **Unchanged**, written to the module instead of a run folder. Bootstrap Migration unchanged |
 | §12.7 Registry cross-reference | **Extended** with per-module columns |
+
+And for readers holding the 2026-07-29 version, the terminal-promotion revision's disposition:
+
+| 2026-07-29 rule | Status after 2026-08-17 |
+|---|---|
+| §12.1 Module project is the module's **durable** home | **Superseded.** It is a pre-promotion workspace, deleted at promotion |
+| §12.2 Four steps | **Extended** to five: Verification and Retirement is added as Step 5 |
+| §12.3 Module Project Creation | **Unchanged for a Draft module; skipped entirely for a Promoted one** |
+| §12.3.1 Four lifecycle states | **Extended** to five, with `Promoted` terminal and `sourceOfTruth` added |
+| §12.4 Workspace Merge | **Unchanged, and now first-promotion-only.** A promoted module updates in place (§12.9) instead of merging |
+| §12.5 Cleanup keeps the module project | **Superseded** by §12.5.1: cleanup still keeps it, retirement then removes it once proven |
+| §12.6 / §12.7 records | **Unchanged in shape**, extended with promotion and in-place-update fields |
 
 ## 13. Target Project Integration (added 2026-07-26, user-mandated)
 

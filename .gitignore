@@ -120,6 +120,21 @@ platform_core_data/modules/**/extent-reports/
 platform_core_data/modules/**/performanceReport/
 platform_core_data/modules/**/execution-summary/
 
+# Workspace Automation Baseline build and report outputs (added 2026-08-17). Until promotion
+# became terminal, execution happened in a module project and the baseline only ever received
+# merged SOURCE — so it needed no rules of its own beyond the nested .gitignore it ships with
+# (target/, *.class, allure-results/). A promoted module now executes and self-heals IN the
+# baseline, which means Maven, Allure, Extent and the SHAFT performance hook all write here.
+# Without these rules the first post-promotion run commits ~23M of Allure output into the
+# authoritative source tree. Same reasoning as the module rules above, same four generators.
+platform_core_data/automation_baseline/**/target/
+platform_core_data/automation_baseline/**/allure-report/
+platform_core_data/automation_baseline/**/allure-results/
+platform_core_data/automation_baseline/**/extent-reports/
+platform_core_data/automation_baseline/**/performanceReport/
+platform_core_data/automation_baseline/**/execution-summary/
+platform_core_data/automation_baseline/**/generatedReport_*.zip
+
 # IntelliJ module descriptors — per-machine, regenerated on import.
 *.iml
 

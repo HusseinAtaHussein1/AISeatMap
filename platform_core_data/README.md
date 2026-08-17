@@ -17,7 +17,7 @@ Everything here is one of exactly four things, and the distinction is what decid
 | [`knowledge_base/`](knowledge_base/) | **Durable — shared across every run and every module** | Inputs, project reference docs, detected stack, supporting material, browser/credential assets, accumulated knowledge |
 | [`modules/`](modules/) | **Durable — per module, evolves in place across runs** | One subfolder per module, holding that module's Context, Discovery, Test Design, Automation, and Healing output, plus its `README.md` summary and `module.json` state. `modules.json` beside them is the registry *and* the active-module pointer (`module_architecture.md` §6) |
 | [`runs/`](runs/) | **Per-run — a run folder is immutable once written** | One folder per pipeline execution, holding that run's **execution** artifacts and evidence: manual execution results, automation execution results, the Final QA Report, and run metadata. Two bookkeeping files sit beside the run folders and are deliberately mutable: `current_active_run.json` (§5.7) and `.run_folder_index.json` (§5.6) |
-| [`automation_baseline/`](automation_baseline/) | **Long-lived source code** | The assembled whole-project Automation Package(s) under a three-way-merge lifecycle (`pipeline.md` §12), plus the `shared/` assets every module project references |
+| [`automation_baseline/`](automation_baseline/) | **Long-lived source code** | The assembled whole-project Automation Package(s) under a three-way-merge lifecycle (`pipeline.md` §12), plus the `shared/` assets every module project references. Once a module is **promoted** this is also where that module is generated, executed and healed — its module copy is retired and this becomes its single source of truth (§12.9) |
 
 **The rule that decides the location, stated once:**
 
@@ -175,13 +175,13 @@ The nine hand-authored documents at `knowledge_base/`'s root — every root `.md
 | Project Context | `modules/{module}/context/ProjectContext.md` |
 | Discovery Artifacts | `modules/{module}/discovery/` |
 | Manual Test Suites & Traceability Matrix | `modules/{module}/test_design/` |
-| Automation Suite *(per module, standalone)* | `modules/{module}/automation/tests_{Framework}/` |
+| Automation Suite *(per module, standalone — **until that module is promoted**)* | `modules/{module}/automation/tests_{Framework}/` |
 | Repair Summary *(only if Stage 5H ran)* | `modules/{module}/healing/` |
 | Manual Execution Results | `runs/{{RUN_FOLDER}}/manual_execution/` |
 | Execution Results | `runs/{{RUN_FOLDER}}/execution/` |
 | Final QA Report | `runs/{{RUN_FOLDER}}/reporting/Final_QA_Report.md` |
 | Run Manifest | `runs/{{RUN_FOLDER}}/metadata/RunManifest.md` |
-| Automation Package *(assembled, whole-project)* | `automation_baseline/{framework}/tests_{Framework}/` |
+| Automation Package *(assembled, whole-project — **and the single source of truth for every promoted module**, `pipeline.md` §12.9)* | `automation_baseline/{framework}/tests_{Framework}/` |
 
 Each artifact is **one file, edited in place** — no `.vN` suffixes and no separate "approved" copy. Approval flips a `status:` field and is recorded in the Run Manifest; git supplies the version history (`pipeline.md` §7).
 

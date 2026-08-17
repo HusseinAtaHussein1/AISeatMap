@@ -128,6 +128,17 @@ dependencies:
 >
 > Nothing about mandatory headless selector verification (§11A), the two mandatory KB reads (§11B), the bounded self-review loop, the Target Write Plan (§11C), brownfield/greenfield detection, or the §5.2 gate's criteria changes. See [`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §7 and `pipeline.md` §12.
 
+> **Revision note (2026-08-17, user-mandated): the module project is a PRE-PROMOTION home, not a durable one.** Point 5 above is superseded. Once a module has been promoted — merged into the Workspace Automation Baseline, verified byte-identical there, and proven by a passing live run — its `tests_{Framework}/` directory is **permanently deleted**, and the baseline becomes that module's single source of truth for everything afterwards.
+>
+> **What this stage must do differently, every time, before writing a single file:**
+>
+> 1. **Resolve the root; never build the path.** Call `node platform_core/tools/automation_lifecycle/cli.js resolve-root --module {{MODULE_SLUG}}`. A `Draft` module (`Generated`/`Executed`/`Healed`/`Approved`) resolves to the module workspace. A `Promoted` module resolves to `automation_baseline/{framework}/tests_{Framework}/`. Hardcoding either path is a caller asserting it knows something it has not checked.
+> 2. **Never recreate a retired working copy.** For a `Promoted` module there is no module project and there must not be one. `copyBaselineIntoModule()` refuses it. If a `tests_*` directory has reappeared under the module, **stop and report** — do not use it, do not merge it, do not delete it silently (`pipeline.md` §12.10 rule 3).
+> 3. **Stay in your lane inside the shared baseline.** Generating for a promoted module means writing into a tree that holds other modules' code. Every path is classified against `.baseline_ownership.json`: `owned` proceeds, `shared` proceeds *and is declared in the Decision Report* (the §11D.2 rule, unchanged), `foreign` is a hard stop. Run `cli.js check-ownership --module {{MODULE_SLUG}}` after writing, before proposing the change for approval.
+> 4. **There is no second assembly.** A promoted module's change is an **in-place baseline update**, recorded with `recordBaselineUpdate()` — not a merge, because there is no separate source to merge from. The §5.2 approval gate is unchanged: approval first, then the module-scoped run, then the record.
+>
+> See `pipeline.md` §12.5.1, §12.9, and §12.10.
+
 # 1. Skill Name
 
 **Automation skill** (Automation Engineering skill) — v3
@@ -501,9 +512,22 @@ Rules, all inherited from `pipeline.md` §13.3 rather than invented here:
 5. **Filesystem writes only** — the platform never runs `git add`/`commit`/`mv`/`rm` against the Target Project. Generated code is left in the working tree for the team to review and commit with their own conventions and hooks.
 6. **Every write is recorded in the Target Write Ledger** — path, run folder, operation, sha256 — the platform's record of what it owns inside someone else's repository.
 
-# 11D. The Module Automation Project — where this stage generates
+# 11D. Where this stage generates — resolve it, never assume it
 
-**This stage generates into `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/`, and nowhere else.** Not into the Workspace Automation Baseline (which only the Workspace Merge writes), not into a temporary run folder (that location is removed), and not directly into the Target Project (that is a projection of an approved baseline, §11C.4).
+**Step zero of every Stage `4A` pass, before any generation:**
+
+```
+node platform_core/tools/automation_lifecycle/cli.js resolve-root --module {{MODULE_SLUG}}
+```
+
+| Resolved mode | Where this stage generates | Governed by |
+|---|---|---|
+| `module` (module is Draft) | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/` | §11D.1–§11D.3 below, unchanged |
+| `baseline` (module is Promoted) | `platform_core_data/automation_baseline/{{FRAMEWORK_LOWER}}/tests_{{FRAMEWORK}}/`, **only inside this module's owned paths** | §11D.4 and `pipeline.md` §12.9 |
+
+**For a Draft module this stage generates into the module project and nowhere else** — not into the Workspace Automation Baseline (which only the Workspace Merge writes), not into a temporary run folder (that location is removed), and not directly into the Target Project (that is a projection of an approved baseline, §11C.4).
+
+**For a Promoted module the module project does not exist and must not be recreated.** If the resolver throws `MODULE_DIR_RESURRECTED`, a directory has come back that this lifecycle retired: stop, report it, and do not generate anywhere until it is resolved.
 
 ## 11D.1 Standalone is a requirement, not a description
 
@@ -549,7 +573,7 @@ A second Stage `4A` pass on the same module **extends the project that already e
 
 ## 11D.4 Lifecycle state — `.module_automation_state.json`
 
-Written alongside the project, tracking exactly four states (`pipeline.md` §12.3.1):
+Written in the module's `automation/` folder, tracking exactly five states (`pipeline.md` §12.3.1):
 
 | State | Set by | Meaning |
 |---|---|---|
@@ -557,8 +581,23 @@ Written alongside the project, tracking exactly four states (`pipeline.md` §12.
 | `Executed` | Stage `5A` | Run; results referenced here by run folder |
 | `Healed` | Stage `5H` | Approved repairs applied and the affected tests re-run |
 | `Approved` | the §5.2 gate, recorded by the Module Manager | Eligible for assembly into the baseline |
+| `Promoted` | `automation_lifecycle/cli.js retire-module` | Assembled, verified, live-proven, working copy retired. **Terminal** — the baseline is now this module's single source of truth |
 
-This stage sets **`Generated` only**. It never writes `Approved` — a stage that could record its own approval would make the gate advisory. It also never advances `Executed` or `Healed`, which belong to the stages that actually did those things.
+This stage sets **`Generated` only**. It never writes `Approved` — a stage that could record its own approval would make the gate advisory. It also never advances `Executed` or `Healed`, which belong to the stages that actually did those things, and it can never write `Promoted`, which `setAutomationState` refuses outright.
+
+**Read `sourceOfTruth` before writing anything.** It is `module` or `baseline`, and it is the field the resolver uses. A module in state `Approved` with `sourceOfTruth: baseline` is promoted; the state name alone is never the answer.
+
+## 11D.4a Generating for a Promoted module
+
+Everything in §11D.1–§11D.3 still applies in spirit — standalone-ness, no parallel copies, no silent deletions — with these differences, which follow from the code now living in a tree shared with other modules:
+
+| §11D rule | How it applies after promotion |
+|---|---|
+| Standalone (§11D.1) | Now a property of the **baseline**, not of a per-module project. It already carries its own `pom.xml`/config and runs on its own; this stage must not break that. The Suite Manifest's `Runs standalone` assertion is made about the baseline. |
+| Shared assets (§11D.2) | **Unchanged in rule, simpler in mechanism.** Shared code sits in the same tree now, so "propose, never edit" is enforced by the `shared` classification in `.baseline_ownership.json`: the edit is allowed but must be declared in the Decision Report, because it clears the whole-project gate rather than this module's. |
+| Reuse in place (§11D.3) | **Stronger, not weaker.** There is exactly one copy of this module's code in existence. No `tests_v2/`, no scratch copy under the module, no "regenerate then merge". |
+| Ownership | **New.** Every path written is classified `owned` / `shared` / `foreign` / `unowned`. `foreign` is a hard stop — never overwrite another module's code. Verify with `cli.js check-ownership --module {{MODULE_SLUG}}` before proposing the change. |
+| Module-scoped suite | **New.** Keep `testng-{{MODULE_SLUG}}.xml` (or the framework's equivalent) in step with the classes this module owns, so Stage `5A` and `5H` can still run this module alone. |
 
 ## 11D.5 Assembly is the merge's job, not this stage's
 
@@ -568,6 +607,8 @@ On approval, the project is assembled into the whole-project baseline by the **u
 - **Brownfield:** the project is generated to match the **detected** layout from the start (§11C.1–§11C.2), so assembly is a merge into the team's existing structure rather than an imposition of the platform's own.
 
 **Ordering is fixed and this stage never shortcuts it:** generate → approve *this module* → assemble into the baseline → then project into the Target Project (`pipeline.md` §13.7). Writing to the Target Project before the baseline is updated would leave the baseline unable to reproduce what the team is looking at.
+
+**After the first assembly comes promotion, and it ends this section's applicability for that module.** Once the merged copy is verified byte-identical and proven by a passing live run, the module project is retired and the module becomes `Promoted` (`pipeline.md` §12.5.1). From then on there is **no assembly step at all** for that module: its next change is written straight into the baseline (§11D.4a) and recorded as an in-place update, because a merge needs two copies and only one exists.
 
 # 12. Traceability
 

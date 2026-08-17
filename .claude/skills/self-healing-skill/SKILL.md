@@ -68,7 +68,7 @@ dependencies:
 > | Output | Goes to | Because |
 > |---|---|---|
 > | Repair Summary, Confidence Reports, Before/After Comparison, Quarantine Register | `modules/{module}/healing/` | It describes **that module's suite**, which is durable |
-> | Repair **code** | in place in `modules/{module}/automation/tests_{Framework}/` | The module project *is* the suite being healed; git is the before/after record |
+> | Repair **code** | in place in the module's **resolved root** — `modules/{module}/automation/tests_{Framework}/` while Draft, or the module's owned paths inside `automation_baseline/{framework}/tests_{Framework}/` once Promoted (`pipeline.md` §12.9) | The resolved root *is* the suite being healed; git is the before/after record. Resolve with `cli.js resolve-root`, never by building a path |
 > | The **rerun's results** | `runs/{{RUN_FOLDER}}/execution/ExecutionResults.rerun-N.md` | A rerun is an execution, and belongs with the execution it is a cycle of |
 >
 > Three consequences worth stating outright: **there is no separate healed copy** of the suite (§13); **the original `ExecutionResults.md` is never edited**, so run immutability holds and "12 failed, then 10 passed after repair and 2 quarantined" reads as one story in one folder; and a **multi-module invocation produces one healing folder per module**, never a combined cross-module repair document, because a repair is always to one module's suite. See [`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §8.
@@ -117,7 +117,7 @@ Three prohibitions define this skill more sharply than its capabilities do:
 |---|---|---|---|
 | Execution Results | **Primary** | Required *(unless §4.2 applies)* | `platform_core_data/runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` — with full Result Classification and Evidence Inventory. At least one `Automation Failure` must be present, or there is nothing to heal (§16). |
 | External Execution Reports | **Primary fallback** | Required *only* when there are no Stage `5A` Execution Results (§4.2) | The framework's own reports from a human-run execution — Allure, TestNG/JUnit XML, Playwright JSON/HTML. The **three most recent runs** are read. Produces `Derived` classifications, never Stage `5A` ones. |
-| Automation Suite | **Primary** | Required | `platform_core_data/modules/{{MODULE_SLUG}}/automation/tests_{Framework}/` — the run's working copy. **Never the baseline directly** (`pipeline.md` §12.3). Under §4.2 this may instead be the human's own automation project, at the path they name. |
+| Automation Suite | **Primary** | Required | The module's **resolved root** (`cli.js resolve-root --module {{MODULE_SLUG}}`): the module working copy while the module is `Draft` — never the baseline directly (`pipeline.md` §12.3) — or, once the module is `Promoted`, its owned paths **inside** the baseline, which is then the only copy that exists (§12.9). Under §4.2 this may instead be the human's own automation project, at the path they name. |
 | Project Context | Governing | Required, must be `Approved` | Target environment, credentials, safety constraints governing the rerun. |
 | Repair KB | Secondary | Optional (read) | Platform `repair_patterns/`, `diagnosis_patterns/`, `reasoning/` + prior runs' Repair Summaries (`pipeline.md` §10.8). Absent means no prior art — reasoning proceeds from evidence alone, and every strategy's confidence is capped accordingly (§9.2). |
 | Selector Verification KB | Secondary | Optional (read) | `knowledge_base/browser/screens/`, `.../components/` — verified locators with their code-state anchors (`pipeline.md` §10.8). |
@@ -456,7 +456,7 @@ Every recorded repair and Platform rule must be independently reviewable: a huma
 
 If the human approves repairs:
 
-1. **Modify only the automation suite's own files** — the specific Page Objects, locators, wait logic, setup helpers, or assertion *mechanics* responsible for the diagnosed issue, in the **run's working copy** (`platform_core_data/modules/{{MODULE_SLUG}}/automation/`), never the baseline directly (`pipeline.md` §12.3).
+1. **Modify only the automation suite's own files** — the specific Page Objects, locators, wait logic, setup helpers, or assertion *mechanics* responsible for the diagnosed issue — in the module's **resolved root**. For a `Draft` module that is the working copy (`platform_core_data/modules/{{MODULE_SLUG}}/automation/`) and never the baseline directly (`pipeline.md` §12.3). For a `Promoted` module it is the baseline, and two extra constraints bind: every file touched must classify as `owned` (or declared `shared`) under `.baseline_ownership.json` — **a `foreign` path is a hard stop, never another module's code repaired by accident** — and the targeted rerun uses the module-scoped suite. Verify with `cli.js check-ownership --module {{MODULE_SLUG}}` before proposing the repair.
 2. **Never modify approved Manual Test Cases.** A corrected value inside the automation is not an amendment to the test case document; where they disagree, disclose it (§8.3).
 3. **Never modify Discovery artifacts.** A repair may *reveal* something Discovery should re-verify — that is a recommendation in the Before/After report, never an in-place edit.
 4. **Never modify the Project Context, PRD, Traceability Matrix, Coverage Report, or any Stage 1–3 artifact.**
@@ -467,9 +467,9 @@ If the human approves repairs:
 # 12. Targeted Rerun
 
 - **Rerun only the repaired tests** — never the full suite, unless every test in it was repaired. A full-suite rerun after a two-test repair wastes environment time and obscures which change caused which outcome.
-- **Rerun from the module's own automation project**, `modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/` — the repaired code, in place. This is precisely what that project being standalone (`automation-skill` §11D.1) buys: one module's repairs are observable without the rest of the suite's noise.
+- **Rerun from the module's resolved root** (`cli.js resolve-root --module {{MODULE_SLUG}}`) — the repaired code, in place. For a `Draft` module that is `modules/{{MODULE_SLUG}}/automation/tests_{{FRAMEWORK}}/`, which is precisely what that project being standalone (`automation-skill` §11D.1) buys. For a `Promoted` module it is the baseline, run through the **module-scoped suite** (`testng-{{MODULE_SLUG}}.xml`) — the same isolation, achieved by suite scoping instead of by directory separation (`pipeline.md` §12.9).
 - **Confirm the target environment against the Project Context before rerunning anything** — the same environment-match discipline every execution-capable stage applies.
-- **Run headless** through the Playwright MCP server, consistent with the Automation branch (`pipeline.md` §3.4).
+- **Confirm Headed or Headless with the human immediately before the rerun starts** (`pipeline.md` §6 Rule 11). This binds every rerun, including a two-test verification rerun. Never infer the mode, never carry it over from the Stage `5A` execution that produced the failures, and never treat approval of the repair plan as approval of the mode. Record the answer in the rerun's results.
 - **Never execute a mutating action against an environment the Project Context has not marked safe for it.**
 - **Capture the same evidence classes Stage `5A` captures**, so a before/after comparison is genuinely comparable rather than comparing rich evidence against thin evidence.
 

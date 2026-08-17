@@ -17,6 +17,17 @@
 //
 // The default is the safe one on purpose: a caller that forgets to pass a scope keeps a runnable
 // project, and the failure mode is a stale build directory rather than a deleted test suite.
+//
+// RETIREMENT (added 2026-08-17, user-mandated) is NOT a cleanup scope, and that separation is
+// deliberate. Cleanup removes files a merge already accounted for; retirement removes an entire
+// module working copy after promotion, which is a different act with a different precondition — a
+// PASSING verification report proving the baseline holds an identical copy (promoteVerify.js).
+// Expressing it as a third scope would have let a caller reach it with the same argument shape that
+// deletes a target/ directory. It gets its own function, its own required proof, and its own guard.
+//
+// THE BASELINE IS NEVER A CLEANUP OR RETIREMENT TARGET. Both entry points refuse a path inside
+// automation_baseline/ outright (pipeline.md §12.10, safety rule 1). After promotion the baseline is
+// the only copy of the automation that exists; a cleanup pass pointed at it would not be a cleanup.
 
 const fs = require('fs');
 const path = require('path');
@@ -24,10 +35,45 @@ const path = require('path');
 const CLEANUP_SCOPES = ['build-only', 'all-accounted'];
 const DEFAULT_CLEANUP_SCOPE = 'build-only';
 
+/** Path segment that marks the Workspace Automation Baseline, wherever the data root happens to be. */
+const BASELINE_MARKER = 'automation_baseline';
+
 class CleanupScopeError extends Error {
   constructor(message) {
     super(message);
     this.name = 'CleanupScopeError';
+  }
+}
+
+class RetirementError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'RetirementError';
+  }
+}
+
+function toPosix(p) {
+  return String(p).split(path.sep).join('/');
+}
+
+/**
+ * Refuses any path inside the Workspace Automation Baseline.
+ *
+ * Checked on the RESOLVED path, so a relative path, a symlink-free `..` walk, or a caller that built
+ * the path by string concatenation all collapse to the same answer before anything is deleted.
+ *
+ * @param {string} absPath
+ * @param {string} operation - named in the error, so the message says what was refused
+ */
+function assertNotBaseline(absPath, operation) {
+  const resolved = toPosix(path.resolve(absPath));
+  const segments = resolved.split('/');
+  if (segments.includes(BASELINE_MARKER)) {
+    throw new RetirementError(
+      `${operation} refused: ${resolved} is inside the Workspace Automation Baseline. The baseline ` +
+      'is the authoritative — and after promotion the ONLY — copy of the project\'s automation, and ' +
+      'is never a deletion target (pipeline.md §12.10, safety rule 1).'
+    );
   }
 }
 
@@ -69,6 +115,7 @@ function cleanupPackage(packageAbsPath, plan, deps = {}) {
   const fsImpl = deps.fs || fs;
   const apply = Boolean(deps.apply);
   const scope = deps.scope || DEFAULT_CLEANUP_SCOPE;
+  assertNotBaseline(packageAbsPath, 'Cleanup');
   const candidates = accountedForPaths(plan, scope);
   const workingCopyAbsPath = packageAbsPath;
 
@@ -90,6 +137,92 @@ function cleanupPackage(packageAbsPath, plan, deps = {}) {
   removeEmptyDirs(workingCopyAbsPath, fsImpl);
 
   return { scope, wouldDelete: candidates, deleted };
+}
+
+/**
+ * Step 4 of the promotion order: permanently removes a module's automation working copy once the
+ * baseline has been proven to hold an identical copy (pipeline.md §12.5).
+ *
+ * FOUR PRECONDITIONS, every one a hard refusal:
+ *   1. The target is not inside the baseline (assertNotBaseline).
+ *   2. `verification.passed === true`, from promoteVerify.js. Without it this is a deletion.
+ *   3. The target is a `tests_{Framework}` directory under `.../automation/`. Retirement removes an
+ *      entire tree, so the shape of what it is pointed at is checked rather than trusted — a caller
+ *      that passes the module ROOT would otherwise take the governance artifacts with it.
+ *   4. `apply` is explicit. Dry-run is the default, matching every other write in this folder.
+ *
+ * WHAT SURVIVES, and this is the user-mandated boundary: everything else under modules/{slug}/ —
+ * automation/*.md, healing/, discovery/, test_design/, README.md, .module_automation_state.json.
+ * Those are the module's permanent history and evidence. Only executable code moves to the baseline.
+ *
+ * @param {string} modulePackageAbsPath - modules/{slug}/automation/tests_{Framework}
+ * @param {{verification: object, apply?: boolean, fs?: object}} deps
+ * @returns {{retired: boolean, path: string, fileCount: number, apply: boolean, preserved: string[]}}
+ */
+function retireModulePackage(modulePackageAbsPath, deps = {}) {
+  const fsImpl = deps.fs || fs;
+  const apply = Boolean(deps.apply);
+  const { verification } = deps;
+
+  assertNotBaseline(modulePackageAbsPath, 'Module retirement');
+
+  if (!verification || verification.passed !== true) {
+    throw new RetirementError(
+      'Retirement refused: it requires a PASSING promotion verification report proving every ' +
+      'module file exists in the baseline with identical content (promoteVerify.js). Deleting a ' +
+      'working copy without that proof destroys automation instead of promoting it ' +
+      '(pipeline.md §12.10, safety rule 2).'
+    );
+  }
+
+  const resolved = toPosix(path.resolve(modulePackageAbsPath));
+  const base = path.basename(resolved);
+  const parent = path.basename(path.dirname(resolved));
+  if (!base.startsWith('tests_') || parent !== 'automation') {
+    throw new RetirementError(
+      `Retirement refused: ${resolved} is not a module automation package. Expected a path shaped ` +
+      'like modules/{slug}/automation/tests_{Framework}. Retirement deletes an entire tree, so it ' +
+      'never infers what it was pointed at — pointing it one level up would take the module\'s ' +
+      'governance artifacts and evidence with it.'
+    );
+  }
+
+  const preserved = [
+    'automation/*.md (Plan, Manifest, Decision Report, Coverage, Suite Manifest, Summary, promotion record)',
+    'automation/.module_automation_state.json',
+    'healing/', 'discovery/', 'test_design/', 'README.md',
+  ];
+
+  if (!fsImpl.existsSync(resolved)) {
+    return { retired: false, path: resolved, fileCount: 0, apply, preserved };
+  }
+
+  const fileCount = countFiles(resolved, fsImpl);
+  if (!apply) {
+    return { retired: false, path: resolved, fileCount, apply, preserved };
+  }
+
+  fsImpl.rmSync(resolved, { recursive: true, force: true });
+  return { retired: true, path: resolved, fileCount, apply, preserved };
+}
+
+/**
+ * @param {string} dirAbsPath
+ * @param {object} fsImpl
+ * @returns {number}
+ */
+function countFiles(dirAbsPath, fsImpl) {
+  let entries;
+  try {
+    entries = fsImpl.readdirSync(dirAbsPath, { withFileTypes: true });
+  } catch {
+    return 0;
+  }
+  let total = 0;
+  for (const entry of entries) {
+    total += entry.isDirectory() ? countFiles(path.join(dirAbsPath, entry.name), fsImpl) : 1;
+  }
+  return total;
 }
 
 /**
@@ -133,8 +266,12 @@ function removeEmptyDirs(dirAbsPath, fsImpl) {
 module.exports = {
   CLEANUP_SCOPES,
   DEFAULT_CLEANUP_SCOPE,
+  BASELINE_MARKER,
   CleanupScopeError,
+  RetirementError,
+  assertNotBaseline,
   accountedForPaths,
   cleanupPackage,
+  retireModulePackage,
   cleanupRunPackage,
 };

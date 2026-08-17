@@ -470,8 +470,11 @@ function cmdAutomation(args) {
   const state = args.state && args.state !== true ? args.state : null;
   if (!slug || !state) {
     console.error(
-      `Usage: cli.js automation <slug> --state <${AUTOMATION_STATES.join('|')}> ` +
-      '[--by <approver>] [--framework F] [--run <run-folder>] [--baseline-ref <sha>]'
+      `Usage: cli.js automation <slug> --state <${AUTOMATION_STATES.filter((s) => s !== 'Promoted').join('|')}> ` +
+      '[--by <approver>] [--framework F] [--run <run-folder>] [--baseline-ref <sha>]\n' +
+      'Note: "Promoted" is not settable here. It is the outcome of a verified promotion — merge, ' +
+      'byte-identity verification, retirement — and is recorded by:\n' +
+      '  node platform_core/tools/automation_lifecycle/cli.js retire-module --module <slug> ...'
     );
     process.exitCode = 1;
     return;

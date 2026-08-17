@@ -107,8 +107,23 @@ function copyBaselineInto(baselineAbsPath, destPackageAbsPath, deps) {
  * @param {string} modulePackageAbsPath - modules/{slug}/automation/tests_{Framework}/
  * @param {object} deps - as copyBaselineInto()
  * @returns {{copied: boolean, baselineRef: string|null, snapshotPath: string, repo: object}}
+ * A PROMOTED module is refused outright (added 2026-08-17). Once a module's code has moved to the
+ * baseline and its working copy has been retired, re-seeding would recreate the very directory the
+ * promotion deleted — and the resurrected copy would look authoritative while being a dead end, since
+ * nothing executes from it any more. Pass `moduleState` (from module_manager/automationState.js) and
+ * this refuses; omit it and the caller has simply not asked the question, which is why the check is
+ * here rather than optional-and-warned.
  */
 function copyBaselineIntoModule(baselineAbsPath, modulePackageAbsPath, deps) {
+  const state = deps && deps.moduleState;
+  if (state && (state.state === 'Promoted' || state.sourceOfTruth === 'baseline')) {
+    throw new Error(
+      `Module "${state.module || '(unknown)'}" is Promoted: the Workspace Automation Baseline is ` +
+      'its single source of truth. Seeding a module working copy for it would recreate the ' +
+      'directory promotion retired, and nothing would ever execute from it. Work in the baseline ' +
+      'instead — resolve the path with automation_lifecycle/automationRoot.js (pipeline.md §12.9).'
+    );
+  }
   return copyBaselineInto(baselineAbsPath, modulePackageAbsPath, deps);
 }
 

@@ -403,6 +403,8 @@ For an **Inconclusive** case where no defect was actually confirmed, most Classi
 
 ## 11.1 Headed Browser — Required for This Skill
 
+> **Revision (2026-08-17, user-mandated):** headed remains this skill's *expected* answer, but it is no longer assumed. `pipeline.md` §6 Rule 11 requires the mode to be **confirmed with the human immediately before every execution**, including this one. Ask, state that headed is the norm here and why, and wait for the explicit answer. The one case that used to be handled silently — headed unavailable, so proceed headless — is now surfaced in the same question rather than discovered mid-run.
+
 **This skill runs the browser headed (visible), not headless.** It is the deliberate exception to the platform-wide headless default, and the one place the two branches differ in tooling posture (`pipeline.md` §3.4): the Automation branch runs headless for speed and repeatability, while this stage runs headed because a human watching *is* the point. This stage exists so a person can watch authored Steps execute against the live application and judge, in real time, whether observed behaviour matches the Expected Result — including timing, transient, and visual-state behaviour (§7's "Notes" evidence type) that a post-hoc screenshot does not preserve. A headless run would produce the same files while removing the live observation the stage is designed around.
 
 **How to run headed, per mechanism:**

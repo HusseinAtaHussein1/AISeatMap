@@ -233,6 +233,30 @@ function renderModuleSummary(modulesDir, slug, opts = {}) {
     if (automation.sourceRuns?.length) {
       lines.push(`- Executed by: ${automation.sourceRuns.map((r) => `\`${r}\``).join(', ')}`);
     }
+    // A promoted module's code is NOT under this module folder any more. Saying so here matters more
+    // than anywhere else: this README is what a person opens to find the suite (pipeline.md §12.9).
+    if (automation.state === 'Promoted' || automation.sourceOfTruth === 'baseline') {
+      lines.push('');
+      lines.push('> **Promoted — the code is not in this folder.** This module\'s executable'
+        + ' automation lives in the Workspace Automation Baseline'
+        + (automation.baselinePath ? ` at \`${automation.baselinePath}\`` : '')
+        + ', which is its single source of truth. The working copy at'
+        + (automation.retiredPath ? ` \`${automation.retiredPath}\`` : ' this module')
+        + ` was retired on ${orDash(automation.promotedAt)}`
+        + (automation.promotedBy ? ` by ${automation.promotedBy}` : '')
+        + '. Everything else here — plans, reports, healing records, evidence — is permanent module'
+        + ' history and stays.');
+      if (automation.ownedPaths?.length) {
+        lines.push('');
+        lines.push(`- Baseline paths owned by this module: ${automation.ownedPaths.map((p) => `\`${p}\``).join(', ')}`);
+      }
+      if (automation.baselineUpdates?.length) {
+        const last = automation.baselineUpdates[automation.baselineUpdates.length - 1];
+        lines.push(`- In-place baseline updates: ${automation.baselineUpdates.length} (last ${last.at}, ${last.changedPaths.length} file(s))`);
+      }
+      lines.push('- If a `tests_*` directory ever reappears under this module, it is not usable —'
+        + ' stop and report it (pipeline.md §12.10, safety rule 3).');
+    }
   } else {
     lines.push('*No automation project yet — Stage 4A has not generated one for this module.*');
   }

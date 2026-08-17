@@ -259,8 +259,8 @@ node platform_core/tools/module_manager/cli.js automation <slug> --state <…> [
 
 | Location | Path | Role |
 |---|---|---|
-| **Module Automation Project** | `modules/{module}/automation/tests_{Framework}/` | **NEW.** Where Stage 4A generates, Stage 5A executes from, and Stage 5H heals. A **standalone, independently runnable project** — its own config and dependency manifest — until approved |
-| **Workspace Automation Baseline** | `automation_baseline/{framework}/tests_{Framework}/` | Unchanged in role: the authoritative, persistent, whole-project suite. Now assembled *from approved module projects* (§7.5) rather than merged from a run working copy |
+| **Module Automation Project** | `modules/{module}/automation/tests_{Framework}/` | **NEW.** Where Stage 4A generates, Stage 5A executes from, and Stage 5H heals. A **standalone, independently runnable project** — its own config and dependency manifest — until approved. **Since 2026-08-17 this is a pre-promotion home only**: it is permanently deleted once the module is promoted (`pipeline.md` §12.5.1) |
+| **Workspace Automation Baseline** | `automation_baseline/{framework}/tests_{Framework}/` | Unchanged in role: the authoritative, persistent, whole-project suite. Now assembled *from approved module projects* (§7.5) rather than merged from a run working copy. **After a module is promoted it is that module's single source of truth** — generated, executed and healed in place, scoped by `.baseline_ownership.json` (`pipeline.md` §12.9) |
 | **Target Project** | `{{TARGET_ROOT}}/<automationRoot>/` | Unchanged: the projection of an approved baseline, per §13.3 |
 
 The **Run Automation Working Copy** (`runs/{{RUN_FOLDER}}/automation/`) is **removed**. Its entire purpose was to give generation a scratch location that was not the baseline; the Module Automation Project serves that purpose better, because it persists, is scoped to one module, and can be executed and healed as a unit.
@@ -337,7 +337,7 @@ In brownfield the module project is generated to match the **detected** layout, 
 | §12.2 The four steps | **Amended**: Step 1 (Working Copy Creation) is replaced by generation into the Module Automation Project; Steps 2–4 are unchanged in mechanism |
 | §12.3 Working Copy Creation | **Superseded.** Its `.lifecycle_snapshot.json` role is served by `.module_automation_state.json`'s `baselineRef` |
 | §12.4 Workspace Merge | **Unchanged in full.** Triggered by module approval instead of run approval |
-| §12.5 Cleanup | **Narrowed.** A module project is *not* deleted after assembly — it is the module's durable automation home. Cleanup applies only to build/IDE output already classified as Discarded Untracked |
+| §12.5 Cleanup | **Narrowed.** A module project is *not* deleted after assembly by cleanup — cleanup applies only to build/IDE output already classified as Discarded Untracked. **Superseded in part on 2026-08-17**: the project is no longer durable, and a separate Retirement step deletes it once the baseline copy is verified and live-proven (`pipeline.md` §12.5.1) |
 | §12.6 `automation_promotion.md` | **Unchanged**, written to `modules/{module}/automation/` instead of a run folder. Bootstrap Migration is unchanged |
 | §12.7 Registry cross-reference | **Extended**: `AutomationPackages.md` gains a per-module column |
 
@@ -349,7 +349,7 @@ Stage 5H is **unchanged in every behavioral respect** — still optional, still 
 
 Repair *reasoning and record* — `RepairSummary.md`, `RepairConfidenceReport.md`, `BeforeAfterComparison.md`, `QuarantineRegister.md`, and any KB promotion proposals — is written to `modules/{module}/healing/`, because it describes **that module's suite**, which is durable, not that execution, which is history.
 
-Repair *code changes* are applied directly to `modules/{module}/automation/tests_{Framework}/`, in place. There is no separate healed copy: the module project **is** the suite being healed, and git is the before/after record — the same in-place discipline `pipeline.md` §7 applies to every other artifact. `BeforeAfterComparison.md` documents the change in reviewable prose; it is not the mechanism by which the change is recoverable.
+Repair *code changes* are applied directly to `modules/{module}/automation/tests_{Framework}/`, in place — or, once the module is **Promoted**, to its owned paths inside the Workspace Automation Baseline, which is then the suite being healed (`pipeline.md` §12.9). Stage 5H resolves which of the two through `automation_lifecycle/automationRoot.js` and never recreates a retired working copy. There is no separate healed copy either way: the resolved root **is** the suite being healed, and git is the before/after record — the same in-place discipline `pipeline.md` §7 applies to every other artifact. `BeforeAfterComparison.md` documents the change in reviewable prose; it is not the mechanism by which the change is recoverable.
 
 ## 8.2 Where the rerun's results go
 

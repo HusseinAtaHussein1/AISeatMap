@@ -356,7 +356,16 @@ node platform_core/tools/module_manager/cli.js summary login    # regenerate its
 - `tests_{Framework}/` — the authoritative whole-project suite, **assembled from approved module projects**. Merges into it are three-way and hash-verified (see [`platform_core/tools/automation_lifecycle/`](../platform_core/tools/automation_lifecycle/)).
 - `shared/` — base page objects, auth fixtures, utilities, and test-data factories, generated **once** and referenced by every module project. A module that needs a change here *proposes* it rather than editing it, because shared code affects every module's suite.
 
-The path a module's automation takes is: **generate in the module → approve that module → assemble into the baseline → project into your repository.** Each step waits on the one before it, so the baseline can always reproduce what your team is looking at.
+The path a module's automation takes is: **generate in the module → approve that module → assemble into the baseline → prove it there → retire the module copy → project into your repository.** Each step waits on the one before it, so the baseline can always reproduce what your team is looking at.
+
+**After a module is promoted, the baseline is where its code lives — permanently.** The first successful promotion is a one-way door: once the baseline copy has been checked file-by-file and a live run of that module has passed from it, the module's own `tests_{Framework}/` folder is deleted for good. Everything else about the module stays — its plans, reports, healing records and evidence are permanent history.
+
+From then on you work on that module **in the baseline**: changes, runs, repairs and self-healing all happen there. Two things keep modules from stepping on each other now that they share one folder:
+
+- `.baseline_ownership.json` records which files belong to which module. Editing a file owned by another module is blocked, not warned about. Shared files (like `pom.xml`) can be changed, but the change has to be declared, because it affects everyone.
+- `testng-{module}.xml` runs just that module, so you can still test one module on its own.
+
+If a deleted module folder ever comes back — a stale restore, a copy from an old branch — the tools **stop and tell you** instead of using it. Nothing runs from that folder any more, so work done there would quietly go nowhere.
 
 ### Run folder names
 

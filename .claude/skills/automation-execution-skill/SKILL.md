@@ -689,6 +689,33 @@ node platform_core/tools/module_manager/cli.js show <slug>     # one module's fu
 
 - **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
   hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+
+**Feature scope — resolving `{{FEATURE_SLUG}}`.** A module may hold standalone **Features** at
+`modules/{module}/features/{feature}/`, each with its own independent stage tracking
+([`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §5.5,
+[`new_us_intake.md`](../../../workflows_and_pipelines/pipeline/new_us_intake.md)). Resolve the pair,
+never one half of it:
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json     # -> activeModules[] + activeFeature
+node platform_core/tools/module_manager/cli.js feature list [<module>]
+```
+
+| `activeFeature` | Scope | This stage resolves |
+|---|---|---|
+| `null` | consolidated module / CRUD | `{{MODULE_SLUG}}` only — and confirms the Feature pointer really is null |
+| set | that standalone Feature | **both** `{{MODULE_SLUG}}` and `{{FEATURE_SLUG}}`; artifacts go under `modules/{module}/features/{feature}/` |
+
+- **An invalid or stale Feature pointer is an error, not a fallback.** A Feature naming a module it
+  does not belong to, or one that no longer exists, means the tooling no longer knows what scope the
+  human intended. **Stop and ask for correction** — never quietly continue at module scope, which
+  would write Feature output into its parent's folders.
+- **Feature artifacts stay inside the Feature boundary; module CRUD artifacts stay inside the parent
+  module.** Neither writes into the other.
+- **A Feature stage never advances the parent module's stage**, and the reverse holds too. Record
+  Feature progress with `cli.js feature stage <module> <feature> <stage>`, module progress with
+  `cli.js stage <module> <stage>`.
+- **A module with no `features/` folder is normal**, not incomplete: it is CRUD-only scope.
 - **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
   Never fall back to "the only module," "the newest," or the first alphabetically.
 - **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means

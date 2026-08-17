@@ -130,6 +130,18 @@ platform_core_data/modules/
       BeforeAfterComparison.md
       QuarantineRegister.md
       kb_promotion_proposals.md
+
+    features/                       # ── STANDALONE FEATURES (§5.5) ────────────────────
+                                    #    OPTIONAL. Created only when an approved standalone
+                                    #    Feature is scaffolded — never eagerly, never empty.
+      {feature}/
+        feature.json                  # this Feature's own state record, incl. its stages map
+        context/                      # Stage 1, feature-scoped
+        discovery/                    # Stage 2, feature-scoped
+          findings/  evidence/
+        test_design/                  # created on first write, like the module's
+        automation/
+        healing/
 ```
 
 ## 5.2 Module identity
@@ -156,6 +168,96 @@ It contains, in order: module name and slug · current pipeline stage and status
 - **Application-agnostic engineering knowledge.** A repair pattern that would hold against a different application is promoted into `knowledge_base/patterns/` through the §10.5 gate, never left to accumulate in a module.
 - **A second copy of the automation baseline.** `automation/` holds this module's suite while it is being developed and approved; `automation_baseline/` holds the assembled whole-project suite (§7.5).
 
+## 5.5 Standalone Features within a module
+
+*(Added 2026-08-17, user-mandated. Routing rule: [`new_us_intake.md`](new_us_intake.md).)*
+
+A **standalone Feature** is one capability, supplied as its own User Story, that belongs to a module's
+business area **without being part of that entity's CRUD package**. It lives at
+`modules/{module}/features/{feature}/` and tracks its own stages.
+
+### 5.5.1 What is a Feature, and what is not
+
+| Supplied as | Result |
+|---|---|
+| An **independent Feature / User Story** | A dedicated Feature folder. |
+| Part of an entity's **CRUD package** — Add/Create, Update, Search, Approve, Reject | **Stays in the consolidated module.** No Feature folder, however feature-shaped the capability sounds. |
+
+**The test is how it was supplied, not whether it could be called a feature** — almost any capability
+could. **The classification is a human decision made at intake and is never inferred**; an ambiguous
+case is asked about, not guessed (`new_us_intake.md` §4.1).
+
+A Feature is always a **child** of a module, never a peer, because modules partition the *application*
+and a Feature is a capability *within* one of those partitions. This is the same reason §6.4 forbids
+proposing a module to hold a work item.
+
+### 5.5.2 Independent stages
+
+**A Feature's `stages` map is its own, and nothing rolls up in either direction.**
+
+| Level | Its `stages` map means |
+|---|---|
+| Module | the **consolidated CRUD scope** |
+| Feature | **that Feature only** |
+
+A Feature reaching `test_design: Approved` says nothing about the module's CRUD suite, and a module
+reaching it says nothing about any Feature. Rolling either into the other would claim coverage nobody
+produced — which is exactly the failure that makes a status field worth keeping.
+
+The module's `README.md` renders both: a *Pipeline Status — consolidated module (CRUD) scope* table
+and, when Features exist, a separate **Features** table with each Feature's own stage columns (§5.3).
+
+```bash
+node platform_core/tools/module_manager/cli.js stage <module> <stage> --status Approved
+node platform_core/tools/module_manager/cli.js feature stage <module> <feature> <stage> --status Approved
+```
+
+### 5.5.3 Rules
+
+1. **`features/` is created only when an approved standalone Feature is scaffolded.** A CRUD-only
+   module never grows an empty one — an empty `features/` folder reads as "this module has Features",
+   the same way a scaffolded module folder reads as "this module exists" (§6.4 #4).
+2. **A Proposed Feature is registered, never scaffolded.** Same gate discipline as a module.
+3. **A Feature never brings its parent module into existence.** Registering one under a nonexistent
+   module is refused; creating the module is a separate, human-approved step.
+4. **Feature artifacts stay inside the Feature boundary; module CRUD artifacts stay inside the parent
+   module.** Neither writes into the other.
+5. **A Feature is never renamed**, for the reason §5.2 gives for modules. It is superseded instead.
+6. **Existing modules are not migrated.** A module created before this section is valid exactly as it
+   is; nothing is moved or normalized to match the new shape.
+
+### 5.5.4 Registry representation — additive, no migration
+
+`features[]` is an **optional** key on a module's entry, and `schemaVersion` stays **1**.
+
+An absent `features` key means *"this module has no registered standalone Features"* — which is
+precisely what every registry written before this section means. So **nothing migrates**, and every
+existing reader keeps working by never looking at a key that is not there. Bumping the version would
+instead make every pre-existing registry unreadable until each reader was updated in lockstep, buying
+nothing.
+
+### 5.5.5 The active Feature pointer
+
+`modules.json` carries a nullable **`activeFeature`** alongside `activeModules[]`:
+
+| State | Meaning | A stage resolves |
+|---|---|---|
+| `activeFeature: null` | consolidated module / CRUD scope | `{{MODULE_SLUG}}` only |
+| `activeFeature` set | that standalone Feature | **both** `{{MODULE_SLUG}}` and `{{FEATURE_SLUG}}` |
+
+- A non-null `activeFeature` is valid **only** when the Feature belongs to the single active module.
+- **`cli.js use <module>` clears it** — selecting module/CRUD scope is an explicit scope choice, and
+  switching modules therefore clears an incompatible Feature as a matter of course. The clear is
+  reported, never silent.
+- **`cli.js use-feature <module> <feature>`** sets the pair together. The pair is the unit: a Feature
+  slug without its module cannot be resolved to a path.
+- **An invalid or stale pointer fails loudly and asks for correction. It NEVER degrades to module
+  scope.** `resolveActiveFeature()` throws; a plain `active` read still *shows* the broken pointer, so
+  it can be looked at in order to be fixed.
+
+The no-silent-fallback rule is the load-bearing one. Falling back would send a Feature's artifacts
+into its parent's folders — indistinguishable, afterwards, from work that was always module-scoped.
+
 # 6. The Module Registry — `modules/modules.json`
 
 Directly modeled on the Active Run pointer (`run_manager.md` §5.7), for the same reason and with the same discipline: **which module the pipeline is working on must be an explicit, inspectable fact on disk, not something inferred from conversational context.**
@@ -174,13 +276,15 @@ Directly modeled on the Active Run pointer (`run_manager.md` §5.7), for the sam
 | `activeModules[]` | The module slug(s) the pipeline is currently working on — **an array, because a run may legitimately scope to several modules or to all of them** |
 | `activeScope` | `single` · `multi` · `full-project` — what the current activation *means*, so a stage can tell "just Login" from "all five, of which Login happens to be first". **`full-project` is never derived from the selection's extent — only set by explicit intent** (`cli.js use --all`), because §9.1 has Stage `5A` execute the assembled baseline for it. `single` and `multi` follow from the count |
 | `spansEveryModule` | True when the active selection happens to cover every approved module. **Reported, never acted on:** it lets the CLI say "that is every module — did you mean `--all`?" without deciding for the human that it did |
+| `activeFeature` | **Nullable.** The standalone Feature under `activeModules[0]` that the pipeline is working on, or `null` for consolidated module/CRUD scope (§5.5.5). Cleared whenever module scope is selected |
+| `previousActiveFeature` | The prior Feature pointer, so a cleared one can be seen and restored |
 | `switchedAt` / `setBy` / `note` | Provenance of the last activation change |
 | `previousActiveModules` | The prior activation, so a mis-switch is one command to undo |
 | `modules[]` | The registry proper — one entry per module (§6.3) |
 
 ## 6.3 Per-module entry, and `module.json`
 
-Each registry entry carries `slug`, `name`, `description`, `status`, `createdAt`, `supersededBy`, and a `stages` map. **The same content is written into the module's own `module.json`**, and the rule for the duplication is the one the Active Run pointer already establishes: **`module.json` is authoritative; `modules.json`'s copy is a display cache**, refreshed whenever a stage records progress. Where they disagree, `module.json` wins. The registry exists so that listing every module's state is one file read instead of N.
+Each registry entry carries `slug`, `name`, `description`, `status`, `createdAt`, `supersededBy`, a `stages` map, and — **optionally** — a `features[]` array (§5.5.4). An entry with no `features` key has no standalone Features, which is what every pre-2026-08-17 entry means; `schemaVersion` is unchanged at 1. **The same content is written into the module's own `module.json`**, and the rule for the duplication is the one the Active Run pointer already establishes: **`module.json` is authoritative; `modules.json`'s copy is a display cache**, refreshed whenever a stage records progress. Where they disagree, `module.json` wins. The registry exists so that listing every module's state is one file read instead of N.
 
 The `stages` map holds one entry per stage that writes to this module — `context`, `discovery`, `test_design`, `automation`, `healing` — each recording:
 
@@ -212,6 +316,7 @@ This preserves `pipeline.md` §6 Rule 4 exactly: the PRD is read by Stage 1 and 
 3. **Only the Module Manager writes `modules.json`.** Stages read it, and record their own progress through the Module Manager's `recordStage()` — they never hand-edit the registry.
 4. **Activating a module and creating it are distinct steps.** Activation refuses a nonexistent module.
 5. **The registry is committed, not ignored** — which modules exist and where each stands is shared state a teammate or a later session needs, and its git history is a usable audit trail.
+6. **Every rule above applies to Features too.** A stage never invents one, only the Module Manager writes them, registering and scaffolding are distinct steps, and an unresolvable Feature pointer is an error rather than a prompt to fall back to module scope (§5.5).
 
 ## 6.6 Tooling
 

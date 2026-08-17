@@ -18,6 +18,7 @@ const path = require('path');
 
 const { MODULE_STAGES, readRegistry, resolveModule } = require('./moduleRegistry');
 const { readAutomationState } = require('./automationState');
+const { listFeatures } = require('./featureRegistry');
 
 /** Human-facing stage labels, in pipeline order. */
 const STAGE_LABELS = {
@@ -158,6 +159,9 @@ function renderModuleSummary(modulesDir, slug, opts = {}) {
   }
 
   const stages = module.stages || {};
+  // `|| []` is decision B in one line: a module registered before Features existed has no
+  // `features` key, and that reads as "none" rather than as a missing field to repair.
+  const features = listFeatures(modulesDir, slug, registry);
   const scope = extractScopeStatement(path.join(moduleDir, 'context', 'ProjectContext.md'));
   const testCases = countTestCases(moduleDir);
   const findings = countFindings(moduleDir);
@@ -205,14 +209,47 @@ function renderModuleSummary(modulesDir, slug, opts = {}) {
   }
   lines.push('');
 
-  lines.push('## Pipeline Status');
+  lines.push('## Pipeline Status — consolidated module (CRUD) scope');
   lines.push('');
+  if (features.length) {
+    // Only said when there ARE Features, because otherwise the distinction is noise: a CRUD-only
+    // module has exactly one pipeline status and calling it "the CRUD one" invites the reader to
+    // hunt for a second table that does not exist.
+    lines.push(
+      '> This table covers the **module\'s own consolidated CRUD scope only**. Each standalone '
+      + 'Feature tracks its stages independently and is listed under **Features** below — a Feature '
+      + 'reaching a stage never advances the module\'s.'
+    );
+    lines.push('');
+  }
   lines.push('| Stage | Status | Artifact | Revisions | Last updated | Last run |');
   lines.push('|---|---|---|---|---|---|');
   for (const stage of MODULE_STAGES) {
     lines.push(formatStageRow(slug, stage, stages[stage], moduleDir));
   }
   lines.push('');
+
+  // Features section — present only when the module has registered Features. A CRUD-only module
+  // shows no empty Features heading, for the same reason it gets no empty features/ folder.
+  if (features.length) {
+    lines.push('## Features');
+    lines.push('');
+    lines.push(
+      'Standalone Features under this module. Each was supplied as its own User Story and is **not** '
+      + 'part of the entity\'s CRUD package (`new_us_intake.md` §4).'
+    );
+    lines.push('');
+    lines.push(`| Feature | Status | Source US | ${MODULE_STAGES.join(' | ')} |`);
+    lines.push(`|---|---|---|${MODULE_STAGES.map(() => '---').join('|')}|`);
+    for (const f of features) {
+      const cells = MODULE_STAGES.map((s) => (f.stages?.[s]?.status || 'Not Started'));
+      lines.push(
+        `| [\`${f.slug}\`](features/${f.slug}/) | ${orDash(f.status)} | `
+        + `${orDash(f.sourceUserStory)} | ${cells.join(' | ')} |`
+      );
+    }
+    lines.push('');
+  }
 
   lines.push('## Coverage');
   lines.push('');

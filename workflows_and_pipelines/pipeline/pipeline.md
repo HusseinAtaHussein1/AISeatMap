@@ -568,6 +568,8 @@ This does not weaken §6 Rule 3 in the normal, non-Spike case — it only makes 
 
 **Why:** the same day these gates were introduced, the user drew this line explicitly: "The platform should stop interrupting the workflow for engineering decisions. Reserve questions only for real human decisions." Confirmed concretely against an anti-enumeration test-case addition and an adjacent-scope (Logout) question — both are Engineering Decisions and should never have been asked about.
 
+**Feature-vs-CRUD is a Human Decision** *(added 2026-08-17)*. When a new User Story arrives, whether it is a standalone Feature or part of a module's CRUD scope is decided by the human, not inferred from the story's title — see §5.7. It sits in the Human Decision column for the same reason a framework choice does: cheap to ask once, expensive to undo after artifacts exist under the wrong shape. This is **not** an exception to the anti-interruption rule above; it is one short question asked once at intake, before any work begins.
+
 ### 5.6 Batch Repair Approval (Stage `5H` — Self-Healing)
 
 **This gate exists because Stage `5H` is the only stage that modifies code a human already approved.** Every other stage either produces a new artifact or reads existing ones; `5H` rewrites the output of Stage `4A` after that output cleared the §5.2 gate. That asymmetry is what makes a dedicated gate necessary rather than reusing §5.2 alone.
@@ -625,6 +627,26 @@ Mechanically:
 | **Skip** | Stage `5A`'s original results stand unchanged as final. |
 
 **Repeated failure is quarantined, not repaired indefinitely.** A test that has been repaired and has failed again across a defined number of healing passes is moved to the **Quarantine Register** with its full history, rather than being repaired a third time. A test that needs perpetual healing is telling you something about the test's design or the application's stability that another patch will not fix.
+
+### 5.7 New User Story Intake Routing (pre-Stage-1 — added 2026-08-17, user-mandated)
+
+**Full rule: [`new_us_intake.md`](new_us_intake.md).** Summarized here because it is a gate, and every gate belongs in §5.
+
+**Trigger:** any supplied User Story — pasted text, a Markdown file, a work-item reference, or prose a reasonable reader would call a User Story.
+
+**Nothing is created until it is answered.** No module, no run, no Feature, no active pointer, no Project Context.
+
+| Step | |
+|---|---|
+| 1 | **Ask:** *"Is this User Story for a standalone Feature or part of a module CRUD scope?"* — options `Feature` / `CRUD`. **Never inferred from the title.** |
+| 2 | **`Feature`** → collect the story and AC · confirm the parent module · inspect existing scope · propose `modules/<module>/features/<feature>/` (creating the parent module first if absent) |
+| 2 | **`CRUD`** → ask one story or several · identify which of Add/Create · Update · Search · Approve · Reject are included · collect each story and AC · propose **one consolidated module**, no feature folder per area |
+| 3 | **Inspect existing scope** — `cli.js inspect-scope`. Overlap is a **candidate**, never a verdict; never concluded from a story number alone |
+| 4 | **Show the proposal and wait** — parent module, feature name, exact paths, overlap, run scope, and what is deliberately not being created |
+
+**Where it binds.** `CLAUDE.md` fires the conversation, but the rule does not depend on it: **`.claude/skills/project-context-skill/SKILL.md` §3.2 and Execution Rule 14** make the answered routing a precondition of Stage 1, so a **directly invoked** skill (§5.3.1) still has to comply. That is the case the harness cannot cover, and therefore the case the rule exists for.
+
+**Ambiguity is asked about, never resolved silently.** A capability supplied inside a CRUD package stays in the consolidated module however feature-shaped it sounds; a capability presented as its own Feature/User Story gets a Feature folder. The test is how it was supplied.
 
 ## 6. General Pipeline Rules
 

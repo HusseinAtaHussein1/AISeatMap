@@ -67,6 +67,28 @@ Only this story's acceptance criteria are in scope for Stage 3's test design (`.
 
 **The two branches are siblings, not a sequence.** Step 3M does not gate Step 3A: Stage `4A` takes its scope directly from the approved Stage 3 suite, never from a manual execution outcome (`pipeline.md` §3.3). This workflow invokes both because a User Story generally wants both deliverables — but either may be run alone, in either order, or concurrently, and skipping one is a branch not taken, never a gap (`pipeline.md` §6 Rule 3a).
 
+## Step 0 — New User Story Intake Routing *(added 2026-08-17, user-mandated)*
+
+**Runs before the Stage-State Check.** This workflow's §3 says the module(s) are "whatever module(s)
+the story's acceptance criteria touch — named explicitly in the story content, not assumed." Step 0 is
+how that naming actually happens; before it existed, the workflow assumed the module was already known.
+
+**Spec:** [`../pipeline/new_us_intake.md`](../pipeline/new_us_intake.md).
+
+1. **Ask:** *"Is this User Story for a standalone Feature or part of a module CRUD scope?"* — `Feature`
+   or `CRUD`. **Never inferred from the story title.**
+2. **`Feature`** → confirm the parent module; scope is `Run Scope Type: Feature` / `Run Type: User
+   Story`, and is **not** widened into the parent's CRUD scope. Target is
+   `modules/<module>/features/<feature>/`.
+   **`CRUD`** → ask one story or several; identify which of Add/Create · Update · Search · Approve ·
+   Reject are included; collect each story and its AC. Target is **one consolidated module**.
+3. **Inspect existing scope** — `cli.js inspect-scope [--user-story …] [--name …]`. Overlap is a
+   candidate for a human to judge, never a verdict, and never concluded from a story number alone.
+4. **Show the proposal and wait for confirmation** before anything is created.
+
+**Nothing in Step 1 runs until Step 0 is answered** — including run creation. A refinement created
+against the wrong scope shape is not fixed by re-running Step 1; it has to be discarded.
+
 ## Step 1 — Run Manager & Stage-State Check
 
 Before Stage 3 is invoked, the Run Manager performs the Automation Start Decision Gate check (`pipeline/pipeline.md` §5.4) — **extended here to any downstream entry point, not only Stage `4A`** — because this workflow is itself a request to begin at a stage other than Stage 1:
@@ -203,7 +225,8 @@ Per `workflows_and_pipelines/pipeline/pipeline.md` §7, this workflow **referenc
 # 9. Rules
 
 1. **This workflow never re-runs Stage 1 or Stage 2** — it consumes their existing Approved outputs unchanged. If they don't exist or aren't current, Step 1 stops and asks; it does not run them itself (that would make this workflow indistinguishable from a full pipeline run, which already exists).
-2. **The Stage-State Check (§4 Step 1) always runs first** — never assumed, never skipped, per `pipeline/pipeline.md` §5.4's existing "never choose on the human's behalf" rule.
+2. **Intake routing (Step 0) always runs first**, before the Stage-State Check and before any run is created. Feature-vs-CRUD is a Human Decision (`pipeline/pipeline.md` §5.5, §5.7) and is never inferred from the story title.
+2b. **The Stage-State Check (§4 Step 1) always runs first** — never assumed, never skipped, per `pipeline/pipeline.md` §5.4's existing "never choose on the human's behalf" rule.
 3. **All applicable checkpoints from `pipeline/pipeline.md` §5 still apply in full** — Human Review at Stage 3 and Stage `4M`, Automation Approval at Stage `4A`.
 5. **The branches never cross.** Step 3M's results never bound Step 3A's scope, and Step 3A never reads a Manual branch artifact (`pipeline/pipeline.md` §3.3). Running only one branch is a complete execution of that pipeline, not a partial run.
 4. **Scope never widens beyond this story's acceptance criteria** without an explicit, disclosed Human Decision (`pipeline/pipeline.md` §5.5) — an adjacent feature staying out of scope is documented, not silently folded in.

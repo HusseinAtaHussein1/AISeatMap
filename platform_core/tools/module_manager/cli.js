@@ -26,6 +26,22 @@
 //                                              # record the module automation project's lifecycle
 //   node .../cli.js drift [<slug>] [--json]    # per-module drift + staleness
 //
+//   # New User Story intake — standalone Features (new_us_intake.md, module_architecture.md §5.5)
+//   node .../cli.js inspect-scope [--user-story US-4222] [--name "..."] [--json]
+//                                              # the existing-scope sweep run BEFORE anything is
+//                                              # created. exit 2 = overlap candidates to ask about
+//   node .../cli.js feature list [<module>] [--json]
+//   node .../cli.js feature propose <module> --name "..." [--user-story US-1234] [--ac-ref <path>]
+//   node .../cli.js feature approve <module> [<feature>...] --by "Reviewer"
+//   node .../cli.js feature scaffold <module> <feature> [--dry-run]
+//   node .../cli.js feature show <module> <feature> [--json]
+//   node .../cli.js feature stage <module> <feature> <stage> --status <Approved|...>
+//   node .../cli.js use-feature <module> <feature>   # activate Feature scope (decision C)
+//
+// A Feature is always a CHILD of a module, never a peer — which is why every Feature verb names its
+// module. A CRUD area (Add/Update/Search/Approve/Reject for one entity) is NOT a Feature and gets no
+// feature folder; that classification is a human decision made at intake, never inferred here.
+//
 // --modules-dir overrides where modules/ is looked for (defaults to the conventional location).
 
 const fs = require('fs');
@@ -45,13 +61,32 @@ const {
 } = require('./moduleRegistry');
 const {
   ActiveModuleError,
+  ActiveFeatureError,
   setActiveModules,
   setActiveModulesToAll,
+  setActiveFeature,
+  clearActiveFeature,
   readActiveModules,
+  resolveActiveFeature,
   isActiveModuleStale,
+  isActiveFeatureStale,
   clearActiveModules,
 } = require('./activeModule');
 const { ModuleScaffoldError, scaffoldModule, planScaffold } = require('./moduleScaffold');
+const {
+  FEATURE_STAGES,
+  FeatureRegistryError,
+  approveFeatures,
+  findScopeOverlap,
+  listAllFeatures,
+  listFeatures,
+  proposeFeature,
+  recordFeatureStage,
+  resolveFeature,
+} = require('./featureRegistry');
+const {
+  FeatureScaffoldError, planFeatureScaffold, scaffoldFeature,
+} = require('./featureScaffold');
 const {
   AUTOMATION_STATES, AutomationStateError, setAutomationState, readAutomationState,
 } = require('./automationState');
@@ -62,6 +97,9 @@ const { ModuleSlugError, generateModuleSlug } = require('./moduleSlug');
 const VERBS = new Set([
   'list', 'active', 'use', 'show', 'clear',
   'propose', 'approve', 'scaffold', 'summary', 'stage', 'automation', 'drift',
+  // New User Story intake (new_us_intake.md): standalone Features and the scope sweep that runs
+  // before anything is created.
+  'feature', 'use-feature', 'inspect-scope',
 ]);
 
 /** A malformed invocation — reported like every other named error, never as a stack trace. */
@@ -86,6 +124,10 @@ const KNOWN_FLAGS = new Set([
   'all', 'artifact', 'baseline-ref', 'by', 'description', 'dry-run', 'framework', 'help',
   'json', 'modules-dir', 'name', 'no-revision', 'note', 'now', 'prd', 'run', 'scope',
   'scope-paths', 'state', 'status', 'target-ref', 'target-root',
+  // Intake flags. `--user-story` is what makes overlap detection possible later without re-reading
+  // every context document, and `--ac-ref` points at the acceptance criteria a human compares
+  // when the tool reports a candidate (intake rule #9 — never decide overlap from a story number).
+  'user-story', 'ac-ref', 'module', 'feature',
 ]);
 
 function parseArgs(argv) {
@@ -216,8 +258,13 @@ function cmdActive(args) {
   }
 
   const state = readActiveModules(modulesDir);
+  // A stale FEATURE pointer is reported, but does not make `active` fail — you must be able to LOOK
+  // at a broken pointer in order to fix it. What must fail is any stage trying to RESOLVE it, and
+  // that is resolveActiveFeature()'s job (decision C — never fall back silently).
+  const featureStale = isActiveFeatureStale(modulesDir);
+
   if (args.json) {
-    console.log(JSON.stringify(state, null, 2));
+    console.log(JSON.stringify({ ...state, featureStale }, null, 2));
     return;
   }
   if (!state.modules.length) {
@@ -226,6 +273,17 @@ function cmdActive(args) {
     return;
   }
   console.log(state.modules.join('\n'));
+  if (state.feature) {
+    console.log(`feature: ${state.feature}${featureStale ? '   ⚠ STALE — does not resolve' : ''}`);
+  }
+  if (featureStale) {
+    console.error(
+      '\nThe active Feature pointer does not resolve against the active module. '
+      + 'Re-select with `cli.js use-feature <module> <feature>`, or drop to module/CRUD scope with '
+      + '`cli.js use <module>`. A stage will refuse to run until this is corrected.'
+    );
+    process.exitCode = 1;
+  }
 }
 
 function cmdUse(args) {
@@ -250,6 +308,18 @@ function cmdUse(args) {
         }
       );
     console.log(`Active module(s): ${registry.activeModules.join(', ')}  [${registry.activeScope}]`);
+
+    // Selecting module/CRUD scope clears any Feature pointer (decision C). Saying so out loud
+    // matters: a silent clear looks identical to "there was never a Feature selected", and the
+    // human needs to know their scope just changed.
+    if (registry.clearedFeature) {
+      console.log(
+        `\nCleared active Feature \`${registry.clearedFeature}\` — this is consolidated `
+        + 'module/CRUD scope.\n'
+        + `      To work on that Feature again: cli.js use-feature ${registry.activeModules[0]} `
+        + `${registry.clearedFeature}`
+      );
+    }
 
     // A selection that happens to span the project is REPORTED, never silently upgraded to
     // full-project — that scope changes what Stage 5A executes (the assembled baseline rather than
@@ -498,6 +568,300 @@ function cmdAutomation(args) {
   }
 }
 
+/**
+ * `feature <propose|approve|scaffold|list|show|stage>` — standalone Features (new_us_intake.md).
+ *
+ * Grouped under one verb rather than spread across six top-level ones, so `cli.js --help` still
+ * reads as a module tool with a Feature sub-surface, which is what the architecture actually is: a
+ * Feature is never a peer of a module, always a child of one.
+ */
+function cmdFeature(args) {
+  const modulesDir = resolveModulesDir(args);
+  if (!modulesDir) return;
+
+  const sub = args._[1];
+  const SUBS = ['propose', 'approve', 'scaffold', 'list', 'show', 'stage'];
+  if (!sub || !SUBS.includes(sub)) {
+    console.error(`Usage: cli.js feature <${SUBS.join('|')}> [...]`);
+    process.exitCode = 1;
+    return;
+  }
+
+  const stamp = now(args);
+  const moduleSlug = args._[2];
+  const str = (v) => (v && v !== true ? String(v) : undefined);
+
+  if (sub === 'list') {
+    // No module named → every Feature everywhere. This is the sweep intake runs before proposing
+    // anything, so it has to be answerable in one call (intake rule #8).
+    const rows = moduleSlug
+      ? listFeatures(modulesDir, moduleSlug).map((f) => ({ ...f, module: moduleSlug }))
+      : listAllFeatures(modulesDir);
+    if (args.json) {
+      console.log(JSON.stringify(rows, null, 2));
+      return;
+    }
+    if (!rows.length) {
+      console.log(moduleSlug
+        ? `Module "${moduleSlug}" has no registered standalone Features (CRUD-only scope).`
+        : 'No standalone Features are registered in any module.');
+      return;
+    }
+    for (const f of rows) {
+      console.log(`  ${f.module}/${f.slug.padEnd(28)} ${String(f.status).padEnd(10)} `
+        + `${f.sourceUserStory || '—'}`);
+    }
+    return;
+  }
+
+  if (!moduleSlug) {
+    console.error(`Usage: cli.js feature ${sub} <module-slug> [...]`);
+    process.exitCode = 1;
+    return;
+  }
+
+  if (sub === 'propose') {
+    const name = str(args.name);
+    if (!name) {
+      console.error('feature propose requires --name "<Feature name>".');
+      process.exitCode = 1;
+      return;
+    }
+    const result = proposeFeature(modulesDir, moduleSlug, {
+      name,
+      description: str(args.description),
+      sourceUserStory: str(args['user-story']),
+      acceptanceCriteriaRef: str(args['ac-ref']),
+    }, { now: stamp });
+    console.log(`${result.created ? 'Proposed' : 'Updated proposal for'} feature `
+      + `${moduleSlug}/${result.feature.slug}  [${result.feature.status}]`);
+    console.log(`  path (on approval): ${featurePathFor(moduleSlug, result.feature.slug)}`);
+    console.log('  Not scaffolded — a folder on disk reads as an approved Feature.');
+    return;
+  }
+
+  if (sub === 'approve') {
+    const by = str(args.by);
+    if (!by) {
+      console.error('feature approve requires --by "<Reviewer Name>" — '
+        + 'an approval record with no approver is not an approval.');
+      process.exitCode = 1;
+      return;
+    }
+    const slugs = args._.slice(3);
+    const { approved } = approveFeatures(modulesDir, moduleSlug, slugs, { now: stamp, approvedBy: by });
+    if (!approved.length) {
+      console.log(`No Proposed Features under "${moduleSlug}" to approve.`);
+      return;
+    }
+    for (const f of approved) console.log(`Approved feature ${moduleSlug}/${f.slug}`);
+    return;
+  }
+
+  if (sub === 'scaffold') {
+    const featureSlug = args._[3] || str(args.feature);
+    if (!featureSlug) {
+      console.error(`Usage: cli.js feature scaffold ${moduleSlug} <feature-slug> [--dry-run]`);
+      process.exitCode = 1;
+      return;
+    }
+    if (args['dry-run']) {
+      const plan = planFeatureScaffold(modulesDir, moduleSlug, featureSlug);
+      console.log(`Would create under ${featurePathFor(moduleSlug, featureSlug)}:`);
+      for (const d of plan.createDirs) console.log(`  dir  ${d}`);
+      for (const f of plan.createFiles) console.log(`  file ${f}`);
+      if (plan.createsFeaturesDir) {
+        console.log(`\n  This creates the module's features/ folder for the first time.`);
+      }
+      if (!plan.createDirs.length && !plan.createFiles.length) console.log('  (nothing — already scaffolded)');
+      return;
+    }
+    const result = scaffoldFeature(modulesDir, moduleSlug, featureSlug, { now: stamp });
+    writeModuleSummary(modulesDir, moduleSlug, { now: stamp });
+    console.log(`${result.created ? 'Scaffolded' : 'Already present:'} `
+      + `${featurePathFor(moduleSlug, featureSlug)}`);
+    for (const w of result.wrote) console.log(`  ${w}`);
+    return;
+  }
+
+  if (sub === 'show') {
+    const featureSlug = args._[3] || str(args.feature);
+    if (!featureSlug) {
+      console.error(`Usage: cli.js feature show ${moduleSlug} <feature-slug>`);
+      process.exitCode = 1;
+      return;
+    }
+    const feature = resolveFeature(modulesDir, moduleSlug, featureSlug);
+    if (!feature) {
+      console.error(`No Feature "${featureSlug}" is registered under module "${moduleSlug}".`);
+      process.exitCode = 1;
+      return;
+    }
+    if (args.json) {
+      console.log(JSON.stringify(feature, null, 2));
+      return;
+    }
+    console.log(`${feature.name}  (${moduleSlug}/${feature.slug})`);
+    console.log(`Status: ${feature.status}   On disk: ${feature.onDisk ? 'yes' : 'no'}`);
+    if (feature.sourceUserStory) console.log(`Story:  ${feature.sourceUserStory}`);
+    if (feature.description) console.log(`Scope:  ${feature.description}`);
+    console.log('');
+    for (const stage of FEATURE_STAGES) {
+      const s = feature.stages?.[stage] || {};
+      console.log(`  ${stage.padEnd(14)} ${String(s.status || 'Not Started').padEnd(28)} `
+        + `${s.lastUpdated ? s.lastUpdated.slice(0, 10) : ''}`);
+    }
+    return;
+  }
+
+  // sub === 'stage' — records progress against the FEATURE, never its parent module (decision A).
+  const featureSlug = args._[3];
+  const stage = args._[4];
+  if (!featureSlug || !stage) {
+    console.error(`Usage: cli.js feature stage ${moduleSlug} <feature-slug> <stage> --status <S>`);
+    process.exitCode = 1;
+    return;
+  }
+  const status = str(args.status);
+  if (!status) {
+    console.error(`feature stage requires --status <${STAGE_STATUSES.join('|')}>.`);
+    process.exitCode = 1;
+    return;
+  }
+  const updated = recordFeatureStage(modulesDir, moduleSlug, featureSlug, stage, {
+    status,
+    artifactPath: str(args.artifact),
+    lastRun: str(args.run),
+    targetRefAtWrite: str(args['target-ref']),
+    ...(args['no-revision'] ? { incrementRevision: false } : {}),
+  }, { now: stamp });
+  writeModuleSummary(modulesDir, moduleSlug, { now: stamp });
+  console.log(`Recorded ${moduleSlug}/${featureSlug} ${stage}: ${updated.stages[stage].status}`);
+  console.log(`  (the parent module's ${stage} stage is unchanged — feature stages never roll up)`);
+}
+
+/** Repo-relative feature path, for messages. Kept here so the CLI has one renderer for it. */
+function featurePathFor(moduleSlug, featureSlug) {
+  return `platform_core_data/modules/${moduleSlug}/features/${featureSlug}`;
+}
+
+/** `use-feature <module> <feature>` — point the pipeline at a standalone Feature (decision C). */
+function cmdUseFeature(args) {
+  const modulesDir = resolveModulesDir(args);
+  if (!modulesDir) return;
+
+  const moduleSlug = args._[1];
+  const featureSlug = args._[2];
+  if (!moduleSlug || !featureSlug) {
+    console.error('Usage: cli.js use-feature <module-slug> <feature-slug>');
+    process.exitCode = 1;
+    return;
+  }
+
+  try {
+    const registry = setActiveFeature(modulesDir, moduleSlug, featureSlug, {
+      now: now(args),
+      setBy: args.by && args.by !== true ? args.by : undefined,
+      note: args.note && args.note !== true ? args.note : undefined,
+    });
+    console.log(`Active: ${registry.activeModules[0]} / feature ${registry.activeFeature}`);
+    console.log('  Stages resolve BOTH {{MODULE_SLUG}} and {{FEATURE_SLUG}} while this is set.');
+    console.log(`  To return to consolidated CRUD scope: cli.js use ${registry.activeModules[0]}`);
+  } catch (err) {
+    console.error(err.message);
+    process.exitCode = 1;
+  }
+}
+
+/**
+ * `inspect-scope` — the existing-scope sweep intake runs BEFORE proposing anything (intake §5, rule
+ * #8). Reports modules, Features, story mappings, stage states, and overlap candidates in one call.
+ *
+ * It reports CANDIDATES and never a verdict, because intake rule #9 forbids concluding overlap from
+ * a story number: the business scope and acceptance criteria have to be compared by a human. The
+ * exit code says whether there is something to ask about, not whether something is wrong.
+ */
+function cmdInspectScope(args) {
+  const modulesDir = resolveModulesDir(args);
+  if (!modulesDir) return;
+
+  const str = (v) => (v && v !== true ? String(v) : undefined);
+  const query = {
+    userStory: str(args['user-story']),
+    name: str(args.name),
+    moduleSlug: str(args.module),
+  };
+
+  const modules = listModules(modulesDir);
+  const features = listAllFeatures(modulesDir);
+  const overlap = findScopeOverlap(modulesDir, query);
+  const active = readActiveModules(modulesDir);
+
+  const report = {
+    query,
+    modules: modules.map((m) => ({
+      slug: m.slug,
+      name: m.name,
+      status: m.status,
+      onDisk: m.onDisk,
+      stages: Object.fromEntries(
+        MODULE_STAGES.map((s) => [s, m.stages?.[s]?.status || 'Not Started'])
+      ),
+      featureCount: features.filter((f) => f.module === m.slug).length,
+    })),
+    features: features.map((f) => ({
+      module: f.module,
+      slug: f.slug,
+      name: f.name,
+      status: f.status,
+      sourceUserStory: f.sourceUserStory ?? null,
+      stages: Object.fromEntries(
+        FEATURE_STAGES.map((s) => [s, f.stages?.[s]?.status || 'Not Started'])
+      ),
+    })),
+    active: { modules: active.modules, feature: active.feature, scope: active.scope },
+    overlapCandidates: {
+      modules: overlap.modules.map((m) => m.slug),
+      features: overlap.features.map((f) => `${f.module}/${f.slug}`),
+    },
+  };
+
+  if (args.json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    console.log('Registered modules');
+    for (const m of report.modules) {
+      console.log(`  ${m.slug.padEnd(28)} ${String(m.status).padEnd(10)} `
+        + `features: ${m.featureCount}`);
+    }
+    console.log('\nRegistered standalone Features');
+    if (!report.features.length) console.log('  (none)');
+    for (const f of report.features) {
+      console.log(`  ${`${f.module}/${f.slug}`.padEnd(40)} ${String(f.status).padEnd(10)} `
+        + `${f.sourceUserStory || '—'}`);
+    }
+    console.log(`\nActive: ${report.active.modules.join(', ') || '(none)'}`
+      + `${report.active.feature ? ` / feature ${report.active.feature}` : ''}`);
+
+    const hits = report.overlapCandidates.modules.length + report.overlapCandidates.features.length;
+    console.log(`\nOverlap candidates: ${hits || 'none'}`);
+    for (const m of report.overlapCandidates.modules) console.log(`  module  ${m}`);
+    for (const f of report.overlapCandidates.features) console.log(`  feature ${f}`);
+    if (hits) {
+      console.log(
+        '\nThese are CANDIDATES, not a verdict. Compare the business scope and acceptance criteria '
+        + 'before concluding anything — a matching story number is not a matching scope, and a '
+        + 'different number does not prove the scope is new. Ask the human which they want.'
+      );
+    }
+  }
+
+  // Exit 2 = "there is something to ask about", distinct from 1 = error. Lets a caller branch
+  // without parsing prose.
+  const hits = report.overlapCandidates.modules.length + report.overlapCandidates.features.length;
+  if (hits) process.exitCode = 2;
+}
+
 function cmdDrift(args) {
   const roots = resolveRoots(args);
   if (!roots) return;
@@ -576,12 +940,17 @@ function main(argv) {
     stage: cmdStage,
     automation: cmdAutomation,
     drift: cmdDrift,
+    feature: cmdFeature,
+    'use-feature': cmdUseFeature,
+    'inspect-scope': cmdInspectScope,
   };
 
   try {
     handlers[verb](args);
   } catch (err) {
     if (err instanceof ModuleRegistryError || err instanceof ActiveModuleError
+      || err instanceof ActiveFeatureError || err instanceof FeatureRegistryError
+      || err instanceof FeatureScaffoldError
       || err instanceof ModuleScaffoldError || err instanceof AutomationStateError
       || err instanceof ModuleSlugError) {
       console.error(err.message);

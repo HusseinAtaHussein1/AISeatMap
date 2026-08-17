@@ -26,11 +26,27 @@ const {
 } = require('./moduleRegistry');
 
 const { resolveModuleSlug, resolveModuleSlugStrict } = require('./moduleSlug');
+const { findFeature, listFeatures } = require('./featureRegistry');
 
 class ActiveModuleError extends Error {
   constructor(message) {
     super(message);
     this.name = 'ActiveModuleError';
+  }
+}
+
+/**
+ * Raised when the module/feature pointer pair is invalid or stale.
+ *
+ * Its own error type, deliberately: the correct response to an invalid Feature pointer is to STOP
+ * and ask, never to quietly continue at module scope. A distinct type stops a caller catching
+ * "module problems" and silently absorbing this one (decision C — "skills must never fall back
+ * silently from an invalid Feature pointer to module scope").
+ */
+class ActiveFeatureError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ActiveFeatureError';
   }
 }
 
@@ -167,7 +183,20 @@ function setActiveModules(modulesDir, identifiers, opts = {}) {
   const previous = registry.activeModules || [];
   const same = previous.length === resolved.length && previous.every((s) => resolved.includes(s));
 
+  // Decision C: selecting module/CRUD scope ALWAYS clears activeFeature, and switching modules
+  // therefore clears an incompatible one as a matter of course.
+  //
+  // Clearing unconditionally rather than "only when incompatible" is the safer of the two readings,
+  // and it is the one the rule actually asks for: `use <module>` IS the act of selecting consolidated
+  // CRUD scope. Keeping a Feature pointer alive through it would leave the next stage writing
+  // feature-scoped artifacts while the human believes they selected the module's CRUD scope — the
+  // exact silent-scope-drift this pointer exists to prevent. The cleared value is reported so the
+  // caller can say so out loud.
+  const clearedFeature = registry.activeFeature || null;
+
   registry.activeModules = resolved;
+  registry.activeFeature = null;
+  registry.previousActiveFeature = clearedFeature;
   registry.activeScope = scope || deriveActiveScope(resolved, registry);
   // Reported, never acted on: it lets the CLI say "this is every module — did you mean --all?"
   // without deciding for the human that it did.
@@ -183,7 +212,144 @@ function setActiveModules(modulesDir, identifiers, opts = {}) {
   if (note) registry.note = note; else delete registry.note;
 
   writeRegistry(modulesDir, registry);
+  // Non-enumerable so it never lands in modules.json, but available to the CLI for its message.
+  Object.defineProperty(registry, 'clearedFeature', { value: clearedFeature, enumerable: false });
   return registry;
+}
+
+/**
+ * Points the pipeline at a standalone Feature under a module — decision C's write path.
+ *
+ * Sets BOTH pointers together, because a Feature pointer that does not name its parent is not
+ * resolvable: `{{FEATURE_SLUG}}` alone cannot produce a path. The pair is the unit.
+ *
+ * @param {string} modulesDir
+ * @param {string} moduleIdentifier
+ * @param {string} featureSlug
+ * @param {{now: Date, setBy?: string, note?: string}} opts
+ * @returns {object} the updated registry
+ */
+function setActiveFeature(modulesDir, moduleIdentifier, featureSlug, opts = {}) {
+  const { now, setBy, note } = opts;
+  if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
+    throw new ActiveFeatureError('setActiveFeature requires an explicit valid `now` Date.');
+  }
+  if (!featureSlug || !String(featureSlug).trim()) {
+    throw new ActiveFeatureError('setActiveFeature requires a feature slug.');
+  }
+
+  // Resolve the module first, through the existing path, so a Proposed/Superseded/unknown parent
+  // fails with the message that already explains why.
+  setActiveModules(modulesDir, [moduleIdentifier], { now, setBy, note });
+
+  const registry = readRegistry(modulesDir);
+  const moduleSlug = (registry.activeModules || [])[0];
+  const feature = findFeature(modulesDir, moduleSlug, String(featureSlug).trim(), registry);
+
+  if (!feature) {
+    const known = listFeatures(modulesDir, moduleSlug, registry).map((f) => f.slug);
+    throw new ActiveFeatureError(
+      `No Feature "${featureSlug}" is registered under module "${moduleSlug}". ` +
+      (known.length
+        ? `Registered Features: ${known.join(', ')}.`
+        : `Module "${moduleSlug}" has no registered standalone Features — it is CRUD-only scope.`)
+    );
+  }
+  if (feature.status === 'Proposed') {
+    throw new ActiveFeatureError(
+      `Feature "${featureSlug}" is still Proposed and has not been confirmed at intake. ` +
+      'Approve it before activating — activating would bypass the confirmation gate.'
+    );
+  }
+  if (feature.status === 'Superseded') {
+    throw new ActiveFeatureError(
+      `Feature "${featureSlug}" is Superseded by "${feature.supersededBy}". Activate that one instead.`
+    );
+  }
+
+  registry.activeFeature = feature.slug;
+  registry.switchedAt = now.toISOString();
+  registry.setBy = setBy || 'Module Manager';
+  writeRegistry(modulesDir, registry);
+  return registry;
+}
+
+/**
+ * Clears the Feature pointer, leaving the module selection alone — i.e. drop to consolidated
+ * module/CRUD scope without switching modules.
+ * @param {string} modulesDir
+ * @param {{now: Date, setBy?: string}} opts
+ * @returns {object} the registry
+ */
+function clearActiveFeature(modulesDir, opts = {}) {
+  const { now, setBy } = opts;
+  if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
+    throw new ActiveFeatureError('clearActiveFeature requires an explicit valid `now` Date.');
+  }
+  const registry = readRegistry(modulesDir);
+  registry.previousActiveFeature = registry.activeFeature || null;
+  registry.activeFeature = null;
+  registry.switchedAt = now.toISOString();
+  registry.setBy = setBy || 'Module Manager';
+  writeRegistry(modulesDir, registry);
+  return registry;
+}
+
+/**
+ * THE accessor a stage calls to learn whether it is operating at Feature scope or module/CRUD scope.
+ *
+ * This function is where decision C's "never fall back silently" rule is enforced. It has exactly
+ * three outcomes, and the third is the important one:
+ *
+ *   1. `{module, feature: null}`  — consolidated module/CRUD scope. Resolve `{{MODULE_SLUG}}` only.
+ *   2. `{module, feature}`        — Feature scope. Resolve BOTH slugs.
+ *   3. THROWS                     — the pointer pair is invalid or stale. The caller stops and asks.
+ *
+ * It never returns (1) as a recovery from (3). An `activeFeature` naming a Feature that does not
+ * belong to `activeModule`, or that was removed, means the tooling no longer knows what scope the
+ * human intended — and writing module-scope artifacts on that guess is how a Feature's output ends
+ * up in its parent's folders.
+ *
+ * @param {string} modulesDir
+ * @param {{env?: object}} [opts]
+ * @returns {{module: string|null, feature: string|null, scope: 'feature'|'module'|null}}
+ */
+function resolveActiveFeature(modulesDir, opts = {}) {
+  const registry = readRegistry(modulesDir);
+  const modules = resolveActiveModules(modulesDir, opts);
+  const pointed = registry.activeFeature || null;
+
+  if (!pointed) {
+    return { module: modules[0] ?? null, feature: null, scope: modules.length ? 'module' : null };
+  }
+
+  if (!modules.length) {
+    throw new ActiveFeatureError(
+      `activeFeature is "${pointed}" but no module is active. A Feature pointer without its parent ` +
+      'module cannot be resolved to a path. Re-select the scope with ' +
+      '`cli.js use-feature <module> <feature>`, or clear it with `cli.js use <module>`.'
+    );
+  }
+  if (modules.length > 1) {
+    throw new ActiveFeatureError(
+      `activeFeature is "${pointed}" but ${modules.length} modules are active ` +
+      `(${modules.join(', ')}). A Feature belongs to exactly one module, so this pair is ` +
+      'contradictory. Re-select with `cli.js use-feature <module> <feature>`.'
+    );
+  }
+
+  const moduleSlug = modules[0];
+  const feature = findFeature(modulesDir, moduleSlug, pointed, registry);
+  if (!feature) {
+    throw new ActiveFeatureError(
+      `activeFeature is "${pointed}", which is not a registered Feature of the active module ` +
+      `"${moduleSlug}". The pointer is stale or the pair was never valid. This is NOT treated as ` +
+      'module scope — re-select with `cli.js use-feature <module> <feature>`, or drop to module ' +
+      'scope deliberately with `cli.js use ' + moduleSlug + '`.'
+    );
+  }
+
+  return { module: moduleSlug, feature: feature.slug, scope: 'feature' };
 }
 
 /**
@@ -242,9 +408,14 @@ function readActiveModules(modulesDir, opts = {}) {
     modules,
     scope: modules.length ? (registry.activeScope || deriveActiveScope(modules, registry)) : null,
     spansEveryModule: modules.length ? coversEveryModule(modules, registry) : false,
+    // Reported raw, exactly as stored. Validating the pair is resolveActiveFeature()'s job, and
+    // doing it here too would mean a plain `active` read could throw — which would make it
+    // impossible to LOOK at a broken pointer in order to fix it.
+    feature: registry.activeFeature ?? null,
     switchedAt: registry.switchedAt ?? null,
     setBy: registry.setBy ?? null,
     previousActiveModules: registry.previousActiveModules ?? [],
+    previousActiveFeature: registry.previousActiveFeature ?? null,
   };
 }
 
@@ -275,8 +446,11 @@ function clearActiveModules(modulesDir, opts = {}) {
   }
   const registry = readRegistry(modulesDir);
   registry.previousActiveModules = registry.activeModules || [];
+  registry.previousActiveFeature = registry.activeFeature || null;
   registry.activeModules = [];
   registry.activeScope = null;
+  // A Feature pointer cannot outlive its parent selection — it would be unresolvable by definition.
+  registry.activeFeature = null;
   registry.switchedAt = now.toISOString();
   registry.setBy = setBy || 'Module Manager';
   writeRegistry(modulesDir, registry);
@@ -300,16 +474,38 @@ function setActiveModulesToAll(modulesDir, opts = {}) {
   return setActiveModules(modulesDir, active, { ...opts, scope: 'full-project' });
 }
 
+/**
+ * True when the Feature pointer no longer resolves — reported distinctly from "no Feature active",
+ * because it means something changed out from under the pipeline and needs a human's correction.
+ * @param {string} modulesDir
+ * @returns {boolean}
+ */
+function isActiveFeatureStale(modulesDir) {
+  const registry = readRegistry(modulesDir);
+  if (!registry.activeFeature) return false;
+  try {
+    resolveActiveFeature(modulesDir);
+    return false;
+  } catch {
+    return true;
+  }
+}
+
 module.exports = {
   ActiveModuleError,
+  ActiveFeatureError,
   ModuleRegistryError,
   activeSlugs,
   coversEveryModule,
   deriveActiveScope,
   setActiveModules,
   setActiveModulesToAll,
+  setActiveFeature,
+  clearActiveFeature,
   resolveActiveModules,
+  resolveActiveFeature,
   readActiveModules,
   isActiveModuleStale,
+  isActiveFeatureStale,
   clearActiveModules,
 };

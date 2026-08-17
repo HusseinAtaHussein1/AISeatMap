@@ -35,6 +35,20 @@ const REGISTRY_SCHEMA_VERSION = 1;
 const MODULE_STAGES = ['context', 'discovery', 'test_design', 'automation', 'healing'];
 
 /**
+ * OPTIONAL per-module key holding standalone Features (featureRegistry.js, §5.5).
+ *
+ * Deliberately optional, and schemaVersion deliberately NOT bumped. An absent `features` key means
+ * "this module has no registered standalone Features", which is exactly what every registry written
+ * before Features existed means — so nothing migrates and every existing reader keeps working by
+ * simply never looking at a key that is not there. A schemaVersion bump would instead make every
+ * pre-existing registry unreadable until each reader was updated in lockstep, for no gain.
+ *
+ * A module's `stages` map always describes its CONSOLIDATED CRUD scope. Feature progress lives in
+ * each Feature's own `stages` map and never rolls up (decision A).
+ */
+const MODULE_OPTIONAL_KEYS = ['features'];
+
+/**
  * Artifact status vocabulary — deliberately IDENTICAL to the Run Manifest's (pipeline.md §7).
  * A parallel vocabulary would mean two answers to "is this approved?", which is the one question
  * every gate depends on.
@@ -95,6 +109,11 @@ function emptyRegistry() {
     // on: `full-project` is an explicit intent (`use --all`), because it changes what Stage 5A
     // executes. See activeModule.js's deriveActiveScope for the full reasoning.
     spansEveryModule: false,
+    // The optional standalone-Feature pointer (module_architecture.md §5.5). `null` means
+    // consolidated module/CRUD scope, which is what EVERY registry written before Features existed
+    // means — so an absent key reads correctly with no migration (decision B).
+    activeFeature: null,
+    previousActiveFeature: null,
     switchedAt: null,
     setBy: null,
     previousActiveModules: [],
@@ -556,6 +575,7 @@ module.exports = {
   MODULE_STATE_FILENAME,
   REGISTRY_SCHEMA_VERSION,
   MODULE_STAGES,
+  MODULE_OPTIONAL_KEYS,
   STAGE_STATUSES,
   MODULE_STATUSES,
   ACTIVE_SCOPES,

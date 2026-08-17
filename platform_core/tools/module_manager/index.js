@@ -6,6 +6,8 @@ module.exports = {
   ...require('./moduleRegistry'),
   ...require('./activeModule'),
   ...require('./moduleScaffold'),
+  ...require('./featureRegistry'),
+  ...require('./featureScaffold'),
   ...require('./automationState'),
   ...require('./moduleDrift'),
   ...require('./moduleSummary'),

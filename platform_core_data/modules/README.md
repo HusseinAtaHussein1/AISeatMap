@@ -48,9 +48,31 @@ modules/
     healing/                        # ── Stage 5H — created ONLY if 5H actually ran ─────
       RepairSummary.md · RepairConfidenceReport.md · BeforeAfterComparison.md
       QuarantineRegister.md · kb_promotion_proposals.md
+
+    features/                       # ── STANDALONE FEATURES — optional ────────────────
+                                    #    Created ONLY when an approved standalone Feature
+                                    #    is scaffolded. A CRUD-only module has no features/.
+      {feature}/
+        feature.json                  # this Feature's own state, including its own stages map
+        context/ · discovery/ · test_design/ · automation/ · healing/
 ```
 
-**A folder's absence is a record.** `test_design/` absent means Stage 3 has not run for that module. `healing/` absent is the normal case — Stage 5H is optional and never runs on its own. Only `context/` and `discovery/` are created when a module is scaffolded, because Stages 1 and 2 follow immediately.
+**A folder's absence is a record.** `test_design/` absent means Stage 3 has not run for that module. `healing/` absent is the normal case — Stage 5H is optional and never runs on its own. **`features/` absent means the module is CRUD-only scope**, which is the normal case too. Only `context/` and `discovery/` are created when a module is scaffolded, because Stages 1 and 2 follow immediately.
+
+## Modules and Features
+
+A **module** is a business area. A **standalone Feature** is one capability inside that area, supplied as its own User Story and **not** part of the entity's CRUD package.
+
+| Supplied as | Lands in |
+|---|---|
+| An independent Feature / User Story | `modules/<module>/features/<feature>/` |
+| Part of a CRUD package — Add/Create, Update, Search, Approve, Reject | `modules/<module>/` — **one consolidated module**, no feature folder per area |
+
+**Which one applies is asked, never inferred from the story's title** ([`new_us_intake.md`](../../workflows_and_pipelines/pipeline/new_us_intake.md)). A capability supplied inside a CRUD package stays in the module however feature-shaped it sounds.
+
+**Feature stages are independent.** A module's `stages` map describes its consolidated CRUD scope; each Feature's `stages` map describes only that Feature. Neither advances the other, and the module's `README.md` shows both separately.
+
+**Modules created before the Features layer are unchanged and are not migrated.** `features[]` is an optional registry key and `schemaVersion` stays `1`, so an absent key simply means "no standalone Features."
 
 ## Working with modules
 
@@ -65,7 +87,18 @@ node platform_core/tools/module_manager/cli.js active --json           # what is
 node platform_core/tools/module_manager/cli.js show login              # one module's full state
 node platform_core/tools/module_manager/cli.js summary login           # regenerate its README.md
 node platform_core/tools/module_manager/cli.js drift [login] [--json]  # has the code moved since we designed it?
+
+# standalone Features, and the scope sweep intake runs before creating anything
+node platform_core/tools/module_manager/cli.js inspect-scope --user-story US-1234 --json
+node platform_core/tools/module_manager/cli.js feature list [login] [--json]
+node platform_core/tools/module_manager/cli.js feature propose  login --name "Bulk Export" --user-story US-1234
+node platform_core/tools/module_manager/cli.js feature approve  login --by "Reviewer"
+node platform_core/tools/module_manager/cli.js feature scaffold login bulk-export [--dry-run]
+node platform_core/tools/module_manager/cli.js feature stage    login bulk-export context --status Approved
+node platform_core/tools/module_manager/cli.js use-feature login bulk-export   # Feature scope
 ```
+
+`activeFeature` is nullable and sits alongside `activeModules[]`: `null` means consolidated module/CRUD scope, a set value means that standalone Feature. **`use <module>` clears it** — selecting module scope is an explicit choice, and the clear is reported rather than silent. **An invalid or stale Feature pointer is an error that asks for correction, never a quiet fall back to module scope.**
 
 `activeScope` records what an activation *means* — `single`, `multi`, or `full-project` — so a stage can tell "just Login" from "all five, of which Login happens to be first."
 

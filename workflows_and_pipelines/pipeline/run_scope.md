@@ -38,13 +38,32 @@ A Run Scope is always exactly one of the following Types:
 |---|---|---|
 | **Entire Project** | No narrowing — the run validates against the full approved Project Knowledge scope. | `full-project` — every approved module |
 | **Epic** | The run validates everything under a named Epic (a grouping of Features/User Stories). | `multi` — the modules the Epic spans |
-| **Feature** | The run validates a single Feature and its constituent behavior. | `single` or `multi`, depending on whether the Feature crosses a module boundary |
+| **Feature** | The run validates a single Feature and its constituent behavior. | `single` — and, when the Feature is registered as a **standalone Feature**, it further resolves to `modules/{module}/features/{feature}/` with its own `activeFeature` pointer ([`module_architecture.md`](module_architecture.md) §5.5). May be `multi` where a Feature genuinely crosses a module boundary |
 | **User Story** | The run validates a single User Story's acceptance criteria. | `single` — usually one module |
 | **Bug** | The run validates a specific reported defect — reproduction, and (once fixed) regression confirmation. | `single` — the module the defect is in |
 | **Requirement Document** | The run validates whatever a specific supplied document defines — broader than one story, not necessarily the whole project (e.g., a short spec for a small change). | `single` or `multi`, per the document |
 | **Custom Scope** | Any scope that doesn't cleanly fit the above — described directly in the run configuration rather than pointing at a tracked work item. | Any of the three — stated explicitly in the run configuration |
 
 The third column is a **typical** mapping, not a rule. A Bug that turns out to span two modules is a `multi` run, and saying so is more useful than forcing it into `single` to match a table.
+
+## 3.1 Feature vs. User Story — resolved by asking, never by inference
+
+*(Added 2026-08-17. Full rule: [`new_us_intake.md`](new_us_intake.md).)*
+
+`Feature` and `User Story` are both Types above, and a supplied story can legitimately be either. **The
+choice is a routing question put to the human before any scope is recorded**, never read off the story's
+title:
+
+> Is this User Story for a standalone Feature or part of a module CRUD scope?
+
+| Answer | Run Scope Type | Run Type | Resolves to |
+|---|---|---|---|
+| **`Feature`** | `Feature` | `User Story` | `modules/{module}/features/{feature}/` — the Feature defines the scope, never widened into its parent's CRUD scope |
+| **`CRUD`** | `User Story` | `User Story` | `modules/{module}/` — **one consolidated module** covering every supplied CRUD area, with traceability to each individual story |
+
+A CRUD area (Add/Create, Update, Search, Approve, Reject for one entity) is **not** a Feature and gets
+no feature folder, however feature-shaped the capability sounds. This mirrors §2's existing rule that
+the Type→module mapping is a human decision at Stage 1's gate and never an inference.
 
 # 4. Run Scope Sources
 

@@ -14,6 +14,16 @@ folder — a full-project or multi-module invocation produces several of these, 
 document. There is no project-wide Project Context; the union of these files IS the project context
 (pipeline.md §4, Stage 1).
 
+FEATURE SCOPE. The SAME template renders a standalone Feature's context, to
+modules/{{MODULE_SLUG}}/features/{{FEATURE_SLUG}}/context/ProjectContext.md — a Feature context is a
+Project Context with a narrower scope, not a different document, and a second template would drift
+from this one. Fill the two optional Feature rows below when rendering at Feature scope and OMIT them
+entirely at module/CRUD scope. Which scope applies is decided at intake, never inferred
+(new_us_intake.md; module_architecture.md §5.5).
+
+AT CRUD SCOPE, ONE FILE COVERS EVERY SUPPLIED CRUD AREA — Add/Create, Update, Search, Approve, Reject
+for the entity — with §7 tracing each area back to its own User Story. Never one context per area.
+
 DURABLE, EDITED IN PLACE. This file belongs to its MODULE, not to the run that first wrote it. A
 later run refining this module's context re-opens THIS file and edits it; it never writes a second
 copy anywhere (pipeline.md §7). `revisionCount` below is the in-place-edit equivalent of a version.
@@ -24,6 +34,8 @@ copy anywhere (pipeline.md §7). `revisionCount` below is the in-place-edit equi
 | Field | Value |
 |---|---|
 | Module | `{{MODULE_SLUG}}` |
+| Feature | `{{FEATURE_SLUG}}` <!-- OPTIONAL — Feature scope only. OMIT this row at module/CRUD scope; an empty row reads as "there is a Feature and nobody named it" --> |
+| Source User Story | {{SOURCE_USER_STORY}} <!-- OPTIONAL — Feature scope only. The story this Feature was created from; matches `sourceUserStory` in the registry --> |
 | PRD Source | `platform_core_data/knowledge_base/PRD.md` |
 | PRD sections this module derives from | {{PRD_SECTIONS}} <!-- the decomposition's own traceability (pipeline.md §8) --> |
 | Run Scope Type | {{RUN_SCOPE_TYPE}} <!-- Entire Project / Epic / Feature / User Story / Bug — run_scope.md §3 --> |

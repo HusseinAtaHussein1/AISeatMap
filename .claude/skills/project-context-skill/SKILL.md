@@ -83,6 +83,45 @@ The pipeline works in terms of **modules** — coherent areas of the application
 
 **Report a decomposition gap; do not act on it.** If the PRD's structure genuinely resists decomposition — overlapping areas, or one area large enough that a reviewer would likely want it split — say so in the proposal, with the options, and let the reviewer decide. Guessing at a boundary that later has to be undone is more expensive than asking.
 
+## 3.2 New User Story intake routing — a precondition of §3.1
+
+**A newly supplied User Story is routed before this stage proposes anything.** The full rule is
+[`new_us_intake.md`](../../../workflows_and_pipelines/pipeline/new_us_intake.md); this section states
+what it means *for this stage*, and it is binding here rather than in any prompt file.
+
+Two answers must exist before §3.1's proposal is made, before a run is created, and before a single
+Project Context is written:
+
+1. **Feature or CRUD** — *"Is this User Story for a standalone Feature or part of a module CRUD
+   scope?"* Never inferred from the story title.
+2. **Does the scope already exist** — the sweep at
+   `cli.js inspect-scope [--user-story …] [--name …]`, whose result is reported to the human.
+
+Then the proposed structure is shown (parent module, feature name, exact paths, overlap, run scope)
+and **confirmed** before anything is created.
+
+| Route | This stage writes |
+|---|---|
+| **`Feature`** | `modules/{{MODULE_SLUG}}/features/{{FEATURE_SLUG}}/context/ProjectContext.md`, scoped to that Feature only. Run Scope Type `Feature`, Run Type `User Story`. The parent module is created first when it does not exist — a separate approval, never a side effect. |
+| **`CRUD`** | `modules/{{MODULE_SLUG}}/context/ProjectContext.md`, **one consolidated context accounting for every supplied CRUD area**, with traceability to each individual User Story. **No feature folder per CRUD area.** |
+
+**Why this stage and not only the harness.** A skill can be invoked directly at any time
+(`pipeline.md` §5.3.1), which means the intake conversation can be bypassed entirely. If the rule
+lived only in `CLAUDE.md` it would be advice that a direct invocation silently skips — so the
+precondition is Execution Rule 14 below, and it is checked here.
+
+**What this stage must not do:**
+
+- **Never classify Feature-vs-CRUD itself.** It is a Human Decision under `pipeline.md` §5.5, of the
+  same kind as a framework choice: cheap to ask, expensive to undo.
+- **Never widen a `Feature` scope into its parent module's CRUD scope.** The Feature defines the scope.
+- **Never create a feature folder for a CRUD area** — Add/Create, Update, Search, Approve and Reject
+  for one entity are one consolidated module, however feature-shaped the capability sounds.
+- **Never conclude scope overlap from a User Story number.** The same number can describe changed
+  scope; a different number can describe the same scope. Compare the business scope and Acceptance
+  Criteria, and let the human decide.
+- **Never migrate an existing module** to the Features layout. Modules created before it are valid.
+
 # 4. Inputs
 
 | Input | Required? | Description |
@@ -136,6 +175,7 @@ There is no `PROJECT_NAME` key: the platform tests one Target Project at a time,
 11. **Must record its progress through the Module Manager**, never by hand-editing `modules.json`: `cli.js` records the stage's status, artifact path, revision count, and the run that produced it (`module_architecture.md` §6.5 Rule 3).
 12. **Must not scaffold a module that has not been approved.** A `Proposed` module has no folder, and creating one would assert an approval no human gave.
 13. **Must run the Simple English Communication Standard check on the Project Context before treating it as finished** (`workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 10): short, direct sentences; any hard word replaced with an easier one where meaning stays the same; every necessary technical term briefly explained; confirmed PRD statements kept visibly separate from carried-forward assumptions; and a first-read check for whether a Business Analyst or Product Owner, not just this skill, would understand it. Requirement IDs, module names, and PRD section references are never altered by this check.
+14. **Must not propose a module, scaffold a Feature, create a run, activate a pointer, or write a Project Context for a newly supplied User Story until intake routing is answered and the proposed structure is confirmed** (§3.2, [`new_us_intake.md`](../../../workflows_and_pipelines/pipeline/new_us_intake.md)). The two answers required are *Feature or CRUD* and *does the scope already exist*. **This rule binds a direct invocation exactly as it binds an orchestrated one** — a skill called straight from the command line is the case the harness cannot cover, and therefore the case this rule exists for. An invocation that arrives with a story and no routing answer **asks**; it does not proceed on the most likely reading.
 
 # 8. Expected Artifacts
 
@@ -276,6 +316,33 @@ node platform_core/tools/module_manager/cli.js show <slug>     # one module's fu
 
 - **Never hand-format, guess, or infer a module slug.** Resolve it from the pointer. A slug written by
   hand is a folder that may not exist, and a stage writing into it creates a module nothing can find.
+
+**Feature scope — resolving `{{FEATURE_SLUG}}`.** A module may hold standalone **Features** at
+`modules/{module}/features/{feature}/`, each with its own independent stage tracking
+([`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §5.5,
+[`new_us_intake.md`](../../../workflows_and_pipelines/pipeline/new_us_intake.md)). Resolve the pair,
+never one half of it:
+
+```bash
+node platform_core/tools/module_manager/cli.js active --json     # -> activeModules[] + activeFeature
+node platform_core/tools/module_manager/cli.js feature list [<module>]
+```
+
+| `activeFeature` | Scope | This stage resolves |
+|---|---|---|
+| `null` | consolidated module / CRUD | `{{MODULE_SLUG}}` only — and confirms the Feature pointer really is null |
+| set | that standalone Feature | **both** `{{MODULE_SLUG}}` and `{{FEATURE_SLUG}}`; artifacts go under `modules/{module}/features/{feature}/` |
+
+- **An invalid or stale Feature pointer is an error, not a fallback.** A Feature naming a module it
+  does not belong to, or one that no longer exists, means the tooling no longer knows what scope the
+  human intended. **Stop and ask for correction** — never quietly continue at module scope, which
+  would write Feature output into its parent's folders.
+- **Feature artifacts stay inside the Feature boundary; module CRUD artifacts stay inside the parent
+  module.** Neither writes into the other.
+- **A Feature stage never advances the parent module's stage**, and the reverse holds too. Record
+  Feature progress with `cli.js feature stage <module> <feature> <stage>`, module progress with
+  `cli.js stage <module> <stage>`.
+- **A module with no `features/` folder is normal**, not incomplete: it is CRUD-only scope.
 - **No active module → ask, never assume.** Stop and ask which module to work in, listing what exists.
   Never fall back to "the only module," "the newest," or the first alphabetically.
 - **A pointer naming a module folder that does not exist → report it and stop.** A stale pointer means

@@ -149,6 +149,24 @@ Three prohibitions define this stage's boundary:
 
 **The decision is read from the Markdown suite, which is authoritative** — not from the workbook. A reviewer who marked their decisions in the `.xlsx` must first move them into the Markdown with `cli.js --import-lifecycle` (`tools/test_suite_export/README.md`); until that runs, the workbook holds decisions the Markdown does not, and the next export would discard them. This stage never edits either file (§12 #8) — a scope that looks wrong is reported, not corrected here.
 
+
+## 4.1 The Application Context — this stage closes its cycle
+
+*(Added 2026-08-18, user-mandated.)*
+
+`platform_core_data/modules/ApplicationContext.md` is refreshed to `Draft` by Stage 1 when a run begins, and appended to by any stage that **proves** a cross-module dependency, records a new cross-module rule, or changes an end-to-end journey's coverage ([`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §6.7).
+
+**This stage is the branch's terminal stage, so it is where that cycle closes.** Before this stage reports itself complete it must:
+
+1. **Append what this run changed about the relationships between modules** — a dependency proven rather than assumed, an E2E journey whose coverage moved, a cross-module rule now recorded in `knowledge/INDEX.md`. Nothing that belongs to one module goes in; that is its governing rule.
+2. **Present the diff for approval** — what changed since the last `Approved` revision, and what did not.
+3. **Set its status to `Pending Review`.**
+
+**This stage never sets it to `Approved`.** That is a human's decision, exactly like every other gate (`pipeline.md` §5). Until a human approves it, the file is not final — and the next run reopens it as `Draft` regardless.
+
+**If nothing cross-module changed, say so and leave it alone.** A run that taught the application map nothing is a normal outcome; an edit invented to look productive is worse than no edit, because the next reader cannot tell which lines were learned and which were filler.
+
+
 # 5. Precondition Validation
 
 Before executing a test case's Steps, this skill confirms its stated Preconditions (§6 of `.claude/skills/test-design-skill/SKILL.md` — login state, data state, role) actually hold in the target environment:

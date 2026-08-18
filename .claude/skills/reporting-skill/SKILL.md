@@ -75,6 +75,24 @@ The Reporting skill is the final stage of the pipeline. It synthesizes the raw E
 | Traceability Matrix | Required | Required | `platform_core_data/modules/{{MODULE_SLUG}}/test_design/TraceabilityMatrix.md` |
 | Project Context | Required | Required | `platform_core_data/modules/{{MODULE_SLUG}}/context/ProjectContext.md` |
 
+
+## 4.1 The Application Context — this stage closes its cycle
+
+*(Added 2026-08-18, user-mandated.)*
+
+`platform_core_data/modules/ApplicationContext.md` is refreshed to `Draft` by Stage 1 when a run begins, and appended to by any stage that **proves** a cross-module dependency, records a new cross-module rule, or changes an end-to-end journey's coverage ([`module_architecture.md`](../../../workflows_and_pipelines/pipeline/module_architecture.md) §6.7).
+
+**This stage is the branch's terminal stage, so it is where that cycle closes.** Before this stage reports itself complete it must:
+
+1. **Append what this run changed about the relationships between modules** — a dependency proven rather than assumed, an E2E journey whose coverage moved, a cross-module rule now recorded in `knowledge/INDEX.md`. Nothing that belongs to one module goes in; that is its governing rule.
+2. **Present the diff for approval** — what changed since the last `Approved` revision, and what did not.
+3. **Set its status to `Pending Review`.**
+
+**This stage never sets it to `Approved`.** That is a human's decision, exactly like every other gate (`pipeline.md` §5). Until a human approves it, the file is not final — and the next run reopens it as `Draft` regardless.
+
+**If nothing cross-module changed, say so and leave it alone.** A run that taught the application map nothing is a normal outcome; an edit invented to look productive is worse than no edit, because the next reader cannot tell which lines were learned and which were filler.
+
+
 # 5. Outputs
 
 **Final QA Report** — the stakeholder-facing synthesis of the entire pipeline run: what was tested, what passed/failed, how much of the Project Context is covered, how much of the manual suite is automated, what remains unverified, and what should happen next.

@@ -51,7 +51,7 @@ This document defines *where artifacts live* and *how modules are tracked*. It e
 | Folder | Lifetime | Holds | Mutability |
 |---|---|---|---|
 | `knowledge_base/` | Durable, shared across every run and module | Human-authored inputs (PRD, run configuration, architecture), detected stack, browser/credential assets, accumulated cross-run knowledge, promoted `patterns/` | Edited in place by humans; `stack.md` by Stage 4A |
-| **`modules/`** | **Durable, per module, evolves across runs** | **Per-module Context, Discovery, Test Design, Automation, and Healing output — one subfolder per module** | **Edited in place by the owning stage; every edit is git history** |
+| **`modules/`** | **Durable, per module, evolves across runs** | **Per-module Context, Discovery, Test Design, Automation, and Healing output — one subfolder per module — plus `ApplicationContext.md`, the cross-module relationship map (§6.7)** | **Edited in place by the owning stage; every edit is git history** |
 | `runs/` | Per run, **immutable once written** | Manual Execution results and Automation Execution results, plus each run's metadata, manifest, and evidence | Written once by the executing stage |
 | `automation_baseline/` | Long-lived source code | The whole-project Automation Package under the §12 three-way-merge lifecycle | Written only by the Workspace Merge |
 
@@ -308,6 +308,59 @@ The `stages` map holds one entry per stage that writes to this module — `conte
 5. **Only Stage 1 may propose a module.** No other stage creates one. A Stage 2 or Stage 3 discovery that a module should be split reports it as a gap for the next Stage 1 pass — it does not act.
 
 This preserves `pipeline.md` §6 Rule 4 exactly: the PRD is read by Stage 1 and no one else, and the module decomposition — being derived from the PRD — is therefore Stage 1's output and nobody else's.
+
+## 6.7 `ApplicationContext.md` — the module layer's own context
+
+*(Added 2026-08-18, user-mandated.)*
+
+`modules/ApplicationContext.md` sits beside `modules.json` and holds **what no single module can hold**:
+the dependency graph between modules, the cross-module business rules index, the end-to-end journeys,
+the fixture build order, and the application-wide environment and safety posture.
+
+**It is not the "project-wide Project Context" that `project-context-skill` §5 rejected, and the
+distinction is the whole reason it is allowed to exist.** That objection was to a document which
+*summarises* the per-module contexts — it would disagree with them at the first edit, and nothing would
+say which is authoritative. This file summarises nothing. It is governed by one rule:
+
+> **If a statement belongs to one module, it belongs in that module's context.**
+> This file may only state what is true of **two or more modules at once**.
+
+The test for a violation is mechanical: *if a paragraph could move into a single module's context
+without losing meaning, it was never application-level.*
+
+### 6.7.1 Lifecycle — refreshed at run start, final only after the last stage
+
+Unlike a module's Project Context, this file is **not** approved once and then edited freely. It carries
+a status that moves with the run:
+
+| Moment | Status | Who acts |
+|---|---|---|
+| A run is created | `Draft — refreshed for {run}` | **Stage 1** re-reads the module registry and refreshes §1 (module map), §2 (dependency graph) and §6 (posture) against reality, then records what it changed |
+| Through Stages 2 … 5 | `Draft` | Any stage that **proves** a cross-module dependency, adds a cross-module rule, or changes an E2E journey's coverage appends to it. A stage never marks it final |
+| After the branch's **terminal stage** — `6A` Reporting (Automation) or `4M` Manual Execution (Manual) | `Pending Review` | The terminal stage presents the diff of what this run changed |
+| A human approves | `Approved — {run}` | Only then is it final for that cycle. The next run reopens it as `Draft` |
+
+**Why the approval sits at the end and not at Stage 1.** What a run learns about the relationships
+*between* modules is mostly discovered while it executes — run-004's Branch → Agency supplier cascade
+was proven at Stage 2 and again after a live Branch change, not written at Stage 1. Approving this file
+before the run has run would approve last week's understanding.
+
+**A stage never silently marks it `Approved`.** The status is a human's, exactly like every other gate
+in `pipeline.md` §5.
+
+### 6.7.2 Rules
+
+1. **Never copy a module's scope, acceptance criteria, findings, or dispositions into it.** Link by path.
+2. **Never restate a cross-module rule's full text** — cite its ID from `knowledge/INDEX.md` and record
+   only which modules it binds.
+3. **Never record a metric, count, or percentage.** A derived number drifts the moment its source moves.
+4. **A module's own revision does not oblige an edit here.** Only a change in the *relationship* between
+   modules reaches this file. That asymmetry is what stops it growing into a second copy of everything.
+5. **Status lives in the document's own header, and nowhere else.** No sidecar JSON and no registry field
+   were added for it, deliberately: a second home for the status is a second thing to keep in sync, and
+   nothing yet reads it programmatically. When a tool needs it, that tool brings its own record.
+6. **It is committed, like the registry beside it** — the relationship map is shared state a teammate or
+   a later session needs.
 
 ## 6.5 Rules
 

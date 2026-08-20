@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Generic supplier credentials (PCC) *",
+    "value": "ewr",
+    "readOnly": true,
+    "disabled": false
+  },
+  {
+    "label": "Generic supplier credentials (PCC) *",
+    "value": "sa",
+    "readOnly": false,
+    "disabled": false
+  }
+]

@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '10 out of 18' test cases in the current suite                                       
+                  Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc037_paymentOptionRequiredWhenNoneSelected'                  
+                            Test Description: 'TC-AGENCY-037 Payment option blocks submission when none is selected'                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

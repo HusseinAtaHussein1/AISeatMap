@@ -1,0 +1,85 @@
+{
+  "rows": [
+    [
+      "Code",
+      "Agency Name",
+      "Country Name",
+      "City",
+      "Status",
+      "Approval Status",
+      "Branch Name",
+      "Actions"
+    ],
+    [
+      "AGN9767",
+      "Uplift1_Ahmed Mohamed AbdelDaiem",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "Uplif1_Ahmed Mohamed AbdelDaiem",
+      ""
+    ],
+    [
+      "AGN10243",
+      "Jeanett",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "Leif",
+      ""
+    ],
+    [
+      "AGN9776",
+      "NDC2_Hashem Hesham",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC2_Hashem Hesham",
+      ""
+    ],
+    [
+      "AGN10242",
+      "Tim",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "Emeline",
+      ""
+    ],
+    [
+      "AGN10241",
+      "Jenette_0c3f1e",
+      "Egypt",
+      "Badrashin",
+      "Active",
+      "Approved",
+      "Roland_0fc9d7",
+      ""
+    ],
+    [
+      "AGN2",
+      "Test Egypt",
+      "Egypt",
+      "Cairo",
+      "Active",
+      "Approved",
+      "Test",
+      ""
+    ],
+    [
+      "AGN10240",
+      "Cathie_10b4fa",
+      "Egypt",
+      "Badrashin",
+      "Active",
+      "Approved",
+      "Lavonne_439b90",
+      ""
+    ]
+  ],
+  "totalText": []
+}

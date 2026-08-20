@@ -1,0 +1,179 @@
+{
+  "perTab": {
+    "Amadeus": {
+      "activeTab": "Admin",
+      "fields": [
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "p-multiselect",
+          "value": "All (4 selected)",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "test mg",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "aa",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "p-multiselect",
+          "value": "SabreStaging, sabrelivee",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "nagy",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "ewr",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "sa",
+          "readOnly": false,
+          "disabled": false
+        }
+      ],
+      "panelText": "Airline Supplier credential (PCC) Amadeus Sabre NDCGal Generic supplier credentials (PCC) * All (4 selected) Manager Name * Supplier Credentials Description *"
+    },
+    "Sabre": {
+      "activeTab": "Admin",
+      "fields": [
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "p-multiselect",
+          "value": "All (4 selected)",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "test mg",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "aa",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "p-multiselect",
+          "value": "SabreStaging, sabrelivee",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "nagy",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "ewr",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "sa",
+          "readOnly": false,
+          "disabled": false
+        }
+      ],
+      "panelText": "Airline Supplier credential (PCC) Amadeus Sabre NDCGal Generic supplier credentials (PCC) * SabreStaging, sabrelivee Manager Name * Supplier Credentials Description *"
+    },
+    "NDCGal": {
+      "activeTab": "Admin",
+      "fields": [
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "p-multiselect",
+          "value": "All (4 selected)",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "test mg",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "aa",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "p-multiselect",
+          "value": "SabreStaging, sabrelivee",
+          "readOnly": false,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "nagy",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "ewr",
+          "readOnly": true,
+          "disabled": false
+        },
+        {
+          "label": "Generic supplier credentials (PCC) *",
+          "tag": "input",
+          "value": "sa",
+          "readOnly": false,
+          "disabled": false
+        }
+      ],
+      "panelText": "Airline Supplier credential (PCC) Amadeus Sabre NDCGal Generic supplier credentials (PCC) * All (4 selected) Manager Name * Supplier Credentials Description *"
+    }
+  },
+  "global": {
+    "hasSearchPcc": false,
+    "hasTicketingPcc": false,
+    "hasAmadeusFilter": false,
+    "blueCommand": "Blue Command Screen",
+    "blueDisabled": null
+  },
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search"
+  ]
+}

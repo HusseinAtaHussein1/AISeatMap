@@ -1,0 +1,108 @@
+{
+ "verifiedAt": "2026-08-18T13:32:48.885Z",
+ "codeStateAnchor": "STG live build as of 2026-08-18",
+ "scanned": [
+  {
+   "idx": 0,
+   "code": "AGN10247",
+   "name": "Jewell",
+   "branch": "Brittany",
+   "url": "http://192.168.1.70/admin/agency/edit/12083",
+   "ready": true,
+   "supplierRows": 1,
+   "hasPcc": false
+  },
+  {
+   "idx": 1,
+   "code": "AGN10246",
+   "name": "Nannette",
+   "branch": "Kenneth",
+   "url": "http://192.168.1.70/admin/agency/edit/12081",
+   "ready": true,
+   "supplierRows": 1,
+   "hasPcc": false
+  },
+  {
+   "idx": 2,
+   "code": "AGN10245",
+   "name": "Michael",
+   "branch": "Clarine",
+   "url": "http://192.168.1.70/admin/agency/edit/12079",
+   "ready": true,
+   "supplierRows": 1,
+   "hasPcc": false
+  },
+  {
+   "idx": 3,
+   "code": "AGN10244",
+   "name": "Nieves",
+   "branch": "Kaycee",
+   "url": "http://192.168.1.70/admin/agency/edit/12077",
+   "ready": true,
+   "supplierRows": 1,
+   "hasPcc": false
+  },
+  {
+   "idx": 4,
+   "code": "AGN9767",
+   "name": "Uplift1_Ahmed Mohamed AbdelDaiem",
+   "branch": "Uplif1_Ahmed Mohamed AbdelDaiem",
+   "url": "http://192.168.1.70/admin/agency/edit/10936",
+   "ready": true,
+   "supplierRows": 1,
+   "hasPcc": true
+  }
+ ],
+ "pcc": {
+  "onRecord": {
+   "idx": 4,
+   "code": "AGN9767",
+   "name": "Uplift1_Ahmed Mohamed AbdelDaiem",
+   "branch": "Uplif1_Ahmed Mohamed AbdelDaiem",
+   "url": "http://192.168.1.70/admin/agency/edit/10936",
+   "ready": true,
+   "supplierRows": 1,
+   "hasPcc": true
+  },
+  "locators": {
+   "genericSupplierPcc": {
+    "resolved": "unique",
+    "strategy": "[id=\"id-Genericsuppliercredentials(PCC)\"]",
+    "visible": false,
+    "readOnly": true,
+    "disabledAttr": false,
+    "value": ""
+   },
+   "genericSupplierPccAncestor": {
+    "resolved": "unique",
+    "strategy": "[id=\"id-Genericsuppliercredentials(PCC)\"] >> xpath=ancestor::div[contains(@class,\"p-multiselect\")][1]",
+    "visible": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "value": null
+   },
+   "managerName": {
+    "resolved": "unique",
+    "strategy": "#id-ManagerName",
+    "visible": true,
+    "readOnly": true,
+    "disabledAttr": false,
+    "value": "test"
+   },
+   "supplierCredDesc": {
+    "resolved": "unique",
+    "strategy": "#id-SupplierCredentialsDescription",
+    "visible": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "value": "desc"
+   },
+   "pccTabs": {
+    "resolved": "none",
+    "strategy": "div[class*=\"p-tabview\"] li[role=\"tab\"]",
+    "count": 0
+   }
+  },
+  "tabLabels": []
+ }
+}

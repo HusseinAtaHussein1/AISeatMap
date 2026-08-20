@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '5 out of 18' test cases in the current suite                                        
+                        Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc012_agencyOwnerDetailsPersist'                        
+                                   Test Description: 'TC-AGENCY-012 Update Agency Owner Details successfully'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

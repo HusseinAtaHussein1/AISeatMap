@@ -1,5 +1,89 @@
 # Coverage Summary — `agency`
 
+## run-004 — 2026-08-18 (current)
+
+| Field | Value |
+|---|---|
+| Produced by run | `run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency` |
+| In-scope surface (Project Context revision 3 §2) | US-4222's ten AC groups plus its four Expected Outcome actions, on the Admin → Agency update flow. Agency search and Create Agency are in scope **as means only** |
+| Discovery Mode for every entry below | Browser automation — **Browser Driver**, headed |
+| Generated | 2026-08-18 |
+
+### Coverage percentage
+
+**100%** — basis: **4/4** in-scope screens visited (dashboard/login check, Agency list, Agency update form, Agency create form).
+
+### Visited screens
+
+| Screen | Route | Discovery Mode | What was done |
+|---|---|---|---|
+| Login → dashboard | `/dashboard` | Browser Driver, headed | Credentials re-verified — the open item in Project Context §4 |
+| Agency list | `/admin/agency` | Browser Driver, headed | Grid columns and first rows read; used to reach the record |
+| **Agency update form** | `/admin/agency/edit/949` | Browser Driver, headed | Full structural read, pre-fill polling, validation and max-length probes, Cancel check, PCC dependency probe, annotated evidence |
+| Agency create form | `/admin/agency/add` | Browser Driver, headed | Empty-submit validation capture only |
+| Branch `BRN287` (`NDC1_Ahmed Ayman`) | `/admin/branch/edit/BRN287` | Browser Driver, headed | **Read-only, plus in-form probes discarded without saving.** Visited to answer AC-9's inheritance question, not to assess the `branch` module |
+| Agency `AGN9799` (`NDC1_Ahmed Ayman`) | `/admin/agency/edit/11006` | Browser Driver, headed | Read-only observation of the supplier cascade before and after the human's approved Branch change |
+| Supplier master | `/master/supplier/supplier/edit/119` | Browser Driver, headed | **Targeted corroboration read only** — to locate the source of `Manager Name`. The `master-supplier` module was not assessed and stays out of scope |
+
+### Visited components
+
+PrimeNG dropdown · PrimeNG multiselect · PrimeNG calendar · repeatable-row `Add` pattern · phone control with country selector · checkbox group · in-cell editable table. Each noted once, not once per occurrence.
+
+### Per-criterion depth
+
+| AC group | Section present? | Discovery outcome this run |
+|---|---|---|
+| AC-1 Agency Master | yes | Every field inventoried with type, required, read-only and max length. `Country` read-only confirmed; **Branch confirmed non-editable** (`PO-10`); `Fax No` extra; `Company URL` accepts non-URLs (FINDING-010) |
+| AC-2 Agency Owner Details | yes | Three fields, all mandatory. Email format message captured verbatim |
+| AC-3 Upload Document | yes | Still no `accept` restriction; existing `.png` persists on load (`PO-7`). **Upload / replace / remove not executed** |
+| AC-4 Agency Logo | yes | `accept="image/*"`; stored logo renders as a preview (`PO-7`). **2 MB limit not executed** |
+| AC-5 Sales Contact | yes | `Designation` still absent. **Multi-row `Add` not executed** |
+| AC-6 Bank Account Details | yes | Three optional fields, all empty on this record |
+| AC-7 Payment Settings | yes | All eleven fields plus `Outstanding Threshold *` inventoried; 29 payment options (FINDING-011); max-length caps measured by real keystrokes |
+| AC-8 Product Access Details | yes | **Table layout confirmed exactly as `PO-8` describes**, with its five columns and one supplier row |
+| AC-9 Airline Supplier Credential (PCC) | **yes** | Fully observed after the 2026-08-18 experiment: one tab per supplier inherited from the parent Branch, each with three controls. The story's "filters" are the tabs. `Search Supplier Credential PCC` and `Ticketing Supplier Credentials PCC` confirmed absent across five tabs on two Branches and two Agencies (FINDING-008) |
+| AC-10 Import PNR toggle | yes | Present and ticked. **Downstream effect not executed** — that is `import-pnr`'s module and needs a booking-side action |
+| Expected Outcome — Cancel | yes | **Executed and verified** — discards without persisting (`PO-6`) |
+| Expected Outcome — Submit for Approval | yes, as `Send For Approval` | Button present on both forms; label difference re-confirmed |
+| Expected Outcome — Approve | yes | Button present on the update form. **Not executed** |
+| Expected Outcome — Reject | yes | Button present on the update form. **Not executed** |
+
+### Skipped areas
+
+| Area | Why |
+|---|---|
+| Approve / Reject execution | Requires a **self-created** record; `APPROVE Shared` and `REJECT Shared` are `Forbidden (absolute)` and no grant lifts them. Belongs to Stage 5A, which creates its own record under the run-004 grant |
+| Document upload, logo upload, and their limits | Executing them changes a shared record. Belongs to Stage 5A against a self-created record |
+| Unicode / emoji / payload-shaped input probes | Chosen against on a shared record. Every probe this run performed is reversible in-form without saving; these add risk without adding to what XC-17–XC-20 already settle |
+| Adding a second supplier row or a second document / bank / sales-contact row | Would require saving Product Access changes on a shared record |
+| Role authorization, maker–checker separation, self-approval | **Decided out of scope** by `PO-1`, `PO-6`, `PO-9`. Owned by the future Role CRUD module |
+| `Save as Draft` | **Decided out of scope** by `PO-5`; kept on record as a future coverage item |
+| `Transfer Pnr Option` · `Blue Command Screen` · `Enable Search Limit` | **Decided out of scope 2026-08-18** by the product owner — to be discussed when the User Story for their own feature arrives. Evidence kept in FINDING-012 so that story starts from an observation rather than a blank page |
+| All five Reflection areas | **Decided out of scope** by `PO-11` — impact-awareness boundaries only |
+
+### Blocked areas
+
+*(none)* — nothing this run attempted was blocked. Every skip above is a decision or a safety boundary, not an obstruction, and the distinction is deliberate.
+
+### Unreachable areas
+
+*(none)* — every in-scope screen was reachable live with the credentials provided.
+
+### Fixture precondition carried to Stage 3 and Stage 5A
+
+AC-9 is reachable only on an Agency whose parent Branch carries at least one supplier with a credential selected (`BR-006`, `BR-008`). The answer of 2026-08-18 is that the suite **builds its own Branch first**, selects its supplier and supplier credential, then creates its Agencies under it — keeping every record `SelfCreated`, which is the only ownership class where the approve step is grantable at all.
+
+**This needs a Stage 1 grant that does not exist yet.** Project Context §5 forbids this run from creating or editing a Branch. Until that is revised, the fixture design is recorded, not authorized.
+
+### Coverage honesty note
+
+**Screen coverage is 100%; criterion coverage is not**, and the gap is entirely made of actions that mutate. Discovery reads; Stage 5A executes. Nine of the fourteen rows above are fully observed, four are observed-but-not-executed, and AC-9 is partial because part of it is absent from the application. No area was left uncovered for lack of time or lack of a tool.
+
+---
+
+## run-001 — 2026-07-31 (retained, unchanged)
+
+
 | Field | Value |
 |---|---|
 | Module | `agency` |

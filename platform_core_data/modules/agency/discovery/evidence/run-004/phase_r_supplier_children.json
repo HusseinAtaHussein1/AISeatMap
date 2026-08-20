@@ -1,0 +1,102 @@
+[
+  {
+    "t": "Flight",
+    "h": ""
+  },
+  {
+    "t": "Credential Field",
+    "h": ""
+  },
+  {
+    "t": "Credential Field",
+    "h": "/master/supplier/credentials"
+  },
+  {
+    "t": "Supplier Credentials",
+    "h": ""
+  },
+  {
+    "t": "Supplier Credentials",
+    "h": "/master/supplier/supplier-credentials"
+  },
+  {
+    "t": "Credential Routes Filter",
+    "h": ""
+  },
+  {
+    "t": "Credential Routes Filter",
+    "h": "/master/supplier/credential-routes-filter"
+  },
+  {
+    "t": "Flight Search Limitation",
+    "h": ""
+  },
+  {
+    "t": "Flight Search Limitation",
+    "h": "/master/supplier/flight-search-limitation"
+  },
+  {
+    "t": "Hold PCC Filter",
+    "h": ""
+  },
+  {
+    "t": "Hold PCC Filter",
+    "h": "/master/supplier/hold-pcc-filter"
+  },
+  {
+    "t": "Hold PCC Management",
+    "h": ""
+  },
+  {
+    "t": "Hold PCC Management",
+    "h": "/master/supplier/hold-pcc-management"
+  },
+  {
+    "t": "Restricted Commands",
+    "h": ""
+  },
+  {
+    "t": "Restricted Commands",
+    "h": "/master/supplier/restricted-commands"
+  },
+  {
+    "t": "Miscellaneous",
+    "h": ""
+  },
+  {
+    "t": "Payment Gateway",
+    "h": ""
+  },
+  {
+    "t": "Dashboard",
+    "h": ""
+  },
+  {
+    "t": "Admin",
+    "h": ""
+  },
+  {
+    "t": "Master",
+    "h": ""
+  },
+  {
+    "t": "Rule Engine",
+    "h": ""
+  },
+  {
+    "t": "Settings",
+    "h": ""
+  },
+  {
+    "t": "User Management",
+    "h": ""
+  },
+  {
+    "t": "Booking-Mid Office",
+    "h": ""
+  },
+  {
+    "t": "Profile",
+    "h": ""
+  }
+]

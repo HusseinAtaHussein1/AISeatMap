@@ -1,0 +1,322 @@
+{
+  "branchGrid": {
+    "inputs": [
+      {
+        "ph": "Code",
+        "id": "id-Branchcode"
+      },
+      {
+        "ph": "Name",
+        "id": "id-Branchname"
+      },
+      {
+        "ph": "Select",
+        "id": "id-Country"
+      },
+      {
+        "ph": "Select",
+        "id": "id-State"
+      },
+      {
+        "ph": "",
+        "id": "id-City"
+      },
+      {
+        "ph": "",
+        "id": "id-Status-Inactive"
+      },
+      {
+        "ph": "",
+        "id": "id-Status-Active"
+      },
+      {
+        "ph": "",
+        "id": "id-Status-Both"
+      },
+      {
+        "ph": "",
+        "id": ""
+      }
+    ],
+    "headers": [
+      "Code",
+      "Branch Name",
+      "Country Name",
+      "City",
+      "Approval Status",
+      "Actions"
+    ],
+    "rows": [
+      [
+        "BRN710",
+        "ahmed_Agent",
+        "Egypt",
+        "Cairo",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN2",
+        "Test",
+        "Egypt",
+        "Hurghada",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN103",
+        "kiko",
+        "Egypt",
+        "El Shorouk",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN890",
+        "Kaycee",
+        "Egypt",
+        "Badr",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN251",
+        "Uplif1_Ahmed Mohamed AbdelDaiem",
+        "Egypt",
+        "Cairo",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN889",
+        "Leif",
+        "Egypt",
+        "Badr",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN888",
+        "Emeline",
+        "Egypt",
+        "Badr",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN262",
+        "NDC2_Hashem Hesham",
+        "Egypt",
+        "Cairo",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN253",
+        "Uplift1_Abduallah Ramadan",
+        "Egypt",
+        "Cairo",
+        "Approved",
+        ""
+      ],
+      [
+        "BRN887",
+        "QA_2168637289921300",
+        "Egypt",
+        "Cairo",
+        "Approved",
+        ""
+      ]
+    ]
+  },
+  "branchMatches": [
+    [
+      "BRN210",
+      "NDC1",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN291",
+      "NDC1_Yara Khaled",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN287",
+      "NDC1_Ahmed Ayman",
+      "Egypt",
+      "15th of May",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN293",
+      "NDC1_Mohamed Nasr",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN518",
+      "NDC1_Hussein",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN286",
+      "NDC1_Mostafa Ashry",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN308",
+      "NDC1_Mostdafa Elatawy",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN303",
+      "NDC1_Mostafa Elatawy",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN292",
+      "NDC1_Mahmoud Gomaa",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ],
+    [
+      "BRN294",
+      "NDC1_Omar Mohamed",
+      "Egypt",
+      "Cairo",
+      "Approved",
+      ""
+    ]
+  ],
+  "agencyMatches": [
+    [
+      "AGN9801",
+      "NDC1_Yara Khaled",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Yara Khaled",
+      ""
+    ],
+    [
+      "AGN9799",
+      "NDC1_Ahmed Ayman",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Ahmed Ayman",
+      ""
+    ],
+    [
+      "AGN9798",
+      "NDC1_Mostafa Ashry",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Mostafa Ashry",
+      ""
+    ],
+    [
+      "AGN9814",
+      "NDC1_Mostafa Elatawy",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Mostafa Elatawy",
+      ""
+    ],
+    [
+      "AGN9806",
+      "NDC1_Ahmed Abd ElGhani",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Ahmed Abd El Ghani",
+      ""
+    ],
+    [
+      "AGN9805",
+      "NDC1_Omar Mohamed",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Omar Mohamed",
+      ""
+    ],
+    [
+      "AGN9804",
+      "NDC1_Hassan Al Shimy",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Hassan Al Shimy",
+      ""
+    ],
+    [
+      "AGN9803",
+      "NDC1_Mohamed Nasr",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Mohamed Nasr",
+      ""
+    ],
+    [
+      "AGN9802",
+      "NDC1_Mahmoud Gomaa",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Mahmoud Gomaa",
+      ""
+    ],
+    [
+      "AGN9800",
+      "NDC1_Mohamed Samir",
+      "Egypt",
+      "Badr",
+      "Active",
+      "Approved",
+      "NDC1_Mohamed Samir",
+      ""
+    ]
+  ],
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/Branch/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/Branch/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Admin2/agency/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Admin2/agency/search?size=10&page=1"
+  ]
+}

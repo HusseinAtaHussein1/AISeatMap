@@ -1,0 +1,51 @@
+{
+  "sels": {
+    "Q1": "#p-tabpanel-11 > div > ndc-fg-form-generator > form > div > div",
+    "Q2": "div > ndc-add-agency > div > ndc-fg-form-container:nth-of-type(7) > div > ndc-fg-form-generator > form > div > div > ndc-fg-input:nth-of-type(5) > ndc-fg-checkbox-input > div",
+    "Q3": "ndc-add-agency > div > div:nth-of-type(4) > div:nth-of-type(2) > ndc-fg-form-generator > form > div > div:nth-of-type(2) > ndc-fg-input:nth-of-type(3) > ndc-fg-checkbox-input > div > div",
+    "Q4": "body > ndc-root > ndc-layout > div > div:nth-of-type(1) > div:nth-of-type(3) > div > div > ndc-add-agency > div > div:nth-of-type(3)",
+    "Q5": "div > div > ndc-add-agency > div > ndc-fg-form-container:nth-of-type(6) > div > ndc-fg-form-generator > form > div > div > ndc-fg-input:nth-of-type(2) > ndc-fg-text-input"
+  },
+  "res": {
+    "originalPath": "C:\\Users\\Sheen\\agentic-ai-testing-platform\\platform_core_data\\modules\\agency\\discovery\\evidence\\run-004\\run004_update_form_unclear_items.png",
+    "annotatedPath": "C:\\Users\\Sheen\\agentic-ai-testing-platform\\platform_core_data\\modules\\agency\\discovery\\evidence\\run-004\\run004_update_form_unclear_items.annotated.png",
+    "drawn": [
+      {
+        "label": "Q1",
+        "top": 4523.625,
+        "left": 357,
+        "width": 1026,
+        "height": 115
+      },
+      {
+        "label": "Q2",
+        "top": 3472.625,
+        "left": 367,
+        "width": 1006,
+        "height": 94
+      },
+      {
+        "label": "Q3",
+        "top": 4873.625,
+        "left": 889,
+        "width": 242.5,
+        "height": 60
+      },
+      {
+        "label": "Q4",
+        "top": 4327.625,
+        "left": 352,
+        "width": 1036,
+        "height": 363
+      },
+      {
+        "label": "Q5",
+        "top": 2790.625,
+        "left": 709.65625,
+        "width": 320.65625,
+        "height": 80
+      }
+    ],
+    "missing": []
+  }
+}

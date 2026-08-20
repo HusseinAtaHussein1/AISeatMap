@@ -1,0 +1,36 @@
+{
+ "verifiedAt": "2026-08-19T06:35:53.888Z",
+ "mode": "headless",
+ "submitted": false,
+ "nonGet": [
+  "POST http://192.168.1.70:8080/odeysysadmin/Admin2/loginAction"
+ ],
+ "supplierRows": 63,
+ "row2": {
+  "inputId": null,
+  "inputChecked": false,
+  "wrapperClass": "p-checkbox p-component",
+  "boxExists": true,
+  "boxClass": "p-checkbox-box",
+  "highlightOnWrapper": false,
+  "highlightOnBox": false
+ },
+ "before": {
+  "checked": false,
+  "highlightOnWrapper": false,
+  "highlightOnBox": false
+ },
+ "dispatchOuter": "dispatched",
+ "afterOuterClick": {
+  "checked": false,
+  "highlightOnWrapper": false,
+  "highlightOnBox": false
+ },
+ "dispatchInner": "dispatched",
+ "afterInnerClick": {
+  "checked": true,
+  "highlightOnWrapper": false,
+  "highlightOnBox": true
+ },
+ "nonGetAfterLogin": []
+}

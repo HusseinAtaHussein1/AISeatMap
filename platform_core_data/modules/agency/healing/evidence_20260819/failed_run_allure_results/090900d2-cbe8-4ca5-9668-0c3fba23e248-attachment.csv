@@ -1,0 +1,5 @@
+1, Test Method 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.prepareSharedFixture' failed. Please investigate and open a new Issue if needed.
+2, Test Method 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.prepareSharedFixture' failed. Please investigate and open a new Issue if needed.
+3, Test Method 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.prepareSharedFixture' failed. Please investigate and open a new Issue if needed.
+4, Test Method 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareSharedFixture' failed. Please investigate and open a new Issue if needed.
+5, Test Method 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.prepareSharedFixture' failed. Please investigate and open a new Issue if needed.

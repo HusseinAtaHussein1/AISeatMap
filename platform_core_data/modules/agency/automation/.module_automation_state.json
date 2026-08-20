@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "module": "agency",
+  "state": "Generated",
+  "framework": "SHAFT",
+  "baselineRef": "c072129a3ac2efc0a2da488d325e46d9034a60a3",
+  "seededFrom": "platform_core_data/automation_baseline/shaft/tests_SHAFT",
+  "seedMethod": "copy-in",
+  "sourceRuns": [
+    "run-004",
+    "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+  ],
+  "generatedAt": "2026-08-18T14:25:00.000Z",
+  "updatedAt": "2026-08-18T14:25:00.000Z",
+  "suiteFile": "testng-agency.xml",
+  "testCount": 18,
+  "history": [
+    {
+      "state": "Generated",
+      "at": "2026-08-18T14:25:00.000Z",
+      "run": "run-004"
+    }
+  ]
+}

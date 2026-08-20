@@ -1,0 +1,48 @@
+{
+  "note": "Structure only. Supplier contact-person name, email and phone are real third-party contact details and are deliberately NOT recorded here.",
+  "list": {
+    "url": "http://192.168.1.70/master/supplier/supplier",
+    "headers": [
+      "Supplier",
+      "Type",
+      "Status",
+      "Approval Status",
+      "Actions"
+    ],
+    "rowCount": 10
+  },
+  "supplierRecord": {
+    "url": "http://192.168.1.70/master/supplier/supplier/edit/119",
+    "heading": "",
+    "labels": [
+      "Products Type *",
+      "Country *",
+      "Supplier *",
+      "Email *",
+      "City *",
+      "PIN code *",
+      "Supplier type *",
+      "Whitelist Airports",
+      "MOR",
+      "Near By Status",
+      "Manager Name *",
+      "Address *",
+      "Name *",
+      "Email *",
+      "Phone *",
+      "Payment mode *",
+      "Settlement currency *",
+      "Settlement period *",
+      "Agreement expiry date *",
+      "Remarks *"
+    ],
+    "managerName": {
+      "present": false
+    },
+    "supplier": null,
+    "supplierFieldReadOnly": null
+  },
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/Supplier/search"
+  ]
+}

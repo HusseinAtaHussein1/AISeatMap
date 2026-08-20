@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '6 out of 18' test cases in the current suite                                        
+                         Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc044_importPnrOptionPersists'                         
+                                          Test Description: 'TC-AGENCY-044 Import PNR Option persists'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

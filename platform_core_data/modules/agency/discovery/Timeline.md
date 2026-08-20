@@ -1,3 +1,88 @@
+# Discovery Timeline — `agency`
+
+---
+
+## run-004 — 2026-08-18 (times local, UTC+3; the raw session log is `evidence/run-004/phase_a_timeline.txt`)
+
+Discovery Mode for every entry: Browser automation — Browser Driver, headed.
+
+```
+09:52  Raw HTTP probe of http://192.168.1.70/            -> 200 (branch reuse R-4: probe before declaring a blocker)
+09:52  Raw HTTP probe of /auth/login                     -> 200
+09:53  STAGE_STARTED (stage 2) and SKILL_STARTED recorded
+09:54  Authenticated as odeysysadmin (headed) — credentials re-verified, Project Context §4 item closed
+09:54  Navigate /admin/agency — list rendered, grid columns and first rows read
+09:56  Navigate /admin/agency/edit/949
+09:56  Pre-fill polled at 250 ms intervals -> 61/78 inputs populated by 1000 ms (branch reuse R-2)
+09:56  Full-page screenshot captured; 81 controls, 11 PrimeNG widgets, 1 table inventoried
+09:56  OBSERVED: "Airline Supplier credential (PCC)" section PRESENT — contradicts run-001 FINDING-002
+09:56  OBSERVED: Branch control disabled + readOnly, showing "Test (BRN2)" — PO-10
+09:56  OBSERVED: Product Access table columns STATUS/SUPPLIER NAME/CREDENTIAL NAME/PRODUCT NAME/DESCRIPTION — PO-8
+09:56  OBSERVED: stored document and stored logo both present on load — PO-7
+09:58  Validation probing on the update form: blur alone renders no message
+09:59  Navigate /admin/agency/add — empty create form captured
+09:59  Clicked "Send For Approval" on the EMPTY create form
+09:59  Non-GET requests during the attempt: NONE — no record could be created
+09:59  Captured 23 x "Required" + 1 x "Please select at least one supplier."
+10:00  Field-to-message map extracted (PO-12 satisfied)
+10:02  Navigate /admin/agency/edit/949 — format and max-length probes, all by real keystrokes (branch reuse R-1)
+10:02  "Agency *" cleared           -> "Required"
+10:02  "Email ID *" <- not-an-email -> "Please enter a valid email"  (PRD XC-18 verbatim)
+10:02  "Credit limit *" <- abcdef   -> value reverted to 1000000, NO message   [FINDING-010 candidate]
+10:02  "Post office box *" <- 12 ch -> 8 kept (max length enforced)
+10:02  "Credit Terms (Days) *" <- 15 ch -> 11 kept
+10:02  "Phone No *" <- abcdefgh     -> field emptied, then "Required"
+10:02  "Company URL" <- "not a url at all" -> accepted, NO message           [FINDING-010 candidate]
+10:03  All probed fields restored in-form; nothing saved
+10:04  PCC dependency probe: supplier row DESELECTED -> PCC section disappears entirely
+10:04  Screenshot of the PCC-absent state captured
+10:04  Form reloaded (no save) -> PCC section and values return                [FINDING-008]
+10:04  Cancel probe: Company URL changed asdas -> run004-cancel-probe, then Cancel clicked
+10:04  Cancel navigated to /admin/agency; record reopened shows "asdas" — nothing persisted — PO-6
+10:06  Annotated evidence, pass 1: Q1/Q4/Q5 drawn, Q2/Q3 MISSING (malformed element ids broke the selectors)
+10:06  Missing rectangles treated as missing questions, not cosmetic: selectors rebuilt id-free
+10:06  Annotated evidence, pass 2: Q1 Q2 Q3 Q4 Q5 all drawn, none missing
+10:07  Tight annotation captured for Q1 (Manager Name only, #id-ManagerName)
+10:09  Q5/Q6 annotation captured with Company URL holding the invalid value; value restored afterwards
+10:12  FINDING-008 created (Requirement Gap)
+10:13  FINDING-009 created (Observation)
+10:14  FINDING-010 created (Bug, Medium)
+10:15  FINDING-011 created (Observation)
+10:16  FINDING-012 created (Requirement Gap)
+10:18  ReCheck_run-004.md written — run-001's seven Findings re-checked, none of their packages edited
+10:22  Discovery Artifacts completed -> Pending Review
+```
+
+**Session safety record.** Across all six browser sessions the only non-GET requests were `…/Master2/state/search` and `…/Admin2/agency/search`, both read operations. No Agency record was created, updated, approved, or rejected. Every in-form edit was reverted or discarded by reload, and the one submit attempt was made against an empty create form that produced no server traffic at all.
+
+```
+11:41  Human answer: Agency suppliers are inherited from the parent Branch (check/uncheck only) -> BR-006 recorded
+11:42  Read-only lookup: Branch NDC1_Ahmed Ayman = BRN287, Agency NDC1_Ahmed Ayman = AGN9799 (/admin/agency/edit/11006)
+11:43  BRN287 read: 63 supplier rows, only NDCGal ticked
+11:45  In-form probe (never saved): ticked Amadeus/AmadeusNDC/Galileo/Sabre -> one PCC tab appeared per supplier
+11:45  Reloaded BRN287 -> back to NDCGal only; nothing persisted
+11:46  Read Galileo tab's PCC options: Galileo Live UAE, Live EGY PCC, Robot Test, KSA Galileoo, GalileoLiveSTAGING
+11:52  Human answer: Manager Name comes from the Supplier CRUD -> searched Supplier Credentials + Credential Field: NOT found there
+11:55  SAFETY: Supplier Credentials record exposed live API credentials in evidence -> screenshot deleted, values scrubbed from JSON
+12:01  Human supplied the exact route -> /master/supplier/supplier/edit/119: Manager Name * present, mandatory, EDITABLE -> BR-007
+12:05  Checked execution_safety_policy.json before acting on the Branch:
+         mutation/Shared  = Approval Required  (grantable)
+         approval/Shared  = Forbidden (ABSOLUTE, no grant lifts it)
+       => this run could submit a Branch change but never approve it. Declined to act; asked the human to make the change.
+12:14  Human made and approved the Branch change (Amadeus + Sabre added to BRN287)
+12:14  READ-ONLY verification: BRN287 now carries Amadeus, NDCGal, Sabre
+12:14  Agency AGN9799 shows all three suppliers, all ticked, WITHOUT any action on the agency -> cascade confirmed
+12:15  Agency PCC section now has three tabs (Amadeus | Sabre | NDCGal), each with the SAME three controls
+12:15  Page-text search across all tabs: Search Supplier Credential PCC = absent, Ticketing Supplier Credentials PCC = absent
+12:16  OQ-1 answered by experiment; OQ-2 answered and closed; FINDING-008 and FINDING-009 updated
+```
+
+**Second safety record (2026-08-18 afternoon).** Everything above was a read or an in-form edit discarded by reload. **No Branch, Agency, Supplier, or Supplier Credential record was created, updated, approved, or rejected by this run.** The one change to Branch `BRN287` was made and approved by the human; this stage only observed its effect.
+
+---
+
+## run-001 — 2026-07-31 (retained, unchanged)
+
 # Discovery Timeline — `run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency`
 
 | Field | Value |

@@ -1,5 +1,286 @@
 # QA Assessment Report — `agency`
 
+# Revision 3 — run-004, 2026-08-18 (current)
+
+| Field | Value |
+|---|---|
+| Module | `agency` |
+| Produced by run | `run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency` |
+| Revision | 3 |
+| Project Context validated against | `modules/agency/context/ProjectContext.md` — revision **3**, status **Approved** (2026-08-17) |
+| Discovery Mode(s) used | Browser automation — **Browser Driver**, **headed**. No fallback mode was needed or used |
+| Generated | 2026-08-18 |
+| Status | **Approved** — Ahmed Ayman, Stage 2 Human Review gate, 2026-08-18 |
+| Relationship to run-001 | Independent. run-001's artifacts below are unchanged; this revision sits above them and states where the two disagree |
+
+## Headline
+
+**The application still works, and one of run-001's headline findings no longer holds.**
+
+Nothing failed during this run — no HTTP error, no crash, no timeout. Six page loads, all clean. Five Findings were raised and seven were re-checked.
+
+Three things a reviewer should take from this run:
+
+1. **AC-9's PCC section is not missing.** It is present, renders one tab per supplier inherited from the parent Branch, and each tab carries three of AC-9's controls. run-001 recorded the whole section as absent. After a controlled experiment on 2026-08-18 the escalation is down to **two fields** — `Search Supplier Credential PCC` and `Ticketing Supplier Credentials PCC` — and the story's "filters" turn out to be the tabs themselves. **FINDING-008.**
+2. **One Finding is an actual `Bug`, the module's first.** Numeric fields discard non-numeric keystrokes without showing PRD XC-20's `[V]` message. Every other Finding in this module's history has been a disagreement between requirement sources; this one is the application falling short of a settled, unsuperseded requirement. **FINDING-010.**
+3. **Every product-owner decision that this stage was told to observe rather than assume, held.** `PO-6` Cancel, `PO-7` document and logo persistence, `PO-8` the Product Access table, `PO-10` Branch read-only — all four verified against the live form.
+
+The `branch` knowledge reuse earned its place twice: polling for pre-fill (R-2) and typing real keystrokes for max-length probes (R-1) each prevented a false Finding that the `branch` module had already paid for once.
+
+## 1. Scope
+
+**Run Scope Type `User Story` · Run Type `User Story`** — the narrowest strategy in §16: targeted verification of US-4222's acceptance criteria, with no wandering into adjacent Agency behaviour. Validated against **Project Context revision 3, Approved**, which carries twelve product-owner decisions (`PO-1` … `PO-12`), routes this run down the **Automation Pipeline**, and narrows mutation to self-created records.
+
+Agency search and Create Agency are in scope **as means only**. Create Agency was exercised no further than loading its form and submitting it empty to elicit validation messages — no record was created.
+
+## 2. Objectives
+
+1. Re-verify the environment and the credentials, which Project Context §4 records as existing but **not re-verified in run-004**.
+2. Observe the live Update form against US-4222's ten AC groups and its four Expected Outcome actions.
+3. Discharge the four decisions that require observation rather than assumption: `PO-7`, `PO-8`, `PO-10`, `PO-12`.
+4. Capture the **exact** validation strings, so Stage 3 designs from observation rather than from the story's older wording (`PO-12`).
+5. Re-check run-001's seven Findings against the application as it is today, without editing run-001's records.
+6. Apply the `branch` module's transferred *methods* while carrying across none of its data, selectors, or findings (`metadata/BranchKnowledgeReuse.md`).
+
+## 3. Evidence Sources
+
+| Discovery Mode | Areas covered | Why |
+|---|---|---|
+| **Browser automation — Browser Driver, headed** | Every area of this run: login, agency list, update form, create form, validation probing, annotated evidence capture | Highest-priority mode (§8.1 #1) and available. The driver was chosen over the Playwright MCP server because every flow here is behind a login: the driver authenticates in-process and never exposes a credential value, while an MCP call would put one in the transcript (`mcp/README.md` §1.3) |
+
+**Headed rather than headless, and why that is recorded here.** The platform default is headless for both mechanisms, with headed reserved as a human operator's explicit opt-in. The operator selected **headed** at the standing Headed/Headless gate for this run. This changes nothing about the evidence: screenshots, DOM, console and network are captured identically, so Evidence Category and the Confidence ceiling (§17–§18) are unaffected. What it adds is live human observation while the run executed.
+
+No fallback mode was needed. The environment was reachable throughout — probed over raw HTTP first (`http://192.168.1.70/` → 200), per `branch` reuse item R-4, before any browser navigation.
+
+## 4. Modules Explored
+
+| Route | Screen | Purpose |
+|---|---|---|
+| `/dashboard` | Post-login landing | Confirms the credentials work — Project Context §4's open item |
+| `/admin/agency` | Agency list | Locating the record under test. Grid columns `Code · Agency Name · Country Name · City · Status · Approval Status · Branch Name · Actions` |
+| `/admin/agency/edit/949` | **Agency Update form** | The screen US-4222 governs. Eleven regions — see `AgencyUpdateForm_run-004.md` |
+| `/admin/agency/add` | Agency Create form | Validation-message capture only — see `AgencyCreateForm_ValidationState_run-004.md` |
+
+**Reusable components observed** (named, not catalogued as locators): PrimeNG dropdown, multiselect and calendar; a repeatable-row pattern with an `Add` button (documents, sales contacts, bank accounts); a phone control with a country-flag selector; a checkbox-group pattern; an in-cell editable table.
+
+## 5. Observed Behaviour
+
+- The Update form pre-fills every populated field within about **1 second**; 61 of 78 inputs held values at the 1000 ms poll.
+- **Branch is `disabled` and `readOnly`**, displaying `Test (BRN2)`. It cannot be changed from inside the form.
+- `Country` is read-only and inherited, showing `Egypt` — AC-1 as written.
+- **The stored document and the stored logo are present on load** and need no re-upload to open or edit the record.
+- **Product Access Details is a table**: `STATUS · SUPPLIER NAME · CREDENTIAL NAME · PRODUCT NAME · DESCRIPTION`, one row, `TravelportNdc` / `Flight`, with `Select Product` checkboxes (`Flight`, `Others`) above it.
+- **The Airline Supplier credential (PCC) section renders while a supplier row is selected**, carrying a supplier tab and three controls.
+- **Cancel discards and exits**: an in-form change to `Company URL` was abandoned by `Cancel`, the browser returned to `/admin/agency`, and reopening the record showed the original value.
+- Max lengths are enforced against real keystrokes: `Post office box *` caps at 8, `Credit Terms (Days) *` at 11.
+- Mandatory violations render `Required`; a malformed email renders `Please enter a valid email`; an empty Product Access selection renders `Please select at least one supplier.`
+- The update form offers `Cancel · Send For Approval · Approve · Reject`; the create form offers only `Cancel · Send For Approval`.
+
+## 6. Confirmed Behaviour
+
+Validated against a clearly documented requirement and found to match:
+
+| Behaviour | Requirement it matches |
+|---|---|
+| Mandatory-field violation renders `Required` | PRD **XC-17** `[V]` — the platform-wide string |
+| Malformed email renders `Please enter a valid email` | PRD **XC-18** `[V]` — verbatim, including capitalisation |
+| Phone fields hold the national number only, with a separate country selector | Knowledge item **BR-005** and `branch` reuse R-10 — the story's *"+ Phone country code"* wording is the outlier |
+| The approval-submit button reads `Send For Approval` | `branch` FINDING-011, confirmed by the module owner 2026-08-10. **Now re-observed on the Agency form**, as reuse item R-11 required rather than assumed |
+| `Country` read-only and inherited from Branch | US-4222 AC-1; PRD **ORG-05** `[V]` |
+| Branch not changeable from Agency Update | `PO-10` |
+| Documents and logo persist on Update | `PO-7` |
+| Product Access renders as a table with the five named columns | `PO-8` |
+| Cancel discards unsaved changes without persisting | `PO-6`; PRD **GEO-09** / **SUP-10** `[V]` establish the platform-wide pattern |
+| Status and Approval Status are distinct grid columns | PRD **XC-07** `[V]` |
+
+## 7. Assumptions
+
+| # | Assumption | Evidence Category |
+|---|---|---|
+| A-1 | The PCC section's visibility is driven by the Product Access supplier selection, and run-001 observed a record in the deselected state. Deselection reproducibly hides it; *why* run-001 saw no section is inferred. | Assumption (the mechanism), Direct Observation (the dependency) |
+| A-2 | The numeric fields use a keystroke filter rather than post-hoc validation. Typed characters never appeared at all, which is that pattern's signature — but the implementation was not read. | Assumption |
+| A-3 | `Manager Name`'s value is inherited from the supplier credential record. Consistent with ORG-07's cascade and with the value `live`, but the `master-supplier` module was not opened. | Assumption |
+| A-4 | Record 949's contents are not a stable fixture. Its `Remarks` reads `QA TC23 - reactivating after test` and the payment option count moved between runs, so other testers are acting on it. | Direct Observation, generalised |
+
+## 8. Open Questions
+
+Each carries a labelled rectangle in its Finding's annotated evidence (§5.11.1).
+
+| # | Question | Rect | Raised in | Blocks Stage 3? |
+|---|---|---|---|---|
+| OQ-1 | Are the three live PCC controls AC-9's fields under different names, and what happened to `Search Supplier Credential PCC` (Mandatory), `Ticketing Supplier Credentials PCC`, and the Amadeus/Galileo/Sabre filters? | `Q4` | FINDING-008 | **Answered 2026-08-18 by experiment — no longer blocking.** One business question remains, recorded below |
+| OQ-2 | Is `Manager Name` intentionally read-only on Update, and should it still show a mandatory marker? | `Q1` | FINDING-009 | **Answered 2026-08-18 — closed.** See below |
+| OQ-3 | Should numeric-only fields show XC-20's message, or is silent masking the intended design? | `Q5` | FINDING-010 | No — design to the requirement (row 5) and let execution report it |
+| OQ-4 | Should `Company URL` validate URL format? | `Q6` | FINDING-010 | No — design to observed behaviour, flagged as resting on the directive |
+| OQ-5 | Are the person-name payment methods expected to stay on STG, and which options may a test select? | `Q2` | FINDING-011 | No — mitigated by selecting `Cash` / `Wallet` by label |
+| OQ-6 | Are `Transfer Pnr Option` and `Blue Command Screen` in scope, and is the Galileo dependency a documented rule? | `Q3` | FINDING-012 | **Answered 2026-08-18 — closed. Out of scope by decision**, together with `Enable Search Limit` |
+
+**OQ-1 — the half that is now answered (product owner, 2026-08-18).** Agency suppliers are **inherited from the parent Branch**; a supplier is never added at Agency level, only checked or unchecked. A Branch with no suppliers gives its Agencies none — so the PCC section legitimately cannot appear. Where the Branch holds several, the Agency selects **at least one**, which is exactly what the `Please select at least one supplier.` message enforces.
+
+Three consequences follow, and they change work rather than just closing a question:
+
+1. **FINDING-008's conditional rendering is intended behaviour**, not a defect, and this is the most likely explanation of run-001's FINDING-002.
+2. **A fixture precondition now exists:** the agency under test must sit under a Branch that already has at least one supplier, or AC-9 is unreachable by construction. Stage 5A creating an agency under an arbitrary Branch would see no PCC section and report a false absence.
+3. Recorded as durable cross-module knowledge **`BR-006`** (`knowledge/INDEX.md`), extending `BR-002`.
+
+**OQ-1 — the field-identity half, answered by controlled experiment on 2026-08-18.** This run could not make the Branch change itself: mutating a shared Branch is `Approval Required`, but **approving a record this run did not create is `Forbidden (absolute)`**, so a Branch edit could have been submitted and never approved — leaving BRN287 stuck in *Pending for approval* with the question still unanswered. The human made and approved the change; this stage observed the result read-only.
+
+Adding `Amadeus` and `Sabre` to Branch `BRN287` put **all three suppliers on the child Agency automatically, already ticked, each with its own PCC tab**. With three suppliers inherited and their PCCs selected, every tab renders **the same three controls**:
+
+| AC-9 names | Live equivalent |
+|---|---|
+| Filters: Amadeus PCC · Galileo PCC · Sabre PCC | **the supplier tabs themselves** — one per inherited supplier |
+| `Generic Supplier PCC` | `Generic supplier credentials (PCC) *` |
+| `Manager Name` | `Manager Name *` (read-only — FINDING-009) |
+| `Supplier Credential Description` | `Supplier Credentials Description *` |
+| **`Search Supplier Credential PCC`** (Mandatory) | **absent** |
+| **`Ticketing Supplier Credentials PCC`** | **absent** |
+
+The two absent fields were searched by page text across **five supplier tabs on two Branches and two Agencies** and appear in none. The idea that they might surface only for a GDS supplier with a PCC selected is **refuted** — Amadeus and Sabre are GDS, their PCCs are selected, and the fields still do not exist.
+
+**Stage 3 is unblocked on AC-9:** design three controls per supplier tab, repeated per inherited supplier, and assert the parent Branch carries the supplier first (`BR-006`). The two absent fields get no test case and stay on record as a gap.
+
+**Still open, but not blocking:** were those two fields removed deliberately or never built? The answer changes the record, not the coverage.
+
+**OQ-2 — answered and closed (product owner, then verified).** `Manager Name` is authored in the **Supplier master** (`Master → Supplier → Supplier`), where it is mandatory and editable. It is inherited **read-only** into both the Branch and the Agency `Airline Supplier credential (PCC)` sections, and its value differs per supplier (`Galileo` → `Test`, `NDCGal` → `ewr`, `TravelportNdc` → `live`).
+
+Consequences:
+
+1. The read-only state is **intended**, at Branch level as well as Agency level.
+2. **AC-9's *"Please enter a valid Manager Name."* is not an Agency requirement** — it belongs to the Supplier module. FINDING-009's disposition moves from row 2 to **row 4, `Story Outdated — Confirmed`**.
+3. **Stage 3 designs an inheritance assertion**, not a validation case: the Agency displays the supplier master's value and cannot edit it.
+4. Recorded as durable cross-module knowledge **`BR-007`**.
+
+**A safety note from that lookup, recorded because it happened rather than because it was planned.** Reaching the Supplier master passed through `Master → Supplier → Supplier Credentials`, whose records hold **live API credentials** (username, password, endpoint). One evidence file and one screenshot captured those values and were **scrubbed and deleted immediately**; only the structural fact this run needed was kept. No secret reached any artifact. Stage 3 and Stage 4A should treat Supplier Credential records as credential-bearing and never screenshot them.
+
+**Carried-forward assumptions and risks, each given a direct answer** (Execution Rule 5). Project Context §6 carries ASM-001 … ASM-018 and RSK-001 … RSK-009; `PO-1` … `PO-12` retired nine of them at Stage 1. Of those still live for this stage:
+
+| ID | Outcome |
+|---|---|
+| ASM-002 — the PRD describes no Agency *update* flow; the update form is assumed to mirror create | **Refuted in part, and usefully.** The two forms differ: `Remarks *` and the Approve/Reject buttons exist only on update; the PCC section cannot exist on create. Stage 3 must not design update cases from create-form structure |
+| ASM-003 — Agency PCCs are inherited from Supplier and Branch | **Consistent, not proven.** The section is supplier-scoped and `Manager Name` is read-only, both consistent with inheritance. Proving it needs `master-supplier`, which is out of scope |
+| ASM-012 — do existing documents and logo persist on update? | **Answered: yes** (`PO-7` verified) |
+| ASM-013 — the PCC/Product Access layout is ambiguous in the AC | **Answered by observation** (`PO-8`): a five-column table, plus a separate supplier-tabbed PCC section |
+| ASM-016 — can Branch be changed, and does it re-inherit? | **Answered: Branch cannot be changed** (`PO-10`). Re-inheritance is therefore unreachable and untested, by decision |
+| ASM-018 → `PO-12` — are the story's validation strings current? | **Answered: no.** 23 mandatory fields render `Required`, not per-field messages. Exact strings captured |
+| RSK-001 — shared environment, other testers' data | **Materialised and contained.** Record 949 shows another tester's remark; the payment option count moved between runs. No record was mutated |
+
+## 9. Discovered Risks
+
+| # | Risk | Framing |
+|---|---|---|
+| R-1 | XC-20's numeric message does not appear on this form. If server-side validation is equally absent, a non-numeric value from another client would not be caught here. Not probed — no API-level check was run | Technical |
+| R-2 | `Company URL` stores unusable values (`asdas` is live on record 949). Any downstream consumer of the agency URL receives junk | Business |
+| R-3 | The PCC section's conditional rendering will produce **false absences** in automation that does not first assert a selected supplier row. This is the failure that produced the run-001 result | Technical, and directly aimed at Stage 4A |
+| R-4 | The `Payment option` set is live master data whose size changed between runs. Any count assertion or index-based selection will be flaky by construction | Technical |
+| R-5 | `Manager Name *` is mandatory and unfillable. If its inherited value were ever empty, the form could be unsubmittable with no user-facing remedy. Not reproduced — the observed value was non-empty | Business |
+| R-6 | Record 949 is shared. Designing Stage 3 cases against its current values would couple the suite to data other testers change | Technical |
+
+## 10. Coverage
+
+**100% of the in-scope screens** — 4/4 visited (dashboard, agency list, update form, create form). Full detail, including per-AC depth and what was deliberately not executed, is in `Coverage_Summary.md` (run-004 section). Every entry there records its Discovery Mode.
+
+The distinction that matters: **screen coverage is not criterion coverage.** Discovery reads and observes; executing AC-3's upload rules, AC-4's 2 MB limit, AC-10's downstream toggle effect, and the Approve/Reject workflow belongs to Stage 5A against a self-created record, because those actions mutate.
+
+## 11. Gaps
+
+| # | Gap | Finding | Disposition (ProjectContext §1.1) |
+|---|---|---|---|
+| G-1 | `Search Supplier Credential PCC` (Mandatory) and `Ticketing Supplier Credentials PCC` are absent from every supplier tab. The AC-9 "filters" are **not** missing — they are the supplier tabs | FINDING-008 | **Row 2** — PRD names the section, not these two fields. Narrowed from row 3 once the section was shown to exist |
+| G-2 | `Manager Name` is a mandatory text field in the story, read-only in the application | FINDING-009 | Row 2 |
+| G-3 | Numeric fields enforce their rule without XC-20's `[V]` message | FINDING-010 | **Row 5** — application defect candidate |
+| G-4 | `Company URL` has no format validation, though the story specifies *"Please enter a valid URL."* | FINDING-010 | Row 2 — the PRD is silent |
+| G-5 | Mandatory violations render one shared `Required` where the story specifies about 20 distinct messages | run-001 FINDING-001, re-confirmed with exact strings | Row 1 — settled, PRD-corroborated |
+| G-6 | Document upload enforces no file type; a `.png` is attached where AC-3 requires PDF | run-001 FINDING-004, re-confirmed | Row 5 |
+| G-7 | `Designation` is absent from the Sales Contact section | run-001 FINDING-006, re-confirmed | Row 2 |
+| G-8 | `Transfer Pnr Option`, `Blue Command Screen` and `Enable Search Limit` appear in no requirement | FINDING-012 | **Documented exception** — out of scope by product-owner decision, 2026-08-18. Carried to the User Story that owns these features |
+| G-9 | Role authorization is not assessable and is **not assessed** — one identity, which sees Approve and Reject on the maker form | run-001 FINDING-007, re-confirmed | Not a requirement mismatch. Now a declared exclusion owned by the future Role CRUD module (`PO-9`) |
+
+## 12. Recommendations
+
+**Regression test candidates** — behaviour worth protecting, stated as areas, not as designed cases:
+
+1. Update-form pre-fill completeness (61/78 inputs within 1 s) — a regression here is invisible until a tester saves a half-loaded form.
+2. Branch remaining non-editable on Update (`PO-10`).
+3. Cancel discarding without persisting (`PO-6`) — verified end to end this run.
+4. Document and logo persistence on Update (`PO-7`).
+5. The PCC section appearing whenever a supplier row is selected — the exact condition that made run-001 report it missing.
+6. `Required` and `Please enter a valid email` as the literal mandatory and email strings.
+
+**For Stage 3, specifically:**
+
+- Select payment options **by label** (`Cash`, `Wallet`, `Credit Card`); never by index and never assert the option count.
+- Assert the PCC section only after asserting a selected supplier row.
+- Design AC-9 as the three observed controls, and hold the absent ones pending OQ-1 rather than dropping them.
+- Take every validation expected result from §5 of `AgencyUpdateForm_run-004.md`, not from US-4222's strings.
+
+**For the product owner:** OQ-1 and OQ-2 are the two answers that change what gets designed. The rest can be answered after Stage 3 starts.
+
+## 13. Inputs for Test Design
+
+**Findings by ID, Category, Status** — full detail in each package's `metadata.md`:
+
+| ID | Category | Status | Disposition maps to |
+|---|---|---|---|
+| FINDING-008 | Requirement Gap | Needs Human Review | Exploratory test + escalation on the absent fields |
+| FINDING-009 | Observation | Needs Human Review | Exploratory test |
+| FINDING-010 | **Bug** | Needs Human Review | Design to the requirement (row 5); execution reports the outcome |
+| FINDING-011 | Observation | Needs Human Review | Documented exception — data quality, not application behaviour |
+| FINDING-012 | Requirement Gap | Needs Human Review | **Documented exception — decided out of scope 2026-08-18.** No test case; evidence carried to the future feature story |
+| FINDING-001 … 007 (run-001) | unchanged | unchanged | Re-check outcomes in `findings/ReCheck_run-004.md` — read that alongside the packages |
+
+**Confirmed / refuted / unresolved assumptions:** §7 and the carried-forward table in §8.
+
+**Requirement gaps needing a coverage decision:** none remain blocking. G-1 was answered by experiment on 2026-08-18 and G-8 was decided out of scope on the same day. Every gap now has a disposition Stage 3 can act on.
+
+**One precondition Stage 3 and Stage 5A must honour.** AC-9 is only reachable on an Agency whose **parent Branch already carries at least one supplier** (`BR-006`) — an Agency seeded under a supplier-less Branch shows no PCC section, and any test of AC-9 fails for the wrong reason.
+
+**Fixture strategy — answered 2026-08-18, and it removes the precondition rather than working around it.**
+
+> **Product owner:** the automation builds its **own Branch** first — choosing its supplier and supplier credential exactly as the `branch` automation already does — then creates as many Agencies under it as the suite needs. Both the Branch and the Agencies are records the run created itself.
+
+**Why this is the right answer and not just a convenient one.** Today's session hit a wall that this design removes entirely. Acting on a Branch somebody else owns is blocked by policy in a way no grant can lift:
+
+| Operation | On a **Shared** record | On a **SelfCreated** record |
+|---|---|---|
+| Create / update | `Approval Required` | `Approval Required` |
+| **Approve / Reject** | **`Forbidden (absolute)`** — no grant lifts it | `Approval Required` |
+
+A run that builds its own Branch can therefore complete the whole maker–checker cycle legitimately. A run that borrows someone else's Branch can submit a change and then be unable to approve it — which is exactly why this stage stopped and asked the human to make the change instead of leaving `BRN287` stranded in *Pending for approval*.
+
+**What Stage 3 must design as a consequence:**
+
+1. **A Branch seed case** — the Branch's own mandatory data (Operating country, Branch Email Config, Branch Contact Info, Credit Limit / Top Up Limit / Credit Terms, Payment Options, Remarks) plus, critically, **Product Access with at least one supplier selected and its supplier credential chosen**. Without that last part the child Agency has no PCC section and AC-9 is unreachable (`BR-006`, `BR-008`).
+2. **Agency cases that run under that Branch**, not under an arbitrary existing one.
+3. **Data the suite knows**, so assertions can be exact rather than defensive — the whole reason for building the fixture instead of borrowing one.
+
+**Precedent to reuse, and its boundary.** The `branch` module's approved automation already creates a Branch and selects Product Access suppliers, so the *method* is proven on this application. Per `metadata/BranchKnowledgeReuse.md`, Stage 4A reuses that **approach** and none of its data, selectors, or page objects — every Agency locator is still verified live at generation time.
+
+**The authorization, granted 2026-08-18 and recorded.** The operator granted the general principle: *where something under test depends on records the run can build itself, the run builds them and runs the full cycle — reserving nothing unless told to at the time.* Four Branch authorizations (`CREATE`, `UPDATE`, `SUBMIT`, `APPROVE`, all `SelfCreated`) are recorded in `{{RUN_FOLDER}}/metadata/SafetyAuthorizations.json` and verified against the evaluator:
+
+| Evaluated | Decision |
+|---|---|
+| `CREATE` · `SelfCreated` · branch | **Allowed** |
+| `APPROVE` · `Shared` · branch | **Forbidden** — unchanged, as it must be |
+| `BOOK` · any ownership | **Forbidden** |
+
+**The ownership line is the whole grant.** Acting on a record the run did not create is untouched: `APPROVE` / `REJECT` on a Shared or Unknown record stays `Forbidden (absolute)`, which is why this stage stopped rather than edit `BRN287`. Booking, financial, privileged and notification operations remain absolutely forbidden — the operator's *"reserve nothing"* matches what the policy already held, so nothing widened.
+
+**One document still disagrees, and that is flagged rather than quietly fixed.** Project Context §5 reads that this run *"may **not** create or edit a Branch, Supplier, Staff, Role, Payment Method, or any reference data."* The Branch grant contradicts that sentence. **Stage 2 does not edit an approved Stage 1 artifact**, so the requirement is recorded in both the authorization file and here, and §5 needs a matching Stage 1 revision. The Supplier, Payment Method and Role exclusions in that sentence are **unchanged and still binding** — the grant covers Branch only.
+
+**And one cost to accept with it.** `PO-3` forbids cleanup by DELETE, so every seeded Branch persists on shared staging exactly as seeded Agencies do. The same two obligations apply: reuse a self-created Branch wherever test independence allows, and record how many Branches each execution created.
+
+
+
+**Exact validation strings** for `PO-12`: `AgencyUpdateForm_run-004.md` §5 and `evidence/run-004/phase_e_message_field_map.json`.
+
+**Structural inventory** of every control, with required / read-only / disabled / accept / max-length: `evidence/run-004/phase_b_update_form_structure.json`. This is behavioural evidence, **not** a locator catalogue — no selector is recorded, and Stage 4A verifies every locator live at generation time (§5.15).
+
+---
+
+
+# Revision 2 — run-001, 2026-07-31 (retained in full, unchanged)
+
 | Field | Value |
 |---|---|
 | Module | `agency` |

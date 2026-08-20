@@ -1,0 +1,716 @@
+{
+  "agencyState": {
+    "url": "http://192.168.1.70/admin/agency/edit/11006",
+    "pccPresent": true,
+    "pccLabels": [
+      "Generic supplier credentials (PCC) *",
+      "Manager Name *",
+      "Supplier Credentials Description *"
+    ],
+    "supplierTabs": [
+      "Dashboard",
+      "Dashboard",
+      "Admin",
+      "Admin",
+      "Master",
+      "Master",
+      "Rule Engine",
+      "Rule Engine",
+      "Settings",
+      "Settings",
+      "User Management",
+      "User Management",
+      "Booking-Mid Office",
+      "Booking-Mid Office",
+      "Profile",
+      "Profile",
+      "Reports",
+      "Reports",
+      "PNR Query",
+      "PNR Query",
+      "Transfer PNR",
+      "Transfer PNR",
+      "NDCGal",
+      "NDCGal"
+    ],
+    "productAccessRows": [
+      [
+        "",
+        "NDCGal",
+        "",
+        "Flight",
+        ""
+      ]
+    ],
+    "productAccessChecked": [
+      true
+    ],
+    "branchValue": "NDC1_Ahmed Ayman (BRN287)"
+  },
+  "branchState": {
+    "url": "http://192.168.1.70/admin/branch/edit/BRN287",
+    "headings": [],
+    "supplierMentions": [
+      "NDCGal",
+      "Amadeus",
+      "Amadeus",
+      "Galileo",
+      "Sabre",
+      "TravelportNdc",
+      "NDCGal"
+    ],
+    "tables": [
+      {
+        "headers": [
+          "Status",
+          "Supplier Name",
+          "Credential Name",
+          "Product Name",
+          "Description"
+        ],
+        "rows": [
+          {
+            "cells": [
+              "",
+              "NDCGal",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": true
+          },
+          {
+            "cells": [
+              "",
+              "3O",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AegeanNdc",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AegeanUAE",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AirArabiaEgypt",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AirBlue",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AirBlueKSA",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AirSMCairo",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AirSMCairoKSA",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AirSMCairoUAE",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AirSMCairoUSA",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AJet",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "Amadeus",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AmadeusNDC",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AmdNDC",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "AmdNDCaaaa",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "BlueAirline",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "DOT",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "E",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "EgyptAirEgy",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "EgyptAirKSA",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "EgyptAirUAE",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "ElJazeeraV4",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "EmiratesNdc",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "Ethiopia",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "EthiopNdc",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "FlyAdealNDC",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "FlyDubai",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "FlyDubaiUAE",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "FlyDubi",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "FlyJinnah",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "FlyNas",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "FlyNasKSA",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "Galileo",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "GDI",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "GulfAirKSA",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "IndgoNDC",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "IndiaAirLine",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "Indigo",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "JazeeraAirways",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "JazeeraAirwaysEG",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "JazeeraAirwaysKWI",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "JazeeraV4EGY",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "JazeeraV4KSA",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "JazeeraV4KWI",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "JazeeraV4UAE",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "NDCsbr",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "NDCWT",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "OmanAirNdc",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "RiyadhAirEGY",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "Sabre",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "SalamAir",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "SereneAir",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "ShoraNDC",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "ShuraTech",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "ShuraTechGLC",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "Spicejet",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "THO",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "TravelFusion",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "TravelportNdc",
+              "",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "TurkishAirlines",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "TVC",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          },
+          {
+            "cells": [
+              "",
+              "USBanglaUAE",
+              "Select",
+              "Flight",
+              ""
+            ],
+            "checked": false
+          }
+        ]
+      }
+    ],
+    "pccPresent": true,
+    "bodyExcerpt": "Company\nBranch\nAgency\nStaff\nWelcome\nodeysysadmin\nDashboard\nAdmin\nMaster\nRule Engine\nSettings\nUser Management\nBooking-Mid Office\nProfile\nReports\nPNR Query\nTransfer PNR\nBranch Details (BRN287)\nOperating country\nName\n*\nCountry\n*\nState *\nCairo\nCity *\n15th of May\nAddress 1 *\nAddress 2\nPost Office Box\n*\nPhone Number *\nService Tax Number\nABTA Number\nBranch Email Config Info\nEmail ID\n*\nEmail Password *\nBranch Contact Info\nName\n*\nEmail ID\n*\nPhone Number *\nAdd\nEnter Target Amount\nSet Month\nSelect\nSet Year\nSelect\nAdd\nCredit Limit\n*\nTop Up Limit\n*\nCredit Terms(Days)\n*\nReaching Percentage\nWarning Prompt(Days)\nPayment Option *\n:\nCash\nWallet\nCredit Card\nBANQUE MISR\nFawry\nEdgardo\nIsaiah\nFilomena\nAstrid\nOlive\nDan\nRico\nCollin\nBryant\nEmilio\nTracy\nAlma\nDesmond\nEnda\nHiram\nShannon\nQuinton\nMonserrate\nJoey\nIsrael\nKasi\nJoan\nm\nf\nOutstanding Threshold\n*\nChange Threshold\nProduct Access Details\nFlight\nOthers\nStatus\tSupplier Name\tCredential Name\tProduct Name\tDescription\n\tNDCGal\t\tFlight\t\n\t3O\t\nSelect\n\tFlight\t\n\tAegeanNdc\t\nSelect\n\tFlight\t\n\tAegeanUAE\t\nSelect\n\tFlight\t\n\tAirArabiaEgypt\t\nSelect\n\tFlight\t\n\tAirBlue\t\nSelect\n\tFlight\t\n\tAirBlueKSA\t\nSelect\n\tFlight\t\n\tAirSMCairo\t\nSelect\n\tFlight\t\n\tAirSMCairoKSA\t\nSelect\n\tFlight\t\n\tAirSMCairoUAE\t\nSelect\n\tFlight\t\n\tAirSMCairoUSA\t\nSelect\n\tFlight\t\n\tAJet\t\nSelect\n\tFlight\t\n\tAmadeus\t\tFlight\t\n\tAmadeusNDC\t\tFlight\t\n\tAmdNDC\t\tFlight\t\n\tAmdNDCaaaa\t\tFlight\t\n\tBlueAirline\t\nSelect\n\tFlight\t\n\tDOT\t\nSelect\n\tFlight\t\n\tE\t\tFlight\t\n\tEgyptAirEgy\t\nSelect\n\tFlight\t\n\tEgyptAirKSA\t\nSelect\n\tFlight\t\n\tEgyptAirUAE\t\nSelect\n\tFlight\t\n\tElJazeeraV4\t\nSelect\n\tFlight\t\n\tEmiratesNdc\t\nSelect\n\tFlight\t\n\tEthiopia\t\nSelect\n\tFlight\t\n\tEthiopNdc\t\nSelect\n\tFlight\t\n\tFlyAdealNDC\t\nSelect\n\tFlight\t\n\tFlyDubai\t\nSelect\n\tFlight\t\n\tFlyDubaiUAE\t\nSelect\n\tFlight\t\n\tFlyDubi\t\nSelect\n\tFlight\t\n\tFlyJinnah\t\nSelect\n\tFlight\t\n\tFlyNas\t\nSelect\n\tFlight\t\n\tFlyNasKSA\t\nSelect\n\tFlight\t\n\tGalileo\t\tFlight\t\n\tGDI\t\nSelect\n\tFlight\t\n\tGulfAirKSA\t\nSelect\n\tFlight\t\n\tIndgoNDC\t\nSelect\n\tFlight\t\n\tIndiaAirLine\t\nSelect\n\tFlight\t\n\tIndigo\t\nSelect\n\tFlight\t\n\tJazeeraAirways\t\nSelect\n\tFlight\t\n\tJazeeraAirwaysEG\t\nSelect\n\tFlight\t\n\tJazeeraAirwaysKWI\t\nSelect\n\tFlight\t\n\tJazeeraV4EGY\t\nSelect\n\tFlight\t\n\tJazeeraV4KSA\t\nSelect\n\tFlight\t\n\tJazeeraV4KWI\t\nSelect\n\tFlight\t\n\tJazeeraV4UAE\t\nSelect\n\tFlight\t\n\tNDCsbr\t\tFlight\t\n\tNDCWT\t\nSelect\n\tFlight\t\n\tOmanAirNdc\t\nSelect\n\tFlight\t\n\tRiyadhAirEGY\t\nSelect\n\tFlight\t\n\tSabre\t\tFlight\t\n\tSalamAir\t\nSelect\n\tFlight\t\n\tSereneAir\t\nSelect\n\tFlight\t\n\tShoraNDC\t\nSelect\n\tFlight\t\n\tShuraTech\t\nSelect\n\tFlight\t\n\tShuraTechGLC\t\nSelect\n\tFlight\t\n\tSpicejet\t\nSelect\n\tFlight\t\n\tTHO\t\nSelect\n\tFlight\t\n\tTravelFusion\t\nSelect\n\tFlight\t\n\tTravelportNdc\t\tFlight\t\n\tTurkishAirlines\t\nSelect\n\tFlight\t\n\tTVC\t\nSelect\n\tFlight\t\n\tUSBanglaUAE\t\nSelect\n\tFlight\t\nNDCGal\nGeneric supplier credentials (PCC) *\nAll (4 selected)\nManager Name\n*\nDescription\n*\nImport PNR\nRemarks *\nCancel\nReject\nApprove\nSend For Approval\nCopyright © Wonder Travel 2026. All Rights Reserved. RC8"
+  },
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Admin2/agency/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Admin2/agency/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/Branch/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/Branch/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1"
+  ]
+}

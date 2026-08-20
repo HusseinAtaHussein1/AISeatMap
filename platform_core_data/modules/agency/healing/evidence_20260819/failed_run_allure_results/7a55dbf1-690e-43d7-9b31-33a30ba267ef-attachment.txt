@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '2 out of 18' test cases in the current suite                                        
+                    Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc059_branchIsReadOnlyOnUpdateForm'                    
+                                    Test Description: 'TC-AGENCY-059 Branch is read-only on the Update form'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

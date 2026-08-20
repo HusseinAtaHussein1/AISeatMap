@@ -1,0 +1,8 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '3 out of 18' test cases in the current suite                                        
+                        Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc001_agencyMasterFieldsPersist'                        
+                                   Test Description: 'TC-AGENCY-001 Update Agency Master fields successfully'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @19-08-2026 09:28:06.0453 AM

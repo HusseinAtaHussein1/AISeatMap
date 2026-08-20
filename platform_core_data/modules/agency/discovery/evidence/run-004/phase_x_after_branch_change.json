@@ -1,0 +1,75 @@
+{
+  "branch": {
+    "checked": [
+      {
+        "supplier": "Amadeus",
+        "credential": ""
+      },
+      {
+        "supplier": "NDCGal",
+        "credential": ""
+      },
+      {
+        "supplier": "Sabre",
+        "credential": ""
+      }
+    ],
+    "tabs": [
+      "NDCGal",
+      "NDCGal",
+      "Sabre",
+      "Sabre",
+      "Amadeus",
+      "Amadeus"
+    ],
+    "approvalStatus": "(not shown)"
+  },
+  "agencyAsLoaded": {
+    "productAccess": [
+      {
+        "supplier": "Amadeus",
+        "credential": "",
+        "product": "Flight",
+        "checked": true
+      },
+      {
+        "supplier": "Sabre",
+        "credential": "",
+        "product": "Flight",
+        "checked": true
+      },
+      {
+        "supplier": "NDCGal",
+        "credential": "",
+        "product": "Flight",
+        "checked": true
+      }
+    ],
+    "pccPresent": true,
+    "pccTabs": [
+      "Amadeus",
+      "Amadeus",
+      "Sabre",
+      "Sabre",
+      "NDCGal",
+      "NDCGal"
+    ],
+    "pccLabels": [
+      "Generic supplier credentials (PCC) *",
+      "Manager Name *",
+      "Supplier Credentials Description *",
+      "Generic supplier credentials (PCC) *",
+      "Manager Name*",
+      "Supplier Credentials Description*",
+      "Generic supplier credentials (PCC) *",
+      "Manager Name*",
+      "Supplier Credentials Description*"
+    ],
+    "hasSearchPcc": false,
+    "hasTicketingPcc": false
+  },
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search"
+  ]
+}

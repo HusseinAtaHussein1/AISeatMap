@@ -1,0 +1,306 @@
+[
+  {
+    "probe": "p0",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": true,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p1",
+    "label": "Branch *",
+    "value": "Test Egypt",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p2",
+    "label": "Branch *",
+    "value": "Egypt",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p3",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p4",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p5",
+    "label": "Branch *",
+    "value": "0022",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p6",
+    "label": "Branch *",
+    "value": "asdas",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p7",
+    "label": "Branch *",
+    "value": "",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p8",
+    "label": "",
+    "value": "Cairo",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "TEXTAREA"
+  },
+  {
+    "probe": "p9",
+    "label": "",
+    "value": "down town",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "TEXTAREA"
+  },
+  {
+    "probe": "p10",
+    "label": "",
+    "value": "1149730331",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p15",
+    "label": "Contact person *",
+    "value": "Essam Saady",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p16",
+    "label": "Contact person *",
+    "value": "test.user.ndc@gmail.com",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p17",
+    "label": "",
+    "value": "1000000000",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p19",
+    "label": "Contract Start Date *",
+    "value": "05/07/2020",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p20",
+    "label": "Contract Start Date *",
+    "value": "28/12/2030",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p22",
+    "label": "Name *",
+    "value": "Essam",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p23",
+    "label": "Name *",
+    "value": "ESaady@wondertravel-eg.com",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p24",
+    "label": "",
+    "value": "540951737",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p25",
+    "label": "Account Number",
+    "value": "",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p26",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p27",
+    "label": "Account Number",
+    "value": "",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p28",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p29",
+    "label": "Invoice generation *",
+    "value": "1000000",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p30",
+    "label": "Invoice generation *",
+    "value": "5000000",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p31",
+    "label": "Invoice generation *",
+    "value": "5",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p32",
+    "label": "Target",
+    "value": "",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p33",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p34",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p35",
+    "label": "Credit Terms (Days) *",
+    "value": "1000",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p36",
+    "label": "Credit Terms (Days) *",
+    "value": "",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p37",
+    "label": "Credit Terms (Days) *",
+    "value": "",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p71",
+    "label": "",
+    "value": "fdf",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p72",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p73",
+    "label": "",
+    "value": "",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p74",
+    "label": "Generic supplier credentials (PCC) *",
+    "value": "live",
+    "readOnly": true,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p75",
+    "label": "Generic supplier credentials (PCC) *",
+    "value": "szds",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "INPUT"
+  },
+  {
+    "probe": "p80",
+    "label": "",
+    "value": "QA TC23 - reactivating after test",
+    "readOnly": false,
+    "disabled": false,
+    "tag": "TEXTAREA"
+  }
+]

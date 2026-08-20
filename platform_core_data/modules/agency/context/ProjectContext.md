@@ -11,13 +11,14 @@
 | Pipeline branch | **Automation Pipeline** (1 → 2 → 3 → `4A` → `5A` → optional `5H` → `6A`) — **changed at Revision 3**; run-001 took the Manual branch |
 | Target Environment | `http://192.168.1.70` — STG, shared staging |
 | Produced by run | `run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency` |
-| Revision | 3 <!-- rev 3, 2026-08-17: new independent run; branch changed to Automation; safety policy now governs; mutation narrowed to self-created records; Branch-module knowledge reuse recorded --> |
+| Revision | 4 <!-- rev 4, 2026-08-18: two product-owner decisions from the Stage 2 gate — PO-13 (three undocumented controls out of scope) and PO-14 (dependency grant: the run may build and approve its own Branch). §5's mutation rows corrected for Branch only. --> |
 | Target ref at write | `b0a6eb1` |
 | Generated | 2026-08-17 |
 | Status | **Approved** |
-| Approved by | Revisions 1–2: Ahmed Ayman — Stage 1 Human Review gate, 2026-07-31. **Revision 3: Ahmed Ayman — Stage 1 Human Review gate, 2026-08-17**, after review of the full document and the twelve product-owner decisions at §1.2. |
+| Approved by | Revisions 1–2: Ahmed Ayman — Stage 1 Human Review gate, 2026-07-31. **Revision 3: Ahmed Ayman — Stage 1 Human Review gate, 2026-08-17**, after review of the full document and the twelve product-owner decisions at §1.2. **Revision 4: Ahmed Ayman — Stage 1 Human Review gate, 2026-08-18**, approving `PO-13`, `PO-14`, and the §5 mutation correction. |
 | Revision 2 authored by | Ahmed Ayman (directive), 2026-07-31 — the application becomes the primary reference where US-4222 is clearly outdated; disposition taxonomy added at §1.1; Threshold fields confirmed as later enhancements |
 | Revision 3 authored by | Stage 1, run-004, 2026-08-17 — see §0.1 for exactly what changed and what did not |
+| Revision 4 authored by | Stage 1, run-004, 2026-08-18 — **two decisions taken during Stage 2** and written back here because §1.2 is where product-owner decisions live. See §0.2 |
 | Revision 3 amended | 2026-08-17 — **twelve product-owner decisions applied** (§1.2) plus five document corrections. Still `Pending Review`; the decisions are recorded, the approval of the document is not yet given. |
 
 ## 0.1 What Revision 3 changed
@@ -39,6 +40,31 @@ approval.
 modify run-001's run artifacts. It does edit *this* file, because a module's Project Context is durable and
 edited in place by whichever run refines it (`pipeline.md` §7) — that is the module's file, not run-001's.
 run-001's own folder is untouched.
+
+## 0.2 What Revision 4 changed
+
+Revision 4 is **not** a rewrite and **not** a re-scoping. It records two decisions the product owner took
+on 2026-08-18, while Stage 2 was running, and corrects the one §5 row those decisions make wrong. Everything
+not listed here is unchanged from Revision 3 and keeps its approval.
+
+| # | Change | Why now |
+|---|---|---|
+| 1 | **`PO-13` added** — `Transfer Pnr Option`, `Blue Command Screen` and `Enable Search Limit` are out of scope by decision | Stage 2 found all three on the live form and none of them in any requirement. The product owner decided to exclude them rather than leave them undecided (§1.2, §3) |
+| 2 | **`PO-14` added** — the dependency grant: the run may build, submit and approve a **Branch it created itself**, so it can seed its own Agencies under it | Stage 2 proved AC-9's PCC section only renders on an Agency whose parent Branch carries a supplier with a credential. Without this the story's AC-9 is untestable (§1.2, §5) |
+| 3 | **§5's mutation row corrected — for Branch only** | The row said this run may not create or edit a Branch. `PO-14` changes that for **self-created** Branches. Supplier, Staff, Role, Payment Method and every other reference data stay excluded |
+| 4 | **§3 gains a row** for the three controls `PO-13` excludes | So the exclusion is visible as a decision rather than as a silence |
+
+**What Revision 4 deliberately did not change.** The scope of US-4222, the disposition taxonomy at §1.1,
+`PO-1` … `PO-12`, the pipeline branch, the target environment, the credentials posture, and §6's assumptions
+and risks are all untouched. **No requirement was added, removed or reinterpreted** — the story under test
+is the same story.
+
+**And one thing it does not do.** It does not grant anything. The run-scoped authorizations already exist,
+recorded and evaluated, at
+`platform_core_data/runs/run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency/metadata/SafetyAuthorizations.json`
+(`AUTH-BRANCH-CREATE` / `UPDATE` / `SUBMIT` / `APPROVE-SelfCreated`, approved by ahmed.ayman@tildetech.ae,
+2026-08-18, verified against `platform_core/tools/execution_safety`). This document **cites** them so scope
+and safety stop disagreeing; the grant itself lives where grants live.
 
 ## 0. How to read the requirement references in this document
 
@@ -173,6 +199,25 @@ answer from the product owner settles *what to expect*, not *what is there*.
 | **PO-11** | **Reflection areas are impact-awareness boundaries only** for run-004 — Rule Engine, Search & Booking, NDC Portal, Reports, Top Up, and any other downstream module affected by Agency configuration. **No reflection-area test cases are created or executed.** Relationships are preserved as documented module boundaries and future full-project coverage. Revisited once enough modules are reviewed and an application-level Project Context exists. | Answers ASM-017 and confirms §3's existing exclusions as decided rather than provisional. |
 | **PO-12** | **Observed behaviour sets the expected result for validation messages.** Stage 2 triggers each relevant validation **through a valid interaction**, captures the **exact displayed string including punctuation and capitalization**, does not rely on the older story wording alone, records every story-vs-application difference, and classifies it under §1.1. **Stage 3 designs expected results from the verified Stage 2 observations — never a blind exact-match against outdated or oddly punctuated US-4222 strings.** | Supersedes ASM-018. Turns ~45 fields' worth of contractual-copy risk into a Discovery obligation. |
 
+| **PO-13** | **`Transfer Pnr Option`, `Blue Command Screen` and `Enable Search Limit` are out of scope for run-004.** They are discussed when the User Story for their own feature arrives. The Stage 2 observations stay on record (discovery `FINDING-012`) so that story starts from evidence rather than a blank page. | Same standing as `PO-5` — a **decision, not a deferral pending an answer**. No test case is designed, generated or executed for any of the three. Recorded in §3. |
+| **PO-14** | **Dependency grant.** Where a record under test depends on other records the run can build itself, **the run builds them and runs the full maker–checker cycle on them**. Concretely: the run may `CREATE` / `UPDATE` / `SUBMIT` / `APPROVE` a **Branch it created itself** — `SelfCreated` only — so it can select that Branch's supplier and supplier credential, then create its Agencies underneath it. The operator's caveat, in their own words: **reserve nothing** unless told at the time. | Makes AC-9 testable at all. Stage 2 proved the `Airline Supplier credential (PCC)` section renders only on an Agency whose parent Branch carries a supplier with a credential (`BR-006`, `BR-008`), so the Branch is a **prerequisite of the thing under test**, not background. Rewrites one §5 row. |
+
+**What `PO-14` does not touch, stated because a grant is read for what it permits and misread for what it does not.** The caveat matches what the safety policy already holds absolute, so nothing widened:
+
+| Still `Forbidden (absolute)` — no grant lifts it | |
+|---|---|
+| `booking` — BOOK · HOLD · TICKET · CANCEL_BOOKING · VOID | `financial` — PAYMENT · TOP_UP · WALLET_CHARGE · REFUND |
+| `privileged` — CREDENTIAL_CHANGE · ROLE_PERMISSION_CHANGE | **`APPROVE` / `REJECT` on a `Shared` or `Unknown` record** |
+
+`DELETE` stays ungranted in every form, and `PO-3`'s retention obligations now cover **seeded Branches as
+well as seeded Agencies**: reuse a self-created fixture wherever test independence allows, and record how
+many of each an execution created.
+
+**The ownership line is the whole grant.** Every permission above is `SelfCreated`. This is not a formality:
+during Stage 2 on 2026-08-18 this platform **stopped rather than edit a Branch it did not own**, because it
+could have submitted a change and then been unable to approve it — stranding a shared record in *Pending for
+approval*. The human made that change instead. `PO-14` exists so the suite never depends on that happening again.
+
 **One consequence worth stating plainly.** `PO-1`, `PO-6`, and `PO-9` together remove role authorization
 from this run entirely. That is a deliberate narrowing, and it has a cost: **run-004 will not answer whether
 a maker can approve their own Agency change** (PRD `OQ-1`). The workflow is tested; the governance around it
@@ -209,6 +254,7 @@ is not. That is Role CRUD's job, and this document no longer pretends otherwise.
 | **Agency search as a feature** — filters, Active-only search, pagination, empty state | Not named by US-4222. Used only to reach the record under test (§2). | `agency` — different run scope | ORG-08, XC-08 – XC-16 |
 | **Agency self-registration requests** (New / In-progress queue) | Not named by US-4222. | `agency` — different run scope | ORG-09 |
 | **Agent Login Details search** | Not named by US-4222. | `agency` — different run scope | ORG-10 |
+| **`Transfer Pnr Option` · `Blue Command Screen` · `Enable Search Limit`** | **Decided out of scope by `PO-13`**, 2026-08-18. All three exist on the live Agency form and appear in no acceptance criterion and no PRD requirement. `Blue Command Screen` additionally renders disabled with the inline hint *"This option requires the Galileo supplier to be enabled"*. They are discussed when the User Story for their own feature arrives; the Stage 2 evidence is kept so that story starts from an observation. | Nobody in this run — **recorded exclusion, deferred to a future story** | none; observed in discovery `FINDING-012`; `PO-13` |
 | **Save as Draft** | **Decided out of scope by `PO-5`**, not merely undecided. US-4222's Expected Outcome names only Submit for Approval / Cancel / Approve / Reject; PRD GAP-8 says the backlog specifies draft-save. The discrepancy **stays on record** as a future coverage item (ASM-008, now *Deferred*). **No test cases in this run.** | Nobody in this run — **recorded discrepancy, deferred** | GAP-8; `PO-5` |
 | **Role authorization and role-permission coverage** — which roles may Approve or Reject, whether maker and checker must be different identities, self-approval authorization | **Removed as a test target by `PO-1`, `PO-6`, and `PO-9`.** run-004 asserts Agency **workflow behaviour and resulting state** only, never the correctness of the role authorization model. `odeysysadmin` is the approved actor for every required action; the single account is **neither a blocker nor a risk**. | **Role CRUD module** (future) | XC-06, OQ-1, OQ-2; `PO-1`, `PO-6`, `PO-9` |
 | **Branch CRUD** (a named dependency of the story) | The story lists Branch CRUD as a *dependency* — the Agency form consumes branch data. Testing Branch itself is another module's job. | `branch` | ORG-03, ORG-04 |
@@ -276,7 +322,8 @@ tool call, or report.**
 | Constraint | Implication for downstream stages | Source |
 |---|---|---|
 | **Shared staging, not isolated** — other testers and teams hold live data on `http://192.168.1.70` | Never assume a record you did not create is stable. Every ownership classification (`SelfCreated` vs `Shared`) is a real distinction with different permissions, not bookkeeping. | run configuration; `execution_safety_policy.json` |
-| **Mutation is limited to Agency records this run creates.** `CREATE / UPDATE / APPROVE / REJECT SelfCreated` are authorized by the human grant of 2026-08-17. | Stage 2 and Stage `5A` create their own agencies, tagged and identifiable, then act on those. They may **not** create or edit a Branch, Supplier, Staff, Role, Payment Method, or any reference data — reading it to populate a dropdown is fine. | run configuration — *Run-specific mutation grant — run-004* |
+| **Mutation is limited to records this run creates — Agencies, and now the Branch they depend on.** `CREATE / UPDATE / SUBMIT / APPROVE / REJECT SelfCreated` on **agency** (grant of 2026-08-17) and `CREATE / UPDATE / SUBMIT / APPROVE SelfCreated` on **branch** (`PO-14`, grant of 2026-08-18). | Stage `4A` and Stage `5A` **build their own Branch**, select its supplier and supplier credential, submit and approve it, then create their tagged Agencies under it and act on those. They still may **not** create or edit a **Supplier, Staff, Role, Payment Method, or any other reference data** — reading it to populate a dropdown remains fine. **The Branch exception is narrow and is about ownership, not about Branches:** a Branch this run did not create is untouchable exactly as before. | run configuration; `PO-14`; `{{RUN_FOLDER}}/metadata/SafetyAuthorizations.json` |
+| **Why the Branch had to become creatable, rather than borrowed** | AC-9's `Airline Supplier credential (PCC)` section renders **only** on an Agency whose parent Branch carries a supplier with a credential selected (`BR-006`, `BR-008`, both from Stage 2 observation). Seeding an Agency under an arbitrary Branch produces no PCC section, and a test would then report a **false absence** — the exact failure that produced run-001's FINDING-002. | Stage 2 Discovery, 2026-08-18; discovery `FINDING-008` |
 | **`APPROVE Shared` and `REJECT Shared` are `Forbidden (absolute)`.** No human grant can lift an absolute Forbidden; the evaluator refuses it. | This is **why** Create Agency is in scope as a means (§1, §2). A test case that would approve a pre-existing agency is not designed — it is redesigned to act on a self-created one. | `execution_safety_policy.json` |
 | **`DELETE` is not authorized in any form** — absolute for `Shared`/`Unknown`, and not requested for `SelfCreated`. **`PO-3` accepts this** rather than working around it. | Records this run creates are **left in place**, tagged. **No cleanup through DELETE**, and no test case ends by deleting its fixture. Two binding obligations replace cleanup: **reuse a self-created record wherever test independence and validity allow**, and **record how many Agency records each execution created**. | `execution_safety_policy.json`; run-004 grant; `PO-3` |
 | **The created Agency identifier is captured immediately** (`PO-2`) and preserved in the execution evidence | Ownership must stay provable for the life of the record. Capture happens **at creation, before any other action** — not reconstructed afterwards from a grid. Without it, an Approve cannot be shown to have acted on an authorized record. | `PO-2`; RSK-008 |

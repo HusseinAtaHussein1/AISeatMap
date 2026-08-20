@@ -1,0 +1,443 @@
+{
+  "nonGetRequests": [],
+  "redNodes": [
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric w-fit ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "*",
+      "tag": "SPAN",
+      "cls": "red-astric ng-star-inserted",
+      "color": "rgb(255, 0, 0)"
+    },
+    {
+      "text": "Required",
+      "tag": "LI",
+      "cls": "ng-star-inserted",
+      "color": "rgb(220, 53, 69)"
+    },
+    {
+      "text": "Please select at least one supplier.",
+      "tag": "SPAN",
+      "cls": "",
+      "color": "rgb(232, 73, 73)"
+    }
+  ],
+  "pairs": [
+    {
+      "field": null,
+      "message": "Company"
+    },
+    {
+      "field": null,
+      "message": "Branch"
+    },
+    {
+      "field": null,
+      "message": "Agency"
+    },
+    {
+      "field": null,
+      "message": "Staff"
+    },
+    {
+      "field": null,
+      "message": "Admin"
+    },
+    {
+      "field": null,
+      "message": "*"
+    },
+    {
+      "field": null,
+      "message": "*"
+    },
+    {
+      "field": null,
+      "message": "*"
+    },
+    {
+      "field": null,
+      "message": "*"
+    },
+    {
+      "field": null,
+      "message": "*"
+    },
+    {
+      "field": null,
+      "message": "*"
+    },
+    {
+      "field": null,
+      "message": "*"
+    },
+    {
+      "field": "Address",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "Add"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "*"
+    },
+    {
+      "field": "Freelancer",
+      "message": "Add"
+    },
+    {
+      "field": "Account Type",
+      "message": "Add"
+    },
+    {
+      "field": "Account Type",
+      "message": "*"
+    },
+    {
+      "field": "Account Type",
+      "message": "*"
+    },
+    {
+      "field": "Account Type",
+      "message": "*"
+    },
+    {
+      "field": "Account Type",
+      "message": "*"
+    },
+    {
+      "field": "Year",
+      "message": "*"
+    },
+    {
+      "field": "Credit agency",
+      "message": "*"
+    },
+    {
+      "field": "Others",
+      "message": "Please select at least one supplier."
+    },
+    {
+      "field": "Blue Command Screen",
+      "message": "Send For Approval"
+    }
+  ],
+  "distinctMessages": {
+    "Company": 1,
+    "Branch": 1,
+    "Agency": 1,
+    "Staff": 1,
+    "Admin": 1,
+    "*": 24,
+    "Add": 3,
+    "Please select at least one supplier.": 1,
+    "Send For Approval": 1
+  },
+  "url": "http://192.168.1.70/admin/agency/add"
+}

@@ -1,5 +1,55 @@
 # Findings Summary — `agency`
 
+## run-004 — 2026-08-18 (current)
+
+| Field | Value |
+|---|---|
+| Run Folder | `run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency` |
+| Findings raised by this run | 5 (FINDING-008 … FINDING-012) |
+| run-001 Findings re-checked | 7 — outcomes in [`ReCheck_run-004.md`](ReCheck_run-004.md) |
+| Discovery Mode | Browser automation — **Browser Driver**, headed |
+| Generated | 2026-08-18 |
+
+**run-001's seven Findings and their packages are unchanged.** run-004 re-checked each of them and recorded the outcome in `ReCheck_run-004.md`; where a re-check produced materially new information it raised its own Finding rather than editing run-001's.
+
+### Index — run-004
+
+| ID | Title | Category | Requirement Disposition | Severity | Confidence | Status | Occurrences | Module | Description (one line) |
+|---|---|---|---|---|---|---|---|---|---|
+| FINDING-008 | PCC section is present; one tab per supplier inherited from the parent Branch | Requirement Gap | Re-opens FINDING-002, **narrowed to two fields** — `Story Outdated / Requires Business Confirmation` *(row 2)* after the 2026-08-18 experiment | N/A | 99% | Needs Human Review | 1 | `agency` | Three of AC-9's controls exist per tab and the "filters" are the tabs; only `Search Supplier Credential PCC` and `Ticketing Supplier Credentials PCC` are absent. |
+| FINDING-009 | `Manager Name *` carries a mandatory marker but is read-only | Observation | **`Story Outdated — Confirmed`** *(row 4)* — authored in the Supplier master, inherited read-only | N/A | 96% | Needs Human Review | 2 | `agency` | Editable in `Master → Supplier → Supplier`; read-only on both Branch and Agency, so AC-9's Manager Name message is not an Agency requirement. |
+| FINDING-010 | Numeric and URL fields reject or accept input silently, with no format message | **Bug** | Numeric: **`Application Defect (candidate)`** *(row 5, PRD XC-20 `[V]`)* · URL: *(row 2)* | **Medium** | 92% | Needs Human Review | 2 | `agency` | `Credit limit *` discards letters with no message; `Company URL` accepts `not a url at all`. |
+| FINDING-011 | Payment option list still renders person names and single letters | Observation | Not a requirement mismatch — master-data quality, pre-disposed by `APP-002` | N/A | 98% | Needs Human Review | 1 | `agency` | 29 options; the count moved 28 → 29 since run-001 with no action by this run. |
+| FINDING-012 | `Blue Command Screen` is present, disabled, and documented nowhere | Requirement Gap | **Documented exception** — out of scope by decision, 2026-08-18 (with `Transfer Pnr Option` and `Enable Search Limit`) | N/A | 95% | Needs Human Review | 1 | `agency` | Disabled with the inline hint *"This option requires the Galileo supplier to be enabled"*. No test case in this run. |
+
+### Breakdown — run-004
+
+**By Severity:** 0 Critical · 0 High · **1 Medium** · 0 Low · 4 N/A
+**By Category:** 2 Requirement Gap · 2 Observation · **1 Bug**
+**By Status:** 0 Confirmed · 5 Needs Human Review · 0 Duplicate · 0 Rejected
+**By Module:** `agency` 5
+
+**Why one Finding is a `Bug` where run-001 raised none.** run-001's seven were all disagreements between two requirement sources, which §5.4 rates `N/A`. FINDING-010's numeric half is different in kind: PRD **XC-20** `[V]` states both the rejection *and* the message, no source supersedes it, and the message does not appear. That is an application falling short of a settled requirement, which is what `Bug` means here. It is still `Needs Human Review`, not `Confirmed` — Confidence is 92%, but §5.6 also requires the requirement to be unambiguous, and whether XC-20's platform-wide rule was meant to bind this form is exactly the judgement this stage must not make.
+
+### Evidence Packages — run-004
+
+| Finding ID | Evidence Package | Evidence Files |
+|---|---|---|
+| FINDING-008 | `findings/FINDING-008_PccSectionConditionallyRendered/` | 6 (metadata + 4 screenshots + dependency probe JSON) |
+| FINDING-009 | `findings/FINDING-009_ManagerNameMandatoryButReadOnly/` | 3 (metadata + original and annotated screenshot) |
+| FINDING-010 | `findings/FINDING-010_InputFormatMessagesAbsent/` | 4 (metadata + original and annotated screenshot + probe JSON) |
+| FINDING-011 | `findings/FINDING-011_PaymentOptionDataPollutionRecheck/` | 3 (metadata + original and annotated screenshot) |
+| FINDING-012 | `findings/FINDING-012_BlueCommandScreenDisabledUndocumented/` | 3 (metadata + original and annotated screenshot) |
+
+**Annotated evidence.** Every run-004 Finding that records something this run could not interpret carries a labelled rectangle around the specific control, plus the unmarked original beside it (§5.11.1). Five rectangles were requested and five were drawn — `Q1` Manager Name, `Q2` Payment option group, `Q3` Blue Command Screen, `Q4` PCC section, `Q5` Credit limit — with `Q6` (Company URL) captured in a second pass. No rectangle came back missing, and every rectangle maps to a written question in its Finding's **Unclear Items** table.
+
+**Shared evidence** for run-004 lives once under `../evidence/run-004/` and is cited by path rather than copied into every package.
+
+---
+
+## run-001 — 2026-07-31 (superseded on FINDING-002 only; otherwise current)
+
+
 | Field | Value |
 |---|---|
 | Module | `agency` |

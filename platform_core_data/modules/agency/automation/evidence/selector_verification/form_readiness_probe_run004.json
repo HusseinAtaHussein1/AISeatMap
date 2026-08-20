@@ -1,0 +1,212 @@
+{
+ "dashboard": {
+  "url": "http://192.168.1.70/dashboard",
+  "bodyLen": 400,
+  "visibleDivs": 51
+ },
+ "list": {
+  "url": "http://192.168.1.70/admin/agency",
+  "bodyLen": 1144,
+  "rows": 10
+ },
+ "settle": [
+  {
+   "t": 1500,
+   "bodyLen": 246,
+   "visibleInputs": 0,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 2,
+   "overlays": 0
+  },
+  {
+   "t": 3000,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 4500,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 6000,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 7500,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 9000,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 10500,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 12000,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 13500,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  },
+  {
+   "t": 15000,
+   "bodyLen": 1563,
+   "visibleInputs": 69,
+   "totalInputs": 72,
+   "agencyVal": "Jewell",
+   "spinners": 0,
+   "overlays": 0
+  }
+ ],
+ "final": {
+  "url": "http://192.168.1.70/admin/agency/edit/12083",
+  "htmlLen": 188366,
+  "bodyText": "Company Branch Agency Staff Welcome odeysysadmin Dashboard Admin Master Rule Engine Settings User Management Booking-Mid Office Profile Reports PNR Query Transfer PNR Update Agency Branch * Brittany (BRN893) Agency * Country * State * Cairo City * Badr Post office box * Company URL Fax No Address * Address Phone No * IATA Agency : yes No Agency Business Type : B2B Freelancer Agency Owner Details C",
+  "rootChildren": {
+   "tag": "NDC-ROOT",
+   "children": 3,
+   "display": "inline"
+  },
+  "agencyFieldChain": [
+   {
+    "tag": "INPUT",
+    "cls": "p-inputtext p-component p-element fg-input ng-untouched ng-p",
+    "display": "inline-block",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 45
+   },
+   {
+    "tag": "SPAN",
+    "cls": "p-input-icon-right",
+    "display": "inline-block",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 45
+   },
+   {
+    "tag": "NDC-FG-TEXT-INPUT",
+    "cls": "ng-star-inserted",
+    "display": "inline-block",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 72
+   },
+   {
+    "tag": "NDC-FG-INPUT",
+    "cls": "col-lg-4 col-md-6 col-sm-12 ng-star-inserted",
+    "display": "block",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 107
+   },
+   {
+    "tag": "DIV",
+    "cls": "flex flex-wrap align-items-baseline ng-untouched ng-star-ins",
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 730
+   },
+   {
+    "tag": "DIV",
+    "cls": "nested-form ng-star-inserted",
+    "display": "block",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 730
+   },
+   {
+    "tag": "FORM",
+    "cls": "ng-untouched ng-pristine ng-invalid ng-star-inserted",
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 926
+   },
+   {
+    "tag": "NDC-FG-FORM-GENERATOR",
+    "cls": "row",
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 926
+   },
+   {
+    "tag": "DIV",
+    "cls": "container-fluid",
+    "display": "block",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 1012
+   },
+   {
+    "tag": "NDC-FG-FORM-CONTAINER",
+    "cls": "",
+    "display": "block",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 1012
+   },
+   {
+    "tag": "DIV",
+    "cls": "page admin-crud-panel mx-auto position-relative",
+    "display": "flex",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 4706
+   },
+   {
+    "tag": "NDC-ADD-AGENCY",
+    "cls": "ng-star-inserted",
+    "display": "inline",
+    "visibility": "visible",
+    "opacity": "1",
+    "h": 4706
+   }
+  ]
+ }
+}

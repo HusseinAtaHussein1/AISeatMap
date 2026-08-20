@@ -1,0 +1,17 @@
+{
+  "menu": [
+    {
+      "text": "Supplier",
+      "href": ""
+    },
+    {
+      "text": "Supplier",
+      "href": ""
+    },
+    {
+      "text": "Supplier",
+      "href": ""
+    }
+  ],
+  "nonGetRequests": []
+}

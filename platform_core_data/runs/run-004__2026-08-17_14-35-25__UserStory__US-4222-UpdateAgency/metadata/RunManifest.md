@@ -7,7 +7,7 @@
 | Workflow | unversioned |
 | Status | Preparing |
 | Created | 2026-08-17T11:35:25.430Z |
-| Last updated | 2026-08-17T12:40:16.696Z |
+| Last updated | 2026-08-18T12:54:32.657Z |
 
 ## 1. Code-State Anchor
 
@@ -28,7 +28,9 @@
 
 | Stage | Artifact | Timestamp | Checkpoint Status | Reviewer | Revisions | Invocation Path | Run-Scoped Instruction |
 |---|---|---|---|---|---|---|---|
-| Stage 1 — Project Context | — | 2026-08-17T12:40:16.696Z | Approved | Ahmed Ayman | 0 | — | — |
+| Stage 1 — Project Context | — | 2026-08-18T10:59:20.667Z | Approved | Ahmed Ayman | 0 | — | — |
+| Stage 2 — Discovery | — | 2026-08-18T10:59:20.785Z | Approved | Ahmed Ayman | 0 | — | — |
+| Stage 3 — Test Design | — | 2026-08-18T12:54:32.657Z | Approved | Ahmed Ayman | 2 | — | — |
 
 ## 3. Cross-Run Reuse / Source Runs
 
@@ -51,6 +53,12 @@
 | 1 | 2026-08-17T11:35:25.430Z | — | Run created (`Preparing`) | Run Manager | ad hoc run |
 | 2 | 2026-08-17T11:45:07.757Z | Stage 1 — Project Context | Pending Review | Run Manager | — |
 | 3 | 2026-08-17T12:40:16.696Z | Stage 1 — Project Context | Pending Review → Approved | Ahmed Ayman | — |
+| 4 | 2026-08-18T07:22:12.032Z | Stage 2 — Discovery | Pending Review | Run Manager | — |
+| 5 | 2026-08-18T09:53:42.122Z | Stage 1 — Project Context | Approved → Pending Review | Ahmed Ayman | — |
+| 6 | 2026-08-18T10:59:20.667Z | Stage 1 — Project Context | Pending Review → Approved | Ahmed Ayman | — |
+| 7 | 2026-08-18T10:59:20.785Z | Stage 2 — Discovery | Pending Review → Approved | Ahmed Ayman | — |
+| 8 | 2026-08-18T11:22:53.984Z | Stage 3 — Test Design | Pending Review | Run Manager | — |
+| 9 | 2026-08-18T12:54:32.657Z | Stage 3 — Test Design | Pending Review → Approved | Ahmed Ayman | — |
 
 ## 5. Declared Gaps
 

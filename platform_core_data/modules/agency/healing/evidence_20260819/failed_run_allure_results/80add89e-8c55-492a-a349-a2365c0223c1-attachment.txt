@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '18 out of 18' test cases in the current suite                                       
+                          Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc050_endToEndEditSubmitApprove'                          
+                                Test Description: 'TC-AGENCY-050 Agency update end to end: edit, submit, approve'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

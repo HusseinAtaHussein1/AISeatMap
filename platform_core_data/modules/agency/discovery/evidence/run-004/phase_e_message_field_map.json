@@ -1,0 +1,131 @@
+{
+  "nonGetRequests": [],
+  "mapped": [
+    {
+      "message": "Required",
+      "field": "Branch *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Agency *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Country *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "State *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "City *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Post office box *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Address *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Phone No *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Contact person *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Email ID *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Phone Number *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Contract Start Date *",
+      "tag": "LI",
+      "depthToLabel": 4
+    },
+    {
+      "message": "Required",
+      "field": "Contract End Date *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "",
+      "tag": "LI",
+      "depthToLabel": 6
+    },
+    {
+      "message": "Required",
+      "field": "Name *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Invoice generation *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Credit limit *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Top up limit *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Credit Terms (Days) *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Required",
+      "field": "Payment option *",
+      "tag": "LI",
+      "depthToLabel": 3
+    },
+    {
+      "message": "Please select at least one supplier.",
+      "field": "Branch *",
+      "tag": "SPAN",
+      "depthToLabel": 2
+    }
+  ]
+}

@@ -1,0 +1,747 @@
+[INFO ] 2026-08-19 09:27:16.959 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                    Powered by [1mSHAFT v.7.4.20231015[22m                                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:18.679 [main] ReportManager - Loaded OpenCV "opencv_java470".
+[INFO ] 2026-08-19 09:27:18.679 [main] ReportManager - Initializing Allure Reporting Environment...
+[INFO ] 2026-08-19 09:27:18.876 [main] ReportManager - Initializing Extent Reporting Environment...
+[INFO ] 2026-08-19 09:27:19.436 [main] ReportManager - Initializing Summary Reporting Environment...
+[INFO ] 2026-08-19 09:27:19.454 [main] ReportManager - TestNG run detected...
+[INFO ] 2026-08-19 09:27:19.695 [main] Utils - [TestNG] Running:
+  C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\testng-agency.xml
+
+[INFO ] 2026-08-19 09:27:19.719 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                             Starting execution of suite setup configuration method                                             
+                                          'com.shaft.listeners.internal.ConfigurationHelper.suiteSetup'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:19.809 [main] ReportManager - Initializing Important Links...
+[INFO ] 2026-08-19 09:27:19.815 [main] ReportManager - Initializing Properties...
+[INFO ] 2026-08-19 09:27:19.963 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                         'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.setUp'                                         
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:19.992 [main] ReportManager - Setting "targetOperatingSystem" property with "windows".
+[INFO ] 2026-08-19 09:27:20.002 [main] ReportManager - Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest..., --disable-features=Password..., --disable-infobars], extensions: [], prefs: {credentials_enable_service: false, download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0, profile.password_manager_enabled: false, profile.password_manager_leak_detection: false}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true}
+[INFO ] 2026-08-19 09:27:20.003 [main] ReportManager - Attempting to run locally on: "windows | Chrome".
+[INFO ] 2026-08-19 09:27:20.003 [main] ReportManager - Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection...
+[WARN ] 2026-08-19 09:27:35.010 [main] ReportManager - Aug 19, 2026 9:27:35 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+[WARN ] 2026-08-19 09:27:35.010 [main] ReportManager - WARNING: Unable to find CDP implementation matching 151
+[WARN ] 2026-08-19 09:27:35.010 [main] ReportManager - Aug 19, 2026 9:27:35 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+[WARN ] 2026-08-19 09:27:35.010 [main] ReportManager - WARNING: Unable to find version of CDP to use for 151.0.7922.109. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+[INFO ] 2026-08-19 09:27:35.018 [main] ReportManager - Successfully Opened: "windows | Chrome".
+[INFO ] 2026-08-19 09:27:35.097 [main] ReportManager - Target URL: "http://192.168.1.70"
+[INFO ] 2026-08-19 09:27:35.176 [main] ReportManager - Initial URL: "about:blank"
+[INFO ] 2026-08-19 09:27:36.771 [main] ReportManager - Navigate to url "http://192.168.1.70".
+[INFO ] 2026-08-19 09:27:37.231 [main] ReportManager - Type "odeysysadmin" into "Username *".
+[INFO ] 2026-08-19 09:27:37.559 [main] ReportManager - Type secure "••••••••••••" into "Password * Forgot Password?".
+[INFO ] 2026-08-19 09:27:37.858 [main] ReportManager - Moved the mouse to the middle of the element.
+[INFO ] 2026-08-19 09:27:37.936 [main] ReportManager - Click "Login".
+[INFO ] 2026-08-19 09:27:39.843 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.prepareSharedFixture'                                 
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:39.850 [main] ReportManager - [FIXTURE] building the single shared Branch + Agency pair for this execution
+[INFO ] 2026-08-19 09:27:39.896 [main] ReportManager - Target URL: "http://192.168.1.70/admin/branch/add"
+[INFO ] 2026-08-19 09:27:39.959 [main] ReportManager - Initial URL: "http://192.168.1.70/dashboard"
+[INFO ] 2026-08-19 09:27:40.679 [main] ReportManager - Navigate to url "http://192.168.1.70/admin/branch/add".
+[INFO ] 2026-08-19 09:27:43.099 [main] ReportManager - Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE".
+[INFO ] 2026-08-19 09:27:43.106 [main] ReportManager - Successfully created attachment 'Screenshot - 1787120861918_prepareSharedFixture_ValidateElementExists_passed'
+[INFO ] 2026-08-19 09:27:49.410 [main] ReportManager - Click element.
+[INFO ] 2026-08-19 09:27:50.018 [main] ReportManager - Click "Live".
+[INFO ] 2026-08-19 09:27:51.059 [main] ReportManager - Get Text from "3O", text is "3O".
+[INFO ] 2026-08-19 09:27:51.175 [main] ReportManager - Get Text from "AegeanNdc", text is "AegeanNdc".
+[INFO ] 2026-08-19 09:27:51.286 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:51.367 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:51.626 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:51.976 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:52.307 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:52.647 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:52.961 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:53.306 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:53.630 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:53.935 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:54.275 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:54.614 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:54.935 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:55.277 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:55.611 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:55.938 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:56.258 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:56.585 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:56.927 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:57.248 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:57.621 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:57.948 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:58.275 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:58.603 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:58.915 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:59.234 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:59.573 [main] ReportManager - Get Attribute "class" from element, value is "p-checkbox p-component".
+[INFO ] 2026-08-19 09:27:59.620 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '1 out of 18' test cases in the current suite                                        
+                 Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc055_managerNameIsInheritedAndReadOnly'                 
+                           Test Description: 'TC-AGENCY-055 Manager Name shows the supplier's value and is read-only'                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.636 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp'
+[INFO ] 2026-08-19 09:27:59.636 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareSharedFixture'
+[INFO ] 2026-08-19 09:27:59.636 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc055_managerNameIsInheritedAndReadOnly'
+[INFO ] 2026-08-19 09:27:59.636 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+      Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc055_managerNameIsInheritedAndReadOnly'      
+                           Test Description: 'TC-AGENCY-055 Manager Name shows the supplier's value and is read-only'                           
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.636 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                       'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tearDown'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.654 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                         'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.setUp'                                         
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.656 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.prepareSharedFixture'                                 
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.658 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '2 out of 18' test cases in the current suite                                        
+                    Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc059_branchIsReadOnlyOnUpdateForm'                    
+                                    Test Description: 'TC-AGENCY-059 Branch is read-only on the Update form'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.658 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc059_branchIsReadOnlyOnUpdateForm'
+[INFO ] 2026-08-19 09:27:59.658 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+         Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc059_branchIsReadOnlyOnUpdateForm'         
+                                    Test Description: 'TC-AGENCY-059 Branch is read-only on the Update form'                                    
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.658 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                       'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tearDown'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.668 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                           'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.setUp'                                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:27:59.670 [main] ReportManager - Setting "targetOperatingSystem" property with "windows".
+[INFO ] 2026-08-19 09:27:59.670 [main] ReportManager - Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest..., --disable-features=Password..., --disable-infobars], extensions: [], prefs: {credentials_enable_service: false, download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0, profile.password_manager_enabled: false, profile.password_manager_leak_detection: false}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true}
+[INFO ] 2026-08-19 09:27:59.670 [main] ReportManager - Attempting to run locally on: "windows | Chrome".
+[INFO ] 2026-08-19 09:27:59.670 [main] ReportManager - Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection...
+[WARN ] 2026-08-19 09:28:01.708 [main] ReportManager - Aug 19, 2026 9:28:01 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+[WARN ] 2026-08-19 09:28:01.708 [main] ReportManager - WARNING: Unable to find CDP implementation matching 151
+[WARN ] 2026-08-19 09:28:01.708 [main] ReportManager - Aug 19, 2026 9:28:01 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+[WARN ] 2026-08-19 09:28:01.708 [main] ReportManager - WARNING: Unable to find version of CDP to use for 151.0.7922.109. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+[INFO ] 2026-08-19 09:28:01.708 [main] ReportManager - Successfully Opened: "windows | Chrome".
+[INFO ] 2026-08-19 09:28:01.759 [main] ReportManager - Target URL: "http://192.168.1.70"
+[INFO ] 2026-08-19 09:28:01.839 [main] ReportManager - Initial URL: "about:blank"
+[INFO ] 2026-08-19 09:28:03.166 [main] ReportManager - Navigate to url "http://192.168.1.70".
+[INFO ] 2026-08-19 09:28:03.573 [main] ReportManager - Type "odeysysadmin" into "Username *".
+[INFO ] 2026-08-19 09:28:03.822 [main] ReportManager - Type secure "••••••••••••" into "Password * Forgot Password?".
+[INFO ] 2026-08-19 09:28:04.231 [main] ReportManager - Moved the mouse to the middle of the element.
+[INFO ] 2026-08-19 09:28:04.309 [main] ReportManager - Click "Login".
+[INFO ] 2026-08-19 09:28:06.426 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.449 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '3 out of 18' test cases in the current suite                                        
+                        Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc001_agencyMasterFieldsPersist'                        
+                                   Test Description: 'TC-AGENCY-001 Update Agency Master fields successfully'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.453 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp'
+[INFO ] 2026-08-19 09:28:06.457 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc001_agencyMasterFieldsPersist'
+[INFO ] 2026-08-19 09:28:06.457 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+             Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc001_agencyMasterFieldsPersist'             
+                                   Test Description: 'TC-AGENCY-001 Update Agency Master fields successfully'                                   
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.461 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.465 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                           'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.setUp'                                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.467 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.474 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '4 out of 18' test cases in the current suite                                        
+                       Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc011_agencyBusinessTypePersists'                       
+                                    Test Description: 'TC-AGENCY-011 Agency Business Type selection persists'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.476 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc011_agencyBusinessTypePersists'
+[INFO ] 2026-08-19 09:28:06.476 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+            Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc011_agencyBusinessTypePersists'            
+                                    Test Description: 'TC-AGENCY-011 Agency Business Type selection persists'                                    
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.482 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.501 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                           'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.setUp'                                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.504 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.508 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '5 out of 18' test cases in the current suite                                        
+                        Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc012_agencyOwnerDetailsPersist'                        
+                                   Test Description: 'TC-AGENCY-012 Update Agency Owner Details successfully'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.512 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc012_agencyOwnerDetailsPersist'
+[INFO ] 2026-08-19 09:28:06.512 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+             Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc012_agencyOwnerDetailsPersist'             
+                                   Test Description: 'TC-AGENCY-012 Update Agency Owner Details successfully'                                   
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.563 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.566 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                           'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.setUp'                                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.572 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.582 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '6 out of 18' test cases in the current suite                                        
+                         Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc044_importPnrOptionPersists'                         
+                                          Test Description: 'TC-AGENCY-044 Import PNR Option persists'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.586 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc044_importPnrOptionPersists'
+[INFO ] 2026-08-19 09:28:06.586 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+              Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc044_importPnrOptionPersists'              
+                                          Test Description: 'TC-AGENCY-044 Import PNR Option persists'                                          
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.590 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.592 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                           'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.setUp'                                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.613 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.616 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '7 out of 18' test cases in the current suite                                        
+                         Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc053_agencyNameAcceptsSpace'                         
+                                   Test Description: 'TC-AGENCY-053 Agency name accepts a space between words'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.618 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc053_agencyNameAcceptsSpace'
+[INFO ] 2026-08-19 09:28:06.619 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+              Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc053_agencyNameAcceptsSpace'              
+                                   Test Description: 'TC-AGENCY-053 Agency name accepts a space between words'                                   
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.621 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.624 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:06.628 [main] ReportManager - Setting "targetOperatingSystem" property with "windows".
+[INFO ] 2026-08-19 09:28:06.628 [main] ReportManager - Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest..., --disable-features=Password..., --disable-infobars], extensions: [], prefs: {credentials_enable_service: false, download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0, profile.password_manager_enabled: false, profile.password_manager_leak_detection: false}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true}
+[INFO ] 2026-08-19 09:28:06.628 [main] ReportManager - Attempting to run locally on: "windows | Chrome".
+[INFO ] 2026-08-19 09:28:06.628 [main] ReportManager - Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection...
+[WARN ] 2026-08-19 09:28:09.414 [main] ReportManager - Aug 19, 2026 9:28:09 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+[WARN ] 2026-08-19 09:28:09.414 [main] ReportManager - WARNING: Unable to find CDP implementation matching 151
+[WARN ] 2026-08-19 09:28:09.414 [main] ReportManager - Aug 19, 2026 9:28:09 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+[WARN ] 2026-08-19 09:28:09.414 [main] ReportManager - WARNING: Unable to find version of CDP to use for 151.0.7922.109. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+[INFO ] 2026-08-19 09:28:09.414 [main] ReportManager - Successfully Opened: "windows | Chrome".
+[INFO ] 2026-08-19 09:28:09.473 [main] ReportManager - Target URL: "http://192.168.1.70"
+[INFO ] 2026-08-19 09:28:09.539 [main] ReportManager - Initial URL: "about:blank"
+[INFO ] 2026-08-19 09:28:11.084 [main] ReportManager - Navigate to url "http://192.168.1.70".
+[INFO ] 2026-08-19 09:28:11.502 [main] ReportManager - Type "odeysysadmin" into "Username *".
+[INFO ] 2026-08-19 09:28:11.811 [main] ReportManager - Type secure "••••••••••••" into "Password * Forgot Password?".
+[INFO ] 2026-08-19 09:28:12.139 [main] ReportManager - Moved the mouse to the middle of the element.
+[INFO ] 2026-08-19 09:28:12.206 [main] ReportManager - Click "Login".
+[INFO ] 2026-08-19 09:28:13.865 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.878 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '8 out of 18' test cases in the current suite                                        
+                 Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc002_mandatoryAgencyMasterFieldsShowRequired'                 
+                         Test Description: 'TC-AGENCY-002 Mandatory Agency Master fields block submission when cleared'                         
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.888 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp'
+[INFO ] 2026-08-19 09:28:13.890 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc002_mandatoryAgencyMasterFieldsShowRequired'
+[INFO ] 2026-08-19 09:28:13.890 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+      Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc002_mandatoryAgencyMasterFieldsShowRequired'      
+                         Test Description: 'TC-AGENCY-002 Mandatory Agency Master fields block submission when cleared'                         
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.890 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.894 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.896 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.898 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '9 out of 18' test cases in the current suite                                        
+                   Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc021_contractDatesShowRequiredWhenCleared'                   
+                                 Test Description: 'TC-AGENCY-021 Contract dates block submission when cleared'                                 
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.902 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc021_contractDatesShowRequiredWhenCleared'
+[INFO ] 2026-08-19 09:28:13.904 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+        Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc021_contractDatesShowRequiredWhenCleared'        
+                                 Test Description: 'TC-AGENCY-021 Contract dates block submission when cleared'                                 
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.904 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.904 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.909 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.909 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '10 out of 18' test cases in the current suite                                       
+                  Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc037_paymentOptionRequiredWhenNoneSelected'                  
+                            Test Description: 'TC-AGENCY-037 Payment option blocks submission when none is selected'                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.915 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc037_paymentOptionRequiredWhenNoneSelected'
+[INFO ] 2026-08-19 09:28:13.915 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+       Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc037_paymentOptionRequiredWhenNoneSelected'       
+                            Test Description: 'TC-AGENCY-037 Payment option blocks submission when none is selected'                            
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.919 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.921 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:13.923 [main] ReportManager - Setting "targetOperatingSystem" property with "windows".
+[INFO ] 2026-08-19 09:28:13.925 [main] ReportManager - Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest..., --disable-features=Password..., --disable-infobars], extensions: [], prefs: {credentials_enable_service: false, download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0, profile.password_manager_enabled: false, profile.password_manager_leak_detection: false}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true}
+[INFO ] 2026-08-19 09:28:13.925 [main] ReportManager - Attempting to run locally on: "windows | Chrome".
+[INFO ] 2026-08-19 09:28:13.925 [main] ReportManager - Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection...
+[WARN ] 2026-08-19 09:28:16.388 [main] ReportManager - Aug 19, 2026 9:28:16 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+[WARN ] 2026-08-19 09:28:16.388 [main] ReportManager - WARNING: Unable to find CDP implementation matching 151
+[WARN ] 2026-08-19 09:28:16.390 [main] ReportManager - Aug 19, 2026 9:28:16 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+[WARN ] 2026-08-19 09:28:16.390 [main] ReportManager - WARNING: Unable to find version of CDP to use for 151.0.7922.109. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+[INFO ] 2026-08-19 09:28:16.390 [main] ReportManager - Successfully Opened: "windows | Chrome".
+[INFO ] 2026-08-19 09:28:16.450 [main] ReportManager - Target URL: "http://192.168.1.70"
+[INFO ] 2026-08-19 09:28:16.524 [main] ReportManager - Initial URL: "about:blank"
+[INFO ] 2026-08-19 09:28:18.114 [main] ReportManager - Navigate to url "http://192.168.1.70".
+[INFO ] 2026-08-19 09:28:18.501 [main] ReportManager - Type "odeysysadmin" into "Username *".
+[INFO ] 2026-08-19 09:28:18.902 [main] ReportManager - Type secure "••••••••••••" into "Password * Forgot Password?".
+[INFO ] 2026-08-19 09:28:19.256 [main] ReportManager - Moved the mouse to the middle of the element.
+[INFO ] 2026-08-19 09:28:19.402 [main] ReportManager - Click "Login".
+[INFO ] 2026-08-19 09:28:21.541 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.549 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '11 out of 18' test cases in the current suite                                       
+                     Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc016_uploadValidPdfWithContractDates'                     
+                                Test Description: 'TC-AGENCY-016 Upload a valid PDF document with contract dates'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.551 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp'
+[INFO ] 2026-08-19 09:28:21.554 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc016_uploadValidPdfWithContractDates'
+[INFO ] 2026-08-19 09:28:21.554 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+          Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc016_uploadValidPdfWithContractDates'          
+                                Test Description: 'TC-AGENCY-016 Upload a valid PDF document with contract dates'                                
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.556 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.558 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.561 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.565 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '12 out of 18' test cases in the current suite                                       
+                        Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc020_fakePdfExtensionIsRejected'                        
+                               Test Description: 'TC-AGENCY-020 File named .pdf with non-PDF content is rejected'                               
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.567 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc020_fakePdfExtensionIsRejected'
+[INFO ] 2026-08-19 09:28:21.567 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+             Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc020_fakePdfExtensionIsRejected'             
+                               Test Description: 'TC-AGENCY-020 File named .pdf with non-PDF content is rejected'                               
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.571 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.573 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.575 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.577 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '13 out of 18' test cases in the current suite                                       
+                             Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc022_uploadValidLogo'                             
+                                          Test Description: 'TC-AGENCY-022 Upload a valid agency logo'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.581 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc022_uploadValidLogo'
+[INFO ] 2026-08-19 09:28:21.581 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                  Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc022_uploadValidLogo'                  
+                                          Test Description: 'TC-AGENCY-022 Upload a valid agency logo'                                          
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.583 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.585 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.585 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                    'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareSharedFixture'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.585 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '14 out of 18' test cases in the current suite                                       
+                          Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc023_oversizeLogoIsRejected'                          
+                                       Test Description: 'TC-AGENCY-023 Logo larger than 2 MB is rejected'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.591 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc023_oversizeLogoIsRejected'
+[INFO ] 2026-08-19 09:28:21.591 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+               Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc023_oversizeLogoIsRejected'               
+                                       Test Description: 'TC-AGENCY-023 Logo larger than 2 MB is rejected'                                       
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.593 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.595 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Agency.AgencyMakerChecker_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:21.597 [main] ReportManager - Setting "targetOperatingSystem" property with "windows".
+[INFO ] 2026-08-19 09:28:21.599 [main] ReportManager - Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest..., --disable-features=Password..., --disable-infobars], extensions: [], prefs: {credentials_enable_service: false, download.default_directory: C:\Users\Sheen\agentic-ai-t..., download.prompt_for_download: false, profile.default_content_settings.popups: 0, profile.password_manager_enabled: false, profile.password_manager_leak_detection: false}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true}
+[INFO ] 2026-08-19 09:28:21.599 [main] ReportManager - Attempting to run locally on: "windows | Chrome".
+[INFO ] 2026-08-19 09:28:21.599 [main] ReportManager - Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection...
+[WARN ] 2026-08-19 09:28:24.712 [main] ReportManager - Aug 19, 2026 9:28:24 AM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+[WARN ] 2026-08-19 09:28:24.712 [main] ReportManager - WARNING: Unable to find CDP implementation matching 151
+[WARN ] 2026-08-19 09:28:24.713 [main] ReportManager - Aug 19, 2026 9:28:24 AM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+[WARN ] 2026-08-19 09:28:24.713 [main] ReportManager - WARNING: Unable to find version of CDP to use for 151.0.7922.109. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+[INFO ] 2026-08-19 09:28:24.713 [main] ReportManager - Successfully Opened: "windows | Chrome".
+[INFO ] 2026-08-19 09:28:24.763 [main] ReportManager - Target URL: "http://192.168.1.70"
+[INFO ] 2026-08-19 09:28:24.850 [main] ReportManager - Initial URL: "about:blank"
+[INFO ] 2026-08-19 09:28:26.417 [main] ReportManager - Navigate to url "http://192.168.1.70".
+[INFO ] 2026-08-19 09:28:26.806 [main] ReportManager - Type "odeysysadmin" into "Username *".
+[INFO ] 2026-08-19 09:28:27.129 [main] ReportManager - Type secure "••••••••••••" into "Password * Forgot Password?".
+[INFO ] 2026-08-19 09:28:27.436 [main] ReportManager - Moved the mouse to the middle of the element.
+[INFO ] 2026-08-19 09:28:27.640 [main] ReportManager - Click "Login".
+[INFO ] 2026-08-19 09:28:29.291 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                      'AdminPages.Admin.Agency.AgencyMakerChecker_TC.prepareSharedFixture'                                      
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.303 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '15 out of 18' test cases in the current suite                                       
+                         Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc047_cancelDiscardsUnsavedChanges'                         
+                                        Test Description: 'TC-AGENCY-047 Cancel discards unsaved changes'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.305 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp'
+[INFO ] 2026-08-19 09:28:29.309 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc047_cancelDiscardsUnsavedChanges'
+[INFO ] 2026-08-19 09:28:29.309 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+              Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc047_cancelDiscardsUnsavedChanges'              
+                                        Test Description: 'TC-AGENCY-047 Cancel discards unsaved changes'                                        
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.311 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.313 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Agency.AgencyMakerChecker_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.315 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                      'AdminPages.Admin.Agency.AgencyMakerChecker_TC.prepareSharedFixture'                                      
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.319 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '16 out of 18' test cases in the current suite                                       
+                        Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc049_rejectPendingUpdateWithReason'                        
+                                 Test Description: 'TC-AGENCY-049 Reject a pending agency update with a reason'                                 
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.321 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc049_rejectPendingUpdateWithReason'
+[INFO ] 2026-08-19 09:28:29.321 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+             Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc049_rejectPendingUpdateWithReason'             
+                                 Test Description: 'TC-AGENCY-049 Reject a pending agency update with a reason'                                 
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.323 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.325 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Agency.AgencyMakerChecker_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.328 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                      'AdminPages.Admin.Agency.AgencyMakerChecker_TC.prepareSharedFixture'                                      
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.330 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '17 out of 18' test cases in the current suite                                       
+                             Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc048_approvePendingUpdate'                             
+                                        Test Description: 'TC-AGENCY-048 Approve a pending agency update'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.332 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc048_approvePendingUpdate'
+[INFO ] 2026-08-19 09:28:29.332 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                  Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc048_approvePendingUpdate'                  
+                                        Test Description: 'TC-AGENCY-048 Approve a pending agency update'                                        
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.334 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.338 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                              'AdminPages.Admin.Agency.AgencyMakerChecker_TC.setUp'                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.340 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare shared fixture configuration method                                        
+                                      'AdminPages.Admin.Agency.AgencyMakerChecker_TC.prepareSharedFixture'                                      
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.345 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '18 out of 18' test cases in the current suite                                       
+                          Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc050_endToEndEditSubmitApprove'                          
+                                Test Description: 'TC-AGENCY-050 Agency update end to end: edit, submit, approve'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.347 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc050_endToEndEditSubmitApprove'
+[INFO ] 2026-08-19 09:28:29.347 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+               Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc050_endToEndEditSubmitApprove'               
+                                Test Description: 'TC-AGENCY-050 Agency update end to end: edit, submit, approve'                                
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.349 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                            'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tearDown'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.363 [main] ReportManager - 
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                           Starting execution of engine teardown configuration method                                           
+                                        'com.shaft.listeners.internal.ConfigurationHelper.engineTeardown'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[INFO ] 2026-08-19 09:28:29.363 [main] ReportManager - Successfully created attachment 'SHAFT Engine Logs - Execution log'
+[INFO ] 2026-08-19 09:28:29.363 [main] ReportManager - File Action "DoesFileExist" successfully performed. With the following test data "File Path: "target/logs/log4j.log"".
+[INFO ] 2026-08-19 09:28:29.363 [main] ReportManager - File Action "GetAbsolutePath" successfully performed. With the following test data "Relative Folder Path: "target/logs/log4j.log"".

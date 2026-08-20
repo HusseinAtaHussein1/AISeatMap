@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '12 out of 18' test cases in the current suite                                       
+                        Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc020_fakePdfExtensionIsRejected'                        
+                               Test Description: 'TC-AGENCY-020 File named .pdf with non-PDF content is rejected'                               
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

@@ -1,0 +1,8 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '15 out of 18' test cases in the current suite                                       
+                         Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc047_cancelDiscardsUnsavedChanges'                         
+                                        Test Description: 'TC-AGENCY-047 Cancel discards unsaved changes'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @19-08-2026 09:28:29.0305 AM

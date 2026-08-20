@@ -1,0 +1,159 @@
+{
+  "credField": {
+    "url": "http://192.168.1.70/master/supplier/credentials",
+    "headers": [
+      "Supplier credential field name",
+      "Supplier",
+      "Actions"
+    ],
+    "rows": [
+      [
+        "userName",
+        "Galileo",
+        ""
+      ],
+      [
+        "password",
+        "Galileo",
+        ""
+      ],
+      [
+        "targetBranch",
+        "Galileo",
+        ""
+      ],
+      [
+        "PCC",
+        "Galileo",
+        ""
+      ],
+      [
+        "ServiceType",
+        "Galileo",
+        ""
+      ],
+      [
+        "UniversalRecordServiceType",
+        "Galileo",
+        ""
+      ],
+      [
+        "office_id",
+        "Galileo",
+        ""
+      ],
+      [
+        "master_pricer_action",
+        "Amadeus",
+        ""
+      ],
+      [
+        "password",
+        "Amadeus",
+        ""
+      ],
+      [
+        "endpoint_URL",
+        "Amadeus",
+        ""
+      ]
+    ],
+    "managerNameOnPage": false,
+    "excerpt": "Flight\nSupplier\nMiscellaneous\nPayment Gateway\nWelcome\nodeysysadmin\nDashboard\nAdmin\nMaster\nRule Engine\nSettings\nUser Management\nBooking-Mid Office\nProfile\nReports\nPNR Query\nTransfer PNR\nSearch supplier credential field\nAdd Credential Field\nSupplier Credential Field Name\nSupplier\nSupplier\nSearch in grid\nSupplier credential field name\tSupplier\tActions\nuserName\tGalileo\t\npassword\tGalileo\t\ntargetBranch\tGalileo\t\nPCC\tGalileo\t\nServiceType\tGalileo\t\nUniversalRecordServiceType\tGalileo\t\noffice_id\tGalileo\t\nmaster_pricer_action\tAmadeus\t\npassword\tAmadeus\t\nendpoint_URL\tAmadeus\t\nShowing 10 results of 675 results\nShow\n10\nresults\nFirst\n1\n2\n.....\n68\nLast\nCopyright © Wonder Travel 2026. All Rights Reserved. RC8"
+  },
+  "suppliers": {
+    "url": "http://192.168.1.70/admin/operating-country",
+    "headers": [
+      "Operating Country",
+      "Country Name",
+      "Currency",
+      "Status",
+      "Approval Status",
+      "Actions"
+    ],
+    "rows": [
+      [
+        "usdD",
+        "United States",
+        "United States Dollar",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "EgyptLiveeee",
+        "Egypt",
+        "Egyptian Pound",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "United Arab Emirates",
+        "United Arab Emirates",
+        "United Arab Emirates Dirham",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "zzk",
+        "United Arab Emirates",
+        "aaaaaa",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "vj",
+        "United Arab Emirates",
+        "aaaaaa",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "TestDsssedsdsdmaoTestTest",
+        "",
+        "Egyptian Pound",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "egypttt",
+        "American Samoa",
+        "Egyptian Pound",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "EGY",
+        "Egypt",
+        "Egyptian Pound",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "egypt",
+        "",
+        "Egyptian Pound",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ],
+      [
+        "TestDemoTestTestUpooopcdfdtDdedmooooo",
+        "United Arab Emirates",
+        "Egyptian Pound",
+        "Active",
+        "Approved",
+        "View All Branches"
+      ]
+    ],
+    "managerNameOnPage": false,
+    "excerpt": "Company\nBranch\nAgency\nStaff\nWelcome\nodeysysadmin\nDashboard\nAdmin\nMaster\nRule Engine\nSettings\nUser Management\nBooking-Mid Office\nProfile\nReports\nPNR Query\nTransfer PNR\nOperating Country\nAdd Country\nOperating country name\nSelect Country\nie. Egypt\nStatus\n:\nInactive\nActive\nBoth\nSearch in grid\nOperating Country\tCountry Name\tCurrency\tStatus\tApproval Status\tActions\nusdD\tUnited States\tUnited States Dollar\tActive\tApproved\t\nView All Branches\nEgyptLiveeee\tEgypt\tEgyptian Pound\tActive\tApproved\t\nView All Branches\nUnited Arab Emirates\tUnited Arab Emirates\tUnited Arab Emirates Dirham\tActive\tApproved\t\nView All Branches\nzzk\tUnited Arab Emirates\taaaaaa\tActive\tApproved\t\nView All Branches\nvj\tUnited Arab Emirates"
+  }
+}

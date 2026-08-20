@@ -1,0 +1,1458 @@
+{
+  "url": "http://192.168.1.70/admin/agency/edit/949",
+  "title": "NDC - Agency",
+  "headings": [],
+  "controls": [
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Branch",
+      "name": null,
+      "label": "Branch *",
+      "value": "",
+      "readOnly": true,
+      "disabled": true,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Agency",
+      "name": null,
+      "label": "Agency *",
+      "value": "Test Egypt",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Country",
+      "name": null,
+      "label": "Country *",
+      "value": "Egypt",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-State",
+      "name": null,
+      "label": "State *",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-City",
+      "name": null,
+      "label": "City *",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Postofficebox",
+      "name": null,
+      "label": "Post office box *",
+      "value": "0022",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 8,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-CompanyURL",
+      "name": null,
+      "label": "Company URL",
+      "value": "asdas",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 50,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-FaxNo",
+      "name": null,
+      "label": "Fax No",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 11,
+      "ariaLabel": null
+    },
+    {
+      "tag": "TEXTAREA",
+      "type": "textarea",
+      "id": null,
+      "name": null,
+      "label": "Address 1",
+      "value": "Cairo",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 250,
+      "ariaLabel": null
+    },
+    {
+      "tag": "TEXTAREA",
+      "type": "textarea",
+      "id": null,
+      "name": null,
+      "label": "Address 2",
+      "value": "down town",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 250,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "tel",
+      "id": "Phone No",
+      "name": null,
+      "label": "+20 1001234567",
+      "value": "1149730331",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 15,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "id": "id-IATAAgency-yes",
+      "name": "id-IATAAgency",
+      "label": "yes",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "id": "id-IATAAgency-No",
+      "name": "id-IATAAgency",
+      "label": "No",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "id": "id-AgencyBusinessType-B2B",
+      "name": "id-AgencyBusinessType",
+      "label": "B2B",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "radio",
+      "id": "id-AgencyBusinessType-Freelancer",
+      "name": "id-AgencyBusinessType",
+      "label": "Freelancer",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Contactperson",
+      "name": null,
+      "label": "Contact person *",
+      "value": "Essam Saady",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-EmailID",
+      "name": null,
+      "label": "Email ID *",
+      "value": "test.user.ndc@gmail.com",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 49,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "tel",
+      "id": "Phone Number",
+      "name": null,
+      "label": "+20 1001234567",
+      "value": "1000000000",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 15,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "file",
+      "id": null,
+      "name": "docId",
+      "label": "",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-ContractStartDate",
+      "name": null,
+      "label": "Contract Start Date *",
+      "value": "05/07/2020",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-ContractEndDate",
+      "name": null,
+      "label": "Contract End Date *",
+      "value": "28/12/2030",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "file",
+      "id": null,
+      "name": "logoId",
+      "label": "",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": "image/*",
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Name",
+      "name": null,
+      "label": "Name *",
+      "value": "Essam",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 100,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-EmailID",
+      "name": null,
+      "label": "Email ID *",
+      "value": "ESaady@wondertravel-eg.com",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 49,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "tel",
+      "id": "Phone Number",
+      "name": null,
+      "label": "+20 1001234567",
+      "value": "540951737",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 15,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-AccountNumber",
+      "name": null,
+      "label": "Account Number",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 20,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-AccountType",
+      "name": null,
+      "label": "Account Type",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Bankname",
+      "name": null,
+      "label": "Bank name",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 49,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Invoicegeneration",
+      "name": null,
+      "label": "Invoice generation *",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Creditlimit",
+      "name": null,
+      "label": "Credit limit *",
+      "value": "1000000",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 15,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Topuplimit",
+      "name": null,
+      "label": "Top up limit *",
+      "value": "5000000",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 15,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-OutstandingThreshold",
+      "name": null,
+      "label": "Outstanding Threshold *",
+      "value": "5",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Target",
+      "name": null,
+      "label": "Target",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 15,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Month",
+      "name": null,
+      "label": "Month",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Year",
+      "name": null,
+      "label": "Year",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-CreditTerms(Days)",
+      "name": null,
+      "label": "Credit Terms (Days) *",
+      "value": "1000",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 11,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-ReachingPercentage",
+      "name": null,
+      "label": "Reaching Percentage",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-WarningPrompt(Days)",
+      "name": null,
+      "label": "Warning Prompt (Days)",
+      "value": "",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 11,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id--Creditagency",
+      "name": "id",
+      "label": "Credit agency",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Cash",
+      "name": "id-Cash",
+      "label": "Cash",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Wallet",
+      "name": "id-Wallet",
+      "label": "Wallet",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-CreditCard",
+      "name": "id-CreditCard",
+      "label": "Credit Card",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-BANQUEMISR",
+      "name": "id-BANQUEMISR",
+      "label": "BANQUE MISR",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Fawry",
+      "name": "id-Fawry",
+      "label": "Fawry",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Edgardo",
+      "name": "id-Edgardo",
+      "label": "Edgardo",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Isaiah",
+      "name": "id-Isaiah",
+      "label": "Isaiah",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Filomena",
+      "name": "id-Filomena",
+      "label": "Filomena",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Astrid",
+      "name": "id-Astrid",
+      "label": "Astrid",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Olive",
+      "name": "id-Olive",
+      "label": "Olive",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Dan",
+      "name": "id-Dan",
+      "label": "Dan",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Rico",
+      "name": "id-Rico",
+      "label": "Rico",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Collin",
+      "name": "id-Collin",
+      "label": "Collin",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Bryant",
+      "name": "id-Bryant",
+      "label": "Bryant",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Emilio",
+      "name": "id-Emilio",
+      "label": "Emilio",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Tracy",
+      "name": "id-Tracy",
+      "label": "Tracy",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Alma",
+      "name": "id-Alma",
+      "label": "Alma",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Desmond",
+      "name": "id-Desmond",
+      "label": "Desmond",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Enda",
+      "name": "id-Enda",
+      "label": "Enda",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Hiram",
+      "name": "id-Hiram",
+      "label": "Hiram",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Shannon",
+      "name": "id-Shannon",
+      "label": "Shannon",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Quinton",
+      "name": "id-Quinton",
+      "label": "Quinton",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Monserrate",
+      "name": "id-Monserrate",
+      "label": "Monserrate",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Joey",
+      "name": "id-Joey",
+      "label": "Joey",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Israel",
+      "name": "id-Israel",
+      "label": "Israel",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Kasi",
+      "name": "id-Kasi",
+      "label": "Kasi",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-Joan",
+      "name": "id-Joan",
+      "label": "Joan",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-m",
+      "name": "id-m",
+      "label": "m",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-Paymentoption-f",
+      "name": "id-f",
+      "label": "f",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-SelectProduct-Flight",
+      "name": "id-Flight",
+      "label": "Flight",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id-SelectProduct-Others",
+      "name": "id-Others",
+      "label": "Others",
+      "value": "false",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": null,
+      "name": null,
+      "label": "",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": null,
+      "name": null,
+      "label": "",
+      "value": "fdf",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": null,
+      "name": null,
+      "label": "",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-Genericsuppliercredentials(PCC)",
+      "name": "Generic supplier credentials (PCC)",
+      "label": "Generic supplier credentials (PCC) *",
+      "value": "",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-ManagerName",
+      "name": null,
+      "label": "Manager Name *",
+      "value": "live",
+      "readOnly": true,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "id": "id-SupplierCredentialsDescription",
+      "name": null,
+      "label": "Supplier Credentials Description *",
+      "value": "szds",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": null,
+      "name": null,
+      "label": "",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id--ImportPNROption",
+      "name": "id",
+      "label": "Import PNR Option",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id--TransferPnrOption",
+      "name": "id",
+      "label": "Transfer Pnr Option",
+      "value": "true",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "INPUT",
+      "type": "checkbox",
+      "id": "id--BlueCommandScreen",
+      "name": "id",
+      "label": "Blue Command Screen",
+      "value": "false",
+      "readOnly": false,
+      "disabled": true,
+      "required": false,
+      "accept": null,
+      "maxLength": null,
+      "ariaLabel": null
+    },
+    {
+      "tag": "TEXTAREA",
+      "type": "textarea",
+      "id": null,
+      "name": null,
+      "label": "remarks...",
+      "value": "QA TC23 - reactivating after test",
+      "readOnly": false,
+      "disabled": false,
+      "required": false,
+      "accept": null,
+      "maxLength": 524288,
+      "ariaLabel": null
+    }
+  ],
+  "primeDropdowns": [
+    {
+      "tag": "p-dropdown",
+      "label": "Branch *",
+      "text": "Test (BRN2)",
+      "disabled": true
+    },
+    {
+      "tag": "p-dropdown",
+      "label": "Branch *",
+      "text": "Cairo",
+      "disabled": false
+    },
+    {
+      "tag": "p-dropdown",
+      "label": "Branch *",
+      "text": "Cairo",
+      "disabled": false
+    },
+    {
+      "tag": "p-calendar",
+      "label": "Contract Start Date *",
+      "text": "",
+      "disabled": false
+    },
+    {
+      "tag": "p-calendar",
+      "label": "Contract Start Date *",
+      "text": "",
+      "disabled": false
+    },
+    {
+      "tag": "p-dropdown",
+      "label": "Account Number",
+      "text": "Select",
+      "disabled": false
+    },
+    {
+      "tag": "p-dropdown",
+      "label": "Invoice generation *",
+      "text": "monthly",
+      "disabled": false
+    },
+    {
+      "tag": "p-dropdown",
+      "label": "Target",
+      "text": "Select",
+      "disabled": false
+    },
+    {
+      "tag": "p-dropdown",
+      "label": "Target",
+      "text": "Select",
+      "disabled": false
+    },
+    {
+      "tag": "p-dropdown",
+      "label": "",
+      "text": "10",
+      "disabled": false
+    },
+    {
+      "tag": "p-multiselect",
+      "label": "Generic supplier credentials (PCC) *",
+      "text": "All (4 selected)",
+      "disabled": false
+    }
+  ],
+  "checkboxGroupCount": 36,
+  "checkboxGroups": [
+    {
+      "text": "Credit agency",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": true
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": true
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": true
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Payment option * : Cash Wallet Credit Card BANQUE MISR Fawry Edgardo Isaiah Filo",
+      "checked": false
+    },
+    {
+      "text": "Select Product : Flight Others",
+      "checked": true
+    },
+    {
+      "text": "Select Product : Flight Others",
+      "checked": false
+    },
+    {
+      "text": "Enable Search Limit",
+      "checked": true
+    },
+    {
+      "text": "Import PNR Option",
+      "checked": true
+    },
+    {
+      "text": "Transfer Pnr Option",
+      "checked": true
+    },
+    {
+      "text": "Blue Command Screen",
+      "checked": false
+    }
+  ],
+  "tables": [
+    {
+      "headers": [
+        "STATUS",
+        "SUPPLIER NAME",
+        "CREDENTIAL NAME",
+        "PRODUCT NAME",
+        "DESCRIPTION"
+      ],
+      "rowCount": 1,
+      "firstRows": [
+        [
+          "",
+          "TravelportNdc",
+          "",
+          "Flight",
+          ""
+        ]
+      ]
+    }
+  ],
+  "buttons": [
+    {
+      "text": "Upload document *",
+      "disabled": false,
+      "cls": "p-element p-ripple p-button-outlined p-button p-component"
+    },
+    {
+      "text": "Add",
+      "disabled": false,
+      "cls": "p-element p-button-raised p-button-rounded mt-3 mb-3 p-butto"
+    },
+    {
+      "text": "Upload logo *",
+      "disabled": false,
+      "cls": "p-element p-ripple p-button-outlined p-button p-component"
+    },
+    {
+      "text": "Add",
+      "disabled": false,
+      "cls": "p-element p-button-raised p-button-rounded mt-3 mb-3 p-butto"
+    },
+    {
+      "text": "Add",
+      "disabled": false,
+      "cls": "p-element p-button-raised p-button-rounded mt-3 mb-3 p-butto"
+    },
+    {
+      "text": "Set target",
+      "disabled": false,
+      "cls": "justify-content-center col-sm-6 col-lg-2 col-md-4 mb-sm-3 p-"
+    },
+    {
+      "text": "Cancel",
+      "disabled": false,
+      "cls": "p-element p-button-outlined p-button p-component"
+    },
+    {
+      "text": "Send For Approval",
+      "disabled": false,
+      "cls": "p-element p-buttonp p-button-raised p-button p-component d-f"
+    },
+    {
+      "text": "Approve",
+      "disabled": false,
+      "cls": "p-element p-buttonp p-button-raised p-button p-component d-f"
+    },
+    {
+      "text": "Reject",
+      "disabled": false,
+      "cls": "p-element p-buttonp p-button-raised p-button p-component d-f"
+    }
+  ],
+  "mandatoryLabels": [
+    "Branch *",
+    "Agency *",
+    "Country *",
+    "State *",
+    "City *",
+    "Post office box *",
+    "Address *",
+    "Phone No *",
+    "Contact person *",
+    "Email ID *",
+    "Phone Number *",
+    "Contract Start Date *",
+    "Contract End Date *",
+    "Name *",
+    "Email ID *",
+    "Phone Number *",
+    "Invoice generation *",
+    "Credit limit *",
+    "Top up limit *",
+    "Outstanding Threshold *",
+    "Credit Terms (Days) *",
+    "Payment option *",
+    "Generic supplier credentials (PCC) *",
+    "Manager Name *",
+    "Supplier Credentials Description *",
+    "Remarks *"
+  ],
+  "bodyText": "Company\nBranch\nAgency\nStaff\nWelcome\nodeysysadmin\nDashboard\nAdmin\nMaster\nRule Engine\nSettings\nUser Management\nBooking-Mid Office\nProfile\nReports\nPNR Query\nTransfer PNR\nUpdate Agency\nBranch *\nTest (BRN2)\nAgency\n*\nCountry\n*\nState *\nCairo\nCity *\nCairo\nPost office box\n*\nCompany URL\nFax No\nAddress *\n \nAddress\n \nPhone No *\nIATA Agency\n:\nyes\nNo\nAgency Business Type\n:\nB2B\nFreelancer\nAgency Owner Details\nContact person\n*\nEmail ID\n*\nPhone Number *\nUpload Document\nUpload document\n*\nscreen-1-logo-black-and-white.png\nContract Start Date *\nContract End Date *\nAdd\nAgency Logo\nUpload logo\n*\nWonder Travel Sales Contact\nName\n*\nEmail ID\n*\nPhone Number *\nAdd\nBank Account Details\nAccount Number\nAccount Type\nSelect\nBank name\nAdd\nPayment settings\nPayment terms\nInvoice generation *\nmonthly\nCredit limit\n*\nTop up limit\n*\nOutstanding Threshold\n*\nTarget\nMonth\nSelect\nYear\nSelect\nSet target\nCredit Terms (Days)\n*\nReaching Percentage\nWarning Prompt (Days)\nCredit agency\nPayment option *\n:\nCash\nWallet\nCredit Card\nBANQUE MISR\nFawry\nEdgardo\nIsaiah\nFilomena\nAstrid\nOlive\nDan\nRico\nCollin\nBryant\nEmilio\nTracy\nAlma\nDesmond\nEnda\nHiram\nShannon\nQuinton\nMonserrate\nJoey\nIsrael\nKasi\nJoan\nm\nf\nProduct Access Details\nSelect Product\n:\nFlight\nOthers\nSTATUS\tSUPPLIER NAME\tCREDENTIAL NAME\tPRODUCT NAME\tDESCRIPTION\n\tTravelportNdc\t\tFlight\t\nAirline Supplier credential (PCC)\nTravelportNdc\nGeneric supplier credentials (PCC) *\nAll (4 selected)\nManager Name\n*\nSupplier Credentials Description\n*\nEnable Search Limit\nAgency Features\nImport PNR Option\nTransfer Pnr Option\nBlue Command Screen\nThis option requires the Galileo supplier to be enabled\nRemarks *\nCancel\nSend For Approval\nApprove\nReject\nCopyright © Wonder Travel 2026. All Rights Reserved. RC8"
+}

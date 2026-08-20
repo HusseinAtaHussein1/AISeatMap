@@ -1,0 +1,9 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '1 out of 18' test cases in the current suite                                        
+                 Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc055_managerNameIsInheritedAndReadOnly'                 
+                           Test Description: 'TC-AGENCY-055 Manager Name shows the supplier's value and is read-only'                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @19-08-2026 09:27:59.0636 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareSharedFixture' @19-08-2026 09:27:59.0636 AM

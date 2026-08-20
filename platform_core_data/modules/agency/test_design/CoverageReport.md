@@ -3,319 +3,377 @@
 | Field | Value |
 |---|---|
 | Module | `agency` |
-| Produced by run | `run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency` |
-| Revision | 1 |
-| Project Context | `modules/agency/context/ProjectContext.md` (revision 2, Approved) |
-| Generated | 2026-08-01 |
+| Produced by run | `run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency` |
+| Revision | 3 |
+| Project Context | `modules/agency/context/ProjectContext.md` (revision 4, Approved 2026-08-18) |
+| Discovery | `modules/agency/discovery/` (revision 4, Approved 2026-08-18) |
+| Total Test Cases | 60 |
+| Generated | 2026-08-18 |
 | Status | **Approved** |
-| Approved | 2026-08-02 — reviewer, after per-case review of all 53 cases (37 Approved / 16 Rejected / 0 Pending) |
+| Approved | 2026-08-18 — Ahmed Ayman, alongside the suite and Traceability Matrix |
+| Revision 1–2 | run-001, 2026-08-01 — 53 cases. Approved 2026-08-02. |
 
 ## 1. Run Scope
 
-| | |
+| Field | Value |
 |---|---|
-| **Run Scope Type** | User Story |
-| **Run Scope Source** | Markdown file — `knowledge_base/requirements/user_stories/US-4222_Admin_Update_Agency.md` |
-| **Run Type** | User Story |
-| **Strategy applied** | **User Story** (§16) — narrowest and most literal: at minimum one case per enumerated acceptance criterion, no wandering into adjacent features, and every carried-forward Assumption/Risk given an explicitly tagged case or a stated disposition |
-| **Project Context designed against** | revision 2, `Approved` — the revision carrying the §1.1 Requirement Disposition taxonomy |
-| **Branch** | Manual Execution Pipeline. Cases are authored branch-agnostically; §11's **Review & Automation** roll-up summarizes the two binding per-case decisions that gate each branch |
+| Run Scope Type | **User Story** |
+| Run Type | **User Story** |
+| Source | `knowledge_base/requirements/user_stories/US-4222_Admin_Update_Agency.md` |
+| Pipeline branch | **Automation Pipeline** (1 → 2 → 3 → `4A` → `5A` → optional `5H` → `6A`) — changed at Project Context revision 3; run-001 took the Manual branch |
+| Designed against | Project Context **revision 4**, Approved 2026-08-18, and Discovery **revision 4**, Approved 2026-08-18 |
+| Target environment | `http://192.168.1.70` — STG, shared staging |
+| Target ref | `b0a6eb1` |
 
-**The governing design decision.** US-4222 predates later application enhancements, so per Project Context §1.1 the **running application is the primary reference where the story is clearly outdated**. Expected results are written against observed behaviour for disposition rows 1, 2 and 4; against the *requirement* for row 5; and AC-9 (row 3) is designed but Blocked. Every case whose expected result rests on the directive rather than on the story says so in its Notes.
+**Strategy applied (§16 — User Story).** The narrowest and most literal reading: at minimum one case per
+enumerated acceptance criterion, and **no wandering into adjacent Agency behaviour the story did not ask
+for**. Agency search and Create Agency are exercised only as a means of reaching or building the record
+under test; neither has a case of its own. Every carried-forward Assumption and Risk tied to US-4222 is
+dispositioned in §7 rather than folded silently into another case.
+
+**Code-state drift, stated rather than implied.** `run_manager drift` reports `moved` — four commits
+since this run was anchored. **Every changed path is platform tooling, specification, or this module's
+own artifacts; none is the application under test**, which is an external deployment at
+`http://192.168.1.70` and is not versioned by this repository. No inherited conclusion is invalidated by
+the drift. The application's own state is unversioned, which is why `targetRefAtWrite` is `null` on the
+module's stage records — an unversioned target is not an unchanged one, and run-004 therefore
+re-observed the form directly rather than trusting run-001's snapshots.
 
 ## 2. Requirements Covered
 
-| Requirement | Coverage Status | Test Cases |
+**14 of 14 in-scope requirement groups have at least one test case.** Requirement Coverage is measured
+against US-4222's ten acceptance criteria plus its four Expected Outcome actions.
+
+| Requirement ID | Covered by |
+|---|---|
+| AC-1 — Agency Master, 11 fields | TC-AGENCY-001 … 011, 053, 059 |
+| AC-2 — Agency Owner Details | TC-AGENCY-012 … 015 |
+| AC-3 — Upload Document | TC-AGENCY-016 … 021, 051 |
+| AC-4 — Agency Logo | TC-AGENCY-022, 023, 024, 051 |
+| AC-5 — Wonder Travel Sales Contact | TC-AGENCY-025, 026, 027, 028 |
+| AC-6 — Bank Account Details | TC-AGENCY-029 … 032 |
+| AC-7 — Payment Settings | TC-AGENCY-033 … 039, 058 |
+| AC-8 — Product Access Details | TC-AGENCY-040, 041, 042 |
+| AC-9 — Airline Supplier credential (PCC) | TC-AGENCY-043, 054, 055, 056, 057, 060 |
+| AC-10 — Import PNR Option | TC-AGENCY-044 |
+| Expected Outcome — Submit for Approval | TC-AGENCY-045, 046 |
+| Expected Outcome — Cancel | TC-AGENCY-047 |
+| Expected Outcome — Approve | TC-AGENCY-048, 050 |
+| Expected Outcome — Reject | TC-AGENCY-049 |
+
+**Coverage by §8.3's full category set — computed against `Covered` only:**
+
+| Category | Count | Which |
 |---|---|---|
-| AC-1 — Agency Master | Covered | TC-AGENCY-001 … 011, 053 |
-| AC-2 — Agency Owner Details | Covered | TC-AGENCY-012 … 015 |
-| AC-3 — Upload Document | Covered | TC-AGENCY-016 … 021, 051 |
-| AC-4 — Agency Logo | Covered | TC-AGENCY-022, 023, 024, 051 |
-| AC-5 — Wonder Travel Sales Contact | **Partially Covered** | TC-AGENCY-025 … 028 |
-| AC-6 — Bank Account Details | Covered | TC-AGENCY-029 … 032 |
-| AC-7 — Payment Settings | **Partially Covered** | TC-AGENCY-033 … 039 |
-| AC-8 — Product Access Details | Covered | TC-AGENCY-040, 041, 042 |
-| AC-9 — Airline Supplier Credential (PCC) | **Unknown / Unassessed** | TC-AGENCY-043 (Blocked) |
-| AC-10 — Import PNR Option | Covered | TC-AGENCY-044 |
-| Expected Outcome — Submit for Approval | Covered | TC-AGENCY-045, 046 |
-| Expected Outcome — Cancel | Covered | TC-AGENCY-047 |
-| Expected Outcome — Approve | **Partially Covered** | TC-AGENCY-048, 050 (Blocked) |
-| Expected Outcome — Reject | **Partially Covered** | TC-AGENCY-049 (Blocked) |
+| **Covered** | 12 | AC-1, AC-2, AC-3, AC-4, AC-6, AC-7, AC-8, AC-10, and all four Expected Outcome actions |
+| **Partially Covered** | 2 | AC-5 (`Designation` has no surface), AC-9 (two of five fields exist nowhere) |
+| **Out-of-Scope** | 6 | `PO-13`'s three controls · Branch-change (`PO-10`) · Role authorization (`PO-1`/`PO-6`/`PO-9`) · Reflection areas (`PO-11`) · Save as Draft (`PO-5`) · adjacent agency flows |
+| **Unknown / Unassessed** | 0 | — |
+| **Uncovered** | 0 | — |
 
-**Coverage Percentage: 9/14 = 64% Covered** — basis: 14 in-scope requirement groups (10 AC groups + 4 Expected Outcome actions); 9 fully Covered, 4 Partially Covered, 1 Unknown/Unassessed.
+> **Requirement Coverage: 12/14 = 86% Covered**, with 2 Partially Covered. Out-of-Scope items are not in
+> the denominator: the Project Context excludes them by decision, so their absence is not a gap.
 
-**Read that figure with its companions, not alone.** Per §8.3, Partially Covered and Unknown/Unassessed are reported beside the percentage rather than folded into it. **Nothing is Uncovered** — the one category that would represent a defect in this stage's own output. All five non-Covered requirements are designed; three are blocked by a missing credential or a pending business answer, and two are bounded by open questions the Project Context already records.
+**Two figures moved since revision 1, both upward, and both for the same reason** — run-004 replaced
+inference with observation:
 
-> **This table measures DESIGN coverage, not what will actually run.** *(Added 2026-08-02.)* A requirement is `Covered` here when Stage 3 authored cases for it — which is this stage's own responsibility and is unaffected by review outcomes. **Authorized coverage is a different measurement**, reported in §11.2, and the two now disagree in one place that matters: **AC-6 reads `Covered` above and has zero approved cases**, so nothing about Bank Account Details will be verified in this pass. The rows are not reconciled into one figure deliberately — collapsing them would either hide that Stage 3 did its job, or hide that the run will not exercise it.
+| | Revision 1 | Revision 3 |
+|---|---|---|
+| Covered | 10/14 = 71% | **12/14 = 86%** |
+| Partially Covered | 3 (AC-5, AC-7, Approve/Reject) | **2** (AC-5, AC-9) |
+| Unknown / Unassessed | 1 (AC-9) | **0** |
+| Uncovered | 1 (`PO-13`'s three controls) | **0** — now a decided exclusion, not an omission |
 
 ## 3. Coverage Matrix
 
-| Requirement | TC-001 … 011 | 012 … 015 | 016 … 021 | 022 … 024 | 025 … 028 | 029 … 032 | 033 … 039 | 040 … 042 | 043 | 044 | 045 … 047 | 048 … 050 | 051 | 052 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| AC-1 | ● | | | | | | | | | | | | | ● |
-| AC-2 | | ● | | | | | | | | | | | | |
-| AC-3 | | | ● | | | | | | | | | | ● | |
-| AC-4 | | | | ● | | | | | | | | | ● | |
-| AC-5 | | | | | ● | | | | | | | | | ● |
-| AC-6 | | | | | | ● | | | | | | | | |
-| AC-7 | | | | | | | ● | | | | | | | |
-| AC-8 | | | | | | | | ● | | | | | | ● |
-| AC-9 | | | | | | | | | ● | | | | | |
-| AC-10 | | | | | | | | | | ● | | | | |
-| Expected Outcome | | | | | | | | | | | ● | ● | | |
+Consolidated from `TraceabilityMatrix.md` §2, presented here for at-a-glance review.
 
-Full per-case detail is in `TraceabilityMatrix.md` §1; this is the at-a-glance view.
+| Requirement | Test Cases | Positive | Negative | Boundary | Inheritance / Integration | Status |
+|---|---|---|---|---|---|---|
+| AC-1 | 001–011, 053, 059 | 001, 010, 011, 053 | 002, 004, 005, 007, 008, 009, 015 | 004, 006 | 003, 059 | Covered |
+| AC-2 | 012–015 | 012 | 013, 014, 015 | — | — | Covered |
+| AC-3 | 016–021, 051 | 016, 017, 018, 051 | 019, 020, 021 | — | — | Covered |
+| AC-4 | 022, 023, 024, 051 | 022, 051 | 024 | 023 | — | Covered |
+| AC-5 | 025, 026, 027, 028 | 025, 026 | 027 | — | 028 | **Partially Covered** |
+| AC-6 | 029–032 | 029, 030, 031 | 032 | — | — | Covered |
+| AC-7 | 033–039, 058 | 033, 036, 038, 039 | 034, 035, 037, 058 | — | — | Covered |
+| AC-8 | 040, 041, 042 | 041 | — | — | 040, 042 | Covered |
+| AC-9 | 043, 054, 055, 056, 057, 060 | 043, 057 | 056 | — | 054, 055, 060 | **Partially Covered** |
+| AC-10 | 044 | 044 | — | — | — | Covered |
+| Submit for Approval | 045, 046 | 045 | 046 | — | — | Covered |
+| Cancel | 047 | 047 | — | — | — | Covered |
+| Approve | 048, 050 | 048, 050 | — | — | 050 | Covered |
+| Reject | 049 | 049 | — | — | — | Covered |
 
 ## 4. Business Rules
 
-The Project Context carries no `BR-`prefixed requirement IDs — it enumerates its in-scope surface as US-4222's acceptance-criteria groups, each citing the PRD requirement behind it (see `TraceabilityMatrix.md` header). The **platform-level business rules** that govern this module's behaviour are therefore cited through their PRD identifiers, and each is exercised directly rather than incidentally:
+The Project Context carries no `BR-`prefixed requirement identifiers — it enumerates its scope as
+US-4222 acceptance-criteria groups (see `TraceabilityMatrix.md`'s convention note). The business rules
+this suite exercises therefore arrive as **PRD cross-cutting requirements** and as **durable
+cross-module knowledge items**, and are audited here on their own rather than folded into §2.
 
-| Business Rule | Source | Test Cases |
-|---|---|---|
-| Mandatory-field violation renders `Required`, platform-wide | PRD XC-17 `[V]` | TC-AGENCY-002, 013, 021, 027, 034, 046 |
-| A governed record is submitted for approval, not published on save | PRD XC-01, XC-04 `[V]` | TC-AGENCY-045 |
-| Approve/Reject accept a free-text Remarks entry as the audit reason | PRD XC-03 `[V]` | TC-AGENCY-046, 048, 049 |
-| A checker approves or rejects a pending record | PRD XC-02 `[V]` | TC-AGENCY-048, 049, 050 (Blocked) |
-| An approver should not approve their own change | PRD XC-06 `[I]` — unproven | TC-AGENCY-048, 050 (Blocked) |
-| Cancel must not persist an edit | PRD GEO-09, SUP-10 `[V]` | TC-AGENCY-047 |
-| Country is inherited from the Branch and read-only | PRD ORG-05 `[V]`, AC-1 | TC-AGENCY-003 |
-| Supplier credentials cascade to Agency level | PRD SUP-05 `[V]` | TC-AGENCY-040 |
-| Import PNR must be explicitly enabled per organisation | PRD IPN-05 `[V]` | TC-AGENCY-044 |
-| Numeric-only fields reject non-numeric input | PRD XC-20 `[V]` | TC-AGENCY-004, 032, 035 |
-| Email validation message | PRD XC-18 `[V]` | TC-AGENCY-014 |
-| Phone validation message | PRD XC-19 `[V]` | TC-AGENCY-008 |
+| Rule | Source | Statement | Test Cases |
+|---|---|---|---|
+| XC-01, XC-04 `[V]` | PRD §6 | Creating or updating a governed record does not publish it; the maker submits and the record enters `Pending for approval`. **XC-04 is the one PRD requirement confirming an update path exists at all** | TC-AGENCY-045, 050 |
+| XC-02 `[V]` | PRD §6 | A checker Approves or Rejects the pending record | TC-AGENCY-048, 049, 050 |
+| XC-03 `[V]` | PRD §6 | Approval and rejection accept a free-text Remarks entry, captured as the audit reason | TC-AGENCY-046, 048, 049 |
+| XC-17 `[V]` | PRD §6 | A missing mandatory field reads `Required` | TC-AGENCY-002, 013, 021, 027, 034, 046, 056 |
+| XC-18 `[V]` | PRD §6 | Email errors read `Please enter a valid email` | TC-AGENCY-014 |
+| XC-19 `[V]` | PRD §6 | Phone errors read `Please enter valid phone number` | TC-AGENCY-008 |
+| **XC-20 `[V]`** | PRD §6 | Numeric-only fields state a format message on non-numeric input | **TC-AGENCY-058** — designed to this rule, expected to fail (FINDING-010) |
+| GEO-09, SUP-10 `[V]` | PRD §7.3, §7.5 | An update can be cancelled without persisting — a platform-wide pattern, neither instance about Agency | TC-AGENCY-047 |
+| ORG-05, ORG-06, ORG-07 `[V]` | PRD §7.2 | The Agency form's sections, its Payment Settings fields, and PCC assignment inherited from Supplier & Branch | TC-AGENCY-001, 033, 043 |
+| ORG-08 `[V]` | PRD §7.2 | Agencies are searchable | *(means only — no case, by scope)* |
+| SUP-05 `[V]` | PRD §7.5 | A credential configured at supplier level must be visible and assignable at Branch and Agency level | TC-AGENCY-040, 060 |
+| PAY-03 `[V]` | PRD §7.6 | Supported instruments are Cash, Wallet, Credit Card, Bank Transfer, plus Banque Misr and Fawry | TC-AGENCY-036 |
+| IPN-05 `[V]` | PRD §7.9 | Import PNR must be explicitly enabled for the organisation | TC-AGENCY-044 *(the toggle's persistence only; the refusal belongs to `import-pnr`)* |
+| **`BR-006`** | `knowledge/INDEX.md` | The Agency PCC section renders only where the parent Branch carries a supplier with a credential — extends `BR-002` (Branch Supplier Routing is inherited by child Agencies) | TC-AGENCY-054, 060; and the fixture definition itself |
+| **`APP-002`** | `knowledge/INDEX.md` | The Payment Option list reflects Master → Payment Gateway → Payment Method; its size is intended cross-module reflection, not agency state | TC-AGENCY-036, 037 — **select by label, never assert a count** |
+| **`R-1`, `R-2`** | `branch` module reuse | Probe max length with real keystrokes; read a pre-filled form by polling, never by one fixed-delay sample | TC-AGENCY-004, 006, 035, 058 (keystrokes); every case that reads a populated form (polling) |
 
 ## 5. Test Scenarios
 
-**By tier:** 47 Atomic · 5 Scenario · 1 E2E
-**By priority:** 19 P1 · 19 P2 · 15 P3 · 0 P4
+**60 cases in one module.** By tier: 55 Atomic · 4 Scenario · 1 E2E.
 
-**By dimension** — Negative Test Generation Engine (§7):
-
-| Category | Cases | Notes |
+| Dimension | Cases | Notes |
 |---|---|---|
-| Empty Values | 8 | TC-AGENCY-002, 013, 021, 027, 031, 034, 037, 046 |
-| Invalid Inputs | 10 | TC-AGENCY-004, 005, 008, 009, 014, 015, 019, 024, 032, 035 |
-| Boundary Values | 2 | TC-AGENCY-006 (name length), 023 (2 MB logo) |
-| Special Characters | 2 | TC-AGENCY-005 asserts they are **rejected** (rewritten 2026-08-01, §11.1); TC-AGENCY-053 asserts the space is **accepted** |
-| Unicode | 1 | TC-AGENCY-005 — non-Latin input, now expected to be rejected rather than stored |
-| Security Inputs | 2 | TC-AGENCY-007 (injection-shaped input), 020 (extension spoofing) |
-| Timeouts | 0 | **Not Applicable** — no timeout condition can be induced from a manual browser session against a shared environment, and no requirement states timeout behaviour for this form |
+| **Positive scenarios** | 24 | One per acceptance-criteria group, plus per-field persistence cases |
+| **Validation rules** | 8 | TC-AGENCY-002, 013, 021, 027, 034, 037, 046, 056 |
+| **Business rules** | 16 | §4's table — the maker–checker rules and the inheritance rules |
+| **Error handling** | 3 | TC-AGENCY-014 (exact string), 058 (a required message that is absent), 037 |
+| **Permissions** | 0 | **Not Applicable — removed as a test target by `PO-1`, `PO-6` and `PO-9`.** Role authorization belongs to the future Role CRUD module. This is a decided exclusion, recorded so the gap stays visible rather than reading as coverage |
+| **Configuration** | 1 | TC-AGENCY-044 — the Import PNR switch. `PO-13`'s three switches are out of scope |
+| **Regression impact** | 6 | TC-AGENCY-002, 019, 020, 023, 053, 058 — proactive impact assessment, distinct from Finding-derived regression |
+| **Integration behaviour** | 5 | TC-AGENCY-028, 040, 054, 055, 060 — the Branch → Agency and Supplier → Agency cascades, where undocumented coupling surfaces |
+| **Risk-based prioritization** | — | 15 × P1 · 20 × P2 · 24 × P3 · 0 × P4. Every High-risk item in `TraceabilityMatrix.md` §4 carries P1 or P2; no High-risk requirement is left with only a low-priority case |
+| **Exploratory recommendations** | 5 charters | §10 — not fabricated fixed-outcome cases |
 
-**By dimension** — Required Dimensions (§17):
+**Negative Test Generation Engine (§7) — every category evaluated, none silently skipped:**
 
-| Dimension | Cases / Disposition |
-|---|---|
-| Positive Scenarios | TC-AGENCY-001, 010, 011, 012, 016, 017, 018, 022, 025, 026, 029, 030, 031, 033, 036, 038, 039, 040, 041, 044, 045, 047, 051, 053 |
-| Boundary Testing | TC-AGENCY-006, 023 — evaluated once, shared with §7 rather than duplicated |
-| Validation Rules | TC-AGENCY-002, 004, 005, 007, 008, 009, 013, 014, 015, 021, 027, 032, 034, 035, 037, 046, 053 |
-| Business Rules | See §4 — every listed rule has at least one case |
-| Error Handling | TC-AGENCY-002, 013, 019, 023, 034 — these assert the *message rendered*, not merely that the error triggers |
-| Permissions | TC-AGENCY-048, 049, 050 — **Partially Applicable**: the only role boundary US-4222 states is maker vs. approver, and it is Blocked (one identity). No other role boundary is documented in the Project Context |
-| Configuration | TC-AGENCY-010, 011, 039, 041, 044 — the agency-level switches the form exposes. **Not Applicable** for global feature flags: the Project Context documents none affecting this form |
-| Regression Impact | TC-AGENCY-044 carries the assessment explicitly — disabling Import PNR causes downstream import refusals (PRD IPN-05). Broader impact on the five Reflection areas is Out-of-Scope per Project Context §3 |
-| Integration Behaviour | TC-AGENCY-028, 040, 052 — Branch → Agency inheritance and the supplier-credential cascade. Two of the three are Deferred; see §8 |
-| Risk-based Prioritization | Applied — every High-risk case in `TraceabilityMatrix.md` §4 carries P1 or P2. No High-risk requirement is left at P3/P4 |
-| Exploratory Recommendations | 4 recorded in §10 |
+| Category | Cases | Or the reason it does not apply |
+|---|---|---|
+| **Invalid Inputs** | 004, 005, 008, 009, 014, 015, 032, 035, 058 | — |
+| **Boundary Values** | 004, 006, 023 | — |
+| **Empty Values** | 002, 013, 021, 027, 034, 037, 046, 056 | — |
+| **Unicode** | 005 (`وكالة`) | Covered as one value in the character-set case rather than as a separate case, because the field's allowed set is one rule |
+| **Special Characters** | 005, 007, 053 | `053` covers the space, which the reported rule excludes but existing data requires |
+| **Security Inputs** | 007, 020 | **Now executable as designed.** run-004 deliberately deferred payload probes rather than typing them into shared record 949; the self-created fixture is the record they belong on |
+| **Timeouts** | 0 | **Not Applicable — no timeout condition can be induced** from a browser session against a shared environment, and no requirement states timeout behaviour. Unchanged from revision 1 |
 
 ## 6. Manual Test Cases
 
+Full case content lives in the suite documents, never restated here.
+
 | Artifact | Path | Cases |
 |---|---|---|
-| Manual Test Suite (Markdown, authored) | `modules/agency/test_design/TestCases_Agency.md` | 52 |
-| Manual Test Suite (Excel, generated) | `modules/agency/test_design/TestCases_Agency.xlsx` | 52 |
+| Manual Test Suite — Markdown | `modules/agency/test_design/TestCases_Agency.md` | 60 |
+| Manual Test Suite — Excel | `modules/agency/test_design/TestCases_Agency.xlsx` | 60 |
 
-**Count reconciliation (§9.1 #6):** the suite document's own Total Test Cases states **53**; `TraceabilityMatrix.md` §1 carries **53** rows; the export tool reported **53 case(s) across 1 module(s)** and exited 0 with no warnings. All three agree. *(52 → 53 on 2026-08-01: TC-AGENCY-053 was added for the Agency Name space question, §11.1. The suite header total and the Case Index are now re-rendered from the case bodies by `cli.js --sync-index`, so a hand-maintained count can no longer drift from them.)*
+**Count reconciliation (§9.1 #6) — three sources, counted from the files:**
 
-The workbook was generated by `node platform_core/tools/test_suite_export/cli.js`, never hand-authored. **No flag is needed** — with `agency` the active module, the default call resolves this folder. *(The original export required an explicit `--dir` because the tool's default still targeted the active run's `test_design/`, which the 2026-07-29 module-workspace migration had moved to `modules/{module}/test_design/`. That was platform defect **DREC-T04**, fixed 2026-08-01; the workbook has since been regenerated by the plain default call.)*
+| Source | Count |
+|---|---|
+| Suite document's own Total Test Cases | 60 |
+| `TraceabilityMatrix.md` §1 rows | 60 |
+| `test_suite_export --check` per-module count | 60 |
 
-This module's suite is one file for one module; no grouping caveat applies.
+✅ **All three agree.** The workbook was generated from the Markdown by
+`node platform_core/tools/test_suite_export/cli.js` after the final edit — never hand-written and never
+hand-edited. `--check` reports 60 cases with **no missing-field and no duplicate-ID warnings**; its only
+warnings are the eight inconsistent lifecycle pairs in §11, which are human decisions to resolve, not
+defects in the Markdown.
+
+**No file in this module groups several requirement groups**, so no `--sheet-name` override is used; the
+single workbook's tab is named for the module.
 
 ## 7. Assumptions
 
-Assumption-based cases carried forward from the Project Context, plus the disposition of every Project Context assumption not converted into a case.
+Assumption-based cases carried forward from the Project Context, plus the disposition of every Project
+Context assumption not converted into a case. **Nine dispositions changed at revision 3**, each marked.
 
 | Project Context ID | Statement | Disposition in this suite |
 |---|---|---|
-| ASM-009 | PDF-only and 2 MB constraints are story-sourced and never verified | **Cases** — TC-AGENCY-019, 020, 023, 024 |
-| ASM-012 | Must documents/logo be re-uploaded on every update? | **Case** — TC-AGENCY-051, tagged `Assumption-based` |
-| ASM-016 | Does changing Branch overwrite inherited values? | **Case** — TC-AGENCY-052, tagged `Assumption-based`, **Deferred** |
-| ASM-004, ASM-015 | Is self-approval prohibited? Which role may approve? | **Cases** — TC-AGENCY-048, 049, 050, **Blocked** pending a second credential |
-| ASM-014 | Authoritative Payment Option set unknown | **Bounded case** — TC-AGENCY-036 exercises the five real instruments and deliberately does not assert the full list |
-| ASM-018 | Are the story's message strings literal? | **Resolved before this stage** — refuted as framed; the application renders `Required`. Cases assert `Required` |
-| ASM-008 | Draft-save discrepancy | **No case** — refuted in Discovery; no draft control exists on either form and no in-scope source requires one |
-| ASM-013 | AC-9 table shape ambiguity | **Moot** — the whole section is absent; folded into TC-AGENCY-043 |
-| ASM-001, ASM-002, ASM-007, ASM-010 | PRD is reverse-engineered; no PRD requirement for the update flow; no prior field-validation coverage; test data is environment-specific | **Standing context, not testable** — these shape how results are read rather than defining behaviour to verify. ASM-010 is why every case names `AGN2 — Test Egypt` explicitly rather than assuming a record exists |
-| ASM-003 | PCC inherited from Supplier & Branch | **Unresolvable here** — the section does not exist; folded into TC-AGENCY-043 |
-| ASM-005 | Credit enforcement behaviour unspecified | **No case** — verifying enforcement requires bookings/payments, forbidden on this environment (Project Context §5) |
-| ASM-006 | Complete approval matrix unknown | **Partially** — TC-AGENCY-048/049 would establish it for agencies if unblocked |
-| ASM-011 | `Cancel` "role update process" wording | **Case** — TC-AGENCY-047 tests the agency behaviour; the wording error is a documentation correction |
-| ASM-017 | Are the Reflection areas in scope? | **No case** — Out-of-Scope per Project Context §3 pending DOQ-11 |
+| ASM-009 | PDF-only and 2 MB constraints are story-sourced and never verified | **Cases** — TC-AGENCY-019, 020, 023, 024. Unchanged |
+| ASM-012 | Must documents/logo be re-uploaded on every update? | **Answered by `PO-7` and verified by run-004.** TC-AGENCY-051's `Assumption-based` tag is **removed** — a stored document and logo were both present on form load. What the case still establishes is that a *submission* succeeds without re-upload |
+| ASM-013 | AC-9 table shape ambiguity | **Answered by observation, not inference.** `PO-8` converted it into a Stage 2 task; run-004 recorded the exact layout. Product Access is a five-column table (TC-AGENCY-040) and the PCC section is three controls per supplier tab (TC-AGENCY-043, 060). **Was "moot — the section is absent"** |
+| ASM-016 | Does changing Branch overwrite inherited values? | **Retired by `PO-10`** — Branch is not editable from this form. TC-AGENCY-052 is retired; TC-AGENCY-059 confirms the read-only property instead. **Was a Deferred case** |
+| ASM-018 | Are the story's message strings literal? | **Superseded by `PO-12` and satisfied with literals.** run-004 measured 23 `Required` instances plus `Please select at least one supplier.` and `Please enter a valid email`. Cases assert those exact strings. **Was "resolved as framed"** |
+| ASM-014 | Authoritative Payment Option set unknown | **Answered by `APP-002`** — the list reflects Payment Method master data and its size is intended reflection. TC-AGENCY-036 selects by label and asserts no count. The master's own correctness is `payment-gateway`'s |
+| ASM-011 | `Cancel` "role update process" wording | **Answered by `PO-6` and verified.** TC-AGENCY-047 tests the agency behaviour; the wording is a reference to role authorization, not a qualifier on Cancel |
+| ASM-017 | Are the Reflection areas in scope? | **Answered by `PO-11`** — impact-awareness boundaries only. No case. **Was "pending DOQ-11"** |
+| ASM-004, ASM-015 | Is self-approval prohibited? Which role may approve? | **Deferred to Role CRUD by `PO-9`.** TC-AGENCY-048, 049, 050 are **unblocked** but narrowed: they assert workflow behaviour and resulting state, never role authorization. **Was "Blocked pending a second credential"** |
+| ASM-008 | Draft-save discrepancy | **Decided out of scope by `PO-5`**, not merely refuted. Kept on record as a future coverage item |
+| ASM-006 | Complete approval matrix unknown | **Still open, and now explicitly not this module's** — deferred to Role CRUD. TC-AGENCY-048/049 establish the *workflow*, not the matrix |
+| ASM-003 | PCC inherited from Supplier & Branch | **Confirmed end to end by experiment.** TC-AGENCY-060 asserts it; `BR-006` records it as durable knowledge. **Was "unresolvable — the section does not exist"** |
+| ASM-005 | Credit enforcement behaviour unspecified | **No case** — verifying enforcement requires bookings or payments, `Forbidden (absolute)` on this environment. PRD `OQ-7` remains open |
+| ASM-001, ASM-002, ASM-007, ASM-010 | PRD is reverse-engineered; no PRD requirement for the update flow; no prior field-validation coverage; test data is environment-specific | **Standing context, not testable.** ASM-010's consequence changed: cases no longer name a shared record but a **self-created fixture** (§0.1 of the suite), which is a stronger answer to environment-specific test data than naming a borrowed record was |
 
 ## 8. Coverage Gaps
 
-**Uncovered Requirements: 0.** **Uncovered Findings: 0.**
+**Uncovered Requirements: 0. Uncovered Findings: 0.**
 
 | Item | Category | Reason | Minimal prerequisite to close (§20) |
 |---|---|---|---|
-| AC-9 — Airline Supplier Credential (PCC), five fields | **Unknown / Unassessed** | The section is absent from both the update and create forms. Two `[V]`-tagged PRD requirements describe it, so disposition row 3 applies: designing to observed behaviour would assert the section was legitimately removed, which nothing establishes | **Answer DOQ-02** — confirm with the product owner whether AC-9 was superseded by Product Access Details or is missing |
-| AC-5 — `Designation` field | **Partially Covered** | No surface exists to test; the field is absent from both forms (FINDING-006) | Confirm with the product owner whether `Designation` is expected. TC-AGENCY-026 step 3 closes the one remaining condition (does it appear on an added row?) at no extra cost |
-| AC-5 — Branch-inherited Sales Contact defaults | **Partially Covered** | TC-AGENCY-028 is **Deferred** — verifying inheritance requires changing Branch, which may overwrite live values (ASM-016) | A dedicated (non-shared) environment, or an agency created for the purpose |
-| AC-7 — authoritative Payment Option set | **Partially Covered** | 23 of 28 rendered options are meaningless data (FINDING-003); the correct set is undefined in both sources | Master-data cleanup on STG, or confirmation of the authoritative option list |
-| Expected Outcome — Approve, Reject | **Partially Covered** | TC-AGENCY-048, 049, 050 are designed in full but **Blocked** — one credential exists, so maker and checker cannot be separated (FINDING-007) | **Add a second, non-Super-Admin credential** to `knowledge_base/credentials/credentials.json` |
-| `Transfer Pnr Option`, `Blue Command Screen`, `Enable Search Limit` | **Uncovered — deliberately, with reason** | Three later-enhancement switches with **no acceptance criteria in any source**. Designing a case would mean inventing the expected result, which Execution Rule 6 forbids. Toggling them changes live agency behaviour | Confirm intended behaviour for each; then one persistence case each, mirroring TC-AGENCY-011 |
-| Contract End Date must follow Contract Start Date | **Uncovered — deliberately, with reason** | A natural boundary rule that **no source states** for this form. PRD RPT-08 has a date-order rule but for Statement reports, not agency contracts | Confirm whether the rule applies here; then one boundary case |
-| Timeout behaviour (§7) | **Not Applicable** | No timeout condition can be induced from a manual browser session against a shared environment, and no requirement states timeout behaviour | — |
+| **AC-9 — `Search Supplier Credential PCC` (Mandatory) and `Ticketing Supplier Credentials PCC`** | **Partially Covered** | Both fields exist **nowhere on the form**. run-004 searched for them by page text across five supplier tabs on two Branches and two Agencies and found neither; the hypothesis that they surface only for a GDS supplier with a PCC selected was directly refuted. The PRD names the *section* (ORG-05 `[V]`) but not these fields, which is disposition row 2 — but designing to observed behaviour here would mean asserting that a **Mandatory** story field was legitimately removed, which nothing establishes | **Confirm with the product owner whether `Search Supplier Credential PCC` was deliberately removed or never built.** Until then the two fields are held as blocked, neither designed against nor dropped |
+| AC-5 — `Designation` field | **Partially Covered** | No surface exists to test; absent from the first row on both forms in both runs (FINDING-006) | Confirm whether `Designation` is expected. TC-AGENCY-026 step 3 closes the one remaining condition — does it appear on an added row? — at no extra cost |
+| AC-7 — the authoritative Payment Option set | **Partially Covered within a Covered requirement** | 24 of 29 rendered options are person names and single letters, and the count moved 28 → 29 between runs with no action by either. Pre-disposed by `APP-002` as intended cross-module reflection | Master-data cleanup on STG, or confirmation of the authoritative list. Owned by `payment-gateway`, not by this module |
+| `Transfer Pnr Option` · `Blue Command Screen` · `Enable Search Limit` | **Out-of-Scope** | **Decided by `PO-13`**, 2026-08-18 — not an omission. All three exist on the form and in no requirement; `Blue Command Screen` is additionally disabled with the hint *"This option requires the Galileo supplier to be enabled"*. The Stage 2 evidence is kept so the story that owns them starts from an observation. **Was Uncovered at revision 1** | The User Story for their own feature. Nothing is needed from this run |
+| Contract End Date must follow Contract Start Date | **Uncovered — deliberately, with reason** | A natural boundary rule that **no source states** for this form. PRD RPT-08 carries a date-order rule, but for Statement reports, not agency contracts. Designing it would mean inventing a requirement | Confirm whether the rule applies here; then one boundary case. Charter DREC-T08 covers the investigation |
+| `Reaching Percentage` upper bound | **Uncovered — deliberately, with reason** | Numeric with no stated range in any source. Whether values above 100 are accepted is unknown | Charter DREC-T09, then one boundary case |
+| Credit enforcement behaviour | **Out-of-Scope** | Verifying it requires bookings or payments, which are `Forbidden (absolute)` on this environment. PRD `OQ-7` is open | An environment and authorization for commercial operations — neither of which this run has, or asks for |
+| Role authorization / maker–checker identity separation | **Out-of-Scope** | Removed as a test target by `PO-1`, `PO-6`, `PO-9`. Recorded so the gap stays visible rather than reading as coverage. **Was a High risk and three Blocked cases at revision 1** | A `Role CRUD` module with a requirement behind it. Stage 1 recommends *not* proposing one yet |
+| Timeout behaviour (§7) | **Not Applicable** | No timeout condition can be induced from a browser session against a shared environment, and no requirement states timeout behaviour | — |
 
 ## 9. Risks
 
-Aggregated from `TraceabilityMatrix.md` §4. **Six High-risk items**, called out explicitly:
+Aggregated from `TraceabilityMatrix.md` §4. **Four High-risk items**, called out explicitly — down from
+six at revision 1, and one of them is new.
 
 | Risk | Cases | Why it is High |
 |---|---|---|
-| **Contract documents may be storable in any format** | TC-AGENCY-019, 020 | The document input declares no accepted type and a `.png` is already attached to a live agency. These are the run's strongest genuine defect candidates |
-| **AC-9's section may be a removed feature, not an outdated story** | TC-AGENCY-043 | Two `[V]`-tagged PRD requirements describe it. Mis-dispositioning this would convert a regression into a documentation correction |
-| **Four-eyes governance cannot be verified** | TC-AGENCY-048, 049, 050 | PRD §1.1 lists it as a business objective; one identity makes a genuine segregation failure indistinguishable from correct behaviour |
-| **~20 acceptance criteria specify messages the application does not render** | TC-AGENCY-002, 013, 034 | Resolved by the directive — cases assert `Required`. Residual risk is that the story stays uncorrected and misleads a later reader |
-| **Live commercial settings are edited on shared staging** | TC-AGENCY-033 | Credit limit, payment options and product access affect what other testers see when they search and book. Restoration after each case is mandatory, not optional |
-| **Changing Branch may overwrite existing values** | TC-AGENCY-028, 052 | Both Deferred for exactly this reason — potentially unrecoverable on a live record |
+| **A platform-wide `[V]` validation message does not appear** *(new at revision 3)* | TC-AGENCY-058 | PRD XC-20 `[V]` states both the rejection and the message for non-numeric input, and no source supersedes it. `Credit limit *` discards the keystrokes and shows nothing. If equivalent server-side validation is also missing, a non-numeric value from another client would not be caught — **unverified; no API-level probe was run**. This is the run's one `Bug`-category Finding |
+| **Contract documents may be storable in any format** | TC-AGENCY-019, 020 | The document input declares no accepted type while the logo input on the same form declares `accept="image/*"`, and a `.png` is attached to a live agency. Re-confirmed by run-004 |
+| **~20 acceptance criteria specify messages the application does not render** | TC-AGENCY-002, 013, 034 | Resolved for execution — cases assert `Required`. The residual risk is that the story stays uncorrected and misleads a later reader into re-deriving this analysis |
+| **A literal reading of the character rule makes existing agencies un-updatable** | TC-AGENCY-053 | The reported allowed set excludes the space, yet stored agency names contain one (`Test Egypt`). If rejection is real, no agency whose name has a space can be resubmitted without renaming |
 
-**Medium: 15 cases · Low: remaining.** The standing Medium risk across all mutating cases is shared-environment interference (Project Context RSK-001) — another tester may change `AGN2 — Test Egypt` mid-execution, producing a false failure.
+**Medium: 12 items · Low: the remainder.**
+
+**The standing shared-environment risk is retired for the 41 repointed cases.** At revision 1 every
+mutating case carried it, and restoration after each case was mandatory. Those cases now act on a
+record the run created, so there is nothing of anyone else's to restore or to be changed underneath
+them. The twelve read-only cases save nothing and may run against any agency. `TraceabilityMatrix.md`
+§4 records all four retired risks with the reason each no longer applies.
 
 ## 10. Recommendations
 
 | ID | Recommendation | Rationale |
 |---|---|---|
-| DREC-T01 | **Add a second, non-Super-Admin credential before Stage 4M** | Unblocks TC-AGENCY-048, 049, 050 and resolves ASM-004, ASM-015 and PRD OQ-1 in one step. Currently the single largest coverage gap |
-| DREC-T02 | **Answer DOQ-02 before executing TC-AGENCY-043** | Executing it now records a failure against a criterion whose status is undecided |
-| DREC-T03 | **Record `AGN2 — Test Egypt`'s full pre-edit state before the first mutating case** | 20 cases mutate this record. A single captured baseline makes every restoration step verifiable rather than a matter of memory |
-| DREC-T04 | ~~**Update the export tool's default path resolution**~~ — **RESOLVED 2026-08-01** | It resolved `runs/{run}/test_design/`, which the module-workspace migration replaced with `modules/{module}/test_design/`, so the default was wrong for every module suite — a platform defect, not a suite defect. The default now resolves the **active module**, with `--module <slug>` to name one and `--run` retained for historic run folders. 8 regression tests added (48/48 pass); this workbook was regenerated by the plain default call |
-| DREC-T05 | Get `Outstanding Threshold`'s valid range and business meaning | Its existence is confirmed; its semantics are not. The observed value is `5` against a credit limit of `1000000`, so it is plainly not a currency amount. A guessed value gives a test that passes while asserting nothing meaningful |
-| DREC-T06 | **Exploratory charter — the four undocumented switches** | `Agency Business Type`, `Transfer Pnr Option`, `Blue Command Screen`, `Enable Search Limit`. A time-boxed session to establish what each does, rather than fixed cases that would encode invented expectations |
-| DREC-T07 | **Exploratory charter — Payment Option data** | Establish whether the 23 non-payment entries exist outside STG. Decides whether this is staging hygiene or a production data-integrity defect |
-| DREC-T08 | **Exploratory charter — contract date relationships** | Start/end ordering, past dates, and overlapping document periods. No source states these rules, so a charter is more honest than fabricated assertions |
-| DREC-T09 | **Exploratory charter — `Reaching Percentage` bounds** | The field is numeric with no stated range. Whether values above 100 are accepted is worth knowing before writing a boundary case |
-| DREC-T10 | Correct US-4222 once the outstanding questions are answered | The message column, `Submit for Approval` vs `Send For Approval`, the "role update process" wording, and the seven undocumented fields. Otherwise the next reader repeats this run's analysis |
+| **DREC-T11** | **Confirm whether `Search Supplier Credential PCC` was deliberately removed or never built** | The single largest remaining coverage gap, and the only one blocking a **Mandatory** story field. The answer decides whether two AC-9 fields are logged as an accepted gap or escalated as a removed feature. It no longer blocks the rest of AC-9 |
+| **DREC-T12** | **Confirm whether XC-20's numeric message should appear on the Agency form** | Decides TC-AGENCY-058's fate. If silent masking is the intended platform design, the case is withdrawn and XC-20 is corrected; if not, execution reports a genuine Medium defect. The two outcomes are mutually exclusive, which is why the case is designed to the requirement and split from TC-AGENCY-035 |
+| **DREC-T13** | **Ask separately whether `Company URL` should validate format at all** | Decides whether TC-AGENCY-009 stays exploratory or becomes a negative case designed to AC-1's `"Please enter a valid URL."`. Kept separate from DREC-T12 because the PRD corroborates one half of FINDING-010 and is silent on the other |
+| **DREC-T14** | **Settle where the upload fixtures live** — the one Stage 1 item still open (§8.4 #1) | `PO-4` decided they are synthetic and committed; it did not say where, and `agency` has no automation package yet. Stage 1 recommends `platform_core_data/automation_baseline/shaft/tests_SHAFT/src/test/resources/testDataFiles/agency/uploads/`. **Stage `4A` needs this settled before it writes the upload steps** |
+| **DREC-T15** | **Build `{BRANCH_UNDER_TEST}` with two or more suppliers, not one** | TC-AGENCY-060 verifies the tab set tracks the Branch's supplier set; a single-supplier Branch neither confirms nor refutes that and the case would be recorded `Blocked`. Two suppliers costs the fixture build almost nothing and unlocks the one integration case that would catch undocumented coupling |
+| DREC-T05 | Get `Outstanding Threshold`'s valid range and business meaning | Its existence is settled (disposition row 4); its semantics are not. The observed value is `5` against a credit limit of `1000000`, so it is plainly not a currency amount. A guessed value gives a test that passes while asserting nothing |
+| DREC-T10 | Correct US-4222 once the outstanding questions are answered | The message column, `Submit for Approval` vs `Send For Approval` (confirmed twice), the "role update process" wording, the seven undocumented fields, and AC-9's five fields versus the live three. Otherwise the next reader repeats this run's analysis |
+| DREC-T16 | **Consider whether `Manager Name` should keep its mandatory marker** | Cosmetic and low priority, deliberately not asserted by TC-AGENCY-055. A field nobody can fill carries a `*`, which will keep prompting the question on every review |
+| **Exploratory charters** — scoped for a human tester rather than forced into fixed assertions | | |
+| DREC-T06 | Charter — `Agency Business Type`, and (if `PO-13` is ever lifted) the three excluded switches | A time-boxed session to establish what each does, rather than cases that would encode invented expectations |
+| DREC-T07 | Charter — Payment Option data quality | Establish whether the 24 non-payment entries exist outside STG. Decides whether this is staging hygiene or a production data-integrity defect |
+| DREC-T08 | Charter — contract date relationships | Start/end ordering, past dates, overlapping document periods. No source states these rules |
+| DREC-T09 | Charter — `Reaching Percentage` bounds | Numeric with no stated range; worth knowing before writing a boundary case |
+| DREC-T17 | Charter — the PCC section's behaviour across multiple suppliers | Whether per-tab values are independent, and what happens when a supplier is removed at Branch level while the Agency holds a description against it. `BR-006` establishes the render rule; it does not cover teardown |
+
+**Closed since revision 1:** DREC-T01 (second credential — retired by `PO-9`, no longer needed),
+DREC-T02 (DOQ-02 — answered by FINDING-008's experiment), DREC-T03 (baseline capture of record 949 —
+moot, the record is no longer under test), DREC-T04 (export tool path resolution — resolved 2026-08-01).
 
 ## 11. Review & Automation
 
-*(Section renamed and re-scoped 2026-08-01, and renamed again 2026-08-07 to the canonical umbrella heading `Review & Automation` (`test-design-skill` §18 #11). It was "Automation Candidates" — an advisory list — then "Automation Status", then "Lifecycle Status — Review and Automation". It is a **roll-up of the two binding columns** each test case carries, per `test-design-skill` §6.3. "Lifecycle Status" was dropped because the two decisions are independent and must not read as one combined state.)*
+A roll-up of **decisions already recorded on the cases**, counted by parsing the Case Index with
+`test_suite_export`'s own parser. It is never a recommendation, and this stage advanced nothing.
 
-**Roll-up as of the reviewer's completed review, imported 2026-08-02** (`cli.js --import-lifecycle`). The suite is **53** cases:
+**Review is complete.** All 60 cases were reviewed by Ahmed Ayman on 2026-08-18, recorded in the
+workbook and moved into the Markdown with
+`test_suite_export/cli.js --import-lifecycle` (72 decisions imported), after which the workbook was
+regenerated from the Markdown so the two cannot disagree. Content flows Markdown → Excel; decisions
+flow Excel → Markdown.
 
-**Review is complete — no case is `Pending`.** TC-AGENCY-020 was the last, approved by direct reviewer instruction on 2026-08-02.
+| Column | Pending | Approved | Rejected | Total |
+|---|---|---|---|---|
+| **Review** | **0** | 33 | 27 | 60 |
+| **Automation** | 1 | 18 | 41 | 60 |
 
-| Column | Pending | Approved | Rejected |
-|---|---|---|---|
-| **Review** | **0** | **37** | **16** |
-| **Automation** | 4 | **11** | 38 |
+**Eligibility, derived from the pair every time (§6.3.2):**
 
-| Decision | Count | Cases |
+| Branch | Gate | Eligible now |
 |---|---|---|
-| `Review = Approved` — **executable by Stage `4M`** | 37 | 001–003, 008, 011–018, 020–024, 027, 033–037, 039–042, 044–053 |
-| `Review = Rejected` — excluded, reason `Rejected at Review` | 16 | 004–007, 009, 010, 019, 025, 026, 028–032, 038, 043 |
-| `Review = Approved AND Automation = Approved` — in scope for Stage `4A` | 10 | 001, 002, 020, 021, 022, 040, 047, 050, 052, 053 |
+| Stage `4M` — Manual Execution | `Review = Approved` | **33** |
+| Stage `4A` — Automation | `Review = Approved` **and** `Automation = Approved` | **18** — TC-AGENCY-001, 002, 011, 012, 016, 020, 021, 022, 023, 037, 044, 047, 048, 049, 050, 053, 055, 059 |
 
-**Inconsistent pairs — 1, awaiting human resolution.** `TC-AGENCY-019` carries `Review: Rejected` with `Automation: Approved`. These are two recorded human decisions that disagree (`test-design-skill` §6.3.4). **Neither value has been changed.** The case is already excluded from Stage `4A` by the gate above — automation requires `Review = Approved` independently — so nothing can be generated from it; and it is excluded from Stage `4M` as `Rejected at Review`. `cli.js --check` reports this on every export (exit `2`) until a human resolves it by setting either column. Context: the case is a deliberate "designed to the requirement, not to observed behaviour" negative case (FINDING-004), which may be why its review was contested while the scenario was still judged worth automating.
+**Zero inconsistent pairs.** All eight that revision 3 produced were resolved by the reviewer in the
+same pass — no pair now carries `Automation = Approved` against a `Review` other than `Approved`.
+`--check` reports no warnings of any kind. Nothing was reconciled by this stage; the contradictions
+were answered by the human whose decisions created them.
 
-**Authorized Coverage: 37 ÷ 53 = 69.8%.** Of those 37, four cannot execute in this run regardless: TC-AGENCY-048, 049, 050 are `Blocked` on a second identity, and TC-AGENCY-052 is `Deferred` as destructive on a shared environment. **The executable count for this pass is therefore 33.**
+**Nothing is dropped for being out of scope.** Stage `4M` records a non-approved case as `Excluded`
+with reason `Rejected at Review` and still reports it, so a run can never show "33 of 33 passed" while
+27 cases went unexamined.
 
-### 11.2 Authorized coverage per acceptance criterion — two groups fall to zero
+### 11.1 The 27 cases rejected at Review
 
-| Requirement group | Approved | Rejected | Pending |
-|---|---|---|---|
-| AC-1 Agency Master | 6 | 6 | 0 |
-| AC-2 Agency Owner Details | 4 | 0 | 0 |
-| AC-3 Upload Document | **6** | 1 | 0 |
-| AC-4 Agency Logo | 3 | 0 | 0 |
-| AC-5 Wonder Travel Sales Contact | 1 | 3 | 0 |
-| **AC-6 Bank Account Details** | **0** | **4** | 0 |
-| AC-7 Payment Settings | 6 | 1 | 0 |
-| AC-8 Product Access Details | 3 | 0 | 0 |
-| **AC-9 Airline Supplier Credential (PCC)** | **0** | **1** | 0 |
-| AC-10 Import PNR Option | 1 | 0 | 0 |
-| Expected Outcomes (Submit/Cancel/Approve/Reject) | 6 | 0 | 0 |
+TC-AGENCY-004, 005, 006, 007, 009, 010, 015, 017, 018, 019, 025, 026, 027, 028, 029, 030, 031, 032,
+033, 034, 035, 038, 040, 041, 043, 052, 054.
 
-**AC-6 has no executable coverage at all.** All four of its cases — TC-AGENCY-029, 030, 031, 032 — were rejected, so this Stage `4M` pass will verify **nothing** about Bank Account Details.
+`Rejected` means reviewed and not accepted as written. **None is deleted** — the record of the
+rejection is the point, and each case stays in the suite for Stage `4M` to report as `Excluded`.
 
-> **Reviewer decision, 2026-08-02 — accepted, not overlooked.** The reviewer was shown that AC-6 falls to zero and chose to proceed without re-authoring the four cases *("سيبها دلوقتي" — leave it for now)*. **AC-6 is therefore deliberately unverified in this run.**
->
-> Recorded here because a deliberate omission and an accidental one are indistinguishable in a results table, and only this note tells them apart. It carries three obligations, and none of them is optional:
->
-> 1. **The Manual QA Report must state that AC-6 was not verified in this pass, and why** (`manual-execution-skill` §10 #6, Known Limitations) — a report that simply omits AC-6 would read as though the criterion does not exist.
-> 2. **Requirement coverage must not count AC-6 as covered.** §2 records it `Covered` by *design* — four cases exist — but zero of them are authorized to run, and the two figures must not be conflated. Design coverage and authorized coverage are different measurements.
-> 3. **This does not close AC-6.** It defers it. Re-authoring the four cases, or approving them as written, remains open work for a later revision of this suite.
+Four of them are worth naming, because their rejection changes what this run can claim:
 
-**AC-9 was already `Unknown / Unassessed`** — TC-AGENCY-043 was `Blocked` pending DOQ-02, and rejecting it changes the reason, not the outcome. No coverage is lost that the run had.
-
-**AC-5 retains one case of four.** TC-AGENCY-027 (mandatory-field validation) survives; the positive path, the multiple-contact case, and the inheritance case do not. AC-5 was already `Partially Covered` by design; it is now thinner than that label suggests.
-
-**One of the two upload-security cases survives, and that is enough to move FINDING-004 — but only halfway.** TC-AGENCY-019 (non-PDF rejected) is `Rejected`; TC-AGENCY-020 (a `.pdf`-named file with non-PDF content) is **approved**. Both are `P1, Regression` and both derive from FINDING-004, whose status turns on the single untested question: does the form *accept* a non-PDF on submit? TC-AGENCY-020 answers whether a **content** check exists. It cannot answer whether validation is **extension-only**, because that comparison needed TC-AGENCY-019 beside it. So FINDING-004 can be advanced by this run but **not fully closed**, and the result must say which half was established.
-
-### 11.3 One contradictory marking remains
-
-| Case | `Review` | `Automation` | Why it is flagged |
-|---|---|---|---|
-| ~~TC-AGENCY-020~~ | `Approved` | `Approved` | **Resolved 2026-08-02** — approved by direct reviewer instruction. Now consistently marked and in scope for both branches |
-| **TC-AGENCY-019** | `Rejected` | `Approved` | A case rejected as a test case is nonetheless marked for automation — the two decisions disagree |
-
-**Neither is dangerous, because the gate holds in both directions.** Stage `4A` requires `Review = Approved AND Automation = Approved`, so both are out of automation scope regardless of their `Automation` value (`test-design-skill` §6.3.2), and Stage `4M` excludes both on `Review` alone. They are reported because a contradiction that changes nothing today still records an intent nobody can act on later.
-
-**TC-AGENCY-005 was rejected on 2026-08-01, rewritten, and reset to `Pending` per §6.3.1** — and has since been reviewed again and `Rejected` on its new text. That is a settled decision on the current wording, not a stale verdict.
-
-### 11.1 Discrepancy — the Agency Name character set
-
-*(Raised 2026-08-01 from a reviewer report, mid-review.)*
-
-| | |
-|---|---|
-| **Reported behaviour** | The `Agency` field accepts **letters, digits and underscore only** |
-| **US-4222 AC-1 states** | Agency Name — *"Special characters allowed"* |
-| **PRD** | **Silent** — no character rule for this field anywhere |
-| **Discovery** | Never exercised it. `AgencyUpdateForm.md` §4 records the field exists and is mandatory, nothing about accepted characters |
-| **Evidence category** | `[O]` **Observed — reviewer-reported.** Not captured by the platform, not reproduced by Discovery |
-| **Disposition** | **`Story Outdated / Requires Business Confirmation`** — Project Context §1.1 **row 2** |
-
-**Why row 2 and not row 3.** §1.1 row 3 — *PRD corroborates the story* — would make this a **Possible Application Defect** that must be escalated, never auto-dispositioned as outdated. That row does not apply, and the check is not a formality: the PRD was searched for any Agency Name character rule and has none. With the PRD silent, row 2 governs: design to observed behaviour, label it, and do not treat the application as wrong.
-
-**What it changed.** TC-AGENCY-005 was inverted from "accepts special characters and Unicode" to "rejects characters outside letters, digits and underscore". TC-AGENCY-007 (injection-shaped input) changed its expected result from *stored as literal text* to *refused at input* — every character that makes that payload dangerous is outside the reported set, so the payload should never be stored at all. That is a **stronger** security outcome, which is why the case was rewritten rather than dropped.
-
-**What still needs confirming, and it is not cosmetic.** TC-AGENCY-053 was added at **P1** because a literal reading of the reported rule excludes the **space** — yet the test agency's own stored name, `Test Egypt`, contains one. Either the space is in the allowed set and the rule is "letters, digits, underscore and space", or every agency whose name contains a space cannot be resubmitted without being renamed first. The second reading would be a high-severity defect across the existing data set, so the question is settled by execution, not by assumption.
-
-**Open question for the product owner:** was AC-1's "Special characters allowed" superseded deliberately (a tightening), or has the field's validation drifted from the requirement? Row 2 records the behaviour without answering that, which is exactly what the disposition is for.
-
-**Both columns are `Pending` until a human changes them.** Stage 3 always writes `Pending`; **no skill may change either value** (§6.3.1). The four decisions above were made by the reviewer in the workbook and moved into the Markdown by the import tool, which is the only sanctioned path.
-
-**What changed and why.** This section previously flagged 22 cases as advisory automation candidates via an `AutomationCandidate` tag. Both the tag and the advisory list are **retired**: an advisory hint sitting beside a binding column can disagree with it, leaving a reader no way to tell which governs. There is now one authoritative automation decision per case, recorded on the case.
-
-**The engineering judgment behind that former list is not lost** — it is the input a reviewer should use when setting the `Automation` column, so it is preserved here as guidance rather than as a decision:
-
-- **Well suited to automation** — deterministic field-level input and validation cases with a single observable assertion, no file handling, no judgment call, no second identity: TC-AGENCY-001, 002, 003, 004, 005, 008, 010, 012, 013, 014, 025, 027, 029, 031, 033, 034, 035, 036, 041, 044, 045, 046, 047.
-- **Poorly suited, and why** — the upload cases (TC-AGENCY-016 … 024) need real fixtures and OS-level file dialogs; the Blocked and Deferred cases (TC-AGENCY-028, 043, 048, 049, 050, 052) cannot execute at all yet; and the exploratory-disposition cases (TC-AGENCY-036's option list, TC-AGENCY-043) turn on human judgment a fixed assertion would misrepresent.
-
-**Stage `4M` consumes the `Review` column** (not this section, and never the `Automation` column) — it executes a case only when `Review = Approved` and records every other case as `Excluded` with its reason (`manual-execution-skill` §4.1).
-
-## 12. Inputs for Manual Execution skill
-
-**Both branches consume this stage's output independently.** This section confirms the handoff for each.
-
-| Stage `4M` needs | Satisfied by | Status |
+| Case | What it covered | Consequence of the rejection |
 |---|---|---|
-| Project Context (governing) | `modules/agency/context/ProjectContext.md` rev 2, `Approved` — read directly, unmodified by this stage | ✅ |
-| Manual Test Suite (primary) | `TestCases_Agency.md` + `.xlsx`, 53 cases, parsed clean | ✅ |
-| Requirement Traceability Matrix (secondary) | `TraceabilityMatrix.md` — 52 rows, all six reference dimensions populated per §5.1/§5.4 rules | ✅ |
-| Coverage Report (secondary) | This document — §8 states what Stage 4M should **not** attempt | ✅ |
-| Discovery Artifacts (secondary) | Not produced here. Every Discovery Reference cites a specific artifact **and section** (e.g. `AgencyUpdateForm.md` §5), never "see Discovery" | ✅ |
-| Findings (secondary) | Not produced here. All 7 dispositioned in `TraceabilityMatrix.md` §3 — 3 regression, 2 exploratory, 2 documented exception. Zero Uncovered | ✅ |
+| **TC-AGENCY-043** | AC-9's PCC section and its three controls | The case run-004's Discovery worked hardest to unblock is not accepted. AC-9's coverage now rests on TC-AGENCY-055, 056, 057 and 060, which **are** approved — so the section is still covered, but its top-level presence assertion is not |
+| **TC-AGENCY-054** | The PCC section's conditional rendering | The `BR-006` dependency is no longer asserted by any approved case. It remains a **fixture precondition** either way: a Branch without a supplier still yields no PCC section, and TC-AGENCY-060 would report `Blocked` rather than a false absence |
+| **TC-AGENCY-040** | Product Access populated from the parent Branch | AC-8's inheritance assertion drops out. AC-8 keeps TC-AGENCY-041 and 042, both approved, so the section is exercised but its inheritance is not verified in this run |
+| **TC-AGENCY-019** | Non-PDF document rejected (FINDING-004, designed to the requirement) | The stronger half of the FINDING-004 pair is out. **TC-AGENCY-020 is approved and remains**, so a content check can still be established — but with TC-AGENCY-019 excluded, a pass on TC-AGENCY-020 cannot show whether validation is extension-only. That limitation must be recorded in the result, as the case's own Notes already say |
+
+**TC-AGENCY-027 and TC-AGENCY-034 moved `Approved` → `Rejected`.** These are two of the twelve cases
+revision 3 did not rewrite, so they carried their 2026-08-02 approval forward. The reviewer has now
+withdrawn it. Both are mandatory-field cases asserting `Required`, so AC-5's and AC-7's empty-value
+coverage is reduced; the equivalent cases for AC-1, AC-2 and AC-3 (TC-AGENCY-002, 013, 021) stay
+approved.
+
+**TC-AGENCY-052 resolved to `Rejected` / `Rejected`**, which is the outcome revision 3 recommended for a
+retired case — an approval of steps reading "Not applicable" could not stand, and automating them was
+not possible.
+
+### 11.2 The one remaining Pending value
+
+**TC-AGENCY-007** — `Review: Rejected`, `Automation: Pending`. This is not an inconsistency: §6.3.2's
+gate excludes the case on `Review` alone, so the undecided `Automation` value changes nothing about
+scope. It is left exactly as recorded rather than tidied to `Rejected`, because "no decision yet" is
+what an absent decision means and this stage may not make one.
+
+## 12. Inputs for Both Branches
+
+**Both branches consume this stage's approved output independently, in either order.** This section
+confirms the handoff for each (§21).
+
+| Input | Satisfied by | Status |
+|---|---|---|
+| Project Context (governing) | `modules/agency/context/ProjectContext.md` rev 4, `Approved` — read directly, unmodified by this stage | ✅ |
+| Manual Test Suite (primary) | `TestCases_Agency.md` + `.xlsx`, 60 cases, parsed clean, counts reconciled across three sources | ✅ |
+| Requirement Traceability Matrix (secondary) | `TraceabilityMatrix.md` — 60 rows, all six reference dimensions populated per §5.1/§5.4 | ✅ |
+| Coverage Report (secondary) | This document — §8 states what neither branch should attempt; §11 states what each may consume | ✅ |
+| Discovery Artifacts (secondary) | Not produced here. Every Discovery Reference cites a **specific artifact and section** — e.g. `AgencyUpdateForm_run-004.md` §4.7 — never "see Discovery" | ✅ |
+| Findings (secondary) | Not produced here. All 12 dispositioned in `TraceabilityMatrix.md` §3 — 8 regression, 0 exploratory, 4 documented exception. **Zero Uncovered** | ✅ |
 | Evidence Packages (secondary) | Not produced here. Every Evidence Reference cites specific file(s), never a Finding as a whole | ✅ |
 
-**Stage 4M must know four things before it starts:**
+**What both branches must know before starting:**
 
-1. **Six cases cannot execute** and must be recorded `Blocked` or `Deferred`, never `Failed`: TC-AGENCY-043 (pending DOQ-02), TC-AGENCY-048, 049, 050 (second credential), TC-AGENCY-028, 052 (deferred — destructive).
-2. **Expected results follow observed behaviour, not the story**, wherever the disposition says the story is outdated. A cleared mandatory field must render `Required` — a per-field message appearing instead is a finding to report, not a pass.
-3. **TC-AGENCY-019 is expected to fail.** It asserts the requirement (PDF-only) against an application that appears not to enforce it. That failure is the intended outcome and the run's strongest defect candidate — it must not be "corrected" into a pass.
-4. **Restoration is part of every mutating case.** 20 cases change a live agency on a shared environment; each names the values to record and restore.
+1. **The record under test is built, not borrowed.** `{BRANCH_UNDER_TEST}` → approve → `{AGENCY_UNDER_TEST}`, per the suite's §0.1. Agency 949 is not a valid target for any case. The run-scoped grants are `AUTH-BRANCH-CREATE` / `UPDATE` / `SUBMIT` / `APPROVE-SelfCreated` in the run's `metadata/SafetyAuthorizations.json`, and **none of them carries beyond this run**.
+2. **Build the Branch with two or more suppliers** (DREC-T15), or TC-AGENCY-060 is `Blocked` by construction.
+3. **Two cases are expected to fail, by design.** TC-AGENCY-019 (PDF-only, FINDING-004) and TC-AGENCY-058 (XC-20's numeric message, FINDING-010) assert requirements the application appears not to meet. Those failures are the intended outcome and the run's strongest defect candidates — they must not be "corrected" into passes.
+4. **Expected results follow observed behaviour** wherever the disposition says the story is outdated. A cleared mandatory field must render `Required`; a per-field message appearing instead is a finding to report, not a pass.
+5. **Select payment options by label, never by index or count** (`APP-002`). The option count is demonstrably volatile.
+6. **Type — never assign values in script** for TC-AGENCY-004, 006, 035, 058. A scripted assignment bypasses the keystroke filter these cases exist to characterize (`R-1`).
+7. **Read a pre-filled form by polling, not by one fixed-delay sample** (`R-2`). 61 of 78 inputs populate within 1000 ms; a single early sample reads the form as empty and produces a false "does not pre-fill" failure — as it already did once on the `branch` module.
 
-**Fixtures required and already prepared:** eight files in the session fixture folder (`fixtures/us-4222/` with `FIXTURES.md`) — three valid PDFs, a valid 0.27 MB logo, a 3.46 MB oversize logo, and three wrong-format/extension-spoofing files.
+**Specific to Stage `4A`:** it takes both scope and content from the cases themselves, never from this
+section. Right now that is **18 cases** — TC-AGENCY-001, 002, 011, 012, 016, 020, 021, 022, 023, 037,
+044, 047, 048, 049, 050, 053, 055, 059. The other 42 are `Rejected` at Review or not selected for
+automation, and excluding them is a recorded decision rather than a shortfall. **Selector detail is not in this
+document by design**: run-004 recorded control labels, types and states but deliberately no locator
+values, because `pipeline.md` §3.5 places selector acquisition in Stage `4A`, which verifies each
+locator live at the moment it generates the code using it. `evidence/run-004/phase_b_update_form_structure.json`
+is the full control inventory to work from.
 
-**Handoff confirmation:** every input `manual-execution-skill` §4 declares is present and specific. Every Discovery, Finding and Evidence Reference names a concrete artifact and location. **One item is not resolved and is declared rather than assumed:** TC-AGENCY-043's expected result depends on DOQ-02, which is why the case is Blocked rather than carrying a fabricated assertion.
+**Specific to Stage `4M`:** it gates on `Review` alone and does not read the `Automation` column at all.
+That is **33 cases** eligible. **A fixture build is now required**: most of them mutate the record under
+test, so `{BRANCH_UNDER_TEST}` and `{AGENCY_UNDER_TEST}` must exist before a manual pass starts. Only
+TC-AGENCY-002, 003, 008, 013, 014, 021, 024, 042, 047 and 059 — ten cases — are read-only and could
+run against any agency.
+
+**Handoff confirmation:** every input both skills' §4 declares is present and specific. **Two items are
+declared rather than assumed:** the two absent AC-9 fields are held blocked on DREC-T11 rather than
+carrying a fabricated assertion, and the upload fixtures' committed path is still open (DREC-T14) and
+must be settled before Stage `4A` writes the upload steps.

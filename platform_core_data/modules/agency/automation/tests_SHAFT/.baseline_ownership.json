@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "baseline": "platform_core_data/automation_baseline/shaft/tests_SHAFT",
+  "modules": {
+    "branch": {
+      "owned": [
+        "src/main/java/AdminPages/Admin/Branch/**",
+        "src/test/java/AdminPages/Admin/Branch/**",
+        "src/test/resources/branch_baseline.properties",
+        "testng-branch.xml"
+      ],
+      "suite": "testng-branch.xml",
+      "promotedAt": "2026-08-17T08:49:32.490Z",
+      "baselineRef": "09bafbd91bbe3873328248a3d9688684e2e1914b"
+    }
+  },
+  "shared": [
+    "pom.xml",
+    "testng.xml",
+    "src/main/java/AdminPages/Login/**",
+    "src/test/java/AdminPages/Login/**",
+    "src/main/java/utilities/**",
+    "src/main/resources/properties/**",
+    "src/test/resources/environment.properties",
+    "src/test/resources/META-INF/**",
+    "README.md",
+    "run-tests.bat",
+    "generate_allure_report.bat",
+    ".gitignore"
+  ],
+  "updatedAt": "2026-08-17T08:49:32.490Z"
+}

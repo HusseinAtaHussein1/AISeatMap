@@ -21,6 +21,9 @@ The full specification is [`workflows_and_pipelines/pipeline/module_architecture
 modules/
   modules.json                      # the module registry + the active-module pointer
   README.md                         # this file
+  ApplicationContext.md             # the RELATIONSHIPS between modules — dependency graph, cross-module
+                                    # rules, E2E journeys, fixture build order. Holds nothing a single
+                                    # module could hold; module scope stays in each module's own context
 
   {module}/                         # one folder per module — a slug (lowercase-hyphenated)
     README.md                       # THE MODULE SUMMARY — regenerated, never hand-authored

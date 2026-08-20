@@ -1,0 +1,3 @@
+This file is named .pdf but contains plain text and has no %PDF header.
+TC-AGENCY-020 uses it to determine whether document validation inspects content or only the file
+name. Synthetic and non-sensitive (PO-4).

@@ -1,0 +1,13 @@
+{
+  "originalCompanyUrl": "asdas",
+  "typedValue": "run004-cancel-probe",
+  "urlAfterCancel": "http://192.168.1.70/admin/agency",
+  "valueOnReopen": "asdas",
+  "persisted": false,
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Admin2/agency/search?size=10&page=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1"
+  ]
+}

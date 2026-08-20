@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '4 out of 18' test cases in the current suite                                        
+                       Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc011_agencyBusinessTypePersists'                       
+                                    Test Description: 'TC-AGENCY-011 Agency Business Type selection persists'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

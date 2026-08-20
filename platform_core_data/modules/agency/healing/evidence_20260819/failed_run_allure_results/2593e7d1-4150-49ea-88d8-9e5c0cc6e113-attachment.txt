@@ -1,0 +1,37 @@
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch/add" @19-08-2026 09:27:39.0896 AM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @19-08-2026 09:27:39.0959 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch/add". @19-08-2026 09:27:40.0679 AM
+[ReportManager] Assertion "ValidateElementExists" PASSED. Expected "Element Should Exist, locator 'By.cssSelector: #id-Operatingcountry'" and Actual "Element Exists". Comparison Type "EQUALS". Validation Type "POSITIVE". @19-08-2026 09:27:43.0099 AM
+[ReportManager] Assertion Passed: The Element located by "By.cssSelector: #id-Operatingcountry" exists. @19-08-2026 09:27:43.0099 AM
+[ReportManager] Successfully created attachment 'Screenshot - 1787120861918_prepareSharedFixture_ValidateElementExists_passed' @19-08-2026 09:27:43.0106 AM
+[ReportManager] Click element. @19-08-2026 09:27:49.0410 AM
+[ReportManager] Click "Live". @19-08-2026 09:27:50.0018 AM
+[ReportManager] Get Text from "3O", text is "3O". @19-08-2026 09:27:51.0059 AM
+[ReportManager] Get Text from "AegeanNdc", text is "AegeanNdc". @19-08-2026 09:27:51.0175 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:51.0286 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:51.0367 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:51.0626 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:51.0976 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:52.0307 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:52.0647 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:52.0961 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:53.0306 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:53.0628 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:53.0935 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:54.0275 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:54.0614 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:54.0935 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:55.0277 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:55.0611 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:55.0938 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:56.0258 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:56.0585 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:56.0927 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:57.0248 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:57.0621 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:57.0948 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:58.0275 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:58.0603 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:58.0915 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:59.0234 AM
+[ReportManager] Get Attribute "class" from element, value is "p-checkbox p-component". @19-08-2026 09:27:59.0573 AM

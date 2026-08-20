@@ -1,0 +1,8 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '11 out of 18' test cases in the current suite                                       
+                     Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc016_uploadValidPdfWithContractDates'                     
+                                Test Description: 'TC-AGENCY-016 Upload a valid PDF document with contract dates'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @19-08-2026 09:28:21.0551 AM

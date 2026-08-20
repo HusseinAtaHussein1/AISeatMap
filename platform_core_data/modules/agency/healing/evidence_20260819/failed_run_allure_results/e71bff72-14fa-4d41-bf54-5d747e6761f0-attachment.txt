@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '14 out of 18' test cases in the current suite                                       
+                          Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc023_oversizeLogoIsRejected'                          
+                                       Test Description: 'TC-AGENCY-023 Logo larger than 2 MB is rejected'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

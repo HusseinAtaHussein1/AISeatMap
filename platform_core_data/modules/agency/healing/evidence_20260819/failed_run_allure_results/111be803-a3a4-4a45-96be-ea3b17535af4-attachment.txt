@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '7 out of 18' test cases in the current suite                                        
+                         Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc053_agencyNameAcceptsSpace'                         
+                                   Test Description: 'TC-AGENCY-053 Agency name accepts a space between words'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

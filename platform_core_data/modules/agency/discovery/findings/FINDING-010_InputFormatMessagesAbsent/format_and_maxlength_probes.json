@@ -1,0 +1,126 @@
+{
+  "probes": [
+    {
+      "field": "Agency *",
+      "note": "clear mandatory then blur",
+      "originalValue": "Test Egypt",
+      "typed": "",
+      "typedLength": 0,
+      "acceptedValue": "",
+      "acceptedLength": 0,
+      "truncated": false,
+      "messages": [
+        "Required"
+      ]
+    },
+    {
+      "field": "Email ID * (Agency Owner Details)",
+      "note": "invalid email format",
+      "originalValue": "test.user.ndc@gmail.com",
+      "typed": "not-an-email",
+      "typedLength": 12,
+      "acceptedValue": "not-an-email",
+      "acceptedLength": 12,
+      "truncated": false,
+      "messages": [
+        "Please enter a valid email"
+      ]
+    },
+    {
+      "field": "Credit limit *",
+      "note": "alphabetic into numeric field",
+      "originalValue": "1000000",
+      "typed": "abcdef",
+      "typedLength": 6,
+      "acceptedValue": "1000000",
+      "acceptedLength": 7,
+      "truncated": false,
+      "messages": []
+    },
+    {
+      "field": "Post office box *",
+      "note": "max-length via real keystrokes (attr maxlength=8)",
+      "originalValue": "0022",
+      "typed": "123456789012",
+      "typedLength": 12,
+      "acceptedValue": "00221234",
+      "acceptedLength": 8,
+      "truncated": true,
+      "messages": []
+    },
+    {
+      "field": "Credit Terms (Days) *",
+      "note": "max-length via real keystrokes (attr maxlength=11)",
+      "originalValue": "1000",
+      "typed": "999999999999999",
+      "typedLength": 15,
+      "acceptedValue": "10009999999",
+      "acceptedLength": 11,
+      "truncated": true,
+      "messages": []
+    },
+    {
+      "field": "Phone No *",
+      "note": "alphabetic into phone field",
+      "originalValue": "1149730331",
+      "typed": "abcdefgh",
+      "typedLength": 8,
+      "acceptedValue": "",
+      "acceptedLength": 0,
+      "truncated": true,
+      "messages": [
+        "Required"
+      ]
+    },
+    {
+      "field": "Company URL",
+      "note": "URL format on an optional field",
+      "originalValue": "asdas",
+      "typed": "not a url at all",
+      "typedLength": 16,
+      "acceptedValue": "not a url at all",
+      "acceptedLength": 16,
+      "truncated": false,
+      "messages": []
+    }
+  ],
+  "branch": {
+    "dropdownText": "Test (BRN2)",
+    "inputDisabled": true,
+    "inputReadOnly": true,
+    "wrapperClass": "p-element p-inputwrapper fg-input ng-untouched ng-pristine ng-star-inserted p-inputwrapper-filled ng-valid"
+  },
+  "pccBefore": {
+    "pccHeadingPresent": true,
+    "supplierTabs": [
+      "Dashboard",
+      "Dashboard",
+      "Admin",
+      "Admin",
+      "Master",
+      "Master",
+      "Rule Engine",
+      "Rule Engine",
+      "Settings",
+      "Settings",
+      "User Management",
+      "User Management",
+      "Booking-Mid Office",
+      "Booking-Mid Office",
+      "Profile",
+      "Profile",
+      "Reports",
+      "Reports",
+      "PNR Query",
+      "PNR Query",
+      "Transfer PNR",
+      "Transfer PNR",
+      "TravelportNdc",
+      "TravelportNdc"
+    ],
+    "tableRows": 1
+  },
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1"
+  ]
+}

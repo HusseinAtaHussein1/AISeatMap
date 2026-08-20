@@ -1,0 +1,16 @@
+{
+  "url": "http://192.168.1.70/admin/agency/add",
+  "buttons": [
+    "Upload document\n*",
+    "Add",
+    "Upload logo\n*",
+    "Add",
+    "Add",
+    "Set target",
+    "Cancel",
+    "Send For Approval"
+  ],
+  "nonGetRequests": [],
+  "messages": [],
+  "toasts": []
+}

@@ -1,0 +1,145 @@
+2026-08-18T06:55:34.843Z  authenticated (headed)
+2026-08-18T06:55:34.844Z  url after auth: http://192.168.1.70/dashboard
+2026-08-18T06:55:38.470Z  agency list url: http://192.168.1.70/admin/agency
+2026-08-18T06:55:38.621Z  grid captured
+2026-08-18T06:56:16.327Z  authenticated (headed)
+2026-08-18T06:56:18.254Z  navigated to /admin/agency/edit/949
+2026-08-18T06:56:19.307Z  prefill poll: {"atMs":1000,"total":78,"nonEmpty":61}
+2026-08-18T06:56:21.166Z  fullpage screenshot captured; url=http://192.168.1.70/admin/agency/edit/949
+2026-08-18T06:58:23.998Z  form loaded for validation probing
+2026-08-18T06:58:25.110Z  Contact person * -> cleared -> []
+2026-08-18T06:58:26.109Z  Credit Terms (Days) * -> cleared -> []
+2026-08-18T06:58:27.131Z  Credit Terms (Days) * <- "99999999999999" => accepted="99999999999" msgs=[]
+2026-08-18T06:59:41.771Z  create form loaded: http://192.168.1.70/admin/agency/add
+2026-08-18T06:59:42.051Z  create-form buttons: ["Upload document\n*","Add","Upload logo\n*","Add","Add","Set target","Cancel","Send For Approval"]
+2026-08-18T06:59:42.096Z  clicked submit: Send For Approval
+2026-08-18T06:59:44.105Z  url after submit attempt: http://192.168.1.70/admin/agency/add
+2026-08-18T06:59:44.105Z  non-GET requests during attempt: []
+2026-08-18T06:59:44.119Z  toasts: []
+2026-08-18T07:00:31.426Z  submit attempted on empty create form; non-GET=[]
+2026-08-18T07:01:23.441Z  empty create form submitted; non-GET=[]
+2026-08-18T07:02:23.392Z  update form loaded
+2026-08-18T07:02:24.095Z  Agency *: typed 0 chars -> kept 0 ("") msgs=["Required"]
+2026-08-18T07:02:25.748Z  Email ID * (Agency Owner Details): typed 12 chars -> kept 12 ("not-an-email") msgs=["Please enter a valid email"]
+2026-08-18T07:02:27.312Z  Credit limit *: typed 6 chars -> kept 7 ("1000000") msgs=[]
+2026-08-18T07:02:28.796Z  Post office box *: typed 12 chars -> kept 8 ("00221234") msgs=[]
+2026-08-18T07:02:30.375Z  Credit Terms (Days) *: typed 15 chars -> kept 11 ("10009999999") msgs=[]
+2026-08-18T07:02:31.699Z  Phone No *: typed 8 chars -> kept 0 ("") msgs=["Required"]
+2026-08-18T07:02:33.445Z  Company URL: typed 16 chars -> kept 16 ("not a url at all") msgs=[]
+2026-08-18T07:02:33.878Z  Branch control: {"dropdownText":"Test (BRN2)","inputDisabled":true,"inputReadOnly":true,"wrapperClass":"p-element p-inputwrapper fg-input ng-untouched ng-pristine ng-star-inserted p-inputwrapper-filled ng-valid"}
+2026-08-18T07:02:33.885Z  PCC before: {"pccHeadingPresent":true,"supplierTabs":["Dashboard","Dashboard","Admin","Admin","Master","Master","Rule Engine","Rule Engine","Settings","Settings","User Management","User Management","Booking-Mid Office","Booking-Mid Office","Profile","Profile","Reports","Reports","PNR Query","PNR Query","Transfer PNR","Transfer PNR","TravelportNdc","TravelportNdc"],"tableRows":1}
+2026-08-18T07:04:32.849Z  state with supplier row checked: {"pcc":true,"pccFields":["Generic supplier credentials (PCC) *","Manager Name *","Supplier Credentials Description *"],"supplierRowChecked":true,"flightChecked":true}
+2026-08-18T07:04:34.093Z  state after DESELECTING the supplier row: {"pcc":false,"pccFields":[],"supplierRowChecked":false,"flightChecked":true}
+2026-08-18T07:04:38.975Z  reloaded form (no save performed); state: {"pcc":true,"pccFields":["Generic supplier credentials (PCC) *","Manager Name *","Supplier Credentials Description *"],"supplierRowChecked":true,"flightChecked":true}
+2026-08-18T07:04:39.763Z  Company URL changed in-form from "asdas" to "run004-cancel-probe" (not saved)
+2026-08-18T07:04:42.354Z  URL after Cancel: http://192.168.1.70/admin/agency
+2026-08-18T07:04:47.669Z  Company URL on reopen: "asdas" (original was "asdas") -> persisted=false
+2026-08-18T07:06:02.927Z  selectors: {"Q1":"#p-tabpanel-11 > div > ndc-fg-form-generator > form > div > div","Q2":"#\\[object\\ HTMLInputElement\\] > div > div > ndc-fg-input:nth-of-type(5) > ndc-fg-checkbox-input > div","Q3":"#\\[object\\ RadioNodeList\\] > div > div:nth-of-type(2) > ndc-fg-input:nth-of-type(3) > ndc-fg-checkbox-input > div > div","Q4":"body > ndc-root > ndc-layout > div > div:nth-of-type(1) > div:nth-of-type(3) > div > div > ndc-add-agency > div > div:nth-of-type(3)","Q5":"div > div > ndc-add-agency > div > ndc-fg-form-container:nth-of-type(6) > div > ndc-fg-form-generator > form > div > div > ndc-fg-input:nth-of-type(2) > ndc-fg-text-input"}
+2026-08-18T07:06:03.597Z  annotated: drawn=["Q1","Q4","Q5"] missing=["Q2","Q3"]
+2026-08-18T07:06:28.791Z  selectors: {"Q1":"#p-tabpanel-11 > div > ndc-fg-form-generator > form > div > div","Q2":"div > ndc-add-agency > div > ndc-fg-form-container:nth-of-type(7) > div > ndc-fg-form-generator > form > div > div > ndc-fg-input:nth-of-type(5) > ndc-fg-checkbox-input > div","Q3":"ndc-add-agency > div > div:nth-of-type(4) > div:nth-of-type(2) > ndc-fg-form-generator > form > div > div:nth-of-type(2) > ndc-fg-input:nth-of-type(3) > ndc-fg-checkbox-input > div > div","Q4":"body > ndc-root > ndc-layout > div > div:nth-of-type(1) > div:nth-of-type(3) > div > div > ndc-add-agency > div > div:nth-of-type(3)","Q5":"div > div > ndc-add-agency > div > ndc-fg-form-container:nth-of-type(6) > div > ndc-fg-form-generator > form > div > div > ndc-fg-input:nth-of-type(2) > ndc-fg-text-input"}
+2026-08-18T07:06:29.444Z  annotated: drawn=["Q1","Q2","Q3","Q4","Q5"] missing=[]
+2026-08-18T07:07:21.016Z  tight annotation Q1 captured (C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\agency\discovery\evidence\run-004\run004_pcc_manager_name_unclear.annotated.png)
+2026-08-18T07:09:10.897Z  Q5/Q6 annotation captured; form value restored, nothing saved
+2026-08-18T08:41:29.231Z  branch list url: http://192.168.1.70/admin/branch
+2026-08-18T08:41:29.237Z  branch grid headers: ["Code","Branch Name","Country Name","City","Approval Status","Actions"]
+2026-08-18T08:41:29.238Z  branch search inputs: [{"ph":"Code","id":"id-Branchcode"},{"ph":"Name","id":"id-Branchname"},{"ph":"Select","id":"id-Country"},{"ph":"Select","id":"id-State"},{"ph":"","id":"id-City"},{"ph":"","id":"id-Status-Inactive"}]
+2026-08-18T08:41:31.771Z  branch rows matching NDC1: [["BRN210","NDC1","Egypt","Cairo","Approved",""],["BRN291","NDC1_Yara Khaled","Egypt","Cairo","Approved",""],["BRN287","NDC1_Ahmed Ayman","Egypt","15th of May","Approved",""],["BRN293","NDC1_Mohamed Nasr","Egypt","Cairo","Approved",""],["BRN518","NDC1_Hussein","Egypt","Cairo","Approved",""],["BRN286","NDC1_Mostafa Ashry","Egypt","Cairo","Approved",""],["BRN308","NDC1_Mostdafa Elatawy","Egypt","Cairo","Approved",""],["BRN303","NDC1_Mostafa Elatawy","Egypt","Cairo","Approved",""],["BRN292","NDC1_Mahmoud Gomaa","Egypt","Cairo","Approved",""],["BRN294","NDC1_Omar Mohamed","Egypt","Cairo","Approved",""]]
+2026-08-18T08:41:38.047Z  agency rows matching NDC1: [["AGN9801","NDC1_Yara Khaled","Egypt","Badr","Active","Approved","NDC1_Yara Khaled",""],["AGN9799","NDC1_Ahmed Ayman","Egypt","Badr","Active","Approved","NDC1_Ahmed Ayman",""],["AGN9798","NDC1_Mostafa Ashry","Egypt","Badr","Active","Approved","NDC1_Mostafa Ashry",""],["AGN9814","NDC1_Mostafa Elatawy","Egypt","Badr","Active","Approved","NDC1_Mostafa Elatawy",""],["AGN9806","NDC1_Ahmed Abd ElGhani","Egypt","Badr","Active","Approved","NDC1_Ahmed Abd El Ghani",""],["AGN9805","NDC1_Omar Mohamed","Egypt","Badr","Active","Approved","NDC1_Omar Mohamed",""],["AGN9804","NDC1_Hassan Al Shimy","Egypt","Badr","Active","Approved","NDC1_Hassan Al Shimy",""],["AGN9803","NDC1_Mohamed Nasr","Egypt","Badr","Active","Approved","NDC1_Mohamed Nasr",""],["AGN9802","NDC1_Mahmoud Gomaa","Egypt","Badr","Active","Approved","NDC1_Mahmoud Gomaa",""],["AGN9800","NDC1_Mohamed Samir","Egypt","Badr","Active","Approved","NDC1_Mohamed Samir",""]]
+2026-08-18T08:42:28.301Z  agency edit url: http://192.168.1.70/admin/agency/edit/11006
+2026-08-18T08:42:28.620Z  AGENCY state: {"url":"http://192.168.1.70/admin/agency/edit/11006","pccPresent":true,"pccLabels":["Generic supplier credentials (PCC) *","Manager Name *","Supplier Credentials Description *"],"supplierTabs":["Dashboard","Dashboard","Admin","Admin","Master","Master","Rule Engine","Rule Engine","Settings","Settings","User Management","User Management","Booking-Mid Office","Booking-Mid Office","Profile","Profile","Reports","Reports","PNR Query","PNR Query","Transfer PNR","Transfer PNR","NDCGal","NDCGal"],"productAccessRows":[["","NDCGal","","Flight",""]],"productAccessChecked":[true],"branchValue":"NDC1_Ahmed Ayman (BRN287)"}
+2026-08-18T08:42:39.147Z  branch edit url: http://192.168.1.70/admin/branch/edit/BRN287
+2026-08-18T08:42:39.455Z  BRANCH suppliers mentioned: ["NDCGal","Amadeus","Galileo","Sabre","TravelportNdc"]
+2026-08-18T08:42:39.455Z  BRANCH tables: [{"h":["Status","Supplier Name","Credential Name","Product Name","Description"],"n":63}]
+2026-08-18T08:43:55.729Z  branch form loaded: http://192.168.1.70/admin/branch/edit/BRN287
+2026-08-18T08:43:55.749Z  BEFORE: {"pccSectionPresent":true,"pccLabels":["Generic supplier credentials (PCC) *","Manager Name *"],"tabs":["NDCGal","NDCGal"],"checkedSuppliers":["NDCGal"]}
+2026-08-18T08:43:55.800Z  row not found: Galileo
+2026-08-18T08:43:55.808Z  row not found: Amadeus
+2026-08-18T08:43:55.815Z  row not found: Sabre
+2026-08-18T08:43:57.330Z  AFTER ticking GDS rows: {"pccSectionPresent":true,"pccLabels":["Generic supplier credentials (PCC) *","Manager Name *"],"tabs":["NDCGal","NDCGal"],"checkedSuppliers":["NDCGal"]}
+2026-08-18T08:44:02.762Z  AFTER RELOAD (nothing saved): ["NDCGal"]
+2026-08-18T08:45:18.929Z  GDS row indexes: {"NDCGal":0,"Amadeus":12,"AmadeusNDC":13,"Galileo":33,"Sabre":50}
+2026-08-18T08:45:18.933Z  BEFORE: {"pccLabels":["Generic supplier credentials (PCC) *","Manager Name *"],"tabs":["NDCGal","NDCGal"],"checked":["NDCGal"],"credentialDropdownsVisible":[""]}
+2026-08-18T08:45:20.552Z  ticked Amadeus in-form (row 12)
+2026-08-18T08:45:22.204Z  ticked AmadeusNDC in-form (row 13)
+2026-08-18T08:45:23.853Z  ticked Galileo in-form (row 33)
+2026-08-18T08:45:25.450Z  ticked Sabre in-form (row 50)
+2026-08-18T08:45:27.454Z  AFTER: {"pccLabels":["Generic supplier credentials (PCC) *","Manager Name *","Generic supplier credentials (PCC) *","Manager Name*","Generic supplier credentials (PCC) *","Manager Name*","Generic supplier credentials (PCC) *","Manager Name*","Generic supplier credentials (PCC) *","Manager Name*"],"tabs":["NDCGal","NDCGal","Amadeus","Amadeus","AmadeusNDC","AmadeusNDC","Galileo","Galileo","Sabre","Sabre"],"checked":["NDCGal","Amadeus","AmadeusNDC","Galileo","Sabre"],"credentialDropdownsVisible":["","","","",""]}
+2026-08-18T08:45:32.865Z  AFTER RELOAD (nothing saved): checked=["NDCGal"]
+2026-08-18T08:46:26.269Z  Galileo ticked in-form
+2026-08-18T08:46:27.535Z  Galileo tab opened
+2026-08-18T08:46:29.125Z  PCC options offered: ["Galileo Live UAE","Live EGY PCC","Robot Test","KSA Galileoo","GalileoLiveSTAGING"]
+2026-08-18T08:46:34.142Z  AFTER RELOAD (nothing saved): ["NDCGal"]
+2026-08-18T08:52:40.078Z  Master menu supplier entries: [{"text":"Supplier","href":""}]
+2026-08-18T08:52:43.693Z  route /master/supplier-credential -> http://192.168.1.70/admin/operating-country | Company Branch Agency Staff Welcome odeysysadmin Dashboard Admin Master Rule Engine Settin
+2026-08-18T08:52:46.871Z  route /master/supplier -> http://192.168.1.70/master/supplier | Flight Supplier Miscellaneous Payment Gateway Welcome odeysysadmin Dashboard Admin Master 
+2026-08-18T08:53:34.496Z  supplier list: http://192.168.1.70/master/supplier
+2026-08-18T08:53:34.609Z  subnav: ["Flight","Supplier"]
+2026-08-18T08:53:34.610Z  headers: []
+2026-08-18T08:53:34.610Z  rows: []
+2026-08-18T08:54:37.506Z  Supplier group children: [{"t":"Flight","h":""},{"t":"Credential Field","h":""},{"t":"Credential Field","h":"/master/supplier/credentials"},{"t":"Supplier Credentials","h":""},{"t":"Supplier Credentials","h":"/master/supplier/supplier-credentials"},{"t":"Credential Routes Filter","h":""},{"t":"Credential Routes Filter","h":"/master/supplier/credential-routes-filter"},{"t":"Flight Search Limitation","h":""},{"t":"Flight Search Limitation","h":"/master/supplier/flight-search-limitation"},{"t":"Hold PCC Filter","h":""},{"t":"Hold PCC Filter","h":"/master/supplier/hold-pcc-filter"},{"t":"Hold PCC Management","h":""},{"t":"Hold PCC Management","h":"/master/supplier/hold-pcc-management"},{"t":"Restricted Commands","h":""},{"t":"Restricted Commands","h":"/master/supplier/restricted-commands"},{"t":"Miscellaneous","h":""},{"t":"Payment Gateway","h":""},{"t":"Dashboard","h":""},{"t":"Admin","h":""},{"t":"Master","h":""},{"t":"Rule Engine","h":""},{"t":"Settings","h":""},{"t":"User Management","h":""},{"t":"Booking-Mid Office","h":""},{"t":"Profile","h":""}]
+2026-08-18T08:55:20.860Z  url: http://192.168.1.70/master/supplier/supplier-credentials
+2026-08-18T08:55:20.984Z  headers: ["Credential name","Supplier","Status","Actions"]
+2026-08-18T08:55:20.985Z    row: ["Amadeus Live","Amadeus","Active",""]
+2026-08-18T08:55:20.985Z    row: ["AirArabia Live","","Active",""]
+2026-08-18T08:55:20.985Z    row: ["AirArabiaEgypt","AirArabiaEgypt","Active",""]
+2026-08-18T08:55:20.985Z    row: ["ShuraTechLive","ShuraTech","Active",""]
+2026-08-18T08:55:20.985Z    row: ["AirArbiaUAE","","Active",""]
+2026-08-18T08:55:20.985Z    row: ["FlyEgypt","","Active",""]
+2026-08-18T08:55:20.985Z    row: ["Galileo Live UAE","Galileo","Active",""]
+2026-08-18T08:55:20.985Z    row: ["Fly Dubai","FlyDubai","Active",""]
+2026-08-18T08:55:25.042Z  opened credential record: http://192.168.1.70/master/supplier/supplier-credentials/edit/287
+2026-08-18T08:55:25.269Z  hasManagerName: false
+2026-08-18T08:55:25.269Z    "Supplier *" = "Galileo Live UAE" 
+2026-08-18T08:55:25.269Z    "userName" = "Universal API/uAPI5691377188- 
+2026-08-18T08:55:25.269Z    "userName" = "8Hx*Z$3a=o" 
+2026-08-18T08:55:25.269Z    "userName" = "P3429834" 
+2026-08-18T08:55:25.269Z    "userName" = "8JY1" 
+2026-08-18T08:55:25.269Z    "userName" = "AirService" 
+2026-08-18T08:55:25.269Z    "userName" = "UniversalRecordService" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "Galileo UAE" 
+2026-08-18T08:55:25.269Z    "userName" = "86217736" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "https://emea.universal-api.tr 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:55:25.269Z    "userName" = "" 
+2026-08-18T08:57:28.571Z  Credential Field -> http://192.168.1.70/master/supplier/credentials | managerName on page: false
+2026-08-18T08:57:28.572Z    headers: ["Supplier credential field name","Supplier","Actions"]
+2026-08-18T08:57:28.572Z     ["userName","Galileo",""]
+2026-08-18T08:57:28.572Z     ["password","Galileo",""]
+2026-08-18T08:57:28.572Z     ["targetBranch","Galileo",""]
+2026-08-18T08:57:28.572Z     ["PCC","Galileo",""]
+2026-08-18T08:57:28.572Z     ["ServiceType","Galileo",""]
+2026-08-18T08:57:28.572Z     ["UniversalRecordServiceType","Galileo",""]
+2026-08-18T08:57:33.521Z  Flight > Supplier -> http://192.168.1.70/admin/operating-country | managerName on page: false
+2026-08-18T08:57:33.521Z    headers: ["Operating Country","Country Name","Currency","Status","Approval Status","Actions"]
+2026-08-18T08:57:33.521Z     ["usdD","United States","United States Dollar","Active","Approved","View All Branches"]
+2026-08-18T08:57:33.521Z     ["EgyptLiveeee","Egypt","Egyptian Pound","Active","Approved","View All Branches"]
+2026-08-18T08:57:33.521Z     ["United Arab Emirates","United Arab Emirates","United Arab Emirates Dirham","Active","Approved","View All Branches"]
+2026-08-18T08:57:33.521Z     ["zzk","United Arab Emirates","aaaaaa","Active","Approved","View All Branches"]
+2026-08-18T08:57:33.521Z     ["vj","United Arab Emirates","aaaaaa","Active","Approved","View All Branches"]
+2026-08-18T08:57:33.522Z     ["TestDsssedsdsdmaoTestTest","","Egyptian Pound","Active","Approved","View All Branches"]
+2026-08-18T08:58:15.547Z  Flight group routes: [{"t":"Airline","h":"/master/flight/airline"},{"t":"Airport","h":"/master/flight/airport"},{"t":"Prefer Airline","h":"/master/flight/preferAirline"},{"t":"BSP Commission","h":"/master/flight/bsp"},{"t":"Deal Code","h":"/master/flight/deal-code"}]
+2026-08-18T08:59:12.298Z  credential field rows read: 10
+2026-08-18T08:59:12.299Z  rows mentioning "manager": []
+2026-08-18T08:59:12.299Z  suppliers with credential fields: ["Galileo","Amadeus"]
+2026-08-18T08:59:12.299Z  NDCGal / Travelport credential fields: []
+2026-08-18T09:01:48.727Z  supplier list: {"url":"http://192.168.1.70/master/supplier/supplier","headers":["Supplier","Type","Status","Approval Status","Actions"],"rowCount":10,"firstRows":[["3O","LCC","Active","Approved",""],["AegeanNdc","LCC","Active","Approved",""],["AegeanUAE","LCC","Active","Approved",""],["AirArabiaEgypt","LCC","Active","Approved",""],["AirBlue","LCC","Active","Approved",""],["AirBlueKSA","LCC","Active","Approved","
+2026-08-18T09:01:54.104Z  heading: 
+2026-08-18T09:01:54.104Z  labels: ["Products Type *","Country *","Supplier *","Email *","City *","PIN code *","Supplier type *","Whitelist Airports","MOR","Near By Status","Manager Name *","Address *","Name *","Email *","Phone *","Payment mode *","Settlement currency *","Settlement period *","Agreement expiry date *","Remarks *"]
+2026-08-18T09:01:54.104Z  Manager Name: {"present":false}
+2026-08-18T09:01:54.105Z  Supplier: null (readOnly=null)
+2026-08-18T09:14:35.753Z  BRANCH checked suppliers: [{"supplier":"Amadeus","credential":""},{"supplier":"NDCGal","credential":""},{"supplier":"Sabre","credential":""}]
+2026-08-18T09:14:35.754Z  BRANCH tabs: ["NDCGal","Sabre","Amadeus"]
+2026-08-18T09:14:43.063Z  AGENCY as loaded — product access rows: [{"supplier":"Amadeus","credential":"","product":"Flight","checked":true},{"supplier":"Sabre","credential":"","product":"Flight","checked":true},{"supplier":"NDCGal","credential":"","product":"Flight","checked":true}]
+2026-08-18T09:14:43.063Z  AGENCY pcc tabs: ["Amadeus","Sabre","NDCGal"] | Search PCC: false | Ticketing PCC: false
+2026-08-18T09:15:40.037Z  TAB Amadeus: ["Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) *"]
+2026-08-18T09:15:41.876Z  TAB Sabre: ["Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) *"]
+2026-08-18T09:15:43.686Z  TAB NDCGal: ["Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) *","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) * [RO]","Generic supplier credentials (PCC) *"]
+2026-08-18T09:15:43.954Z  GLOBAL: {"hasSearchPcc":false,"hasTicketingPcc":false,"hasAmadeusFilter":false,"blueCommand":"Blue Command Screen","blueDisabled":null}

@@ -1,0 +1,69 @@
+{
+  "idx": {
+    "NDCGal": 0,
+    "Amadeus": 12,
+    "AmadeusNDC": 13,
+    "Galileo": 33,
+    "Sabre": 50
+  },
+  "after": {
+    "pccLabels": [
+      "Generic supplier credentials (PCC) *",
+      "Manager Name *",
+      "Generic supplier credentials (PCC) *",
+      "Manager Name*",
+      "Generic supplier credentials (PCC) *",
+      "Manager Name*",
+      "Generic supplier credentials (PCC) *",
+      "Manager Name*",
+      "Generic supplier credentials (PCC) *",
+      "Manager Name*"
+    ],
+    "tabs": [
+      "NDCGal",
+      "NDCGal",
+      "Amadeus",
+      "Amadeus",
+      "AmadeusNDC",
+      "AmadeusNDC",
+      "Galileo",
+      "Galileo",
+      "Sabre",
+      "Sabre"
+    ],
+    "checked": [
+      "NDCGal",
+      "Amadeus",
+      "AmadeusNDC",
+      "Galileo",
+      "Sabre"
+    ],
+    "credentialDropdownsVisible": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "restored": {
+    "pccLabels": [
+      "Generic supplier credentials (PCC) *",
+      "Manager Name *"
+    ],
+    "tabs": [
+      "NDCGal",
+      "NDCGal"
+    ],
+    "checked": [
+      "NDCGal"
+    ],
+    "credentialDropdownsVisible": [
+      ""
+    ]
+  },
+  "nonGetRequests": [
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1",
+    "POST http://192.168.1.70:8080/odeysysadmin/Master2/state/search?status=1"
+  ]
+}

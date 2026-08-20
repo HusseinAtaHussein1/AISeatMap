@@ -1,0 +1,558 @@
+{
+ "verifiedAt": "2026-08-18T13:26:34.040Z",
+ "envKey": "STG",
+ "base": "http://192.168.1.70",
+ "mode": "headless",
+ "codeStateAnchor": "STG live build as of 2026-08-18",
+ "reachedVia": "agency list -> row pen click (REPAIR-004; deep link renders an empty shell)",
+ "openedRow": [
+  "AGN10247",
+  "Jewell",
+  "Egypt",
+  "Badr",
+  "Active",
+  "Approved",
+  "Brittany",
+  ""
+ ],
+ "listActions": {
+  "pen": 1,
+  "thumbsUp": 0,
+  "thumbsDown": 1
+ },
+ "listGrid": {
+  "headers": [
+   " Code ",
+   " Agency Name ",
+   " Country Name ",
+   " City ",
+   " Status ",
+   " Approval Status ",
+   " Branch Name ",
+   " Actions "
+  ],
+  "rows": 10
+ },
+ "form": {
+  "url": "http://192.168.1.70/admin/agency/edit/12083",
+  "visibleInputs": 69,
+  "spinnersAtReady": 0,
+  "pollsToReady": 8,
+  "msToReadyApprox": 2000,
+  "totalInputs": 72,
+  "bodyLen": 1563,
+  "mentionsPcc": false,
+  "productAccessRows": 1,
+  "locators": {
+   "branch": {
+    "resolved": "unique",
+    "strategy": "#id-Branch",
+    "count": 1,
+    "visible": false,
+    "enabled": false,
+    "readOnly": true,
+    "disabledAttr": true,
+    "accept": null,
+    "value": ""
+   },
+   "agencyName": {
+    "resolved": "unique",
+    "strategy": "#id-Agency",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "Jewell"
+   },
+   "country": {
+    "resolved": "unique",
+    "strategy": "#id-Country",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": true,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "Egypt"
+   },
+   "stateDropdownAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-State >> xpath=ancestor::div[contains(@class,\"p-dropdown\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "cityDropdownAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-City >> xpath=ancestor::div[contains(@class,\"p-dropdown\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "postOfficeBox": {
+    "resolved": "unique",
+    "strategy": "#id-Postofficebox",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "00"
+   },
+   "companyUrl": {
+    "resolved": "unique",
+    "strategy": "#id-CompanyURL",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": ""
+   },
+   "faxNo": {
+    "resolved": "unique",
+    "strategy": "#id-FaxNo",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": ""
+   },
+   "address1": {
+    "resolved": "unique",
+    "strategy": "textarea >> nth=0",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "Egypt Cairo"
+   },
+   "address2": {
+    "resolved": "unique",
+    "strategy": "textarea >> nth=1",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": ""
+   },
+   "phoneNoMaster": {
+    "resolved": "unique",
+    "strategy": "input[type=\"tel\"] >> nth=0",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "1552574894"
+   },
+   "iataAgencyNo": {
+    "resolved": "unique",
+    "strategy": "#id-IATAAgency-No >> xpath=ancestor::div[contains(@class,\"p-radiobutton\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "businessTypeB2B": {
+    "resolved": "unique",
+    "strategy": "#id-AgencyBusinessType-B2B >> xpath=ancestor::div[contains(@class,\"p-radiobutton\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "businessTypeFreelancer": {
+    "resolved": "unique",
+    "strategy": "#id-AgencyBusinessType-Freelancer >> xpath=ancestor::div[contains(@class,\"p-radiobutton\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "contactPerson": {
+    "resolved": "unique",
+    "strategy": "#id-Contactperson",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "Abdelrahman Shafiq"
+   },
+   "ownerEmailId": {
+    "resolved": "unique",
+    "strategy": "#id-EmailID >> nth=0",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "Ma7moud2000.12@gmail.com"
+   },
+   "ownerPhoneNumber": {
+    "resolved": "unique",
+    "strategy": "input[type=\"tel\"] >> nth=1",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "1552574894"
+   },
+   "documentFileInput": {
+    "resolved": "unique",
+    "strategy": "input[type=\"file\"] >> nth=0",
+    "count": 1,
+    "visible": false,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": ""
+   },
+   "contractStartDate": {
+    "resolved": "unique",
+    "strategy": "#id-ContractStartDate",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "09/08/2026"
+   },
+   "contractEndDate": {
+    "resolved": "unique",
+    "strategy": "#id-ContractEndDate",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "19/09/2026"
+   },
+   "logoFileInput": {
+    "resolved": "unique",
+    "strategy": "input[type=\"file\"] >> nth=1",
+    "count": 1,
+    "visible": false,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": "image/*",
+    "value": ""
+   },
+   "salesContactName": {
+    "resolved": "unique",
+    "strategy": "#id-Name",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "rahma"
+   },
+   "salesEmailId": {
+    "resolved": "unique",
+    "strategy": "#id-EmailID >> nth=1",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "ferdinand.daugherty@gmail.com"
+   },
+   "salesPhoneNumber": {
+    "resolved": "unique",
+    "strategy": "input[type=\"tel\"] >> nth=2",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "1145396760"
+   },
+   "accountNumber": {
+    "resolved": "none",
+    "strategy": "#id-AccountNumber",
+    "count": 0
+   },
+   "bankName": {
+    "resolved": "none",
+    "strategy": "#id-Bankname",
+    "count": 0
+   },
+   "invoiceGenerationAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-Invoicegeneration >> xpath=ancestor::div[contains(@class,\"p-dropdown\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "creditLimit": {
+    "resolved": "unique",
+    "strategy": "#id-Creditlimit",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "100000"
+   },
+   "topUpLimit": {
+    "resolved": "unique",
+    "strategy": "#id-Topuplimit",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "10000"
+   },
+   "outstandingThreshold": {
+    "resolved": "unique",
+    "strategy": "#id-OutstandingThreshold",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "5"
+   },
+   "creditTermsDays": {
+    "resolved": "unique",
+    "strategy": "[id=\"id-CreditTerms(Days)\"]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "1"
+   },
+   "reachingPercentage": {
+    "resolved": "unique",
+    "strategy": "#id-ReachingPercentage",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": ""
+   },
+   "warningPromptDays": {
+    "resolved": "unique",
+    "strategy": "[id=\"id-WarningPrompt(Days)\"]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": ""
+   },
+   "creditAgencyAncestor": {
+    "resolved": "unique",
+    "strategy": "#id--Creditagency >> xpath=ancestor::div[contains(@class,\"p-checkbox\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "payCashAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-Paymentoption-Cash >> xpath=ancestor::div[contains(@class,\"p-checkbox\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "payWalletAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-Paymentoption-Wallet >> xpath=ancestor::div[contains(@class,\"p-checkbox\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "payCreditCardAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-Paymentoption-CreditCard >> xpath=ancestor::div[contains(@class,\"p-checkbox\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "productFlightAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-SelectProduct-Flight >> xpath=ancestor::div[contains(@class,\"p-checkbox\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "productOthersAncestor": {
+    "resolved": "unique",
+    "strategy": "#id-SelectProduct-Others >> xpath=ancestor::div[contains(@class,\"p-checkbox\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "productAccessTable": {
+    "resolved": "unique",
+    "strategy": "table",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "importPnrAncestor": {
+    "resolved": "unique",
+    "strategy": "#id--ImportPNROption >> xpath=ancestor::div[contains(@class,\"p-checkbox\")][1]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "remarks": {
+    "resolved": "unique",
+    "strategy": "textarea[placeholder=\"remarks...\"]",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": "Approved"
+   },
+   "cancelButton": {
+    "resolved": "unique",
+    "strategy": "button:has-text(\"Cancel\")",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "sendForApprovalButton": {
+    "resolved": "unique",
+    "strategy": "button:has-text(\"Send For Approval\")",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "approveButton": {
+    "resolved": "unique",
+    "strategy": "button:has-text(\"Approve\")",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "rejectButton": {
+    "resolved": "unique",
+    "strategy": "button:has-text(\"Reject\")",
+    "count": 1,
+    "visible": true,
+    "enabled": true,
+    "readOnly": false,
+    "disabledAttr": false,
+    "accept": null,
+    "value": null
+   },
+   "genericSupplierPcc": {
+    "resolved": "none",
+    "strategy": "[id=\"id-Genericsuppliercredentials(PCC)\"]",
+    "count": 0
+   },
+   "managerName": {
+    "resolved": "none",
+    "strategy": "#id-ManagerName",
+    "count": 0
+   },
+   "supplierCredDesc": {
+    "resolved": "none",
+    "strategy": "#id-SupplierCredentialsDescription",
+    "count": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,7 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '17 out of 18' test cases in the current suite                                       
+                             Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc048_approvePendingUpdate'                             
+                                        Test Description: 'TC-AGENCY-048 Approve a pending agency update'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m

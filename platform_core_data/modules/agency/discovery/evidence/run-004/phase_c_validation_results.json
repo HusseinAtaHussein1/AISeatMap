@@ -1,0 +1,89 @@
+{
+  "mandatoryEmpty": [
+    {
+      "field": "Agency *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Post office box *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Address *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Phone No *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Contact person *",
+      "probe": "p15",
+      "originalValue": "Essam Saady",
+      "emptyFieldMessages": []
+    },
+    {
+      "field": "Email ID *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Phone Number *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Credit limit *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Top up limit *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Outstanding Threshold *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Credit Terms (Days) *",
+      "probe": "p35",
+      "originalValue": "1000",
+      "emptyFieldMessages": []
+    },
+    {
+      "field": "Supplier Credentials Description *",
+      "skipped": "no editable control matched this label"
+    },
+    {
+      "field": "Remarks *",
+      "skipped": "no editable control matched this label"
+    }
+  ],
+  "formatProbes": [
+    {
+      "field": "Email ID *",
+      "note": "invalid email format",
+      "skipped": "not found"
+    },
+    {
+      "field": "Credit limit *",
+      "note": "alphabetic into numeric field",
+      "skipped": "not found"
+    },
+    {
+      "field": "Post office box *",
+      "note": "maxlength probe via real keystrokes (attr says 8)",
+      "skipped": "not found"
+    },
+    {
+      "field": "Credit Terms (Days) *",
+      "note": "maxlength probe via real keystrokes (attr says 11)",
+      "typed": "99999999999999",
+      "acceptedValue": "99999999999",
+      "messages": []
+    },
+    {
+      "field": "Company URL",
+      "note": "URL format probe (optional field)",
+      "skipped": "not found"
+    }
+  ]
+}

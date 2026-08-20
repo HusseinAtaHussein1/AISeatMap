@@ -119,7 +119,7 @@ committed location is still open — see the Coverage Report's Recommendations.
 | TC-AGENCY-017 | Upload multiple documents | Atomic | P2 | Atomic | Rejected | Rejected |
 | TC-AGENCY-018 | Remove an uploaded document | Atomic | P2 | Atomic | Rejected | Rejected |
 | TC-AGENCY-019 | Non-PDF document is rejected | Atomic | P1 | Atomic, Negative-InvalidInputs, Regression | Rejected | Rejected |
-| TC-AGENCY-020 | File named .pdf with non-PDF content is rejected | Atomic | P1 | Atomic, Negative-SecurityInputs, Regression | Approved | Approved |
+| TC-AGENCY-020 | File named .pdf with non-PDF content is rejected | Atomic | P1 | Atomic, Negative-SecurityInputs, Regression | Rejected | Rejected |
 | TC-AGENCY-021 | Contract dates block submission when cleared | Atomic | P2 | Atomic, Negative-EmptyValues | Approved | Approved |
 | TC-AGENCY-022 | Upload a valid agency logo | Atomic | P1 | Atomic, Smoke | Approved | Approved |
 | TC-AGENCY-023 | Logo larger than 2 MB is rejected | Atomic | P1 | Atomic, Negative-BoundaryValues, Regression | Approved | Approved |
@@ -148,7 +148,7 @@ committed location is still open — see the Coverage Report's Recommendations.
 | TC-AGENCY-046 | Remarks blocks submission when empty | Atomic | P2 | Atomic, Negative-EmptyValues | Approved | Rejected |
 | TC-AGENCY-047 | Cancel discards unsaved changes | Atomic | P1 | Atomic, Regression | Approved | Approved |
 | TC-AGENCY-048 | Approve a pending agency update | Atomic | P1 | Atomic | Approved | Approved |
-| TC-AGENCY-049 | Reject a pending agency update with a reason | Atomic | P1 | Atomic | Approved | Approved |
+| TC-AGENCY-049 | Reject a pending agency update with a reason | Atomic | P1 | Atomic | Rejected | Rejected |
 | TC-AGENCY-050 | Agency update end to end: edit, submit, approve | E2E | P1 | E2E | Approved | Approved |
 | TC-AGENCY-051 | Save an update without re-uploading the existing document and logo | Atomic | P2 | Atomic | Approved | Rejected |
 | TC-AGENCY-052 | Changing Branch re-inherits dependent values | Atomic | P2 | Atomic, OutOfScope | Rejected | Rejected |
@@ -748,9 +748,9 @@ resolution in the Coverage Report §11.
 
 **Notes:** Run this immediately after TC-AGENCY-019 and compare. If TC-AGENCY-019 rejects the `.txt` and this case accepts the fake `.pdf`, validation is by file name only — report that regardless of what AC-3 says, since it is materially weaker than a real format check. With no `accept` attribute on the input at all (run-004), the likeliest outcome is that **both** files are accepted; record which. **Review reset to `Pending`** — the record under test changed.
 
-**Review:** Approved
+**Review:** Rejected
 
-**Automation:** Approved
+**Automation:** Rejected
 
 ### TC-AGENCY-021 — Contract dates block submission when cleared
 
@@ -1541,9 +1541,9 @@ resolution in the Coverage Report §11.
 
 **Notes:** **Unblocked 2026-08-18 for the same reason as TC-AGENCY-048 (`PO-9`).** The rejection reason maps onto PRD XC-03's Remarks field, which is captured as the audit reason. Run this on a **separate** submission from TC-AGENCY-048 — approving and rejecting the same pending record is not possible, and reusing one submission would make whichever case ran second unexecutable. **Review reset to `Pending`** — the Preconditions and Steps changed.
 
-**Review:** Approved
+**Review:** Rejected
 
-**Automation:** Approved
+**Automation:** Rejected
 
 ### TC-AGENCY-050 — Agency update end to end: edit, submit, approve
 

@@ -2,14 +2,34 @@
 
 The Standard Output Contract's eight sections (§25). This is the document Stage `5A` reads first.
 
+> **2026-08-23 architecture refactor (pure refactor, no behaviour change, no live execution).** The
+> Agency suite's architecture was simplified: `Agency_Common` (a 525-line mixed generic-Page/locator/
+> PrimeNG base) was removed and its members redistributed — dropdown/checkbox/radio addressing and the
+> synchronization/interaction repairs to the new `utilities/PrimeNgHelper.java`, everything else to the
+> page that owns it. Every fixed `By` was extracted out of the three Page classes into dedicated
+> `AddAgency_Locators` / `SearchAgency_Locators` / `UpdateAgency_Locators` classes, with the substantial
+> field overlap between Add and Update consolidated into one small shared `AgencyForm_Locators`.
+> `AddAgency_Page.assertSubmissionSucceeded/Blocked` (TestNG assertions inside a Page) were replaced with
+> state methods (`submissionSucceeded`, `submissionBlocked`, `submissionMessages`); Test Classes now own
+> the assertion. The four-class fixture chain (`AgencyTestBase` → `AgencyFixture` → `AgencyProvisioner`
+> → `SupplierBranchProvisioner`) was consolidated into one `src/test/java/utilities/AgencyFixture.java`,
+> and the known-Branch fallback that could silently create a new permanent Branch was retired — the
+> configured Branch is now a standing, read-only precondition. Fixed baseline data moved from
+> `agency_baseline.properties` + `AgencyTestData.java` to `src/test/resources/testDataFiles/agency/agency-data.json`,
+> read through one new generic `Generic_Classes/JsonDataReader.java`. `BranchSupplierGrid.java` was
+> deleted as dead code once its only caller (`SupplierBranchProvisioner`'s create-fallback) was removed.
+> No Test Case was removed, combined, or weakened; no locator value changed; every confirmed REPAIR-AG-*
+> mechanism was preserved and relocated. `mvn -o clean test-compile` passes. No live execution occurred.
+
 | Field | Value |
 |---|---|
 | Module | `agency` |
 | Run | `run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency` |
 | Stage | `4A` — Automation (generation) |
 | Framework | SHAFT Engine 7.4.20231015 · Java 17 · TestNG · Allure |
-| Module state | **`Generated`** |
+| Module state | **`Generated`** (regenerated 2026-08-23 — see below) |
 | Written | 2026-08-18 |
+| **Regenerated** | **2026-08-23.** The 2026-08-18 package was **rejected** after a live Headed run: `prepareSharedFixture` failed on the Add Agency step, and because the suite shared one Agency across all 18 tests, that single failure skipped every one of them. Full detail: `AutomationPlan_SHAFT.md` §0. Three things changed in this regeneration: **(1)** each of the 5 test classes now provisions its own Agency instead of one shared Agency — a fixture failure in one class no longer affects the other four; **(2)** `"Send For Approval"` is now clicked with a plain WebDriver click, not `clickVia` — live inspection found it is a genuine native `<button type="submit">`, not one of the fake-div PrimeNG controls `clickVia` exists for; **(3)** a new pre-submit check names, by label, every mandatory field Angular still considers invalid at the moment of failure — the old diagnostic printed every empty field indiscriminately, and 7 of the 8 fields it once blamed turned out to be optional, not mandatory. Everything else (44 live-verified locators, the reach-via-pen and readiness/spinner mechanics, REPAIR-AG-001..018) carried forward unchanged — none of it was implicated in the rejection.
 
 ## 1. What Was Done
 

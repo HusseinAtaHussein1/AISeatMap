@@ -1,6 +1,6 @@
 ---
 name: automation-skill
-description: Stage 4A of the Agentic AI Testing Platform's Automation Pipeline (Automation Engineering skill). Transforms the approved Stage 3 Manual Test Suite directly into a production-quality automation package — taking its scope from the test cases themselves, verifying every selector live against the running application through the headless Playwright MCP server, consulting the shared Selector Verification and Repair knowledge bases before generating, self-reviewing within a bounded iteration/time budget, detecting brownfield vs. greenfield automatically, and presenting a Target Write Plan for approval. Never executes what it generates. Use when generating or extending test automation for an approved test-design scope.
+description: Stage 4A of the Agentic AI Testing Platform's Automation Pipeline (Automation Engineering skill). Transforms the approved Stage 3 Manual Test Suite directly into a production-quality automation package — taking its scope from the test cases themselves, generating Java/SHAFT UI automation into the platform's one approved Maven structure with its mandatory responsibility separation (Page Classes, dedicated Locator Classes, Test Classes, shared fixtures, externalized JSON test data, a reused Driver Factory, and no speculative layers), verifying every selector live against the running application through the headless Playwright MCP server, consulting the shared Selector Verification and Repair knowledge bases before generating, self-reviewing within a bounded iteration/time budget including a blocking Architecture Review, detecting brownfield vs. greenfield automatically, and presenting a Target Write Plan for approval. Never executes what it generates. Use when generating or extending test automation for an approved test-design scope.
 inputs:
   - name: project_context
     type: file_path
@@ -42,11 +42,11 @@ outputs:
   - name: automation_package
     type: file_path
     location: "platform_core_data/automation_baseline/{framework}/tests_{Framework}/"
-    description: The generated/reused automation project — scripts, page objects, fixtures, configuration.
+    description: "The generated/reused automation project — Test Classes, Page Classes, Locator Classes, fixtures, externalized test data, configuration. For Java/SHAFT UI it uses §8.1's approved Maven structure exactly."
   - name: automation_manifest
     type: file_path
     location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationManifest_{Framework}.md"
-    description: File inventory plus Self Review findings.
+    description: "File inventory — each file with its §8.1 responsibility area — plus Self Review and Architecture Review (§15.1) findings."
   - name: automation_decision_report
     type: file_path
     location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationDecisionReport_{Framework}.md"
@@ -58,7 +58,7 @@ outputs:
   - name: automation_suite_manifest
     type: file_path
     location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/AutomationSuiteManifest_{Framework}.md"
-    description: Realized suite structure and shared fixtures/utilities per suite.
+    description: "Realized suite structure and shared fixtures/utilities per suite, with each suite element mapped to its §8.1 responsibility area."
   - name: automation_summary
     type: file_path
     location: "platform_core_data/automation_baseline/{framework}/AutomationSummary_{Framework}.md"
@@ -74,7 +74,7 @@ outputs:
   - name: self_review_report
     type: file_path
     location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/SelfReviewReport_{Framework}.md"
-    description: "Each self-review iteration's findings and fixes, the iteration/time budget consumed, and every check left unsatisfied when the budget ended (§15A) — disclosed, never silently dropped."
+    description: "Each self-review iteration's findings and fixes, the iteration/time budget consumed, every check left unsatisfied when the budget ended (§15A), and the Architecture Review verdict with all six recorded fields per blocking violation (§15.1) — disclosed, never silently dropped."
   - name: stack_documentation_context
     type: file_path
     location: "platform_core_data/modules/{{MODULE_SLUG}}/automation/StackDocumentationContext_{Framework}.md"
@@ -97,6 +97,17 @@ dependencies:
 > **Branch:** Automation only. This stage reads **no** Manual Execution artifact (`workflows_and_pipelines/pipeline/pipeline.md` §3.3).
 > **Revision history:** see `docs/CHANGELOG.md`.
 >
+> **Revision note (2026-08-23, user-mandated): the Java/SHAFT UI Automation Architecture is now a platform-level strategy, defined once in §8 and binding on every active section.** It is not scoped to Agency, Branch, or any single module, and it is not re-decided per run.
+>
+> 1. **§8 is rewritten and expanded** into the approved Maven structure (§8.1) plus its responsibility separation: Page Classes (§8.2), a dedicated Locator Class per Page Class (§8.3), Test Classes (§8.4), shared fixtures (§8.5), externalized JSON test data (§8.6), the reused Driver Factory (§8.7), Generic Classes (§8.8), technical utilities (§8.9), the default dependency direction (§8.10), the simplicity bound on optional abstractions (§8.11), the framework/system-shape scope limit (§8.12), and brownfield handling (§8.13).
+> 2. **Generic root packages are prohibited for a Java/SHAFT UI package** — `pages/`, `locators/`, `tests/`, `fixtures/`, `workflows/`, `assertions/`, `services/`, `data/`. Responsibility separation happens *inside* the approved structure, never beside it.
+> 3. **Optional layers are no longer defaults.** Workflows, services, assertion classes, Component Object packages, data factories, builders, technical adapters, module-specific `BasePage` classes, and one-method wrappers are generated only against §8.11's three conditions, are justified in the Automation Plan, and never get an empty folder.
+> 4. **Architecture Review (§15.1) is a blocking part of Self Review**, with 22 named blocking conditions and six mandatory recorded fields per violation. It is never `Passed` while an unapproved violation remains.
+> 5. **Conflicting active rules were rewritten, not annotated.** §14.1's "Component Objects" and "Reusable Assertions" rows, §10's "Shared Components" suite element, and §11's "Common Workflows" reusable-asset entry no longer license an architecture §8 forbids. §10 now states explicitly that a suite is a logical grouping in the framework's own mechanism, not a folder layer or a class.
+> 6. **Scope is bounded on purpose.** §8.1's structure governs Java/SHAFT UI automation only (§8.12); other frameworks and system shapes carry the principles, not the folders, and an explicitly documented approved existing or Reference project architecture takes precedence with the difference recorded (§8.13, §32.5).
+>
+> Nothing about approved Stage 3 scope, the Review/Automation lifecycle gate, the decision gates (§30–§33), live selector verification (§11A), the two mandatory KB reads (§11B), brownfield/greenfield detection, Target Write Plan approval (§11C.4), module lifecycle and baseline ownership (§11D), traceability (§12), the Automation Decision Engine (§13), the bounded self-review loop (§15A), the Standard Output Contract (§25), or the Simple English rule changes. No prior section's numbering changed.
+
 > **Revision note (this revision, user-mandated):** the two pipelines now diverge after Stage 3. Four changes to this stage follow:
 > 1. **Scope comes directly from the approved Stage 3 Manual Test Suite** — the Automation Candidate Package and Manual Execution Summary are **no longer inputs**, and the Candidate Package is removed from the platform (`pipeline.md` §3.3). This stage no longer waits on a manual pass.
 > 2. **Live selector/DOM verification is now mandatory and headless** (§11A), replacing the execution-confirmed evidence the Candidate Package used to supply — and it is *stronger* evidence, since it confirms the flow against the same build the suite will run on. Discovery no longer carries selectors at all (`pipeline.md` §3.5).
@@ -153,6 +164,8 @@ The Automation skill transforms the **approved Stage 3 Manual Test Suite** into 
 
 **Driving the browser to *verify* a selector is not executing the suite** (§11A). Verification confirms a locator resolves and a flow is reachable; execution runs the generated tests and produces results. The first is this stage's own grounding work, the second is Stage `5A`'s.
 
+**The project's architecture is not re-invented per run.** For Java/SHAFT UI automation, this skill generates into one approved Maven structure with a fixed responsibility separation — Page Classes, dedicated Locator Classes, Test Classes, shared fixtures, externalized JSON test data, a reused Driver Factory, and a bounded set of technical utilities (§8). Anything beyond those areas is an optional abstraction that must be justified by evidence, never generated because it might be useful later. For any other framework or system shape, the same principles apply in that stack's own approved structure (§8.12).
+
 This skill designs and generates a project; it does not execute one.
 
 # 3. Responsibilities
@@ -165,6 +178,10 @@ This skill designs and generates a project; it does not execute one.
 - **Never read the PRD directly** — only Stage 1 (Project Context skill) is permitted to, per `workflows_and_pipelines/pipeline/pipeline.md` §6 Rule 4.
 - **Produce a complete Automation Plan (§5) before any code generation begins.** No script, page object, or configuration file is written until the plan is finished.
 - **Detect the target automation framework from the approved Project Context — never assume one** (§6), and select the most appropriate framework using explicit, justified criteria (§7), treating SHAFT Engine as a first-class option (§8) alongside Playwright, Selenium, Cypress, Appium, REST Assured, and any other framework the Project Context or existing project may specify.
+- **Generate every Java/SHAFT UI package into the platform's one approved Maven structure, with its fixed responsibility separation** (§8) — Page Classes and their dedicated Locator Classes under `src/main/java/AdminPages/`, Test Classes under `src/test/java/AdminPages/`, shared fixtures under `src/test/java/utilities/`, JSON test data under `src/test/resources/`, a reused Driver Factory, and no generic root package beside it. This is platform-level strategy, not a per-module choice.
+- **Keep the architecture simple, and justify every optional abstraction with evidence** (§8.11) — never generate a workflow, service, assertion class, Component Object package, data factory, builder, adapter, module-specific base page, or one-method wrapper as a default layer.
+- **Perform the blocking Architecture Review before declaring generation complete** (§15.1) — recording file, method, current and expected responsibility, correction made, remaining exception, and approval requirement for every violation, and never reporting `Passed` while an unapproved violation remains.
+- **Report, never silently refactor, an existing package's architecture deviations** (§8.13) — preserve valid conventions and behavior, and route every proposed structural move through the Target Write Plan for individual approval.
 - **Inspect any existing automation project before generating anything new** (§9), and treat it as a reusable knowledge base (§11) — reuse before generating is not a preference, it is the default behavior.
 - **Group approved test cases into logical automation suites organized around business workflows**, not individual pages or screens (§10), with shared setup, teardown, fixtures, components, utilities, and test data per suite.
 - **Assign every test case in the run's scope exactly one Automation Decision** — Reuse Existing Automation, Generate New Automation, Partially Automatable, or Manual Only (§13) — each with an explicit justification, never a silent omission.
@@ -217,8 +234,11 @@ The Automation Plan must include:
 
 - **Target Framework** — the framework selected per §6–§8, with its justification
 - **Target Language** — the programming language the framework will be authored in
-- **Project Architecture** — the overall structure of the automation project (e.g., Page Object Model with a shared driver/session layer, or the equivalent pattern for the selected framework)
-- **Design Pattern** — the specific pattern(s) in use (e.g., Page Object Model, Screenplay, Fixture-based composition)
+- **Project Architecture** — the overall structure of the automation project. **For Java/SHAFT UI automation this is not an open choice: it is §8.1's approved Maven structure**, and the plan states it by reference rather than re-deriving one. For any other framework or system shape, it is that stack's own approved structure, subject to §8.12's principles.
+- **Design Pattern** — the specific pattern(s) in use (e.g., Page Object Model, Screenplay, Fixture-based composition). For Java/SHAFT UI: Page Class + dedicated Locator Class + Test Class + Fixture + JSON test data (§8.2–§8.6).
+- **Responsibility Map** — for every asset the plan intends to create or modify, the responsibility area of §8.1 it belongs to (Page · Locator · Test · Fixture · Driver Factory · Generic Class · Utility · JSON test data · configuration), and its target path. An asset with no stated area is an incomplete plan field.
+- **Optional Abstractions** — every abstraction outside §8.1's default areas, each with its §8.11 justification: which of the two grounds it rests on (authoritative existing/Reference project requirement, or proven duplication in several named places), why maintenance is simpler with it, and why its responsibility cannot be placed cleanly in the approved structure. **An abstraction listed with no justification is an incomplete plan, held to the same standard §7 applies to an unjustified framework choice.** Where none are proposed, the field says `None` rather than being omitted.
+- **Architecture Deviations** — for a brownfield package, every deviation of the existing structure from §8.1–§8.11, each classified `Preserved (approved convention)` · `Correction proposed in Target Write Plan` · `Reported, no action` (§8.13). Never a silent refactor, and never a silent omission.
 - **Planned Automation Suites** — the business-workflow-organized suites from the Suite Planning Engine (§10)
 - **Existing Assets** — everything already reusable, discovered per Existing Framework Analysis (§9)
 - **Assets To Generate** — what must be newly authored, and why nothing existing covers it
@@ -273,42 +293,328 @@ Rules, in order of precedence:
 
 **The selected framework must always be justified in the Automation Plan (§5)** — a framework choice with no stated justification is incomplete. The justification records both the criteria that informed any recommendation *and* the human's actual decision at the Framework Decision Gate (§31) — never a recommendation alone, presented as if it were the decision.
 
-# 8. SHAFT Engine Support
+# 8. SHAFT Engine Support and the Java/SHAFT UI Automation Architecture
 
 **SHAFT Engine is a first-class automation framework for this skill — not a fallback, and not treated as a lesser-supported option.**
 
-When SHAFT Engine is selected (per §6–§7), this skill must generate automation that follows SHAFT Engine best practices, and the generated project should align with the standard SHAFT architecture, including appropriate use of:
-
-- `DriverFactory`
-- Page Object Model
-- TestNG
-- Allure Reporting
-- SHAFT configuration
-- Reusable utilities
-- Data-driven testing when applicable
-- Shared test infrastructure
+When SHAFT Engine is selected (per §6–§7), this skill generates automation that follows SHAFT Engine best practices and uses the framework's own facilities rather than reimplementing them: TestNG as the runner, Allure as the reporting layer (wired by SHAFT itself, never re-authored per test), SHAFT's driver lifecycle, SHAFT's fluent assertion/validation API, SHAFT's configuration properties, and SHAFT's data-driven support where a test case's Test Data implies variants.
 
 **This skill must avoid generating generic Selenium code when SHAFT Engine is selected.** SHAFT Engine wraps and extends Selenium/Appium/REST Assured with its own conventions and utilities; falling back to raw, unwrapped Selenium calls when SHAFT is the selected framework is a specification violation, not a harmless simplification.
+
+**§8.1–§8.13 below are the platform's Automation Strategy for Java/SHAFT UI automation.** They are mandatory, they are not limited to any one module, and they are not re-decided per run. Every other active section of this specification — Planning (§5), Existing Framework Analysis (§9), Suite Planning (§10), the Knowledge Base (§11), the Target Write Plan (§11C.4), Code Generation Standards (§14), Self Review (§15/§15.1), Outputs (§16), the Standard Output Contract (§25), and the Reference Project rules (§32.5) — is read subject to this section.
+
+## 8.1 The approved Maven structure — mandatory, platform-wide
+
+**Every Java/SHAFT UI automation package this skill generates or extends uses exactly this structure:**
+
+```text
+src/
+├── main/
+│   ├── java/
+│   │   ├── AdminPages/           Page Classes + their matching Locator Classes
+│   │   ├── Drive_Factory/        driver creation, browser configuration, driver lifecycle
+│   │   ├── Generic_Classes/      genuinely project-wide, single-responsibility classes
+│   │   └── utilities/            cohesive technical utilities
+│   └── resources/
+│       └── properties/           configuration
+│
+└── test/
+    ├── java/
+    │   ├── AdminPages/           Test Classes, mirroring the Page Class organization
+    │   ├── DBs_Query_Execution/  authorized database query execution
+    │   ├── org/example/          the framework's own entry/scaffold package
+    │   └── utilities/            shared fixtures — setup and cleanup only
+    └── resources/                JSON test data, by module or business scope
+```
+
+**Responsibility separation happens inside this structure, never by adding root packages beside it.** These generic root packages must never be created for a Java/SHAFT UI package, and an existing structure must never be replaced by them:
+
+```text
+pages/   locators/   tests/   fixtures/   workflows/   assertions/   services/   data/
+```
+
+A responsibility that appears to need one of them already has a home above. If it genuinely does not, that is a repository-structure question for a human (§31.6) — never a new top-level package this skill invents.
+
+## 8.2 Page Classes — `src/main/java/AdminPages/`
+
+Organized by application area and module:
+
+```text
+src/main/java/AdminPages/Admin/Agency/
+├── CreateAgency_Page.java
+├── SearchAgency_Page.java
+└── UpdateAgency_Page.java
+```
+
+**Each Page Class represents one page or screen.**
+
+| A Page Class **may** contain | A Page Class **must not** contain |
+|---|---|
+| Page-specific UI actions | Locator declarations |
+| Page-specific state-reading methods | Test assertions |
+| Page-specific waits and synchronization | Test setup or teardown |
+| Navigation actions originating from that page | Test-data provisioning, or static test data |
+| Calls to its matching Locator Class | API or database preparation |
+| | Test orchestration |
+| | Methods unrelated to that page |
+| | Shared fixtures |
+| | Generic containers of unrelated methods |
+
+Representative method shapes:
+
+```java
+enterAgencyName(String name)
+selectCountry(String country)
+clickSearch()
+clickSave()
+openForUpdate(String code)
+isSuccessMessageVisible()
+validationMessageFor(String fieldName)
+codesOnCurrentPage()
+```
+
+**Page Classes expose actual state; Test Classes decide whether the result passes or fails.**
+
+```java
+// Allowed — reports state
+public boolean isSuccessMessageVisible() { ... }
+
+// Not allowed — decides the verdict
+public void assertSubmissionSucceeded() { ... }
+```
+
+## 8.3 Locator Classes — one per Page Class, same package
+
+**Every Page Class has its own dedicated Locator Class, in the same application/module package:**
+
+```text
+src/main/java/AdminPages/Admin/Agency/
+├── CreateAgency_Page.java
+├── CreateAgency_Locators.java
+├── SearchAgency_Page.java
+├── SearchAgency_Locators.java
+├── UpdateAgency_Page.java
+└── UpdateAgency_Locators.java
+```
+
+A Locator Class contains **locator definitions only** — never UI actions, assertions, test data, setup or cleanup, business logic, test flow, or unrelated driver behavior.
+
+Locator naming convention, applied whenever it does not conflict with an approved existing convention (§8.13):
+
+| Prefix | For |
+|---|---|
+| `Btn_` | Buttons |
+| `Txt_` | Text fields |
+| `Lst_` | Dropdowns and lists |
+| `Icn_` | Icons |
+| `Rbtn_` | Radio buttons |
+| `Cbox_` | Checkboxes |
+| `Dpick_` | Date pickers |
+
+```java
+Btn_Save   Txt_AgencyName   Lst_Country   Icn_Update   Rbtn_Active   Cbox_ProductAccess   Dpick_ExpiryDate
+```
+
+Mandatory rules:
+
+- **No locators inside Test Classes.**
+- **No locator declarations inside Page Classes.**
+- **No duplicated locator definitions** — each locator has exactly one authoritative definition.
+- Page methods reach the DOM only through their matching Locator Class.
+- **Selector Verification traceability (§11A.4) is preserved when a locator is moved or reused** — relocating a verified locator into a Locator Class carries its verification record with it; it does not reset it.
+- **A verified locator is never replaced merely for naming or style.** A rename that would discard live-verified evidence is a §11A.5 disclosure, not a cleanup.
+
+## 8.4 Test Classes — `src/test/java/AdminPages/`
+
+Same application/module organization as the Page Classes:
+
+```text
+src/test/java/AdminPages/Admin/Agency/
+├── CreateAgency_Admin_TC.java
+├── SearchAgency_Admin_TC.java
+├── UpdateAgency_Admin_TC.java
+└── AgencyActions_Admin_TC.java
+```
+
+| A Test Class contains **only** | A Test Class **must not** contain |
+|---|---|
+| The readable test flow | Locators |
+| Calls to Page methods | Direct driver or element interactions |
+| Calls to shared setup/cleanup when required | Hardcoded or static test data |
+| Assertions | Page-specific waits or retries |
+| Test metadata | Reusable UI helper methods |
+| Test Case traceability (§12) | Duplicated setup or cleanup |
+| Reading required test data from JSON | Generic utility methods, or complex implementation logic |
+
+- **A test may call multiple Page Classes directly** to express a multi-page scenario.
+- **Interacting with more than one page is never a reason to generate a workflow or service class** (§8.11).
+- **Simple, test-specific assertions stay inside the Test Class.** A shared assertion *class* is not a default layer (§8.11); an assertion used by many tests is satisfied by asserting on a Page Class's state-reading method, not by wrapping it.
+
+## 8.5 Shared fixtures — `src/test/java/utilities/`
+
+```text
+src/test/java/utilities/
+├── AuthenticationFixture.java
+├── AgencyFixture.java
+└── BranchFixture.java
+```
+
+Fixtures are allowed **only** for: authentication/session preparation · reusable test preconditions · creating prerequisite records · authorized API or database setup · reusable cleanup · rerun safety and idempotency · setup shared by more than one test.
+
+Fixtures must **not** contain: normal test steps · assertions · page locators · complete business scenarios · unrelated shared methods · one-method wrappers around Page actions.
+
+- **Prefer one cohesive fixture per module.** Split only on clearly separate responsibilities that have become hard to maintain — never pre-emptively.
+- **Page Classes must never depend on fixtures** (§8.10).
+- Where the Application Context (§4) states a fixture build order, fixtures follow it rather than re-deriving prerequisites per test.
+
+## 8.6 JSON test data — `src/test/resources/`
+
+Organized by module or business scope:
+
+```text
+src/test/resources/
+├── agency/
+│   ├── create-agency.json
+│   ├── search-agency.json
+│   └── update-agency.json
+└── branch/
+    ├── create-branch.json
+    ├── search-branch.json
+    └── update-branch.json
+```
+
+**Test data is JSON-driven.** It is never hardcoded inside a Test Class, Page Class, Locator Class, Fixture, utility, or base class.
+
+- **Test data** means: names, codes, countries, valid values, invalid values, boundary values, search values, and expected messages used by test scenarios.
+- **Not test data**, and allowed to stay in code: technical constants, configuration keys, framework enums, and other non-test-data constants.
+- **Never store a credential, secret, token, or private environment value in a committed JSON file.** Credentials continue to use the approved secure configuration mechanism (`platform_core/tools/browser_driver/README.md` §4 and the project's own environment-variable contract) — this rule is unchanged and is not weakened by JSON-driven test data.
+- **Use the smallest existing JSON-reading mechanism.** Do not generate builders, factories, providers, or model layers to read a JSON file (§8.11).
+
+## 8.7 Drive Factory — `src/main/java/Drive_Factory/`
+
+Owns driver initialization, browser configuration, driver lifecycle, and approved execution-mode configuration.
+
+It must not contain page actions, locators, business logic, test data, module-specific setup, assertions, or fixtures.
+
+**Reuse the existing Driver Factory. Never generate a competing one.** For SHAFT specifically, this area configures SHAFT's own driver lifecycle rather than replacing it.
+
+## 8.8 Generic Classes — `src/main/java/Generic_Classes/`
+
+For genuinely project-wide classes with **one clear responsibility** — JSON reading, configuration reading, shared technical data representation, narrow framework-level behavior.
+
+**Not a dumping ground.** These names must never be generated:
+
+```text
+SharedMethods   CommonMethods   GeneralHelper   BaseUtils
+```
+
+Module-specific behavior stays in its Page Class, Test Class, Fixture, Locator Class, or JSON data.
+
+## 8.9 Utilities — `src/main/java/utilities/`
+
+For cohesive technical utilities only — e.g. `PaginationHelper.java`, `FileUtility.java`, `DateUtility.java`.
+
+A utility must have one clear technical responsibility, be genuinely reusable or required by the approved existing structure, contain no business behavior, contain no test assertions, contain no module-specific setup, and not duplicate framework-native behavior without a stated justification.
+
+**Never generate a utility for possible future use.**
+
+## 8.10 Default dependency direction
+
+```text
+Test Classes            →  Page Classes  →  Page-specific Locator Classes
+Test Classes            →  Fixtures (setup and cleanup only)
+Test Classes / Fixtures →  JSON test data
+Page Classes / Fixtures →  approved Generic Classes or Utilities, when required
+Drive Factory           →  driver lifecycle only
+```
+
+**Prohibited, without exception:**
+
+| Prohibited edge | Why |
+|---|---|
+| Page → Test | A page cannot depend on who is testing it |
+| Page → Fixture | Setup is the test's concern, never the page's |
+| Locator → Page / Test / Fixture | A locator definition depends on nothing |
+| Fixture → Test | Setup cannot depend on the test it prepares for |
+| Driver Factory → module-specific behavior | The driver layer is module-agnostic |
+| Utility → module-specific Test or Page behavior | A utility that knows a module is not a utility |
+| Any circular dependency | — |
+
+## 8.11 Keep the architecture simple
+
+**These are never generated as default layers:**
+
+```text
+Workflows · Services · Assertion classes · Component Object packages · Data factories
+Builders · Technical adapters · Module-specific BasePage classes · One-method wrapper classes
+```
+
+An optional abstraction is allowed **only** when all of the following hold:
+
+1. The authoritative existing or Reference project already requires it (§8.13, §32.5); **or** proven duplication exists in several places;
+2. The abstraction clearly makes maintenance simpler;
+3. Its responsibility cannot be placed cleanly anywhere in §8.1's structure.
+
+**Every optional abstraction is justified in the Automation Plan (§5).** Possible future reuse is never sufficient justification. **No empty folder is created for an optional abstraction.**
+
+**The simplicity requirement, stated as a test:** a tester modifying a normal UI Test Case should usually need to open only —
+
+1. the Test Class; 2. the relevant Page Class; 3. the matching Locator Class, if the locator changed; 4. the JSON file, if the data changed; 5. the Fixture, only if setup or cleanup changed.
+
+A normal Test Case that fails this test is a §15.1 blocking finding.
+
+## 8.12 Framework and system-shape scope
+
+**§8.1's exact Maven structure governs Java/SHAFT UI automation, and only that.** It must never be forced onto API automation, mobile automation, messaging systems, batch systems, cloud automation, or a different framework with its own explicitly approved project structure.
+
+For every other framework or system shape, the same **principles** still apply, expressed in that stack's own idiom:
+
+- The test flow stays readable.
+- Interface actions are separated from tests.
+- Element or endpoint definitions are not duplicated.
+- Test data is externalized.
+- Setup and cleanup are reusable.
+- Unnecessary layers are not generated.
+
+**An approved existing or Reference project architecture takes precedence when it is explicitly documented** (§8.13, §32.5, §34.5).
+
+## 8.13 Brownfield handling for an existing Java/SHAFT package
+
+- **Inspect the authoritative existing structure first** (§9) — before planning a single file.
+- **Preserve valid project conventions**, including naming conventions this section would otherwise suggest changing.
+- **Report every deviation** from §8.1–§8.11 in the Automation Plan (§5) and the Target Write Plan (§11C.4). Reporting is mandatory; refactoring is not authorized by it.
+- **Never silently perform a large architecture refactor.** A structural move is proposed in the Target Write Plan and individually approved (§11C.4 rule 3), exactly like any other modification of a file the team owns.
+- **Never add new complexity because similar complexity already exists.** An existing `SharedMethods`-style class is not permission to add a second one.
+- **Preserve Test Case IDs, steps, expected results, and behavior** through any move. A relocation that changes what a test asserts is not a relocation (§15A.4).
+- **Record every proposed move and deletion in the Target Write Plan** (§11C.4) — including the deletion rules in §11D.3 that already forbid silent removal.
+- **Respect lifecycle and ownership rules** — `.module_automation_state.json` (§11D.4), `.baseline_ownership.json` (§11D.4a). A structural move that touches a `foreign` path is a hard stop, not a refactor.
+- **Existing style is a naming guide, never permission to violate a responsibility boundary.** The §8.10 dependency prohibitions and the §15.1 blocking checks apply to newly generated and newly modified code regardless of how the surrounding code is written. Where the existing code already violates them, that is a reported deviation for a human to decide on — not a standard the new code inherits.
 
 # 9. Existing Framework Analysis
 
 Before generating any new automation, this skill inspects the project's one existing Automation Package for the resolved framework (per §4's "Existing Automation Package(s)" input and the project's `AutomationPackages.md` registry, §19/§31) — and, if the project uses more than one framework, each of those frameworks' own one project independently. As of §33.2, "an existing Automation Package" means the **Workspace Automation Baseline**, copied wholesale into this run's own working copy at Working Copy Creation (`workflows_and_pipelines/pipeline/pipeline.md` §12.3) — never a prior run's folder inspected in place, and never a location this skill reads from without first having copied it in. For each package found, it detects:
 
-- Existing Test Scripts
-- Existing Page Objects
-- Existing Components
+- Existing Test Scripts / Test Classes
+- Existing Page Objects / Page Classes
+- **Existing Locator Classes**, and any locator defined outside one
 - Existing Utilities
 - Existing Fixtures
-- Existing Test Data
+- Existing Test Data, and where it lives (externalized vs. hardcoded in Java)
 - Existing Helpers
-- Existing Folder Structure
-- Existing Naming Conventions
+- **Existing Driver Factory** — the one that must be reused rather than competed with (§8.7)
+- **Existing Generic Classes**
+- Existing Folder Structure — **and, for a Java/SHAFT UI package, how it compares to §8.1's approved Maven structure, area by area**
+- Existing Naming Conventions — including any locator-prefix convention already in force (§8.3)
 - Existing Reporting Solution
 - Existing Build Tool
 
+**The authoritative existing structure is inspected before anything is planned** (§8.13). This inspection is what makes the plan's Responsibility Map and Architecture Deviations fields (§5) answerable; producing either without it is guessing.
+
 **Reuse before generating.** The output of this analysis feeds directly into the Automation Plan's "Existing Assets" field (§5) and into the Automation Knowledge Base search performed before every individual generation decision (§11).
 
-If no existing automation project exists, this section's analysis is trivially empty, and the Automation Plan records that explicitly ("no existing automation project found — greenfield generation") rather than silently skipping the step.
+**Deviations are reported, never silently refactored.** Every place the existing structure differs from §8.1–§8.11 is recorded in the Automation Plan's Architecture Deviations field, with its §8.13 classification. Inspecting a deviation is not authorization to correct it: a structural move is proposed in the Target Write Plan and approved file by file (§11C.4).
+
+If no existing automation project exists, this section's analysis is trivially empty, and the Automation Plan records that explicitly ("no existing automation project found — greenfield generation") rather than silently skipping the step. A greenfield Java/SHAFT UI package is scaffolded directly to §8.1's structure, with no responsibility area created empty (§8.11).
 
 # 10. Suite Planning Engine
 
@@ -323,14 +629,26 @@ Examples of business-workflow-organized suites:
 
 A suite organized around a single page (e.g., a suite that is just "Employee List Page tests," disconnected from the Add Employee / Employee Detail tests that form the same business workflow) is the wrong shape and must not be produced — the workflow, not the screen, is the organizing unit.
 
-Each suite should contain:
+**A suite is a logical grouping of tests, not a folder layer and not a class.** This is the distinction that keeps §10 and §8 consistent, and it is stated explicitly so neither is read as licensing the other:
 
-- Shared Setup
-- Shared Teardown
-- Shared Fixtures
-- Shared Components
-- Shared Utilities
-- Shared Test Data
+| A suite **is** | A suite is **not** |
+|---|---|
+| A named grouping of Test Classes that cover one business workflow | A `workflows/` or `services/` package (§8.1 forbids both) |
+| Expressed in the framework's own grouping mechanism — for Java/SHAFT: TestNG groups and a `<test>` block in `testng.xml` / `testng-{{MODULE_SLUG}}.xml` | A `Workflow` or `Service` class orchestrating page calls (§8.11) |
+| A reporting and execution-selection unit Stage `5A` can run by name | A reason to relocate a Test Class out of its §8.4 application/module package |
+
+**Test Classes stay organized by application area and module** (§8.4) — `src/test/java/AdminPages/Admin/Agency/` — while the *suite* that groups them is organized by workflow. Both are true at once because they answer different questions: the directory answers "what does this test," the suite answers "which tests run together."
+
+Each suite records the following. For a Java/SHAFT UI package, each maps to a §8 responsibility area — a suite never creates a home of its own:
+
+| Suite element | Where it actually lives (Java/SHAFT UI) |
+|---|---|
+| Shared Setup | A Fixture in `src/test/java/utilities/` (§8.5) |
+| Shared Teardown | The same Fixture's cleanup (§8.5) |
+| Shared Fixtures | `src/test/java/utilities/` (§8.5) — one cohesive fixture per module, preferred |
+| Shared Utilities | `src/main/java/utilities/` for technical utilities (§8.9); `src/main/java/Generic_Classes/` for project-wide single-responsibility classes (§8.8) |
+| Shared Test Data | JSON under `src/test/resources/{module}/` (§8.6) |
+| Shared Components | **Not a default layer** (§8.11). Recorded as `None — §8.11` unless a Component Object is justified against §8.11's three conditions and named in the Automation Plan's Optional Abstractions field. |
 
 The resulting suite structure is recorded in the Automation Plan (§5, "Planned Automation Suites") and, after generation, in the Automation Suite Manifest (§16).
 
@@ -340,13 +658,14 @@ The resulting suite structure is recorded in the Automation Plan (§5, "Planned 
 
 This skill treats the existing automation project (§9) as a reusable knowledge base, not merely a folder to avoid clobbering. Before creating anything new, it searches for reusable:
 
-- Page Objects
-- Components
-- Utilities
-- Fixtures
-- Helpers
-- Test Data
-- Common Workflows
+- Page Objects / Page Classes (§8.2)
+- **Locator Classes and individual locator definitions** (§8.3) — a locator that already has an authoritative definition is reused, never redefined
+- Utilities (§8.9) and Generic Classes (§8.8)
+- Fixtures (§8.5)
+- Helpers already present in the existing project
+- Test Data (§8.6)
+- **Driver Factory** (§8.7) — always reused, never competed with
+- Reusable actions covering a common flow (e.g. login) — reused as the Page or Fixture method they already are, **not lifted into a new workflow or service class** (§8.11)
 
 **Never generate a duplicate reusable asset.** If a page object, utility, or fixture already exists that covers (or can be reasonably extended to cover) a new need, this skill reuses or extends it — it does not author a second, parallel version. Where reuse requires extending an existing asset, that extension is itself planned and recorded (Automation Plan §5, Automation Decision Report §13) rather than performed as an undocumented side effect.
 
@@ -472,7 +791,9 @@ All of this is an Engineering Decision (`pipeline.md` §5.5) and is determined w
 Where automation already exists:
 
 - **Extend and reuse rather than duplicate** — a helper, fixture, or page object that already exists is used, not re-created alongside a near-identical twin.
-- **Match the existing conventions** even where platform defaults differ. The team's suite is the authority on its own style; a stylistic "improvement" that makes generated files look foreign is a defect, not an upgrade.
+- **Match the existing conventions** even where platform defaults differ. The team's suite is the authority on its own style; a stylistic "improvement" that makes generated files look foreign is a defect, not an upgrade. **Style is not the same as responsibility.** Existing naming, formatting, and layout conventions are matched (§8.13); the §8.10 dependency prohibitions and §15.1 blocking checks still apply to every file this run generates or modifies, and an existing violation is a reported deviation rather than a convention the new code adopts.
+- **Report every architecture deviation; refactor nothing silently** (§8.13). Deviations go in the Automation Plan's Architecture Deviations field and, where a correction is proposed, in the Target Write Plan as an individually-approved `MOVE`/`MODIFY` row. A large structural refactor is never performed as a side effect of adding coverage.
+- **Never add new complexity because similar complexity already exists.** An existing mixed-responsibility helper does not license a second one (§8.8, §8.11).
 - **Never modify an existing file without naming it in the Write Plan** and having it individually approved (§11C.4, `pipeline.md` §13.3). Creating new files in an allowlisted directory is covered by the gate's blanket approval; editing files the team owns is not.
 - **Bootstrap Migration** lifts a pre-existing suite into a Workspace Automation Baseline the first time (`pipeline.md` §13.8), so "extend the existing suite" means the team's real suite rather than an empty baseline.
 
@@ -492,10 +813,18 @@ Fit: {Brownfield: extending existing suite | Greenfield: scaffolding test infras
 Destination: <targetRoot>/<automationRoot>          both resolved, never assumed (§11C.1)
 Layout/naming: matched from <detectedTestDirs>      the team's own conventions, not platform defaults
 
-  CREATE  <specDir>/<module>-create.<ext>            covers TC-AGENCY-CREATE-001..006
-  CREATE  <pageObjectDir>/<Module>FormPage.<ext>     new page object (verified locators, §11A)
-  REUSE   <pageObjectDir>/LoginPage.<ext>            existing — used unchanged, not duplicated
-  MODIFY  <buildManifest>                            + one test-script entry (additive only)
+  CREATE  <specDir>/<module>-create.<ext>             [Test]     covers TC-AGENCY-CREATE-001..006
+  CREATE  <pageObjectDir>/<Module>FormPage.<ext>      [Page]     new page class
+  CREATE  <pageObjectDir>/<Module>Form_Locators.<ext> [Locator]  verified locators (§11A)
+  REUSE   <pageObjectDir>/LoginPage.<ext>             [Page]     existing — unchanged, not duplicated
+  REUSE   <driverFactoryDir>/                         [Driver]   existing factory reused (§8.7)
+  CREATE  <testDataDir>/<module>/create-<module>.json [Data]     externalized test data (§8.6)
+  MODIFY  <buildManifest>                             [Config]   + one test-script entry (additive only)
+
+Responsibility areas used: Page · Locator · Test · Fixture · Driver · Utility · Data · Config
+Optional abstractions:     None  (or: each one named, with its §8.11 justification)
+Architecture deviations:   0     (or: each one named, with its §8.13 classification)
+Architecture Review:       Passed | Blocked — {n} unapproved violations (§15.1)
 
 Selector verification: 38 verified · 3 reused from KB (no drift) · 2 unverified (named below)
 Self-review: 3 iterations, budget not exhausted, 0 checks left unsatisfied
@@ -506,6 +835,7 @@ Every <placeholder> above is RESOLVED per project — from platform.config.json 
 
 Rules, all inherited from `pipeline.md` §13.3 rather than invented here:
 
+0. **Every row states its responsibility area** (§8.1) — a write whose area cannot be stated is a plan defect. For a Java/SHAFT UI package the area also implies the path: a `[Test]` row under `src/main` or a `[Page]`/`[Locator]` row under `src/test` is a §15.1 blocking violation the plan must not carry to the gate.
 1. **No Target Project file is written before this plan clears the gate.**
 2. **Writes are fail-closed** — absent or empty `target.writeAllowlist` means nothing is written to the Target Project, and generation stays inside `platform_core_data/`.
 3. **Every existing file to be modified is named individually** and approved individually.
@@ -673,20 +1003,24 @@ This skill generates only maintainable automation. Generated code must be:
 
 **Prefer composition over duplication** — when a new test case's needs overlap substantially with an existing asset, compose around/extend that asset rather than copying its logic into a new one (§11).
 
+**"Modular" means the responsibilities in §8, not more layers.** For Java/SHAFT UI automation, §8.1's structure and §8.10's dependency direction are the concrete form of every standard above, and §8.11 bounds them: a new abstraction that satisfies "modular" while failing §8.11's three conditions is a defect, not a modularization. Where §14/§14.1 and §8 could be read as differing, §8 governs.
+
 ## 14.1 Additional Named Standards
 
 The general standards above (Modular/DRY/Readable/Reusable/Maintainable/Versionable) are made concrete through the following, applied at generation time — not only checked retroactively in Self Review (§15):
 
 | Standard | What it requires |
 |---|---|
-| **Page Object Model / Component Objects** | Screens are represented as Page Objects; a UI element or behavior reused *across* multiple pages (e.g., a shared header, a shared date picker) is factored into its own Component Object rather than duplicated inside each Page Object that uses it. |
-| **Reusable Actions** | A multi-step user action performed by more than one test case (e.g., "log in," "add an employee") is a named, reusable action/method — never re-authored inline per test. |
-| **Reusable Assertions** | A verification performed by more than one test case (e.g., "assert the generic error banner is shown") is a named, reusable assertion helper — never re-authored inline per test. |
-| **Test Data Separation** | Test data lives in dedicated fixtures/data files (§10's "Shared Test Data"), never hardcoded inline inside a test body. |
+| **Page Object Model** | Screens are represented as Page Objects — one per page or screen. **For Java/SHAFT UI, this is §8.2's Page Class plus its dedicated §8.3 Locator Class, and locator definitions never live in the Page Class itself.** A **Component Object package is not a default layer** (§8.11): an element reused across pages is represented in each page's own Locator Class, and is factored out only when §8.11's three conditions are met and the abstraction is justified in the Automation Plan. |
+| **Reusable Actions** | A multi-step user action performed by more than one test case (e.g., "log in") is a named, reusable method — never re-authored inline per test. It lives with the responsibility that owns it: a single-page action on that page's Page Class (§8.2); test setup or cleanup in a Fixture (§8.5). **It never becomes a workflow or service class merely because it spans two pages** (§8.4, §8.11). |
+| **Assertions stay in the test** | A Test Class asserts; a Page Class reports state (§8.2). A verification shared by many test cases is satisfied by asserting on a Page Class's state-reading method, **not** by generating an assertion class or an `assertX()` method on the page (§8.11). Simple, test-specific assertions stay inline in the Test Class. |
+| **Test Data Separation** | Test data is externalized, never hardcoded inline in a test body — or in a Page Class, Locator Class, Fixture, utility, or base class. **For Java/SHAFT UI it is JSON under `src/test/resources/`, read with the smallest existing mechanism** (§8.6). Technical constants, configuration keys, and framework enums are not test data and may stay in code. Credentials, secrets, and tokens are never in committed test data. |
 | **Configuration Management** | Environment-specific values (URLs, timeouts, feature-flag states) live in configuration files/environment variables, never hardcoded into test logic. |
 | **Environment Awareness** | Generated automation reads its target environment from configuration (per Configuration Management above) rather than assuming a single hardcoded environment — the same suite must be able to target a different environment by configuration change alone, not a code edit. |
 | **Parameterization** | Where a test case's Test Data (§6 of `.claude/skills/test-design-skill/SKILL.md`) implies data-driven variants (e.g., multiple boundary values), this skill generates a parameterized test rather than one copy-pasted test per data value. |
-| **Naming Conventions** | Files, test names, and reusable assets follow one consistent convention throughout the generated project — matching the existing convention detected in §9 if an existing project is present, or a clearly stated new convention if greenfield. This is a generation-time standard here; §15's naming-consistency check verifies it was actually followed. |
+| **Naming Conventions** | Files, test names, and reusable assets follow one consistent convention throughout the generated project — matching the existing convention detected in §9 if an existing project is present, or a clearly stated new convention if greenfield. For Java/SHAFT UI, the locator prefixes in §8.3 apply wherever they do not conflict with an approved existing convention. This is a generation-time standard here; §15's naming-consistency check verifies it was actually followed. |
+| **Architecture placement** | **For Java/SHAFT UI automation, every generated file lands in the responsibility area §8.1 assigns it, and the §8.10 dependency direction is respected.** Placement is a generation-time standard, not something corrected retroactively in Self Review; §15.1's blocking checks verify it was actually followed. |
+| **No speculative layers** | No workflow, service, assertion class, Component Object package, data factory, builder, adapter, module-specific `BasePage`, or one-method wrapper is generated as a default (§8.11). Each is allowed only against §8.11's three conditions, and each is justified in the Automation Plan. |
 
 Carried forward from v1, still in force:
 - Every automated test maps 1:1 to a Test Case ID (§12), stated in the test name or an adjacent, unambiguous comment/metadata block.
@@ -701,17 +1035,65 @@ This skill validates:
 - Naming consistency (across the newly generated code and, where applicable, against existing conventions detected in §9)
 - Duplicate code (any logic that should have been a shared utility/fixture but wasn't)
 - Broken references (a script citing a Test Case ID, page object, or fixture that doesn't actually exist)
-- Missing reusable assets (a need that should have produced a shared asset but instead produced one-off, non-reusable code)
-- Missing page objects (a screen/component interacted with directly instead of through a page object)
-- Missing utilities (repeated inline logic that should have been extracted)
-- Missing test data (a hardcoded value that should have come from a shared test-data fixture)
-- **Architecture** — the generated project actually matches the Project Architecture and Design Pattern stated in the Automation Plan (§5); a deviation discovered here is corrected or explicitly justified, never left silently inconsistent with the plan.
+- Missing reusable assets (a need that should have produced a shared asset but instead produced one-off, non-reusable code) — bounded by §8.11: a *missing* abstraction is only a finding where §8.11's three conditions are all met, never because one might be useful later
+- Missing page objects (a screen interacted with directly instead of through its Page Class), and, for Java/SHAFT UI, a Page Class with no matching Locator Class (§8.3)
+- Missing utilities (repeated inline logic that should have been extracted, subject to §8.9)
+- Missing test data (a hardcoded value that should have come from externalized test data — for Java/SHAFT UI, a JSON file under `src/test/resources/`, §8.6)
+- **Architecture** — the generated project actually matches the Project Architecture and Design Pattern stated in the Automation Plan (§5); a deviation discovered here is corrected or explicitly justified, never left silently inconsistent with the plan. **For Java/SHAFT UI automation this check is the blocking Architecture Review in §15.1**, not an advisory comparison against the plan.
 - **Compilation/syntax readiness** — the generated code is syntactically valid and, where a lint/type-check/compile tool is available (§17), passes it; a failure here is a defect this skill must fix before declaring generation complete, not a note left for the Automation Execution skill to discover.
 - **Framework compliance** — the generated code actually follows the selected framework's conventions (e.g., SHAFT Engine's DriverFactory/Page Object Model/TestNG/Allure per §8, not generic unwrapped Selenium) — a compliance gap here is exactly the "specification violation" §8 already names, caught before handoff rather than after.
 - **Traceability** — every generated script's Test Case ID, and the Requirement/Discovery/Finding/Evidence References it inherited (§12), are actually present and resolvable — distinct from "broken references" above, which checks internal code references (page objects/fixtures); this checks the external traceability chain specifically.
 - **Simple English wording** — every user-facing artifact this skill produces (Automation Decision Report, Coverage Report, Automation Summary, Self Review Report) uses short, direct sentences, replaces a hard word with an easier one wherever meaning stays the same, briefly explains any necessary technical term, and keeps a verified fact (e.g. a confirmed selector) visibly separate from a recommendation or limitation (`pipeline.md` §6 Rule 10). Test Case IDs, class/method/file names, and framework terms are never altered by this check.
 
 **This skill generates recommendations whenever improvements are identified** — it does not silently fix everything it finds without recording what it found and why, and it does not silently ship known rough edges without disclosing them. Self Review findings are recorded in the Automation Manifest (§16) and, per iteration, in the Self Review Report (§15A).
+
+## 15.1 Architecture Review — blocking checks
+
+**Architecture Review is a named, blocking part of Self Review, not an advisory note.** Every condition below **blocks** Architecture Review for a Java/SHAFT UI package. Each condition's principle applies to any framework whose approved architecture states the equivalent boundary (§8.12).
+
+| # | Blocking condition | Boundary it violates |
+|---|---|---|
+| 1 | A locator inside a Test Class | §8.3 |
+| 2 | A locator declaration inside a Page Class | §8.2, §8.3 |
+| 3 | A direct driver or element interaction inside a Test Class | §8.4 |
+| 4 | An assertion inside a Page Class, Locator Class, Fixture, Driver Factory, or utility | §8.2, §8.5, §8.7, §8.9 |
+| 5 | Hardcoded or static test data in Java code | §8.6 |
+| 6 | A duplicate locator definition | §8.3 |
+| 7 | A Page Class with no matching Locator Class | §8.3 |
+| 8 | A Locator Class containing UI actions | §8.3 |
+| 9 | A page-specific action living outside its Page Class | §8.2 |
+| 10 | Reusable setup duplicated across tests | §8.5 |
+| 11 | Fixture behavior inside a Page Class | §8.2, §8.5 |
+| 12 | A Page Class depending on a Fixture | §8.10 |
+| 13 | A Test Class under `src/main` | §8.1, §8.4 |
+| 14 | A Page or Locator Class under `src/test` | §8.1, §8.2 |
+| 15 | A package declaration that does not match its physical path | §8.1 |
+| 16 | An unnecessary workflow, service, or assertion wrapper | §8.11 |
+| 17 | A one-method forwarding class | §8.11 |
+| 18 | A mixed-responsibility generic helper | §8.8 |
+| 19 | An overloaded base class | §8.11 |
+| 20 | An empty or unjustified architecture folder | §8.11 |
+| 21 | A credential or secret inside JSON test data | §8.6 |
+| 22 | A normal Test Case that fails the §8.11 simplicity requirement | §8.11 |
+
+**For every violation, record all six fields** — in the Self Review Report (§15A) and the Automation Manifest's Self Review Findings section (§16 #3):
+
+| Field | Must state |
+|---|---|
+| File and method | The exact location, never "several places" |
+| Current responsibility / location | Where the behavior sits today |
+| Expected responsibility / location | Where §8 says it belongs |
+| Correction made | What this skill actually changed, or `None` |
+| Remaining exception | What is still in violation after the correction, or `None` |
+| Approval requirement | Whether a human must approve the correction or the exception, and at which gate |
+
+**Architecture Review is never marked `Passed` while an unapproved blocking violation remains.** Three consequences, so none is inferred:
+
+1. A violation this skill corrected within its budget is recorded as `Resolved` and does not block.
+2. A violation this skill could not correct is disclosed exactly as §15A.3 requires, and Architecture Review is reported `Blocked` — never `Passed with notes`.
+3. A violation a human explicitly approved as an exception (e.g. a preserved brownfield convention, §8.13) is recorded with that approval named, and does not block. An exception nobody approved is not an exception.
+
+**The §15A.4 prohibition binds here.** Architecture Review is never satisfied by deleting a check, weakening an assertion, or relaxing a boundary so a violation stops being reportable.
 
 # 15A. Self-Review Iteration & Time Budget
 
@@ -764,8 +1146,8 @@ The §14.1 prohibitions bind here exactly as they bind Stage `5H` (`pipeline.md`
 The Automation skill generates only the following:
 
 1. **Automation Plan** — the complete plan from §5, written before any code generation
-2. **Automation Package** — the actual generated/reused automation project: scripts, page objects, fixtures, utilities, configuration, and any other source artifacts needed to run the suite, organized per the Suite Planning Engine (§10) and the selected framework's conventions (§6–§8)
-3. **Automation Manifest** — a structured inventory of the Automation Package: every file it contains, which were generated versus reused, and the Self Review (§15) findings and recommendations
+2. **Automation Package** — the actual generated/reused automation project: Test Classes, Page Classes, Locator Classes, fixtures, utilities, externalized test data, configuration, and any other source artifacts needed to run the suite, organized per the Suite Planning Engine (§10) and the selected framework's approved architecture — **for Java/SHAFT UI, §8.1's Maven structure exactly** (§6–§8)
+3. **Automation Manifest** — a structured inventory of the Automation Package: every file it contains, **its §8.1 responsibility area**, which were generated versus reused, and the Self Review (§15) and Architecture Review (§15.1) findings and recommendations
 4. **Automation Decision Report** — the per-test-case record from the Automation Decision Engine (§13): Decision, Justification, Reused Assets, Generated Assets, Automation Readiness, Known Limitations, for every test case in the run's scope
 5. **Automation Coverage Report** — the aggregate view: how many test cases received each of the four decisions, an automation coverage percentage, and named reasons for every Partially Automatable / Manual Only case
 6. **Automation Suite Manifest** — the realized suite structure from the Suite Planning Engine (§10): which suites exist, which test cases and automation assets belong to each, and each suite's shared setup/teardown/fixtures/components/utilities/test data
@@ -782,7 +1164,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 - **Browser tools for selector verification only** — either the Browser Driver (`platform_core/tools/browser_driver/`) or the **`playwright` MCP server** (`browser_navigate`, `browser_snapshot`, `browser_find`, `browser_click`, `browser_evaluate` read-only), selected per the Mode Selection Rule in `platform_core/tools/mcp/README.md` §1.2. Strictly for verifying a selector or reading an accessibility tree against the live/staging environment during generation, if available — **never** for executing the generated suite. A credential value is never typed into an MCP tool call (`mcp/README.md` §1.3): authenticate via `BrowserDriver.authenticate()` and use MCP only on the already-authenticated session.
 - **`context7` MCP server** (`resolve-library-id`, `query-docs`) for the mandatory Stack Documentation step (§34) — version-accurate documentation for this project's own stack, used as a generation guideline. Never a source of business logic, requirements, or coverage justification.
 
-**Not permitted:** modifying the PRD, Project Context, or any approved upstream artifact (Manual Test Suite, Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, Evidence Packages); **reading any Manual Execution artifact** (`pipeline.md` §3.3); executing the generated Automation Package against any environment; **repairing a failed test** (Stage `5H`'s exclusive responsibility); automating any scenario outside the run's approved scope; **emitting an unverified selector as though it were confirmed** (§11A.5); **weakening an assertion to satisfy its own self-review** (§15A.4); inventing business logic to fill a specification gap; writing to the Target Project before the Target Write Plan clears its gate (§11C.4); writing to the Repair KB (Stage `5H` is its sole writer); overwriting an existing reusable asset without explicit approval.
+**Not permitted:** modifying the PRD, Project Context, or any approved upstream artifact (Manual Test Suite, Traceability Matrix, Coverage Report, Discovery Artifacts, Findings, Evidence Packages); **reading any Manual Execution artifact** (`pipeline.md` §3.3); executing the generated Automation Package against any environment; **repairing a failed test** (Stage `5H`'s exclusive responsibility); automating any scenario outside the run's approved scope; **emitting an unverified selector as though it were confirmed** (§11A.5); **weakening an assertion to satisfy its own self-review** (§15A.4); inventing business logic to fill a specification gap; writing to the Target Project before the Target Write Plan clears its gate (§11C.4); writing to the Repair KB (Stage `5H` is its sole writer); overwriting an existing reusable asset without explicit approval; **creating a generic root package beside §8.1's approved structure** (`pages/`, `locators/`, `tests/`, `fixtures/`, `workflows/`, `assertions/`, `services/`, `data/`); **generating a workflow, service, assertion class, Component Object package, data factory, builder, adapter, module-specific `BasePage`, or one-method wrapper as a default layer** (§8.11); **generating a competing Driver Factory** (§8.7); **declaring a locator outside its page's Locator Class** (§8.3); **hardcoding test data in Java code** (§8.6); **committing a credential, secret, or token into JSON test data** (§8.6); **performing a large architecture refactor of an existing package without individually-approved Target Write Plan rows** (§8.13); **marking Architecture Review `Passed` while an unapproved blocking violation remains** (§15.1).
 
 # 18. Execution Rules
 
@@ -792,9 +1174,19 @@ No other artifact is produced by this skill. It does not execute the Automation 
 4. **Must never assume a target framework.** Detect it from the Project Context (§6) and, where not explicitly specified, select it transparently against the stated criteria (§7), always with a recorded justification in the Automation Plan.
 5. **Must reuse an existing automation framework already in the project rather than introducing a new one**, and must use whatever framework the Project Context explicitly specifies, without exception.
 6. **Must treat SHAFT Engine as a first-class framework** (§8) and must never generate generic, unwrapped Selenium code when SHAFT Engine is the selected framework.
+6a. **Must generate every Java/SHAFT UI automation package into §8.1's approved Maven structure**, placing each file in the responsibility area §8.1 assigns it, and must never create a generic root package (`pages/`, `locators/`, `tests/`, `fixtures/`, `workflows/`, `assertions/`, `services/`, `data/`) beside it or in place of it.
+6b. **Must give every Page Class its own dedicated Locator Class in the same package** (§8.3), must declare every locator in exactly one authoritative Locator Class, and must never declare a locator inside a Page Class or a Test Class.
+6c. **Must keep assertions in Test Classes and state-reading in Page Classes** (§8.2, §8.4) — a Page, Locator, Fixture, Driver Factory, or utility never asserts.
+6d. **Must externalize all test data** (§8.6) — JSON under `src/test/resources/` for Java/SHAFT UI, read with the smallest existing mechanism — and must never commit a credential, secret, or token into it.
+6e. **Must reuse the existing Driver Factory** (§8.7) and must never generate a competing one.
+6f. **Must respect §8.10's dependency direction** and must never generate a prohibited edge (Page → Test, Page → Fixture, Locator → anything, Fixture → Test, Driver Factory → module-specific behavior, Utility → module-specific behavior, or any cycle).
+6g. **Must not generate a workflow, service, assertion class, Component Object package, data factory, builder, technical adapter, module-specific `BasePage`, or one-method wrapper as a default layer** (§8.11). Each is allowed only against §8.11's three conditions and must be justified in the Automation Plan's Optional Abstractions field; possible future reuse is never a justification, and no empty folder is created for one.
+6h. **Must not force §8.1's structure onto a non-Java/SHAFT-UI system shape** (§8.12) — API, mobile, messaging, batch, cloud, and any framework with an explicitly approved project structure keep their own, and carry §8.12's principles instead. An explicitly documented approved existing or Reference project architecture takes precedence, with the difference recorded rather than assumed (§8.13, §32.5).
+6i. **Must complete the blocking Architecture Review (§15.1) before declaring generation complete**, recording all six fields for every violation, and must never report Architecture Review as `Passed` while an unapproved blocking violation remains.
 7. **Must inspect any existing automation project (§9) before generating anything new**, and must record that inspection's findings (or their absence) in the Automation Plan.
+7a. **Must report every deviation of an existing package's structure from §8.1–§8.11** in the Automation Plan's Architecture Deviations field (§8.13), must preserve valid existing conventions and Test Case IDs/steps/expected results/behavior through any move, and **must never perform a large architecture refactor silently** — every proposed move or deletion appears in the Target Write Plan and is approved individually (§11C.4).
 8. **Must search the Automation Knowledge Base (§11) before creating any reusable asset**, and must never generate a duplicate of an asset that already exists or can be reasonably extended.
-9. **Must organize automation into suites by business workflow, never by individual page** (§10).
+9. **Must organize automation into suites by business workflow, never by individual page** (§10) — and must express a suite as a logical grouping in the framework's own mechanism (for Java/SHAFT: TestNG groups and `testng.xml`), **never as a `workflows/` package or a workflow/service class** (§10, §8.11). Test Classes stay organized by application area and module (§8.4).
 10. **Must assign every manual test case exactly one Automation Decision** (§13) with full justification — no test case is left undecided.
 11. Must automate only test cases within the run's approved scope, using their content exactly as defined in the Approved Manual Test Suite — no new scenarios invented, and no test case outside that scope attempted.
 11a. **Must verify every selector and flow live and headless before emitting it** (§11A), and must record `Unverified` with the element named rather than emitting a guess (§11A.5).
@@ -808,12 +1200,12 @@ No other artifact is produced by this skill. It does not execute the Automation 
 15. **Must never modify an approved manual test case.** A test case that needs to change is escalated as a discrepancy for Stage 3 to address, never silently rewritten by this skill.
 16. **Must never overwrite an existing reusable asset without explicit approval** — extend, compose around, or flag the conflict instead.
 17. **Must generate only maintainable code** per the standards in §14 — modular, DRY, readable, reusable, maintainable, versionable, composition-preferred.
-18. **Must perform Self Review (§15) before declaring generation complete**, and must record findings/recommendations in the Automation Manifest even when no issues are found (state that explicitly, rather than omitting the section).
+18. **Must perform Self Review (§15) before declaring generation complete**, including the blocking Architecture Review (§15.1), and must record findings/recommendations in the Automation Manifest even when no issues are found (state that explicitly, rather than omitting the section).
 19. **Must maintain the full traceability chain** (§12) on every generated asset — every Automation Script cites its Test Case ID and inherits that test case's Requirement/Discovery/Finding/Evidence References without alteration.
 20. Every automated test must be independent and idempotent, or use explicit setup/teardown to guarantee that.
 21. **Must never execute the generated Automation Package, and must never repair a failed test.** Execution is exclusively Stage `5A`'s responsibility and repair exclusively Stage `5H`'s — this skill's task is complete the moment the Automation Package and its accompanying reports (§16) are generated. Driving the browser to verify a selector (§11A) is not execution.
 22. **Must never assume Playwright, or any other single framework, as a default** (§6) — a framework is selected only via the §7 precedence rules, never because it happens to appear first in an example.
-23. **Must apply the Locator Strategy's priority order** (§24) and record a fallback/recovery recommendation wherever the top-priority locator type is not viable for a given element.
+23. **Must apply the Locator Strategy's priority order** (§24) and record a fallback/recovery recommendation wherever the top-priority locator type is not viable for a given element — and must declare the resulting locator in its page's Locator Class (§8.3), preserving its Selector Verification record when it is moved or reused, and never replacing a verified locator merely for naming or style.
 24. **Must select the Automation Strategy matching this run's Run Scope Type** (§23) — never apply one default breadth/depth regardless of scope.
 25. **Must produce the Automation Summary** (§16, §25) as a required output, structured per the Standard Output Contract — never omit it as redundant with the other five artifacts.
 26. **Must recognize the named Stop Conditions** (§26) and, for any Local condition, continue generating automation for every other unblocked test case rather than halting the run — and must state the smallest missing prerequisite for every blocked item (§27), never a bare "cannot proceed."
@@ -857,7 +1249,7 @@ No other artifact is produced by this skill. It does not execute the Automation 
 
 Role: automation engineering (Stage `4A` of the Automation Pipeline).
 
-Turn the approved Stage 3 Manual Test Suite into a reviewable, live-verified automation package. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Automation Planning Engine — the plan is written in full before any code), §6–§7 (Framework Detection and Selection), §8 (SHAFT Engine Support), §9 (Existing Framework Analysis), §10 (Suite Planning Engine), §11 (Automation Knowledge Base), **§11A (Live Selector & DOM Verification — mandatory)**, **§11B (Mandatory KB Consultation)**, **§11C (Brownfield/Greenfield Fit and the Target Write Plan)**, §12 (Traceability), §13 (Automation Decision Engine), §14 (Code Generation Standards), §15 (Self Review), **§15A (Self-Review Iteration & Time Budget)**, §16 (Outputs), §18 (Execution Rules), §19 (Artifacts), §34 (Stack Documentation Step — mandatory before any code generation), §23 (Strategy by Run Scope), §24 (Locator Strategy), §25 (Standard Output Contract), §26–§27 (Stop Conditions and Recovery), §28 (Handoff Contract), and the human decision gates in §30–§33. This section adds no rules of its own.
+Turn the approved Stage 3 Manual Test Suite into a reviewable, live-verified automation package. Execution is fully specified above — §4 (Inputs, all of which must be Approved), §5 (Automation Planning Engine — the plan is written in full before any code), §6–§7 (Framework Detection and Selection), **§8 (SHAFT Engine Support and the mandatory Java/SHAFT UI Automation Architecture — §8.1's approved Maven structure, §8.10's dependency direction, §8.11's simplicity bound, §8.12's framework/system-shape scope, §8.13's brownfield handling)**, §9 (Existing Framework Analysis), §10 (Suite Planning Engine), §11 (Automation Knowledge Base), **§11A (Live Selector & DOM Verification — mandatory)**, **§11B (Mandatory KB Consultation)**, **§11C (Brownfield/Greenfield Fit and the Target Write Plan)**, §12 (Traceability), §13 (Automation Decision Engine), §14 (Code Generation Standards), §15 (Self Review), **§15.1 (Architecture Review — blocking)**, **§15A (Self-Review Iteration & Time Budget)**, §16 (Outputs), §18 (Execution Rules), §19 (Artifacts), §34 (Stack Documentation Step — mandatory before any code generation), §23 (Strategy by Run Scope), §24 (Locator Strategy), §25 (Standard Output Contract), §26–§27 (Stop Conditions and Recovery), §28 (Handoff Contract), and the human decision gates in §30–§33. This section adds no rules of its own.
 
 # 21. Example Execution
 
@@ -876,13 +1268,15 @@ Input:
 
 Hypothetical result: the Automation Plan detects no existing automation project and no framework explicitly named in the Project Context, so it selects **Playwright + TypeScript** against the selection criteria (Web application, no existing framework to reuse, no team-standard override stated), justified in the plan. Suite Planning produces a single **Login Suite** (matching this run's Login-only scope) with shared setup (navigate + clear session) and shared test data (the known valid/invalid credential sets already evidenced in Discovery). Automation Decisions: `TC-LOGIN-001` (valid login) → Generate New Automation; `TC-LOGIN-004` (Forgot Password must not time out, Finding Reference `FINDING-003`) → Generate New Automation, inheriting `FINDING-003`'s Requirement/Discovery/Evidence References onto the script, with Expected Result asserting the *corrected* behavior; the exploratory test derived from `FINDING-004` → Manual Only, Justification: "response-time-parity acceptability is a pending policy decision, not something this skill can assert pass/fail on." Self Review finds no duplicate code (single suite, first run) but recommends extracting the shared credential test-data fixture proactively for the next module's suite. The Automation Coverage Report shows, say, `5/6 test cases automated (83%), 1 Manual Only`.
 
-*(If SHAFT Engine had instead been the selected or existing framework, the same Login Suite would be generated using DriverFactory-based session setup, Page Object Model classes for the Login and Forgot Password screens, TestNG test classes, and Allure annotations for reporting — never as raw Selenium calls.)*
+*(If SHAFT Engine had instead been the selected or existing framework, the same Login Suite would be generated into §8.1's approved Maven structure: `LogIn_Page.java` + `LogIn_Locators.java` and `ForgotPassword_Page.java` + `ForgotPassword_Locators.java` under `src/main/java/AdminPages/Login/`; `LogIn_TC.java` under `src/test/java/AdminPages/Login/`; an `AuthenticationFixture.java` under `src/test/java/utilities/` for the session preparation; the credential-set test data as JSON under `src/test/resources/login/`; the existing Driver Factory under `src/main/java/Drive_Factory/` reused rather than recreated; and reporting through SHAFT's built-in Allure integration — never as raw Selenium calls, and with no workflow, service, assertion, or component class generated for a two-screen flow.)*
 
 # 22. Architecture Principle
 
 > Agents communicate through artifacts only. Each has a single responsibility. Every output becomes the input of another whenever applicable.
 
-For this skill specifically: it is responsible for producing a **production-ready automation project**, not merely isolated automation scripts — planning, framework justification, reuse, suite organization, per-test-case decisions, and self review are all part of that responsibility, not optional extras. **Execution belongs exclusively to the Automation Execution skill.** This skill's outputs — the Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Automation Summary — become the Automation Execution skill's sole input in the next stage.
+For this skill specifically: it is responsible for producing a **production-ready automation project**, not merely isolated automation scripts — planning, framework justification, reuse, suite organization, per-test-case decisions, and self review are all part of that responsibility, not optional extras.
+
+**"Single responsibility" is also the architecture rule inside the generated code, not only the rule between stages.** A Test Class tests, a Page Class acts and reports state, a Locator Class defines locators, a Fixture prepares and cleans up, the Driver Factory owns the driver, and test data lives outside the code (§8). A layer that exists to sit between two of those, without meeting §8.11's conditions, adds a responsibility no one asked for — which is the same defect at a smaller scale. **Execution belongs exclusively to the Automation Execution skill.** This skill's outputs — the Automation Package, Plan, Manifest, Decision Report, Coverage Report, Suite Manifest, and Automation Summary — become the Automation Execution skill's sole input in the next stage.
 
 # 23. Automation Strategy by Run Scope
 
@@ -906,6 +1300,10 @@ If the Project Context does not state an explicit Run Scope Type, this skill def
 
 Generated automation must use a deliberate, prioritized approach to identifying elements — never a single brittle strategy applied uniformly.
 
+**Where a locator lives is settled separately from how it is chosen.** §24 governs the *choice* of locator; §8.3 governs its *home*. For a Java/SHAFT UI package every locator this section produces is declared in exactly one Locator Class, and never in a Page Class or a Test Class — whatever priority level it ended up at. A verified locator is never replaced merely for naming or style, and moving one preserves its Selector Verification record (§8.3, §11A.4).
+
+**An approved project locator convention governs the naming, not the priority order.** Where the project's `automation_framework.md` states a convention such as §8.3's `Btn_`/`Txt_` prefixes, that convention applies to the locator's *identifier*; §24.1's priority order still decides *what the locator matches* (§34.5).
+
 ## 24.1 Priority Order
 
 1. **Accessibility-based locators** — role, label, accessible name, or visible text (e.g., Playwright's `getByRole`/`getByLabel`/`getByText`, or the equivalent construct in the selected framework). Preferred: resilient to styling/DOM-structure changes, and doubles as an accessibility signal.
@@ -926,11 +1324,11 @@ The Automation Summary (§16 Outputs #7) must contain exactly these sections, in
 | # | Section | Must contain, at minimum |
 |---|---|---|
 | 1 | **Automation Summary** | One-paragraph narrative: Run Scope (§23), framework used, and overall automation outcome |
-| 2 | **Generated Files** | A file-level listing of what was generated versus reused this run (consolidating the Automation Manifest, §16 #3) |
-| 3 | **Framework Used** | The selected framework (§6–§8) and its justification, restated from the Automation Plan (§5) for a reader who doesn't want to open a second document |
+| 2 | **Generated Files** | A file-level listing of what was generated versus reused this run (consolidating the Automation Manifest, §16 #3), **each row carrying its §8.1 responsibility area** (Page · Locator · Test · Fixture · Driver · Generic · Utility · Data · Config). A file whose area cannot be stated is an inventory defect, not an acceptable blank. |
+| 3 | **Framework Used** | The selected framework (§6–§8) and its justification, restated from the Automation Plan (§5) for a reader who doesn't want to open a second document. **Where the framework is Java/SHAFT UI, this section states that §8.1's approved Maven structure was used, and names any deviation** (§8.13) — a bare framework name is not enough for a reader deciding whether the package is reviewable. |
 | 4 | **Coverage** | The Automation Coverage Report's (§16 #5) headline figures — decision counts and percentage |
 | 5 | **Automation Decisions** | A reference to the full Automation Decision Report (§16 #4); this section itself lists only counts per decision type, not every individual case |
-| 6 | **Known Limitations** | Every locator fallback (§24.2), every Partially Automatable/Manual Only reason, and any Self Review (§15) finding not yet resolved |
+| 6 | **Known Limitations** | Every locator fallback (§24.2), every Partially Automatable/Manual Only reason, any Self Review (§15) finding not yet resolved, **the Architecture Review verdict (§15.1) with every unresolved blocking violation and every human-approved exception named, every optional abstraction generated with its §8.11 justification, and every architecture deviation carried forward with its §8.13 classification** |
 | 7 | **Execution Instructions** | How to actually run the generated suite — command(s), required environment variables/config, and any prerequisite setup (e.g., `npm install && npx playwright test`, or the SHAFT/TestNG equivalent) |
 | 8 | **Inputs for Automation Execution skill** | The explicit handoff package per §28 — confirmation that every input `.claude/skills/automation-execution-skill/SKILL.md` §4 declares it needs is present |
 
@@ -1002,7 +1400,7 @@ The Automation skill's outputs are consumed by the Automation Execution skill as
 
 | Automation Execution skill needs (`.claude/skills/automation-execution-skill/SKILL.md` §4) | Satisfied by (this skill's output) |
 |---|---|
-| Automation Suite (`tests/`) | §16 Outputs #2, the Automation Package itself |
+| Automation Suite (`tests/`) | §16 Outputs #2, the Automation Package itself — structured per the framework's approved architecture (§8.1 for Java/SHAFT UI), with its Architecture Review verdict (§15.1) stated so Stage `5A` inherits a reviewed package rather than an assumed one |
 | Automation Coverage Summary (`AutomationSummary.md`) | §16 Outputs #7, the Automation Summary (§25) — this is the exact filename gap the v3 revision note identifies and closes |
 | Project Context (environment, credentials, safety constraints) | Unchanged pass-through — this skill does not modify it; Automation Execution reads the same Approved version directly |
 | Execution Mode | Not this skill's concern — `.claude/skills/automation-execution-skill/SKILL.md` §5.1 sources it from the Run Configuration or asks the user directly; this skill must not pre-select or assume one on Automation Execution's behalf |
@@ -1026,6 +1424,8 @@ The abstractions this revision relies on — Framework Detection/Selection (§6�
 | **Cloud Resources** | Framework Detection (§6) extends to a cloud-provider SDK/CLI as the "framework"; Configuration Management (§14.1) already covers environment-specific credentials/resource identifiers. |
 
 **What would need to change, explicitly, and what would not:** supporting any of the above requires naming the new framework (§6) and its locator-equivalent priority order (§24) for that system shape — it requires **no change** to the Traceability Model (§12), the Automation Decision Engine (§13), the Suite Planning organizing principle (§10), the Standard Output Contract (§25), or the Handoff Contract (§28). Those are already defined in terms of test cases and evidence, not in terms of "a browser."
+
+**§8.1's Maven structure is never carried across a system shape** (§8.12). It governs Java/SHAFT UI automation and nothing else: an API, mobile, messaging, batch, or cloud package uses its own approved structure, and a framework with an explicitly documented project structure keeps it. What travels between shapes is the set of principles, not the folders — readable test flow, interface actions separated from tests, no duplicated element or endpoint definitions, externalized test data, reusable setup and cleanup, and no unnecessary layers. §15.1's blocking checks apply in each shape's own terms wherever that shape's approved architecture states the equivalent boundary; a check that has no meaning for a shape (e.g. "a Page Class without a Locator Class" in a message-queue package) is recorded `Not applicable`, never quietly dropped.
 
 # 30. Automation Start Decision Gate
 
@@ -1133,6 +1533,7 @@ The one-time registration analysis (§32.1) must produce and persist a plain-lan
 - **Never recreate SHAFT (or whichever framework's) infrastructure or framework boilerplate that already exists in the Reference Project** (driver factory, base test classes, reporting wiring) — generate only the business/page-specific automation code that fits its existing architecture.
 - **Reuse existing utilities and patterns whenever possible** (per the persisted Architecture Summary, §32.4) rather than authoring parallel equivalents.
 - Extend an existing Page Object for a screen already covered there (e.g. a Login page class) rather than authoring a competing one from scratch — this is the Reference Project's own version of §11's Automation Knowledge Base rule.
+- **The Reference Project's explicitly documented architecture takes precedence over §8.1's structure** (§8.12) — that is what "generate code compatible with its architecture" means. Two things this precedence does **not** do: it does not suspend the §8.10 dependency prohibitions or the §15.1 blocking checks for newly generated code, and it does not license adding complexity the Reference Project merely happens to contain (§8.13). Where the Reference Project's architecture and §8.1 differ, the difference is recorded in the Automation Plan's Architecture Deviations field so the precedence is visible rather than assumed.
 
 # 33. Automation Strategy Decision Gate
 
@@ -1238,6 +1639,8 @@ Stage 4A complete — Automation Package → Pending Automation Approval
   Selectors:    {V} verified | {R} reused from KB (no drift) | {U} unverified (named in report)
   KB patterns:  {K} applied proactively (cited by Rule ID)
   Self-review:  {I}/3 iterations | {C} checks left unsatisfied (disclosed)
+  Architecture: {Passed | Blocked — {B} unapproved violations} (§15.1)
+                optional abstractions: {O} (each justified) | deviations: {D} (each classified)
   Write Plan:   {N} create | {M2} modify | {Fit: brownfield|greenfield}
 
   Not executed — this skill never runs what it generates, and never repairs.

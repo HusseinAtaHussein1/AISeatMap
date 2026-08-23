@@ -32,11 +32,14 @@ to interpret free-form prose to extract what it needs.
 <!-- §25 #2 — a FILE-LEVEL listing of what was generated versus reused this run, consolidating the
      Automation Manifest (§16 #3). -->
 
-| File | Type | Generated / Reused | Suite |
-|---|---|---|---|
-| `{{FILE_PATH}}` | {{FILE_TYPE}} <!-- test script / page object / fixture / utility / config --> | {{ORIGIN}} | {{SUITE}} |
+| File | Responsibility Area | Type | Generated / Reused | Suite |
+|---|---|---|---|---|
+| `{{FILE_PATH}}` | {{AREA}} <!-- Page / Locator / Test / Fixture / Driver / Generic / Utility / Data / Config (§8.1) --> | {{FILE_TYPE}} | {{ORIGIN}} | {{SUITE}} |
 
 **Totals:** {{GENERATED_FILE_COUNT}} generated · {{REUSED_FILE_COUNT}} reused
+
+<!-- §25 #2 — a file whose responsibility area cannot be stated is an INVENTORY DEFECT, not an
+     acceptable blank. -->
 
 ## 3. Framework Used
 
@@ -49,6 +52,9 @@ to interpret free-form prose to extract what it needs.
 | Version | {{FRAMEWORK_VERSION}} |
 | Selection basis | {{SELECTION_BASIS}} <!-- the Framework Decision Gate (§31) answer and its rationale --> |
 | Justification | {{JUSTIFICATION}} |
+| Architecture used | {{ARCHITECTURE_USED}} <!-- §25 #3. For Java/SHAFT UI: `§8.1 approved Maven structure`. For any other framework/system shape: that stack's own approved structure (§8.12). A bare framework name is not enough for a reader deciding whether the package is reviewable. --> |
+| Architecture deviations | {{ARCHITECTURE_DEVIATIONS}} <!-- each named with its §8.13 classification, or `None` --> |
+| Architecture Review (§15.1) | {{ARCHITECTURE_REVIEW_VERDICT}} <!-- Passed / Blocked — {n} unapproved violations --> |
 
 ## 4. Coverage
 
@@ -99,6 +105,30 @@ to interpret free-form prose to extract what it needs.
 | Finding | Why unresolved |
 |---|---|
 | {{SELF_REVIEW_FINDING}} | {{WHY_UNRESOLVED}} |
+
+**Architecture Review (§15.1):**
+
+<!-- §25 #6 — the verdict, EVERY unresolved blocking violation, and EVERY human-approved exception,
+     named. Full detail lives in AutomationManifest §3A. -->
+
+| Blocking violation | File and method | Status | Approved by |
+|---|---|---|---|
+| {{VIOLATION}} | `{{FILE_AND_METHOD}}` | {{STATUS}} <!-- Unresolved / Approved exception --> | {{APPROVER}} <!-- `None` when unapproved --> |
+
+**Optional abstractions generated (§8.11):**
+
+<!-- Every abstraction outside §8.1's default areas that actually shipped, with its justification.
+     `None` when zero — possible future reuse is never a justification. -->
+
+| Abstraction | Justification | Approved by |
+|---|---|---|
+| {{ABSTRACTION}} | {{JUSTIFICATION}} | {{APPROVER}} |
+
+**Architecture deviations carried forward (§8.13):**
+
+| Deviation | Where | Classification |
+|---|---|---|
+| {{DEVIATION}} | `{{LOCATION}}` | {{CLASSIFICATION}} <!-- Preserved (approved convention) / Correction proposed / Reported, no action --> |
 
 ## 7. Execution Instructions
 

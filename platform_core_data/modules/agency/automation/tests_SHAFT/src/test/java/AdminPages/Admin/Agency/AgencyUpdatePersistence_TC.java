@@ -33,7 +33,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
      */
     @Test(priority = 10, description = "TC-AGENCY-001 Update Agency Master fields successfully")
     public void tc001_agencyMasterFieldsPersist() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         String originalName = form.agencyName();
         String originalPostOfficeBox = form.postOfficeBox();
@@ -54,7 +54,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-001 agency master persistence"))
                 .clickSendForApproval();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         Assert.assertEquals(reopened.agencyName(), newName,
                 "Agency name should persist the value submitted by TC-AGENCY-001.");
         Assert.assertEquals(reopened.postOfficeBox(), newPostOfficeBox,
@@ -75,7 +75,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
      */
     @Test(priority = 20, description = "TC-AGENCY-011 Agency Business Type selection persists")
     public void tc011_agencyBusinessTypePersists() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         boolean wasB2B = form.isBusinessTypeB2BSelected();
         boolean wasFreelancer = form.isBusinessTypeFreelancerSelected();
@@ -96,7 +96,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
         form.setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-011 business type persistence"))
                 .clickSendForApproval();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         Assert.assertEquals(reopened.isBusinessTypeB2BSelected(), expectedB2BAfter,
                 "Agency Business Type should persist the selection made by TC-AGENCY-011. This case asserts "
                         + "persistence only -- the business meaning of each value is undocumented "
@@ -106,7 +106,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
     /** TC-AGENCY-012 &mdash; Update Agency Owner Details successfully. */
     @Test(priority = 30, description = "TC-AGENCY-012 Update Agency Owner Details successfully")
     public void tc012_agencyOwnerDetailsPersist() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         System.out.println("[TC-012] originals contact=\"" + form.contactPerson() + "\" email=\""
                 + form.ownerEmailId() + "\" phone=\"" + form.ownerPhoneNumber() + "\"");
@@ -121,7 +121,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-012 owner details persistence"))
                 .clickSendForApproval();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         Assert.assertEquals(reopened.contactPerson(), newContactPerson,
                 "Contact person should persist the value submitted by TC-AGENCY-012.");
         Assert.assertEquals(reopened.ownerEmailId(), newEmail,
@@ -139,7 +139,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
      */
     @Test(priority = 40, description = "TC-AGENCY-044 Import PNR Option persists")
     public void tc044_importPnrOptionPersists() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         boolean before = form.isImportPnrOptionChecked();
         System.out.println("[TC-044] Import PNR Option before=" + before);
@@ -148,7 +148,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-044 import PNR persistence"))
                 .clickSendForApproval();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         Assert.assertEquals(reopened.isImportPnrOptionChecked(), !before,
                 "Import PNR Option should persist the state set by TC-AGENCY-044 (toggled from " + before
                         + " to " + !before + ").");
@@ -168,7 +168,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
      */
     @Test(priority = 50, description = "TC-AGENCY-053 Agency name accepts a space between words")
     public void tc053_agencyNameAcceptsSpace() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         String nameWithSpace = "QA Test Agency";
 
         form.clearAgencyName();
@@ -176,7 +176,7 @@ public class AgencyUpdatePersistence_TC extends AgencyTestBase {
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-053 space in agency name"))
                 .clickSendForApproval();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         String actual = reopened.agencyName();
 
         // Restore a space-free name before asserting, so the shared fixture is left in a predictable

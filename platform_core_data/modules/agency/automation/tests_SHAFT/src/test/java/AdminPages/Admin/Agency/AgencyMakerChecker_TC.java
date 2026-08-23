@@ -31,7 +31,7 @@ import utilities.AgencyDataFactory;
  * rather than inheriting one.
  *
  * <p><b>Every action here is on a record this run created.</b> That is not incidental: approving or
- * rejecting a record the run does not own is {@code Forbidden (absolute)}, and {@link AgencyProvisioner}
+ * rejecting a record the run does not own is {@code Forbidden (absolute)}, and {@code AgencyFixture}
  * proved this Agency's identity per row before any test in this class ran.
  */
 public class AgencyMakerChecker_TC extends AgencyTestBase {
@@ -49,7 +49,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
      */
     @Test(priority = 200, description = "TC-AGENCY-047 Cancel discards unsaved changes")
     public void tc047_cancelDiscardsUnsavedChanges() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         String originalName = form.agencyName();
         System.out.println("[TC-047] original agency name = \"" + originalName + "\"");
@@ -57,7 +57,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
         form.setAgencyName("QA_CANCEL_TEST");
         form.clickCancel();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         Assert.assertEquals(reopened.agencyName(), originalName,
                 "Cancelling must discard the unsaved change: the agency name should still be \"" + originalName
                         + "\". Cancel-must-not-persist is an established platform pattern (PRD GEO-09, "
@@ -82,7 +82,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
     @Test(priority = 210, description = "TC-AGENCY-049 Reject a pending agency update with a reason",
             enabled = false)
     public void tc049_rejectPendingUpdateWithReason() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         String storedCompanyUrl = form.companyUrl();
         String submittedCompanyUrl = "https://qa-rejected-" + System.nanoTime() + ".example.com";
@@ -93,13 +93,13 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-049 change submitted for rejection"))
                 .clickSendForApproval();
 
-        SearchAgency_Page list = agencyList();
+        SearchAgency_Page list = new SearchAgency_Page(driver).open().searchByCode(agencyCode);
         Assert.assertTrue(list.isRowPresent(agencyCode),
                 "Agency " + agencyCode + " should be listed after submission.");
         System.out.println("[TC-049] approval status after submission = \"" + list.approvalStatusOf(agencyCode)
                 + "\"");
 
-        UpdateAgency_Page pending = openUpdateForm();
+        UpdateAgency_Page pending = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         Assert.assertTrue(pending.isRejectPresent(),
                 "The Reject action should be available on a pending agency update. It is absent, so the "
                         + "rejection path cannot be exercised on this record.");
@@ -114,7 +114,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
         String statusAfterReject = afterReject.approvalStatusOf(agencyCode);
         System.out.println("[TC-049] approval status after rejection = \"" + statusAfterReject + "\"");
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         String urlAfterReject = reopened.companyUrl();
 
         Assert.assertTrue(becameRejected,
@@ -137,7 +137,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
      */
     @Test(priority = 220, description = "TC-AGENCY-048 Approve a pending agency update")
     public void tc048_approvePendingUpdate() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         if (!form.isSendForApprovalPresent()) {
             throw new SkipException(
@@ -170,7 +170,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
                         + "reads \"" + statusAfterSubmission + "\". Approve cannot be exercised meaningfully "
                         + "against a record that is not pending.");
 
-        UpdateAgency_Page pending = openUpdateForm();
+        UpdateAgency_Page pending = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         Assert.assertTrue(pending.isApprovePresent(),
                 "The Approve action should be available on a pending agency update; it is absent.");
 
@@ -182,7 +182,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
         String statusAfterApproval = afterApproval.approvalStatusOf(agencyCode);
         System.out.println("[TC-048] approval status after approval = \"" + statusAfterApproval + "\"");
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         Assert.assertEquals(reopened.postOfficeBox(), submittedPostOfficeBox,
                 "Approving a pending update must apply the submitted change: Post office box should read \""
@@ -205,7 +205,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
      */
     @Test(priority = 230, description = "TC-AGENCY-050 Agency update end to end: edit, submit, approve")
     public void tc050_endToEndEditSubmitApprove() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         if (!form.isSendForApprovalPresent()) {
             throw new SkipException(
@@ -236,7 +236,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
                 "The Agency list should show the agency in a pending-approval state after submission, but its "
                         + "Approval Status reads \"" + pendingStatus + "\".");
 
-        UpdateAgency_Page pending = openUpdateForm();
+        UpdateAgency_Page pending = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         pending.setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-050 approval remarks"))
                 .clickApprove();
 
@@ -245,7 +245,7 @@ public class AgencyMakerChecker_TC extends AgencyTestBase {
         String approvedStatus = afterApproval.approvalStatusOf(agencyCode);
         System.out.println("[TC-050] approval status after approval = \"" + approvedStatus + "\"");
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         Assert.assertEquals(reopened.faxNo(), newFaxNo,
                 "TC-AGENCY-050: the Agency Master change (Fax No) should survive the full maker-checker round "

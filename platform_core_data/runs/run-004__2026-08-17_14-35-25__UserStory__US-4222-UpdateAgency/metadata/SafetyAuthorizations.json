@@ -162,6 +162,24 @@
       "cleanupRequired": false,
       "note": "Same dependency grant, and strictly SelfCreated. Approving a Branch the run did not create — BRN287 included — stays Forbidden (absolute); that is exactly why this stage asked the human to approve BRN287 on 2026-08-18 rather than doing it.",
       "revoked": false
+    },
+    {
+      "authorizationId": "AUTH-AGENCY-UPLOAD-SelfCreated",
+      "runId": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency",
+      "environment": "Staging",
+      "module": "agency",
+      "action": "UPLOAD",
+      "ownership": "SelfCreated",
+      "targetScope": "document and logo uploads to the Agency this run created — never a pre-existing record",
+      "decision": "Allowed",
+      "approvedAt": "2026-08-23T00:00:00.000Z",
+      "approvedBy": "ahmed.ayman@tildetech.ae",
+      "policyId": "ndc-admin-portal-stg",
+      "policyVersion": 1,
+      "policyHash": null,
+      "cleanupRequired": false,
+      "note": "Granted at the Stage 5A safety preflight for the full agency suite run (Headed). Covers TC-AGENCY-016, 020, 022, 023. TC-020 is an expected failure (document input has no accept attribute) and must not be repaired into a pass.",
+      "revoked": false
     }
   ]
 }

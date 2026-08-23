@@ -2,52 +2,75 @@ package AdminPages.Admin.Agency;
 
 import AdminPages.Login.TestBase;
 import org.testng.annotations.BeforeMethod;
+import utilities.AgencyFixture;
 
 /**
  * Common setup for every Agency test class: the inherited driver + Super Admin login from
- * {@link TestBase}, plus the one shared Branch/Agency fixture this suite operates on.
+ * {@link TestBase}, plus <b>this class's own</b> Agency fixture.
  *
- * <p><b>{@code @BeforeMethod} is not re-declared for the lifecycle.</b> {@link TestBase}'s Javadoc
- * records why: TestNG annotation inheritance makes an overridden-and-re-annotated setup easy to run
- * twice or not at all, so exactly one annotated lifecycle method exists in the hierarchy. The fixture
- * hook below is a <em>separate</em> {@code @BeforeMethod}, which TestNG runs after the superclass's --
- * it constructs no driver and does not touch the lifecycle.
+ * <p>Contains lifecycle/fixture state only -- no Page action helper methods. Tests call Page Objects
+ * directly, e.g. {@code new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode)}.
  *
- * <p><b>The fixture is built once per execution, not once per method.</b>
- * {@link AgencyFixture#ensureBuilt} is idempotent; the first test that runs pays for provisioning and
- * every later test reuses the same two records. That is the operator's §5.1 instruction expressed in
- * code: one Agency for all cases.
+ * <p><b>{@code @BeforeMethod} is not re-declared for the driver lifecycle.</b> {@link TestBase}'s
+ * Javadoc records why: TestNG annotation inheritance makes an overridden-and-re-annotated setup easy to
+ * run twice or not at all, so exactly one annotated lifecycle method exists in the hierarchy. The fixture
+ * hook below is a <em>separate</em> {@code @BeforeMethod}, which TestNG runs after the superclass's.
+ *
+ * <p><b>Per-class fixture.</b> Every subclass builds <b>its own</b> Agency, once, the first time any of
+ * its test methods runs -- the fields below are <b>instance</b> fields, so a fixture failure in one class
+ * does not affect the other four. The Branch beneath every class's Agency is the one known, pre-approved
+ * Branch, reused read-only ({@link AgencyFixture#build}) -- so five classes cost five new Agencies and
+ * zero new Branches.
+ *
+ * <p><b>A failed build is remembered for this class's own instance, not retried.</b> TestNG runs every
+ * test method in a class on the same instance by default, so an instance field set the first time
+ * {@link #prepareClassFixture()} runs is visible to every later method in that same class, and a first
+ * failure is reported to every later method rather than re-attempted. Catches {@code Throwable}, not just
+ * {@code RuntimeException}, because {@code org.testng.Assert} throws {@link AssertionError}, an
+ * {@link Error} (REPAIR-AG-008).
  */
 public abstract class AgencyTestBase extends TestBase {
 
-    /** The Agency Code every test in this suite acts on. */
+    /** The Agency Code every test in this class acts on. */
     protected String agencyCode;
 
-    /** The run-created Agency Name, needed where a test asserts row identity. */
+    /** This class's run-created Agency Name, needed where a test asserts row identity. */
     protected String agencyName;
 
+    private AgencyFixture.Built classFixture;
+    private Throwable classFixtureBuildFailure;
+    private boolean classFixtureBuildAttempted;
+
     @BeforeMethod(dependsOnMethods = "setUp")
-    public void prepareSharedFixture() {
-        AgencyProvisioner.ProvisionedAgency provisioned = AgencyFixture.ensureBuilt(driver);
-        agencyCode = provisioned.agencyCode();
-        agencyName = provisioned.agencyName();
+    public void prepareClassFixture() {
+        if (!classFixtureBuildAttempted) {
+            classFixtureBuildAttempted = true;
+            try {
+                classFixture = AgencyFixture.build(driver, getClass().getSimpleName());
+            } catch (Throwable failure) {
+                classFixtureBuildFailure = failure;
+                if (failure instanceof RuntimeException) {
+                    throw (RuntimeException) failure;
+                }
+                if (failure instanceof Error) {
+                    throw (Error) failure;
+                }
+                throw new IllegalStateException("Fixture build failed for " + getClass().getSimpleName(), failure);
+            }
+        } else if (classFixtureBuildFailure != null) {
+            throw new IllegalStateException(
+                    getClass().getSimpleName() + "'s own Agency fixture failed to build earlier in this "
+                            + "execution and is not retried -- under the per-class fixture strategy, this "
+                            + "failure affects only this class's own tests, not the other four Agency test "
+                            + "classes. Original cause below.",
+                    classFixtureBuildFailure);
+        }
+        agencyCode = classFixture.agencyCode();
+        agencyName = classFixture.agencyName();
     }
 
-    /**
-     * Opens the shared Agency's Update form the only sanctioned way -- via the list row's edit pen.
-     *
-     * <b>REPAIR-AG-012 (2026-08-19, Stage 5H).</b> Searches by the fixture's own code before opening it.
-     * The unfiltered {@code /admin/agency} view renders only 10 rows in an order unrelated to creation
-     * time, so a freshly created (or otherwise not-page-1) Agency is not reliably present without
-     * searching -- confirmed live, the exact same lesson {@code SearchBranch_Page.searchByName} already
-     * encodes for Branch.
-     */
-    protected UpdateAgency_Page openUpdateForm() {
-        return new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
-    }
-
-    /** Same correction as {@link #openUpdateForm()} -- see REPAIR-AG-012. */
-    protected SearchAgency_Page agencyList() {
-        return new SearchAgency_Page(driver).open().searchByCode(agencyCode);
+    /** The Branch this class's own Agency sits beneath (reused, not created by this run). */
+    protected AgencyFixture.ApprovedBranch branch() {
+        return classFixture.branch();
     }
 }

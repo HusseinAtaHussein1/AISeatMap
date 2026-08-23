@@ -33,7 +33,7 @@ public class AgencyInheritanceAndReadOnly_TC extends AgencyTestBase {
      */
     @Test(priority = 5, description = "TC-AGENCY-055 Manager Name shows the supplier's value and is read-only")
     public void tc055_managerNameIsInheritedAndReadOnly() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         if (!form.isPccSectionPresent()) {
             throw new SkipException(
@@ -41,8 +41,8 @@ public class AgencyInheritanceAndReadOnly_TC extends AgencyTestBase {
                             + "not rendered on agency " + agencyCode + ". FINDING-008 establishes the section "
                             + "appears only while the parent Branch carries suppliers with credentials. This "
                             + "run's fixture Branch was created with "
-                            + AgencyFixture.branch().supplierNames().size() + " supplier(s): "
-                            + AgencyFixture.branch().supplierNames() + ". If the section is still absent, the "
+                            + branch().supplierNames().size() + " supplier(s): "
+                            + branch().supplierNames() + ". If the section is still absent, the "
                             + "supplier rows did not carry credentials -- an environment/fixture gap. Manager "
                             + "Name's read-only behaviour is not evidenced either way by this outcome.");
         }
@@ -63,7 +63,7 @@ public class AgencyInheritanceAndReadOnly_TC extends AgencyTestBase {
                         + "An empty inherited field means either the supplier record carries no Manager Name "
                         + "or the inheritance did not happen -- both are findings, and which one it is must be "
                         + "checked against Master > Supplier > Supplier for this run's suppliers: "
-                        + AgencyFixture.branch().supplierNames());
+                        + branch().supplierNames());
         Assert.assertTrue(form.isManagerNameReadOnly(),
                 "Manager Name must not be editable on the Agency form -- its value is authored on the supplier "
                         + "master and only displayed here (FINDING-009). If it has become editable, the "
@@ -91,7 +91,7 @@ public class AgencyInheritanceAndReadOnly_TC extends AgencyTestBase {
      */
     @Test(priority = 6, description = "TC-AGENCY-059 Branch is read-only on the Update form")
     public void tc059_branchIsReadOnlyOnUpdateForm() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         String displayedBranch = form.branch();
         System.out.println("[TC-059] Branch value = \"" + displayedBranch + "\" editable="

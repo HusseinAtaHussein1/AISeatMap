@@ -1,0 +1,1144 @@
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/C:/Program%20Files/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.ndc.branch:branch-automation-shaft >---------------
+[INFO] Building branch-automation-shaft 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] 1 problem was encountered while building the effective model for org.javassist:javassist:jar:3.18.1-GA during dependency collection step for project (use -X to see details)
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ branch-automation-shaft ---
+[INFO] Copying 12 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ branch-automation-shaft ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ branch-automation-shaft ---
+[INFO] Copying 8 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ branch-automation-shaft ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ branch-automation-shaft ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running TestSuite
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                    Powered by SHAFT v.7.4.20231015                                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:54:23 PM 
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by nu.pattern.OpenCV$LocalLoader in an unnamed module (file:/C:/Users/Aymoon/.m2/repository/org/openpnp/opencv/4.7.0-0/opencv-4.7.0-0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+[INFO] Loaded OpenCV "opencv_java470". | com.shaft.tools.io.ReportManager - main - 03:54:24 PM 
+[INFO] Initializing Allure Reporting Environment... | com.shaft.tools.io.ReportManager - main - 03:54:24 PM 
+[INFO] Initializing Extent Reporting Environment... | com.shaft.tools.io.ReportManager - main - 03:54:24 PM 
+[INFO] Initializing Summary Reporting Environment... | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] TestNG run detected... | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                             Starting execution of suite setup configuration method                                             
+                                          'com.shaft.listeners.internal.ConfigurationHelper.suiteSetup'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] Initializing Important Links... | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] Initializing Properties... | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest..., --disable-features=Password..., --disable-infobars], extensions: [], prefs: {credentials_enable_service: false, download.default_directory: E:\Projects\agentic-ai-test..., download.prompt_for_download: false, profile.default_content_settings.popups: 0, profile.password_manager_enabled: false, profile.password_manager_leak_detection: false}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 03:54:25 PM 
+[WARN] Aug 23, 2026 3:54:27 PM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 03:54:27 PM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 03:54:27 PM 
+[WARN] Aug 23, 2026 3:54:27 PM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 03:54:27 PM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.187. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 03:54:27 PM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 03:54:27 PM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 03:54:27 PM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 03:54:27 PM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 03:54:49 PM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 03:54:49 PM 
+[INFO] Type secure "••••••••••••" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 03:54:49 PM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 03:54:49 PM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 03:54:49 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare class fixture configuration method                                        
+                                     'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareClassFixture'                                     
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:54:51 PM 
+[INFO] [FIXTURE] AgencyDocumentsAndLogo_TC: building this class's own Agency (beneath the reused, known-approved Branch) | com.shaft.tools.io.ReportManager - main - 03:54:51 PM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch" | com.shaft.tools.io.ReportManager - main - 03:54:51 PM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 03:54:51 PM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch". | com.shaft.tools.io.ReportManager - main - 03:54:51 PM 
+[INFO] Get Text from element, text is "Showing 10 results of 576 results". | com.shaft.tools.io.ReportManager - main - 03:54:52 PM 
+[INFO] Type "BRN908" into "Branch code". | com.shaft.tools.io.ReportManager - main - 03:54:52 PM 
+[INFO] Get Attribute "value" from "Branch code", value is "BRN908". | com.shaft.tools.io.ReportManager - main - 03:54:52 PM 
+[INFO] Get Attribute "value" from "Branch code", value is "BRN908". | com.shaft.tools.io.ReportManager - main - 03:54:52 PM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] Click "By.cssSelector: label[for='id-Status-Both']". | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] [DIAG-SYNC] selectStatus Both selected on attempt 1 of 3 (normal click) | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] Get Text from element, text is "Showing 10 results of 576 results". | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] Get Text from element, text is "Showing 10 results of 576 results". | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] [DIAG-SYNC] clickSearch start t=0ms summaryBefore="Showing 10 results of 576 results" rowsBefore=10 | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] Click "Search". | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] [DIAG-SYNC] clickSearch clicked t=489ms | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] Is enabled action failed. | com.shaft.tools.io.ReportManager - main - 03:54:53 PM 
+[INFO] Successfully created attachment 'Screenshot - 1787489694072_prepareClassFixture_isEnabled_failed' | com.shaft.tools.io.ReportManager - main - 03:54:54 PM 
+[ERROR] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:119)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$xsH1JY2v.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:566)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:525)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.187)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '24.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [df70f6ec9c03f3ea118755e9d7a2b0dc, isElementEnabled {id=f.BA5B8C793F169644922002218598D1B4.d.54C8D387AE86823C06E27E88D2E95012.e.524}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.187, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Aymoon\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:63439}, goog:processID: 26884, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:63439/devtoo..., se:cdpVersion: 150.0.7871.187, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:41093/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (df70f6ec9c03f3ea118755e9d7a2b0dc)] -> css selector: table tbody tr]
+Session ID: df70f6ec9c03f3ea118755e9d7a2b0dc
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$xsH1JY2v.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:566)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:525)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) | com.shaft.tools.io.ReportManager - main - 03:54:54 PM 
+[INFO] Is enabled action failed. | com.shaft.tools.io.ReportManager - main - 03:54:54 PM 
+[INFO] Successfully created attachment 'Screenshot - 1787489695017_prepareClassFixture_isEnabled_failed' | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[ERROR] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:119)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$xsH1JY2v.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:584)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:531)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.187)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '24.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [df70f6ec9c03f3ea118755e9d7a2b0dc, isElementEnabled {id=f.BA5B8C793F169644922002218598D1B4.d.54C8D387AE86823C06E27E88D2E95012.e.524}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.187, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Aymoon\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:63439}, goog:processID: 26884, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:63439/devtoo..., se:cdpVersion: 150.0.7871.187, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:41093/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (df70f6ec9c03f3ea118755e9d7a2b0dc)] -> css selector: table tbody tr]
+Session ID: df70f6ec9c03f3ea118755e9d7a2b0dc
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$xsH1JY2v.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:584)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:531)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] [DIAG-SYNC] clickSearch fresh result cycle confirmed (grid re-rendered) t=2120ms | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Get Text from element, text is "Showing 1 results of 1 results". | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Get Text from element, text is "Showing 1 results of 1 results". | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] [DIAG-SYNC] clickSearch end t=2209ms summaryAfter="Showing 1 results of 1 results" rowCountAfter=1 | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Get Text from "QA_694969440098400", text is "QA_694969440098400". | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Get Text from "Approved", text is "Approved". | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] [PROVISION] reusing known approved Branch BRN908 ("QA_694969440098400") suppliers=[3O, AegeanNdc] -- no new Branch created | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] [FIXTURE] AgencyDocumentsAndLogo_TC: branch ready (reused, not created): QA_694969440098400 (BRN908) suppliers=[3O, AegeanNdc] | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Target URL: "http://192.168.1.70/admin/agency/add" | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch" | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Navigate to url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:54:55 PM 
+[INFO] Get Text from element, text is "QA_694969440098400 (BRN908)". | com.shaft.tools.io.ReportManager - main - 03:54:56 PM 
+[INFO] Get Attribute "value" from "Country *", value is "". | com.shaft.tools.io.ReportManager - main - 03:54:57 PM 
+[INFO] Get Attribute "value" from "Country *", value is "Egypt". | com.shaft.tools.io.ReportManager - main - 03:54:57 PM 
+[INFO] Get Text from element, text is "Cairo". | com.shaft.tools.io.ReportManager - main - 03:54:57 PM 
+[INFO] Get Text from element, text is "Cairo". | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Type "E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyContract_Doc1_valid.pdf" into element. | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Click "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Type "?a?" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Type "?" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Type "01/01/2026" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Type "?" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Click "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:54:58 PM 
+[INFO] Type "?a?" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:54:59 PM 
+[INFO] Type "?" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:54:59 PM 
+[INFO] Type "31/12/2027" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:54:59 PM 
+[INFO] Type "?" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:54:59 PM 
+[INFO] Type "E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyLogo_valid.png" into element. | com.shaft.tools.io.ReportManager - main - 03:54:59 PM 
+[INFO] Get Text from element, text is "monthly". | com.shaft.tools.io.ReportManager - main - 03:54:59 PM 
+[INFO] Get Attribute "value" from "Country *", value is "Egypt". | com.shaft.tools.io.ReportManager - main - 03:55:00 PM 
+[INFO] Click "Send For Approval". | com.shaft.tools.io.ReportManager - main - 03:55:00 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:00 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:00 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:01 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:01 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:02 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:02 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:03 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:03 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:04 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:05 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:05 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:06 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:06 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:07 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:07 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:08 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:08 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:09 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:09 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:10 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:10 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:11 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:11 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:12 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:12 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:13 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:13 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:14 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:14 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:15 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:15 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:16 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:16 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:17 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:17 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:18 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:18 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:19 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:19 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:20 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:21 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:21 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:22 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:22 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:23 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:23 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:24 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:24 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:25 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:25 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:26 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:26 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:27 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:27 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:28 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:28 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:29 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:29 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] [PROVISION] still on http://192.168.1.70/admin/agency/add | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] [PROVISION] validation messages = [] | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] [PROVISION] still-invalid mandatory fields = [] | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] [PROVISION] productAccessRows = 2 | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '1 out of 5' test cases in the current suite                                        
+                     Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc016_uploadValidPdfWithContractDates'                     
+                                Test Description: 'TC-AGENCY-016 Upload a valid PDF document with contract dates'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareClassFixture' | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc016_uploadValidPdfWithContractDates' | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+          Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc016_uploadValidPdfWithContractDates'          
+                                Test Description: 'TC-AGENCY-016 Upload a valid PDF document with contract dates'                                
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare class fixture configuration method                                        
+                                     'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareClassFixture'                                     
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '2 out of 5' test cases in the current suite                                        
+                             Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc022_uploadValidLogo'                             
+                                          Test Description: 'TC-AGENCY-022 Upload a valid agency logo'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc022_uploadValidLogo' | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                  Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc022_uploadValidLogo'                  
+                                          Test Description: 'TC-AGENCY-022 Upload a valid agency logo'                                          
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                            'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.setUp'                                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare class fixture configuration method                                        
+                                     'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareClassFixture'                                     
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '3 out of 5' test cases in the current suite                                        
+                          Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc023_oversizeLogoIsRejected'                          
+                                       Test Description: 'TC-AGENCY-023 Logo larger than 2 MB is rejected'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc023_oversizeLogoIsRejected' | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+               Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc023_oversizeLogoIsRejected'               
+                                       Test Description: 'TC-AGENCY-023 Logo larger than 2 MB is rejected'                                       
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                          'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tearDown'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                         'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.setUp'                                         
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Setting "targetOperatingSystem" property with "windows". | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Capabilities {acceptInsecureCerts: true, browserName: chrome, goog:chromeOptions: {args: [--start-maximized, --remote-allow-origins=*, --enable-automation, --disable-background-timer-..., --disable-backgrounding-occ..., --disable-features=Calculat..., --disable-hang-monitor, --disable-domain-reliability, --disable-renderer-backgrou..., --disable-features=Autofill..., --metrics-recording-only, --no-first-run, --no-default-browser-check, --silent-debugger-extension..., --disable-extensions, --disable-component-extensi..., --disable-dev-shm-usage, --disable-features=MediaRouter, --disable-features=Translate, --disable-ipc-flooding-prot..., --disable-background-networ..., --mute-audio, --disable-breakpad, --ignore-certificate-errors, --disable-device-discovery-..., --force-color-profile=srgb, --hide-scrollbars, --host-resolver-rules, --no-pings, --disable-features=AvoidUnn..., --disable-features=Certific..., --disable-sync, --disable-features=Optimiza..., --disable-features=DialMedi..., --disable-features=GlobalMe..., --disable-features=Improved..., --disable-features=LazyFram..., --disable-field-trial-config, --enable-features=NetworkSe..., --enable-features=NetworkSe..., --enable-use-zoom-for-dsf, --log-net-log, --net-log-capture-mode, --disable-client-side-phish..., --disable-default-apps, --disable-features=Interest..., --disable-features=Password..., --disable-infobars], extensions: [], prefs: {credentials_enable_service: false, download.default_directory: E:\Projects\agentic-ai-test..., download.prompt_for_download: false, profile.default_content_settings.popups: 0, profile.password_manager_enabled: false, profile.password_manager_leak_detection: false}}, pageLoadStrategy: none, timeouts: {pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: true} | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Attempting to run locally on: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[INFO] Identifying OS/Driver combination. Please note that if a new browser/driver executable will be downloaded it may take some time depending on your connection... | com.shaft.tools.io.ReportManager - main - 03:55:30 PM 
+[WARN] Aug 23, 2026 3:55:32 PM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch | com.shaft.tools.io.ReportManager - main - 03:55:32 PM 
+[WARN] WARNING: Unable to find CDP implementation matching 150 | com.shaft.tools.io.ReportManager - main - 03:55:32 PM 
+[WARN] Aug 23, 2026 3:55:32 PM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5 | com.shaft.tools.io.ReportManager - main - 03:55:32 PM 
+[WARN] WARNING: Unable to find version of CDP to use for 150.0.7871.187. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.13.0` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's. | com.shaft.tools.io.ReportManager - main - 03:55:32 PM 
+[INFO] Successfully Opened: "windows | Chrome". | com.shaft.tools.io.ReportManager - main - 03:55:32 PM 
+[INFO] Target URL: "http://192.168.1.70" | com.shaft.tools.io.ReportManager - main - 03:55:32 PM 
+[INFO] Initial URL: "about:blank" | com.shaft.tools.io.ReportManager - main - 03:55:32 PM 
+[INFO] Navigate to url "http://192.168.1.70". | com.shaft.tools.io.ReportManager - main - 03:55:57 PM 
+[INFO] Type "odeysysadmin" into "Username *". | com.shaft.tools.io.ReportManager - main - 03:55:57 PM 
+[INFO] Type secure "••••••••••••" into "Password * Forgot Password?". | com.shaft.tools.io.ReportManager - main - 03:55:57 PM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 03:55:58 PM 
+[INFO] Click "Login". | com.shaft.tools.io.ReportManager - main - 03:55:58 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare class fixture configuration method                                        
+                                  'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.prepareClassFixture'                                  
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:02 PM 
+[INFO] [FIXTURE] AgencyInheritanceAndReadOnly_TC: building this class's own Agency (beneath the reused, known-approved Branch) | com.shaft.tools.io.ReportManager - main - 03:56:02 PM 
+[INFO] Target URL: "http://192.168.1.70/admin/branch" | com.shaft.tools.io.ReportManager - main - 03:56:02 PM 
+[INFO] Initial URL: "http://192.168.1.70/dashboard" | com.shaft.tools.io.ReportManager - main - 03:56:02 PM 
+[INFO] Navigate to url "http://192.168.1.70/admin/branch". | com.shaft.tools.io.ReportManager - main - 03:56:02 PM 
+[INFO] Get Text from element, text is "Showing 10 results of 576 results". | com.shaft.tools.io.ReportManager - main - 03:56:03 PM 
+[INFO] Type "BRN908" into "Branch code". | com.shaft.tools.io.ReportManager - main - 03:56:03 PM 
+[INFO] Get Attribute "value" from "Branch code", value is "BRN908". | com.shaft.tools.io.ReportManager - main - 03:56:03 PM 
+[INFO] Get Attribute "value" from "Branch code", value is "BRN908". | com.shaft.tools.io.ReportManager - main - 03:56:03 PM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 03:56:03 PM 
+[INFO] Click "By.cssSelector: label[for='id-Status-Both']". | com.shaft.tools.io.ReportManager - main - 03:56:03 PM 
+[INFO] [DIAG-SYNC] selectStatus Both selected on attempt 1 of 3 (normal click) | com.shaft.tools.io.ReportManager - main - 03:56:03 PM 
+[INFO] Get Text from element, text is "Showing 10 results of 576 results". | com.shaft.tools.io.ReportManager - main - 03:56:04 PM 
+[INFO] Get Text from element, text is "Showing 10 results of 576 results". | com.shaft.tools.io.ReportManager - main - 03:56:04 PM 
+[INFO] [DIAG-SYNC] clickSearch start t=0ms summaryBefore="Showing 10 results of 576 results" rowsBefore=10 | com.shaft.tools.io.ReportManager - main - 03:56:04 PM 
+[INFO] Moved the mouse to the middle of the element. | com.shaft.tools.io.ReportManager - main - 03:56:04 PM 
+[INFO] Click "Search". | com.shaft.tools.io.ReportManager - main - 03:56:04 PM 
+[INFO] [DIAG-SYNC] clickSearch clicked t=494ms | com.shaft.tools.io.ReportManager - main - 03:56:04 PM 
+[INFO] Is enabled action failed. | com.shaft.tools.io.ReportManager - main - 03:56:04 PM 
+[INFO] Successfully created attachment 'Screenshot - 1787489764821_prepareClassFixture_isEnabled_failed' | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[ERROR] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:119)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$nfg0ygNp.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:566)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:525)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.187)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '24.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [6f31a2d3af7f5e2d439156b7e3e6c65f, isElementEnabled {id=f.8973661A6508AC6F2D28E2F6CCF8B496.d.AF1D154DB7343AECBDE882BB7CD071F6.e.520}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.187, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Aymoon\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:53647}, goog:processID: 13256, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:53647/devtoo..., se:cdpVersion: 150.0.7871.187, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:25434/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (6f31a2d3af7f5e2d439156b7e3e6c65f)] -> css selector: table tbody tr]
+Session ID: 6f31a2d3af7f5e2d439156b7e3e6c65f
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$nfg0ygNp.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:566)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:525)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Is enabled action failed. | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Successfully created attachment 'Screenshot - 1787489765380_prepareClassFixture_isEnabled_failed' | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[ERROR] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:119)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$nfg0ygNp.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:584)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:531)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=150.0.7871.187)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '24.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [6f31a2d3af7f5e2d439156b7e3e6c65f, isElementEnabled {id=f.8973661A6508AC6F2D28E2F6CCF8B496.d.AF1D154DB7343AECBDE882BB7CD071F6.e.520}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 150.0.7871.187, chrome: {chromedriverVersion: 150.0.7871.124 (9261fd0a595..., userDataDir: C:\Users\Aymoon\AppData\Loc...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:53647}, goog:processID: 13256, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:53647/devtoo..., se:cdpVersion: 150.0.7871.187, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:25434/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (6f31a2d3af7f5e2d439156b7e3e6c65f)] -> css selector: table tbody tr]
+Session ID: 6f31a2d3af7f5e2d439156b7e3e6c65f
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$nfg0ygNp.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:584)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:531)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ AdminPages.Admin.Agency.SupplierBranchProvisioner.getOrCreateApprovedBranchWithSuppliers(SupplierBranchProvisioner.java:117)
+ AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:94)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+ java.base/java.lang.reflect.Method.invoke(Method.java:565)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+ org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] [DIAG-SYNC] clickSearch fresh result cycle confirmed (grid re-rendered) t=1701ms | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Get Text from element, text is "Showing 1 results of 1 results". | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Get Text from element, text is "Showing 1 results of 1 results". | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] [DIAG-SYNC] clickSearch end t=1783ms summaryAfter="Showing 1 results of 1 results" rowCountAfter=1 | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Get Text from "QA_694969440098400", text is "QA_694969440098400". | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Get Text from "Approved", text is "Approved". | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] [PROVISION] reusing known approved Branch BRN908 ("QA_694969440098400") suppliers=[3O, AegeanNdc] -- no new Branch created | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] [FIXTURE] AgencyInheritanceAndReadOnly_TC: branch ready (reused, not created): QA_694969440098400 (BRN908) suppliers=[3O, AegeanNdc] | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Target URL: "http://192.168.1.70/admin/agency/add" | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Initial URL: "http://192.168.1.70/admin/branch" | com.shaft.tools.io.ReportManager - main - 03:56:05 PM 
+[INFO] Navigate to url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:06 PM 
+[INFO] Get Text from element, text is "QA_694969440098400 (BRN908)". | com.shaft.tools.io.ReportManager - main - 03:56:07 PM 
+[INFO] Get Attribute "value" from "Country *", value is "". | com.shaft.tools.io.ReportManager - main - 03:56:07 PM 
+[INFO] Get Attribute "value" from "Country *", value is "". | com.shaft.tools.io.ReportManager - main - 03:56:07 PM 
+[INFO] Get Attribute "value" from "Country *", value is "Egypt". | com.shaft.tools.io.ReportManager - main - 03:56:08 PM 
+[INFO] Get Text from element, text is "Cairo". | com.shaft.tools.io.ReportManager - main - 03:56:08 PM 
+[INFO] Get Text from element, text is "Cairo". | com.shaft.tools.io.ReportManager - main - 03:56:08 PM 
+[INFO] Type "E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyContract_Doc1_valid.pdf" into element. | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Click "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "?a?" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "?" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "01/01/2026" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "?" into "Contract Start Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Click "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "?a?" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "?" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "31/12/2027" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "?" into "Contract End Date *". | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Type "E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyLogo_valid.png" into element. | com.shaft.tools.io.ReportManager - main - 03:56:09 PM 
+[INFO] Get Text from element, text is "monthly". | com.shaft.tools.io.ReportManager - main - 03:56:10 PM 
+[INFO] Get Attribute "value" from "Country *", value is "Egypt". | com.shaft.tools.io.ReportManager - main - 03:56:10 PM 
+[INFO] Click "Send For Approval". | com.shaft.tools.io.ReportManager - main - 03:56:10 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:10 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:11 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:11 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:12 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:12 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:13 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:13 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:14 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:15 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:15 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:16 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:16 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:17 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:17 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:18 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:18 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:19 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:19 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:20 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:20 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:21 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:21 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:22 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:22 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:23 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:23 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:24 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:24 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:25 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:25 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:26 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:26 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:27 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:27 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:28 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:28 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:29 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:29 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:30 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:30 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:31 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:31 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:32 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:32 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:33 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:33 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:34 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:35 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:35 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:36 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:36 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:37 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:37 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:38 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:38 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:39 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:39 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:40 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:40 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Get current url "http://192.168.1.70/admin/agency/add". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] [PROVISION] still on http://192.168.1.70/admin/agency/add | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] [PROVISION] validation messages = [] | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] [PROVISION] still-invalid mandatory fields = [] | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] [PROVISION] productAccessRows = 2 | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '4 out of 5' test cases in the current suite                                        
+                 Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc055_managerNameIsInheritedAndReadOnly'                 
+                           Test Description: 'TC-AGENCY-055 Manager Name shows the supplier's value and is read-only'                           
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareClassFixture' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc055_managerNameIsInheritedAndReadOnly' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+      Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc055_managerNameIsInheritedAndReadOnly'      
+                           Test Description: 'TC-AGENCY-055 Manager Name shows the supplier's value and is read-only'                           
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                       'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tearDown'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                Starting execution of set up configuration method                                                
+                                         'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.setUp'                                         
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting execution of prepare class fixture configuration method                                        
+                                  'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.prepareClassFixture'                                  
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '5 out of 5' test cases in the current suite                                        
+                    Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc059_branchIsReadOnlyOnUpdateForm'                    
+                                    Test Description: 'TC-AGENCY-059 Branch is read-only on the Update form'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Current Method log: tc059_branchIsReadOnlyOnUpdateForm' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+         Finished Execution of Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc059_branchIsReadOnlyOnUpdateForm'         
+                                    Test Description: 'TC-AGENCY-059 Branch is read-only on the Update form'                                    
+                                                             Test Status: 'Skipped'                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                              Starting execution of tear down configuration method                                              
+                                       'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tearDown'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                           Starting execution of engine teardown configuration method                                           
+                                        'com.shaft.listeners.internal.ConfigurationHelper.engineTeardown'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Execution log' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] File Action "DoesFileExist" successfully performed. With the following test data "File Path: "target/logs/log4j.log"". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] File Action "GetAbsolutePath" successfully performed. With the following test data "Relative Folder Path: "target/logs/log4j.log"". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] File Action "ReadFileAsByteArray" successfully performed. With the following test data "File Path: "E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\logs\log4j.log"". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] File Action "DeleteFile" successfully performed. With the following test data "Target File Path: "target/logs/log4j.log", file was not deleted.". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Execution log: 20260823-155641' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] File Action "DoesFileExist" successfully performed. With the following test data "File Path: "allure-results/cucumberReport.html"". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'HTML - Checkpoints Report' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully created attachment 'SHAFT Engine Logs - Issues log CSV: 20260823-155641' | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Successfully Closed Driver. | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] File Action "GetAbsolutePath" successfully performed. With the following test data "Relative File Path: "execution-summary/ExecutionSummaryReport_23-08-2026_15-56-41-0947-PM.html"". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] File Action "WriteToFile" successfully performed. With the following test data "Target File Path: "E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\execution-summary\ExecutionSummaryReport_23-08-2026_15-56-41-0947-PM.html"". | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Executing: ".\execution-summary/ExecutionSummaryReport_*.html" locally. | com.shaft.tools.io.ReportManager - main - 03:56:41 PM 
+[INFO] Terminal Action "PerformTerminalCommands" successfully performed. With the following test data "Host Name: "localHost" | Command: ".\execution-summary/ExecutionSummaryReport_*.html" | Exit Status: "0"". | com.shaft.tools.io.ReportManager - main - 03:56:42 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                         Test Execution Summary Results                                                         
+                                              Total Cases: 5 --> Passed: 0 | Failed: 0 | Skipped: 5                                              
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:42 PM 
+[INFO] 
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                           This test run was powered by SHAFT v.7.4.20231015                                           
+                               SHAFT is and will always be 100% FREE for commercial and private use                               
+                                                   in compliance with the MIT license                                                   
+                                   Visit SHAFT's user guide https://shafthq.github.io/ to learn more                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ | com.shaft.tools.io.ReportManager - main - 03:56:42 PM 
+[ERROR] Tests run: 18, Failures: 2, Errors: 0, Skipped: 16, Time elapsed: 140.7 s <<< FAILURE! -- in TestSuite
+[ERROR] AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareClassFixture -- Time elapsed: 69.32 s <<< FAILURE!
+java.lang.AssertionError: Provisioning failed: the Add Agency form did not submit. The suite cannot proceed, because every mutating test may act only on an Agency this run created -- acting on any other record is outside this run's mutation authorisation. Still-invalid mandatory field(s) at the moment of submission: []. See the [PROVISION] diagnostics above for the rest of the form's state. expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:111)
+	at org.testng.Assert.failNotEquals(Assert.java:1578)
+	at org.testng.Assert.assertTrue(Assert.java:57)
+	at AdminPages.Admin.Agency.AddAgency_Page.assertSubmissionSucceeded(AddAgency_Page.java:597)
+	at AdminPages.Admin.Agency.AgencyProvisioner.createAgency(AgencyProvisioner.java:108)
+	at AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:96)
+	at AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+	at org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+	at org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+	at org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.prepareClassFixture -- Time elapsed: 70.35 s <<< FAILURE!
+java.lang.AssertionError: Provisioning failed: the Add Agency form did not submit. The suite cannot proceed, because every mutating test may act only on an Agency this run created -- acting on any other record is outside this run's mutation authorisation. Still-invalid mandatory field(s) at the moment of submission: []. See the [PROVISION] diagnostics above for the rest of the form's state. expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:111)
+	at org.testng.Assert.failNotEquals(Assert.java:1578)
+	at org.testng.Assert.assertTrue(Assert.java:57)
+	at AdminPages.Admin.Agency.AddAgency_Page.assertSubmissionSucceeded(AddAgency_Page.java:597)
+	at AdminPages.Admin.Agency.AgencyProvisioner.createAgency(AgencyProvisioner.java:108)
+	at AdminPages.Admin.Agency.AgencyFixture.build(AgencyFixture.java:96)
+	at AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:51)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+	at org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+	at org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+	at org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at org.testng.TestRunner.privateRun(TestRunner.java:848)
+	at org.testng.TestRunner.run(TestRunner.java:621)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:336)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+	at org.testng.TestNG.runSuites(TestNG.java:1114)
+	at org.testng.TestNG.run(TestNG.java:1082)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR] AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.prepareClassFixture
+[ERROR]   Run 1: AgencyDocumentsAndLogo_TC>AgencyTestBase.prepareClassFixture:51 Provisioning failed: the Add Agency form did not submit. The suite cannot proceed, because every mutating test may act only on an Agency this run created -- acting on any other record is outside this run's mutation authorisation. Still-invalid mandatory field(s) at the moment of submission: []. See the [PROVISION] diagnostics above for the rest of the form's state. expected [true] but found [false]
+[INFO]   Run 2: PASS
+[INFO]   Run 3: PASS
+[INFO] 
+[ERROR] AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.prepareClassFixture
+[ERROR]   Run 1: AgencyInheritanceAndReadOnly_TC>AgencyTestBase.prepareClassFixture:51 Provisioning failed: the Add Agency form did not submit. The suite cannot proceed, because every mutating test may act only on an Agency this run created -- acting on any other record is outside this run's mutation authorisation. Still-invalid mandatory field(s) at the moment of submission: []. See the [PROVISION] diagnostics above for the rest of the form's state. expected [true] but found [false]
+[INFO]   Run 2: PASS
+[INFO] 
+[INFO] 
+[ERROR] Tests run: 11, Failures: 2, Errors: 0, Skipped: 9
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:24 min
+[INFO] Finished at: 2026-08-23T15:56:42+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.1.2:test (default-test) on project branch-automation-shaft: There are test failures.
+[ERROR] 
+[ERROR] Please refer to E:\Projects\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

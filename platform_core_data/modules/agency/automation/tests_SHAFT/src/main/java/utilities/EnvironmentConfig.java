@@ -57,13 +57,7 @@ public class EnvironmentConfig {
         return PROPS.getProperty("editBranchPath");
     }
 
-    /**
-     * Super Admin credentials for the QA environment, held here rather than in environment
-     * variables so the suite runs from any terminal or IDE with no setup step. They live in this
-     * one class only -- never inside a test -- so pointing the suite at a different environment
-     * stays a single-file change alongside {@code environment.properties}.
-     */
-    // ── Agency routes (added by run-004, Stage 4A) ────────────────────────────────────────────
+    // ── Agency routes (added by run-004, Stage 4A; restored 2026-08-23 regeneration) ───────────
 
     public static String agencyListUrl() {
         return baseUrl() + agencyListPath();
@@ -91,6 +85,12 @@ public class EnvironmentConfig {
         return PROPS.getProperty("editAgencyPath", "/admin/agency/edit");
     }
 
+    /**
+     * Super Admin credentials for the QA environment, held here rather than in environment
+     * variables so the suite runs from any terminal or IDE with no setup step. They live in this
+     * one class only -- never inside a test -- so pointing the suite at a different environment
+     * stays a single-file change alongside {@code environment.properties}.
+     */
     private static final String USERNAME = "odeysysadmin";
     private static final String PASSWORD = "qqE6)Cxp6>B8";
 

@@ -71,7 +71,7 @@ Automation Candidates hint is RETIRED and no longer exists, so nothing pre-empts
 | **Decision** | {{DECISION}} <!-- exactly one of the four --> |
 | **Justification** | {{JUSTIFICATION}} <!-- why THIS decision, referencing the specific test case content, existing assets, or specification gap involved — never a generic rationale --> |
 | **Reused Assets** | {{REUSED_ASSETS}} <!-- which existing assets this relies on, or `None` --> |
-| **Generated Assets** | {{GENERATED_ASSETS}} <!-- which new assets this produces, or `None` --> |
+| **Generated Assets** | {{GENERATED_ASSETS}} <!-- which new assets this produces, each with its §8.1 responsibility area (Page / Locator / Test / Fixture / Driver / Generic / Utility / Data / Config), or `None`. An asset with no stated area is an incomplete decision field. --> |
 | **Automation Readiness** | {{READINESS}} <!-- ready to hand to Stage 5A, or blocked pending something specific (e.g. a missing test data fixture) — name the blocker --> |
 | **Known Limitations** | {{KNOWN_LIMITATIONS}} <!-- reliability, scope, and edge cases this automation does NOT cover --> |
 

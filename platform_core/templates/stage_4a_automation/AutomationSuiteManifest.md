@@ -11,6 +11,13 @@ HARD RULE (§10): suites follow BUSINESS WORKFLOWS, NOT INDIVIDUAL PAGES. A suit
 single page, disconnected from the other tests forming the same business workflow, is the wrong shape
 and must not be produced. The workflow, not the screen, is the organizing unit.
 
+HARD RULE (§10, §8.11): A SUITE IS A LOGICAL GROUPING, NOT A FOLDER LAYER AND NOT A CLASS. For
+Java/SHAFT it is expressed as TestNG groups plus a <test> block in testng.xml /
+testng-{{MODULE_SLUG}}.xml — NEVER a workflows/ or services/ package, and never a Workflow or Service
+class orchestrating page calls. Test Classes stay organized by application area and module under
+src/test/java/AdminPages/ (§8.4); the suite that groups them is organized by workflow. Both are true
+at once: the directory answers "what does this test", the suite answers "which tests run together".
+
 Where the realized structure diverges from the Plan, §4 records why — a silent divergence between
 plan and manifest is a defect in this stage's output.
 -->
@@ -30,9 +37,9 @@ plan and manifest is a defect in this stage's output.
 
 ## 1. Suite Index
 
-| Suite | Business Workflow | Test Cases | Assets | Execution Order |
-|---|---|---|---|---|
-| {{SUITE}} | {{WORKFLOW}} | {{CASE_COUNT}} | {{ASSET_COUNT}} | {{ORDER}} |
+| Suite | Business Workflow | Grouping Mechanism | Test Cases | Assets | Execution Order |
+|---|---|---|---|---|---|
+| {{SUITE}} | {{WORKFLOW}} | {{GROUPING}} <!-- e.g. `TestNG group: agency` + `testng-agency.xml <test>` — NEVER a package or class name --> | {{CASE_COUNT}} | {{ASSET_COUNT}} | {{ORDER}} |
 
 ## 2. Suites
 
@@ -50,16 +57,16 @@ plan and manifest is a defect in this stage's output.
 |---|---|---|---|
 | {{TEST_CASE_ID}} | `{{SCRIPT_PATH}}` | {{DECISION}} <!-- Reuse / Generate / Partially Automatable --> | {{STATUS}} |
 
-**Shared elements (§10):**
+**Shared elements (§10) — each mapped to its §8.1 responsibility area:**
 
-| Element | Value / Location |
-|---|---|
-| Shared Setup | {{SHARED_SETUP}} |
-| Shared Teardown | {{SHARED_TEARDOWN}} |
-| Shared Fixtures | {{SHARED_FIXTURES}} |
-| Shared Components | {{SHARED_COMPONENTS}} |
-| Shared Utilities | {{SHARED_UTILITIES}} |
-| Shared Test Data | {{SHARED_TEST_DATA}} |
+| Element | Value / Location | Responsibility area (Java/SHAFT UI) |
+|---|---|---|
+| Shared Setup | {{SHARED_SETUP}} | Fixture — `src/test/java/utilities/` (§8.5) |
+| Shared Teardown | {{SHARED_TEARDOWN}} | Fixture cleanup — `src/test/java/utilities/` (§8.5) |
+| Shared Fixtures | {{SHARED_FIXTURES}} | `src/test/java/utilities/` (§8.5) |
+| Shared Utilities | {{SHARED_UTILITIES}} | `src/main/java/utilities/` · `Generic_Classes/` (§8.9, §8.8) |
+| Shared Test Data | {{SHARED_TEST_DATA}} | JSON — `src/test/resources/{module}/` (§8.6) |
+| Shared Components | {{SHARED_COMPONENTS}} <!-- `None — §8.11` unless justified in Plan §3B --> | Not a default layer (§8.11) |
 
 <!-- Repeat the block above for every suite. -->
 
@@ -68,9 +75,9 @@ plan and manifest is a defect in this stage's output.
 <!-- Assets shared across more than one suite — the layer a change would ripple through. Knowing this
      is what lets Stage 5H scope a repair's blast radius. -->
 
-| Asset | Type | Used By Suites |
-|---|---|---|
-| `{{ASSET}}` | {{TYPE}} | {{SUITES}} |
+| Asset | Responsibility Area | Type | Used By Suites |
+|---|---|---|---|
+| `{{ASSET}}` | {{AREA}} <!-- Page / Locator / Test / Fixture / Driver / Generic / Utility / Data / Config (§8.1) --> | {{TYPE}} | {{SUITES}} |
 
 ## 4. Divergence From Plan
 

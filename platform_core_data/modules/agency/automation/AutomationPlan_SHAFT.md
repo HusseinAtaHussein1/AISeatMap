@@ -1,5 +1,18 @@
 # Automation Plan — `agency` / SHAFT
 
+> **2026-08-23 architecture refactor addendum (after this plan's generation).** A pure architecture
+> refactor was applied on top of the generation this plan describes: no behaviour change, no new live
+> verification, no live execution. `Agency_Common` → removed, split into `utilities/PrimeNgHelper.java`
+> (PrimeNG technical behaviour) plus page-owned members; fixed locators extracted into
+> `AddAgency_Locators` / `SearchAgency_Locators` / `UpdateAgency_Locators` / shared `AgencyForm_Locators`;
+> `AgencyProvisioner` + `SupplierBranchProvisioner` + the old `AgencyFixture` → consolidated into one
+> `src/test/java/utilities/AgencyFixture.java` (moved out of `AdminPages.Admin.Agency`); the Branch
+> create-fallback retired — the configured known Branch is now a read-only standing precondition;
+> `agency_baseline.properties` + `AgencyTestData.java` → `src/test/resources/testDataFiles/agency/agency-data.json`
+> via a new generic `Generic_Classes/JsonDataReader.java`; `BranchSupplierGrid.java` deleted as dead code.
+> All REPAIR-AG-* mechanisms below are preserved verbatim in their new location. See
+> `AutomationSummary_SHAFT.md`'s banner for the full list.
+
 | Field | Value |
 |---|---|
 | Module | `agency` |
@@ -8,8 +21,82 @@
 | Project Context | `modules/agency/context/ProjectContext.md` rev 4, **Approved** |
 | Manual Test Suite | `modules/agency/test_design/TestCases_Agency.md` rev 3, **Approved** — 60 cases |
 | Written | 2026-08-18 |
-| Status | **Approved as-is** — 2026-08-18, Ahmed Ayman. Generation authorised |
-| Operator amendment at approval | **One Agency fixture for the entire execution**, not one per test case (§5.1) |
+| **Revised** | **2026-08-23 — the 2026-08-18 generation was REJECTED (see §0 below). This revision supersedes §5.1's single-fixture decision and records new live-verification findings. Generation is being redone from a clean re-seed of the baseline.** |
+| Status | **Superseded — regenerating.** The Target Write Plan for the regenerated package is presented separately, per §11C.4, before any code is written under this revision |
+| Operator amendment, 2026-08-18 (**superseded**) | ~~One Agency fixture for the entire execution~~ — see §0.2 |
+| Operator amendment, 2026-08-23 (**current**) | **One Agency (+ its Branch dependency) per test CLASS** — 5 fixtures per execution instead of 1 (§0.2) |
+
+## 0. Rejection and Regeneration (2026-08-23)
+
+### 0.1 Why the 2026-08-18 package was rejected
+
+A live Headed execution of the full `testng-agency.xml` suite showed `prepareSharedFixture` failing at
+the Add Agency step for the shared fixture: the form never submitted (`[PROVISION] validation messages
+= []`, `productAccessRows = 2`), and because §5.1 gave the whole suite **one** shared Agency, that single
+failure skipped all 18 tests. Two candidate root causes were named at rejection time: (a) `clickVia`'s
+synthetic `MouseEvent` dispatch not reaching the "Send For Approval" handler, or (b) a genuinely empty
+mandatory field silently blocking submission (the application renders zero validation messages —
+`FINDING-010`).
+
+### 0.2 Re-verification findings (2026-08-23, live, headless, read-only)
+
+Both candidates were re-checked live against the running Add Agency form before any new code was written
+(§11A). Neither the old assumption nor the old diagnostic held up unedited:
+
+**Finding A — the old diagnostic list was misleading.** The prior run's `[PROVISION] empty visible
+fields` log named 8 fields: Company URL, Fax No, Address, Account Number, Bank name, Target, Reaching
+Percentage, Warning Prompt (Days). Live inspection of every `label` on the form shows **7 of those 8
+carry no `*`** — they are optional fields, and being empty was never a defect. **Only `Address` is
+mandatory** (`Address *`, a `<textarea>`, confirmed `ng-invalid` on a pristine form alongside 15 other
+starred fields: Branch, Agency, Country, State, City, Post office box, Contact person, Email ID,
+Contract Start/End Date, Name, Invoice generation, Credit limit, Top up limit, Credit Terms (Days)). The
+old diagnostic helper printed every empty field indiscriminately, optional or not, which is exactly the
+noise that made root-causing this from the log alone impossible. **Root cause is (b): the mandatory
+`Address` textarea was not actually holding a value at submit time** — most likely the same class of
+defect `REPAIR-BR-013` already named for Branch (SHAFT/driver-issued text entry reporting delivered while
+Angular's control stays `ng-pristine`), now confirmed to reach Agency's `Address` field too.
+
+**Finding B — the button itself is not the suspect.** `"Send For Approval"` is a genuine native
+`<button type="submit">` carrying PrimeNG's `pButton` directive (`<button pbutton="" type="submit"
+class="p-element p-buttonp p-button-raised p-button p-component ...">`). This is structurally different
+from the fake-div PrimeNG controls (`p-checkbox`, `p-dropdown`) that made `clickVia`'s synthetic
+`MouseEvent` dispatch necessary for Branch (`REPAIR-BR-010`) — those need it because a driver-issued
+click lands on a wrapper `div`, not the real control. A real `<button>` has no such wrapper problem.
+
+**Decision, made on this evidence:** the new `AddAgency_Page.clickSendForApproval()` uses a **plain
+SHAFT/WebDriver click**, not `clickVia`. `clickVia` (or the equivalent `typeVia` JS-assignment technique
+already proven for Branch text inputs) is reserved for the form's actual PrimeNG dropdown/checkbox
+controls, exactly as Branch already does. The new `AddAgency_Page.fillAddress(...)` must use `typeVia`
+(JS value assignment + `input`/`change` dispatch, per `REPAIR-BR-013`) rather than a plain `sendKeys`,
+and the fixture provisioner explicitly asserts the `Address` textarea's `value` is non-empty **before**
+calling `clickSendForApproval()` — turning a silent submit failure into a named, diagnosable assertion
+failure at the exact step that caused it, instead of a 15-second URL-poll timeout four call frames away.
+
+### 0.3 Fixture strategy — superseded, per-class now (overrides §5.1 below)
+
+**Operator decision, 2026-08-23: each test CLASS gets its own freshly-provisioned Agency and Branch —
+not one Agency shared by all 5 classes/18 tests.** §5.1's "one shared Agency for the whole suite"
+decision is superseded for this reason: under §5.1, `prepareSharedFixture`'s single failure skipped every
+one of the suite's 18 tests, because there was exactly one fixture and every test depended on it. Per-
+class fixtures contain a fixture failure to that one class's tests — the other 4 classes proceed
+normally.
+
+| | §5.1 (superseded) | §0.3 (current) |
+|---|---|---|
+| Fixtures per execution | 1 Branch + 1 Agency | **5 Agencies**, each beneath the class's own fixture call |
+| Branch handling | 1 new Branch | **0 new Branches** — `SupplierBranchProvisioner` already reuses the known, pre-approved `BRN908` read-only (operator instruction, 2026-08-20); this is unchanged by the per-class decision and correctly carried forward from the restored code |
+| Blast radius of a fixture failure | All 18 tests | Only that one class's tests (at most 5) |
+| Permanent STG records per execution | 2 (1 Branch + 1 Agency) | **5** (5 Agencies, 0 new Branches) — cheaper than the original §5.1 estimate implied, not more expensive |
+| Cross-test interference risk (§5.1's rules 1–2 below) | High — explicit reset/ordering required within the shared record | Eliminated **between classes**; still required **within** a class where more than one test shares that class's one Agency |
+
+This trades STG record volume (10 instead of 2, still bounded and one-way per `PO-3`) for eliminating the
+single point of failure that caused the 2026-08-23 rejection. The maker–checker ordering constraint
+(§5.1 rules 1–2, the `Draft → Pending → Reject → Pending → Approve` chain) is unchanged **within**
+`AgencyMakerChecker_TC`'s own class-scoped Agency — it is a same-class concern regardless of which
+fixture scope wins.
+
+**Everywhere below that still describes "the shared Agency" (§5.1) is superseded by this section.** §5.1
+is left in place, unedited, as the record of what was tried and why it failed — not as instruction.
 
 ## 1. Target Framework and Language
 
@@ -52,6 +139,31 @@ future approval. `testng-branch.xml` is left untouched and a separate `testng-ag
 **Standalone-ness (§11D.1): Yes.** The seeded project carries its own `pom.xml`, SHAFT
 `properties/`, `environment.properties`, and TestNG suite, so it compiles and runs alone — which is
 what makes the approval gate a real review rather than a formality.
+
+### 2.1 Architecture Deviations vs. `automation-skill` §8.1 (2026-08-23 addendum)
+
+The current specification's §8.1 names a Maven layout with `AdminPages/`, `Drive_Factory/`,
+`Generic_Classes/`, and `utilities/` as sibling roots under `src/main/java`, and a
+`DBs_Query_Execution/`/`org/example/` pair under `src/test/java`. **The actual, authoritative baseline
+this project was seeded from (`automation_baseline/shaft/tests_SHAFT`, `branch`, Promoted) does not use
+that exact layout** — it uses `AdminPages/Admin/{Module}/` for both Page and Locator-bearing classes
+(locators live as `private static final By` fields inside the Page class itself, not in a separate
+Locator Class per §8.3), `AdminPages/Login/` for auth, and a flat `utilities/` package; there is no
+`Drive_Factory/`, `Generic_Classes/`, `DBs_Query_Execution/`, or `org/example/`. Per §8.13 and §32.5's
+precedence rule ("an approved existing or Reference project architecture takes precedence when
+explicitly documented"), **the baseline's actual convention governs this regeneration** — classified
+`Preserved (approved convention)`. This regeneration does **not** introduce a separate Locator Class per
+Page Class (§8.3's ideal), because doing so for only the newly-generated Agency package while every
+existing Branch class keeps locators inline would leave one module's code shaped differently from every
+other module's in the same Maven project, which is a worse outcome than the deviation itself. This
+deviation is reported here rather than silently corrected or silently followed without comment, per
+§8.13's mandatory-disclosure rule.
+
+**Optional Abstractions (§5, §8.11): None.** No workflow, service, assertion class, Component Object
+package, data factory, builder, adapter, module-specific `BasePage`, or one-method wrapper is generated.
+`Agency_Common` (§5) mirrors `Branch_Common`'s existing, already-precedented role as a shared
+section-helper base class for one module's Page classes — an existing convention being matched, not a
+new layer being introduced.
 
 ## 3. Planned Automation Suites (§10)
 

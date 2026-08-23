@@ -57,14 +57,18 @@ platform_core/templates/
 │                                      # ManualTestResults.csv has no template: its schema is
 │                                      # fixed by manual-execution-skill §9.2
 ├── stage_4a_automation/               # AUTOMATION branch
-│   ├── AutomationPlan.md
-│   ├── AutomationManifest.md
+│   ├── AutomationPlan.md              # incl. Responsibility Map · Optional Abstractions ·
+│   │                                  #       Architecture Deviations (automation-skill §8)
+│   ├── AutomationManifest.md          # incl. Architecture Review §3A (blocking, §15.1)
 │   ├── AutomationDecisionReport.md
 │   ├── AutomationCoverageReport.md
 │   ├── AutomationSuiteManifest.md
 │   ├── StackDocumentationContext.md
 │   ├── AutomationSummary.md
 │   └── AutomationPackages.md          # project-level registry (automation_baseline/)
+│                                      # No TargetWritePlan/SelfReviewReport template yet: both are
+│                                      # declared outputs of automation-skill (§11C.4, §15A) whose
+│                                      # structure still lives in that spec — see the note below.
 ├── stage_5a_execution/
 │   └── ExecutionResults.md
 ├── stage_5h_self_healing/             # OPTIONAL, opt-in only (pipeline.md §3.6)
@@ -96,6 +100,39 @@ Manifest, Decision Report, Coverage Report, Suite Manifest, and Stack Documentat
 into the module; the whole-project `AutomationPackages.md` registry and `AutomationSummary_{FW}.md`
 render into the baseline. That split is the same rule applied to two different scopes, not an
 exception to it.
+
+### Stage 4A and the Java/SHAFT UI Automation Architecture
+
+`automation-skill` §8 defines the platform's mandatory architecture for **Java/SHAFT UI automation**:
+one approved Maven structure — Page Classes and their dedicated Locator Classes under
+`src/main/java/AdminPages/`, the Driver Factory under `src/main/java/Drive_Factory/`, Generic Classes
+and technical utilities under `src/main/java/`, configuration under `src/main/resources/properties/`,
+Test Classes under `src/test/java/AdminPages/`, shared fixtures under `src/test/java/utilities/`, and
+JSON test data under `src/test/resources/`. Four consequences for the templates in this folder:
+
+1. **Every file-level row carries its responsibility area** — Page · Locator · Test · Fixture ·
+   Driver · Generic · Utility · Data · Config. `AutomationManifest.md` §1, `AutomationSummary.md` §2,
+   and `AutomationSuiteManifest.md` §3 all require it; a blank area is an inventory defect, not an
+   acceptable omission.
+2. **`AutomationPlan.md` plans the architecture rather than inventing one** — §3 states the approved
+   structure by reference, §3A is the Responsibility Map, §3B lists Optional Abstractions with their
+   §8.11 justification, and §3C records Architecture Deviations with their §8.13 classification.
+3. **`AutomationManifest.md` §3A is the blocking Architecture Review** (§15.1) — 22 named conditions,
+   six recorded fields per violation, and no `Passed` verdict while an unapproved violation remains.
+4. **No template requires an empty section for an optional layer.** Workflows, services, assertion
+   classes, Component Object packages, adapters, builders, and data factories appear in a rendered
+   artifact only when one was actually used and justified (§8.11). `Shared Components` is the one
+   legacy row kept, and it renders as `None — §8.11` unless justified in the Plan's §3B.
+
+For a **non-Java/SHAFT-UI** package (API, mobile, messaging, batch, cloud, or a framework with its
+own explicitly approved structure), the same templates are used with that stack's own areas: §8.1's
+folders are never forced onto another system shape (§8.12), and an Architecture Review condition with
+no meaning for the shape is recorded `Not applicable` rather than dropped.
+
+**Two of `automation-skill`'s declared outputs have no template here yet** — the Target Write Plan
+(§11C.4) and the Self Review Report (§15A). Their structure is specified inline in that skill, and
+the Architecture Review's detail is carried by `AutomationManifest.md` §3A. This is a known,
+pre-existing gap in the template set, recorded here rather than left to be rediscovered.
 
 `metadata/` follows the same naming rule but is not a stage: it holds the run-wide artifacts every run
 has (`runs/{{RUN_FOLDER}}/metadata/`). `run.json` and `run_summary.md` have no template here because

@@ -45,7 +45,7 @@ public class AgencyUpdateValidation_TC extends AgencyTestBase {
      */
     @Test(priority = 60, description = "TC-AGENCY-002 Mandatory Agency Master fields block submission when cleared")
     public void tc002_mandatoryAgencyMasterFieldsShowRequired() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         assertClearingShowsRequired(form, "Agency", form.agencyName(),
                 () -> form.clearAgencyName(), form::agencyNameValidationShown,
@@ -83,7 +83,7 @@ public class AgencyUpdateValidation_TC extends AgencyTestBase {
      */
     @Test(priority = 70, description = "TC-AGENCY-021 Contract dates block submission when cleared")
     public void tc021_contractDatesShowRequiredWhenCleared() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         String originalStart = form.contractStartDate();
         form.setContractStartDate("");
@@ -116,7 +116,7 @@ public class AgencyUpdateValidation_TC extends AgencyTestBase {
      */
     @Test(priority = 80, description = "TC-AGENCY-037 Payment option blocks submission when none is selected")
     public void tc037_paymentOptionRequiredWhenNoneSelected() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         boolean cashWasChecked = form.isPaymentOptionCashChecked();
         boolean walletWasChecked = form.isPaymentOptionWalletChecked();
@@ -145,7 +145,7 @@ public class AgencyUpdateValidation_TC extends AgencyTestBase {
 
         // Restore whatever was selected before, so no later case inherits an agency with no payment
         // option -- which would make its own submission fail for this case's reason.
-        UpdateAgency_Page restore = openUpdateForm();
+        UpdateAgency_Page restore = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         if (cashWasChecked && !restore.isPaymentOptionCashChecked()) {
             restore.togglePaymentOptionCash();
         }

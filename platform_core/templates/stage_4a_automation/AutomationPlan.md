@@ -11,6 +11,11 @@ before any other artifact in this stage.
 HARD RULE (§34.4): a run against a pinned-version stack with ZERO Context7 queries performed and NO
 recorded documentation gap is an INCOMPLETE Automation Plan — the same standard §7 applies to an
 unjustified framework choice.
+
+HARD RULE (§8): for JAVA/SHAFT UI automation the Project Architecture is NOT an open choice — it is
+§8.1's approved Maven structure, stated by reference, never re-derived. Sections 3A/3B/3C below are
+mandatory for that framework. An Optional Abstraction listed with NO justification is an INCOMPLETE
+Automation Plan, held to the same standard §7 applies to an unjustified framework choice.
 -->
 
 # Automation Plan — {{FRAMEWORK}} — {{RUN_FOLDER}}
@@ -44,14 +49,79 @@ unjustified framework choice.
 
 ## 3. Project Architecture
 
-<!-- The overall structure of the automation project — e.g. Page Object Model with a shared
-     driver/session layer, or the equivalent pattern for the selected framework. -->
+<!-- §5 / §8. For JAVA/SHAFT UI: state `§8.1 approved Maven structure` — do NOT re-derive a layout,
+     and do NOT substitute generic root packages (pages/ locators/ tests/ fixtures/ workflows/
+     assertions/ services/ data/), which §8.1 prohibits. For any other framework or system shape,
+     state that stack's own approved structure; §8.1 is NEVER forced onto API, mobile, messaging,
+     batch, or cloud automation (§8.12). An explicitly documented approved existing or Reference
+     project architecture takes precedence, and the difference is recorded in §3C. -->
 
 {{PROJECT_ARCHITECTURE}}
 
+**Java/SHAFT UI responsibility areas (§8.1)** — omit this table entirely for a non-Java/SHAFT-UI package:
+
+| Area | Path | Holds |
+|---|---|---|
+| Page Classes | `src/main/java/AdminPages/` | one class per page/screen; actions, state-reading, waits, navigation (§8.2) |
+| Locator Classes | `src/main/java/AdminPages/` | one per Page Class, same package; locator definitions only (§8.3) |
+| Driver Factory | `src/main/java/Drive_Factory/` | driver init, browser config, lifecycle — reused, never re-created (§8.7) |
+| Generic Classes | `src/main/java/Generic_Classes/` | project-wide, single-responsibility only (§8.8) |
+| Utilities | `src/main/java/utilities/` | cohesive technical utilities (§8.9) |
+| Configuration | `src/main/resources/properties/` | configuration; never a credential value |
+| Test Classes | `src/test/java/AdminPages/` | readable flow, page calls, assertions, traceability (§8.4) |
+| DB query execution | `src/test/java/DBs_Query_Execution/` | authorized database query execution |
+| Shared fixtures | `src/test/java/utilities/` | setup and cleanup only (§8.5) |
+| JSON test data | `src/test/resources/` | by module/business scope; no secrets (§8.6) |
+
+## 3A. Responsibility Map
+
+<!-- §5 — EVERY asset this plan intends to create or modify, with the §8.1 responsibility area it
+     belongs to and its target path. An asset with NO stated area is an INCOMPLETE plan field.
+     A [Test] path under src/main, or a [Page]/[Locator] path under src/test, is a §15.1 BLOCKING
+     violation this plan must not carry to the gate. -->
+
+| Asset | Responsibility Area | Target Path | Create / Modify / Reuse |
+|---|---|---|---|
+| {{ASSET}} | {{AREA}} <!-- Page / Locator / Test / Fixture / Driver / Generic / Utility / Data / Config --> | `{{TARGET_PATH}}` | {{OPERATION}} |
+
+## 3B. Optional Abstractions
+
+<!-- §8.11 — every abstraction OUTSIDE §8.1's default areas. Workflows, services, assertion classes,
+     Component Object packages, data factories, builders, technical adapters, module-specific
+     BasePage classes, and one-method wrappers are NEVER default layers.
+
+     Each row needs ALL FOUR justification columns. POSSIBLE FUTURE REUSE IS NOT A JUSTIFICATION.
+     NO EMPTY FOLDER is created for an optional abstraction.
+
+     Where none are proposed, keep this section and write `None` — do NOT omit it, and do NOT
+     pre-create rows for abstractions that were not actually used. -->
+
+| Abstraction | Ground (existing/Reference requirement · proven duplication, named) | Why maintenance is simpler | Why it fits nowhere in §8.1 | Approved by |
+|---|---|---|---|---|
+| {{ABSTRACTION}} | {{GROUND}} | {{MAINTENANCE_BENEFIT}} | {{WHY_NO_HOME}} | {{APPROVER}} |
+
+**Optional abstractions proposed:** {{OPTIONAL_ABSTRACTION_COUNT}} <!-- `None` when zero -->
+
+## 3C. Architecture Deviations
+
+<!-- §8.13 — BROWNFIELD ONLY. Every place the authoritative existing structure differs from
+     §8.1–§8.11, or where an approved existing/Reference architecture takes precedence over §8.1.
+
+     REPORTING IS MANDATORY; REFACTORING IS NOT AUTHORIZED BY IT. A structural move is proposed in
+     the Target Write Plan (§11C.4) and approved file by file. Never a silent refactor, never a
+     silent omission, and never new complexity added because similar complexity already exists.
+
+     Omit this section only for a genuinely greenfield package. -->
+
+| Deviation | Where | Classification | Note |
+|---|---|---|---|
+| {{DEVIATION}} | `{{LOCATION}}` | {{CLASSIFICATION}} <!-- Preserved (approved convention) / Correction proposed in Target Write Plan / Reported, no action --> | {{NOTE}} |
+
 ## 4. Design Pattern
 
-<!-- The specific pattern(s) in use — e.g. Page Object Model, Screenplay, Fixture-based composition. -->
+<!-- The specific pattern(s) in use. For JAVA/SHAFT UI this is fixed: Page Class + dedicated Locator
+     Class + Test Class + Fixture + JSON test data (§8.2–§8.6) — assertions in the Test Class, state
+     reading on the Page Class, no assertion class and no workflow/service class (§8.11). -->
 
 {{DESIGN_PATTERN}}
 
@@ -63,9 +133,21 @@ unjustified framework choice.
      not be produced. The workflow, not the screen, is the organizing unit.
      Good: Login Suite · Employee Suite · Leave Suite · Recruitment Suite -->
 
-| Suite | Business Workflow | Test Case IDs | Shared Setup | Shared Teardown | Shared Fixtures | Shared Components | Shared Utilities | Shared Test Data |
+| Suite | Business Workflow | Test Case IDs | Shared Setup | Shared Teardown | Shared Fixtures | Shared Utilities | Shared Test Data | Shared Components |
 |---|---|---|---|---|---|---|---|---|
-| {{SUITE}} | {{WORKFLOW}} | {{TEST_CASE_IDS}} | {{SETUP}} | {{TEARDOWN}} | {{FIXTURES}} | {{COMPONENTS}} | {{UTILITIES}} | {{TEST_DATA}} |
+| {{SUITE}} | {{WORKFLOW}} | {{TEST_CASE_IDS}} | {{SETUP}} | {{TEARDOWN}} | {{FIXTURES}} | {{UTILITIES}} | {{TEST_DATA}} | {{COMPONENTS}} |
+
+<!-- §10 / §8 — A SUITE IS A LOGICAL GROUPING, NOT A FOLDER LAYER AND NOT A CLASS. For Java/SHAFT it
+     is expressed as TestNG groups and a <test> block in testng.xml — NEVER a workflows/ or services/
+     package, and never a Workflow/Service class orchestrating page calls (§8.1, §8.11). Test Classes
+     stay organized by application area and module (§8.4).
+
+     Where each element actually lives, Java/SHAFT UI:
+       Shared Setup / Teardown / Fixtures -> src/test/java/utilities/      (§8.5)
+       Shared Utilities                   -> src/main/java/utilities/ or Generic_Classes/ (§8.9, §8.8)
+       Shared Test Data                   -> src/test/resources/{module}/  (§8.6)
+       Shared Components                  -> NOT A DEFAULT LAYER. Write `None — §8.11` unless a
+                                             Component Object is justified in the Plan's §3B. -->
 
 ## 6. Existing Assets
 

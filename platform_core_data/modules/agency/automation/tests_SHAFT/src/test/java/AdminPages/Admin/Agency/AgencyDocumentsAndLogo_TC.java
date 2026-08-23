@@ -3,6 +3,7 @@ package AdminPages.Admin.Agency;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utilities.AgencyDataFactory;
+import utilities.AgencyFixture;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class AgencyDocumentsAndLogo_TC extends AgencyTestBase {
      */
     @Test(priority = 90, description = "TC-AGENCY-016 Upload a valid PDF document with contract dates")
     public void tc016_uploadValidPdfWithContractDates() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         String startDate = "01/01/2026";
         String endDate = "31/12/2027";
@@ -45,7 +46,7 @@ public class AgencyDocumentsAndLogo_TC extends AgencyTestBase {
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-016 valid PDF upload"))
                 .clickSendForApproval();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         List<String> displayedNames = reopened.uploadedFileNames();
         System.out.println("[TC-016] displayed uploaded-file labels = " + displayedNames);
 
@@ -78,7 +79,7 @@ public class AgencyDocumentsAndLogo_TC extends AgencyTestBase {
     @Test(priority = 100, description = "TC-AGENCY-020 File named .pdf with non-PDF content is rejected",
             enabled = false)
     public void tc020_fakePdfExtensionIsRejected() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         form.attachDocument(AgencyFixture.fakeExtensionDocumentPath())
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-020 fake .pdf content"))
@@ -108,7 +109,7 @@ public class AgencyDocumentsAndLogo_TC extends AgencyTestBase {
      */
     @Test(priority = 110, description = "TC-AGENCY-022 Upload a valid agency logo")
     public void tc022_uploadValidLogo() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         form.attachLogo(AgencyFixture.validLogoPath());
 
@@ -118,7 +119,7 @@ public class AgencyDocumentsAndLogo_TC extends AgencyTestBase {
         form.setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-022 valid logo upload"))
                 .clickSendForApproval();
 
-        UpdateAgency_Page reopened = openUpdateForm();
+        UpdateAgency_Page reopened = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
         boolean previewAfterReopen = reopened.isLogoPreviewVisible();
         System.out.println("[TC-022] logo preview visible after reopening = " + previewAfterReopen);
 
@@ -143,7 +144,7 @@ public class AgencyDocumentsAndLogo_TC extends AgencyTestBase {
      */
     @Test(priority = 120, description = "TC-AGENCY-023 Logo larger than 2 MB is rejected")
     public void tc023_oversizeLogoIsRejected() {
-        UpdateAgency_Page form = openUpdateForm();
+        UpdateAgency_Page form = new SearchAgency_Page(driver).open().searchByCode(agencyCode).clickEditPen(agencyCode);
 
         form.attachLogo(AgencyFixture.oversizeLogoPath())
                 .setRemarks(AgencyDataFactory.uniqueRemarks("TC-AGENCY-023 oversize logo"))

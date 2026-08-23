@@ -5,7 +5,7 @@
   "status": "Active",
   "derivedFromSections": [],
   "createdAt": "2026-07-31T08:55:57.892Z",
-  "updatedAt": "2026-08-18T12:54:32.802Z",
+  "updatedAt": "2026-08-23T12:20:03.893Z",
   "supersededBy": null,
   "stages": {
     "context": {
@@ -33,11 +33,11 @@
       "targetRefAtWrite": null
     },
     "automation": {
-      "status": "Not Started",
+      "status": "Pending Automation Approval",
       "artifactPath": null,
       "lastRun": null,
-      "lastUpdated": null,
-      "revisionCount": 0,
+      "lastUpdated": "2026-08-23T12:20:03.893Z",
+      "revisionCount": 2,
       "targetRefAtWrite": null
     },
     "healing": {

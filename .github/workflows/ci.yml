@@ -12,12 +12,12 @@ name: CI
 on:
   push:
     branches:
-      - tool-development
+      - tool-development-Project-agnostic-agentic-workflow
       - platform-testing
       - 'feature/**'
   pull_request:
     branches:
-      - tool-development
+      - tool-development-Project-agnostic-agentic-workflow
       - platform-testing
   workflow_dispatch:
 

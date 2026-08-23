@@ -54,7 +54,23 @@
 
 const fs = require('fs');
 const path = require('path');
-const { chromium } = require('playwright');
+// Playwright is a peer tool, not a runtime dependency of this package (the platform ships
+// dependency-free — see .github/workflows/ci.yml). Resolved lazily for the same reason the roots
+// below are: requiring this module must never throw on a machine that has not installed it. The
+// error surfaces when a browser is actually launched, and says what to install.
+function chromium() {
+  try {
+    return require("playwright").chromium;
+  } catch {
+    const err = new Error(
+      "Playwright is not installed. Launching a browser needs it: run `npm i -D playwright` " +
+      "and `npx playwright install chromium`. The platform itself ships dependency-free, so " +
+      "Playwright is installed only on a machine that actually drives a browser."
+    );
+    err.code = "PLAYWRIGHT_NOT_INSTALLED";
+    throw err;
+  }
+}
 
 // Roots come from platform_paths, never from this file's own location: once the platform is
 // installed inside a host project, `__dirname/../../..` is the host's repository, not the tool
@@ -183,7 +199,7 @@ async function launchAuthenticated({ env, credentialsPath, headless, stage } = {
       ? stageDefault
       : !!browserSettings.headless;
 
-  const browser = await chromium.launch({
+  const browser = await chromium().launch({
     channel: browserSettings.channel || 'chrome',
     headless: isHeadless,
   });

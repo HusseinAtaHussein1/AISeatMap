@@ -13,8 +13,18 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGE_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+# These paths are handed to node, which on Windows is a native program: it cannot resolve the
+# /c/... form Git Bash's `pwd` reports. `pwd -W` gives it C:/... instead. A no-op elsewhere.
+abspath() (
+  cd "$1" || exit 1
+  case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) pwd -W ;;
+    *) pwd ;;
+  esac
+)
+
+SCRIPT_DIR="$(abspath "$(dirname "${BASH_SOURCE[0]}")")"
+PACKAGE_ROOT="$(abspath "${SCRIPT_DIR}/..")"
 CLI="${PACKAGE_ROOT}/bin/agentic-testing.js"
 
 if ! command -v node >/dev/null 2>&1; then
@@ -44,7 +54,7 @@ for arg in "$@"; do
     *)  if [ -z "${TARGET}" ]; then TARGET="${arg}"; else PASSTHROUGH+=("${arg}"); fi ;;
   esac
 done
-if [ -z "${TARGET}" ]; then TARGET="$(pwd)"; fi
+if [ -z "${TARGET}" ]; then TARGET="$(abspath .)"; fi
 
 echo "Platform:  ${PACKAGE_ROOT}"
 echo "Target:    ${TARGET}"

@@ -117,7 +117,13 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: node scripts/verifyPackable.js
 
-      # `npm run test:e2e` is deliberately NOT wired in yet. It performs a real install into a
-      # throwaway target and is worth having, but scripts/e2e/verify-install.sh still asserts
-      # "7 skills installed" while the platform ships 8 — so it would fail for a reason unrelated
-      # to whatever change triggered the run. Add it here once that assertion is corrected.
+      # The full install E2E: pack the real tarball, install it into a Playwright app, a Maven/SHAFT
+      # app and a greenfield repo, and assert the target project comes out untouched. It packs the
+      # package itself, so it belongs here rather than in the test job.
+      - name: Verify a real install end to end
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          # The installer commits inside the tool folder it creates, and a runner has no identity.
+          git config --global user.email "ci@example.com"
+          git config --global user.name "CI"
+          npm run test:e2e

@@ -14,6 +14,32 @@ check(){ if eval "$2"; then ok "$1"; else bad "$1"; fi }
 
 rm -rf "$WORK"; mkdir -p "$WORK"
 
+# Absolute from here on. run_install() cd's into the target project before invoking the CLI, so a
+# relative $WORK would re-resolve against that project and the packed CLI would not be found.
+# On Git Bash/MSYS `pwd` reports /c/..., which npm and node cannot resolve because they are
+# native Windows programs. `pwd -W` gives them C:/... instead. Same accommodation as the
+# `tar --force-local` below, and a no-op everywhere else.
+abspath() (
+  cd "$1" || exit 1
+  case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) pwd -W ;;
+    *) pwd ;;
+  esac
+)
+WORK="$(abspath "$WORK")"
+REPO="$(abspath "$REPO")"
+
+# The skill set is read from the repo under test, never hardcoded. A literal count goes stale the
+# moment a skill is added or renamed, and a stale assertion is worse than none: it then fails for
+# a reason unrelated to whatever change triggered the run. Names, not a count — a count cannot
+# tell a renamed skill from a correctly installed one.
+SKILLS="$(ls "$REPO/.claude/skills" | sort | tr '\n' ' ')"
+SKILL_COUNT="$(ls "$REPO/.claude/skills" | wc -l)"
+if [ "$SKILL_COUNT" -eq 0 ]; then
+  echo "  FAIL: $REPO/.claude/skills is empty — there is nothing to verify against"; exit 1
+fi
+echo "Verifying against $SKILL_COUNT skills: $SKILLS"
+
 # Fixtures first: make-fixtures.sh rm -rf's its own base dir, so building it after unpacking the
 # package would delete the package.
 bash "$(dirname "$0")/make-fixtures.sh" "$WORK/fixtures" >/dev/null 2>&1
@@ -36,7 +62,7 @@ mkdir -p "$WORK/pkg"
 tar --force-local -xzf "$WORK/$TARBALL" -C "$WORK/pkg"
 PKG="$WORK/pkg/package"
 check "the package contains bin/agentic-testing.js"        "[ -f '$PKG/bin/agentic-testing.js' ]"
-check "the package contains all 7 skills"                  "[ \$(ls '$PKG/.claude/skills' | wc -l) -eq 7 ]"
+check "the package contains every skill ($SKILL_COUNT)"    "[ \"\$(ls '$PKG/.claude/skills' | sort | tr '\n' ' ')\" = \"\$SKILLS\" ]"
 check "the package contains platform_core/tools"           "[ -d '$PKG/platform_core/tools' ]"
 check "the package contains the pipeline spec"             "[ -f '$PKG/workflows_and_pipelines/pipeline/pipeline.md' ]"
 check "the package contains Platform Knowledge patterns"   "[ -d '$PKG/platform_core/knowledge/patterns' ]"
@@ -80,7 +106,7 @@ check "pipeline spec copied"                      "[ -f '$APP/agentic-testing-to
 check "blank PRD scaffolded"                      "[ -f '$APP/agentic-testing-tool/platform_core_data/knowledge_base/PRD.md' ]"
 check "runs shape scaffolded"                     "[ -d '$APP/agentic-testing-tool/platform_core_data/runs' ]"
 check "Platform Knowledge installed"              "[ -d '$APP/agentic-testing-tool/platform_core/knowledge/patterns' ]"
-check "7 skills installed for Claude Code"        "[ \$(ls '$APP/.claude/skills' | wc -l) -eq 7 ]"
+check "every skill installed for Claude Code ($SKILL_COUNT)" "[ \"\$(ls '$APP/.claude/skills' | sort | tr '\n' ' ')\" = \"\$SKILLS\" ]"
 check ".mcp.json created"                         "[ -f '$APP/.mcp.json' ]"
 check "tool folder has its own git repo"          "[ -d '$APP/agentic-testing-tool/.git' ]"
 

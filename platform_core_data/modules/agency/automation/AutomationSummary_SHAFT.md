@@ -37,6 +37,12 @@ Generated a standalone, compiling SHAFT automation package for the `agency` modu
 dual-approved cases from `TestCases_Agency.md` revision 3 — 3,703 lines of Java across 16 new files, plus
 a module-scoped suite file, externalised baseline data, and four synthetic upload fixtures.
 
+> **Correction, 2026-08-24.** TC-AGENCY-055 was rejected by explicit operator direction after Stage 5A's
+> execution found no corresponding `@Test` method had ever been generated for it, despite being counted
+> among the 18 above and among the "16 fully automated" in §2. Current scope is **17**. See
+> `AutomationCoverageReport_SHAFT.md` §1–§2 and `AutomationDecisionReport_SHAFT.md` §1 for the corrected
+> figures, and `ExecutionResults.md` (this run's `execution/` folder) for how the gap was found.
+
 Before any code was written: the target root was resolved by tool, the project was seeded from the promoted
 baseline via `copy-in`, both knowledge bases were read, the stack was detected from `pom.xml`, **49 locators
 were verified live and headless against the running application**, and the Automation Plan was written and
@@ -49,8 +55,8 @@ approved.
 | | |
 |---|---|
 | Cases in the approved Stage 3 suite | 60 |
-| Dual-approved (`Review` **and** `Automation` = Approved) | **18** |
-| Fully automated | **16** (89%) |
+| Dual-approved (`Review` **and** `Automation` = Approved) | **17** *(18 at generation time; TC-AGENCY-055 rejected 2026-08-24, see §1 correction)* |
+| Fully automated | **15** (88%) *(was reported 16/89% at generation time — TC-AGENCY-055 was miscounted here, see §1)* |
 | Partially automated | 2 — TC-AGENCY-002, TC-AGENCY-059 |
 | Not automated | 0 |
 
@@ -96,7 +102,9 @@ enumerated with **zero non-GET requests issued** — proof the pass was read-onl
 
 **TC-AGENCY-055 was unblocked rather than deferred.** The PCC section renders on no ordinary agency; five
 were scanned read-only until `AGN9767` rendered it, confirming `#id-ManagerName` visible, **read-only**, and
-carrying an inherited value — exactly as FINDING-009 predicted.
+carrying an inherited value — exactly as FINDING-009 predicted. *(Historical note: despite this successful
+locator verification, no `@Test` method was ever written to use it — see the §1 correction. The case is
+now `Rejected` in `TestCases_Agency.md` and out of scope.)*
 
 ## 5. Risks and Limitations
 

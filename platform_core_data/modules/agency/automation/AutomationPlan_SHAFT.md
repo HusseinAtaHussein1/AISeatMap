@@ -270,12 +270,18 @@ instead of pre-emptively.
 
 ## 6. Estimated Automation Coverage — before generation
 
-Scope is the **18 dual-approved cases** (`Review = Approved` **and** `Automation = Approved`). The other
-42 are out of scope by recorded human decision, not by omission.
+Scope was the **18 dual-approved cases** (`Review = Approved` **and** `Automation = Approved`) at the time
+this Plan was written. The other 42 were out of scope by recorded human decision, not by omission.
+
+> **Correction, 2026-08-24.** TC-AGENCY-055 was rejected by explicit operator direction after Stage 5A's
+> execution found no `@Test` method had ever been generated for it, despite this Plan projecting it below.
+> Current scope is **17**; see `AutomationCoverageReport_SHAFT.md` §1 for the corrected arithmetic. This
+> section is left as originally written — a projection, not restated to match the outcome (§6's own stated
+> discipline, carried through consistently by this correction).
 
 | Projected decision | Count | Cases |
 |---|---|---|
-| **Generate New Automation** | **17** | TC-001, 002, 011, 012, 016, 020, 021, 022, 023, 037, 044, 047, 048, 049, 050, 053, **055** |
+| **Generate New Automation** | **17** | TC-001, 002, 011, 012, 016, 020, 021, 022, 023, 037, 044, 047, 048, 049, 050, 053, **055** *(rejected 2026-08-24 — see correction above)* |
 | **Reuse Existing Automation** | 0 | No existing Agency automation exists to reuse |
 | **Partially Automatable** | 1 | TC-059 — see §8 |
 | **Manual Only** | 0 | — |

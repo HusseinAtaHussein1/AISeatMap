@@ -11,7 +11,7 @@ has to interpret prose.
 | Project root | `platform_core_data/modules/agency/automation/tests_SHAFT` |
 | Module state | `Generated` |
 | Framework | SHAFT Engine 7.4.20231015 · Java 17 · TestNG · Allure |
-| Test count | 18 |
+| Test count | 17 *(was stated 18; TC-AGENCY-055 rejected 2026-08-24 — never had a generated `@Test` method, see §5)* |
 | Build verified | `mvn -o test-compile` clean |
 | **Executed by Stage 4A?** | **No — never.** Stage 4A generates only |
 
@@ -38,7 +38,7 @@ for the next run.
 
 | Priority | Class | Tests |
 |---|---|---|
-| 5–6 | `AgencyInheritanceAndReadOnly_TC` | TC-055, 059 |
+| 6 | `AgencyInheritanceAndReadOnly_TC` | TC-059 *(priority 5, TC-055, was listed here but no `@Test` method was ever generated — rejected 2026-08-24)* |
 | 10–50 | `AgencyUpdatePersistence_TC` | TC-001, 011, 012, 044, 053 |
 | 60–80 | `AgencyUpdateValidation_TC` | TC-002, 021, 037 |
 | 90–120 | `AgencyDocumentsAndLogo_TC` | TC-016, 020, 022, 023 |
@@ -72,9 +72,13 @@ retrying it 17 more times and littering the environment with partial records.
 |---|---|---|
 | TC-AGENCY-020 | **Likely FAIL** | The document input has no `accept` attribute. The failure **is the finding** — do not repair it into a pass |
 | TC-AGENCY-023 | **Possible FAIL** | The 2 MB limit is unverified (ASM-009). Record the observed threshold |
-| TC-AGENCY-055 | **Possible SKIP** | PCC section absent (FINDING-008). The skip message names the fixture's suppliers |
 | TC-AGENCY-048 | **Possible SKIP** | A rejected Agency may not be resubmittable — §5.1's recorded assumption |
 | TC-AGENCY-050 | **Possible SKIP** | Same cause as TC-048 |
+
+**TC-AGENCY-055, previously listed here as Possible SKIP, was rejected 2026-08-24** by explicit operator
+direction after Stage 5A's execution found no `@Test` method had ever been generated for it — it was never
+in the runnable suite to begin with, under any Execution Mode. Row removed; see
+`AutomationCoverageReport_SHAFT.md` §1 for the corrected scope.
 
 A `SkipException` here carries a **named blocked precondition**. Record it as `Blocked`, never as `Failed`
 and never as `Passed`.

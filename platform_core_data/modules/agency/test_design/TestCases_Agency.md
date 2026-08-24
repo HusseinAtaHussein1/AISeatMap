@@ -154,7 +154,7 @@ committed location is still open — see the Coverage Report's Recommendations.
 | TC-AGENCY-052 | Changing Branch re-inherits dependent values | Atomic | P2 | Atomic, OutOfScope | Rejected | Rejected |
 | TC-AGENCY-053 | Agency name accepts a space between words | Atomic | P1 | Atomic, Regression | Approved | Approved |
 | TC-AGENCY-054 | PCC section is removed when the Product Access supplier is deselected | Atomic | P2 | Atomic, Regression | Rejected | Rejected |
-| TC-AGENCY-055 | Manager Name shows the supplier's value and cannot be edited | Atomic | P2 | Atomic, Regression | Approved | Approved |
+| TC-AGENCY-055 | Manager Name shows the supplier's value and cannot be edited | Atomic | P2 | Atomic, Regression | Rejected | Rejected |
 | TC-AGENCY-056 | Generic supplier credentials (PCC) blocks submission when cleared | Atomic | P2 | Atomic, Negative-EmptyValues | Approved | Rejected |
 | TC-AGENCY-057 | Supplier Credentials Description change persists | Atomic | P3 | Atomic | Approved | Rejected |
 | TC-AGENCY-058 | Credit limit shows the numeric format message for alphabetic input | Atomic | P2 | Atomic, Negative-InvalidInputs, Regression | Approved | Rejected |
@@ -1692,11 +1692,11 @@ resolution in the Coverage Report §11.
 
 **Tags:** Atomic, Regression
 
-**Notes:** **New 2026-08-18 (FINDING-009).** AC-9 lists `Manager Name` as Mandatory and specifies the message *"Please enter a valid Manager Name."*. run-004 established the field is **read-only** and inherited: the value is authored in `Master → Supplier → Supplier` and displayed here. **AC-9's Manager Name validation is therefore not an Agency test case** — this is an inheritance assertion instead, and no validation case is designed for that message. If Supplier CRUD is ever brought into scope, the message is tested there. One cosmetic question stays open and is deliberately **not** asserted: the field carries a mandatory asterisk although nobody can fill it. That is recorded as a low-priority observation, not a failure condition for this case. Step 2 needs the supplier master's value, which is read from the `master-supplier` module's record — reading it is in scope; changing it is not.
+**Notes:** **New 2026-08-18 (FINDING-009).** AC-9 lists `Manager Name` as Mandatory and specifies the message *"Please enter a valid Manager Name."*. run-004 established the field is **read-only** and inherited: the value is authored in `Master → Supplier → Supplier` and displayed here. **AC-9's Manager Name validation is therefore not an Agency test case** — this is an inheritance assertion instead, and no validation case is designed for that message. If Supplier CRUD is ever brought into scope, the message is tested there. One cosmetic question stays open and is deliberately **not** asserted: the field carries a mandatory asterisk although nobody can fill it. That is recorded as a low-priority observation, not a failure condition for this case. Step 2 needs the supplier master's value, which is read from the `master-supplier` module's record — reading it is in scope; changing it is not. **Rejected 2026-08-24 by explicit operator direction: no longer needed for this run.** No automation exists for this case — Stage 4A's suite documented it in a Javadoc block but never implemented an `@Test` method for it (found during Stage 5A execution, `ExecutionResults.md`) — so this decision retires a documented gap rather than a working asset.
 
-**Review:** Approved
+**Review:** Rejected
 
-**Automation:** Approved
+**Automation:** Rejected
 
 ### TC-AGENCY-056 — Generic supplier credentials (PCC) blocks submission when cleared
 

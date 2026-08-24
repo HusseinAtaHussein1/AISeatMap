@@ -7,17 +7,22 @@
 | Manual Test Suite | `TestCases_Agency.md` revision 3, **Approved** — 60 cases |
 | Written | 2026-08-18 |
 
-## 1. Scope Arithmetic — how 60 cases become 18
+## 1. Scope Arithmetic — how 60 cases become 17
+
+> **Correction, 2026-08-24.** This section originally read 18 at generation time (2026-08-18). TC-AGENCY-055
+> was rejected by explicit operator direction after Stage 5A's execution found it had no generated `@Test`
+> method — see §2 and §4. The arithmetic below reflects the **current** scope, 17; the historical figure of
+> 18 no longer applies.
 
 | Step | Count | Note |
 |---|---|---|
 | Cases in the approved Stage 3 suite | 60 | revision 3 |
-| Less `Review = Rejected` | −27 | Recorded human decisions |
+| Less `Review = Rejected` | −28 | Recorded human decisions (27 at generation time; +1, TC-AGENCY-055, rejected 2026-08-24) |
 | Less not-`Automation = Approved` where `Review = Approved` | −15 | 14 `Rejected` + 1 `Pending` — deliberately manual, or undecided |
-| **Dual-approved — this stage's scope** | **18** | `Review = Approved` AND `Automation = Approved` |
+| **Dual-approved — this stage's scope** | **17** | `Review = Approved` AND `Automation = Approved` |
 
-Suite-wide lifecycle tallies: `Review` 33 Approved / 27 Rejected / 0 Pending · `Automation` 18 Approved /
-41 Rejected / 1 Pending.
+Suite-wide lifecycle tallies: `Review` 32 Approved / 28 Rejected / 0 Pending · `Automation` 17 Approved /
+42 Rejected / 1 Pending.
 
 **The 42 excluded cases are not coverage gaps and are never reported as such.** `Automation = Rejected`
 means a human decided the case stays manual; `Pending` means nobody has decided yet. This stage does not
@@ -25,17 +30,22 @@ chase, question, or advance either lifecycle value (§6.3.1) — only a human ma
 
 ## 2. Automation Coverage of the In-Scope Set
 
-| Category | Count | % of 18 |
+| Category | Count | % of 17 |
 |---|---|---|
-| **Fully automated** | **16** | **89%** |
-| **Partially automated** | 2 | 11% |
+| **Fully automated** | **15** | **88%** |
+| **Partially automated** | 2 | 12% |
 | Not automated | 0 | 0% |
 | Blocked | 0 | 0% |
 
+*(At generation time, against a scope of 18 that still included TC-AGENCY-055: 16 fully / 2 partial / 89%.
+TC-AGENCY-055 was counted as fully automated then, which was itself inaccurate — no `@Test` method for it
+was ever generated, discovered only by Stage 5A's execution on 2026-08-24. Its removal from scope corrects
+both the count and the earlier overstatement in the same step.)*
+
 **This is one case short of the Plan's projection** of 17 fully / 1 partial / 0 blocked — 94% projected
-against 89% delivered. The difference is TC-AGENCY-002, **downgraded** from fully to partially automated
-while the test was being written: two of its six mandatory fields turned out to be PrimeNG dropdowns with no
-verified clear affordance.
+against 89% delivered at generation time (18-case scope). The difference is TC-AGENCY-002, **downgraded**
+from fully to partially automated while the test was being written: two of its six mandatory fields turned
+out to be PrimeNG dropdowns with no verified clear affordance.
 
 The projection is not being quietly restated to match the outcome. A plan that promised 17 and delivered 16
 should say so, because the alternative — faking the two dropdown clears to keep the number — would have
@@ -73,12 +83,12 @@ hand and confirm each renders `Required`.
 
 | Suite | Tests | Cases |
 |---|---|---|
-| Inheritance & Read-only | 2 | TC-055, 059 |
+| Inheritance & Read-only | 1 | TC-059 *(TC-055 rejected 2026-08-24 — never generated, see §1)* |
 | Field Persistence | 5 | TC-001, 011, 012, 044, 053 |
 | Validation | 3 | TC-002, 021, 037 |
 | Documents & Logo | 4 | TC-016, 020, 022, 023 |
 | Maker–Checker | 4 | TC-047, 049, 048, 050 |
-| **Total** | **18** | |
+| **Total** | **17** | |
 
 ## 5. Tests Expected to Fail — by design, and they must not be "fixed"
 
@@ -97,7 +107,6 @@ Both failure messages state this in the code itself, so Stage 5A records a defec
 
 | Test | Skips when | Named cause |
 |---|---|---|
-| TC-AGENCY-055 | The PCC section does not render | FINDING-008 — the parent Branch's suppliers lack credentials. The message prints the fixture's actual supplier list |
 | TC-AGENCY-048 | The rejected Agency offers no `Send For Approval` | Automation Plan §5.1's unverified assumption, shown false. **No second Agency is provisioned** — that would contradict the operator's one-Agency instruction |
 | TC-AGENCY-050 | Same as TC-048 | Same |
 

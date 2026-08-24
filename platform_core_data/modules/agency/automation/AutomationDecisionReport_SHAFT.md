@@ -10,7 +10,13 @@
 ## 1. Automation Decision per Test Case (§13)
 
 Scope is the Stage 3 suite narrowed by the lifecycle gate: **`Review = Approved` AND
-`Automation = Approved`**. That yields **18** of 60 cases.
+`Automation = Approved`**. That yielded **18** of 60 cases at generation time.
+
+> **Correction, 2026-08-24.** TC-AGENCY-055 was rejected by explicit operator direction after Stage 5A's
+> execution found it had no corresponding `@Test` method — the "Generate New" decision below was recorded,
+> but the method itself was never written despite the case's locator being live-verified (`SelectorVerificationReport_SHAFT.md`
+> §4.2). It is no longer dual-approved (`TestCases_Agency.md`) and is removed from scope. The row is kept
+> below for its historical decision record, not as current coverage. **Current scope: 17 of 60.**
 
 | Test Case | Decision | Justification |
 |---|---|---|
@@ -30,10 +36,11 @@ Scope is the Stage 3 suite narrowed by the lifecycle gate: **`Review = Approved`
 | TC-AGENCY-049 | **Generate New** | Reject with reason, asserting the submitted value was **not** applied |
 | TC-AGENCY-050 | **Generate New** | E2E multi-section round trip. Runs last |
 | TC-AGENCY-053 | **Generate New** | Space in agency name. Expected result stated definitely, not softened |
-| TC-AGENCY-055 | **Generate New** | Manager Name inherited + read-only. Skips if the PCC section is absent |
+| ~~TC-AGENCY-055~~ | ~~**Generate New**~~ **Rejected 2026-08-24** | ~~Manager Name inherited + read-only. Skips if the PCC section is absent~~ — no method was ever generated; see correction note above |
 | TC-AGENCY-059 | **Partially Automatable** | DOM read-only properties automated; "click and confirm no list opens" stays manual — see §4 |
 
-**Totals: 16 Generate New · 2 Partially Automatable · 0 Manual Only · 0 Reuse Existing · 0 silently dropped.**
+**Current totals (17 in scope): 15 Generate New · 2 Partially Automatable · 0 Manual Only · 0 Reuse Existing · 0 silently dropped.**
+*(Historical totals at generation time, 18 in scope: 16 Generate New · 2 Partially Automatable.)*
 
 **The 42 cases outside this scope are not gaps.** 27 carry `Review = Rejected` and 41 carry
 `Automation = Rejected` — recorded human decisions that a case stays manual or is not wanted. This stage

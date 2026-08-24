@@ -74,5 +74,5 @@ engaged.
 | `mvn -o test-compile` | Clean |
 | `check-ownership --module agency` | `allowed: true`, every list empty |
 | `resolve-root --module agency` | `Generated` → module workspace, `Exists: true` |
-| `@Test` method count | 18 — matches the 18 dual-approved cases exactly |
+| `@Test` method count | **Corrected 2026-08-24 — this row was wrong.** The actual count was always **17**, not 18: TC-AGENCY-055 was documented in a Javadoc block but no `@Test` method was ever written for it. Stage 5A's execution found the gap; TC-AGENCY-055 has since been rejected in `TestCases_Agency.md`, so the dual-approved scope is now also 17 — the two numbers match again, but not for the reason originally stated here. |
 | Suite executed | **No.** Stage 4A never executes |

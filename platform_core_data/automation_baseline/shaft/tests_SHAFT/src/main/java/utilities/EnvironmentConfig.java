@@ -57,6 +57,34 @@ public class EnvironmentConfig {
         return PROPS.getProperty("editBranchPath");
     }
 
+    // ── Agency routes (added by run-004, Stage 4A; restored 2026-08-23 regeneration) ───────────
+
+    public static String agencyListUrl() {
+        return baseUrl() + agencyListPath();
+    }
+
+    public static String addAgencyUrl() {
+        return baseUrl() + addAgencyPath();
+    }
+
+    public static String agencyListPath() {
+        return PROPS.getProperty("agencyListPath", "/admin/agency");
+    }
+
+    public static String addAgencyPath() {
+        return PROPS.getProperty("addAgencyPath", "/admin/agency/add");
+    }
+
+    /**
+     * Recognition only -- never a navigation target. The Update Agency screen is reached by clicking a
+     * row's edit pen; a direct visit to this path renders an empty shell whose locators still resolve
+     * (verified live 2026-08-18). See {@code editBranchPath()} above, which carries the same warning
+     * for the same reason on the Branch screen.
+     */
+    public static String editAgencyPath() {
+        return PROPS.getProperty("editAgencyPath", "/admin/agency/edit");
+    }
+
     /**
      * Super Admin credentials for the QA environment, held here rather than in environment
      * variables so the suite runs from any terminal or IDE with no setup step. They live in this

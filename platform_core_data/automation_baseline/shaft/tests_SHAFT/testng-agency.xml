@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+    MODULE-SCOPED SUITE - Agency. See workflows_and_pipelines/pipeline/pipeline.md §12.9.
+
+    Regenerated 2026-08-23, Stage 4A, after the 2026-08-18 package was rejected (see
+    AutomationPlan_SHAFT.md §0). Lets Stage 5A and Stage 5H run the Agency module on its own,
+    without touching the Branch module's tests.
+
+        mvn test -DsuiteXmlFile=testng-agency.xml     module-scoped run (Stage 5A, 5H reruns)
+
+    ────────────────────────────────────────────────────────────────────────────────────────────
+    WHY THIS FILE STILL HAS ONE <test> BLOCK, EVEN THOUGH EACH CLASS NOW BUILDS ITS OWN FIXTURE
+
+    The per-class fixture change (Automation Plan §0.3) removes the CROSS-class dependency that used
+    to exist when all five classes shared one Agency -a fixture failure in one class no longer
+    skips the other four. It does NOT remove the ordering requirement WITHIN AgencyMakerChecker_TC's
+    own class, whose three tests drive its own class-scoped Agency through one-way state transitions
+    (submit -> reject -> resubmit -> approve). TestNG scopes @Test(priority = ...) to the enclosing
+    <test> tag, so all five classes still sit in one <test> block to keep that ordering meaningful;
+    splitting per class would make each class's priorities independent of the others, which is
+    harmless now that no cross-class fixture dependency exists -but read-only classes still read
+    a pristine environment most cleanly when they run before any other class has mutated anything
+    it shares (the reused, known-approved Branch), so the original ordering is kept rather than
+    reshuffled without a reason to.
+
+        priority   5-6     read-only inheritance and read-only assertions
+        priority  10-50    field persistence
+        priority  60-80    validation (restores every field it clears)
+        priority  90-120   documents and logo
+        priority 200-230   maker-checker LAST, own class-scoped Agency: submit -> reject -> resubmit
+                           -> approve, one-way state transitions, not repeatable actions
+
+    preserve-order="true" keeps declaration order as the tie-break; priority is what actually
+    sequences the run.
+-->
+<suite name="AgencyModuleSuite" verbose="1">
+    <test name="AgencyUpdateSuite" preserve-order="true">
+        <classes>
+            <!-- Read-only first: neither case saves anything, so both observe a pristine fixture. -->
+            <class name="AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC"/>
+            <class name="AdminPages.Admin.Agency.AgencyUpdatePersistence_TC"/>
+            <class name="AdminPages.Admin.Agency.AgencyUpdateValidation_TC"/>
+            <class name="AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC"/>
+            <!-- Last: leaves its own class-scoped fixture approved, with test values applied. -->
+            <class name="AdminPages.Admin.Agency.AgencyMakerChecker_TC"/>
+        </classes>
+    </test>
+</suite>

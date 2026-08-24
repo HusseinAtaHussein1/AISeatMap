@@ -1,0 +1,26 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '7 out of 15' test cases in the current suite                                        
+                 Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc002_mandatoryAgencyMasterFieldsShowRequired'                 
+                         Test Description: 'TC-AGENCY-002 Mandatory Agency Master fields block submission when cleared'                         
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:17:37.0231 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:17:37.0292 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:17:37.0489 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12166". @24-08-2026 11:17:39.0467 AM
+[ReportManager] Get Attribute "value" from "Agency *", value is "QA_AGENCY_1045215358466500". @24-08-2026 11:17:46.0824 AM
+[ReportManager] Clear "Agency *". @24-08-2026 11:17:46.0862 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:47.0092 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:47.0161 AM
+[ReportManager] Get Attribute "value" from "Post office box *", value is "QA12345". @24-08-2026 11:17:47.0331 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:47.0524 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:47.0593 AM
+[ReportManager] Get Attribute "value" from "Address 1", value is "1 Test Street". @24-08-2026 11:17:47.0748 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:47.0932 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:48.0021 AM
+[ReportManager] Get Attribute "value" from "+20 1001234567", value is "1005828500". @24-08-2026 11:17:48.0180 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:48.0364 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 11:17:48.0436 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 11:17:48.0514 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareClassFixture' @24-08-2026 11:17:48.0515 AM

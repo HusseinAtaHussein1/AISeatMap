@@ -1,0 +1,19 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '12 out of 15' test cases in the current suite                                       
+                          Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc023_oversizeLogoIsRejected'                          
+                                       Test Description: 'TC-AGENCY-023 Logo larger than 2 MB is rejected'                                       
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 10:34:19.0286 AM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 10:34:19.0342 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 10:34:19.0656 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12162". @24-08-2026 10:34:21.0039 AM
+[ReportManager] Type "C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyLogo_oversize.png" into element. @24-08-2026 10:34:28.0678 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 10:34:29.0375 AM
+[ReportManager] Click "Send For Approval". @24-08-2026 10:34:29.0433 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12162". @24-08-2026 10:34:29.0491 AM
+[ReportManager] Get Text from element, text is "Please enter file with size less than 2MB .". @24-08-2026 10:34:29.0600 AM
+[ReportManager] Get Text from element, text is "Please enter file with size less than 2MB .". @24-08-2026 10:34:29.0695 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12162". @24-08-2026 10:34:29.0764 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 10:34:29.0765 AM

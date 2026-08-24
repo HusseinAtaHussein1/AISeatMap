@@ -1,0 +1,39 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '10 out of 15' test cases in the current suite                                       
+                     Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc016_uploadValidPdfWithContractDates'                     
+                                Test Description: 'TC-AGENCY-016 Upload a valid PDF document with contract dates'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:49:04.0663 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:49:04.0710 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:49:04.0915 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:06.0234 PM
+[ReportManager] Type "C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyContract_Doc1_valid.pdf" into element. @24-08-2026 12:49:13.0624 PM
+[ReportManager] Click "Contract Start Date *". @24-08-2026 12:49:13.0810 PM
+[ReportManager] Type "a" into "Contract Start Date *". @24-08-2026 12:49:13.0892 PM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 12:49:13.0927 PM
+[ReportManager] Type "01/01/2026" into "Contract Start Date *". @24-08-2026 12:49:13.0966 PM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 12:49:14.0043 PM
+[ReportManager] Click "Contract End Date *". @24-08-2026 12:49:14.0236 PM
+[ReportManager] Type "a" into "Contract End Date *". @24-08-2026 12:49:14.0310 PM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 12:49:14.0343 PM
+[ReportManager] Type "31/12/2027" into "Contract End Date *". @24-08-2026 12:49:14.0393 PM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 12:49:14.0510 PM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 12:49:15.0028 PM
+[ReportManager] Click "Send For Approval". @24-08-2026 12:49:15.0078 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:15.0129 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:15.0743 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:16.0339 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:16.0942 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 12:49:17.0542 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:49:17.0590 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:49:17.0642 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:49:17.0828 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:19.0506 PM
+[ReportManager] Get Text from element, text is "AgencyContract_Doc1_valid.pdf". @24-08-2026 12:49:26.0806 PM
+[ReportManager] Get Attribute "value" from "Contract Start Date *", value is "01/01/2026". @24-08-2026 12:49:26.0868 PM
+[ReportManager] Get Attribute "value" from "Contract End Date *", value is "31/12/2027". @24-08-2026 12:49:26.0948 PM
+[ReportManager] Get Text from element, text is "AgencyContract_Doc1_valid.pdf". @24-08-2026 12:49:27.0011 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 12:49:27.0028 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareClassFixture' @24-08-2026 12:49:27.0028 PM

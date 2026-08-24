@@ -1,0 +1,38 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '8 out of 15' test cases in the current suite                                        
+                   Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc021_contractDatesShowRequiredWhenCleared'                   
+                                 Test Description: 'TC-AGENCY-021 Contract dates block submission when cleared'                                 
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 10:32:13.0247 AM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 10:32:13.0305 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 10:32:13.0597 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12161". @24-08-2026 10:32:15.0306 AM
+[ReportManager] Get Attribute "value" from "Contract Start Date *", value is "01/01/2026". @24-08-2026 10:32:23.0218 AM
+[ReportManager] Click "Contract Start Date *". @24-08-2026 10:32:23.0344 AM
+[ReportManager] Type "a" into "Contract Start Date *". @24-08-2026 10:32:23.0424 AM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 10:32:23.0464 AM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 10:32:23.0520 AM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 10:32:23.0556 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 10:32:23.0699 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 10:32:23.0770 AM
+[ReportManager] Click "Contract Start Date *". @24-08-2026 10:32:23.0890 AM
+[ReportManager] Type "a" into "Contract Start Date *". @24-08-2026 10:32:23.0948 AM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 10:32:23.0983 AM
+[ReportManager] Type "01/01/2026" into "Contract Start Date *". @24-08-2026 10:32:24.0015 AM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 10:32:24.0097 AM
+[ReportManager] Get Attribute "value" from "Contract End Date *", value is "31/12/2027". @24-08-2026 10:32:24.0206 AM
+[ReportManager] Click "Contract End Date *". @24-08-2026 10:32:24.0350 AM
+[ReportManager] Type "a" into "Contract End Date *". @24-08-2026 10:32:24.0423 AM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 10:32:24.0461 AM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 10:32:24.0513 AM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 10:32:24.0548 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 10:32:24.0693 AM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 10:32:24.0764 AM
+[ReportManager] Click "Contract End Date *". @24-08-2026 10:32:24.0907 AM
+[ReportManager] Type "a" into "Contract End Date *". @24-08-2026 10:32:24.0977 AM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 10:32:25.0012 AM
+[ReportManager] Type "31/12/2027" into "Contract End Date *". @24-08-2026 10:32:25.0046 AM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 10:32:25.0127 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 10:32:25.0157 AM

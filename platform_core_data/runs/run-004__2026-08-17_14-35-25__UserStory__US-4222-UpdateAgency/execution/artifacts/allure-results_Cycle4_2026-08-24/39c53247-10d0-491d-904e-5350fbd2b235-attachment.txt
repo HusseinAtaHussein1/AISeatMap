@@ -1,0 +1,24 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '11 out of 15' test cases in the current suite                                       
+                             Test Method: 'AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC.tc022_uploadValidLogo'                             
+                                          Test Description: 'TC-AGENCY-022 Upload a valid agency logo'                                          
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:49:32.0860 PM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 12:49:32.0916 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:49:33.0216 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:34.0570 PM
+[ReportManager] Type "C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyLogo_valid.png" into element. @24-08-2026 12:49:42.0050 PM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 12:49:42.0603 PM
+[ReportManager] Click "Send For Approval". @24-08-2026 12:49:42.0654 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:42.0714 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:43.0346 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:43.0994 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:44.0579 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 12:49:45.0195 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:49:45.0227 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:49:45.0292 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:49:45.0502 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12173". @24-08-2026 12:49:47.0113 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 12:49:54.0343 PM

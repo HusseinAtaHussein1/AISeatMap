@@ -1,0 +1,436 @@
+[ReportManager] Target URL: "http://192.168.1.70/admin/branch" @24-08-2026 11:18:41.0634 AM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 11:18:41.0692 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/branch". @24-08-2026 11:18:41.0974 AM
+[ReportManager] Get Text from element, text is "Showing 10 results of 576 results". @24-08-2026 11:18:42.0764 AM
+[ReportManager] Type "BRN908" into "Branch code". @24-08-2026 11:18:42.0972 AM
+[ReportManager] Get Attribute "value" from "Branch code", value is "BRN908". @24-08-2026 11:18:43.0054 AM
+[ReportManager] Get Attribute "value" from "Branch code", value is "BRN908". @24-08-2026 11:18:43.0121 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 11:18:43.0380 AM
+[ReportManager] Click "By.cssSelector: label[for='id-Status-Both']". @24-08-2026 11:18:43.0430 AM
+[ReportManager] Get Text from element, text is "Showing 10 results of 576 results". @24-08-2026 11:18:43.0654 AM
+[ReportManager] Get Text from element, text is "Showing 10 results of 576 results". @24-08-2026 11:18:43.0706 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 11:18:44.0065 AM
+[ReportManager] Click "Search". @24-08-2026 11:18:44.0125 AM
+[ReportManager] Is enabled action failed. @24-08-2026 11:18:44.0440 AM
+[ReportManager] Successfully created attachment 'Screenshot - 1787559524589_prepareClassFixture_isEnabled_failed' @24-08-2026 11:18:45.0226 AM
+[ReportManager] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$69pSi6kN.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:566)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:525)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ utilities.AgencyFixture.confirmKnownApprovedBranch(AgencyFixture.java:99)
+ utilities.AgencyFixture.build(AgencyFixture.java:73)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:49)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=151.0.7922.109)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [f4b81a0d798f521b9a56eda284dc1149, isElementEnabled {id=f.1028985579FBE1F653E85B3673946D39.d.63A8EBF524404AE76423C8B5F315A6B1.e.521}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 151.0.7922.109, chrome: {chromedriverVersion: 151.0.7922.138 (41fa8244239..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:52241}, goog:processID: 37868, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:52241/devtoo..., se:cdpVersion: 151.0.7922.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:46890/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (f4b81a0d798f521b9a56eda284dc1149)] -> css selector: table tbody tr]
+Session ID: f4b81a0d798f521b9a56eda284dc1149
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$69pSi6kN.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.cycleStarted(SearchBranch_Page.java:566)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:525)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ utilities.AgencyFixture.confirmKnownApprovedBranch(AgencyFixture.java:99)
+ utilities.AgencyFixture.build(AgencyFixture.java:73)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:49)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) @24-08-2026 11:18:45.0226 AM
+[ReportManager] Is enabled action failed. @24-08-2026 11:18:45.0259 AM
+[ReportManager] Successfully created attachment 'Screenshot - 1787559525394_prepareClassFixture_isEnabled_failed' @24-08-2026 11:18:45.0649 AM
+[ReportManager] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$69pSi6kN.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:584)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:531)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ utilities.AgencyFixture.confirmKnownApprovedBranch(AgencyFixture.java:99)
+ utilities.AgencyFixture.build(AgencyFixture.java:73)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:49)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=151.0.7922.109)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [f4b81a0d798f521b9a56eda284dc1149, isElementEnabled {id=f.1028985579FBE1F653E85B3673946D39.d.63A8EBF524404AE76423C8B5F315A6B1.e.521}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 151.0.7922.109, chrome: {chromedriverVersion: 151.0.7922.138 (41fa8244239..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:52241}, goog:processID: 37868, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:52241/devtoo..., se:cdpVersion: 151.0.7922.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:46890/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (f4b81a0d798f521b9a56eda284dc1149)] -> css selector: table tbody tr]
+Session ID: f4b81a0d798f521b9a56eda284dc1149
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
+ org.openqa.selenium.remote.RemoteWebElement.isEnabled(RemoteWebElement.java:182)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$69pSi6kN.isEnabled(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:686)
+ org.openqa.selenium.support.ui.ExpectedConditions$24.apply(ExpectedConditions.java:681)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Branch.SearchBranch_Page.awaitFreshResultCycle(SearchBranch_Page.java:584)
+ AdminPages.Admin.Branch.SearchBranch_Page.clickSearch(SearchBranch_Page.java:531)
+ AdminPages.Admin.Branch.SearchBranch_Page.searchByCode(SearchBranch_Page.java:599)
+ utilities.AgencyFixture.confirmKnownApprovedBranch(AgencyFixture.java:99)
+ utilities.AgencyFixture.build(AgencyFixture.java:73)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:49)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) @24-08-2026 11:18:45.0650 AM
+[ReportManager] Get Text from element, text is "Showing 1 results of 1 results". @24-08-2026 11:18:45.0770 AM
+[ReportManager] Get Text from element, text is "Showing 1 results of 1 results". @24-08-2026 11:18:45.0821 AM
+[ReportManager] Get Text from "QA_694969440098400", text is "QA_694969440098400". @24-08-2026 11:18:45.0950 AM
+[ReportManager] Get Text from "Approved", text is "Approved". @24-08-2026 11:18:46.0007 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency/add" @24-08-2026 11:18:46.0047 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/branch" @24-08-2026 11:18:46.0108 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency/add". @24-08-2026 11:18:46.0512 AM
+[ReportManager] Get Text from element, text is "QA_694969440098400 (BRN908)". @24-08-2026 11:18:47.0222 AM
+[ReportManager] Get Attribute "value" from "Country *", value is "". @24-08-2026 11:18:47.0315 AM
+[ReportManager] Get Attribute "value" from "Country *", value is "". @24-08-2026 11:18:47.0641 AM
+[ReportManager] Get Attribute "value" from "Country *", value is "Egypt". @24-08-2026 11:18:47.0973 AM
+[ReportManager] Get Text from element, text is "Cairo". @24-08-2026 11:18:48.0442 AM
+[ReportManager] Get Text from element, text is "Cairo". @24-08-2026 11:18:48.0850 AM
+[ReportManager] Type "C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyContract_Doc1_valid.pdf" into element. @24-08-2026 11:18:49.0476 AM
+[ReportManager] Click "Contract Start Date *". @24-08-2026 11:18:49.0679 AM
+[ReportManager] Type "a" into "Contract Start Date *". @24-08-2026 11:18:49.0759 AM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 11:18:49.0810 AM
+[ReportManager] Type "01/01/2026" into "Contract Start Date *". @24-08-2026 11:18:49.0851 AM
+[ReportManager] Type "" into "Contract Start Date *". @24-08-2026 11:18:49.0958 AM
+[ReportManager] Click "Contract End Date *". @24-08-2026 11:18:50.0158 AM
+[ReportManager] Type "a" into "Contract End Date *". @24-08-2026 11:18:50.0257 AM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 11:18:50.0298 AM
+[ReportManager] Type "31/12/2027" into "Contract End Date *". @24-08-2026 11:18:50.0338 AM
+[ReportManager] Type "" into "Contract End Date *". @24-08-2026 11:18:50.0422 AM
+[ReportManager] Type "C:\Users\Sheen\agentic-ai-testing-platform\platform_core_data\modules\agency\automation\tests_SHAFT\target\test-classes\testDataFiles\agency\uploads\AgencyLogo_valid.png" into element. @24-08-2026 11:18:50.0500 AM
+[ReportManager] Get Text from element, text is "monthly". @24-08-2026 11:18:51.0291 AM
+[ReportManager] Get Attribute "value" from "Country *", value is "Egypt". @24-08-2026 11:18:52.0202 AM
+[ReportManager] Click "Send For Approval". @24-08-2026 11:18:52.0366 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/add". @24-08-2026 11:18:52.0478 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/add". @24-08-2026 11:18:53.0082 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/add". @24-08-2026 11:18:53.0673 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/add". @24-08-2026 11:18:54.0234 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 11:18:54.0861 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:18:54.0900 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:18:54.0979 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:18:55.0194 AM
+[ReportManager] Get Text from "AGN10300", text is "AGN10300". @24-08-2026 11:18:56.0941 AM
+[ReportManager] Get Text from "QA_AGENCY_1045301414964700", text is "QA_AGENCY_1045301414964700". @24-08-2026 11:18:56.0996 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 11:18:57.0042 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:18:57.0085 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:18:57.0145 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:18:57.0351 AM
+[ReportManager] Get Attribute "value" from "Agency name", value is "QA_AGENCY_1045301414964700". @24-08-2026 11:18:58.0802 AM
+[ReportManager] Get Text from "AGN10300", text is "AGN10300". @24-08-2026 11:18:58.0897 AM
+[ReportManager] Get Text from "QA_AGENCY_1045301414964700", text is "QA_AGENCY_1045301414964700". @24-08-2026 11:18:58.0952 AM
+[ReportManager] Get Text from "QA_AGENCY_1045301414964700", text is "QA_AGENCY_1045301414964700". @24-08-2026 11:18:59.0032 AM
+[ReportManager] Get Attribute "value" from "remarks...", value is "QA automated check: approving this run's fixture Agency QA_AGENCY_1045301414964700 [1045314691307200]". @24-08-2026 11:18:59.0627 AM
+[ReportManager] Expected condition failed: waiting for com.shaft.listeners.internal.WebDriverListener$$Lambda/0x00000189d16ec6b8@3ecc4d8c (tried for 0 second(s) with 100 milliseconds interval) || no such element: Unable to locate element: {"method":"css selector","selector":"div.p-dialog"} @24-08-2026 11:19:00.0281 AM
+[ReportManager] Find element action failed. @24-08-2026 11:19:00.0301 AM
+[ReportManager] Successfully created attachment 'Screenshot - 1787559540428_prepareClassFixture_findElement_failed' @24-08-2026 11:19:00.0756 AM
+[ReportManager] java.lang.reflect.InvocationTargetException: null
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$DqxIrgHQ.findElement(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$20.apply(ExpectedConditions.java:569)
+ org.openqa.selenium.support.ui.ExpectedConditions$20.apply(ExpectedConditions.java:565)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Agency.SearchAgency_Page.completeRemarksPrompt(SearchAgency_Page.java:256)
+ utilities.AgencyFixture.approveNewlyCreatedAgency(AgencyFixture.java:256)
+ utilities.AgencyFixture.createAgency(AgencyFixture.java:199)
+ utilities.AgencyFixture.build(AgencyFixture.java:77)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:49)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+Caused by: org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: {"method":"css selector","selector":"div.p-dialog"}
+  (Session info: chrome=151.0.7922.109)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Build info: version: '4.13.0', revision: 'ba948ece5b*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '23.0.1'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [f4b81a0d798f521b9a56eda284dc1149, findElement {using=css selector, value=div.p-dialog}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 151.0.7922.109, chrome: {chromedriverVersion: 151.0.7922.138 (41fa8244239..., userDataDir: C:\Users\Sheen\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:52241}, goog:processID: 37868, networkConnectionEnabled: false, pageLoadStrategy: none, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:52241/devtoo..., se:cdpVersion: 151.0.7922.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 60000, script: 30000}, unhandledPromptBehavior: ignore, webSocketUrl: ws://localhost:46890/sessio..., webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: f4b81a0d798f521b9a56eda284dc1149
+ java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+ java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+ java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.createException(W3CHttpResponseCodec.java:200)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:133)
+ org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:52)
+ org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:191)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:196)
+ org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:171)
+ org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:602)
+ org.openqa.selenium.remote.ElementLocation$ElementFinder$2.findElement(ElementLocation.java:165)
+ org.openqa.selenium.remote.ElementLocation.findElement(ElementLocation.java:59)
+ org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:359)
+ org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:353)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:249)
+ org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+ org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxy$2(WebDriverDecorator.java:321)
+ net.bytebuddy.renamed.java.lang.Object$ByteBuddy$DqxIrgHQ.findElement(Unknown Source)
+ org.openqa.selenium.support.ui.ExpectedConditions$20.apply(ExpectedConditions.java:569)
+ org.openqa.selenium.support.ui.ExpectedConditions$20.apply(ExpectedConditions.java:565)
+ org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:205)
+ AdminPages.Admin.Agency.SearchAgency_Page.completeRemarksPrompt(SearchAgency_Page.java:256)
+ utilities.AgencyFixture.approveNewlyCreatedAgency(AgencyFixture.java:256)
+ utilities.AgencyFixture.createAgency(AgencyFixture.java:199)
+ utilities.AgencyFixture.build(AgencyFixture.java:77)
+ AdminPages.Admin.Agency.AgencyTestBase.prepareClassFixture(AgencyTestBase.java:49)
+ java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+ java.base/java.lang.reflect.Method.invoke(Method.java:580)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+ org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:69)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:390)
+ org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:325)
+ org.testng.internal.invokers.TestInvoker.runConfigMethods(TestInvoker.java:810)
+ org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:577)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:227)
+ org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+ org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:957)
+ org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:200)
+ org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+ org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+ java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+ org.testng.TestRunner.privateRun(TestRunner.java:848)
+ org.testng.TestRunner.run(TestRunner.java:621)
+ org.testng.SuiteRunner.runTest(SuiteRunner.java:443)
+ org.testng.SuiteRunner.runSequentially(SuiteRunner.java:437)
+ org.testng.SuiteRunner.privateRun(SuiteRunner.java:397)
+ org.testng.SuiteRunner.run(SuiteRunner.java:336)
+ org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+ org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+ org.testng.TestNG.runSuitesSequentially(TestNG.java:1280)
+ org.testng.TestNG.runSuitesLocally(TestNG.java:1200)
+ org.testng.TestNG.runSuites(TestNG.java:1114)
+ org.testng.TestNG.run(TestNG.java:1082)
+ org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308)
+ org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71)
+ org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113)
+ org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+ org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+ org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+ org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) @24-08-2026 11:19:00.0756 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:19:00.0798 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:19:00.0865 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:19:01.0164 AM
+[ReportManager] Get Text from "Approved", text is "Approved". @24-08-2026 11:19:02.0587 AM

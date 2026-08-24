@@ -1,0 +1,46 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '15 out of 15' test cases in the current suite                                       
+                          Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc050_endToEndEditSubmitApprove'                          
+                                Test Description: 'TC-AGENCY-050 Agency update end to end: edit, submit, approve'                                
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:51:41.0945 PM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 12:51:42.0002 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:51:42.0295 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12174". @24-08-2026 12:51:43.0669 PM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 12:51:51.0651 PM
+[ReportManager] Click "Send For Approval". @24-08-2026 12:51:51.0702 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12174". @24-08-2026 12:51:51.0751 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12174". @24-08-2026 12:51:52.0355 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12174". @24-08-2026 12:51:52.0949 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12174". @24-08-2026 12:51:53.0549 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 12:51:54.0141 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:51:54.0190 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:51:54.0254 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:51:54.0465 PM
+[ReportManager] Get Text from "Pending for approval", text is "Pending for approval". @24-08-2026 12:51:55.0882 PM
+[ReportManager] Get Text from "Pending for approval", text is "Pending for approval". @24-08-2026 12:51:55.0930 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:51:55.0964 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:51:56.0027 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:51:56.0231 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12174". @24-08-2026 12:51:57.0631 PM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 12:52:05.0262 PM
+[ReportManager] Click "Approve". @24-08-2026 12:52:05.0378 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:52:05.0411 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency/edit/12174" @24-08-2026 12:52:05.0494 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:52:05.0630 PM
+[ReportManager] Get Text from "Pending for approval", text is "Pending for approval". @24-08-2026 12:52:07.0043 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:52:07.0074 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:52:07.0137 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:52:07.0346 PM
+[ReportManager] Get Text from "Approved", text is "Approved". @24-08-2026 12:52:08.0767 PM
+[ReportManager] Get Text from "Approved", text is "Approved". @24-08-2026 12:52:08.0807 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:52:08.0839 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:52:08.0902 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:52:09.0107 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12174". @24-08-2026 12:52:10.0442 PM
+[ReportManager] Get Attribute "value" from "Fax No", value is "0100372400". @24-08-2026 12:52:17.0517 PM
+[ReportManager] Get Attribute "value" from "Email ID * Email ID *", value is "e2e.owner_1050886414455500@example.com". @24-08-2026 12:52:17.0593 PM
+[ReportManager] Get Attribute "value" from "Top up limit *", value is "11000". @24-08-2026 12:52:17.0668 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 12:52:17.0670 PM

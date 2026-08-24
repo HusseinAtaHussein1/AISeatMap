@@ -1,0 +1,23 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '3 out of 15' test cases in the current suite                                        
+                       Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc011_agencyBusinessTypePersists'                       
+                                    Test Description: 'TC-AGENCY-011 Agency Business Type selection persists'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:15:17.0805 AM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 11:15:17.0866 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:15:18.0135 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:15:19.0915 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 11:15:28.0449 AM
+[ReportManager] Click "Send For Approval". @24-08-2026 11:15:28.0515 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:15:28.0573 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:15:29.0195 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:15:29.0784 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:15:30.0394 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 11:15:30.0990 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:15:31.0054 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:15:31.0121 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:15:31.0338 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:15:33.0032 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 11:15:40.0476 AM

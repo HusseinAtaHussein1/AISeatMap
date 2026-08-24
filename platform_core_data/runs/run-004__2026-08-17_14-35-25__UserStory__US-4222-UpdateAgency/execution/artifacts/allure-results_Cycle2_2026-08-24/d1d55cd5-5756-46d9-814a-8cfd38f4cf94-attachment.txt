@@ -1,0 +1,21 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                       Starting Execution: '13 out of 15' test cases in the current suite                                       
+                         Test Method: 'AdminPages.Admin.Agency.AgencyMakerChecker_TC.tc047_cancelDiscardsUnsavedChanges'                         
+                                        Test Description: 'TC-AGENCY-047 Cancel discards unsaved changes'                                        
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:20:42.0870 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:20:42.0937 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:20:43.0127 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12168". @24-08-2026 11:20:44.0566 AM
+[ReportManager] Get Attribute "value" from "Agency *", value is "QA_AGENCY_1045402442394300". @24-08-2026 11:20:52.0147 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 11:20:52.0594 AM
+[ReportManager] Click "Cancel". @24-08-2026 11:20:52.0667 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:20:52.0726 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:20:52.0800 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:20:52.0998 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12168". @24-08-2026 11:20:54.0341 AM
+[ReportManager] Get Attribute "value" from "Agency *", value is "QA_AGENCY_1045402442394300". @24-08-2026 11:21:01.0739 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 11:21:01.0741 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareClassFixture' @24-08-2026 11:21:01.0742 AM

@@ -1,0 +1,14 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '1 out of 15' test cases in the current suite                                        
+                    Test Method: 'AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC.tc059_branchIsReadOnlyOnUpdateForm'                    
+                                    Test Description: 'TC-AGENCY-059 Branch is read-only on the Update form'                                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 10:28:21.0014 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 10:28:21.0070 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 10:28:21.0292 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12159". @24-08-2026 10:28:22.0701 AM
+[ReportManager] Get Attribute "value" from "Branch *", value is "". @24-08-2026 10:28:30.0310 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 10:28:30.0446 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: prepareClassFixture' @24-08-2026 10:28:30.0459 AM

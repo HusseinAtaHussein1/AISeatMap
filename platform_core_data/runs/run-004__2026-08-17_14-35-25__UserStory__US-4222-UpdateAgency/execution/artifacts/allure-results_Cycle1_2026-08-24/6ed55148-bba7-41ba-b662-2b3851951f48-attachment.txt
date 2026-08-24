@@ -1,0 +1,29 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '4 out of 15' test cases in the current suite                                        
+                        Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc012_agencyOwnerDetailsPersist'                        
+                                   Test Description: 'TC-AGENCY-012 Update Agency Owner Details successfully'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 10:30:01.0361 AM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 10:30:01.0419 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 10:30:01.0740 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12160". @24-08-2026 10:30:03.0734 AM
+[ReportManager] Get Attribute "value" from "Contact person *", value is "QA Contact Person". @24-08-2026 10:30:11.0596 AM
+[ReportManager] Get Attribute "value" from "Email ID * Email ID *", value is "owner_1042301219110100@example.com". @24-08-2026 10:30:11.0677 AM
+[ReportManager] Get Attribute "value" from "+20 1001234567", value is "1018236500". @24-08-2026 10:30:11.0757 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 10:30:12.0410 AM
+[ReportManager] Click "Send For Approval". @24-08-2026 10:30:12.0461 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12160". @24-08-2026 10:30:12.0523 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12160". @24-08-2026 10:30:13.0151 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12160". @24-08-2026 10:30:13.0742 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12160". @24-08-2026 10:30:14.0312 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 10:30:14.0914 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 10:30:14.0956 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 10:30:15.0016 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 10:30:15.0222 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12160". @24-08-2026 10:30:16.0574 AM
+[ReportManager] Get Attribute "value" from "Contact person *", value is "QA Owner". @24-08-2026 10:30:23.0872 AM
+[ReportManager] Get Attribute "value" from "Email ID * Email ID *", value is "qa.owner@example.com". @24-08-2026 10:30:23.0947 AM
+[ReportManager] Get Attribute "value" from "+20 1001234567", value is "1000000001". @24-08-2026 10:30:24.0035 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 10:30:24.0037 AM

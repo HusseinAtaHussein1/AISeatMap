@@ -1,0 +1,33 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '6 out of 15' test cases in the current suite                                        
+                         Test Method: 'AdminPages.Admin.Agency.AgencyUpdatePersistence_TC.tc053_agencyNameAcceptsSpace'                         
+                                   Test Description: 'TC-AGENCY-053 Agency name accepts a space between words'                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:16:44.0440 AM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 11:16:44.0498 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:16:44.0777 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:16:46.0471 AM
+[ReportManager] Clear "Agency *". @24-08-2026 11:16:54.0278 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 11:16:54.0882 AM
+[ReportManager] Click "Send For Approval". @24-08-2026 11:16:54.0931 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:16:54.0987 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:16:55.0598 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:16:56.0256 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:16:56.0858 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 11:16:57.0477 AM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:16:57.0534 AM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency" @24-08-2026 11:16:57.0619 AM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 11:16:57.0835 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:16:58.0880 AM
+[ReportManager] Get Attribute "value" from "Agency *", value is "QA Test Agency". @24-08-2026 11:17:06.0358 AM
+[ReportManager] Clear "Agency *". @24-08-2026 11:17:06.0395 AM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 11:17:07.0019 AM
+[ReportManager] Click "Send For Approval". @24-08-2026 11:17:07.0067 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:17:07.0134 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:17:07.0733 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:17:08.0362 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12165". @24-08-2026 11:17:08.0939 AM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 11:17:09.0511 AM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 11:17:09.0513 AM

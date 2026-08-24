@@ -1,0 +1,29 @@
+
+[0;7m------------------------------------------------------------------------------------------------------------------------------------------------
+                                        Starting Execution: '9 out of 15' test cases in the current suite                                        
+                  Test Method: 'AdminPages.Admin.Agency.AgencyUpdateValidation_TC.tc037_paymentOptionRequiredWhenNoneSelected'                  
+                            Test Description: 'TC-AGENCY-037 Payment option blocks submission when none is selected'                            
+------------------------------------------------------------------------------------------------------------------------------------------------
+[0m
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:48:16.0855 PM
+[ReportManager] Initial URL: "http://192.168.1.70/dashboard" @24-08-2026 12:48:16.0918 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:48:17.0207 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:18.0586 PM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 12:48:26.0902 PM
+[ReportManager] Click "Send For Approval". @24-08-2026 12:48:26.0960 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:27.0001 PM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 12:48:27.0101 PM
+[ReportManager] Get Text from element, text is "Required". @24-08-2026 12:48:27.0179 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:27.0218 PM
+[ReportManager] Target URL: "http://192.168.1.70/admin/agency" @24-08-2026 12:48:27.0266 PM
+[ReportManager] Initial URL: "http://192.168.1.70/admin/agency/edit/12172" @24-08-2026 12:48:27.0313 PM
+[ReportManager] Navigate to url "http://192.168.1.70/admin/agency". @24-08-2026 12:48:27.0566 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:28.0883 PM
+[ReportManager] Moved the mouse to the middle of the element. @24-08-2026 12:48:36.0600 PM
+[ReportManager] Click "Send For Approval". @24-08-2026 12:48:36.0651 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:36.0701 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:37.0303 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:37.0911 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency/edit/12172". @24-08-2026 12:48:38.0511 PM
+[ReportManager] Get current url "http://192.168.1.70/admin/agency". @24-08-2026 12:48:39.0096 PM
+[ReportManager] Successfully created attachment 'SHAFT Engine Logs - Current Method log: setUp' @24-08-2026 12:48:39.0096 PM

@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <!--
-    Four suites, one per business workflow (automation-skill §10: suites are organised around
-    workflows, not around screens). They are declared in dependency order for a human reading the
+    Whole-project regression suite (pipeline.md §12.9: "plain `mvn test` runs the whole-project
+    regression"). Module-scoped suites remain the default for iteration:
+
+        mvn test -DsuiteXmlFile=testng-branch.xml     Branch only
+        mvn test -DsuiteXmlFile=testng-agency.xml     Agency only
+        mvn test                                       this file — every promoted module
+
+    Branch — four suites, one per business workflow (automation-skill §10: suites are organised
+    around workflows, not around screens). Declared in dependency order for a human reading the
     file, but each is independent: every test authenticates for itself, and every mutating test
     provisions the record it acts on.
 
-    CreateBranchSuite       US 8605: 13 dual-approved cases (unchanged by this run)
+    CreateBranchSuite       US 8605: 13 dual-approved cases
     SearchBranchSuite       US 8599: read-only search, grid, and pagination cases
     BranchActionsSuite      US 8599: approve/reject from the grid (mutating, self-created records)
     UpdateBranchSuite       US 8606: update, cancel, and approve-from-Update (mutating)
+
+    Agency — added 2026-08-24 when the `agency` module was merged into this baseline
+    (run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency). One suite, one <test> block:
+    see `testng-agency.xml` for why all five classes must stay together (cross-class priority
+    ordering the maker-checker class depends on) — that reasoning is unchanged here, so it is not
+    duplicated in this file.
+
+    AgencyUpdateSuite       US-4222: 15 of 17 dual-approved cases (2 deliberately disabled by
+                            operator decision — TC-AGENCY-020, TC-AGENCY-049; TC-AGENCY-055 rejected,
+                            no automation)
 -->
-<suite name="BranchAutomationSuite" verbose="1">
+<suite name="NDCAdminPortalAutomationSuite" verbose="1">
     <test name="CreateBranchSuite">
         <classes>
             <class name="AdminPages.Admin.Branch.CreateBranch_Admin_TC"/>
@@ -30,6 +47,17 @@
     <test name="UpdateBranchSuite">
         <classes>
             <class name="AdminPages.Admin.Branch.UpdateBranch_TC"/>
+        </classes>
+    </test>
+    <test name="AgencyUpdateSuite" preserve-order="true">
+        <classes>
+            <!-- Read-only first: neither case saves anything, so both observe a pristine fixture. -->
+            <class name="AdminPages.Admin.Agency.AgencyInheritanceAndReadOnly_TC"/>
+            <class name="AdminPages.Admin.Agency.AgencyUpdatePersistence_TC"/>
+            <class name="AdminPages.Admin.Agency.AgencyUpdateValidation_TC"/>
+            <class name="AdminPages.Admin.Agency.AgencyDocumentsAndLogo_TC"/>
+            <!-- Last: leaves its own class-scoped fixture approved, with test values applied. -->
+            <class name="AdminPages.Admin.Agency.AgencyMakerChecker_TC"/>
         </classes>
     </test>
 </suite>

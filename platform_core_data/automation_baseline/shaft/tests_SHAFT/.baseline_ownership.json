@@ -12,6 +12,17 @@
       "suite": "testng-branch.xml",
       "promotedAt": "2026-08-17T08:49:32.490Z",
       "baselineRef": "09bafbd91bbe3873328248a3d9688684e2e1914b"
+    },
+    "agency": {
+      "owned": [
+        "src/main/java/AdminPages/Admin/Agency/**",
+        "src/test/java/AdminPages/Admin/Agency/**",
+        "src/test/java/utilities/AgencyFixture.java",
+        "src/test/resources/testDataFiles/agency/**",
+        "testng-agency.xml"
+      ],
+      "suite": "testng-agency.xml",
+      "promotedAt": "2026-08-24T11:16:36.674Z"
     }
   },
   "shared": [
@@ -20,6 +31,7 @@
     "src/main/java/AdminPages/Login/**",
     "src/test/java/AdminPages/Login/**",
     "src/main/java/utilities/**",
+    "src/main/java/Generic_Classes/**",
     "src/main/resources/properties/**",
     "src/test/resources/environment.properties",
     "src/test/resources/META-INF/**",
@@ -28,5 +40,5 @@
     "generate_allure_report.bat",
     ".gitignore"
   ],
-  "updatedAt": "2026-08-17T08:49:32.490Z"
+  "updatedAt": "2026-08-24T11:16:36.674Z"
 }

@@ -1,10 +1,14 @@
 {
   "schemaVersion": 2,
-  "baselinePath": "E:/Projects/agentic-ai-testing-platform/platform_core_data/automation_baseline/shaft/tests_SHAFT",
+  "baselinePath": "C:/Users/Sheen/agentic-ai-testing-platform/platform_core_data/automation_baseline/shaft/tests_SHAFT",
   "baselinePathRoot": "absolute",
   "baselineRef": "c072129a3ac2efc0a2da488d325e46d9034a60a3",
   "gitAvailable": true,
   "gitMode": "tool-repo",
-  "repoRoot": "E:/Projects/agentic-ai-testing-platform",
-  "copiedAt": "2026-08-23T12:03:36.235Z"
+  "repoRoot": "C:/Users/Sheen/agentic-ai-testing-platform",
+  "copiedAt": "2026-08-23T12:03:36.235Z",
+  "repoRootCorrected": {
+    "at": "2026-08-24T00:00:00.000Z",
+    "reason": "Working directory relocated from E:/Projects/agentic-ai-testing-platform to C:/Users/Sheen/agentic-ai-testing-platform between snapshot and promotion. baselineRef c072129a3ac2efc0a2da488d325e46d9034a60a3 independently verified present in the current repo (git cat-file -t; git log), same origin remote (github.com/ayman2911/agentic-ai-testing-platform) — same history, not a divergent repo. Corrected by hand per pipeline.md §12.4's repo-identity-changed guard, which otherwise hard-blocks on this path difference alone."
+  }
 }

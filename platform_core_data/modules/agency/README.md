@@ -5,7 +5,7 @@
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
 **Slug:** `agency` · **Status:** Active
-**Last generated:** 2026-08-23T12:20:03.893Z
+**Last generated:** 2026-08-24T09:55:52.300Z
 
 ## Scope
 
@@ -32,7 +32,7 @@ Agency lifecycle under a Branch: multi-section create and update (Agency Master,
 
 ## Automation
 
-**Lifecycle state:** Generated · **Framework:** SHAFT
+**Lifecycle state:** Approved · **Framework:** SHAFT
 
 - Assembled into the baseline: never
 - Generated against shared ref: c072129a3ac2efc0a2da488d325e46d9034a60a3

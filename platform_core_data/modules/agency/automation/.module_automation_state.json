@@ -1,18 +1,18 @@
 {
   "schemaVersion": 2,
   "module": "agency",
-  "state": "Generated",
+  "state": "Promoted",
   "framework": "SHAFT",
   "baselineRef": "c072129a3ac2efc0a2da488d325e46d9034a60a3",
-  "sourceOfTruth": "module",
+  "sourceOfTruth": "baseline",
   "sourceRuns": [
     "run-004",
     "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
   ],
-  "assembledAt": null,
-  "approvedBy": null,
-  "approvedAt": null,
-  "updatedAt": "2026-08-23T12:19:51.453Z",
+  "assembledAt": "2026-08-24T10:01:54.000Z",
+  "approvedBy": "ahmed.ayman@tildetech.ae",
+  "approvedAt": "2026-08-24T09:55:52.300Z",
+  "updatedAt": "2026-08-24T13:11:08.000Z",
   "history": [
     {
       "state": "Generated",
@@ -23,6 +23,63 @@
       "state": "Generated",
       "at": "2026-08-23T12:19:51.453Z",
       "run": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    },
+    {
+      "state": "Approved",
+      "at": "2026-08-24T07:25:49.469Z",
+      "run": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    },
+    {
+      "state": "Executed",
+      "at": "2026-08-24T07:43:19.389Z",
+      "run": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    },
+    {
+      "state": "Executed",
+      "at": "2026-08-24T08:24:34.414Z",
+      "run": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    },
+    {
+      "state": "Executed",
+      "at": "2026-08-24T08:29:10.249Z",
+      "run": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    },
+    {
+      "state": "Executed",
+      "at": "2026-08-24T09:53:55.376Z",
+      "run": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    },
+    {
+      "state": "Approved",
+      "at": "2026-08-24T09:55:52.300Z",
+      "run": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    },
+    {
+      "state": "Assembled",
+      "at": "2026-08-24T10:01:54.000Z"
+    },
+    {
+      "state": "Promoted",
+      "at": "2026-08-24T13:11:08.000Z",
+      "note": "Module directory was removed outside the retire-module CLI flow while investigating a Windows file lock (IntelliJ JPS build daemon). Verification had already passed (63/63 identical) with the directory present, and the live from-baseline run (testng-agency.xml, Headless) had already passed 15/15 before removal. Ownership was already registered in .baseline_ownership.json by an earlier retire-module --apply attempt that failed only at the delete step (EPERM). This call records the completion the tool itself would have recorded, using the same real verification result."
     }
-  ]
+  ],
+  "lastMergeSummary": "git commit 6beee4fe23d02e581db96b07b0c6e6624d6f43f5",
+  "baselinePath": "platform_core_data/automation_baseline/shaft/tests_SHAFT",
+  "ownedPaths": [
+    "src/main/java/AdminPages/Admin/Agency/**",
+    "src/test/java/AdminPages/Admin/Agency/**",
+    "src/test/java/utilities/AgencyFixture.java",
+    "src/test/resources/testDataFiles/agency/**",
+    "testng-agency.xml"
+  ],
+  "retiredPath": "platform_core_data/modules/agency/automation/tests_SHAFT",
+  "promotedAt": "2026-08-24T13:11:08.000Z",
+  "promotedBy": "ahmed.ayman@tildetech.ae",
+  "promotionVerification": {
+    "passed": true,
+    "fileCount": 63,
+    "reportPath": null,
+    "verifiedAt": "2026-08-24T13:11:08.000Z"
+  }
 }

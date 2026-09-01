@@ -1,0 +1,15 @@
+{
+  "folderName": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
+  "index": 5,
+  "scope": "UserStory",
+  "target": "Import Booked PNR - New Layer Contract",
+  "workflow": "unversioned",
+  "targetRef": "46481cc18cc4a50218ae0a6b764bdc2a93dbbae6",
+  "targetRefScope": [],
+  "targetRefCapturedAt": "2026-09-01T08:41:40.582Z",
+  "targetRepoRoot": "E:/Projects/agentic-ai-testing-platform",
+  "targetRefReason": "git repository at E:/Projects/agentic-ai-testing-platform",
+  "createdBy": "Run Manager",
+  "startedTime": "2026-09-01T08:41:40.582Z",
+  "status": "Preparing"
+}

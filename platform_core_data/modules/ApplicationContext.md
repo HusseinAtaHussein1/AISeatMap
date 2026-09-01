@@ -4,10 +4,10 @@
 |---|---|
 | Scope | **The whole application**, as the relationships *between* modules. Not a summary of them |
 | Created | 2026-08-18, by operator directive during run-004 |
-| Revision | 1 |
-| Status | **`Draft` — refreshed for `run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency`** |
+| Revision | 2 |
+| Status | **`Draft` — refreshed for `run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract`** |
 | Lifecycle | Refreshed to `Draft` by **Stage 1** at run start · appended to by any stage that **proves** a cross-module fact · presented for approval by the branch's **terminal stage** (`6A` Reporting, or `4M` Manual Execution) · **final only once a human approves it** — see `module_architecture.md` §6.7.1 |
-| Modules approved so far | `branch` (Active) · `agency` (Active) — 16 more `Proposed` |
+| Modules approved so far | `branch` (Active) · `agency` (Active) · `import-booked-pnr` (Active, with Feature `new-layer-contract`) — 16 more `Proposed` |
 | Target Environment | `http://192.168.1.70` (Admin, STG) · `http://192.168.1.92:9500` (NDC Portal — no credentials configured) |
 | PRD source | `platform_core_data/knowledge_base/PRD.md` — §11 (E2E), §7 (module areas), §6 (cross-cutting) |
 | Anticipated by | `agency` Project Context `PO-11`, which deferred reflection coverage *"until an application-level Project Context exists"*. This is that document |
@@ -38,13 +38,17 @@ context without losing meaning, it was never application-level, and it is duplic
 
 ## 1. Module map
 
-Sixteen of eighteen modules are `Proposed` — named in the registry from the PRD, with no folder and no
-work done. That is a statement of what exists, not a backlog commitment.
+Sixteen of nineteen modules are `Proposed` — named in the registry from the PRD, with no folder and no
+work done. That is a statement of what exists, not a backlog commitment. `import-booked-pnr` is not
+PRD-derived: it is an **existing application capability** the PRD's 2026-07-25 automation-derived
+reconstruction does not cover, registered on 2026-09-01 during a New User Story intake (see its own
+Project Context for why).
 
 | Module | Status | Stages on disk | Role in the application |
 |---|---|---|---|
 | `branch` | **Active** | context · discovery · test_design · automation · healing | Organisation layer under Company. Owns supplier routing and the configuration Agencies inherit |
 | `agency` | **Active** | context · discovery · test_design | Organisation layer under Branch. The unit that books |
+| `import-booked-pnr` | **Active** | features/`new-layer-contract`/context · test_design | **Existing** capability: importing an offline-booked, ticketed PNR into NDC as a manual booking — applies the Rule Engine at the original ticketing time and deducts the organization wallet. Distinct from `import-pnr` (below), which imports an *un-ticketed* PNR for online payment. Its Feature `new-layer-contract` covers the **new** `NDC_Core_service` integration path replacing NDC-INT for booking retrieval |
 | `authentication` | Proposed | — | Admin and Portal login, OTP, lockout. Upstream of everything |
 | `company` | Proposed | — | Departments, Top-Up Requests |
 | `role-management` | Proposed | — | Roles and permission sets. **Owns the maker–checker authorization question every module defers to it** |
@@ -272,6 +276,17 @@ last week's understanding of the application.
 — an edit invented to look productive is worse than no edit, because the next reader cannot tell which
 lines were learned and which were filler.
 
-**Current cycle:** `Draft`, refreshed for run-004, which has recorded three cross-module facts so far
-(`BR-006`, `BR-007`, `BR-008`) and moved `E2E-03` from no coverage to partial. It becomes
-`Pending Review` when run-004 reaches Stage `6A`.
+**Cycle history:** `run-004` recorded three cross-module facts (`BR-006`, `BR-007`, `BR-008`) and moved
+`E2E-03` from no coverage to partial before this refresh.
+
+**Current cycle:** `Draft`, refreshed for `run-005` — §1's module map updated to add `import-booked-pnr`
+(registered via intake, not PRD-derived; an existing capability the PRD does not cover). No
+cross-module dependency has been *proven* yet in this cycle; §2's graph is unchanged.
+
+**One dependency asserted but not yet proven, recorded here because it spans modules.** The
+`import-booked-pnr` capability depends on an integration layer for supplier/GDS booking retrieval, and
+that dependency is being changed: **NDC Integration (NDC-INT) → `NDC_Core_service`**. The historical
+flow also touches `rule-engine` (rules applied at the original offline ticketing time, not import
+time) and organization wallet handling. None of this has been observed by a run — it comes from
+historical documentation supplied 2026-09-01 and is stated as asserted, not verified. It becomes
+`Pending Review` when run-005 reaches its branch's terminal stage.

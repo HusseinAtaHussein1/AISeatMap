@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "activeRun": {
-    "folderName": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency",
-    "index": 4,
+    "folderName": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
+    "index": 5,
     "scope": "UserStory",
-    "target": "US-4222-UpdateAgency",
+    "target": "ImportBookedPNR-NewLayerContract",
     "status": "Preparing",
     "title": null,
-    "startedTime": "2026-08-17T11:35:25.430Z",
+    "startedTime": "2026-09-01T08:41:40.582Z",
     "stagesPresent": [],
-    "path": "platform_core_data/runs/run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+    "path": "platform_core_data/runs/run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract"
   },
-  "switchedAt": "2026-08-17T11:35:25.430Z",
+  "switchedAt": "2026-09-01T08:41:40.582Z",
   "setBy": "Run Manager",
-  "previousRun": "run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch"
+  "previousRun": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
 }

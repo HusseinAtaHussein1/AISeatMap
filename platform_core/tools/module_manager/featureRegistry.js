@@ -64,19 +64,26 @@ class FeatureRegistryError extends Error {
   }
 }
 
-/** @param {string} modulesDir @param {string} moduleSlug @returns {string} */
-function featuresDir(modulesDir, moduleSlug) {
-  return path.join(modulesDir, moduleSlug, FEATURES_DIRNAME);
+/**
+ * @param {string} modulesDir @param {string} moduleSlug
+ * @param {string} [dirname] - the folder name to use instead of `features` (default). Generalized
+ *   for the NDC Core Service layer's shared-scope entities, which register through this same file
+ *   but live under `shared/` rather than `features/` (module_architecture.md, NDC section). Every
+ *   existing caller omits this and gets byte-identical `features/` behavior.
+ * @returns {string}
+ */
+function featuresDir(modulesDir, moduleSlug, dirname = FEATURES_DIRNAME) {
+  return path.join(modulesDir, moduleSlug, dirname);
 }
 
-/** @param {string} modulesDir @param {string} moduleSlug @param {string} featureSlug */
-function featureDir(modulesDir, moduleSlug, featureSlug) {
-  return path.join(featuresDir(modulesDir, moduleSlug), featureSlug);
+/** @param {string} modulesDir @param {string} moduleSlug @param {string} featureSlug @param {string} [dirname] */
+function featureDir(modulesDir, moduleSlug, featureSlug, dirname = FEATURES_DIRNAME) {
+  return path.join(featuresDir(modulesDir, moduleSlug, dirname), featureSlug);
 }
 
-/** @param {string} modulesDir @param {string} moduleSlug @param {string} featureSlug */
-function featureStatePath(modulesDir, moduleSlug, featureSlug) {
-  return path.join(featureDir(modulesDir, moduleSlug, featureSlug), FEATURE_STATE_FILENAME);
+/** @param {string} modulesDir @param {string} moduleSlug @param {string} featureSlug @param {string} [dirname] */
+function featureStatePath(modulesDir, moduleSlug, featureSlug, dirname = FEATURES_DIRNAME) {
+  return path.join(featureDir(modulesDir, moduleSlug, featureSlug, dirname), FEATURE_STATE_FILENAME);
 }
 
 /**
@@ -332,6 +339,8 @@ function recordFeatureStage(modulesDir, moduleSlug, featureSlug, stage, update =
     );
   }
 
+  const dirname = opts.dirname || FEATURES_DIRNAME;
+
   requireModule(modulesDir, moduleSlug);
   const features = listFeatures(modulesDir, moduleSlug);
   const existing = features.find((f) => f.slug === featureSlug);
@@ -364,9 +373,9 @@ function recordFeatureStage(modulesDir, moduleSlug, featureSlug, stage, update =
 
   // The Feature's own feature.json, written only when the Feature is actually on disk — the same
   // rule registerModule() applies to module.json for a Proposed module.
-  if (fs.existsSync(featureDir(modulesDir, moduleSlug, featureSlug))) {
+  if (fs.existsSync(featureDir(modulesDir, moduleSlug, featureSlug, dirname))) {
     writeJsonAtomic(
-      featureStatePath(modulesDir, moduleSlug, featureSlug),
+      featureStatePath(modulesDir, moduleSlug, featureSlug, dirname),
       { ...updated, module: moduleSlug }
     );
   }
@@ -379,12 +388,13 @@ function recordFeatureStage(modulesDir, moduleSlug, featureSlug, stage, update =
  * @param {string} modulesDir
  * @param {string} moduleSlug
  * @param {string} featureSlug
+ * @param {string} [dirname] - see featuresDir()
  * @returns {object|null}
  */
-function resolveFeature(modulesDir, moduleSlug, featureSlug) {
+function resolveFeature(modulesDir, moduleSlug, featureSlug, dirname = FEATURES_DIRNAME) {
   const entry = findFeature(modulesDir, moduleSlug, featureSlug);
   if (!entry) return null;
-  const dir = featureDir(modulesDir, moduleSlug, featureSlug);
+  const dir = featureDir(modulesDir, moduleSlug, featureSlug, dirname);
   return {
     ...entry,
     module: moduleSlug,

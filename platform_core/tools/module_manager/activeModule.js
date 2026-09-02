@@ -166,8 +166,9 @@ function setActiveModules(modulesDir, identifiers, opts = {}) {
       );
     }
     if (entry.status === 'Superseded') {
+      const by = entry.supersededByExternal || entry.supersededBy;
       throw new ActiveModuleError(
-        `Module "${slug}" is Superseded by "${entry.supersededBy}". Activate that module instead ` +
+        `Module "${slug}" is Superseded by "${by}". Activate that ${entry.supersededByExternal ? 'entity' : 'module'} instead ` +
         '— the superseded one stays readable but is no longer where work lands.'
       );
     }
@@ -434,6 +435,24 @@ function isActiveModuleStale(modulesDir) {
 }
 
 /**
+ * True when a currently-active module has since been marked Superseded.
+ *
+ * `setActiveModules()` already refuses to SELECT a Superseded module (Constraint 2 — Superseded
+ * status mechanically blocks reuse). This covers the other direction: a module that was legitimately
+ * active and was superseded WHILE active. The pointer does not auto-clear on supersede (that would
+ * make `supersedeModule()` reach into a pointer file it otherwise has no reason to touch), so this is
+ * reported the same way a stale Feature pointer is — visible on a plain `active` read, not silently
+ * hidden, so a human notices before recording a stage against a module that no longer accepts new work.
+ * @param {string} modulesDir
+ * @returns {boolean}
+ */
+function isActiveModuleSuperseded(modulesDir) {
+  const registry = readRegistry(modulesDir);
+  const pointed = registry.activeModules || [];
+  return pointed.some((slug) => findModule(registry, slug)?.status === 'Superseded');
+}
+
+/**
  * Clears the selection. Used when a project intentionally has no active module.
  * @param {string} modulesDir
  * @param {{now: Date, setBy?: string}} opts
@@ -506,6 +525,7 @@ module.exports = {
   resolveActiveFeature,
   readActiveModules,
   isActiveModuleStale,
+  isActiveModuleSuperseded,
   isActiveFeatureStale,
   clearActiveModules,
 };

@@ -190,9 +190,24 @@ function renderModuleSummary(modulesDir, slug, opts = {}) {
   );
   lines.push('');
   lines.push(`**Slug:** \`${slug}\` · **Status:** ${orDash(module.status)}`
-    + (module.supersededBy ? ` · **Superseded by:** \`${module.supersededBy}\`` : ''));
+    + (module.supersededBy ? ` · **Superseded by:** \`${module.supersededBy}\`` : '')
+    // supersededByExternal: the superseding entity lives OUTSIDE this registry entirely (e.g. an NDC
+    // Core Service Feature promoted into services/) — an opaque reference string this file cannot
+    // resolve into a module link, so it is rendered as its own labeled fact rather than folded into
+    // the `supersededBy` phrasing above, which every reader assumes points at a sibling module here.
+    + (module.supersededByExternal ? ` · **Superseded by (external):** \`${module.supersededByExternal}\`` : ''));
   lines.push(`**Last generated:** ${now.toISOString()}`);
   lines.push('');
+
+  if (module.supersededByExternal) {
+    lines.push(
+      `> **This module is Superseded.** It is no longer where work lands — see ` +
+      `\`${module.supersededByExternal}\` instead. This folder stays readable (nothing is deleted or ` +
+      'renamed on disk), and everything below is its permanent history as of the last time it was ' +
+      'active.'
+    );
+    lines.push('');
+  }
 
   lines.push('## Scope');
   lines.push('');

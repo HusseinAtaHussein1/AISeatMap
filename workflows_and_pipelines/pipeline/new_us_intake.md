@@ -295,3 +295,84 @@ This rule does **not**:
 - Migrate, move, or normalize any existing module, Feature, artifact, or run.
 - Authorize any action against any environment (`run_scope.md` §10).
 - Decide any classification on the human's behalf.
+
+# 12. NDC Core Service intake routing — an ADDITION, alongside §3-§9
+
+This section adds a THIRD routing path, for one business initiative only: **NDC Core Service**. It
+does not change §3-§9 in any way — every non-NDC User Story is routed exactly as written above.
+
+## 12.1 The hierarchy
+
+```
+Service (NDC_Core_Service)
+  → Feature (Refund, Reissue, Seatmap, Import Booked PNR)
+    → Supplier (NDCGal, SabreNDC, ...) — a NEW, independent entity, never called a "feature"
+    → Shared scope (e.g. "new-layer-contract") — cross-supplier work, not yet supplier-specific
+```
+
+A Supplier under one Feature is **independent** from the same Supplier name under a different
+Feature — "NDCGal" under Refund and "NDCGal" under Import Booked PNR are two unrelated entities with
+their own stage tracking, their own folder, their own `supplier.json`.
+
+Refund, Reissue, and Seatmap exist today as **empty Feature registrations only** — proposed and
+approved, so the name is reserved and traceable, but with **no `shared/` or `suppliers/` folder**
+until a real request for that Feature arrives. Import Booked PNR is the only one with live work.
+
+## 12.2 Trigger: "new supplier"
+
+When a human says **"new supplier"** (or names a new Supplier for the NDC Core Service):
+
+1. Ask: **"Which NDC Core Service feature is this supplier for? Refund / Reissue / Seatmap / Import
+   Booked PNR"** — never inferred from context, never assumed from a prior run.
+2. Ask for the supplier checklist / scope description for that Supplier.
+3. Run the scope sweep: `cli.js ndc inspect-scope --name "<Supplier name>" [--user-story ...] --json`.
+   Overlap is a candidate, never a verdict — identical reasoning to §5.1.
+4. Propose the Supplier under the named Feature and **wait for confirmation** before creating
+   anything:
+   ```bash
+   cli.js ndc supplier propose <feature> --name "<Supplier name>"
+   cli.js ndc supplier approve <feature> <supplier> --by "<Reviewer>"
+   cli.js ndc supplier scaffold <feature> <supplier> [--dry-run]
+   ```
+5. Create a run bound to Service + Feature + Supplier (never Service + Feature alone, and never both
+   Supplier and shared scope — `run_manager.md`'s NDC run-ownership validation enforces this
+   mechanically), then run the normal pipeline stages against that Supplier's scope.
+
+## 12.3 Tooling
+
+```bash
+cli.js ndc service list [--json]
+cli.js ndc service propose --name "NDC_Core_Service"
+cli.js ndc service approve <service> --by "Reviewer"
+
+cli.js ndc feature list [--json]
+cli.js ndc feature propose --name "Refund"
+cli.js ndc feature approve <feature> --by "Reviewer"
+cli.js ndc feature scaffold <feature> [--dry-run]
+
+cli.js ndc shared propose  <feature> --name "New Layer Contract" [--user-story ...]
+cli.js ndc shared approve  <feature> <scope> --by "Reviewer"
+cli.js ndc shared scaffold <feature> <scope> [--dry-run]
+cli.js ndc shared stage    <feature> <scope> <stage> --status <Approved|...>
+
+cli.js ndc supplier propose  <feature> --name "NDCGal"
+cli.js ndc supplier approve  <feature> <supplier> --by "Reviewer"
+cli.js ndc supplier scaffold <feature> <supplier> [--dry-run]
+cli.js ndc supplier stage    <feature> <supplier> <stage> --status <Approved|...>
+cli.js ndc supplier list     <feature> [--json]
+
+cli.js ndc use-feature  <feature>
+cli.js ndc use-supplier <feature> <supplier>
+cli.js ndc inspect-scope --user-story "..." --name "..." [--json]
+```
+
+## 12.4 What this does NOT do
+
+- Does not reuse `modules/modules.json`, `moduleRegistry.js`'s module registry file, or
+  `activeModule.js`'s pointer space. `services/services.json` and `activeService.js` are a SEPARATE,
+  independent addressing system — the two must never be confused.
+- Does not register a Supplier as a "feature", or store it under a `features/` folder.
+- Does not create `refund/`, `reissue/`, or `seatmap/` content beyond the empty Feature registration.
+- Does not migrate the existing `modules/` layer. `agency` and `branch` are untouched.
+
+Full architecture: `module_architecture.md`, NDC Core Service section.

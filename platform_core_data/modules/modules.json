@@ -7,17 +7,15 @@
   },
   "approvedAt": "2026-09-01T08:09:09.619Z",
   "approvedBy": "Ahmed Ayman",
-  "activeModules": [
-    "import-booked-pnr"
-  ],
-  "activeScope": "single",
+  "activeModules": [],
+  "activeScope": null,
   "spansEveryModule": false,
-  "activeFeature": "new-layer-contract",
-  "previousActiveFeature": null,
-  "switchedAt": "2026-09-01T08:09:47.915Z",
+  "activeFeature": null,
+  "previousActiveFeature": "new-layer-contract",
+  "switchedAt": "2026-09-02T07:13:40.168Z",
   "setBy": "Module Manager",
   "previousActiveModules": [
-    "agency"
+    "import-booked-pnr"
   ],
   "modules": [
     {
@@ -1012,10 +1010,10 @@
       "slug": "import-booked-pnr",
       "name": "Import Booked PNR",
       "description": "Admin module to search and import a booked PNR by record locator, supplier and credential; this feature investigates and defines the initial contract for the new integration layer replacing the existing Integration Layer.",
-      "status": "Active",
+      "status": "Superseded",
       "derivedFromSections": [],
       "createdAt": "2026-09-01T08:08:58.619Z",
-      "updatedAt": "2026-09-01T13:26:49.768Z",
+      "updatedAt": "2026-09-02T12:00:00.000Z",
       "supersededBy": null,
       "stages": {
         "context": {
@@ -1115,7 +1113,8 @@
           "approvedAt": "2026-09-01T08:09:24.512Z",
           "approvedBy": "Ahmed Ayman"
         }
-      ]
+      ],
+      "supersededByExternal": "services/ndc-core-service/import-booked-pnr"
     }
   ]
 }

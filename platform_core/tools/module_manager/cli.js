@@ -69,6 +69,7 @@ const {
   readActiveModules,
   resolveActiveFeature,
   isActiveModuleStale,
+  isActiveModuleSuperseded,
   isActiveFeatureStale,
   clearActiveModules,
 } = require('./activeModule');
@@ -94,12 +95,41 @@ const { computeModuleDrift, computeAllModuleDrift, detectStaleStages } = require
 const { writeModuleSummary } = require('./moduleSummary');
 const { ModuleSlugError, generateModuleSlug } = require('./moduleSlug');
 
+// NDC Core Service layer: Service → Feature → Supplier/Shared (module_architecture.md, NDC section).
+const {
+  ServiceRegistryError,
+  proposeServices,
+  approveServices,
+  scaffoldService,
+  listServices,
+} = require('./serviceRegistry');
+const {
+  ActiveServiceError,
+  findFeatureAcrossServices,
+  setActiveNdcFeature,
+  setActiveSupplier,
+  readActiveService,
+} = require('./activeService');
+const {
+  SupplierRegistryError,
+  proposeSupplier,
+  approveSuppliers,
+  recordSupplierStage,
+  resolveSupplier,
+  scaffoldSupplier,
+  listSuppliers,
+  listAllSuppliers,
+} = require('./supplierRegistry');
+
 const VERBS = new Set([
   'list', 'active', 'use', 'show', 'clear',
   'propose', 'approve', 'scaffold', 'summary', 'stage', 'automation', 'drift',
   // New User Story intake (new_us_intake.md): standalone Features and the scope sweep that runs
   // before anything is created.
   'feature', 'use-feature', 'inspect-scope',
+  // NDC Core Service layer — its own namespace, kept separate from the verbs above (which must keep
+  // working byte-for-byte identically for agency/branch/plain modules).
+  'ndc',
 ]);
 
 /** A malformed invocation — reported like every other named error, never as a stack trace. */
@@ -128,6 +158,8 @@ const KNOWN_FLAGS = new Set([
   // every context document, and `--ac-ref` points at the acceptance criteria a human compares
   // when the tool reports a candidate (intake rule #9 — never decide overlap from a story number).
   'user-story', 'ac-ref', 'module', 'feature',
+  // NDC Core Service layer.
+  'services-dir',
 ]);
 
 function parseArgs(argv) {
@@ -206,6 +238,26 @@ function resolveModulesDir(args) {
   return r ? r.modulesDir : null;
 }
 
+/**
+ * Where services/ lives — a SIBLING of modules/, never nested inside it (module_architecture.md,
+ * NDC section). `--services-dir` overrides, mirroring `--modules-dir`.
+ */
+function resolveServicesDir(args) {
+  const explicit = args['services-dir'] && args['services-dir'] !== true;
+  if (explicit) return path.resolve(args['services-dir']);
+  try {
+    const roots = require('../platform_paths/paths').resolveRoots();
+    return path.join(roots.dataRoot, 'services');
+  } catch (err) {
+    console.error(
+      `Could not resolve platform roots (${err.message}).\n` +
+      'Pass --services-dir <path> explicitly, or fix platform.config.json.'
+    );
+    process.exitCode = 1;
+    return null;
+  }
+}
+
 function now(args) {
   const value = args.now && args.now !== true ? new Date(args.now) : new Date();
   if (Number.isNaN(value.getTime())) {
@@ -262,9 +314,12 @@ function cmdActive(args) {
   // at a broken pointer in order to fix it. What must fail is any stage trying to RESOLVE it, and
   // that is resolveActiveFeature()'s job (decision C — never fall back silently).
   const featureStale = isActiveFeatureStale(modulesDir);
+  // Likewise, an active module superseded WHILE active is surfaced rather than hidden — the pointer
+  // does not auto-clear on supersede (see isActiveModuleSuperseded's header).
+  const superseded = isActiveModuleSuperseded(modulesDir);
 
   if (args.json) {
-    console.log(JSON.stringify({ ...state, featureStale }, null, 2));
+    console.log(JSON.stringify({ ...state, featureStale, superseded }, null, 2));
     return;
   }
   if (!state.modules.length) {
@@ -275,6 +330,14 @@ function cmdActive(args) {
   console.log(state.modules.join('\n'));
   if (state.feature) {
     console.log(`feature: ${state.feature}${featureStale ? '   ⚠ STALE — does not resolve' : ''}`);
+  }
+  if (superseded) {
+    console.error(
+      '\nThe active module has been Superseded since it was selected. Re-select the module that '
+      + 'superseded it with `cli.js use <slug>` — recording further stages here would write into a '
+      + 'module that is no longer where work lands.'
+    );
+    process.exitCode = 1;
   }
   if (featureStale) {
     console.error(
@@ -904,6 +967,500 @@ function cmdDrift(args) {
   }
 }
 
+// ── NDC Core Service layer: Service → Feature → Supplier/Shared ────────────────────────────────
+//
+// Kept as its OWN namespace, entirely separate from the verbs above. A Feature here reuses
+// moduleRegistry.js wholesale (services/<service>/ passed as its modulesDir); a shared scope reuses
+// featureRegistry.js with dirname 'shared' instead of 'features'; a Supplier is its own file
+// (supplierRegistry.js), never registered as a "feature". See module_architecture.md, NDC section.
+
+const SHARED_DIRNAME = 'shared';
+
+function ndcFeaturePathFor(serviceSlug, featureSlug) {
+  return `platform_core_data/services/${serviceSlug}/${featureSlug}`;
+}
+function ndcSharedPathFor(serviceSlug, featureSlug, scopeSlug) {
+  return `${ndcFeaturePathFor(serviceSlug, featureSlug)}/${SHARED_DIRNAME}/${scopeSlug}`;
+}
+function ndcSupplierPathFor(serviceSlug, featureSlug, supplierSlug) {
+  return `${ndcFeaturePathFor(serviceSlug, featureSlug)}/suppliers/${supplierSlug}`;
+}
+
+/**
+ * Resolves the single Active service. The `ndc feature/shared/supplier` verbs deliberately do not
+ * require the human to name the Service on every call (see activeService.js's header) — today there
+ * is exactly one (`ndc-core-service`). Ambiguity is reported, never silently resolved.
+ */
+function resolveSingleActiveService(servicesDir) {
+  const active = listServices(servicesDir).filter((s) => s.status === 'Active');
+  if (!active.length) {
+    throw new ServiceRegistryError(
+      'No Active service is registered. Run `cli.js ndc service propose --name "..."` then ' +
+      '`cli.js ndc service approve <slug> --by "..."` first.'
+    );
+  }
+  if (active.length > 1) {
+    throw new ServiceRegistryError(
+      `${active.length} services are registered (${active.map((s) => s.slug).join(', ')}). ` +
+      'This CLI surface assumes exactly one Active service at a time.'
+    );
+  }
+  return active[0].slug;
+}
+
+function cmdNdc(args) {
+  const servicesDir = resolveServicesDir(args);
+  if (!servicesDir) return;
+
+  const sub = args._[1];
+  const SUBS = ['service', 'feature', 'shared', 'supplier', 'use-feature', 'use-supplier', 'inspect-scope'];
+  if (!sub || !SUBS.includes(sub)) {
+    console.error(`Usage: cli.js ndc <${SUBS.join('|')}> [...]`);
+    process.exitCode = 1;
+    return;
+  }
+
+  const stamp = now(args);
+  const str = (v) => (v && v !== true ? String(v) : undefined);
+
+  if (sub === 'service') { cmdNdcService(servicesDir, args, stamp, str); return; }
+  if (sub === 'feature') { cmdNdcFeature(servicesDir, args, stamp, str); return; }
+  if (sub === 'shared') { cmdNdcShared(servicesDir, args, stamp, str); return; }
+  if (sub === 'supplier') { cmdNdcSupplier(servicesDir, args, stamp, str); return; }
+  if (sub === 'use-feature') { cmdNdcUseFeature(servicesDir, args, stamp); return; }
+  if (sub === 'use-supplier') { cmdNdcUseSupplier(servicesDir, args, stamp); return; }
+  cmdNdcInspectScope(servicesDir, args);
+}
+
+function cmdNdcService(servicesDir, args, stamp, str) {
+  const action = args._[2];
+
+  if (action === 'list') {
+    const rows = listServices(servicesDir);
+    if (args.json) { console.log(JSON.stringify(rows, null, 2)); return; }
+    if (!rows.length) { console.log('No services registered yet.'); return; }
+    for (const s of rows) console.log(`  ${s.slug.padEnd(24)} ${String(s.status).padEnd(10)} ${s.name}`);
+    return;
+  }
+
+  if (action === 'propose') {
+    const name = str(args.name);
+    if (!name) {
+      console.error('Usage: cli.js ndc service propose --name "Service Name" [--description "..."]');
+      process.exitCode = 1;
+      return;
+    }
+    const { proposed, alreadyPresent } = proposeServices(
+      servicesDir, [{ name, description: str(args.description) }], { now: stamp }
+    );
+    for (const s of proposed) console.log(`Proposed: ${s.slug}  (${s.name})`);
+    for (const s of alreadyPresent) console.log(`Already registered as ${s.status}: ${s.slug}`);
+    return;
+  }
+
+  if (action === 'approve') {
+    const by = str(args.by);
+    if (!by) {
+      console.error('Usage: cli.js ndc service approve [<slug>...] --by "<reviewer>"');
+      process.exitCode = 1;
+      return;
+    }
+    const { approved } = approveServices(servicesDir, args._.slice(3), { now: stamp, approvedBy: by });
+    for (const s of approved) {
+      scaffoldService(servicesDir, s.slug, { now: stamp, entry: s });
+      console.log(`Approved and scaffolded: ${s.slug}`);
+    }
+    if (!approved.length) console.log('No proposed services to approve.');
+    return;
+  }
+
+  console.error('Usage: cli.js ndc service <list|propose|approve> [...]');
+  process.exitCode = 1;
+}
+
+function cmdNdcFeature(servicesDir, args, stamp, str) {
+  const action = args._[2];
+
+  if (action === 'list') {
+    const rows = [];
+    for (const svc of listServices(servicesDir)) {
+      for (const m of listModules(path.join(servicesDir, svc.slug))) rows.push({ ...m, service: svc.slug });
+    }
+    if (args.json) { console.log(JSON.stringify(rows, null, 2)); return; }
+    if (!rows.length) { console.log('No Features registered under any service.'); return; }
+    for (const f of rows) {
+      console.log(`  ${f.service}/${f.slug.padEnd(24)} ${String(f.status).padEnd(10)} ${f.name}`);
+    }
+    return;
+  }
+
+  let serviceSlug;
+  try {
+    serviceSlug = resolveSingleActiveService(servicesDir);
+  } catch (err) {
+    console.error(err.message);
+    process.exitCode = 1;
+    return;
+  }
+  const svcDir = path.join(servicesDir, serviceSlug);
+
+  if (action === 'propose') {
+    const name = str(args.name);
+    if (!name) {
+      console.error('Usage: cli.js ndc feature propose --name "Feature Name"');
+      process.exitCode = 1;
+      return;
+    }
+    const { proposed, alreadyPresent } = proposeModules(
+      svcDir, [{ name, kind: 'ndc_feature', service: serviceSlug }], { now: stamp }
+    );
+    for (const f of proposed) console.log(`Proposed: ${serviceSlug}/${f.slug}  (${f.name})`);
+    for (const f of alreadyPresent) console.log(`Already registered as ${f.status}: ${serviceSlug}/${f.slug}`);
+    return;
+  }
+
+  if (action === 'approve') {
+    const by = str(args.by);
+    if (!by) {
+      console.error('Usage: cli.js ndc feature approve [<feature>...] --by "<reviewer>"');
+      process.exitCode = 1;
+      return;
+    }
+    const { approved } = approveModules(svcDir, args._.slice(3), { now: stamp, approvedBy: by });
+    for (const f of approved) {
+      scaffoldModule(svcDir, f.slug, { now: stamp, entry: f });
+      console.log(`Approved and scaffolded: ${serviceSlug}/${f.slug}`);
+    }
+    if (!approved.length) console.log('No proposed Features to approve.');
+    return;
+  }
+
+  if (action === 'scaffold') {
+    const featureSlug = args._[3];
+    if (!featureSlug) {
+      console.error('Usage: cli.js ndc feature scaffold <feature> [--dry-run]');
+      process.exitCode = 1;
+      return;
+    }
+    if (args['dry-run']) {
+      console.log(JSON.stringify(planScaffold(svcDir, featureSlug), null, 2));
+      return;
+    }
+    const { wrote } = scaffoldModule(svcDir, featureSlug, { now: stamp });
+    for (const w of wrote) console.log(`created  ${w}`);
+    return;
+  }
+
+  console.error('Usage: cli.js ndc feature <list|propose|approve|scaffold> [...]');
+  process.exitCode = 1;
+}
+
+function cmdNdcShared(servicesDir, args, stamp, str) {
+  const action = args._[2];
+  const featureSlug = args._[3];
+  const ACTIONS = ['propose', 'approve', 'scaffold', 'stage'];
+  if (!action || !ACTIONS.includes(action) || !featureSlug) {
+    console.error(`Usage: cli.js ndc shared <${ACTIONS.join('|')}> <feature> [...]`);
+    process.exitCode = 1;
+    return;
+  }
+
+  let serviceSlug;
+  try {
+    ({ serviceSlug } = findFeatureAcrossServices(servicesDir, featureSlug));
+  } catch (err) {
+    console.error(err.message);
+    process.exitCode = 1;
+    return;
+  }
+  const svcDir = path.join(servicesDir, serviceSlug);
+
+  if (action === 'propose') {
+    const name = str(args.name);
+    if (!name) {
+      console.error(`Usage: cli.js ndc shared propose ${featureSlug} --name "..." [--user-story ...]`);
+      process.exitCode = 1;
+      return;
+    }
+    const result = proposeFeature(svcDir, featureSlug, {
+      name,
+      sourceUserStory: str(args['user-story']),
+      acceptanceCriteriaRef: str(args['ac-ref']),
+    }, { now: stamp });
+    console.log(`${result.created ? 'Proposed' : 'Updated proposal for'} shared scope ` +
+      `${featureSlug}/${result.feature.slug}  [${result.feature.status}]`);
+    console.log(`  path (on approval): ${ndcSharedPathFor(serviceSlug, featureSlug, result.feature.slug)}`);
+    return;
+  }
+
+  if (action === 'approve') {
+    const by = str(args.by);
+    if (!by) {
+      console.error(`Usage: cli.js ndc shared approve ${featureSlug} <scope> --by "<reviewer>"`);
+      process.exitCode = 1;
+      return;
+    }
+    const scopeSlug = args._[4];
+    const { approved } = approveFeatures(
+      svcDir, featureSlug, scopeSlug ? [scopeSlug] : [], { now: stamp, approvedBy: by }
+    );
+    for (const s of approved) console.log(`Approved shared scope ${featureSlug}/${s.slug}`);
+    if (!approved.length) console.log('No proposed shared scopes to approve.');
+    return;
+  }
+
+  if (action === 'scaffold') {
+    const scopeSlug = args._[4];
+    if (!scopeSlug) {
+      console.error(`Usage: cli.js ndc shared scaffold ${featureSlug} <scope> [--dry-run]`);
+      process.exitCode = 1;
+      return;
+    }
+    if (args['dry-run']) {
+      console.log(JSON.stringify(planFeatureScaffold(svcDir, featureSlug, scopeSlug, SHARED_DIRNAME), null, 2));
+      return;
+    }
+    const result = scaffoldFeature(svcDir, featureSlug, scopeSlug, { now: stamp, dirname: SHARED_DIRNAME });
+    for (const w of result.wrote) console.log(`created  ${w}`);
+    return;
+  }
+
+  // stage
+  const scopeSlug = args._[4];
+  const stage = args._[5];
+  const status = str(args.status);
+  if (!scopeSlug || !stage || !status) {
+    console.error(`Usage: cli.js ndc shared stage ${featureSlug} <scope> <stage> --status <S>`);
+    process.exitCode = 1;
+    return;
+  }
+  const updated = recordFeatureStage(svcDir, featureSlug, scopeSlug, stage, {
+    status,
+    artifactPath: str(args.artifact),
+    lastRun: str(args.run),
+    targetRefAtWrite: str(args['target-ref']),
+    ...(args['no-revision'] ? { incrementRevision: false } : {}),
+  }, { now: stamp, dirname: SHARED_DIRNAME });
+  console.log(`Recorded ${featureSlug}/${scopeSlug} ${stage}: ${updated.stages[stage].status}`);
+}
+
+function cmdNdcSupplier(servicesDir, args, stamp, str) {
+  const action = args._[2];
+  const ACTIONS = ['propose', 'approve', 'scaffold', 'stage', 'list'];
+  const featureSlug = args._[3];
+  if (!action || !ACTIONS.includes(action) || !featureSlug) {
+    console.error(`Usage: cli.js ndc supplier <${ACTIONS.join('|')}> <feature> [...]`);
+    process.exitCode = 1;
+    return;
+  }
+
+  let serviceSlug;
+  try {
+    ({ serviceSlug } = findFeatureAcrossServices(servicesDir, featureSlug));
+  } catch (err) {
+    console.error(err.message);
+    process.exitCode = 1;
+    return;
+  }
+  const svcDir = path.join(servicesDir, serviceSlug);
+
+  if (action === 'list') {
+    const rows = listSuppliers(svcDir, featureSlug);
+    if (args.json) { console.log(JSON.stringify(rows, null, 2)); return; }
+    if (!rows.length) { console.log(`Feature "${featureSlug}" has no registered Suppliers.`); return; }
+    for (const s of rows) console.log(`  ${featureSlug}/${s.slug.padEnd(20)} ${String(s.status).padEnd(10)} ${s.name}`);
+    return;
+  }
+
+  if (action === 'propose') {
+    const name = str(args.name);
+    if (!name) {
+      console.error(`Usage: cli.js ndc supplier propose ${featureSlug} --name "Supplier Name"`);
+      process.exitCode = 1;
+      return;
+    }
+    const result = proposeSupplier(svcDir, serviceSlug, featureSlug, { name }, { now: stamp });
+    console.log(`${result.created ? 'Proposed' : 'Updated proposal for'} supplier ` +
+      `${featureSlug}/${result.supplier.slug}  [${result.supplier.status}]`);
+    console.log(`  path (on approval): ${ndcSupplierPathFor(serviceSlug, featureSlug, result.supplier.slug)}`);
+    return;
+  }
+
+  if (action === 'approve') {
+    const by = str(args.by);
+    if (!by) {
+      console.error(`Usage: cli.js ndc supplier approve ${featureSlug} <supplier> --by "<reviewer>"`);
+      process.exitCode = 1;
+      return;
+    }
+    const supplierSlug = args._[4];
+    const { approved } = approveSuppliers(
+      svcDir, featureSlug, supplierSlug ? [supplierSlug] : [], { now: stamp, approvedBy: by }
+    );
+    for (const s of approved) console.log(`Approved supplier ${featureSlug}/${s.slug}`);
+    if (!approved.length) console.log('No proposed Suppliers to approve.');
+    return;
+  }
+
+  if (action === 'scaffold') {
+    const supplierSlug = args._[4];
+    if (!supplierSlug) {
+      console.error(`Usage: cli.js ndc supplier scaffold ${featureSlug} <supplier> [--dry-run]`);
+      process.exitCode = 1;
+      return;
+    }
+    if (args['dry-run']) {
+      const { plan } = scaffoldSupplier(svcDir, featureSlug, supplierSlug, { now: stamp, dryRun: true });
+      console.log(JSON.stringify(plan, null, 2));
+      return;
+    }
+    const result = scaffoldSupplier(svcDir, featureSlug, supplierSlug, { now: stamp });
+    for (const w of result.wrote) console.log(`created  ${w}`);
+    return;
+  }
+
+  // stage
+  const supplierSlug = args._[4];
+  const stage = args._[5];
+  const status = str(args.status);
+  if (!supplierSlug || !stage || !status) {
+    console.error(`Usage: cli.js ndc supplier stage ${featureSlug} <supplier> <stage> --status <S>`);
+    process.exitCode = 1;
+    return;
+  }
+  const updated = recordSupplierStage(svcDir, featureSlug, supplierSlug, stage, {
+    status,
+    artifactPath: str(args.artifact),
+    lastRun: str(args.run),
+    targetRefAtWrite: str(args['target-ref']),
+    ...(args['no-revision'] ? { incrementRevision: false } : {}),
+  }, { now: stamp });
+  console.log(`Recorded ${featureSlug}/${supplierSlug} ${stage}: ${updated.stages[stage].status}`);
+}
+
+function cmdNdcUseFeature(servicesDir, args, stamp) {
+  const featureSlug = args._[2];
+  if (!featureSlug) {
+    console.error('Usage: cli.js ndc use-feature <feature>');
+    process.exitCode = 1;
+    return;
+  }
+  try {
+    const registry = setActiveNdcFeature(servicesDir, featureSlug, { now: stamp });
+    console.log(`Active: ${registry.activeService} / feature ${registry.activeFeature}`);
+  } catch (err) {
+    console.error(err.message);
+    process.exitCode = 1;
+  }
+}
+
+function cmdNdcUseSupplier(servicesDir, args, stamp) {
+  const featureSlug = args._[2];
+  const supplierSlug = args._[3];
+  if (!featureSlug || !supplierSlug) {
+    console.error('Usage: cli.js ndc use-supplier <feature> <supplier>');
+    process.exitCode = 1;
+    return;
+  }
+  try {
+    const registry = setActiveSupplier(servicesDir, featureSlug, supplierSlug, { now: stamp });
+    console.log(
+      `Active: ${registry.activeService} / ${registry.activeFeature} / supplier ${registry.activeSupplier}`
+    );
+  } catch (err) {
+    console.error(err.message);
+    process.exitCode = 1;
+  }
+}
+
+/** `ndc inspect-scope` — the same-shaped sweep as `inspect-scope`, across the NDC layer. */
+function cmdNdcInspectScope(servicesDir, args) {
+  const str = (v) => (v && v !== true ? String(v) : undefined);
+  const query = { userStory: str(args['user-story']), name: str(args.name) };
+  const normalize = (v) => (v === null || v === undefined ? null : String(v).toLowerCase().replace(/[^a-z0-9]/g, ''));
+  const wantedStory = query.userStory ? normalize(query.userStory) : null;
+  const wantedName = query.name ? String(query.name).toLowerCase().trim() : null;
+
+  const services = listServices(servicesDir);
+  const features = [];
+  const sharedScopes = [];
+  const suppliers = [];
+  for (const svc of services) {
+    const svcDir = path.join(servicesDir, svc.slug);
+    for (const f of listModules(svcDir)) {
+      features.push({ ...f, service: svc.slug });
+      for (const sh of listFeatures(svcDir, f.slug)) {
+        sharedScopes.push({ ...sh, service: svc.slug, feature: f.slug });
+      }
+      for (const s of listSuppliers(svcDir, f.slug)) {
+        suppliers.push({ ...s, service: svc.slug, feature: f.slug });
+      }
+    }
+  }
+
+  const active = readActiveService(servicesDir);
+  const matchesName = (n) => wantedName && String(n || '').toLowerCase().trim() === wantedName;
+
+  const overlapFeatures = features.filter((f) => matchesName(f.name));
+  const overlapShared = sharedScopes.filter((s) => (wantedStory && normalize(s.sourceUserStory) === wantedStory) || matchesName(s.name));
+  const overlapSuppliers = suppliers.filter((s) => matchesName(s.name));
+
+  const report = {
+    query,
+    services: services.map((s) => ({ slug: s.slug, name: s.name, status: s.status })),
+    features: features.map((f) => ({ service: f.service, slug: f.slug, name: f.name, status: f.status })),
+    sharedScopes: sharedScopes.map((s) => ({
+      service: s.service, feature: s.feature, slug: s.slug, name: s.name, status: s.status,
+      sourceUserStory: s.sourceUserStory ?? null,
+    })),
+    suppliers: suppliers.map((s) => ({ service: s.service, feature: s.feature, slug: s.slug, name: s.name, status: s.status })),
+    active,
+    overlapCandidates: {
+      features: overlapFeatures.map((f) => `${f.service}/${f.slug}`),
+      sharedScopes: overlapShared.map((s) => `${s.service}/${s.feature}/shared/${s.slug}`),
+      suppliers: overlapSuppliers.map((s) => `${s.service}/${s.feature}/suppliers/${s.slug}`),
+    },
+  };
+
+  const hits = report.overlapCandidates.features.length + report.overlapCandidates.sharedScopes.length
+    + report.overlapCandidates.suppliers.length;
+
+  if (args.json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    console.log('Registered services');
+    for (const s of report.services) console.log(`  ${s.slug.padEnd(24)} ${s.status}`);
+    console.log('\nRegistered Features');
+    for (const f of report.features) console.log(`  ${f.service}/${f.slug.padEnd(24)} ${f.status}`);
+    console.log('\nRegistered shared scopes');
+    if (!report.sharedScopes.length) console.log('  (none)');
+    for (const s of report.sharedScopes) {
+      console.log(`  ${s.service}/${s.feature}/shared/${s.slug.padEnd(20)} ${s.status}  ${s.sourceUserStory || '—'}`);
+    }
+    console.log('\nRegistered suppliers');
+    if (!report.suppliers.length) console.log('  (none)');
+    for (const s of report.suppliers) {
+      console.log(`  ${s.service}/${s.feature}/suppliers/${s.slug.padEnd(20)} ${s.status}`);
+    }
+    console.log(
+      `\nActive: ${active.service || '(none)'}${active.feature ? ` / ${active.feature}` : ''}` +
+      `${active.supplier ? ` / ${active.supplier}` : ''}`
+    );
+    console.log(`\nOverlap candidates: ${hits || 'none'}`);
+    for (const f of report.overlapCandidates.features) console.log(`  feature  ${f}`);
+    for (const s of report.overlapCandidates.sharedScopes) console.log(`  shared   ${s}`);
+    for (const s of report.overlapCandidates.suppliers) console.log(`  supplier ${s}`);
+    if (hits) {
+      console.log(
+        '\nThese are CANDIDATES, not a verdict — compare business scope and acceptance criteria before ' +
+        'concluding anything.'
+      );
+    }
+  }
+
+  if (hits) process.exitCode = 2;
+}
+
 function main(argv) {
   let args;
   try {
@@ -920,7 +1477,7 @@ function main(argv) {
 
   if (!verb || args.help) {
     console.error(
-      'Usage: cli.js <list|active|use|show|clear|propose|approve|scaffold|summary|stage|automation|drift> [...]\n' +
+      'Usage: cli.js <list|active|use|show|clear|propose|approve|scaffold|summary|stage|automation|drift|feature|use-feature|inspect-scope|ndc> [...]\n' +
       'See the header of this file for the full verb list.'
     );
     process.exitCode = args.help ? 0 : 1;
@@ -943,6 +1500,7 @@ function main(argv) {
     feature: cmdFeature,
     'use-feature': cmdUseFeature,
     'inspect-scope': cmdInspectScope,
+    ndc: cmdNdc,
   };
 
   try {
@@ -952,7 +1510,8 @@ function main(argv) {
       || err instanceof ActiveFeatureError || err instanceof FeatureRegistryError
       || err instanceof FeatureScaffoldError
       || err instanceof ModuleScaffoldError || err instanceof AutomationStateError
-      || err instanceof ModuleSlugError) {
+      || err instanceof ModuleSlugError || err instanceof ServiceRegistryError
+      || err instanceof ActiveServiceError || err instanceof SupplierRegistryError) {
       console.error(err.message);
       process.exitCode = 1;
       return;

@@ -81,6 +81,39 @@ creates nothing — so the proposal is the real plan.
 **Full rule, and the enforcement that does not depend on this file:**
 [`workflows_and_pipelines/pipeline/new_us_intake.md`](workflows_and_pipelines/pipeline/new_us_intake.md).
 
+## NDC Core Service intake routing
+
+A third, independent hierarchy for one business initiative: `Service (NDC_Core_Service) → Feature
+(Refund, Reissue, Seatmap, Import Booked PNR) → Supplier (NDCGal, SabreNDC, ...) or Shared scope`.
+This is a SIBLING of the module/Feature routing above, never a variant of it — a Supplier is never
+registered as a "feature", and its registry (`platform_core_data/services/services.json`) is
+completely separate from `modules/modules.json`. Full spec:
+[`workflows_and_pipelines/pipeline/module_architecture.md`](workflows_and_pipelines/pipeline/module_architecture.md)
+§11 and
+[`workflows_and_pipelines/pipeline/new_us_intake.md`](workflows_and_pipelines/pipeline/new_us_intake.md)
+§12.
+
+**Trigger: "new supplier"**, or a new Supplier named for the NDC Core Service. When it fires:
+
+1. Ask: **"Which NDC Core Service feature is this supplier for? Refund / Reissue / Seatmap / Import
+   Booked PNR"** — never inferred, never assumed from a prior run.
+2. Ask for the supplier checklist / scope description for that Supplier.
+3. Create the Supplier scope (`cli.js ndc supplier propose/approve/scaffold <feature> ...`), then a
+   run bound to Service + Feature + Supplier, and run the normal pipeline stages against it.
+
+**A Supplier under one Feature is independent from the same Supplier name under a different
+Feature.** "NDCGal" under Refund and "NDCGal" under Import Booked PNR are two unrelated entities —
+separate folder, separate `supplier.json`, separate stage tracking, never merged or cross-referenced.
+
+**Refund / Reissue / Seatmap exist as empty Feature folders only.** They are proposed and approved
+(the name is reserved and traceable), but no `shared/` and no `suppliers/` content is created for any
+of them until a real request arrives — exactly the same "never created silently" discipline every
+module and Feature in this platform already follows.
+
+A run addresses NDC scope with `service`/`feature`/`supplier`/`sharedScope` on `run.json`, not
+`modules[]`. It must pick exactly one of `supplier` or `sharedScope` — never both, never neither —
+enforced mechanically by `createRun.js`'s `validateNdcRunScope()`.
+
 ## Scope pointers
 
 | | |

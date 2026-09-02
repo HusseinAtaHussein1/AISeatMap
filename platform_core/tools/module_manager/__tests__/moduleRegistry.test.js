@@ -281,6 +281,59 @@ test('supersedeModule marks a module superseded without renaming or deleting it'
   cleanup(modulesDir);
 });
 
+test('supersedeModule accepts an externalSupersededBy reference when the superseding entity lives in a different registry', () => {
+  // Constraint 2: import-booked-pnr is promoted into services/ndc-core-service/import-booked-pnr —
+  // a different registry this file cannot resolve or validate, so it is stored as an opaque string
+  // in its OWN field rather than overloading `supersededBy` (which every reader assumes is a sibling
+  // slug in THIS registry).
+  const modulesDir = makeModulesDir();
+  makeActiveModule(modulesDir, 'Import Booked PNR');
+
+  supersedeModule(modulesDir, 'import-booked-pnr', null, {
+    now: LATER,
+    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+  });
+
+  const entry = resolveModule(modulesDir, 'import-booked-pnr');
+  assert.equal(entry.status, 'Superseded');
+  assert.equal(entry.supersededBy, null);
+  assert.equal(entry.supersededByExternal, 'services/ndc-core-service/import-booked-pnr');
+  assert.ok(fs.existsSync(path.join(modulesDir, 'import-booked-pnr')), 'the folder must stay readable');
+  cleanup(modulesDir);
+});
+
+test('supersedeModule requires either bySlug or externalSupersededBy — refuses a supersede naming neither', () => {
+  const modulesDir = makeModulesDir();
+  makeActiveModule(modulesDir, 'Booking');
+  assert.throws(
+    () => supersedeModule(modulesDir, 'booking', null, { now: LATER }),
+    (err) => err instanceof ModuleRegistryError && /requires either `bySlug`/.test(err.message)
+  );
+  cleanup(modulesDir);
+});
+
+test('recordStage is structurally unreachable for a Superseded module through the CLI activation path', () => {
+  // Stage-recording tools resolve their target module through the active-module pointer (or an
+  // explicit slug a human typed), and setActiveModules() already refuses a Superseded module
+  // (activeModule.test.js). recordStage() itself does not re-check status — by design, an explicit
+  // `cli.js stage <slug> ...` targeting a slug directly must still work for a human fixing a
+  // pre-Superseded record — but the NORMAL path (select-then-record) cannot reach it, because
+  // selection is the gate. This test documents that recordStage() has no status guard of its own,
+  // so the guarantee lives entirely in setActiveModules().
+  const modulesDir = makeModulesDir();
+  makeActiveModule(modulesDir, 'Import Booked PNR');
+  supersedeModule(modulesDir, 'import-booked-pnr', null, {
+    now: LATER,
+    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+  });
+
+  // recordStage() does not throw on a Superseded module when targeted explicitly by slug — proving
+  // the guard is structural (nothing can SELECT it as active) rather than duplicated here.
+  const updated = recordStage(modulesDir, 'import-booked-pnr', 'context', { status: 'Draft' }, { now: LATER });
+  assert.equal(updated.stages.context.status, 'Draft');
+  cleanup(modulesDir);
+});
+
 test('listModules reports stagesPresent from disk, not from status fields', () => {
   // "Where did this module actually get to?" answered without trusting a field that may be stale.
   const modulesDir = makeModulesDir();

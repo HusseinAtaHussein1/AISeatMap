@@ -57,16 +57,19 @@ class FeatureScaffoldError extends Error {
  * @param {string} modulesDir
  * @param {string} moduleSlug
  * @param {string} featureSlug
+ * @param {string} [dirname] - the folder name to scaffold under, instead of `features` (default).
+ *   Generalized for the NDC Core Service layer's shared-scope entities (module_architecture.md,
+ *   NDC section), which scaffold through this same file but under `shared/`.
  * @returns {{moduleSlug: string, featureSlug: string, featureDir: string, exists: boolean,
  *   createsFeaturesDir: boolean, createDirs: string[], createFiles: string[]}}
  */
-function planFeatureScaffold(modulesDir, moduleSlug, featureSlug) {
+function planFeatureScaffold(modulesDir, moduleSlug, featureSlug, dirname = FEATURES_DIRNAME) {
   assertValidModuleSlug(moduleSlug);
   assertValidModuleSlug(featureSlug);
 
-  const dir = featureDir(modulesDir, moduleSlug, featureSlug);
+  const dir = featureDir(modulesDir, moduleSlug, featureSlug, dirname);
   const exists = fs.existsSync(dir);
-  const parentFeaturesDir = featuresDir(modulesDir, moduleSlug);
+  const parentFeaturesDir = featuresDir(modulesDir, moduleSlug, dirname);
   const createsFeaturesDir = !fs.existsSync(parentFeaturesDir);
 
   const createDirs = [];
@@ -105,16 +108,17 @@ function planFeatureScaffold(modulesDir, moduleSlug, featureSlug) {
  * @param {string} modulesDir
  * @param {string} moduleSlug
  * @param {string} featureSlug
- * @param {{now: Date, dryRun?: boolean}} opts
+ * @param {{now: Date, dryRun?: boolean, dirname?: string}} opts - `dirname` defaults to `features`
+ *   (see planFeatureScaffold)
  * @returns {{plan: object, created: boolean, wrote: string[]}}
  */
 function scaffoldFeature(modulesDir, moduleSlug, featureSlug, opts = {}) {
-  const { now, dryRun = false } = opts;
+  const { now, dryRun = false, dirname = FEATURES_DIRNAME } = opts;
   if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
     throw new FeatureScaffoldError('scaffoldFeature requires an explicit valid `now` Date.');
   }
 
-  const plan = planFeatureScaffold(modulesDir, moduleSlug, featureSlug);
+  const plan = planFeatureScaffold(modulesDir, moduleSlug, featureSlug, dirname);
   if (dryRun) return { plan, created: false, wrote: [] };
 
   const module = requireModule(modulesDir, moduleSlug);
@@ -166,15 +170,16 @@ function scaffoldFeature(modulesDir, moduleSlug, featureSlug, opts = {}) {
  * @param {string} moduleSlug
  * @param {string} featureSlug
  * @param {string} stage
+ * @param {string} [dirname]
  * @returns {string}
  */
-function ensureFeatureStageFolder(modulesDir, moduleSlug, featureSlug, stage) {
+function ensureFeatureStageFolder(modulesDir, moduleSlug, featureSlug, stage, dirname = FEATURES_DIRNAME) {
   if (!FEATURE_STAGES.includes(stage)) {
     throw new FeatureScaffoldError(
       `Unknown feature stage "${stage}". Expected one of: ${FEATURE_STAGES.join(', ')}.`
     );
   }
-  const dir = path.join(featureDir(modulesDir, moduleSlug, featureSlug), stage);
+  const dir = path.join(featureDir(modulesDir, moduleSlug, featureSlug, dirname), stage);
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
@@ -185,10 +190,15 @@ function ensureFeatureStageFolder(modulesDir, moduleSlug, featureSlug, stage) {
  * @param {string} moduleSlug
  * @param {string} featureSlug
  * @param {string} [stage]
+ * @param {string} [dirname]
+ * @param {string} [rootPrefix] - repo-relative prefix before `<module>/`, default
+ *   `platform_core_data/modules`. NDC callers pass `platform_core_data/services/<service>`.
  * @returns {string}
  */
-function featureArtifactPath(moduleSlug, featureSlug, stage) {
-  const base = `platform_core_data/modules/${moduleSlug}/${FEATURES_DIRNAME}/${featureSlug}`;
+function featureArtifactPath(
+  moduleSlug, featureSlug, stage, dirname = FEATURES_DIRNAME, rootPrefix = 'platform_core_data/modules'
+) {
+  const base = `${rootPrefix}/${moduleSlug}/${dirname}/${featureSlug}`;
   return stage ? `${base}/${stage}` : base;
 }
 

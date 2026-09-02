@@ -1,0 +1,56 @@
+{
+  "slug": "new-layer-contract",
+  "name": "New Layer Contract",
+  "description": null,
+  "sourceUserStory": "Import Booked PNR - New Layer Contract",
+  "acceptanceCriteriaRef": null,
+  "status": "Active",
+  "createdAt": "2026-09-01T08:09:20.373Z",
+  "updatedAt": "2026-09-01T13:26:49.768Z",
+  "supersededBy": null,
+  "stages": {
+    "context": {
+      "status": "Approved",
+      "artifactPath": "platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/context/ProjectContext.md",
+      "lastRun": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
+      "lastUpdated": "2026-09-01T13:26:49.694Z",
+      "revisionCount": 4,
+      "targetRefAtWrite": null
+    },
+    "discovery": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    },
+    "test_design": {
+      "status": "Pending Review",
+      "artifactPath": "platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/test_design/TestCases_ImportBookedPNR.md",
+      "lastRun": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
+      "lastUpdated": "2026-09-01T13:26:49.768Z",
+      "revisionCount": 3,
+      "targetRefAtWrite": null
+    },
+    "automation": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    },
+    "healing": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    }
+  },
+  "approvedAt": "2026-09-01T08:09:24.512Z",
+  "approvedBy": "Ahmed Ayman",
+  "module": "import-booked-pnr"
+}

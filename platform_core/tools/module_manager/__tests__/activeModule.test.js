@@ -13,6 +13,7 @@ const {
   resolveActiveModules,
   readActiveModules,
   isActiveModuleStale,
+  isActiveModuleSuperseded,
   clearActiveModules,
 } = require('../activeModule');
 const {
@@ -158,6 +159,49 @@ test('setActiveModules refuses a Superseded module and names its replacement', (
     () => setActiveModules(modulesDir, ['booking'], { now: LATER }),
     /Superseded by "booking-flow"/
   );
+  cleanup(modulesDir);
+});
+
+test('setActiveModules refuses a module Superseded by an EXTERNAL entity, naming the external reference', () => {
+  // Constraint 2: import-booked-pnr is superseded by a Feature that now lives in a different
+  // registry (services/ndc-core-service/import-booked-pnr) — not a sibling slug in modules.json.
+  const modulesDir = makeModulesDir();
+  makeActiveModule(modulesDir, 'Import Booked PNR');
+  supersedeModule(modulesDir, 'import-booked-pnr', null, {
+    now: NOW,
+    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+  });
+
+  assert.throws(
+    () => setActiveModules(modulesDir, ['import-booked-pnr'], { now: LATER }),
+    /Superseded by "services\/ndc-core-service\/import-booked-pnr"/
+  );
+  cleanup(modulesDir);
+});
+
+test('isActiveModuleSuperseded reports true when the active module is superseded WHILE active', () => {
+  // setActiveModules() blocks SELECTING a Superseded module, but a module superseded while already
+  // active does not auto-clear the pointer (supersedeModule() has no reason to reach into it) — this
+  // is the mechanism that surfaces that case on a plain `active` read instead of hiding it.
+  const modulesDir = makeModulesDir();
+  makeActiveModule(modulesDir, 'Import Booked PNR');
+  setActiveModules(modulesDir, ['import-booked-pnr'], { now: NOW });
+  assert.equal(isActiveModuleSuperseded(modulesDir), false);
+
+  supersedeModule(modulesDir, 'import-booked-pnr', null, {
+    now: LATER,
+    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+  });
+  assert.equal(isActiveModuleSuperseded(modulesDir), true);
+  cleanup(modulesDir);
+});
+
+test('isActiveModuleSuperseded is false when nothing is active, or the active module is fine', () => {
+  const modulesDir = makeModulesDir();
+  assert.equal(isActiveModuleSuperseded(modulesDir), false);
+  makeActiveModule(modulesDir, 'Login');
+  setActiveModules(modulesDir, ['login'], { now: NOW });
+  assert.equal(isActiveModuleSuperseded(modulesDir), false);
   cleanup(modulesDir);
 });
 

@@ -39,6 +39,55 @@ class CreateRunError extends Error {
 const UNVERSIONED = 'unversioned';
 
 /**
+ * Validates the NDC Core Service run-ownership fields on a run.json object.
+ *
+ * See module_architecture.md, NDC Core Service section, "run ownership scope exclusivity". A run may
+ * carry four OPTIONAL fields — `service`, `feature`, `supplier`, `sharedScope` — all defaulting to
+ * `null`, exactly like `modules[]` is already an optional key elsewhere in this platform. This keeps
+ * EVERY non-NDC run (agency, branch, or any run that never sets `service`) entirely unaffected: the
+ * function returns immediately, with no field checked, when `service` and `feature` are both null.
+ *
+ * Once a run IS NDC-scoped (`service` and `feature` both set), exactly two shapes are legal:
+ *   - a Supplier run:      `supplier` set,   `sharedScope` null
+ *   - a shared-scope run:  `supplier` null,  `sharedScope` set
+ * A run naming BOTH or NEITHER is a contradiction — a run cannot be simultaneously supplier-specific
+ * and cross-supplier, and an NDC-scoped run that names neither has not actually picked a scope. Both
+ * are rejected here, mechanically, rather than left to a convention nothing enforces.
+ *
+ * @param {{service?: string|null, feature?: string|null, supplier?: string|null, sharedScope?: string|null}} runJson
+ * @throws {CreateRunError} when the run is NDC-scoped and its ownership fields are contradictory
+ */
+function validateNdcRunScope(runJson = {}) {
+  const service = runJson.service ?? null;
+  const feature = runJson.feature ?? null;
+  const supplier = runJson.supplier ?? null;
+  const sharedScope = runJson.sharedScope ?? null;
+
+  // Not an NDC-scoped run — untouched, exactly as every run written before these fields existed.
+  if (service === null && feature === null) return;
+
+  if (!service || !feature) {
+    throw new CreateRunError(
+      'An NDC-scoped run requires BOTH `service` and `feature` set. Got ' +
+      `service=${JSON.stringify(service)}, feature=${JSON.stringify(feature)}.`
+    );
+  }
+  if (supplier !== null && sharedScope !== null) {
+    throw new CreateRunError(
+      'An NDC-scoped run must never set both `supplier` and `sharedScope` — a run is EITHER a ' +
+      'Supplier run or a shared-scope run, never both. Got ' +
+      `supplier=${JSON.stringify(supplier)}, sharedScope=${JSON.stringify(sharedScope)}.`
+    );
+  }
+  if (supplier === null && sharedScope === null) {
+    throw new CreateRunError(
+      'An NDC-scoped run (service and feature both set) must pick EXACTLY ONE of `supplier` or ' +
+      '`sharedScope` — neither is set.'
+    );
+  }
+}
+
+/**
  * Creates a run folder with its metadata, and optionally makes it the active run.
  *
  * @param {string} runsDir - absolute path to platform_core_data/runs
@@ -69,6 +118,9 @@ function createRun(runsDir, opts = {}) {
   if (!scope && !opts.folderName) {
     throw new CreateRunError('createRun requires a `scope` (or a pre-generated `folderName`).');
   }
+  // Validated BEFORE any folder is created — a rejected NDC ownership shape must leave nothing
+  // behind, exactly like every other createRun() validation failure.
+  validateNdcRunScope(extraRunJson);
 
   let existingNames = [];
   try {
@@ -117,8 +169,15 @@ function createRun(runsDir, opts = {}) {
     createdBy: createdBy || 'Run Manager',
     startedTime: now.toISOString(),
     status: 'Preparing',
+    // NDC Core Service run-ownership fields — optional, default null, zero impact on any non-NDC
+    // run (see validateNdcRunScope's header).
+    service: null,
+    feature: null,
+    supplier: null,
+    sharedScope: null,
     ...extraRunJson,
   };
+  validateNdcRunScope(runJson);
   writeJson(path.join(runDir, 'metadata', 'run.json'), runJson);
 
   let manifestPath = null;
@@ -200,4 +259,5 @@ module.exports = {
   CreateRunError,
   createRun,
   backfillTargetRef,
+  validateNdcRunScope,
 };

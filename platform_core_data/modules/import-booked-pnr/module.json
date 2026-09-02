@@ -2,10 +2,10 @@
   "slug": "import-booked-pnr",
   "name": "Import Booked PNR",
   "description": "Admin module to search and import a booked PNR by record locator, supplier and credential; this feature investigates and defines the initial contract for the new integration layer replacing the existing Integration Layer.",
-  "status": "Active",
+  "status": "Superseded",
   "derivedFromSections": [],
   "createdAt": "2026-09-01T08:08:58.619Z",
-  "updatedAt": "2026-09-01T13:26:49.768Z",
+  "updatedAt": "2026-09-02T12:00:00.000Z",
   "supersededBy": null,
   "stages": {
     "context": {
@@ -105,5 +105,6 @@
       "approvedAt": "2026-09-01T08:09:24.512Z",
       "approvedBy": "Ahmed Ayman"
     }
-  ]
+  ],
+  "supersededByExternal": "services/ndc-core-service/import-booked-pnr"
 }

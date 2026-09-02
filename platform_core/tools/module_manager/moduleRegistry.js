@@ -303,6 +303,11 @@ function registerModule(modulesDir, module, opts = {}) {
   const existing = findModule(registry, slug);
   const timestamp = now.toISOString();
 
+  // `kind`/`service` are minimal, explicit passthrough fields — not part of the plain-module shape,
+  // but carried through when a caller supplies them so the NDC Core Service layer can register a
+  // Feature (which reuses this function wholesale, `services/<service>/` as `modulesDir`) with
+  // `kind: 'ndc_feature'` and `service: '<service-slug>'` on the entry, so it is never mistaken for
+  // a plain module. Omitted entirely for every existing caller — agency/branch entries gain no keys.
   const entry = existing
     ? {
       ...existing,
@@ -310,6 +315,8 @@ function registerModule(modulesDir, module, opts = {}) {
       description: module.description ?? existing.description ?? null,
       status,
       ...(module.derivedFromSections ? { derivedFromSections: module.derivedFromSections } : {}),
+      ...(module.kind !== undefined ? { kind: module.kind } : {}),
+      ...(module.service !== undefined ? { service: module.service } : {}),
       updatedAt: timestamp,
     }
     : {
@@ -318,6 +325,8 @@ function registerModule(modulesDir, module, opts = {}) {
       description: module.description ?? null,
       status,
       derivedFromSections: module.derivedFromSections ?? [],
+      ...(module.kind !== undefined ? { kind: module.kind } : {}),
+      ...(module.service !== undefined ? { service: module.service } : {}),
       createdAt: timestamp,
       updatedAt: timestamp,
       supersededBy: null,
@@ -515,26 +524,43 @@ function approveModules(modulesDir, slugs = [], opts = {}) {
  * Marks a module superseded by another. A module is never renamed or deleted on disk — other
  * artifacts cite its path, exactly as they cite a legacy run folder's name (run_manager.md §5.6).
  * Both stay readable; only the claim about which is current changes.
+ * `bySlug` and `opts.externalSupersededBy` are mutually exclusive: a module is superseded either by
+ * a sibling in THIS SAME `modules/` registry (`bySlug`, resolved and validated here), or by an
+ * entity that lives outside it entirely — e.g. a Feature promoted into the NDC Core Service layer's
+ * `services/` tree (`opts.externalSupersededBy`, an opaque repo-relative reference string this
+ * registry cannot resolve or validate, because it does not own that path).
+ *
  * @param {string} modulesDir
  * @param {string} slug
- * @param {string} bySlug
- * @param {{now: Date}} opts
+ * @param {string|null} bySlug - a sibling module slug in this registry, or `null` when superseded
+ *   externally (pass `opts.externalSupersededBy` in that case)
+ * @param {{now: Date, externalSupersededBy?: string}} opts
  * @returns {object} the registry
  */
 function supersedeModule(modulesDir, slug, bySlug, opts = {}) {
-  const { now } = opts;
+  const { now, externalSupersededBy } = opts;
   if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
     throw new ModuleRegistryError('supersedeModule requires an explicit valid `now` Date.');
+  }
+  if (!bySlug && !externalSupersededBy) {
+    throw new ModuleRegistryError(
+      'supersedeModule requires either `bySlug` (a sibling module in this registry) or ' +
+      '`opts.externalSupersededBy` (a reference string for an entity outside this registry).'
+    );
   }
   const registry = readRegistry(modulesDir);
   const entry = findModule(registry, slug);
   if (!entry) throw new ModuleRegistryError(`No module "${slug}" is registered.`);
-  if (!findModule(registry, bySlug)) {
+  if (bySlug && !findModule(registry, bySlug)) {
     throw new ModuleRegistryError(`No module "${bySlug}" is registered to supersede "${slug}".`);
   }
 
   entry.status = 'Superseded';
-  entry.supersededBy = bySlug;
+  entry.supersededBy = bySlug || null;
+  // Kept as a SEPARATE field from `supersededBy` rather than overloading it with a foreign-registry
+  // path: every existing reader of `supersededBy` assumes a sibling slug it can look up in THIS
+  // registry, and a reference string in that field would silently break that assumption.
+  entry.supersededByExternal = externalSupersededBy || null;
   entry.updatedAt = now.toISOString();
 
   writeRegistry(modulesDir, registry);

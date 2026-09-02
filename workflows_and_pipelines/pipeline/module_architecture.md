@@ -708,6 +708,12 @@ platform_core_data/
         ├── seatmap/       ← same
         └── import-booked-pnr/
             ├── module.json                     the Feature's own state file
+            ├── context/
+            │   ├── FeatureChecklistProfile.md  Feature-level, sourced from shared/*'s approved
+            │   │                                context(s) — never bound to one shared scope's name
+            │   └── ExecutionFlow_HappyPath.md  Feature-level operational knowledge (HOW to execute,
+            │                                    not WHAT the Test Case says) — optional, only where
+            │                                    a Feature's flow needs it (new_us_intake.md §12.2a)
             ├── shared/
             │   └── new-layer-contract/         cross-supplier scope, not yet supplier-specific
             │       ├── context/
@@ -715,6 +721,10 @@ platform_core_data/
             └── suppliers/
                 └── ndcgal/                      per-supplier scope
                     ├── context/
+                    │   └── SupplierChecklist.md rendered from the generic base template +
+                    │                            this Feature's FeatureChecklistProfile.md
+                    │                            (platform_core/templates/ndc_supplier_intake/,
+                    │                            new_us_intake.md §12.2a)
                     └── ...
 ```
 

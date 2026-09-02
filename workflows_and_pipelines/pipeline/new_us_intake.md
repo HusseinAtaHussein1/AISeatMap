@@ -306,6 +306,8 @@ does not change §3-§9 in any way — every non-NDC User Story is routed exactl
 ```
 Service (NDC_Core_Service)
   → Feature (Refund, Reissue, Seatmap, Import Booked PNR)
+    → context/FeatureChecklistProfile.md — Feature-level, sourced from the Feature's approved
+                                            shared context(s); see §12.2a
     → Supplier (NDCGal, SabreNDC, ...) — a NEW, independent entity, never called a "feature"
     → Shared scope (e.g. "new-layer-contract") — cross-supplier work, not yet supplier-specific
 ```
@@ -334,9 +336,64 @@ When a human says **"new supplier"** (or names a new Supplier for the NDC Core S
    cli.js ndc supplier approve <feature> <supplier> --by "<Reviewer>"
    cli.js ndc supplier scaffold <feature> <supplier> [--dry-run]
    ```
-5. Create a run bound to Service + Feature + Supplier (never Service + Feature alone, and never both
+   `scaffoldSupplier()` only creates the folder skeleton and `supplier.json` — it does not render any
+   Markdown (identical to `scaffoldFeature()`'s behavior for Features). Rendering the Supplier
+   Checklist itself is a separate, agent-performed step — §12.2a.
+5. Render the Supplier Checklist into the freshly-scaffolded `context/` folder — §12.2a.
+6. Create a run bound to Service + Feature + Supplier (never Service + Feature alone, and never both
    Supplier and shared scope — `run_manager.md`'s NDC run-ownership validation enforces this
    mechanically), then run the normal pipeline stages against that Supplier's scope.
+
+## 12.2a Rendering the Supplier Checklist
+
+A Supplier Checklist is never authored from scratch and never carries one Feature's business content
+hardcoded into another Feature's Supplier. It is always produced by merging two documents:
+
+```
+platform_core/templates/ndc_supplier_intake/SupplierChecklist.md   (generic, Feature-agnostic)
+                              +
+services/ndc-core-service/<feature>/context/FeatureChecklistProfile.md   (this Feature's own rows)
+                              ↓
+services/ndc-core-service/<feature>/suppliers/<supplier>/context/SupplierChecklist.md
+```
+
+This follows the same convention `platform_core/templates/README.md` already documents for every
+other pipeline artifact: rendering is a Skill/agent responsibility (copy the template, fill
+`{{TOKEN}}` placeholders, strip HTML-comment guidance), not a `module_manager` tool function — no
+code performs this merge. Concretely, the rendering agent:
+
+1. Reads the generic base template. Sections/rows marked `GENERIC` render as-is (with their
+   `{{TOKEN}}`s filled for this Supplier). Sections/rows marked `INJECTED FROM FEATURE PROFILE`
+   (§5b Feature-Specific Test Data, §7b Behavior Rows, §8b Feature-Specific Error Rows, plus the
+   Feature-level Open Questions carried into §12) are placeholders only — never authored directly in
+   the base template.
+2. Resolves this Feature's `FeatureChecklistProfile.md` from the **Feature root**
+   (`services/ndc-core-service/<feature>/context/FeatureChecklistProfile.md`) — never from inside a
+   specific shared scope's folder, since a Feature may accumulate more than one approved shared scope
+   over time and the Profile is not rebuilt per scope.
+3. Injects §A (Test Data), §B (Behavior + Requirement ID + Source Status), §C (Error Rows), and the
+   Profile's "Open Questions carried from the shared context" table into the matching injection
+   points.
+4. A row's `Source Status` (Confirmed / Open / Provisional / Pending Confirmation) is carried through
+   unchanged — rendering never promotes an Open or Provisional item to Confirmed just because it now
+   appears in a Supplier's own document.
+5. Fills the header's `Rendered from Feature Profile` field with the Profile's path and revision, so
+   a reader can always trace a rendered row back to its source without re-deriving it.
+
+If a Feature has no `FeatureChecklistProfile.md` yet (e.g. a brand-new Feature with no approved
+shared context), the injection points render as an explicit gap (`Feature Checklist Profile not yet
+available — see <Feature>'s shared context status`), never as silently empty sections and never by
+inventing rows to fill them.
+
+A Feature may also carry **operational execution knowledge** — Feature-level, not Supplier-specific,
+living beside `FeatureChecklistProfile.md` in the same `context/` folder (e.g. Import Booked PNR's
+`ExecutionFlow_HappyPath.md`). This is HOW to execute a scenario across environments, distinct from
+WHAT a Test Case's business-level steps say. When present, the rendering agent records a pointer to
+it in the Supplier Checklist's §3c ("Feature-level Execution Flow reference") rather than duplicating
+the procedure into every Supplier's own context. `SupplierChecklist.md` §3c's Source/Target
+Environment fields are a generic **capability** — not every Feature requires two environments; a
+Feature with no such requirement marks it `N/A` rather than a Supplier inventing a Source environment
+that doesn't apply.
 
 ## 12.3 Tooling
 

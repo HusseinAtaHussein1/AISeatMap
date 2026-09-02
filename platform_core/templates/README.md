@@ -15,6 +15,34 @@ stage could legitimately produce differently-shaped documents while both "follow
 These templates are now **authoritative**. Each `SKILL.md` points here instead of restating the
 structure, so there is exactly one place to change when an artifact's shape changes.
 
+## `ndc_supplier_intake/` — a second template pair, deliberately not a numbered stage
+
+`ndc_supplier_intake/SupplierChecklist.md` and `ndc_supplier_intake/FeatureChecklistProfile.md`
+template the NDC Core Service Supplier-intake artifacts (`module_architecture.md` §11,
+`new_us_intake.md` §12). They live outside the `stage_N_.../` numbering because they aren't one of
+the 8 pipeline-stage artifacts — a Supplier Checklist plays the same "intake document a later run
+starts from and refines in place" role for a Supplier that `stage_1_context/ProjectContext.md` plays
+for a module/Feature, so it follows this folder's same `{{TOKEN}}`/HTML-comment/section-order
+conventions rather than living as prose inside a Skill.
+
+Two templates, not one, because a Supplier Checklist is never authored standalone — it is always a
+merge of the generic base template and that Feature's own `FeatureChecklistProfile.md` instance
+(`services/ndc-core-service/<feature>/context/FeatureChecklistProfile.md`), so one Feature's business
+rows are never hardcoded into the reusable base:
+
+```
+ndc_supplier_intake/SupplierChecklist.md          (generic, Feature-agnostic)
+                    +
+<feature>/context/FeatureChecklistProfile.md      (this Feature's own rows, sourced from its
+                                                     approved shared context(s))
+                    ↓
+<feature>/suppliers/<supplier>/context/SupplierChecklist.md   (rendered)
+```
+
+The merge is a Skill/agent responsibility exactly like every other template here — see
+`new_us_intake.md` §12.2a for the full rendering procedure, including how `Source Status`
+(Confirmed/Open/Provisional/Pending Confirmation) survives the merge unchanged.
+
 ## Not to be confused with
 
 | Location | What it templates | Direction |

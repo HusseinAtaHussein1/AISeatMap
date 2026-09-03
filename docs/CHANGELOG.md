@@ -1,8 +1,385 @@
-# Agent Specification Changelog
+# Platform Changelog
 
-This document holds the revision history that used to be embedded at the top of each `agents/*.md` file. It was extracted so each agent spec only describes its **current** behavior; history of how it got there lives here instead.
+This document is the platform's single revision history — every user-mandated change, platform
+defect fix, and structural decision, from the earliest commit onward. It began as the revision
+history extracted from the top of each `agents/*.md` file (each agent spec now retains only its
+`Pipeline position` and `Traceability` lines — current-state metadata, not history), and has since
+grown to cover the whole repository.
 
-Each agent file now retains only its `Pipeline position` and `Traceability` lines — current-state metadata, not history.
+**Every notable commit gets an entry here, in the same session it lands in.** "Notable" means: a new
+capability, a governance/policy change, a structural migration, a platform defect fix, or a
+cross-cutting tooling change — not a routine run's day-to-day artifact sync (discovery findings, test
+suite updates, execution results) unless it also changed how the platform behaves. When in doubt,
+record it; a redundant entry costs nothing, a silent gap defeats the point of this file. Newest first.
+
+---
+
+## 2026-09-03 — NDC Core Service runs gain an execution/governance rule set
+
+User-mandated. Adds `workflows_and_pipelines/pipeline/ndc_execution_rules.md`, a rule set that
+activates only when a run's `service === "ndc-core-service"` and never changes Agency/Branch/classic-module
+behaviour. Covers inheritance, run-intake fields, QA-layer defaults, run-scope freeze, requirement
+precedence, Discovery/Automation gates, evidence, test-data isolation, prior-run reuse, the
+Source/Target environment model, and completion reporting for Supplier and Shared-scope runs.
+
+`createRun.js` and `cli.js` now wire in `validateNdcRunScope()` enforcement so an NDC run must bind
+to exactly one of `supplier` / `sharedScope` on `run.json` — never both, never neither — mechanically,
+not just by convention. `CLAUDE.md` and the pipeline docs cross-reference the new file.
+
+---
+
+## 2026-09-02 — Generic Supplier Checklist + Feature Checklist Profile templates; Import Booked PNR instantiated
+
+Adds the reusable NDC Core Service Supplier-intake artifacts: a Feature-agnostic
+`SupplierChecklist.md` base template plus a `FeatureChecklistProfile.md` template that injects
+Feature-specific rows into it at render time, so no Feature's business content is hardcoded into the
+shared base. Populates Import Booked PNR's own `FeatureChecklistProfile.md` (sourced from the
+approved shared `new-layer-contract` `ProjectContext.md` / `TraceabilityMatrix.md`, with verified
+`HIST-xx` requirement IDs) and an `ExecutionFlow_HappyPath.md` capturing the Happy Path's operational
+execution knowledge across the Source/Target environment model. The render flow is documented in
+`new_us_intake.md` and `module_architecture.md`.
+
+---
+
+## 2026-09-02 — `NDC_Core_Service` hierarchy introduced; Import Booked PNR migrated
+
+User-mandated. Introduces `NDC_Core_Service` as a new, explicit hierarchy layer —
+`Service → Feature → Supplier | Shared scope` — sibling to, never a variant of, the existing
+module/Feature registry. **A Supplier is never registered or addressed as a "feature"**, and its
+registry (`platform_core_data/services/services.json`) is completely separate from `modules/modules.json`.
+
+Adds run-scope validation so a run must bind to exactly one of `supplier` / `sharedScope` on `run.json`,
+never both — the mechanism `createRun.js`'s `validateNdcRunScope()` later enforces mechanically
+(2026-09-03, above). Migrates the existing `import-booked-pnr` `new-layer-contract` work (shared,
+cross-supplier contract scope) into the new layout **with full history preserved via `git mv`**, and
+marks the old module entry `Superseded` and unselectable rather than deleting it.
+
+Full spec: `module_architecture.md` §11 and `new_us_intake.md` §12.
+
+---
+
+## 2026-09-01 — Import Booked PNR intake: `new-layer-contract` Feature (Stages 1-3)
+
+Registers the `import-booked-pnr` module and `new-layer-contract` Feature for the `NDC_Core_service`
+integration-contract investigation, `run-005`. Project Context deliberately separates the existing
+Import Booked PNR **business** behaviour (historical documentation plus Meeting 1 slides) from the
+genuinely **new** NDC_Core_service contract and the migration/regression coverage the NDC-INT swap
+requires — the two are not the same investigation.
+
+Test Design produces 61 API-contract and regression test cases classified by evidence level
+(`Confirmed` / `Regression` / `Discovery` / `Blocked`), none executable yet pending a live endpoint.
+
+Also removes the stray legacy credentials folder at `platform_core_data/credentials/`, superseded by
+`knowledge_base/credentials/`.
+
+---
+
+## 2026-08-24 — Agency automation assembled, executed, and promoted into the Workspace Automation Baseline
+
+The Agency module's SHAFT automation package is merged into the baseline (`6beee4f`, +23/~2/-0, 0
+conflicts), verified byte-identical (63/63 files), compiled standalone, and live-run from the
+baseline — 15/15 Passed, Headless — before the module working copy at
+`modules/agency/automation/tests_SHAFT/` is permanently deleted. The baseline is now Agency's sole
+source of truth, scoped by `.baseline_ownership.json` and run via `testng-agency.xml`.
+
+Two operational notes carried into `automation_promotion.md`: `generate_allure_report.bat` and the
+three `properties/default/*` files were excluded from the merge as machine-specific noise (SHAFT
+Engine rewrites them with the running machine's own values on every execution); and retirement
+completed via an unusual path after a Windows file lock (IntelliJ's JPS build daemon) blocked the
+directory delete — the two remaining bookkeeping calls were made by invoking the tool's own functions
+directly with the real, already-passing verification data, rather than skipped.
+
+`testng.xml`, the whole-project regression suite, is updated to include Agency alongside Branch, and
+renamed `BranchAutomationSuite` → `NDCAdminPortalAutomationSuite`.
+
+**Stage 5A execution — 4 cycles, one divergence investigated and closed.** Cycle 1 (Headed): 14
+Passed, `TC-AGENCY-002` `Inconclusive` — raw TestNG `Failed`, but evidence did not clearly separate a
+locator issue from a genuine behaviour difference, so it was not confirmed as an Application or
+Automation Failure. Cycles 2 (Headless), 3 (Headed, selective re-run), and 4 (Headed, full suite) all
+ran 15/15 Passed, including `TC-AGENCY-002` three times running. Each cycle is its own file
+(`ExecutionResults.md` + `.rerun-1/2/3.md`) per the run-immutability rule — none overwrites another.
+
+**`TC-AGENCY-055` rejected; Stage 4A coverage figures corrected.** No `@Test` method was ever
+generated for it despite it being counted among the 18 dual-approved cases and the "16 fully
+automated" figure — discovered during this Stage 5A execution. Rejected by operator decision
+(`Review` + `Automation`), and every Stage 4A artifact that cited the stale 18/16 figures now carries
+a dated correction note rather than a silent number change.
+
+---
+
+## 2026-08-23 — CI and install-E2E brought back in line with the platform; Agency SHAFT suite repaired
+
+Same pair of platform defects fixed in parallel on `tool-development-Project-agnostic-agentic-workflow`
+and ported here, since both branches share `ci.yml` and both browser drivers:
+
+- **CI trigger.** `ci.yml` still triggered on the retired `tool-development` name instead of
+  `tool-development-Project-agnostic-agentic-workflow`.
+- **`browser_provider/providers/playwright_node/{driver,session}.js`** had never actually been
+  committed — left behind in a stash while `index.js` requiring them shipped, failing four tests with
+  `MODULE_NOT_FOUND`. Restored, and their `playwright` import made lazy so requiring the module never
+  throws on a machine without Playwright; a launch without it now fails with `PLAYWRIGHT_NOT_INSTALLED`
+  naming what to install instead of at `require` time.
+- **Install E2E** asserted "7 skills" while the platform ships 8 (why `ci.yml` had left `test:e2e`
+  deliberately unwired). The skill set is now read from the repo under test and compared by name;
+  `$WORK`/`$REPO` are made absolute; and both shell scripts resolve paths through an `abspath` helper
+  that emits `pwd -W` on MSYS, so the clone route works from Git Bash too. `test:e2e` now runs in the
+  `package` CI job, gated on `.toolonly` — it stays skipped on this branch, since packaging a data root
+  holding a real PRD is exactly what `verifyPackable` refuses to do.
+
+`npm test`: 943 tests, 0 failures on both fixes. `verifyBranchBoundary` passes.
+
+Separately, the Agency SHAFT automation suite is repaired: Page classes split into dedicated Locator
+classes, `PrimeNgHelper` and `JsonDataReader` added, stale test-data/fixture/provisioner helpers
+removed, with the self-healing repair summary and run-004 Safety/Observability metadata synced
+alongside it.
+
+---
+
+## 2026-08-20 — Agency run-004 artifacts synced; two Agency cases ruled
+
+`run-004` (Agency, Automation branch) gains Discovery findings 008–012 with evidence, an updated test
+design/coverage/traceability, its automation package, self-healing evidence and repair records, and
+`SafetyAuthorizations`. Separately, `TC-AGENCY-020` and `TC-AGENCY-049` are marked `Rejected` by
+operator ruling (2026-08-20): both are confirmed system behaviour, not defects. Markdown `Review`/
+`Automation` status and the summary table are synced to the Excel edit; `Expected Result` text is left
+unchanged.
+
+---
+
+## 2026-08-18 — Stages gain an Application Context to read and close
+
+Stage 1 refreshes `modules/ApplicationContext.md` to `Draft` at run start and owns only the module
+map, the dependency graph, and the application-wide posture — sections a later run established are
+left as that run wrote them. Test Design and Automation read it as a secondary input, for the fixture
+build order and upstream dependencies a single module's context cannot state; a dependency named
+there becomes a **precondition**, never a new test target. The terminal stages — `4M` Manual Execution
+and `6A` Reporting — append what the run proved about relationships between modules and set it to
+`Pending Review`. **No stage ever approves it.** Recorded in `module_architecture.md` §6.7.
+
+---
+
+## 2026-08-17 — New User Story intake: routed as Feature or CRUD before anything is created
+
+User-mandated. A supplied User Story previously became a module by whoever read it first, differently
+each time, with no record of the choice. Adds the routing question (`CLAUDE.md`'s "New User Story
+intake" section is this rule, restated for the assistant), the structure each answer produces, and
+tooling that refuses to be bypassed.
+
+**Routing.** New US → ask *standalone Feature or part of a module CRUD scope?*, never inferred from
+the title. `Feature` → collect story + AC, confirm the parent module, sweep existing scope, propose
+`modules/<m>/features/<f>/`, wait. `CRUD` → ask one story or several, identify which of
+Add/Update/Search/Approve/Reject are included, collect each, propose **one** consolidated module,
+wait. A capability supplied inside a CRUD package stays in the module and gets no Feature folder,
+however feature-shaped it sounds — the test is *how it was supplied*. Ambiguity is asked about, never
+resolved silently.
+
+Enforcement is layered, because `CLAUDE.md` alone is advice a direct skill invocation skips:
+`project-context-skill` §3.2 + Execution Rule 14 make answered routing a precondition of Stage 1, and
+the tooling refuses mechanically.
+
+**Standalone Features.** New `modules/<module>/features/<feature>/`, its own `feature.json`, its own
+stages map. `features/` is created only when an approved Feature is scaffolded — a CRUD-only module
+never grows an empty one, since an empty `features/` folder reads as "this module has Features."
+Feature stages are independent; neither level rolls up into the other. `features[]` is an
+**optional** registry key and `schemaVersion` stays `1` — an absent key means "no standalone
+Features," exactly what every pre-existing registry already means, so nothing migrates.
+`activeFeature` is nullable alongside `activeModules[]`; `use <module>` clears it and says so; **an
+invalid or stale pointer throws and asks for correction rather than degrading to module scope**, which
+would write Feature output into its parent's folders.
+
+New verbs: `inspect-scope` (exit `2` = overlap candidates), `feature propose|approve|scaffold|list|
+show|stage`, `use-feature`. Overlap is a candidate for a human to judge, never a verdict, and never
+concluded from a story number alone.
+
+**Tests.** +49 tests, all passing: 915 total, 911 pass (4 pre-existing, unrelated `browser_provider`
+failures on a missing `playwright_node/driver.js`). Both routes covered end to end, including the two
+negatives that matter: a CRUD capability must not create a Feature folder, and an invalid Feature
+pointer must fail rather than fall back. Branch and Agency are untouched — no `features/` folder
+exists anywhere, and no existing module or run was moved or normalized to match the new convention.
+
+---
+
+## 2026-08-17 — Discovery requires annotated evidence for unclear UI findings
+
+An unclear item lands in `Observation` by default (Explorer Execution Rule 9), which had one of the
+**lowest** evidence floors in the table — so the least-understood findings carried the weakest
+evidence: a full-page screenshot of a 45-field form and a sentence saying something on it was
+unclear, leaving the reviewer to guess which element. That guess is exactly what raising the finding
+was meant to avoid.
+
+Whenever Discovery raises an Open Question, records an ambiguous UI observation, cannot determine a
+control's purpose, finds unclear wording/validation/status/icon/column/section behaviour, needs a
+product-owner decision about a visual element, or records a mismatch it cannot yet classify, it must
+now produce **both** the original screenshot **and** an annotated copy with a labelled high-contrast
+rectangle around only the unclear element.
+
+**Mechanism.** `browser_driver/api.js` gains `annotatedScreenshot(name, rects, opts)`, extending the
+existing screenshot utility. A transient in-page overlay, not image post-processing — the package
+keeps zero runtime dependencies, and the overlay gets exact element bounds for free. The pristine
+original is written to disk **before** any node is injected, so a failure during annotation still
+leaves usable evidence; cleanup runs in a `finally`, is idempotent, and swallows its own errors so it
+can never mask the real failure. Rectangles are outline-only over a transparent fill so text/value/icon
+stay readable; every node carries `pointer-events:none`; every rect must carry a label mapping to a
+written question. MCP §1.4 gains one narrow, six-condition exception permitting this transient,
+self-removing, view-only overlay — anything that writes to the application stays forbidden exactly as
+before.
+
+**Static Discovery modes** (no live page) cannot produce a precise rectangle and record the verbatim
+`Annotated evidence not capturable — Discovery Mode: <mode>` instead, never a fabricated rectangle.
+
+**Tests.** +28 tests, all passing: 943 total, 939 pass (same 4 pre-existing, unrelated failures).
+
+---
+
+## 2026-08-17 — Promotion becomes terminal: the Workspace Automation Baseline is the single source of truth
+
+User-mandated. Until now a module's automation project was **durable** — it survived assembly and
+stayed the place Stage 5A executed and 5H healed. It is now a **pre-promotion workspace**: on the
+first successful promotion (merge, byte-identity proof, and a passing live run) it is **permanently
+deleted**, and the Workspace Automation Baseline owns that module for the rest of its life.
+
+Stated plainly, what that costs: module isolation was physical (separate directories) and is now
+declared (an ownership manifest + scoped suites), and an in-place baseline edit has no three-way merge
+protecting it.
+
+**New tooling.** `automationRoot.js` — the one path resolver, `Draft` → module workspace, `Promoted`
+→ baseline; throws `MODULE_DIR_RESURRECTED` if a retired directory reappears rather than quietly
+preferring the baseline. `baselineOwnership.js` — `.baseline_ownership.json` + `classifyPath`:
+`owned`/`shared`/`foreign`/`unowned`; `foreign` is a hard stop, so two modules can never claim the
+same path. `promoteVerify.js` — re-reads both trees and compares SHA-256 per file, which is what
+separates a promotion from a deletion.
+
+**Changed.** `automationState.js` gains a fifth, terminal state `Promoted` (no transition out), plus
+`sourceOfTruth`, `ownedPaths`, `promotionVerification`, `baselineUpdates[]`; `recordPromotion` demands
+a passing verification, a prior assembly, owned paths, and an approver. `cleanup.js` gains
+`retireModulePackage()`, deliberately separate from ordinary cleanup so a caller cannot reach "delete
+the whole suite" via the argument shape that empties `target/`; both entry points now refuse anything
+inside `automation_baseline/` outright. `baselineCopy.js` refuses to re-seed a `Promoted` module. New
+CLI verbs: `resolve-root`, `verify-promotion`, `retire-module`, `check-retired`, `check-ownership`.
+
+Also, user-mandated: Headed or Headless is confirmed with the human immediately before **every**
+execution — reruns, verification, regression, self-healing, and post-promotion proofs included, never
+inferred or carried over from the previous run. Propagated to Stages `5A`, `5H`, and `4M`.
+
+**46 new unit tests, all passing.**
+
+### The Branch module completes this lifecycle the same day
+
+`platform_core_data/modules/branch/automation/tests_SHAFT/` is permanently deleted;
+`automation_baseline/shaft/tests_SHAFT/` becomes its single source of truth after byte-identity (38
+files, 0 differing), a clean standalone compile, and a live proof (31/31 Headed, BUILD SUCCESS). A
+first post-promotion Headless run failed `TC-BR-045`/`TC-BR-055` on signatures already documented in
+`BranchFailureAnalysis_2026-08-14.md`; an A/B on byte-identical trees, mode held constant, showed the
+module copy failing both and the baseline passing both — the promotion is recorded as causing
+nothing, and *why* identical bytes differed is deliberately left unasserted rather than guessed at.
+
+A follow-up healing pass, the first against a Promoted module, fixes the Update Branch readiness wait
+(`REPAIR-BR-013`): the wait was keyed on a label no longer reading `"loading..."`, but an *empty*
+label already satisfies that, releasing before the dependent PrimeNG dropdown's fetch had even
+started — an ordering defect, not a slow-load one. Fixed by waiting on the `p-placeholder` class per
+field instead. Changed **when** the test reads, never **what** it asserts. A fresh Automation Approval
+is recorded against the specific changed file, since Stage 4A's approval covered the suite as it was
+before the repair. The generalizable technique is promoted as `REPAIR-014` into the shared Platform
+Knowledge base, alongside `REPAIR-005` through `REPAIR-013` from the four Branch self-healing passes
+between 2026-08-05 and 2026-08-15 — and `INDEX.md`, found listing only `REPAIR-001..004` against 13
+files on disk, is corrected to list all fourteen.
+
+Two small platform-hygiene fixes land alongside this: `BrowserSession.java`, left untracked since the
+2026-08-05 Workspace Merge because `.git/info/exclude` ignored `platform_core_data/`, is committed;
+and `baselineOwnership.js`'s `matchesPattern()` is changed from a raw-NUL-byte sentinel (which made
+git classify the whole file as binary — no line diff, no blame — on a guard that exists specifically
+to stop one module overwriting another's code) to a named, printable one with identical semantics.
+
+### Also this day
+
+- **`run-004` started** for US-4222 `[Admin] Update Agency` on the Automation branch, independent of
+  `run-001`'s Manual-branch coverage of the same story. The requirement was re-verified against fresh
+  acceptance criteria (no drift). `execution_safety_policy.json` now governs this run (created after
+  2026-08-07), making `APPROVE`/`REJECT` on a shared Agency record `Forbidden` and pulling Create
+  Agency into scope as the only means of testing them against a self-created record. Branch-module
+  methodology is reused under a recorded boundary — no Branch test data, selectors, findings, or
+  artifacts crossed over. Stage 1 approved by Ahmed Ayman the same day.
+- **`ONBOARDING.md`** added — a zero-to-productive map of the repo: what the platform is, how it's
+  laid out, the two pipelines and their stages, the governance rules that explain most design
+  decisions, and where to go next.
+- **Stage `5H` gains an external-evidence fallback** for a human who wrote and ran automation in their
+  own IDE: it can now derive Result Classifications from the suite's own last three execution reports
+  (Allure, TestNG/JUnit XML, Playwright) — never only the newest, since three runs are what
+  distinguish a new break from an old one — labelled `Derived — {class}` and shown at the batch gate
+  for human confirmation. Report-only evidence caps root-cause confidence at `Medium`; `High` still
+  requires live reproduction. Repairs only failures whose placement git evidence and report evidence
+  agree on; a disagreement is raised as `Ambiguous`, never resolved unilaterally. Never replaces
+  Execution Results that already exist.
+
+---
+
+## 2026-08-15 — Branch module: BranchActions_TC recovered, full suite executed, nine repair patterns promoted
+
+**Recovery and execution.** `BranchActions_TC` — declared in `testng.xml` for weeks with no class
+behind it — is recovered from `origin/platform-testing`, its duplicated approval strings replaced with
+the `ApprovalStatus` enum, and stale `"run-003"` remarks wording dropped. `SearchBranch_Page` gains a
+remarks-capture flow that verifies the textarea actually holds the remark and requires the dialog to
+close as proof of acceptance, rather than trusting a delivery event this screen reports even when it
+does nothing. `BranchProvisioner` ports `REPAIR-BR-014`'s bounded re-search, so it can no longer read
+row 1 of a filtered grid and hand back an unrelated record.
+
+Two full-suite executions follow: rerun-27 (Headless, 28/28 Passed, first time Create/Search/Update ran
+together end to end) and rerun-28 (operator-run, 24 Passed — `TC-BR-056`, the first approve-from-grid
+test ever to execute in this module, passed; `TC-BR-057`/`TC-BR-058` were skipped, Not Executed, when
+the login screen stopped rendering). A follow-up run (rerun-29, Headed) closes both: `TC-BR-057`
+(reject from the grid) and `TC-BR-058` (approve + remarks capture) both Passed, bringing automation
+coverage to 31 of 32 cases (96.9%). **The preflight caught a missing authorization** here: only
+`CREATE`/`UPDATE`/`SUBMIT`/`APPROVE` were granted, none covering `REJECT` — `Automation = Approved`
+made `TC-BR-057` an approved asset, but never authorized the business change it makes on a live
+environment. `TC-BR-058` ran on existing grants; `TC-BR-057` waited for a new grant scoped to
+self-created records, since rejecting a pre-existing branch (another team's record, same Staging grid)
+stayed forbidden.
+
+Two changes are flagged as **not repairs, needing review**: `TC-BR-026`'s assertion was loosened so it
+can no longer fail, silently dropping coverage of the 11-digit rule (`FINDING-004`) it exists to guard;
+and `TC-BR-052`'s test method was deleted while its javadoc was left orphaned above an unrelated
+helper — the exact outcome an earlier healing pass had explicitly refused to produce by weakening the
+test instead, since deleting it "records an open disagreement as settled." Neither appears in any
+healing record; both are committed for reproducibility, not because they're agreed
+(`Final_QA_Report` `DEF-REP-01`/`DEF-REP-02`).
+
+A tooling hazard is recorded for future runs: SHAFT clears `allure-results/` at the start of every
+run, so launching one test destroys a prior test's still-needed evidence unless it's copied out first.
+
+**Nine repair patterns promoted** into the shared Platform Knowledge base (`REPAIR-005` through
+`REPAIR-013`) from the four Branch self-healing passes between 2026-08-05 and 2026-08-15 — each
+carrying its provenance and confidence stated honestly as "1 execution, 1 project," since these
+generalise by technique, not by proven cross-project use.
+
+---
+
+## 2026-08-10 — Branch module artifacts carried forward after self-healing follow-up
+
+Carries the branch module forward across the four stages touched by the 2026-08-09 self-healing pass:
+a new `BranchActions_TC` suite; hardened `AddBranch`/`SearchBranch` page objects and `Branch_Common`;
+Discovery gains `FINDING-016` (credit-terms cap conflicts with the warning-prompt spec) with refreshed
+metadata on four related findings; Test Design extends `TestCases_Branch` and its coverage report; and
+`PRD_UserStories` is reconciled with the new finding.
+
+---
+
+## 2026-08-09 — Branch module: five automation defects repaired via self-healing
+
+`REPAIR-BR-009` through `REPAIR-BR-012`, all evidence-confirmed via timestamped instrumentation and
+live DOM/API checks against Staging: `clickSearch()` resolved on a transient empty-state flash instead
+of the real result set (debounced the check); pagination and row-action icon clicks silently failed to
+register on this app's PrimeNG components (replicated the JS-dispatched-click pattern already proven
+elsewhere in the module); `UpdateBranch_Page`'s City/State dropdowns populate on their own async
+timeline independent of the field the page's readiness wait was keyed on (waited for them explicitly);
+and `hasNextPage()` checked for a disabled state the paginator's Next button never carries, even on the
+true last page (switched to comparing current vs. highest offered page number).
+
+Confirmed via targeted reruns: `TC-BR-043`/`055`/`060`/`061`/`065` now pass. `TC-BR-054`'s remaining
+failure is left open as a confirmed scan-bound question (51 real "Rejected" records verified via the
+Branch search API), not a data gap or automation defect.
+
+Full evidence: `platform_core_data/modules/branch/healing/RepairSummary.md` (Pass
+`HEAL-BR-20260809-01`) and `BeforeAfterComparison.md`.
 
 ---
 

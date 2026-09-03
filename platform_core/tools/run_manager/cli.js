@@ -33,6 +33,15 @@
 //   node .../cli.js manifest --reuse <artifact> --from <run>  # record cross-run reuse
 //   node .../cli.js anchor [--run <r>] [--force] # backfill a missing code-state anchor
 //
+//   # NDC Core Service ONLY — frozen-scope mutation (module_architecture.md §11.5)
+//   node .../cli.js ndc-scope-change [--run <r>] --approved-by "<name>" --reason "..." \
+//     [--service S] [--feature F] [--supplier S | --clear-supplier] \
+//     [--shared-scope SS | --clear-shared-scope] [--testing-layer-scope <json> | --clear-testing-layer-scope]
+//                                               # the ONLY supported way to change an NDC run's
+//                                               # service/feature/supplier/sharedScope/testingLayerScope
+//                                               # after creation; refuses on a non-NDC run and requires
+//                                               # --approved-by + --reason. Appends to scopeHistory.
+//
 // --started defaults to now if omitted. --existing-dir, if given, is scanned for existing folder
 // names so the run index advances past the highest one present and collisions get a deterministic
 // __2/__3 suffix. --index pins the run index explicitly; --no-index omits the run-NNN__ prefix.
@@ -47,7 +56,9 @@ const { captureTargetRef, computeDrift } = require('./targetRef');
 const {
   LINEAGE_FILENAME, LineageError, planRefinement, writeLineage, readLineage,
 } = require('./runLineage');
-const { createRun, backfillTargetRef, CreateRunError } = require('./createRun');
+const {
+  createRun, backfillTargetRef, changeNdcRunScope, CreateRunError,
+} = require('./createRun');
 const {
   CHECKPOINT_STATUSES, INVOCATION_PATHS, ManifestError,
   recordStage, recordReuse, recordGap, readManifest,
@@ -66,7 +77,7 @@ const {
 
 const VERBS = new Set([
   'name', 'active', 'use', 'list', 'refresh', 'clear', 'refine', 'drift',
-  'new', 'stage', 'manifest', 'anchor',
+  'new', 'stage', 'manifest', 'anchor', 'ndc-scope-change',
 ]);
 
 function parseArgs(argv) {
@@ -656,6 +667,77 @@ function cmdAnchor(args) {
   console.log('  NOTE: a backfilled anchor is the code state NOW, not when the run executed —');
   console.log('        drift measured from it understates what actually changed since the run.');
 }
+/**
+ * `ndc-scope-change` — the one supported path to mutate an NDC run's frozen scope after creation
+ * (module_architecture.md §11.5). Refuses on a non-NDC run, requires --approved-by and --reason, and
+ * appends the change to `scopeHistory` rather than overwriting it.
+ */
+function cmdNdcScopeChange(args) {
+  const runsDir = resolveRunsDir(args);
+  if (!runsDir) return;
+  const folderName = (args.run && args.run !== true)
+    ? resolveRunFolder(runsDir, args.run)
+    : resolveActiveRunFolder(runsDir);
+  if (!folderName) {
+    console.error('No run to change. Pass --run <run>, or set an active run first.');
+    process.exitCode = 1;
+    return;
+  }
+
+  const approvedBy = args['approved-by'] && args['approved-by'] !== true ? args['approved-by'] : undefined;
+  const reason = args.reason && args.reason !== true ? args.reason : undefined;
+  if (!approvedBy || !reason) {
+    console.error(
+      'Usage: cli.js ndc-scope-change [--run <r>] --approved-by "<name>" --reason "..." \\\n' +
+      '         [--service S] [--feature F] [--supplier S | --clear-supplier] \\\n' +
+      '         [--shared-scope SS | --clear-shared-scope] \\\n' +
+      '         [--testing-layer-scope <json> | --clear-testing-layer-scope]'
+    );
+    process.exitCode = 1;
+    return;
+  }
+
+  const changes = {};
+  const setOrClear = (field, flag, clearFlag) => {
+    if (args[clearFlag]) { changes[field] = null; return; }
+    if (args[flag] && args[flag] !== true) changes[field] = args[flag];
+  };
+  setOrClear('service', 'service', 'clear-service');
+  setOrClear('feature', 'feature', 'clear-feature');
+  setOrClear('supplier', 'supplier', 'clear-supplier');
+  setOrClear('sharedScope', 'shared-scope', 'clear-shared-scope');
+  if (args['clear-testing-layer-scope']) {
+    changes.testingLayerScope = null;
+  } else if (args['testing-layer-scope'] && args['testing-layer-scope'] !== true) {
+    try {
+      changes.testingLayerScope = JSON.parse(args['testing-layer-scope']);
+    } catch {
+      console.error('--testing-layer-scope must be valid JSON (a string is also valid JSON — quote it: \'"UI only"\').');
+      process.exitCode = 1;
+      return;
+    }
+  }
+
+  try {
+    const res = changeNdcRunScope(runsDir, folderName, { now: new Date(), approvedBy, reason, changes });
+    if (args.json) {
+      console.log(JSON.stringify(res, null, 2));
+      return;
+    }
+    console.log(`${folderName}: NDC scope changed (approved by ${approvedBy})`);
+    console.log(`  reason:   ${reason}`);
+    console.log(`  previous: ${JSON.stringify(res.previous)}`);
+    console.log(`  next:     ${JSON.stringify(res.next)}`);
+  } catch (err) {
+    if (err instanceof CreateRunError) {
+      console.error(err.message);
+      process.exitCode = 1;
+      return;
+    }
+    throw err;
+  }
+}
+
 function cmdList(args) {
   const runsDir = resolveRunsDir(args);
   if (!runsDir) return;
@@ -722,6 +804,7 @@ function main() {
     case 'stage': return cmdStage(args);
     case 'manifest': return cmdManifest(args);
     case 'anchor': return cmdAnchor(args);
+    case 'ndc-scope-change': return cmdNdcScopeChange(args);
     default: return cmdName(args);
   }
 }

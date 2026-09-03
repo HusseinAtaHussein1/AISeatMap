@@ -170,11 +170,15 @@ function createRun(runsDir, opts = {}) {
     startedTime: now.toISOString(),
     status: 'Preparing',
     // NDC Core Service run-ownership fields — optional, default null, zero impact on any non-NDC
-    // run (see validateNdcRunScope's header).
+    // run (see validateNdcRunScope's header). `testingLayerScope` and `scopeHistory` are part of the
+    // same optional NDC surface: harmless on every non-NDC run, and the frozen-scope/history model
+    // (changeNdcRunScope, below) only ever activates once `service` is set.
     service: null,
     feature: null,
     supplier: null,
     sharedScope: null,
+    testingLayerScope: null,
+    scopeHistory: [],
     ...extraRunJson,
   };
   validateNdcRunScope(runJson);
@@ -255,9 +259,108 @@ function backfillTargetRef(runsDir, folderName, opts = {}) {
   return { updated: true, reason: 'anchor backfilled', anchor: next };
 }
 
+/** The NDC frozen-scope fields — see changeNdcRunScope's header. */
+const NDC_SCOPE_FIELDS = ['service', 'feature', 'supplier', 'sharedScope', 'testingLayerScope'];
+
+/**
+ * Changes the frozen NDC scope of an EXISTING NDC-scoped run — the one supported path to mutate
+ * `service` / `feature` / `supplier` / `sharedScope` / `testingLayerScope` after creation
+ * (module_architecture.md §11.5 "Run scope freeze"). Nothing else in this platform writes those
+ * fields once a run exists, so a change made any other way is, by construction, the silent mutation
+ * this function exists to prevent.
+ *
+ * Requires explicit human approval (`approvedBy`) and a non-empty `reason` — an NDC scope change is
+ * never inferred or automatic. The proposed new shape is re-validated with `validateNdcRunScope()`,
+ * so a change can never land the run in a shape `createRun()` itself would have refused (e.g. both
+ * `supplier` and `sharedScope` set). Every change is APPENDED to `scopeHistory`, never overwritten —
+ * the previous scope stays reconstructable.
+ *
+ * Refuses on a non-NDC run (`service` null): scope-freeze/history is an NDC-only concept, and this
+ * function must never be the path by which an Agency/Branch/classic-module run gains fields it never
+ * had before.
+ *
+ * @param {string} runsDir
+ * @param {string} folderName
+ * @param {object} opts
+ * @param {Date} opts.now
+ * @param {string} opts.approvedBy - the human who approved this change
+ * @param {string} opts.reason - non-empty; why the scope is changing
+ * @param {object} [opts.changes] - subset of NDC_SCOPE_FIELDS to change; omitted fields are unchanged
+ * @returns {{updated: boolean, previous: object, next: object, historyEntry: object}}
+ */
+function changeNdcRunScope(runsDir, folderName, opts = {}) {
+  const { now, approvedBy, reason, changes = {} } = opts;
+
+  if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
+    throw new CreateRunError('changeNdcRunScope requires an explicit valid `now` Date.');
+  }
+  if (!approvedBy || !String(approvedBy).trim()) {
+    throw new CreateRunError(
+      'changeNdcRunScope requires `approvedBy` — an NDC scope change must be attributed to the ' +
+      'human who approved it, never applied silently.'
+    );
+  }
+  if (!reason || !String(reason).trim()) {
+    throw new CreateRunError('changeNdcRunScope requires a non-empty `reason`.');
+  }
+
+  const unknownKeys = Object.keys(changes).filter((k) => !NDC_SCOPE_FIELDS.includes(k));
+  if (unknownKeys.length) {
+    throw new CreateRunError(
+      `changeNdcRunScope only accepts changes to ${NDC_SCOPE_FIELDS.join(', ')}. ` +
+      `Got unknown key(s): ${unknownKeys.join(', ')}.`
+    );
+  }
+
+  const file = path.join(runsDir, folderName, 'metadata', 'run.json');
+  let meta;
+  try {
+    meta = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    throw new CreateRunError(`No readable metadata/run.json for run "${folderName}".`);
+  }
+
+  if (meta.service === null || meta.service === undefined) {
+    throw new CreateRunError(
+      `Run "${folderName}" is not NDC-scoped (\`service\` is null) — scope-freeze/history is an ` +
+      'NDC-only concept and does not apply to this run.'
+    );
+  }
+
+  const previous = {};
+  const next = {};
+  for (const f of NDC_SCOPE_FIELDS) {
+    previous[f] = meta[f] ?? null;
+    next[f] = Object.prototype.hasOwnProperty.call(changes, f) ? changes[f] : previous[f];
+  }
+
+  // Re-validate the full XOR/both-set invariant against the PROPOSED new shape (testingLayerScope is
+  // opaque to this check — validateNdcRunScope only constrains service/feature/supplier/sharedScope).
+  validateNdcRunScope(next);
+
+  const historyEntry = {
+    changedAt: now.toISOString(),
+    approvedBy: String(approvedBy),
+    reason: String(reason),
+    previous,
+    next,
+  };
+
+  const updated = {
+    ...meta,
+    ...next,
+    scopeHistory: [...(Array.isArray(meta.scopeHistory) ? meta.scopeHistory : []), historyEntry],
+  };
+  writeJson(file, updated);
+
+  return { updated: true, previous, next, historyEntry };
+}
+
 module.exports = {
   CreateRunError,
   createRun,
   backfillTargetRef,
   validateNdcRunScope,
+  changeNdcRunScope,
+  NDC_SCOPE_FIELDS,
 };

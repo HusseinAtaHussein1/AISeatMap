@@ -797,6 +797,47 @@ how `modules[]` is already optional elsewhere in this document:
 Validated **before** any run folder is created, so a rejected shape leaves nothing behind — the same
 guarantee every other `createRun()` validation failure already gives.
 
+### 11.5.1 Run scope freeze (added 2026-09-03, user-mandated)
+
+Once an NDC run's scope is confirmed, `service` / `feature` / `supplier` / `sharedScope` /
+`testingLayerScope` are **frozen**. `run.json` gains one more optional field alongside the four above
+— `testingLayerScope: null` — plus an append-only `scopeHistory: []`:
+
+```json
+{
+  "service": null, "feature": null, "supplier": null, "sharedScope": null,
+  "testingLayerScope": null,
+  "scopeHistory": []
+}
+```
+
+Both are written by `createRun()` on every run (NDC or not) — harmless on a non-NDC run, exactly like
+the four fields above. Nothing writes `scopeHistory` at creation time; the initial confirmed scope IS
+the baseline, and recording a fake "change" entry for it would misrepresent a baseline as a mutation.
+
+**`changeNdcRunScope(runsDir, folderName, opts)`** (`createRun.js`) is the one supported path to
+mutate any of those five fields after creation:
+
+- Requires `opts.approvedBy` (non-empty) and `opts.reason` (non-empty) — a scope change is never
+  silent or automatic.
+- `opts.changes` may set any subset of the five fields; omitted fields are carried forward unchanged.
+- Re-validates the proposed **new** shape with `validateNdcRunScope()` — a change can never leave the
+  run in a shape `createRun()` itself would have refused (both `supplier` and `sharedScope` set, or
+  neither).
+- Refuses outright on a non-NDC run (`service` null) — this function must never become a path by
+  which an Agency/Branch/classic-module run gains scope-history fields it never had.
+- On success, **appends** `{ changedAt, approvedBy, reason, previous, next }` to `scopeHistory[]` and
+  writes the new scope onto the top-level fields. `previous` is never overwritten — every past scope
+  stays reconstructable from the array.
+
+CLI: `cli.js ndc-scope-change [--run <r>] --approved-by "<name>" --reason "..." [--service ...]
+[--feature ...] [--supplier ... | --clear-supplier] [--shared-scope ... | --clear-shared-scope]
+[--testing-layer-scope <json> | --clear-testing-layer-scope]` — the only supported CLI surface for
+this mutation; there is no separate "update run" command that could bypass it, because no other run
+mutation path for `run.json`'s NDC fields exists in this platform.
+
+Full governance rule (why this exists, precedence, gating): `ndc_execution_rules.md` §4.
+
 ## 11.6 Superseding a module into the Service layer
 
 `import-booked-pnr` (module_architecture.md §6, promoted 2026-09-02) is the first case of a module

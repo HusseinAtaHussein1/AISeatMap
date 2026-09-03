@@ -1498,4 +1498,54 @@ distinguish "passed first time" from "passed eventually".
 
 ---
 
+## 16. NDC Core Service — Stage Gates (scope-gated) (added 2026-09-03, user-mandated)
+
+**This section applies only when the resolved run has `service === "ndc-core-service"`.** It adds no
+new pipeline stage, Skill, or branch — it constrains what Stage 3 (Test Design) and Stage 4A
+(Automation) may accept for an NDC-scoped run, on top of every rule that already applies to them. A
+non-NDC run (Agency, Branch, any classic module) is entirely unaffected by this section.
+
+Full governance rule set this section gates: `ndc_execution_rules.md`. Routing: `new_us_intake.md`
+§13. Schema/mechanics for the run-scope freeze referenced below: `module_architecture.md` §11.5.1.
+
+### 16.1 Discovery → Test Design gate
+
+| Discovery finding classification | May Test Design record it as a confirmed expected result? |
+|---|---|
+| `Confirmed` | Yes |
+| `Historical Requirement` | Yes, unless the current User Story explicitly changes it — then it is regression evidence, not the requirement |
+| `Supplier-Specific Confirmed` | Yes |
+| `Open Question` | **No** — classify the test as `Discovery`, `Blocked`, or `Pending Confirmation` |
+| `Assumption` | **No** |
+| `Blocked` | **No** |
+| `Provisional` | **No** |
+| `Not Applicable` | N/A — no test case results from it |
+
+### 16.2 Test Design → Automation gate
+
+Do not start Stage 4A automation for an NDC test case when any of the following holds:
+
+| Condition | Gate |
+|---|---|
+| Expected result unresolved | Blocked from automation |
+| Required environment/Supplier test data unavailable | Blocked from automation |
+| Supplier contract still under Discovery | Blocked from automation |
+| Test case marked `Blocked` | Blocked from automation |
+| Execution would violate `execution_safety_policy.json` (§14) | Blocked from automation |
+| Destructive cleanup/reset behavior unknown | Blocked from automation |
+
+When multiple NDC test cases are eligible, Stage 4A prioritizes: (1) stable confirmed P1 flows, (2)
+API/contract/mapping validation, (3) high-value regression, (4) stable E2E flows.
+
+### 16.3 Run scope freeze enforcement point
+
+An NDC run's `service`/`feature`/`supplier`/`sharedScope`/`testingLayerScope` are frozen once
+confirmed (`ndc_execution_rules.md` §4). No stage in this pipeline may write those fields directly —
+the only supported mutation path is `changeNdcRunScope()` / `cli.js ndc-scope-change`
+(`module_architecture.md` §11.5.1), which requires explicit human approval and a reason, and appends
+rather than overwrites. A stage that needs a scope change stops and asks, exactly as any other
+Human Decision point does (§5.5).
+
+---
+
 *This document defines the reusable pipeline only. It does not itself invoke any agent, and no stage described above has been run as part of producing this specification.*

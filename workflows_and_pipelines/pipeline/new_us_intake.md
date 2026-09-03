@@ -433,3 +433,17 @@ cli.js ndc inspect-scope --user-story "..." --name "..." [--json]
 - Does not migrate the existing `modules/` layer. `agency` and `branch` are untouched.
 
 Full architecture: `module_architecture.md`, NDC Core Service section.
+
+# 13. NDC Core Service — execution/governance rules (pointer only)
+
+Once an NDC Supplier or shared-scope run is intake-routed via §12, it also carries a dedicated
+execution/governance rule set — Supplier inheritance, run-intake fields, QA-layer defaults, run-scope
+freeze (mechanically enforced — `changeNdcRunScope()`, module_architecture.md §11.5), requirement
+precedence, Discovery→Test-Design and Test-Design→Automation gates, execution evidence, test-data
+isolation, prior-run reuse, the Import Booked PNR environment model, and completion reporting.
+
+**These rules apply only when the resolved scope has `service === "ndc-core-service"`.** They do not
+change §3-§9's routing or any classic module/Feature workflow's behavior.
+
+Full rule set (kept in one place, not duplicated here): `ndc_execution_rules.md`. Stage-gate
+mechanics for the same rule set: `pipeline.md` §16.

@@ -114,6 +114,13 @@ A run addresses NDC scope with `service`/`feature`/`supplier`/`sharedScope` on `
 `modules[]`. It must pick exactly one of `supplier` or `sharedScope` — never both, never neither —
 enforced mechanically by `createRun.js`'s `validateNdcRunScope()`.
 
+**NDC Core Service Supplier/Shared-scope runs also carry an execution/governance rule set** —
+inheritance, run-intake fields, QA-layer defaults, run-scope freeze, requirement precedence,
+Discovery/Automation gates, evidence, test-data isolation, prior-run reuse, environment model,
+completion reporting. It activates **only** when `service === "ndc-core-service"` and never changes
+Agency/Branch/classic-module behavior. Full rules:
+[`workflows_and_pipelines/pipeline/ndc_execution_rules.md`](workflows_and_pipelines/pipeline/ndc_execution_rules.md).
+
 ## Scope pointers
 
 | | |

@@ -1,6 +1,6 @@
 # Supplier Checklist — {{SUPPLIER_NAME}}
 
-<!-- Renders to: platform_core_data/services/ndc-core-service/{{FEATURE_SLUG}}/suppliers/{{SUPPLIER_SLUG}}/context/SupplierChecklist.md -->
+<!-- Renders to: platform_core_data/supplier-features/{{FEATURE_SLUG}}/suppliers/{{SUPPLIER_SLUG}}/context/SupplierChecklist.md -->
 <!-- This is an INTAKE document, not a completeness gate. Unknown fields are recorded as Unknown /
      To Be Discovered / Blocked / Pending Developer Confirmation — they do not block Supplier scope
      creation or run start. Discovery is where most Unknown/To Be Discovered items get resolved.
@@ -13,9 +13,9 @@
      THIS TEMPLATE IS GENERIC AND FEATURE-AGNOSTIC. It must remain reusable, unmodified, across every
      NDC Core Service Feature (Refund, Reissue, Seatmap, Import Booked PNR, and future Features).
      Feature-specific rows are never hardcoded here — they are injected at render time from that
-     Feature's FeatureChecklistProfile.md (platform_core/templates/ndc_supplier_intake/FeatureChecklistProfile.md
+     Feature's FeatureChecklistProfile.md (platform_core/templates/supplier_feature_intake/FeatureChecklistProfile.md
      is the generic Profile template; each Feature has its own populated instance at
-     services/ndc-core-service/{{FEATURE_SLUG}}/context/FeatureChecklistProfile.md). Sections/rows
+     supplier-features/{{FEATURE_SLUG}}/context/FeatureChecklistProfile.md). Sections/rows
      marked "GENERIC — cross-Feature" belong in this file. Sections/rows marked "INJECTED FROM FEATURE
      PROFILE" are populated by the renderer, never authored directly into this template. -->
 

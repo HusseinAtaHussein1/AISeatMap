@@ -164,17 +164,17 @@ test('setActiveModules refuses a Superseded module and names its replacement', (
 
 test('setActiveModules refuses a module Superseded by an EXTERNAL entity, naming the external reference', () => {
   // Constraint 2: import-booked-pnr is superseded by a Feature that now lives in a different
-  // registry (services/ndc-core-service/import-booked-pnr) — not a sibling slug in modules.json.
+  // registry (supplier-features/import-booked-pnr) — not a sibling slug in modules.json.
   const modulesDir = makeModulesDir();
   makeActiveModule(modulesDir, 'Import Booked PNR');
   supersedeModule(modulesDir, 'import-booked-pnr', null, {
     now: NOW,
-    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+    externalSupersededBy: 'supplier-features/import-booked-pnr',
   });
 
   assert.throws(
     () => setActiveModules(modulesDir, ['import-booked-pnr'], { now: LATER }),
-    /Superseded by "services\/ndc-core-service\/import-booked-pnr"/
+    /Superseded by "supplier-features\/import-booked-pnr"/
   );
   cleanup(modulesDir);
 });
@@ -190,7 +190,7 @@ test('isActiveModuleSuperseded reports true when the active module is superseded
 
   supersedeModule(modulesDir, 'import-booked-pnr', null, {
     now: LATER,
-    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+    externalSupersededBy: 'supplier-features/import-booked-pnr',
   });
   assert.equal(isActiveModuleSuperseded(modulesDir), true);
   cleanup(modulesDir);

@@ -6,10 +6,10 @@
   "activeModules": [],
   "activeScope": null,
   "spansEveryModule": false,
-  "activeFeature": null,
+  "activeFeature": "import-booked-pnr",
   "previousActiveFeature": null,
-  "switchedAt": null,
-  "setBy": null,
+  "switchedAt": "2026-09-04T08:57:15.021Z",
+  "setBy": "Module Manager",
   "previousActiveModules": [],
   "modules": [
     {
@@ -18,8 +18,7 @@
       "description": "Admin module to search and import a booked PNR by record locator, supplier and credential; this feature investigates and defines the initial contract for the new integration layer replacing the existing Integration Layer.",
       "status": "Active",
       "derivedFromSections": [],
-      "kind": "ndc_feature",
-      "service": "ndc-core-service",
+      "kind": "supplier_feature",
       "createdAt": "2026-09-02T12:00:00.000Z",
       "updatedAt": "2026-09-01T13:26:49.768Z",
       "supersededBy": null,
@@ -79,7 +78,7 @@
           "stages": {
             "context": {
               "status": "Approved",
-              "artifactPath": "platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/context/ProjectContext.md",
+              "artifactPath": "platform_core_data/supplier-features/import-booked-pnr/shared/new-layer-contract/context/ProjectContext.md",
               "lastRun": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
               "lastUpdated": "2026-09-01T13:26:49.694Z",
               "revisionCount": 4,
@@ -95,7 +94,7 @@
             },
             "test_design": {
               "status": "Pending Review",
-              "artifactPath": "platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/test_design/TestCases_ImportBookedPNR.md",
+              "artifactPath": "platform_core_data/supplier-features/import-booked-pnr/shared/new-layer-contract/test_design/TestCases_ImportBookedPNR.md",
               "lastRun": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
               "lastUpdated": "2026-09-01T13:26:49.768Z",
               "revisionCount": 3,
@@ -121,7 +120,9 @@
           "approvedAt": "2026-09-01T08:09:24.512Z",
           "approvedBy": "Ahmed Ayman"
         }
-      ]
+      ],
+      "integrationLayer": "ndc-core-service"
     }
-  ]
+  ],
+  "activeSupplier": null
 }

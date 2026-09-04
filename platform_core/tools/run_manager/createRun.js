@@ -38,51 +38,81 @@ class CreateRunError extends Error {
 /** run.json fields whose value is a platform spec version we record rather than invent (§7). */
 const UNVERSIONED = 'unversioned';
 
+/** The one non-null `scopeFamily` this platform understands today (run_manager.md §7). */
+const SUPPLIER_FEATURE_SCOPE = 'supplier-feature';
+
 /**
- * Validates the NDC Core Service run-ownership fields on a run.json object.
+ * Validates a run's scope-family ownership fields on a run.json object.
  *
- * See module_architecture.md, NDC Core Service section, "run ownership scope exclusivity". A run may
- * carry four OPTIONAL fields — `service`, `feature`, `supplier`, `sharedScope` — all defaulting to
- * `null`, exactly like `modules[]` is already an optional key elsewhere in this platform. This keeps
- * EVERY non-NDC run (agency, branch, or any run that never sets `service`) entirely unaffected: the
- * function returns immediately, with no field checked, when `service` and `feature` are both null.
+ * See module_architecture.md, Supplier Features section, "run ownership scope exclusivity". A run may
+ * carry four OPTIONAL fields — `scopeFamily`, `feature`, `supplier`, `sharedScope` — all defaulting
+ * to `null`, exactly like `modules[]` is already an optional key elsewhere in this platform.
  *
- * Once a run IS NDC-scoped (`service` and `feature` both set), exactly two shapes are legal:
+ * `scopeFamily` is the DISCRIMINATOR, and it is deliberately a named family rather than an entity
+ * identifier: `feature` already holds a Feature slug, so a boolean-ish `supplierFeature` field
+ * sitting beside it would read as "which Supplier Feature" and invite exactly the wrong inference.
+ * It follows the `moduleScope` convention already in run_manager.md §7 — a short string saying what
+ * the scope IS, not which entity it names. It also leaves room for a future `scopeFamily: "module"`
+ * without inventing a second discriminator.
+ *
+ * A `scopeFamily` of null means the classic module/Feature addressing system, which is what EVERY
+ * run written before these fields existed means — so the function returns immediately, with no field
+ * checked, and those runs stay entirely unaffected.
+ *
+ * Once a run IS Supplier-Feature-scoped, exactly two shapes are legal:
  *   - a Supplier run:      `supplier` set,   `sharedScope` null
  *   - a shared-scope run:  `supplier` null,  `sharedScope` set
  * A run naming BOTH or NEITHER is a contradiction — a run cannot be simultaneously supplier-specific
- * and cross-supplier, and an NDC-scoped run that names neither has not actually picked a scope. Both
- * are rejected here, mechanically, rather than left to a convention nothing enforces.
+ * and cross-supplier, and one that names neither has not actually picked a scope. Both are rejected
+ * here, mechanically, rather than left to a convention nothing enforces.
  *
- * @param {{service?: string|null, feature?: string|null, supplier?: string|null, sharedScope?: string|null}} runJson
- * @throws {CreateRunError} when the run is NDC-scoped and its ownership fields are contradictory
+ * @param {{scopeFamily?: string|null, feature?: string|null, supplier?: string|null,
+ *          sharedScope?: string|null}} runJson
+ * @throws {CreateRunError} when the run is Supplier-Feature-scoped and its fields are contradictory
  */
-function validateNdcRunScope(runJson = {}) {
-  const service = runJson.service ?? null;
+function validateRunScopeFamily(runJson = {}) {
+  const scopeFamily = runJson.scopeFamily ?? null;
   const feature = runJson.feature ?? null;
   const supplier = runJson.supplier ?? null;
   const sharedScope = runJson.sharedScope ?? null;
 
-  // Not an NDC-scoped run — untouched, exactly as every run written before these fields existed.
-  if (service === null && feature === null) return;
+  // Not a Supplier-Feature-scoped run — untouched, exactly as every run written before these fields
+  // existed. A bare `feature` with no scopeFamily is caught below, not silently accepted.
+  if (scopeFamily === null) {
+    if (feature !== null || supplier !== null || sharedScope !== null) {
+      throw new CreateRunError(
+        'A run that sets `feature`, `supplier`, or `sharedScope` must declare its ' +
+        `\`scopeFamily\` (expected "${SUPPLIER_FEATURE_SCOPE}"). Got scopeFamily=null with ` +
+        `feature=${JSON.stringify(feature)}, supplier=${JSON.stringify(supplier)}, ` +
+        `sharedScope=${JSON.stringify(sharedScope)}.`
+      );
+    }
+    return;
+  }
 
-  if (!service || !feature) {
+  if (scopeFamily !== SUPPLIER_FEATURE_SCOPE) {
     throw new CreateRunError(
-      'An NDC-scoped run requires BOTH `service` and `feature` set. Got ' +
-      `service=${JSON.stringify(service)}, feature=${JSON.stringify(feature)}.`
+      `Unknown \`scopeFamily\` ${JSON.stringify(scopeFamily)}. The only value this platform ` +
+      `understands is "${SUPPLIER_FEATURE_SCOPE}" (or null for a classic module-scoped run).`
+    );
+  }
+  if (!feature) {
+    throw new CreateRunError(
+      `A "${SUPPLIER_FEATURE_SCOPE}" run requires \`feature\` set to the Supplier Feature's slug. ` +
+      `Got feature=${JSON.stringify(feature)}.`
     );
   }
   if (supplier !== null && sharedScope !== null) {
     throw new CreateRunError(
-      'An NDC-scoped run must never set both `supplier` and `sharedScope` — a run is EITHER a ' +
-      'Supplier run or a shared-scope run, never both. Got ' +
+      `A "${SUPPLIER_FEATURE_SCOPE}" run must never set both \`supplier\` and \`sharedScope\` — a ` +
+      'run is EITHER a Supplier run or a shared-scope run, never both. Got ' +
       `supplier=${JSON.stringify(supplier)}, sharedScope=${JSON.stringify(sharedScope)}.`
     );
   }
   if (supplier === null && sharedScope === null) {
     throw new CreateRunError(
-      'An NDC-scoped run (service and feature both set) must pick EXACTLY ONE of `supplier` or ' +
-      '`sharedScope` — neither is set.'
+      `A "${SUPPLIER_FEATURE_SCOPE}" run must pick EXACTLY ONE of \`supplier\` or \`sharedScope\` — ` +
+      'neither is set.'
     );
   }
 }
@@ -118,9 +148,9 @@ function createRun(runsDir, opts = {}) {
   if (!scope && !opts.folderName) {
     throw new CreateRunError('createRun requires a `scope` (or a pre-generated `folderName`).');
   }
-  // Validated BEFORE any folder is created — a rejected NDC ownership shape must leave nothing
-  // behind, exactly like every other createRun() validation failure.
-  validateNdcRunScope(extraRunJson);
+  // Validated BEFORE any folder is created — a rejected ownership shape must leave nothing behind,
+  // exactly like every other createRun() validation failure.
+  validateRunScopeFamily(extraRunJson);
 
   let existingNames = [];
   try {
@@ -169,11 +199,12 @@ function createRun(runsDir, opts = {}) {
     createdBy: createdBy || 'Run Manager',
     startedTime: now.toISOString(),
     status: 'Preparing',
-    // NDC Core Service run-ownership fields — optional, default null, zero impact on any non-NDC
-    // run (see validateNdcRunScope's header). `testingLayerScope` and `scopeHistory` are part of the
-    // same optional NDC surface: harmless on every non-NDC run, and the frozen-scope/history model
-    // (changeNdcRunScope, below) only ever activates once `service` is set.
-    service: null,
+    // Supplier Features run-ownership fields — optional, default null, zero impact on any classic
+    // module-scoped run (see validateRunScopeFamily's header). `testingLayerScope` and `scopeHistory`
+    // are part of the same optional surface: harmless on every classic run, and the frozen-scope/
+    // history model (changeSupplierFeatureRunScope, below) only ever activates once `scopeFamily` is
+    // set.
+    scopeFamily: null,
     feature: null,
     supplier: null,
     sharedScope: null,
@@ -181,7 +212,7 @@ function createRun(runsDir, opts = {}) {
     scopeHistory: [],
     ...extraRunJson,
   };
-  validateNdcRunScope(runJson);
+  validateRunScopeFamily(runJson);
   writeJson(path.join(runDir, 'metadata', 'run.json'), runJson);
 
   let manifestPath = null;
@@ -259,25 +290,33 @@ function backfillTargetRef(runsDir, folderName, opts = {}) {
   return { updated: true, reason: 'anchor backfilled', anchor: next };
 }
 
-/** The NDC frozen-scope fields — see changeNdcRunScope's header. */
-const NDC_SCOPE_FIELDS = ['service', 'feature', 'supplier', 'sharedScope', 'testingLayerScope'];
+/**
+ * The frozen-scope fields — see changeSupplierFeatureRunScope's header.
+ *
+ * `scopeFamily` is deliberately NOT in this list. It is frozen absolutely, not frozen-but-changeable:
+ * converting a classic module run into a Supplier-Feature run (or back) is not a scope CHANGE, it is
+ * a different run. The retired Service-tier version of this list carried `service` here for exactly
+ * that kind of re-pointing, which the new model has no equivalent of.
+ */
+const SCOPE_FREEZE_FIELDS = ['feature', 'supplier', 'sharedScope', 'testingLayerScope'];
 
 /**
- * Changes the frozen NDC scope of an EXISTING NDC-scoped run — the one supported path to mutate
- * `service` / `feature` / `supplier` / `sharedScope` / `testingLayerScope` after creation
- * (module_architecture.md §11.5 "Run scope freeze"). Nothing else in this platform writes those
- * fields once a run exists, so a change made any other way is, by construction, the silent mutation
- * this function exists to prevent.
+ * Changes the frozen scope of an EXISTING Supplier-Feature run — the one supported path to mutate
+ * `feature` / `supplier` / `sharedScope` / `testingLayerScope` after creation
+ * (module_architecture.md §11.5.1 "Run scope freeze", ndc_execution_rules.md §A4). Nothing else in
+ * this platform writes those fields once a run exists, so a change made any other way is, by
+ * construction, the silent mutation this function exists to prevent.
  *
- * Requires explicit human approval (`approvedBy`) and a non-empty `reason` — an NDC scope change is
- * never inferred or automatic. The proposed new shape is re-validated with `validateNdcRunScope()`,
- * so a change can never land the run in a shape `createRun()` itself would have refused (e.g. both
+ * Requires explicit human approval (`approvedBy`) and a non-empty `reason` — a scope change is never
+ * inferred or automatic. The proposed new shape is re-validated with `validateRunScopeFamily()`, so a
+ * change can never land the run in a shape `createRun()` itself would have refused (e.g. both
  * `supplier` and `sharedScope` set). Every change is APPENDED to `scopeHistory`, never overwritten —
  * the previous scope stays reconstructable.
  *
- * Refuses on a non-NDC run (`service` null): scope-freeze/history is an NDC-only concept, and this
- * function must never be the path by which an Agency/Branch/classic-module run gains fields it never
- * had before.
+ * Refuses on a classic run (`scopeFamily` null): scope-freeze/history is a Supplier-Features concept,
+ * and this function must never be the path by which an Agency/Branch/classic-module run gains fields
+ * it never had before. This is the same guard the Service-tier version applied via `service`, moved
+ * onto the discriminator that replaced it.
  *
  * @param {string} runsDir
  * @param {string} folderName
@@ -285,29 +324,29 @@ const NDC_SCOPE_FIELDS = ['service', 'feature', 'supplier', 'sharedScope', 'test
  * @param {Date} opts.now
  * @param {string} opts.approvedBy - the human who approved this change
  * @param {string} opts.reason - non-empty; why the scope is changing
- * @param {object} [opts.changes] - subset of NDC_SCOPE_FIELDS to change; omitted fields are unchanged
+ * @param {object} [opts.changes] - subset of SCOPE_FREEZE_FIELDS; omitted fields are unchanged
  * @returns {{updated: boolean, previous: object, next: object, historyEntry: object}}
  */
-function changeNdcRunScope(runsDir, folderName, opts = {}) {
+function changeSupplierFeatureRunScope(runsDir, folderName, opts = {}) {
   const { now, approvedBy, reason, changes = {} } = opts;
 
   if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
-    throw new CreateRunError('changeNdcRunScope requires an explicit valid `now` Date.');
+    throw new CreateRunError('changeSupplierFeatureRunScope requires an explicit valid `now` Date.');
   }
   if (!approvedBy || !String(approvedBy).trim()) {
     throw new CreateRunError(
-      'changeNdcRunScope requires `approvedBy` — an NDC scope change must be attributed to the ' +
-      'human who approved it, never applied silently.'
+      'changeSupplierFeatureRunScope requires `approvedBy` — a scope change must be attributed to ' +
+      'the human who approved it, never applied silently.'
     );
   }
   if (!reason || !String(reason).trim()) {
-    throw new CreateRunError('changeNdcRunScope requires a non-empty `reason`.');
+    throw new CreateRunError('changeSupplierFeatureRunScope requires a non-empty `reason`.');
   }
 
-  const unknownKeys = Object.keys(changes).filter((k) => !NDC_SCOPE_FIELDS.includes(k));
+  const unknownKeys = Object.keys(changes).filter((k) => !SCOPE_FREEZE_FIELDS.includes(k));
   if (unknownKeys.length) {
     throw new CreateRunError(
-      `changeNdcRunScope only accepts changes to ${NDC_SCOPE_FIELDS.join(', ')}. ` +
+      `changeSupplierFeatureRunScope only accepts changes to ${SCOPE_FREEZE_FIELDS.join(', ')}. ` +
       `Got unknown key(s): ${unknownKeys.join(', ')}.`
     );
   }
@@ -320,23 +359,24 @@ function changeNdcRunScope(runsDir, folderName, opts = {}) {
     throw new CreateRunError(`No readable metadata/run.json for run "${folderName}".`);
   }
 
-  if (meta.service === null || meta.service === undefined) {
+  if (meta.scopeFamily === null || meta.scopeFamily === undefined) {
     throw new CreateRunError(
-      `Run "${folderName}" is not NDC-scoped (\`service\` is null) — scope-freeze/history is an ` +
-      'NDC-only concept and does not apply to this run.'
+      `Run "${folderName}" is not Supplier-Feature-scoped (\`scopeFamily\` is null) — scope-freeze/` +
+      'history does not apply to a classic module-scoped run.'
     );
   }
 
   const previous = {};
   const next = {};
-  for (const f of NDC_SCOPE_FIELDS) {
+  for (const f of SCOPE_FREEZE_FIELDS) {
     previous[f] = meta[f] ?? null;
     next[f] = Object.prototype.hasOwnProperty.call(changes, f) ? changes[f] : previous[f];
   }
 
-  // Re-validate the full XOR/both-set invariant against the PROPOSED new shape (testingLayerScope is
-  // opaque to this check — validateNdcRunScope only constrains service/feature/supplier/sharedScope).
-  validateNdcRunScope(next);
+  // Re-validate the full XOR/both-set invariant against the PROPOSED new shape. `scopeFamily` is read
+  // from the existing run rather than from `next` — it is not changeable here, but the validator needs
+  // it to know which rules apply. `testingLayerScope` is opaque to this check.
+  validateRunScopeFamily({ ...next, scopeFamily: meta.scopeFamily });
 
   const historyEntry = {
     changedAt: now.toISOString(),
@@ -358,9 +398,10 @@ function changeNdcRunScope(runsDir, folderName, opts = {}) {
 
 module.exports = {
   CreateRunError,
+  SUPPLIER_FEATURE_SCOPE,
   createRun,
   backfillTargetRef,
-  validateNdcRunScope,
-  changeNdcRunScope,
-  NDC_SCOPE_FIELDS,
+  validateRunScopeFamily,
+  changeSupplierFeatureRunScope,
+  SCOPE_FREEZE_FIELDS,
 };

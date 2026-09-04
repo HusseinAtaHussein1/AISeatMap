@@ -282,7 +282,7 @@ test('supersedeModule marks a module superseded without renaming or deleting it'
 });
 
 test('supersedeModule accepts an externalSupersededBy reference when the superseding entity lives in a different registry', () => {
-  // Constraint 2: import-booked-pnr is promoted into services/ndc-core-service/import-booked-pnr —
+  // Constraint 2: import-booked-pnr is promoted into supplier-features/import-booked-pnr —
   // a different registry this file cannot resolve or validate, so it is stored as an opaque string
   // in its OWN field rather than overloading `supersededBy` (which every reader assumes is a sibling
   // slug in THIS registry).
@@ -291,13 +291,13 @@ test('supersedeModule accepts an externalSupersededBy reference when the superse
 
   supersedeModule(modulesDir, 'import-booked-pnr', null, {
     now: LATER,
-    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+    externalSupersededBy: 'supplier-features/import-booked-pnr',
   });
 
   const entry = resolveModule(modulesDir, 'import-booked-pnr');
   assert.equal(entry.status, 'Superseded');
   assert.equal(entry.supersededBy, null);
-  assert.equal(entry.supersededByExternal, 'services/ndc-core-service/import-booked-pnr');
+  assert.equal(entry.supersededByExternal, 'supplier-features/import-booked-pnr');
   assert.ok(fs.existsSync(path.join(modulesDir, 'import-booked-pnr')), 'the folder must stay readable');
   cleanup(modulesDir);
 });
@@ -324,7 +324,7 @@ test('recordStage is structurally unreachable for a Superseded module through th
   makeActiveModule(modulesDir, 'Import Booked PNR');
   supersedeModule(modulesDir, 'import-booked-pnr', null, {
     now: LATER,
-    externalSupersededBy: 'services/ndc-core-service/import-booked-pnr',
+    externalSupersededBy: 'supplier-features/import-booked-pnr',
   });
 
   // recordStage() does not throw on a Superseded module when targeted explicitly by slug — proving

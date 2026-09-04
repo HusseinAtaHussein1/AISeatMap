@@ -296,53 +296,66 @@ This rule does **not**:
 - Authorize any action against any environment (`run_scope.md` §10).
 - Decide any classification on the human's behalf.
 
-# 12. NDC Core Service intake routing — an ADDITION, alongside §3-§9
+# 12. Supplier Features intake routing — an ADDITION, alongside §3-§9
 
-This section adds a THIRD routing path, for one business initiative only: **NDC Core Service**. It
-does not change §3-§9 in any way — every non-NDC User Story is routed exactly as written above.
+This section adds a THIRD routing path, for **Supplier-driven Features**. It does not change §3-§9 in
+any way — every non-Supplier-Feature User Story is routed exactly as written above.
 
 ## 12.1 The hierarchy
 
 ```
-Service (NDC_Core_Service)
-  → Feature (Refund, Reissue, Seatmap, Import Booked PNR)
+Supplier Features                              (platform_core_data/supplier-features/)
+  → Feature (Import Booked PNR, Refund, Reissue, Seatmap, Ancillaries, Upselling, ...)
+    → integrationLayer — Feature METADATA naming the technical/backend path (e.g.
+                          "ndc-core-service"), or null. NEVER a folder tier, never inferred
     → context/FeatureChecklistProfile.md — Feature-level, sourced from the Feature's approved
                                             shared context(s); see §12.2a
-    → Supplier (NDCGal, SabreNDC, ...) — a NEW, independent entity, never called a "feature"
+    → Supplier (Travelport NDC, Sabre NDC, ...) — an independent entity, never called a "feature"
     → Shared scope (e.g. "new-layer-contract") — cross-supplier work, not yet supplier-specific
 ```
 
 A Supplier under one Feature is **independent** from the same Supplier name under a different
-Feature — "NDCGal" under Refund and "NDCGal" under Import Booked PNR are two unrelated entities with
-their own stage tracking, their own folder, their own `supplier.json`.
+Feature — "Travelport NDC" under Import Booked PNR and "Travelport NDC" under Ancillaries are two
+unrelated entities with their own stage tracking, their own folder, their own `supplier.json`.
 
-Refund, Reissue, and Seatmap exist today as **empty Feature registrations only** — proposed and
-approved, so the name is reserved and traceable, but with **no `shared/` or `suppliers/` folder**
-until a real request for that Feature arrives. Import Booked PNR is the only one with live work.
+**Import Booked PNR is the only Feature with live work today.** Refund, Reissue, Seatmap,
+Ancillaries, and Upselling are named here as known candidates only — they are **not registered and
+not on disk**, and each is proposed and approved individually when a real request for it arrives.
+Nothing may treat a Feature as pre-existing because it is named in this list.
 
 ## 12.2 Trigger: "new supplier"
 
-When a human says **"new supplier"** (or names a new Supplier for the NDC Core Service):
+When a human says **"new supplier"** (or names a new Supplier for a Supplier Feature):
 
-1. Ask: **"Which NDC Core Service feature is this supplier for? Refund / Reissue / Seatmap / Import
-   Booked PNR"** — never inferred from context, never assumed from a prior run.
+1. Ask: **"Which Supplier Feature is this supplier for?"** — never inferred from context, never
+   assumed from a prior run. Offer the CURRENT registered Features, read live from the registry:
+   ```bash
+   cli.js supplier-feature feature list --json
+   ```
+   The list is generated from the registry, never hardcoded here, so a Feature registered later
+   appears automatically with no edit to this document. If the named Feature is not registered yet,
+   that is a separate propose→approve step the human decides on — not something the Supplier request
+   creates as a side effect.
 2. Ask for the supplier checklist / scope description for that Supplier.
-3. Run the scope sweep: `cli.js ndc inspect-scope --name "<Supplier name>" [--user-story ...] --json`.
+3. Run the scope sweep: `cli.js supplier-feature inspect-scope --name "<Supplier name>" [--user-story ...] --json`.
    Overlap is a candidate, never a verdict — identical reasoning to §5.1.
 4. Propose the Supplier under the named Feature and **wait for confirmation** before creating
    anything:
    ```bash
-   cli.js ndc supplier propose <feature> --name "<Supplier name>"
-   cli.js ndc supplier approve <feature> <supplier> --by "<Reviewer>"
-   cli.js ndc supplier scaffold <feature> <supplier> [--dry-run]
+   cli.js supplier-feature supplier propose  <feature> --name "<Supplier name>"
+   cli.js supplier-feature supplier approve  <feature> <supplier> --by "<Reviewer>"
+   cli.js supplier-feature supplier scaffold <feature> <supplier> [--dry-run]
    ```
    `scaffoldSupplier()` only creates the folder skeleton and `supplier.json` — it does not render any
    Markdown (identical to `scaffoldFeature()`'s behavior for Features). Rendering the Supplier
    Checklist itself is a separate, agent-performed step — §12.2a.
 5. Render the Supplier Checklist into the freshly-scaffolded `context/` folder — §12.2a.
-6. Create a run bound to Service + Feature + Supplier (never Service + Feature alone, and never both
-   Supplier and shared scope — `run_manager.md`'s NDC run-ownership validation enforces this
-   mechanically), then run the normal pipeline stages against that Supplier's scope.
+6. Create a run bound to the Feature + Supplier (never the Feature alone, and never both Supplier and
+   shared scope — `run_manager.md`'s run-ownership validation enforces this mechanically via
+   `scopeFamily`), then run the normal pipeline stages against that Supplier's scope.
+
+NDC Core Service is **not** a parent choice in this flow, and is never asked about. A Feature's
+integration layer is recorded on the Feature (§11.2) and read from there when it matters.
 
 ## 12.2a Rendering the Supplier Checklist
 
@@ -350,11 +363,11 @@ A Supplier Checklist is never authored from scratch and never carries one Featur
 hardcoded into another Feature's Supplier. It is always produced by merging two documents:
 
 ```
-platform_core/templates/ndc_supplier_intake/SupplierChecklist.md   (generic, Feature-agnostic)
+platform_core/templates/supplier_feature_intake/SupplierChecklist.md   (generic, Feature-agnostic)
                               +
-services/ndc-core-service/<feature>/context/FeatureChecklistProfile.md   (this Feature's own rows)
+supplier-features/<feature>/context/FeatureChecklistProfile.md   (this Feature's own rows)
                               ↓
-services/ndc-core-service/<feature>/suppliers/<supplier>/context/SupplierChecklist.md
+supplier-features/<feature>/suppliers/<supplier>/context/SupplierChecklist.md
 ```
 
 This follows the same convention `platform_core/templates/README.md` already documents for every
@@ -368,9 +381,9 @@ code performs this merge. Concretely, the rendering agent:
    Feature-level Open Questions carried into §12) are placeholders only — never authored directly in
    the base template.
 2. Resolves this Feature's `FeatureChecklistProfile.md` from the **Feature root**
-   (`services/ndc-core-service/<feature>/context/FeatureChecklistProfile.md`) — never from inside a
-   specific shared scope's folder, since a Feature may accumulate more than one approved shared scope
-   over time and the Profile is not rebuilt per scope.
+   (`supplier-features/<feature>/context/FeatureChecklistProfile.md`) — never from inside a specific
+   shared scope's folder, since a Feature may accumulate more than one approved shared scope over
+   time and the Profile is not rebuilt per scope.
 3. Injects §A (Test Data), §B (Behavior + Requirement ID + Source Status), §C (Error Rows), and the
    Profile's "Open Questions carried from the shared context" table into the matching injection
    points.
@@ -393,57 +406,69 @@ it in the Supplier Checklist's §3c ("Feature-level Execution Flow reference") r
 the procedure into every Supplier's own context. `SupplierChecklist.md` §3c's Source/Target
 Environment fields are a generic **capability** — not every Feature requires two environments; a
 Feature with no such requirement marks it `N/A` rather than a Supplier inventing a Source environment
-that doesn't apply.
+that doesn't apply. The Source/Target ticketing flow itself is Import-Booked-PNR-specific
+(`module_architecture.md` §11.7 tier C) and is never assumed for another Feature.
 
 ## 12.3 Tooling
 
 ```bash
-cli.js ndc service list [--json]
-cli.js ndc service propose --name "NDC_Core_Service"
-cli.js ndc service approve <service> --by "Reviewer"
+cli.js supplier-feature feature list [--json]
+cli.js supplier-feature feature propose --name "Ancillaries" [--integration-layer "<integration>"]
+cli.js supplier-feature feature approve <feature> --by "Reviewer"
+cli.js supplier-feature feature scaffold <feature> [--dry-run]
+cli.js supplier-feature feature set-integration-layer <feature> --value "<integration>"
+                                          # the ONLY sanctioned way to correct integrationLayer
+                                          # after approval; touches that one field and nothing else
 
-cli.js ndc feature list [--json]
-cli.js ndc feature propose --name "Refund"
-cli.js ndc feature approve <feature> --by "Reviewer"
-cli.js ndc feature scaffold <feature> [--dry-run]
+cli.js supplier-feature shared propose  <feature> --name "New Layer Contract" [--user-story ...]
+cli.js supplier-feature shared approve  <feature> <scope> --by "Reviewer"
+cli.js supplier-feature shared scaffold <feature> <scope> [--dry-run]
+cli.js supplier-feature shared stage    <feature> <scope> <stage> --status <Approved|...>
 
-cli.js ndc shared propose  <feature> --name "New Layer Contract" [--user-story ...]
-cli.js ndc shared approve  <feature> <scope> --by "Reviewer"
-cli.js ndc shared scaffold <feature> <scope> [--dry-run]
-cli.js ndc shared stage    <feature> <scope> <stage> --status <Approved|...>
+cli.js supplier-feature supplier propose  <feature> --name "Travelport NDC"
+cli.js supplier-feature supplier approve  <feature> <supplier> --by "Reviewer"
+cli.js supplier-feature supplier scaffold <feature> <supplier> [--dry-run]
+cli.js supplier-feature supplier stage    <feature> <supplier> <stage> --status <Approved|...>
+cli.js supplier-feature supplier list     <feature> [--json]
 
-cli.js ndc supplier propose  <feature> --name "NDCGal"
-cli.js ndc supplier approve  <feature> <supplier> --by "Reviewer"
-cli.js ndc supplier scaffold <feature> <supplier> [--dry-run]
-cli.js ndc supplier stage    <feature> <supplier> <stage> --status <Approved|...>
-cli.js ndc supplier list     <feature> [--json]
-
-cli.js ndc use-feature  <feature>
-cli.js ndc use-supplier <feature> <supplier>
-cli.js ndc inspect-scope --user-story "..." --name "..." [--json]
+cli.js supplier-feature use-feature  <feature>
+cli.js supplier-feature use-supplier <feature> <supplier>
+cli.js supplier-feature inspect-scope --user-story "..." --name "..." [--json]
 ```
 
 ## 12.4 What this does NOT do
 
 - Does not reuse `modules/modules.json`, `moduleRegistry.js`'s module registry file, or
-  `activeModule.js`'s pointer space. `services/services.json` and `activeService.js` are a SEPARATE,
-  independent addressing system — the two must never be confused.
+  `activeModule.js`'s pointer space. `supplier-features/modules.json` and
+  `activeSupplierFeature.js` are a SEPARATE, independent addressing system — the two must never be
+  confused.
 - Does not register a Supplier as a "feature", or store it under a `features/` folder.
-- Does not create `refund/`, `reissue/`, or `seatmap/` content beyond the empty Feature registration.
+- Does not create any Feature — Refund, Reissue, Seatmap, Ancillaries, Upselling, or otherwise —
+  until a real request for that Feature is proposed and approved.
+- Does not create any Supplier scope as a side effect of intake.
 - Does not migrate the existing `modules/` layer. `agency` and `branch` are untouched.
 
-Full architecture: `module_architecture.md`, NDC Core Service section.
+Full architecture: `module_architecture.md`, Supplier Features section.
 
-# 13. NDC Core Service — execution/governance rules (pointer only)
+# 13. Supplier Features — execution/governance rules (pointer only)
 
-Once an NDC Supplier or shared-scope run is intake-routed via §12, it also carries a dedicated
+Once a Supplier or shared-scope run is intake-routed via §12, it also carries a dedicated
 execution/governance rule set — Supplier inheritance, run-intake fields, QA-layer defaults, run-scope
-freeze (mechanically enforced — `changeNdcRunScope()`, module_architecture.md §11.5), requirement
-precedence, Discovery→Test-Design and Test-Design→Automation gates, execution evidence, test-data
-isolation, prior-run reuse, the Import Booked PNR environment model, and completion reporting.
+freeze (mechanically enforced — `changeSupplierFeatureRunScope()`, module_architecture.md §11.5.1),
+requirement precedence, Discovery→Test-Design and Test-Design→Automation gates, execution evidence,
+test-data isolation, prior-run reuse, the Import Booked PNR environment model, and completion
+reporting.
 
-**These rules apply only when the resolved scope has `service === "ndc-core-service"`.** They do not
-change §3-§9's routing or any classic module/Feature workflow's behavior.
+That rule set is **tiered**, and the tier decides when a rule activates:
+
+- **§A Supplier-Feature-wide** — any Feature under `supplier-features/`, whatever its integration
+  layer.
+- **§B NDC-Core-Service-specific** — only when the Feature's `integrationLayer ===
+  "ndc-core-service"`. Never inferred from a folder location, a Supplier name, or the words "NDC",
+  "supplier", "API", or "booking" appearing in a User Story.
+- **§C Import-Booked-PNR-specific** — that one Feature only.
+
+None of it changes §3-§9's routing or any classic module/Feature workflow's behavior.
 
 Full rule set (kept in one place, not duplicated here): `ndc_execution_rules.md`. Stage-gate
 mechanics for the same rule set: `pipeline.md` §16.

@@ -1498,12 +1498,16 @@ distinguish "passed first time" from "passed eventually".
 
 ---
 
-## 16. NDC Core Service — Stage Gates (scope-gated) (added 2026-09-03, user-mandated)
+## 16. Supplier Features — Stage Gates (scope-gated)
 
-**This section applies only when the resolved run has `service === "ndc-core-service"`.** It adds no
-new pipeline stage, Skill, or branch — it constrains what Stage 3 (Test Design) and Stage 4A
-(Automation) may accept for an NDC-scoped run, on top of every rule that already applies to them. A
-non-NDC run (Agency, Branch, any classic module) is entirely unaffected by this section.
+**This section applies only when the resolved run has `scopeFamily === "supplier-feature"`.** It adds
+no new pipeline stage, Skill, or branch — it constrains what Stage 3 (Test Design) and Stage 4A
+(Automation) may accept for a Supplier-Feature run, on top of every rule that already applies to
+them. A classic run (Agency, Branch, any module) is entirely unaffected by this section.
+
+The gates below are `ndc_execution_rules.md` §A7 and §A8 — **Supplier-Feature-wide**, so they apply
+whatever a Feature's integration layer is. The integration-layer-specific (§B) and
+Import-Booked-PNR-specific (§C) rules are not stage gates and are not restated here.
 
 Full governance rule set this section gates: `ndc_execution_rules.md`. Routing: `new_us_intake.md`
 §13. Schema/mechanics for the run-scope freeze referenced below: `module_architecture.md` §11.5.1.
@@ -1523,7 +1527,7 @@ Full governance rule set this section gates: `ndc_execution_rules.md`. Routing: 
 
 ### 16.2 Test Design → Automation gate
 
-Do not start Stage 4A automation for an NDC test case when any of the following holds:
+Do not start Stage 4A automation for a Supplier-Feature test case when any of the following holds:
 
 | Condition | Gate |
 |---|---|
@@ -1534,14 +1538,14 @@ Do not start Stage 4A automation for an NDC test case when any of the following 
 | Execution would violate `execution_safety_policy.json` (§14) | Blocked from automation |
 | Destructive cleanup/reset behavior unknown | Blocked from automation |
 
-When multiple NDC test cases are eligible, Stage 4A prioritizes: (1) stable confirmed P1 flows, (2)
+When multiple test cases are eligible, Stage 4A prioritizes: (1) stable confirmed P1 flows, (2)
 API/contract/mapping validation, (3) high-value regression, (4) stable E2E flows.
 
 ### 16.3 Run scope freeze enforcement point
 
-An NDC run's `service`/`feature`/`supplier`/`sharedScope`/`testingLayerScope` are frozen once
-confirmed (`ndc_execution_rules.md` §4). No stage in this pipeline may write those fields directly —
-the only supported mutation path is `changeNdcRunScope()` / `cli.js ndc-scope-change`
+A Supplier-Feature run's `feature`/`supplier`/`sharedScope`/`testingLayerScope` are frozen once
+confirmed (`ndc_execution_rules.md` §A4). No stage in this pipeline may write those fields directly —
+the only supported mutation path is `changeSupplierFeatureRunScope()` / `cli.js scope-change`
 (`module_architecture.md` §11.5.1), which requires explicit human approval and a reason, and appends
 rather than overwrites. A stage that needs a scope change stops and asks, exactly as any other
 Human Decision point does (§5.5).

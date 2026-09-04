@@ -258,10 +258,11 @@ nothing.
 The no-silent-fallback rule is the load-bearing one. Falling back would send a Feature's artifacts
 into its parent's folders — indistinguishable, afterwards, from work that was always module-scoped.
 
-**See also §11** for a THIRD hierarchy layer (Service → Feature → Supplier/Shared) built for the NDC
-Core Service initiative. It is a sibling of this Feature layer, not a variant of it — a Supplier is
-never registered as a "feature", and its registry lives in `services/services.json`, entirely
-separate from `modules.json`'s `activeFeature` described above.
+**See also §11** for a THIRD hierarchy layer (Supplier Features → Feature → Supplier/Shared), the
+home of every Supplier-driven Feature. It is a sibling of this Feature layer, not a variant of it — a
+Supplier is never registered as a "feature", and its registry lives in
+`supplier-features/modules.json` with its own pointer space, entirely separate from `modules.json`'s
+`activeFeature` described above.
 
 # 6. The Module Registry — `modules/modules.json`
 
@@ -689,175 +690,238 @@ Every row below is **applied**. The table was written as a reviewable edit set b
 
 ---
 
-# 11. NDC Core Service — a third hierarchy layer
+# 11. Supplier Features — a third hierarchy layer
 
-Built for one business initiative, **NDC Core Service**. It is a sibling of `modules/`, not a
-variant of it, and it is the ONLY place a Supplier concept exists in this platform.
+The home of every **Supplier-driven Feature**, whatever technical path implements it. It is a sibling
+of `modules/`, not a variant of it, and it is the ONLY place a Supplier concept exists in this
+platform.
 
 ## 11.1 The hierarchy
 
 ```
 platform_core_data/
 ├── modules/                                    UNCHANGED — agency, branch, modules.json untouched
-└── services/                                   NEW, sibling to modules/
-    ├── services.json                           top-level registry (mirrors modules.json's shape)
-    └── ndc-core-service/
-        ├── service.json
-        ├── refund/        ← empty Feature registration only — no shared/, no suppliers/
-        ├── reissue/       ← same
-        ├── seatmap/       ← same
-        └── import-booked-pnr/
-            ├── module.json                     the Feature's own state file
-            ├── context/
-            │   ├── FeatureChecklistProfile.md  Feature-level, sourced from shared/*'s approved
-            │   │                                context(s) — never bound to one shared scope's name
-            │   └── ExecutionFlow_HappyPath.md  Feature-level operational knowledge (HOW to execute,
-            │                                    not WHAT the Test Case says) — optional, only where
-            │                                    a Feature's flow needs it (new_us_intake.md §12.2a)
-            ├── shared/
-            │   └── new-layer-contract/         cross-supplier scope, not yet supplier-specific
-            │       ├── context/
-            │       └── test_design/
-            └── suppliers/
-                └── ndcgal/                      per-supplier scope
-                    ├── context/
-                    │   └── SupplierChecklist.md rendered from the generic base template +
-                    │                            this Feature's FeatureChecklistProfile.md
-                    │                            (platform_core/templates/ndc_supplier_intake/,
-                    │                            new_us_intake.md §12.2a)
-                    └── ...
+└── supplier-features/                          sibling to modules/
+    ├── modules.json                            Feature registry + this layer's active pointer
+    └── import-booked-pnr/
+        ├── module.json                         the Feature's own state file
+        ├── context/
+        │   ├── FeatureChecklistProfile.md      Feature-level, sourced from shared/*'s approved
+        │   │                                    context(s) — never bound to one shared scope's name
+        │   └── ExecutionFlow_HappyPath.md      Feature-level operational knowledge (HOW to execute,
+        │                                        not WHAT the Test Case says) — optional, only where
+        │                                        a Feature's flow needs it (new_us_intake.md §12.2a)
+        ├── shared/
+        │   └── new-layer-contract/             cross-supplier scope, not yet supplier-specific
+        │       ├── context/
+        │       └── test_design/
+        └── suppliers/
+            └── <supplier>/                     per-supplier scope
+                ├── context/
+                │   └── SupplierChecklist.md    rendered from the generic base template +
+                │                               this Feature's FeatureChecklistProfile.md
+                │                               (platform_core/templates/supplier_feature_intake/,
+                │                               new_us_intake.md §12.2a)
+                └── ...
 ```
 
-`Service (NDC_Core_Service) → Feature (Refund, Reissue, Seatmap, Import Booked PNR) → Supplier
-(NDCGal, SabreNDC, ...) or Shared scope`. A Supplier under one Feature is **independent** from the
-same Supplier name under a different Feature — separate folder, separate `supplier.json`, separate
-stage tracking.
+`Supplier Features → Feature (Import Booked PNR, Refund, Reissue, Seatmap, Ancillaries, Upselling,
+...) → Supplier (Travelport NDC, Sabre NDC, ...) or Shared scope`.
 
-## 11.2 Why three separate implementations, not one generalized one
+A Supplier under one Feature is **independent** from the same Supplier name under a different
+Feature — separate folder, separate `supplier.json`, separate stage tracking, separate context,
+Discovery, Test Design, runs, and execution state. "Travelport NDC" under Import Booked PNR and
+"Travelport NDC" under Ancillaries are two unrelated entities and are never merged because the
+Supplier name matches.
+
+**There is no Service tier.** `supplier-features/` is a fixed root, not a registrable entity, so the
+first thing a human registers is the Feature itself — exactly as a plain module is the first
+registrable entity under `modules/`. This is what the layer's 2026-09-04 revision changed: NDC Core
+Service used to sit above the Features as their organizational owner, which made it impossible to
+host a Supplier-driven Feature (Ancillaries, Upselling) that is not implemented through NDC.
+
+## 11.2 The integration layer is Feature METADATA, never hierarchy
+
+A Feature declares the technical/backend path it is implemented through as a field on its own entry:
+
+```json
+{ "kind": "supplier_feature", "integrationLayer": "ndc-core-service" }
+```
+
+`integrationLayer` is a free-form nullable string, deliberately **not** a fixed enum:
+
+| Feature | `integrationLayer` |
+|---|---|
+| Import Booked PNR | `"ndc-core-service"` |
+| Refund · Reissue · Seatmap | `"ndc-core-service"` where that is actually true — recorded per Feature, never assumed |
+| Ancillaries · Upselling | not necessarily NDC Core Service — recorded when known, `null` until then |
+
+Nothing infers an integration layer from a Feature's name or from a sibling Feature's value. A
+Supplier-driven Feature is **not** an NDC Feature by default, and `null` is a legitimate recorded
+state, never a gap to be filled by guessing.
+
+Set at proposal time via `--integration-layer`, and corrected afterwards through exactly one
+sanctioned mutation — `feature set-integration-layer` (§11.4). There is deliberately no general
+field-update command: a generic setter would be an unaudited write channel into `stages`, which only
+`recordStage()` may ever touch.
+
+## 11.3 Why three separate implementations, not one generalized one
 
 | Entity | Registry file | State file | Implementation |
 |---|---|---|---|
-| Service | `services/services.json` | `services/<service>/service.json` | `serviceRegistry.js` — its own file, mirroring `moduleRegistry.js`'s propose→approve→scaffold pattern, but with no `stages` of its own (a Service is a container; work happens two levels down) |
-| Feature | cached in `services/<service>/modules.json` | `services/<service>/<feature>/module.json` | **Reuses `moduleRegistry.js` wholesale** — `services/<service>/` is passed as its `modulesDir`, the Feature slug as its "module" slug. Every entry additionally carries `kind: 'ndc_feature'` and `service: '<service-slug>'`, added as minimal, explicit passthrough fields on `registerModule()`'s entry shape so it is never mistaken for a plain module |
-| Shared scope | cached in the Feature's own `module.json` (`features[]` key) | `.../<feature>/shared/<scope>/feature.json` | **Reuses `featureRegistry.js`**, whose hardcoded `FEATURES_DIRNAME = 'features'` was generalized into an optional `dirname` parameter (default `'features'`, so `agency`/`branch`/every existing caller is byte-identical) — NDC shared-scope calls pass `dirname: 'shared'` |
-| Supplier | cached in the Feature's own `module.json` (`suppliers[]` key) | `.../<feature>/suppliers/<supplier>/supplier.json` | **`supplierRegistry.js` — brand new, independent file.** Structurally resembles `featureRegistry.js` (same propose→approve→stage lifecycle, same stage vocabulary) but does not call into it and does not reuse its `features[]` array or `feature.json` naming. Its own error class (`SupplierRegistryError`), its own registry key (`suppliers`), its own state file (`supplier.json`) carrying explicit `service` and `feature` fields |
+| Feature | `supplier-features/modules.json` | `supplier-features/<feature>/module.json` | **Reuses `moduleRegistry.js` wholesale** — `supplier-features/` is passed as its `modulesDir`, the Feature slug as its "module" slug. Every entry additionally carries `kind: 'supplier_feature'` and `integrationLayer`, added as minimal, explicit passthrough fields on `registerModule()`'s entry shape so it is never mistaken for a plain module |
+| Shared scope | cached in the Feature's own `module.json` (`features[]` key) | `.../<feature>/shared/<scope>/feature.json` | **Reuses `featureRegistry.js`**, whose hardcoded `FEATURES_DIRNAME = 'features'` was generalized into an optional `dirname` parameter (default `'features'`, so `agency`/`branch`/every existing caller is byte-identical) — shared-scope calls pass `dirname: 'shared'` |
+| Supplier | cached in the Feature's own `module.json` (`suppliers[]` key) | `.../<feature>/suppliers/<supplier>/supplier.json` | **`supplierRegistry.js` — its own independent file.** Structurally resembles `featureRegistry.js` (same propose→approve→stage lifecycle, same stage vocabulary) but does not call into it and does not reuse its `features[]` array or `feature.json` naming. Its own error class (`SupplierRegistryError`), its own registry key (`suppliers`), its own state file (`supplier.json`) carrying an explicit `feature` field |
 
 A Supplier is deliberately **not** implemented by calling into `featureRegistry.js` with a different
 dirname, even though it could resemble one structurally. The two must never be mistaken for each
-other: a Supplier is a new, independent business concept, and giving it the same code path as a
-Feature would make "is this a Feature or a Supplier?" a question the tooling itself could no longer
-answer cleanly from the shape of the call.
+other: a Supplier is an independent business concept, and giving it the same code path as a Feature
+would make "is this a Feature or a Supplier?" a question the tooling itself could no longer answer
+cleanly from the shape of the call.
 
-## 11.3 The active pointer — a separate address space
+A Supplier's identity is **(feature, slug)**. It carries no back-reference to an integration layer:
+that is the parent Feature's metadata and is never copied down.
 
-`services/services.json` carries its own nullable `activeService` / `activeFeature` /
-`activeSupplier` pointers, resolved by `activeService.js` — **kept entirely separate from**
-`modules.json`'s `activeModules[]` / `activeFeature` (§5.5.5, §6.1). These are two independent
-addressing systems. A module's `activeFeature` and this pointer's `activeFeature` answer different
-questions about different registries and must never collide or be confused.
+## 11.4 The active pointer — a separate address space
 
-`cli.js ndc use-feature <feature>` and `cli.js ndc use-supplier <feature> <supplier>` resolve the
-Service automatically (there is exactly one, `ndc-core-service`, today) rather than requiring it
-named on every call; ambiguity across several Services is reported, never silently resolved to the
-first match.
+`supplier-features/modules.json` carries its own nullable `activeFeature` / `activeSupplier`
+pointers, resolved by `activeSupplierFeature.js` — **kept entirely separate from** `modules/
+modules.json`'s `activeModules[]` / `activeFeature` (§5.5.5, §6.1). These are two independent
+addressing systems, and the words collide dangerously: a classic module's `activeFeature` means
+"which standalone Feature UNDER the active module", while this layer's means "which top-level
+Supplier Feature". They answer different questions about different registries and must never be
+confused or allowed to collide.
 
-## 11.4 Tooling
+Setting a Feature clears the Supplier beneath it — a stale Supplier pointer is never kept.
 
 ```bash
-cli.js ndc service  <list|propose|approve>
-cli.js ndc feature  <list|propose|approve|scaffold>
-cli.js ndc shared   <propose|approve|scaffold|stage> <feature> [<scope>] [...]
-cli.js ndc supplier <propose|approve|scaffold|stage|list> <feature> [<supplier>] [...]
-cli.js ndc use-feature  <feature>
-cli.js ndc use-supplier <feature> <supplier>
-cli.js ndc inspect-scope --user-story "..." --name "..." [--json]
+cli.js supplier-feature feature   <list|propose|approve|scaffold|set-integration-layer>
+cli.js supplier-feature shared    <propose|approve|scaffold|stage> <feature> [<scope>] [...]
+cli.js supplier-feature supplier  <propose|approve|scaffold|stage|list> <feature> [<supplier>] [...]
+cli.js supplier-feature use-feature  <feature>
+cli.js supplier-feature use-supplier <feature> <supplier>
+cli.js supplier-feature inspect-scope --user-story "..." --name "..." [--json]
 ```
 
 Full command reference: `new_us_intake.md` §12.3.
 
 ## 11.5 Run ownership — Constraint: Supplier XOR shared scope, never both, never neither
 
-`run.json` gains four **optional** fields, default `null` — zero impact on any non-NDC run, matching
+`run.json` gains four **optional** fields, default `null` — zero impact on any classic run, matching
 how `modules[]` is already optional elsewhere in this document:
 
 ```json
-{ "service": null, "feature": null, "supplier": null, "sharedScope": null }
+{ "scopeFamily": null, "feature": null, "supplier": null, "sharedScope": null }
 ```
 
-`createRun.js`'s `validateNdcRunScope()` enforces, mechanically, that once a run is NDC-scoped
-(`service` and `feature` both set) it picks **exactly one** of `supplier` or `sharedScope`:
+`scopeFamily` is the **discriminator**, and it is deliberately a named family rather than an entity
+identifier: `feature` already holds a Feature slug, so a field named after the layer itself would
+read as "which Supplier Feature" and invite exactly the wrong inference. It follows the `moduleScope`
+convention already in `run_manager.md` §7 — a short string saying what the scope IS, not which entity
+it names — and leaves room for a future `scopeFamily: "module"` without a second discriminator.
 
-| Shape | `supplier` | `sharedScope` | Legal? |
-|---|---|---|---|
-| Supplier run | set | `null` | ✅ |
-| Shared-scope run | `null` | set | ✅ |
-| Both set | set | set | ❌ rejected — a run cannot be simultaneously supplier-specific and cross-supplier |
-| Neither set | `null` | `null` | ❌ rejected — an NDC-scoped run must pick a scope |
+`createRun.js`'s `validateRunScopeFamily()` enforces, mechanically:
 
-Validated **before** any run folder is created, so a rejected shape leaves nothing behind — the same
-guarantee every other `createRun()` validation failure already gives.
+| Shape | `scopeFamily` | `supplier` | `sharedScope` | Legal? |
+|---|---|---|---|---|
+| Classic run | `null` | `null` | `null` | ✅ returns immediately, nothing checked |
+| Supplier run | `"supplier-feature"` | set | `null` | ✅ |
+| Shared-scope run | `"supplier-feature"` | `null` | set | ✅ |
+| Both set | `"supplier-feature"` | set | set | ❌ a run cannot be simultaneously supplier-specific and cross-supplier |
+| Neither set | `"supplier-feature"` | `null` | `null` | ❌ the run has not actually picked a scope |
+| Undeclared family | `null` | any set | any set | ❌ ownership fields with no `scopeFamily` produce a run nothing can classify later |
+| Unknown family | anything else | — | — | ❌ rejected rather than silently accepted |
 
-### 11.5.1 Run scope freeze (added 2026-09-03, user-mandated)
+A `"supplier-feature"` run must also name a `feature`. Validated **before** any run folder is
+created, so a rejected shape leaves nothing behind — the same guarantee every other `createRun()`
+validation failure already gives.
 
-Once an NDC run's scope is confirmed, `service` / `feature` / `supplier` / `sharedScope` /
-`testingLayerScope` are **frozen**. `run.json` gains one more optional field alongside the four above
-— `testingLayerScope: null` — plus an append-only `scopeHistory: []`:
+### 11.5.1 Run scope freeze
+
+Once a Supplier-Feature run's scope is confirmed, `feature` / `supplier` / `sharedScope` /
+`testingLayerScope` are **frozen**. `run.json` carries two more optional fields alongside the four
+above — `testingLayerScope: null` and an append-only `scopeHistory: []`:
 
 ```json
 {
-  "service": null, "feature": null, "supplier": null, "sharedScope": null,
+  "scopeFamily": null, "feature": null, "supplier": null, "sharedScope": null,
   "testingLayerScope": null,
   "scopeHistory": []
 }
 ```
 
-Both are written by `createRun()` on every run (NDC or not) — harmless on a non-NDC run, exactly like
-the four fields above. Nothing writes `scopeHistory` at creation time; the initial confirmed scope IS
-the baseline, and recording a fake "change" entry for it would misrepresent a baseline as a mutation.
+Both are written by `createRun()` on every run — harmless on a classic run, exactly like the four
+fields above. Nothing writes `scopeHistory` at creation time; the initial confirmed scope IS the
+baseline, and recording a fake "change" entry for it would misrepresent a baseline as a mutation.
 
-**`changeNdcRunScope(runsDir, folderName, opts)`** (`createRun.js`) is the one supported path to
-mutate any of those five fields after creation:
+**`scopeFamily` is not in the frozen-but-changeable set — it is frozen absolutely.** Converting a
+classic module run into a Supplier-Feature run (or back) is not a scope *change*, it is a different
+run, so no supported path exists to do it.
+
+**`changeSupplierFeatureRunScope(runsDir, folderName, opts)`** (`createRun.js`) is the one supported
+path to mutate any of the four changeable fields after creation:
 
 - Requires `opts.approvedBy` (non-empty) and `opts.reason` (non-empty) — a scope change is never
   silent or automatic.
-- `opts.changes` may set any subset of the five fields; omitted fields are carried forward unchanged.
-- Re-validates the proposed **new** shape with `validateNdcRunScope()` — a change can never leave the
-  run in a shape `createRun()` itself would have refused (both `supplier` and `sharedScope` set, or
-  neither).
-- Refuses outright on a non-NDC run (`service` null) — this function must never become a path by
+- `opts.changes` may set any subset of the four fields; omitted fields are carried forward unchanged.
+  An unknown key — including `scopeFamily` — is refused rather than ignored.
+- Re-validates the proposed **new** shape with `validateRunScopeFamily()` — a change can never leave
+  the run in a shape `createRun()` itself would have refused (both `supplier` and `sharedScope` set,
+  or neither).
+- Refuses outright on a classic run (`scopeFamily` null) — this function must never become a path by
   which an Agency/Branch/classic-module run gains scope-history fields it never had.
 - On success, **appends** `{ changedAt, approvedBy, reason, previous, next }` to `scopeHistory[]` and
   writes the new scope onto the top-level fields. `previous` is never overwritten — every past scope
   stays reconstructable from the array.
 
-CLI: `cli.js ndc-scope-change [--run <r>] --approved-by "<name>" --reason "..." [--service ...]
-[--feature ...] [--supplier ... | --clear-supplier] [--shared-scope ... | --clear-shared-scope]
+CLI: `cli.js scope-change [--run <r>] --approved-by "<name>" --reason "..." [--feature ...]
+[--supplier ... | --clear-supplier] [--shared-scope ... | --clear-shared-scope]
 [--testing-layer-scope <json> | --clear-testing-layer-scope]` — the only supported CLI surface for
-this mutation; there is no separate "update run" command that could bypass it, because no other run
-mutation path for `run.json`'s NDC fields exists in this platform.
+this mutation; there is no separate "update run" command that could bypass it, because no other
+mutation path for `run.json`'s ownership fields exists in this platform.
 
-Full governance rule (why this exists, precedence, gating): `ndc_execution_rules.md` §4.
+Full governance rule (why this exists, precedence, gating): `ndc_execution_rules.md` §A4.
 
-## 11.6 Superseding a module into the Service layer
+## 11.6 Superseding a module into the Supplier Features layer
 
-`import-booked-pnr` (module_architecture.md §6, promoted 2026-09-02) is the first case of a module
-being superseded by an entity that lives **outside `modules/` entirely** — `services/ndc-core-service/
-import-booked-pnr`. `moduleRegistry.js`'s `supersedeModule()` gained an optional
-`opts.externalSupersededBy` string, stored as its own field (`supersededByExternal`), alongside —
-never overloading — the existing `supersededBy` (which every reader assumes is a sibling slug in the
-SAME registry). The old module folder is never deleted or moved; `activeModule.js`'s existing
-Superseded guard (§6.4) already refuses to activate it, unchanged, because the guard checks
-`status === 'Superseded'` regardless of which field names the replacement.
+`import-booked-pnr` (§6, promoted 2026-09-02) is the first case of a module being superseded by an
+entity that lives **outside `modules/` entirely** — `supplier-features/import-booked-pnr`.
+`moduleRegistry.js`'s `supersedeModule()` gained an optional `opts.externalSupersededBy` string,
+stored as its own field (`supersededByExternal`), alongside — never overloading — the existing
+`supersededBy` (which every reader assumes is a sibling slug in the SAME registry). The old module
+folder is never deleted or moved; `activeModule.js`'s existing Superseded guard (§6.4) already
+refuses to activate it, unchanged, because the guard checks `status === 'Superseded'` regardless of
+which field names the replacement.
 
-## 11.7 What this section does NOT do
+## 11.7 Rule scope — pointer only
+
+This document defines the layer's **structure**: registries, state files, pointers, run-ownership
+schema. The layer's **execution and governance rules** live in one place —
+[`ndc_execution_rules.md`](ndc_execution_rules.md) — and are deliberately not restated here, so
+there is never a second, drifting copy of a rule to reconcile.
+
+That rule set is organized into three tiers, and a rule never activates merely because a Feature
+happens to sit in this folder alongside another one:
+
+| Tier | Applies when | Where |
+|---|---|---|
+| **A. Supplier-Feature-wide** | any Feature under `supplier-features/`, whatever its integration layer | `ndc_execution_rules.md` §A |
+| **B. NDC-Core-Service-specific** | the Feature's `integrationLayer === "ndc-core-service"` — gated on declared metadata, never on folder location | `ndc_execution_rules.md` §B |
+| **C. Import-Booked-PNR-specific** | that one Feature only; never generalized to Ancillaries, Upselling, or any other | `ndc_execution_rules.md` §C |
+
+Stage-gate mechanics for the same rule set: `pipeline.md` §16.
+
+## 11.8 What this section does NOT do
 
 - Does not migrate `agency`, `branch`, or any other existing module.
-- Does not create `refund/`, `reissue/`, or `seatmap/` content beyond the empty Feature registration.
+- Does not create `refund/`, `reissue/`, `seatmap/`, `ancillaries/`, or `upselling/` — not as folders
+  and not as registry entries. Each is proposed and approved individually when real work for it
+  arrives, exactly like every other entity in this platform.
+- Does not create any Supplier scope.
 - Does not change `MODULE_STAGES`, `STAGE_STATUSES`, or any core stage vocabulary — a Feature and a
   Supplier both use the same five stages a plain module does.
 - Does not change `featureRegistry.js`'s default behavior for any existing caller (verified by a test
   suite proving byte-identical output with `dirname` omitted).
-
 ---
 
 *This document defines the Module Workspace layout and its integration contracts only. It does not itself invoke any agent, and no stage described in it has been run — either in producing it or in applying it.*

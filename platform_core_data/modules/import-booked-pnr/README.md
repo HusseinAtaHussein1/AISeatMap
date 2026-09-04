@@ -4,10 +4,10 @@
 >
 > This is a **summary and an index**, never a source of truth. Every figure below is cited from the artifact that owns it; where this file and an artifact disagree, **the artifact wins**.
 
-**Slug:** `import-booked-pnr` · **Status:** Superseded · **Superseded by (external):** `services/ndc-core-service/import-booked-pnr`
+**Slug:** `import-booked-pnr` · **Status:** Superseded · **Superseded by (external):** `supplier-features/import-booked-pnr`
 **Last generated:** 2026-09-02T12:00:00.000Z
 
-> **This module is Superseded.** It is no longer where work lands — see `services/ndc-core-service/import-booked-pnr` instead. This folder stays readable (nothing is deleted or renamed on disk), and everything below is its permanent history as of the last time it was active.
+> **This module is Superseded.** It is no longer where work lands — see `supplier-features/import-booked-pnr` instead. This folder stays readable (nothing is deleted or renamed on disk), and everything below is its permanent history as of the last time it was active.
 
 ## Scope
 

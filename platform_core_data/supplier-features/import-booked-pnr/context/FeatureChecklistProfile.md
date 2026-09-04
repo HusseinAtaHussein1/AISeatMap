@@ -8,7 +8,7 @@
      left stale. -->
 
 **Feature:** Import Booked PNR (`import-booked-pnr`)
-**Canonical location:** `platform_core_data/services/ndc-core-service/import-booked-pnr/context/FeatureChecklistProfile.md`
+**Canonical location:** `platform_core_data/supplier-features/import-booked-pnr/context/FeatureChecklistProfile.md`
 **Status:** Approved
 **Last Updated:** 2026-09-02
 
@@ -19,9 +19,9 @@
 
 | Shared Scope | Path | Revision | What it contributed |
 |---|---|---|---|
-| `new-layer-contract` | `platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/context/ProjectContext.md` | rev 3 (Meeting 1 incorporated) | §A, §B, §C, §D below, all rows |
-| `new-layer-contract` (test design) | `platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/test_design/TraceabilityMatrix.md` | matches ProjectContext rev 3 | `HIST-xx` / `SVC-xx` / `MIG-xx` ID scheme and roll-up used throughout |
-| — (Feature-level operational knowledge, not a shared scope) | `platform_core_data/services/ndc-core-service/import-booked-pnr/context/ExecutionFlow_HappyPath.md` | 2026-09-02 | HOW to execute the Happy Path across the Source/Target environment model — referenced by Suppliers via `SupplierChecklist.md` §3c, never duplicated |
+| `new-layer-contract` | `platform_core_data/supplier-features/import-booked-pnr/shared/new-layer-contract/context/ProjectContext.md` | rev 3 (Meeting 1 incorporated) | §A, §B, §C, §D below, all rows |
+| `new-layer-contract` (test design) | `platform_core_data/supplier-features/import-booked-pnr/shared/new-layer-contract/test_design/TraceabilityMatrix.md` | matches ProjectContext rev 3 | `HIST-xx` / `SVC-xx` / `MIG-xx` ID scheme and roll-up used throughout |
+| — (Feature-level operational knowledge, not a shared scope) | `platform_core_data/supplier-features/import-booked-pnr/context/ExecutionFlow_HappyPath.md` | 2026-09-02 | HOW to execute the Happy Path across the Source/Target environment model — referenced by Suppliers via `SupplierChecklist.md` §3c, never duplicated |
 
 **ID scheme used below:** `HIST-01…20` (the Traceability Matrix's canonical per-requirement IDs —
 finer-grained than the Project Context §6's own `HR-IBPNR-01…10` numbering, which groups several

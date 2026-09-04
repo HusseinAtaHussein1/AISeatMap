@@ -1,7 +1,7 @@
 # Feature Checklist Profile — {{FEATURE_NAME}}
 
 <!-- Renders to (Feature-level, NOT bound to one shared scope):
-     platform_core_data/services/ndc-core-service/{{FEATURE_SLUG}}/context/FeatureChecklistProfile.md
+     platform_core_data/supplier-features/{{FEATURE_SLUG}}/context/FeatureChecklistProfile.md
 
      Sourced FROM one or more of this Feature's approved shared contexts — never invented
      independently of them. A Supplier renderer resolves this Profile from the Feature root; it must
@@ -15,7 +15,7 @@
      Requirement ID. A row with no verifiable Requirement ID is flagged, never invented. -->
 
 **Feature:** {{FEATURE_NAME}} ({{FEATURE_SLUG}})
-**Canonical location:** `platform_core_data/services/ndc-core-service/{{FEATURE_SLUG}}/context/FeatureChecklistProfile.md`
+**Canonical location:** `platform_core_data/supplier-features/{{FEATURE_SLUG}}/context/FeatureChecklistProfile.md`
 **Status:** {{STATUS}} <!-- Draft / Proposed / Approved -->
 **Last Updated:** {{LAST_UPDATED}}
 

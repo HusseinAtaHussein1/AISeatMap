@@ -81,45 +81,62 @@ creates nothing — so the proposal is the real plan.
 **Full rule, and the enforcement that does not depend on this file:**
 [`workflows_and_pipelines/pipeline/new_us_intake.md`](workflows_and_pipelines/pipeline/new_us_intake.md).
 
-## NDC Core Service intake routing
+## Supplier Features intake routing
 
-A third, independent hierarchy for one business initiative: `Service (NDC_Core_Service) → Feature
-(Refund, Reissue, Seatmap, Import Booked PNR) → Supplier (NDCGal, SabreNDC, ...) or Shared scope`.
-This is a SIBLING of the module/Feature routing above, never a variant of it — a Supplier is never
-registered as a "feature", and its registry (`platform_core_data/services/services.json`) is
-completely separate from `modules/modules.json`. Full spec:
+A third, independent hierarchy for Supplier-driven Features: `Supplier Features → Feature (Import
+Booked PNR, and any other registered Feature) → Supplier (Travelport NDC, Sabre NDC, ...) or Shared
+scope`. This is a SIBLING of the module/Feature routing above, never a variant of it — a Supplier is
+never registered as a "feature", and its registry
+(`platform_core_data/supplier-features/modules.json`) is completely separate from
+`modules/modules.json`. Full spec:
 [`workflows_and_pipelines/pipeline/module_architecture.md`](workflows_and_pipelines/pipeline/module_architecture.md)
 §11 and
 [`workflows_and_pipelines/pipeline/new_us_intake.md`](workflows_and_pipelines/pipeline/new_us_intake.md)
 §12.
 
-**Trigger: "new supplier"**, or a new Supplier named for the NDC Core Service. When it fires:
+**There is no Service tier.** A Feature declares its technical backend as metadata —
+`integrationLayer: "ndc-core-service"`, or another integration, or `null` — never as a folder above
+it, and never inferred from the Feature's name. NDC Core Service is a valid integration layer, not an
+owner: a Supplier-driven Feature (Ancillaries, Upselling) is never forced through it.
 
-1. Ask: **"Which NDC Core Service feature is this supplier for? Refund / Reissue / Seatmap / Import
-   Booked PNR"** — never inferred, never assumed from a prior run.
+**Trigger: "new supplier"**, or a new Supplier named for a Supplier Feature. When it fires:
+
+1. Ask: **"Which Supplier Feature is this supplier for?"** — never inferred, never assumed from a
+   prior run. Read the current options live from
+   `cli.js supplier-feature feature list --json`; never offer a hardcoded list.
 2. Ask for the supplier checklist / scope description for that Supplier.
-3. Create the Supplier scope (`cli.js ndc supplier propose/approve/scaffold <feature> ...`), then a
-   run bound to Service + Feature + Supplier, and run the normal pipeline stages against it.
+3. Create the Supplier scope
+   (`cli.js supplier-feature supplier propose/approve/scaffold <feature> ...`), then a run bound to
+   Feature + Supplier, and run the normal pipeline stages against it.
 
 **A Supplier under one Feature is independent from the same Supplier name under a different
-Feature.** "NDCGal" under Refund and "NDCGal" under Import Booked PNR are two unrelated entities —
-separate folder, separate `supplier.json`, separate stage tracking, never merged or cross-referenced.
+Feature.** "Travelport NDC" under Import Booked PNR and "Travelport NDC" under Ancillaries are two
+unrelated entities — separate folder, separate `supplier.json`, separate stage tracking, never merged
+or cross-referenced.
 
-**Refund / Reissue / Seatmap exist as empty Feature folders only.** They are proposed and approved
-(the name is reserved and traceable), but no `shared/` and no `suppliers/` content is created for any
-of them until a real request arrives — exactly the same "never created silently" discipline every
-module and Feature in this platform already follows.
+**Import Booked PNR is the only registered Feature today.** Refund, Reissue, Seatmap, Ancillaries,
+and Upselling are candidate names only — not registered, not on disk. Each is proposed and approved
+individually when a real request for it arrives, exactly like every other entity here.
 
-A run addresses NDC scope with `service`/`feature`/`supplier`/`sharedScope` on `run.json`, not
-`modules[]`. It must pick exactly one of `supplier` or `sharedScope` — never both, never neither —
-enforced mechanically by `createRun.js`'s `validateNdcRunScope()`.
+A run addresses this scope with `scopeFamily`/`feature`/`supplier`/`sharedScope` on `run.json`, not
+`modules[]`. `scopeFamily` is the discriminator (`"supplier-feature"`, or `null` for a classic run) —
+deliberately not named after the Feature, which `feature` already holds. It must pick exactly one of
+`supplier` or `sharedScope` — never both, never neither — enforced mechanically by `createRun.js`'s
+`validateRunScopeFamily()`.
 
-**NDC Core Service Supplier/Shared-scope runs also carry an execution/governance rule set** —
-inheritance, run-intake fields, QA-layer defaults, run-scope freeze, requirement precedence,
-Discovery/Automation gates, evidence, test-data isolation, prior-run reuse, environment model,
-completion reporting. It activates **only** when `service === "ndc-core-service"` and never changes
-Agency/Branch/classic-module behavior. Full rules:
+**Supplier/Shared-scope runs also carry an execution/governance rule set** — inheritance, run-intake
+fields, QA-layer defaults, run-scope freeze, requirement precedence, Discovery/Automation gates,
+evidence, test-data isolation, prior-run reuse, environment model, completion reporting. It is
+**tiered**, and the tier decides when a rule fires: **§A** applies to any Supplier Feature, **§B**
+only when that Feature's `integrationLayer === "ndc-core-service"`, **§C** only to Import Booked PNR.
+Never inferred from a folder, a Supplier name, or the word "NDC" in a User Story. It never changes
+Agency/Branch/classic-module behavior. Full rules (kept in one place, not duplicated):
 [`workflows_and_pipelines/pipeline/ndc_execution_rules.md`](workflows_and_pipelines/pipeline/ndc_execution_rules.md).
+
+A Supplier-Feature run's scope is **frozen** once confirmed. The only supported way to change
+`feature`/`supplier`/`sharedScope`/`testingLayerScope` afterwards is
+`run_manager/cli.js scope-change --approved-by "..." --reason "..."`, which appends to `scopeHistory`
+and never overwrites. `scopeFamily` itself is never changeable.
 
 ## Scope pointers
 

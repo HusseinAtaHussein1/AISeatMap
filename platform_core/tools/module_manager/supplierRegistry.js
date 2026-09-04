@@ -1,23 +1,27 @@
-// Supplier Registry — Suppliers (NDCGal, SabreNDC, ...) registered under an NDC Core Service Feature.
+// Supplier Registry — Suppliers (Travelport NDC, Sabre NDC, ...) registered under a Supplier Feature.
 //
-// See workflows_and_pipelines/pipeline/module_architecture.md, NDC Core Service section.
+// See workflows_and_pipelines/pipeline/module_architecture.md, Supplier Features section.
 //
 // WHAT A SUPPLIER IS, AND WHY THIS IS ITS OWN FILE
-//   Service (NDC_Core_Service) → Feature (Refund/Reissue/Seatmap/Import Booked PNR) → Supplier
-//   (NDCGal, SabreNDC, ...) is a supplier-specific scope under one Feature. It is DELIBERATELY never
-//   registered as a "feature" — a Supplier is a new, independent entity with its own file
-//   (supplier.json), its own registry key (`suppliers`), and its own error class
-//   (SupplierRegistryError). It structurally resembles featureRegistry.js (same
-//   proposal → approval → stage-recording lifecycle, same stage vocabulary) but does not call into
-//   it or reuse its `features[]` array — the two must never be mistaken for each other, and reusing
-//   featureRegistry.js's shape by inheritance rather than by calling it is what keeps that true.
+//   Supplier Features → Feature (Import Booked PNR, Refund, Ancillaries, ...) → Supplier is a
+//   supplier-specific scope under one Feature. It is DELIBERATELY never registered as a "feature" —
+//   a Supplier is an independent entity with its own file (supplier.json), its own registry key
+//   (`suppliers`), and its own error class (SupplierRegistryError). It structurally resembles
+//   featureRegistry.js (same proposal → approval → stage-recording lifecycle, same stage vocabulary)
+//   but does not call into it or reuse its `features[]` array — the two must never be mistaken for
+//   each other, and reusing featureRegistry.js's shape by inheritance rather than by calling it is
+//   what keeps that true.
 //
-// A Feature is itself implemented by REUSING moduleRegistry.js as-is (services/<service>/ passed as
+// A Feature is itself implemented by REUSING moduleRegistry.js as-is (supplier-features/ passed as
 // its `modulesDir`, the Feature slug as its module slug). This file therefore reads/writes the
 // Feature's own module.json and its parent modules.json cache — via moduleRegistry.js's exported
 // primitives, exactly as featureRegistry.js does for a plain module — but stores everything under
-// the `suppliers` key instead of `features`, and every entity carries explicit `service` and
-// `feature` fields rather than a bare `module` back-reference.
+// the `suppliers` key instead of `features`, and every entity carries an explicit `feature` field
+// rather than a bare `module` back-reference.
+//
+// SUPPLIER IDENTITY IS (feature, slug). "Travelport NDC" under Import Booked PNR and "Travelport
+// NDC" under Ancillaries are two unrelated entities: separate folder, separate supplier.json,
+// separate stage tracking, never merged because the name matches.
 //
 // STAGE INDEPENDENCE: a Supplier's `stages` map is its own, exactly as decision A requires for a
 // standalone Feature — recordSupplierStage() never touches the parent Feature's (module's) stages.
@@ -125,7 +129,7 @@ function requireFeature(featureModulesDir, featureSlug, registry) {
   if (!entry && !state) {
     throw new SupplierRegistryError(
       `No Feature "${featureSlug}" is registered, so a Supplier cannot be registered under it. ` +
-      'Propose and approve the Feature first (`cli.js ndc feature propose/approve`) — a separate, ' +
+      'Propose and approve the Feature first (`cli.js supplier-feature feature propose/approve`) — a separate, ' +
       'human-approved step, never a side effect of registering the Supplier.'
     );
   }
@@ -137,13 +141,12 @@ function requireFeature(featureModulesDir, featureSlug, registry) {
  * other entity in this platform: a folder on disk reads as approval.
  *
  * @param {string} featureModulesDir
- * @param {string} serviceSlug
  * @param {string} featureSlug
  * @param {{name: string, slug?: string, description?: string}} supplier
  * @param {{now: Date}} opts
  * @returns {{supplier: object, created: boolean, feature: object}}
  */
-function proposeSupplier(featureModulesDir, serviceSlug, featureSlug, supplier, opts = {}) {
+function proposeSupplier(featureModulesDir, featureSlug, supplier, opts = {}) {
   const { now } = opts;
   if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
     throw new SupplierRegistryError('proposeSupplier requires an explicit valid `now` Date.');
@@ -177,7 +180,10 @@ function proposeSupplier(featureModulesDir, serviceSlug, featureSlug, supplier, 
       slug,
       name: supplier.name,
       description: supplier.description ?? null,
-      service: serviceSlug,
+      // `feature` alone is what makes "the same Supplier name under two Features is two independent
+      // entities" true — the Supplier's identity is (feature, slug), and always was. There is no
+      // `service` field: the Service tier that once sat above the Feature no longer exists, and a
+      // Feature's integration layer is the FEATURE's metadata, never copied down onto its Suppliers.
       feature: featureSlug,
       status: 'Proposed',
       createdAt: timestamp,
@@ -267,7 +273,7 @@ function recordSupplierStage(featureModulesDir, featureSlug, supplierSlug, stage
   if (!existing) {
     throw new SupplierRegistryError(
       `No Supplier "${supplierSlug}" is registered under Feature "${featureSlug}". ` +
-      `Run \`cli.js ndc supplier list ${featureSlug}\` to see its registered Suppliers.`
+      `Run \`cli.js supplier-feature supplier list ${featureSlug}\` to see its registered Suppliers.`
     );
   }
 

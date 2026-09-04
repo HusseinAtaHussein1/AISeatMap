@@ -33,14 +33,15 @@
 //   node .../cli.js manifest --reuse <artifact> --from <run>  # record cross-run reuse
 //   node .../cli.js anchor [--run <r>] [--force] # backfill a missing code-state anchor
 //
-//   # NDC Core Service ONLY — frozen-scope mutation (module_architecture.md §11.5)
-//   node .../cli.js ndc-scope-change [--run <r>] --approved-by "<name>" --reason "..." \
-//     [--service S] [--feature F] [--supplier S | --clear-supplier] \
+//   # Supplier Features ONLY — frozen-scope mutation (module_architecture.md §11.5.1)
+//   node .../cli.js scope-change [--run <r>] --approved-by "<name>" --reason "..." \
+//     [--feature F] [--supplier S | --clear-supplier] \
 //     [--shared-scope SS | --clear-shared-scope] [--testing-layer-scope <json> | --clear-testing-layer-scope]
-//                                               # the ONLY supported way to change an NDC run's
-//                                               # service/feature/supplier/sharedScope/testingLayerScope
-//                                               # after creation; refuses on a non-NDC run and requires
+//                                               # the ONLY supported way to change a Supplier-Feature
+//                                               # run's feature/supplier/sharedScope/testingLayerScope
+//                                               # after creation; refuses on a classic run and requires
 //                                               # --approved-by + --reason. Appends to scopeHistory.
+//                                               # `scopeFamily` itself is never changeable.
 //
 // --started defaults to now if omitted. --existing-dir, if given, is scanned for existing folder
 // names so the run index advances past the highest one present and collisions get a deterministic
@@ -57,7 +58,7 @@ const {
   LINEAGE_FILENAME, LineageError, planRefinement, writeLineage, readLineage,
 } = require('./runLineage');
 const {
-  createRun, backfillTargetRef, changeNdcRunScope, CreateRunError,
+  createRun, backfillTargetRef, changeSupplierFeatureRunScope, CreateRunError,
 } = require('./createRun');
 const {
   CHECKPOINT_STATUSES, INVOCATION_PATHS, ManifestError,
@@ -77,7 +78,7 @@ const {
 
 const VERBS = new Set([
   'name', 'active', 'use', 'list', 'refresh', 'clear', 'refine', 'drift',
-  'new', 'stage', 'manifest', 'anchor', 'ndc-scope-change',
+  'new', 'stage', 'manifest', 'anchor', 'scope-change',
 ]);
 
 function parseArgs(argv) {
@@ -668,11 +669,11 @@ function cmdAnchor(args) {
   console.log('        drift measured from it understates what actually changed since the run.');
 }
 /**
- * `ndc-scope-change` — the one supported path to mutate an NDC run's frozen scope after creation
- * (module_architecture.md §11.5). Refuses on a non-NDC run, requires --approved-by and --reason, and
- * appends the change to `scopeHistory` rather than overwriting it.
+ * `scope-change` — the one supported path to mutate a Supplier-Feature run's frozen scope after
+ * creation (module_architecture.md §11.5.1). Refuses on a classic run, requires --approved-by and
+ * --reason, and appends the change to `scopeHistory` rather than overwriting it.
  */
-function cmdNdcScopeChange(args) {
+function cmdScopeChange(args) {
   const runsDir = resolveRunsDir(args);
   if (!runsDir) return;
   const folderName = (args.run && args.run !== true)
@@ -688,8 +689,8 @@ function cmdNdcScopeChange(args) {
   const reason = args.reason && args.reason !== true ? args.reason : undefined;
   if (!approvedBy || !reason) {
     console.error(
-      'Usage: cli.js ndc-scope-change [--run <r>] --approved-by "<name>" --reason "..." \\\n' +
-      '         [--service S] [--feature F] [--supplier S | --clear-supplier] \\\n' +
+      'Usage: cli.js scope-change [--run <r>] --approved-by "<name>" --reason "..." \\\n' +
+      '         [--feature F] [--supplier S | --clear-supplier] \\\n' +
       '         [--shared-scope SS | --clear-shared-scope] \\\n' +
       '         [--testing-layer-scope <json> | --clear-testing-layer-scope]'
     );
@@ -702,7 +703,8 @@ function cmdNdcScopeChange(args) {
     if (args[clearFlag]) { changes[field] = null; return; }
     if (args[flag] && args[flag] !== true) changes[field] = args[flag];
   };
-  setOrClear('service', 'service', 'clear-service');
+  // No `service` flag: the Service tier is retired, and `scopeFamily` — its replacement — is frozen
+  // absolutely rather than changeable (see SCOPE_FREEZE_FIELDS in createRun.js).
   setOrClear('feature', 'feature', 'clear-feature');
   setOrClear('supplier', 'supplier', 'clear-supplier');
   setOrClear('sharedScope', 'shared-scope', 'clear-shared-scope');
@@ -719,7 +721,7 @@ function cmdNdcScopeChange(args) {
   }
 
   try {
-    const res = changeNdcRunScope(runsDir, folderName, { now: new Date(), approvedBy, reason, changes });
+    const res = changeSupplierFeatureRunScope(runsDir, folderName, { now: new Date(), approvedBy, reason, changes });
     if (args.json) {
       console.log(JSON.stringify(res, null, 2));
       return;
@@ -804,7 +806,7 @@ function main() {
     case 'stage': return cmdStage(args);
     case 'manifest': return cmdManifest(args);
     case 'anchor': return cmdAnchor(args);
-    case 'ndc-scope-change': return cmdNdcScopeChange(args);
+    case 'scope-change': return cmdScopeChange(args);
     default: return cmdName(args);
   }
 }

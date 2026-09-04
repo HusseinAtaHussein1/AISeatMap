@@ -1,8 +1,8 @@
-// Supplier Registry — Suppliers registered under an NDC Core Service Feature.
+// Supplier Registry — Suppliers registered under a Supplier Feature.
 //
-// A Feature is implemented by reusing moduleRegistry.js wholesale: `services/<service>/` is passed
-// as its `modulesDir`, and the Feature slug is its "module" slug. These tests therefore seed a
-// Feature the same way, then exercise supplierRegistry.js against it.
+// A Feature is implemented by reusing moduleRegistry.js wholesale: `supplier-features/` is passed as
+// its `modulesDir`, and the Feature slug is its "module" slug. These tests therefore seed a Feature
+// the same way, then exercise supplierRegistry.js against it.
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -30,7 +30,7 @@ const LATER = new Date('2026-09-02T09:00:00Z');
 
 function makeSvcDir() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'supplier-registry-test-'));
-  const svcDir = path.join(root, 'ndc-core-service');
+  const svcDir = path.join(root, 'supplier-features');
   fs.mkdirSync(svcDir, { recursive: true });
   return svcDir;
 }
@@ -39,25 +39,30 @@ const cleanup = (d) => fs.rmSync(path.dirname(d), { recursive: true, force: true
 /** Seeds an Active, scaffolded Feature — the host a Supplier registers under. */
 function seedFeature(svcDir, name = 'Import Booked PNR') {
   const { entry } = registerModule(
-    svcDir, { name, status: 'Active', kind: 'ndc_feature', service: 'ndc-core-service' }, { now: NOW }
+    svcDir,
+    { name, status: 'Active', kind: 'supplier_feature', integrationLayer: 'ndc-core-service' },
+    { now: NOW }
   );
   scaffoldModule(svcDir, entry.slug, { now: NOW });
   return entry.slug;
 }
 
 function seedSupplier(svcDir, featureSlug, name = 'NDCGal') {
-  const { supplier } = proposeSupplier(svcDir, 'ndc-core-service', featureSlug, { name }, { now: NOW });
+  const { supplier } = proposeSupplier(svcDir, featureSlug, { name }, { now: NOW });
   approveSuppliers(svcDir, featureSlug, [supplier.slug], { now: NOW, approvedBy: 'Reviewer' });
   return supplier.slug;
 }
 
-test('a Feature carries kind:ndc_feature and service — never mistaken for a plain module', () => {
+test('a Feature carries kind:supplier_feature and its integrationLayer — never a plain module', () => {
   const svcDir = makeSvcDir();
   try {
     const slug = seedFeature(svcDir);
     const state = readModuleState(svcDir, slug);
-    assert.equal(state.kind, 'ndc_feature');
-    assert.equal(state.service, 'ndc-core-service');
+    assert.equal(state.kind, 'supplier_feature');
+    // The integration layer is METADATA on the Feature, not a folder tier above it — which is what
+    // lets a Supplier Feature declare a different backend, or none at all.
+    assert.equal(state.integrationLayer, 'ndc-core-service');
+    assert.equal(state.service, undefined);
   } finally {
     cleanup(svcDir);
   }
@@ -67,7 +72,7 @@ test('proposeSupplier requires the parent Feature to exist first', () => {
   const svcDir = makeSvcDir();
   try {
     assert.throws(
-      () => proposeSupplier(svcDir, 'ndc-core-service', 'nonexistent', { name: 'NDCGal' }, { now: NOW }),
+      () => proposeSupplier(svcDir, 'nonexistent', { name: 'NDCGal' }, { now: NOW }),
       (err) => err instanceof SupplierRegistryError && /No Feature "nonexistent"/.test(err.message)
     );
   } finally {
@@ -79,7 +84,7 @@ test('a proposed Supplier is not scaffolded, and scaffolding one is refused', ()
   const svcDir = makeSvcDir();
   try {
     const featureSlug = seedFeature(svcDir);
-    const { supplier } = proposeSupplier(svcDir, 'ndc-core-service', featureSlug, { name: 'NDCGal' }, { now: NOW });
+    const { supplier } = proposeSupplier(svcDir, featureSlug, { name: 'NDCGal' }, { now: NOW });
     assert.equal(supplier.status, 'Proposed');
     assert.equal(fs.existsSync(path.join(svcDir, featureSlug, 'suppliers')), false);
     assert.throws(
@@ -95,7 +100,7 @@ test('approving a Supplier requires an approver', () => {
   const svcDir = makeSvcDir();
   try {
     const featureSlug = seedFeature(svcDir);
-    proposeSupplier(svcDir, 'ndc-core-service', featureSlug, { name: 'NDCGal' }, { now: NOW });
+    proposeSupplier(svcDir, featureSlug, { name: 'NDCGal' }, { now: NOW });
     assert.throws(
       () => approveSuppliers(svcDir, featureSlug, [], { now: NOW }),
       (err) => err instanceof SupplierRegistryError && /approvedBy/.test(err.message)
@@ -119,8 +124,11 @@ test('scaffolding an approved Supplier creates suppliers/<slug>/ with eager cont
     assert.equal(fs.existsSync(path.join(dir, 'test_design')), false);
 
     const onDisk = JSON.parse(fs.readFileSync(path.join(dir, 'supplier.json'), 'utf8'));
-    assert.equal(onDisk.service, 'ndc-core-service');
+    // (feature, slug) is a Supplier's whole identity — there is no `service` back-reference, and the
+    // parent Feature's integrationLayer is deliberately NOT copied down onto its Suppliers.
     assert.equal(onDisk.feature, featureSlug);
+    assert.equal(onDisk.service, undefined);
+    assert.equal(onDisk.integrationLayer, undefined);
   } finally {
     cleanup(svcDir);
   }

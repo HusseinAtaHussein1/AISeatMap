@@ -106,5 +106,5 @@
       "approvedBy": "Ahmed Ayman"
     }
   ],
-  "supersededByExternal": "services/ndc-core-service/import-booked-pnr"
+  "supersededByExternal": "supplier-features/import-booked-pnr"
 }

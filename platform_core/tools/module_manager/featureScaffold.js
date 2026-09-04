@@ -192,7 +192,7 @@ function ensureFeatureStageFolder(modulesDir, moduleSlug, featureSlug, stage, di
  * @param {string} [stage]
  * @param {string} [dirname]
  * @param {string} [rootPrefix] - repo-relative prefix before `<module>/`, default
- *   `platform_core_data/modules`. NDC callers pass `platform_core_data/services/<service>`.
+ *   `platform_core_data/modules`. Supplier Features callers pass `platform_core_data/supplier-features`.
  * @returns {string}
  */
 function featureArtifactPath(

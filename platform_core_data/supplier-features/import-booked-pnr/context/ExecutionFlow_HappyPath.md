@@ -14,7 +14,7 @@
      nothing here is assumed to generalize to them. -->
 
 **Feature:** Import Booked PNR (`import-booked-pnr`)
-**Canonical location:** `platform_core_data/services/ndc-core-service/import-booked-pnr/context/ExecutionFlow_HappyPath.md`
+**Canonical location:** `platform_core_data/supplier-features/import-booked-pnr/context/ExecutionFlow_HappyPath.md`
 **Status:** Approved
 **Last Updated:** 2026-09-02
 **Related:** `FeatureChecklistProfile.md` (same folder) — Requirement IDs cited below trace to that

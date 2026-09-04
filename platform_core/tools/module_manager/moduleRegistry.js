@@ -303,11 +303,18 @@ function registerModule(modulesDir, module, opts = {}) {
   const existing = findModule(registry, slug);
   const timestamp = now.toISOString();
 
-  // `kind`/`service` are minimal, explicit passthrough fields — not part of the plain-module shape,
-  // but carried through when a caller supplies them so the NDC Core Service layer can register a
-  // Feature (which reuses this function wholesale, `services/<service>/` as `modulesDir`) with
-  // `kind: 'ndc_feature'` and `service: '<service-slug>'` on the entry, so it is never mistaken for
-  // a plain module. Omitted entirely for every existing caller — agency/branch entries gain no keys.
+  // `kind`/`integrationLayer` are minimal, explicit passthrough fields — not part of the plain-module
+  // shape, but carried through when a caller supplies them so the Supplier Features layer can
+  // register a Feature (which reuses this function wholesale, `supplier-features/` as `modulesDir`)
+  // with `kind: 'supplier_feature'` and its declared `integrationLayer` on the entry, so it is never
+  // mistaken for a plain module.
+  //
+  // `integrationLayer` records the technical/backend path a Supplier Feature is implemented through
+  // (e.g. `'ndc-core-service'`) — deliberately a free-form nullable string, never a fixed enum, so a
+  // Feature such as Ancillaries or Upselling is never forced toward NDC Core Service just because it
+  // is Supplier-driven. It is METADATA, never hierarchy: the folder tree says nothing about it.
+  //
+  // Omitted entirely for every existing caller — agency/branch entries gain no keys.
   const entry = existing
     ? {
       ...existing,
@@ -316,7 +323,7 @@ function registerModule(modulesDir, module, opts = {}) {
       status,
       ...(module.derivedFromSections ? { derivedFromSections: module.derivedFromSections } : {}),
       ...(module.kind !== undefined ? { kind: module.kind } : {}),
-      ...(module.service !== undefined ? { service: module.service } : {}),
+      ...(module.integrationLayer !== undefined ? { integrationLayer: module.integrationLayer } : {}),
       updatedAt: timestamp,
     }
     : {
@@ -326,7 +333,7 @@ function registerModule(modulesDir, module, opts = {}) {
       status,
       derivedFromSections: module.derivedFromSections ?? [],
       ...(module.kind !== undefined ? { kind: module.kind } : {}),
-      ...(module.service !== undefined ? { service: module.service } : {}),
+      ...(module.integrationLayer !== undefined ? { integrationLayer: module.integrationLayer } : {}),
       createdAt: timestamp,
       updatedAt: timestamp,
       supersededBy: null,
@@ -348,6 +355,58 @@ function registerModule(modulesDir, module, opts = {}) {
   }
 
   return { registry, entry, created: !existing };
+}
+
+/**
+ * Corrects a Supplier Feature's declared `integrationLayer` AFTER it has been approved.
+ *
+ * WHY THIS EXISTS, AND WHY IT IS THIS NARROW
+ *   `integrationLayer` is set at proposal time, but a Feature's backend can be identified (or
+ *   corrected) later, and proposeModules() deliberately refuses to touch an entry that is no longer
+ *   `Proposed` — re-proposing an Active Feature short-circuits into `alreadyPresent`. Without this
+ *   function there is NO supported path to fix the field, and the only alternative would be a
+ *   hand-edit of modules.json, which module_architecture.md §6.5 forbids outright.
+ *
+ *   It is deliberately NOT a general `update(slug, field, value)`. A generic field-setter would be
+ *   an unaudited write channel into `stages` — the one part of an entry that must only ever move
+ *   through recordStage() — so the mutation surface is exactly one field, named in the function.
+ *
+ * It changes nothing else: registerModule() is idempotent by slug and spreads the existing entry
+ * first, so `stages`, `createdAt`, `approvedAt`/`approvedBy`, `supersededBy`, `features[]`, and
+ * `suppliers[]` all survive byte-identically. `null` is a legal value (clears the declaration).
+ *
+ * @param {string} modulesDir
+ * @param {string} slug
+ * @param {string|null} integrationLayer
+ * @param {{now: Date}} opts
+ * @returns {object} the updated entry
+ */
+function setIntegrationLayer(modulesDir, slug, integrationLayer, opts = {}) {
+  const { now } = opts;
+  if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
+    throw new ModuleRegistryError('setIntegrationLayer requires an explicit valid `now` Date.');
+  }
+  if (integrationLayer !== null && typeof integrationLayer !== 'string') {
+    throw new ModuleRegistryError(
+      'setIntegrationLayer requires a string integration layer, or null to clear it.'
+    );
+  }
+
+  const current = resolveModule(modulesDir, slug);
+  if (!current) {
+    throw new ModuleRegistryError(
+      `No Feature "${slug}" is registered, so its integration layer cannot be set.`
+    );
+  }
+
+  const { entry } = registerModule(modulesDir, {
+    slug,
+    name: current.name,
+    description: current.description ?? null,
+    status: current.status,
+    integrationLayer,
+  }, { now });
+  return entry;
 }
 
 /**
@@ -526,9 +585,9 @@ function approveModules(modulesDir, slugs = [], opts = {}) {
  * Both stay readable; only the claim about which is current changes.
  * `bySlug` and `opts.externalSupersededBy` are mutually exclusive: a module is superseded either by
  * a sibling in THIS SAME `modules/` registry (`bySlug`, resolved and validated here), or by an
- * entity that lives outside it entirely — e.g. a Feature promoted into the NDC Core Service layer's
- * `services/` tree (`opts.externalSupersededBy`, an opaque repo-relative reference string this
- * registry cannot resolve or validate, because it does not own that path).
+ * entity that lives outside it entirely — e.g. a module promoted into the Supplier Features layer's
+ * `supplier-features/` tree (`opts.externalSupersededBy`, an opaque repo-relative reference string
+ * this registry cannot resolve or validate, because it does not own that path).
  *
  * @param {string} modulesDir
  * @param {string} slug
@@ -619,6 +678,7 @@ module.exports = {
   listSlugs,
   resolveModule,
   registerModule,
+  setIntegrationLayer,
   recordStage,
   proposeModules,
   approveModules,

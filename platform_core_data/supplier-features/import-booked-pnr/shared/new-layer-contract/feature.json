@@ -11,7 +11,7 @@
   "stages": {
     "context": {
       "status": "Approved",
-      "artifactPath": "platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/context/ProjectContext.md",
+      "artifactPath": "platform_core_data/supplier-features/import-booked-pnr/shared/new-layer-contract/context/ProjectContext.md",
       "lastRun": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
       "lastUpdated": "2026-09-01T13:26:49.694Z",
       "revisionCount": 4,
@@ -27,7 +27,7 @@
     },
     "test_design": {
       "status": "Pending Review",
-      "artifactPath": "platform_core_data/services/ndc-core-service/import-booked-pnr/shared/new-layer-contract/test_design/TestCases_ImportBookedPNR.md",
+      "artifactPath": "platform_core_data/supplier-features/import-booked-pnr/shared/new-layer-contract/test_design/TestCases_ImportBookedPNR.md",
       "lastRun": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
       "lastUpdated": "2026-09-01T13:26:49.768Z",
       "revisionCount": 3,

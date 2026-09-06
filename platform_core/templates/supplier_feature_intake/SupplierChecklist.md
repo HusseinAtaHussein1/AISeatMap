@@ -11,16 +11,31 @@
      silently overwritten.
 
      THIS TEMPLATE IS GENERIC AND FEATURE-AGNOSTIC. It must remain reusable, unmodified, across every
-     NDC Core Service Feature (Refund, Reissue, Seatmap, Import Booked PNR, and future Features).
+     Supplier Feature — whatever integration layer that Feature declares, or none at all. The
+     hierarchy it represents is Supplier Features -> Feature -> Supplier. There is no Service tier,
+     and `integrationLayer` is Feature METADATA, never an organizational parent
+     (module_architecture.md §11.1, §11.2).
      Feature-specific rows are never hardcoded here — they are injected at render time from that
      Feature's FeatureChecklistProfile.md (platform_core/templates/supplier_feature_intake/FeatureChecklistProfile.md
      is the generic Profile template; each Feature has its own populated instance at
      supplier-features/{{FEATURE_SLUG}}/context/FeatureChecklistProfile.md). Sections/rows
      marked "GENERIC — cross-Feature" belong in this file. Sections/rows marked "INJECTED FROM FEATURE
-     PROFILE" are populated by the renderer, never authored directly into this template. -->
+     PROFILE" are populated by the renderer, never authored directly into this template.
 
-**Service:** NDC_Core_Service
+     Injection points: §5b (Test Data), §5c (Feature Capability Matrix — CONDITIONAL, see below),
+     §7b (Behavior), §8b (Errors), and §12 (Feature-level Open Questions). §5b, §7b, §8b and §12
+     ALWAYS render — as an explicit gap when the Feature has no Profile yet. §5c is the sole
+     conditional one: it renders only when the Feature has a Capability Model on disk, and is omitted
+     entirely otherwise.
+
+     {{INTEGRATION_LAYER}} is filled from the Feature's registered `integrationLayer` value —
+     e.g. `ndc-core-service`, another integration, or `null`. Render a null/absent value as
+     `Unknown / not declared`, never as a guess and never omitted. It is recorded as metadata only;
+     nothing in this checklist may treat it as the Feature's owner or parent. -->
+
+**Scope family:** Supplier Features → Feature → Supplier
 **Feature:** {{FEATURE_NAME}} ({{FEATURE_SLUG}})
+**Integration Layer:** {{INTEGRATION_LAYER}} <!-- Feature metadata: ndc-core-service / another integration / Unknown — not an owner -->
 **Supplier:** {{SUPPLIER_NAME}} ({{SUPPLIER_SLUG}})
 **Status:** {{STATUS}} <!-- Draft / Proposed / Approved -->
 **Revision:** {{REVISION_COUNT}}
@@ -40,14 +55,21 @@
 > implementation:
 >
 > ```
-> NDC UI
+> Application UI
 >     ↓
-> NDC Application
+> Application
 >     ↓
-> NDC Core Service
+> Integration Layer  ({{INTEGRATION_LAYER}} — omit this tier when the Feature declares none)
 >     ↓
 > Supplier
 > ```
+>
+> The middle tier is whatever this Feature actually declares as its `integrationLayer`. It is not
+> assumed to exist, and it is not assumed to be NDC Core Service. A Feature with
+> `integrationLayer: null` has a three-tier path, and that is a complete, valid scope — not a gap.
+> A Feature may also span more than one application (e.g. an Admin application for configuration and
+> a Portal application for the business flow); record each application's own access details
+> separately rather than collapsing them into one row.
 >
 > It is not an API-only or contract-only scope by default. Unless a specific run is explicitly
 > narrowed by the human, a Supplier run is **Full Feature QA** — UI, API, Contract, Integration,
@@ -61,7 +83,7 @@
 > for the exact source path(s) and revision(s) used to populate the injected rows below.
 > Supplier-specific Test Cases must trace back to the relevant shared requirement IDs.
 >
-> This template is reusable across every NDC Core Service Feature and every Supplier. It never
+> This template is reusable across every Supplier Feature and every Supplier. It never
 > assumes one Feature's UI, mappings, or business flow apply to another. The same Supplier name under
 > two different Features is two completely independent Supplier scopes (e.g. `NDCGal / Refund` ≠
 > `NDCGal / Import Booked PNR`).
@@ -139,7 +161,7 @@
 
 | Field | Value | Status | Evidence/Source | Notes |
 |---|---|---|---|---|
-| NDC Core Service base URL | | | | |
+| Integration layer base URL (per the Feature's declared `integrationLayer`; N/A when it declares none) | | | | |
 | Endpoint(s) | | | | |
 | Authentication mechanism | | | | |
 | Supplier credential | | | | |
@@ -151,7 +173,7 @@
 
 ### 3c. Source / Target Environment Model (if applicable)
 
-<!-- A generic CAPABILITY, not a rule that every NDC Feature must use two environments. Some Feature
+<!-- A generic CAPABILITY, not a rule that every Supplier Feature must use two environments. Some Feature
      flows need a separate preparation environment to produce input test data before the Feature under
      test can be exercised (e.g. Import Booked PNR — see its FeatureChecklistProfile.md /
      ExecutionFlow_*.md for whether and why); others don't. Mark "Dual-environment execution required?"
@@ -215,6 +237,50 @@
 |---|---|---|
 | *(injected at render time)* | | |
 
+### 5c. Feature Capability Matrix — INJECTED FROM FEATURE PROFILE (CONDITIONAL)
+
+<!-- CONDITIONAL SECTION. It renders ONLY when this Feature has a Capability Model — that is, when
+     supplier-features/{{FEATURE_SLUG}}/context/CapabilityModel.md exists. When it does not exist,
+     the renderer OMITS this section entirely: no heading, no empty table, no "not yet available" gap
+     line. Many Features have no capability-driven Supplier variation, and an empty matrix on those
+     would read as an unanswered obligation that does not exist.
+
+     This differs deliberately from §5b/§7b/§8b, which always render (as a gap when the Feature has
+     no Profile yet) because every Feature has test data, behaviors, and errors. Not every Feature
+     has capabilities that vary per Supplier.
+
+     The section stays FEATURE-AGNOSTIC. Its dimensions, allowed values, and status vocabulary come
+     from the Feature's own CapabilityModel.md — never hardcoded here. Ancillaries has one (Baggage /
+     Meal / Seat / Bundle, with per-capability application levels); a Feature such as Refund or
+     Seatmap gets one only if and when its own capability variation is defined and approved.
+
+     RENDERING RULES:
+     1. One row per capability in the Feature's capability register, per the Feature's dimensions.
+     2. Values the human supplied at Supplier intake render with Source Status = `Provided`. They are
+        NEVER reset to `To Be Discovered` — that value is the ABSENCE default only.
+     3. Capability Result and Source Status are two INDEPENDENT axes and are never merged into one
+        column. Each dimension carries its own Source Status.
+     4. Source Status is carried through UNCHANGED. Rendering never promotes `Provided` to `Verified`
+        or `Discovered` — the same rule that stops §7b rendering from promoting `Open` to
+        `Confirmed`.
+     5. A dimension with no supplied value renders `To Be Discovered` with Source Status `—`.
+     6. Discovery updates this table in place, and records a contradiction using the Feature's
+        discrepancy record (Provided Value / Discovery Finding / Final Verified Value / Evidence /
+        Change Reason) — never by overwriting the Provided value.
+     7. This is a LIVING table: opened at Supplier intake, refined during Discovery, and read by Test
+        Design, which applies the Feature Capability Model's own Test Design gate. -->
+
+| Capability | Capability Result | Source Status | Application Level | Source Status | Other dimensions (per the Feature's Capability Model) | Evidence | Notes |
+|---|---|---|---|---|---|---|---|
+| *(injected at render time from the Feature's Capability Model, plus any values provided at intake)* | | | | | | | |
+
+**Discrepancy records for this Supplier** — one block per contradicted value, appended, never
+overwriting:
+
+| Capability | Dimension | Provided Value | Discovery Finding | Final Verified Value | Evidence | Change Reason |
+|---|---|---|---|---|---|---|
+| *(appended during Discovery; empty until a contradiction is found)* | | | | | | |
+
 ## 6. Contract / Mapping — GENERIC
 
 <!-- Do NOT invent mandatory fields, nullability, exact status/error codes, array representation,
@@ -227,7 +293,7 @@
 | Provider-specific fields | | | | |
 | Original ticketing date/time mapping (if applicable to this Feature) | | | | |
 | Booking status mapping | | | | |
-| Supplier status → NDC status mapping | | | | |
+| Supplier status → platform status mapping | | | | |
 | Supplier identifier / provider routing | | | | |
 | Passenger mapping | | | | |
 | Passenger type mapping | | | | |
@@ -270,12 +336,14 @@
 
 ## 8. Error Handling
 
-<!-- Distinguish where possible: Supplier behavior → NDC Core Service behavior → NDC Application
-     behavior → UI behavior. Do not assume a supplier error is exposed to the UI unchanged. -->
+<!-- Distinguish where possible: Supplier behavior → integration-layer behavior → application
+     behavior → UI behavior. Do not assume a supplier error is exposed to the UI unchanged.
+     The "Integration Layer Behavior" column is N/A for a Feature that declares no integration
+     layer — leave it N/A rather than inventing a tier that does not exist for that Feature. -->
 
 ### 8a. Generic Cross-Feature Error Categories — GENERIC
 
-| Error Case | Supplier Behavior | NDC Core Service Behavior | NDC Application Behavior | UI Behavior (toaster/message/page/retry) | Status | Evidence/Notes |
+| Error Case | Supplier Behavior | Integration Layer Behavior | Application Behavior | UI Behavior (toaster/message/page/retry) | Status | Evidence/Notes |
 |---|---|---|---|---|---|---|
 | Invalid request | | | | | | |
 | Supplier timeout | | | | | | |
@@ -284,13 +352,13 @@
 | Malformed response | | | | | | |
 | Partial response | | | | | | |
 | Unexpected supplier response | | | | | | |
-| NDC Core Service normalized error | | | | | | |
+| Integration-layer normalized error (N/A where the Feature declares no integration layer) | | | | | | |
 
 ### 8b. Feature-Specific Error Rows — INJECTED FROM FEATURE PROFILE
 
 <!-- Rows injected from this Feature's FeatureChecklistProfile.md §C. -->
 
-| Error Case | Supplier Behavior | NDC Core Service Behavior | NDC Application Behavior | UI Behavior (toaster/message/page/retry) | Status | Evidence/Notes |
+| Error Case | Supplier Behavior | Integration Layer Behavior | Application Behavior | UI Behavior (toaster/message/page/retry) | Status | Evidence/Notes |
 |---|---|---|---|---|---|---|
 | *(injected at render time)* | | | | | | |
 

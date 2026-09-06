@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "derivedFrom": null,
-  "approvedAt": "2026-09-02T12:00:00.000Z",
+  "approvedAt": "2026-09-04T10:49:38.383Z",
   "approvedBy": "Ahmed Ayman",
   "activeModules": [],
   "activeScope": null,
@@ -122,6 +122,117 @@
         }
       ],
       "integrationLayer": "ndc-core-service"
+    },
+    {
+      "slug": "ancillaries",
+      "name": "Ancillaries",
+      "description": null,
+      "status": "Active",
+      "derivedFromSections": [],
+      "kind": "supplier_feature",
+      "integrationLayer": null,
+      "createdAt": "2026-09-04T10:49:38.245Z",
+      "updatedAt": "2026-09-04T10:50:07.010Z",
+      "supersededBy": null,
+      "stages": {
+        "context": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "discovery": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "test_design": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "automation": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        },
+        "healing": {
+          "status": "Not Started",
+          "artifactPath": null,
+          "lastRun": null,
+          "lastUpdated": null,
+          "revisionCount": 0,
+          "targetRefAtWrite": null
+        }
+      },
+      "features": [
+        {
+          "slug": "ancillaries-baseline",
+          "name": "Ancillaries Baseline",
+          "description": null,
+          "sourceUserStory": "Ancillaries - Shared Feature Baseline",
+          "acceptanceCriteriaRef": null,
+          "status": "Active",
+          "createdAt": "2026-09-04T10:49:44.870Z",
+          "updatedAt": "2026-09-04T10:50:07.010Z",
+          "supersededBy": null,
+          "stages": {
+            "context": {
+              "status": "Pending Review",
+              "artifactPath": "platform_core_data/supplier-features/ancillaries/shared/ancillaries-baseline/context/ProjectContext.md",
+              "lastRun": null,
+              "lastUpdated": "2026-09-04T10:50:07.010Z",
+              "revisionCount": 1,
+              "targetRefAtWrite": null
+            },
+            "discovery": {
+              "status": "Not Started",
+              "artifactPath": null,
+              "lastRun": null,
+              "lastUpdated": null,
+              "revisionCount": 0,
+              "targetRefAtWrite": null
+            },
+            "test_design": {
+              "status": "Not Started",
+              "artifactPath": null,
+              "lastRun": null,
+              "lastUpdated": null,
+              "revisionCount": 0,
+              "targetRefAtWrite": null
+            },
+            "automation": {
+              "status": "Not Started",
+              "artifactPath": null,
+              "lastRun": null,
+              "lastUpdated": null,
+              "revisionCount": 0,
+              "targetRefAtWrite": null
+            },
+            "healing": {
+              "status": "Not Started",
+              "artifactPath": null,
+              "lastRun": null,
+              "lastUpdated": null,
+              "revisionCount": 0,
+              "targetRefAtWrite": null
+            }
+          },
+          "approvedAt": "2026-09-04T10:49:45.008Z",
+          "approvedBy": "Ahmed Ayman"
+        }
+      ]
     }
   ],
   "activeSupplier": null

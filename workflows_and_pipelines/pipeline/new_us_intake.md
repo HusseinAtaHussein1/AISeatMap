@@ -377,9 +377,9 @@ code performs this merge. Concretely, the rendering agent:
 
 1. Reads the generic base template. Sections/rows marked `GENERIC` render as-is (with their
    `{{TOKEN}}`s filled for this Supplier). Sections/rows marked `INJECTED FROM FEATURE PROFILE`
-   (§5b Feature-Specific Test Data, §7b Behavior Rows, §8b Feature-Specific Error Rows, plus the
-   Feature-level Open Questions carried into §12) are placeholders only — never authored directly in
-   the base template.
+   (§5b Feature-Specific Test Data, §5c Feature Capability Matrix — conditional, see §12.2b, §7b
+   Behavior Rows, §8b Feature-Specific Error Rows, plus the Feature-level Open Questions carried
+   into §12) are placeholders only — never authored directly in the base template.
 2. Resolves this Feature's `FeatureChecklistProfile.md` from the **Feature root**
    (`supplier-features/<feature>/context/FeatureChecklistProfile.md`) — never from inside a specific
    shared scope's folder, since a Feature may accumulate more than one approved shared scope over
@@ -392,6 +392,15 @@ code performs this merge. Concretely, the rendering agent:
    appears in a Supplier's own document.
 5. Fills the header's `Rendered from Feature Profile` field with the Profile's path and revision, so
    a reader can always trace a rendered row back to its source without re-deriving it.
+6. Fills `{{INTEGRATION_LAYER}}` from the Feature's **registered** `integrationLayer` value — never
+   from the Feature's name, a sibling Feature's value, or the words "NDC"/"supplier"/"API" appearing
+   anywhere. A `null` or absent value renders as `Unknown / not declared`; it is never guessed and
+   never omitted. The rendered value is **metadata only** — the template's own hierarchy line reads
+   `Supplier Features → Feature → Supplier`, and nothing in a rendered Checklist may present an
+   integration layer as the Feature's owner or parent (`module_architecture.md` §11.2). The
+   integration-layer tier in §2's scope diagram, the §3b integration base-URL row, and the
+   "Integration Layer Behavior" column in §8a/§8b are all **N/A** for a Feature that declares none —
+   left N/A rather than filled with an invented tier.
 
 If a Feature has no `FeatureChecklistProfile.md` yet (e.g. a brand-new Feature with no approved
 shared context), the injection points render as an explicit gap (`Feature Checklist Profile not yet
@@ -408,6 +417,71 @@ Environment fields are a generic **capability** — not every Feature requires t
 Feature with no such requirement marks it `N/A` rather than a Supplier inventing a Source environment
 that doesn't apply. The Source/Target ticketing flow itself is Import-Booked-PNR-specific
 (`module_architecture.md` §11.7 tier C) and is never assumed for another Feature.
+
+## 12.2b Rendering a Feature Capability Matrix — conditional §5c
+
+Some Features vary per Supplier not only in *values* but in *which capabilities exist at all*.
+Ancillaries is the first: one Supplier may support Baggage + Meal + Seat + Bundle while another
+supports only Baggage + Meal, and they may apply an ancillary per segment, per journey, per
+passenger, or booking-wide. A Feature with that shape carries a third Feature-level artifact beside
+`FeatureChecklistProfile.md`:
+
+```
+supplier-features/<feature>/context/CapabilityModel.md
+```
+
+It defines the **model** — capability register, dimensions, allowed values, status vocabulary,
+interpretation rules, evidence rules, the discrepancy process, and the Test Design gate. It contains
+**no Supplier answers**, and is never edited to record one.
+
+**The injection is conditional, and the condition is the file's existence.** When
+`context/CapabilityModel.md` is present, the renderer injects `SupplierChecklist.md` §5c. When it is
+absent, §5c is **omitted entirely** — no heading, no empty table, no "not yet available" gap line.
+This deliberately differs from §5b/§7b/§8b, which always render (as an explicit gap when a Feature
+has no Profile yet): every Feature has test data, behaviors, and errors, but not every Feature has
+capabilities that vary per Supplier. Presence-on-disk as the activation condition follows the
+convention already used for stage folders (`moduleScaffold.js` — an absent folder means that stage
+did not run), so no registry or schema field is needed.
+
+### The capability information flow
+
+```
+CapabilityModel.md          Feature-level: dimensions, allowed values, rules. NO answers
+        ↓ render (§5c)
+SupplierChecklist.md §5c    Supplier-level instance, one row per capability
+        ↓ Supplier intake
+Provided values             human-supplied at intake → Source Status = `Provided`
+        ↓ Discovery
+verify · resolve · evidence · record discrepancies
+        ↓
+Verified Supplier Capability Matrix   (in the Supplier Checklist — not a separate file)
+        ↓
+Test Design                 applies the Feature Capability Model's own gate
+```
+
+**Discovery is not the first source of capability answers.** Intake is, whenever the human supplies
+information. Against an already-populated row, Discovery's job is to **verify**, not to re-determine
+from scratch. Six rules bind the renderer and every later writer:
+
+1. **Two independent axes, never merged.** `Capability Result` (Supported · Unsupported · To Be
+   Discovered · Blocked · N/A) says what is true. `Source Status` (Provided · Discovered · Verified ·
+   Pending Verification · Conflicting Evidence) says how well it is known and where it came from.
+   Each dimension carries its own Source Status.
+2. **A Provided value is never reset to `To Be Discovered`.** That value is the *absence* default
+   only.
+3. **Source Status is carried through unchanged.** Rendering never promotes `Provided` to `Verified`
+   — the same rule that already stops rendering from promoting `Open` to `Confirmed` in §7b.
+4. **A contradiction appends, never overwrites.** Provided Value · Discovery Finding · Final Verified
+   Value · Evidence · Change Reason. The Provided value stays readable forever.
+5. **The Checklist is a living document** — opened at intake, refined through Discovery, read by Test
+   Design.
+6. **Unsupported is not a defect.** A capability confirmed absent for a Supplier is a recorded
+   capability fact.
+
+The generic template stays Feature-agnostic: §5c's dimensions and vocabulary come from the Feature's
+own Capability Model, never hardcoded into `SupplierChecklist.md`. **Ancillaries is the only Feature
+with a Capability Model today.** No other Feature gains §5c by being named here, and a Feature such
+as Refund or Seatmap gets one only if and when its own capability variation is defined and approved.
 
 ## 12.3 Tooling
 

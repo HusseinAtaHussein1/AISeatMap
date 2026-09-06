@@ -1,0 +1,1697 @@
+{
+  "title": "Manual QA Report",
+  "documentTitle": "Update Agency (US-4222) — Manual QA Report",
+  "statusPill": "PENDING REVIEW",
+  "statusPillTone": "warning",
+  "meta": {
+    "fields": [
+      {
+        "label": "Scope",
+        "value": "US-4222 \"[Admin] Update Agency\" — module `agency`, 53 designed test cases, 37 approved for execution"
+      },
+      [
+        {
+          "label": "Coverage",
+          "value": "37 of 53 designed cases executed (31 passed, 1 failed, 4 blocked, 1 skipped). 16 cases were rejected at review and never authorized to run — 69.8% authorized coverage of the designed suite."
+        }
+      ],
+      {
+        "label": "Description",
+        "value": "Stage 4M Manual Execution against live staging on a real agency record (AGN2 — Test Egypt); surfaced 2 defects, resolved 5 assumptions, and left 1 outstanding change on the environment."
+      }
+    ],
+    "runFields": [
+      [
+        {
+          "label": "Module",
+          "value": "agency"
+        },
+        {
+          "label": "Run Scope / Type",
+          "value": "User Story / User Story"
+        },
+        {
+          "label": "Browser mode",
+          "value": "Headed"
+        }
+      ],
+      [
+        {
+          "label": "Execution ID",
+          "value": "EXEC-4M-US4222-001"
+        },
+        {
+          "label": "Executed by",
+          "value": "Manual Execution skill (Stage 4M), Super Admin role"
+        }
+      ],
+      {
+        "label": "Run Folder",
+        "value": "run-001__2026-07-31_11-56-38__UserStory__US-4222UpdateAgency",
+        "mono": true
+      },
+      {
+        "label": "Environment",
+        "value": "STG (shared, live commercial data) — http://192.168.1.70"
+      },
+      {
+        "label": "Execution window",
+        "value": "2026-07-31 → 2026-08-02"
+      },
+      {
+        "label": "Status",
+        "value": "COMPLETE — Pending Review"
+      }
+    ]
+  },
+  "statuses": [
+    {
+      "key": "Passed",
+      "label": "Passed",
+      "tone": "pass"
+    },
+    {
+      "key": "Failed",
+      "label": "Failed",
+      "tone": "fail"
+    },
+    {
+      "key": "Blocked",
+      "label": "Blocked",
+      "tone": "blocked"
+    },
+    {
+      "key": "Skipped",
+      "label": "Skipped",
+      "tone": "warning"
+    },
+    {
+      "key": "Not Executed",
+      "label": "Not Executed",
+      "tone": "neutral"
+    },
+    {
+      "key": "Inconclusive",
+      "label": "Inconclusive",
+      "tone": "accent"
+    },
+    {
+      "key": "Excluded",
+      "label": "Excluded",
+      "tone": "neutral"
+    }
+  ],
+  "summary": {
+    "total": 53,
+    "totalLabel": "Suite Total — 53 designed cases",
+    "duration": "15m 8s",
+    "durationLabel": "Total Recorded Execution Time",
+    "donut": {
+      "focus": "Passed",
+      "label": "pass rate, executable scope"
+    },
+    "counts": [
+      {
+        "status": "Passed",
+        "value": 31
+      },
+      {
+        "status": "Failed",
+        "value": 1
+      },
+      {
+        "status": "Blocked",
+        "value": 4
+      },
+      {
+        "status": "Skipped",
+        "value": 1
+      },
+      {
+        "status": "Not Executed",
+        "value": 0
+      },
+      {
+        "status": "Inconclusive",
+        "value": 0
+      }
+    ]
+  },
+  "testCases": {
+    "title": "Test case results — all 53 designed cases",
+    "searchPlaceholder": "Search by ID, title, reason, evidence...",
+    "categories": [
+      {
+        "key": "agency-master",
+        "name": "AC-1 · Agency Master fields",
+        "icon": "🏢",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-001",
+            "title": "Update Agency Master fields successfully",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Scenario · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "44.6s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-001.png"
+          },
+          {
+            "id": "TC-AGENCY-002",
+            "title": "Mandatory Agency Master fields block submission when cleared",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "9.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-002_kbd.png"
+          },
+          {
+            "id": "TC-AGENCY-003",
+            "title": "Country is read-only and inherited from the Branch",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "20.8s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-003_rerun.png"
+          },
+          {
+            "id": "TC-AGENCY-004",
+            "title": "Post office box rejects non-numeric input",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-005",
+            "title": "Agency name rejects characters outside letters, digits and underscore",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-006",
+            "title": "Agency name rejects an over-length value",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-007",
+            "title": "Agency name refuses injection-shaped input",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-008",
+            "title": "Phone No rejects an invalid phone number",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "6.1s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-008_kbd.png"
+          },
+          {
+            "id": "TC-AGENCY-009",
+            "title": "Company URL rejects a malformed URL",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-010",
+            "title": "IATA Agency selection persists",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-011",
+            "title": "Agency Business Type selection persists",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "37.3s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-011.png"
+          },
+          {
+            "id": "TC-AGENCY-052",
+            "title": "Changing Branch re-inherits dependent values",
+            "status": "Skipped",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Reason",
+                "value": "Deferred / Requires Dedicated Environment. The case's own Notes mark it DEFERRED and forbid execution in this run: changing Branch may overwrite Product Access and Sales Contact values the agency already holds, which on this shared environment is a destructive and possibly unrecoverable change to a live commercial record."
+              }
+            ],
+            "evidence": "No evidence file captured for this case — its outcome is recorded from the execution log."
+          },
+          {
+            "id": "TC-AGENCY-053",
+            "title": "Agency name accepts a space between words",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "35.6s"
+              },
+              {
+                "label": "Assumption resolved",
+                "value": "Refuted — the reviewer-reported rule that the agency name accepts letters, digits and underscore only does not hold for the space character. \"QA Test Agency\" was accepted and redisplayed with its space intact, which matters because the agency's own stored name contains one."
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-053.png"
+          }
+        ]
+      },
+      {
+        "key": "owner-details",
+        "name": "AC-2 · Agency Owner Details",
+        "icon": "👤",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-012",
+            "title": "Update Agency Owner Details successfully",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "43.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-012.png"
+          },
+          {
+            "id": "TC-AGENCY-013",
+            "title": "Mandatory Agency Owner fields block submission when cleared",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "9.3s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-013_kbd.png"
+          },
+          {
+            "id": "TC-AGENCY-014",
+            "title": "Owner Email ID rejects an invalid email format",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "8.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-014_kbd.png"
+          },
+          {
+            "id": "TC-AGENCY-015",
+            "title": "Contact person rejects numeric input",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "8.2s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-015_kbd.png"
+          }
+        ]
+      },
+      {
+        "key": "documents",
+        "name": "AC-3 · Upload Document Details",
+        "icon": "📄",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-016",
+            "title": "Upload a valid PDF document with contract dates",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Scenario · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "53.7s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-016.png"
+          },
+          {
+            "id": "TC-AGENCY-017",
+            "title": "Upload multiple documents",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "44.6s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-017.png"
+          },
+          {
+            "id": "TC-AGENCY-018",
+            "title": "Remove an uploaded document",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "50.5s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-018.png"
+          },
+          {
+            "id": "TC-AGENCY-019",
+            "title": "Non-PDF document is rejected",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-020",
+            "title": "File named .pdf with non-PDF content is rejected",
+            "status": "Failed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Reason",
+                "value": "The file was accepted and persisted with no validation message — document format is validated neither by content nor by extension."
+              },
+              {
+                "label": "Execution Time",
+                "value": "65.4s"
+              },
+              {
+                "label": "Test Data",
+                "value": "AgencyContract_fake_extension.pdf — 297 bytes of plain text with no %PDF header, carrying a .pdf file name."
+              },
+              {
+                "label": "Expected",
+                "value": "The upload is rejected with a message identifying the file format as invalid — the Agency Logo control on this same form rejects a non-image with \"Please upload an image in .gif, .jpg, .png, .jpeg, .webp format .\""
+              },
+              {
+                "label": "Actual",
+                "value": "Accepted silently at selection with no validation message, the submission was accepted, and after the agency was reopened the file was listed as an attached contract document. The document upload control declares no accept attribute at all; the logo control declares accept=\"image/*\"."
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-020.png",
+            "detail": {
+              "preconditions": "Logged in to the NDC Admin Portal as Super Admin, on the Update Agency form for agency AGN2 — Test Egypt, which already holds one document.",
+              "steps": [
+                "Add a second document row with Add.",
+                "Select the fixture through the row's own Upload document control.",
+                "Enter contract dates of 01/04/2026 and 30/04/2027.",
+                "Submit with Send For Approval, then approve.",
+                "Reopen the agency and re-read the Upload Document section."
+              ],
+              "expected": "The upload is rejected with a message identifying the file format as invalid. AC-3 governs contract documents, and the logo control on the same form demonstrates that the product does validate uploads.",
+              "priority": "P1"
+            }
+          },
+          {
+            "id": "TC-AGENCY-021",
+            "title": "Contract dates block submission when cleared",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "17.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-021_rerun.png"
+          },
+          {
+            "id": "TC-AGENCY-051",
+            "title": "Save an update without re-uploading the existing document and logo",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "36.9s"
+              },
+              {
+                "label": "Assumption resolved",
+                "value": "ASM-012 Confirmed — an agency with an existing document and logo was updated without touching either section, and both remained attached. The Mandatory marking describes create-time only."
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-051.png"
+          }
+        ]
+      },
+      {
+        "key": "logo",
+        "name": "AC-4 · Agency Logo",
+        "icon": "🖼",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-022",
+            "title": "Upload a valid agency logo",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "45.5s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-022.png"
+          },
+          {
+            "id": "TC-AGENCY-023",
+            "title": "Logo larger than 2 MB is rejected",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "33.8s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-023.png"
+          },
+          {
+            "id": "TC-AGENCY-024",
+            "title": "Non-image file is rejected as a logo",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "32.6s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-024.png"
+          }
+        ]
+      },
+      {
+        "key": "sales-contact",
+        "name": "AC-5 · Wonder Travel Sales Contact",
+        "icon": "📞",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-025",
+            "title": "Update Wonder Travel Sales Contact successfully",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-026",
+            "title": "Add a second sales contact",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-027",
+            "title": "Mandatory Sales Contact fields block submission when cleared",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "9.1s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-027_kbd.png"
+          },
+          {
+            "id": "TC-AGENCY-028",
+            "title": "Sales Contact defaults inherit from the Branch contact person",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "bank-account",
+        "name": "AC-6 · Bank Account Details",
+        "icon": "🏦",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-029",
+            "title": "Add a bank account",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-030",
+            "title": "Add multiple bank accounts",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-031",
+            "title": "Agency saves with all bank account fields empty",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-032",
+            "title": "Account Number rejects non-numeric input",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "payment-settings",
+        "name": "AC-7 · Payment settings",
+        "icon": "💳",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-033",
+            "title": "Update Payment Settings successfully",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Scenario · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "44.7s"
+              },
+              {
+                "label": "Assumption resolved",
+                "value": "FINDING-005 Confirmed — the Outstanding Threshold field accepted 10 against an observed 5; no constraint was encountered at that value."
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-033.png"
+          },
+          {
+            "id": "TC-AGENCY-034",
+            "title": "Mandatory Payment Settings fields block submission when cleared",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "9.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-034_kbd.png"
+          },
+          {
+            "id": "TC-AGENCY-035",
+            "title": "Numeric Payment Settings fields reject non-numeric input",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "7.2s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-035_kbd.png"
+          },
+          {
+            "id": "TC-AGENCY-036",
+            "title": "Select multiple payment options",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "40.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-036.png"
+          },
+          {
+            "id": "TC-AGENCY-037",
+            "title": "Payment option blocks submission when none is selected",
+            "status": "Blocked",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Reason",
+                "value": "BLOCKED FOR AUTOMATION — the payment-option checkbox component cannot be driven reliably through the public UI with any interaction method available to this harness. NOT an application defect."
+              },
+              {
+                "label": "Blocked for automation only",
+                "value": "Not an application defect. The behaviour was verified manually and is correct; the limitation is the harness's. The visible controls read unchecked while the underlying model still carried a selection, confirmed by network capture."
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-037_network.json · artifacts/TC-AGENCY-037_network_final.png · artifacts/TC-AGENCY-037_realclick.png"
+          },
+          {
+            "id": "TC-AGENCY-038",
+            "title": "Set a target for a month and year",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-039",
+            "title": "Credit agency selection persists",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "36.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-039.png"
+          }
+        ]
+      },
+      {
+        "key": "product-access",
+        "name": "AC-8 · Product Access / Agency Features",
+        "icon": "✈",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-040",
+            "title": "Product Access is populated from the parent Branch",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-040_product_access_grid.png"
+          },
+          {
+            "id": "TC-AGENCY-041",
+            "title": "Change the selected products",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Reason",
+                "value": "A product other than the one deselected also changed."
+              },
+              {
+                "label": "Execution Time",
+                "value": "39.3s"
+              },
+              {
+                "label": "Expected",
+                "value": "Re-selecting a product restores it, exactly as deselecting it removed it. Nothing in US-4222 suggests that changing a product selection is a one-way action."
+              },
+              {
+                "label": "Actual",
+                "value": "The deselection persisted, which is what the case asserts — so the case Passed. The revert then failed: re-selecting Flight renders a blank supplier-credential panel in which Manager Name and Supplier Credentials Description are mandatory, and the form refuses to save until both are filled. The agency has no values for either."
+              },
+              {
+                "label": "Note",
+                "value": "The case Passed. The defect is what the attempt to undo it revealed — see the Findings below. Reporting it only as a passing case would bury the more important finding."
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-041.png",
+            "detail": {
+              "preconditions": "On the Update Agency form for AGN2 — Test Egypt, with both products (Flight, Others) selected.",
+              "testData": "No entered data — the case deselects the Flight product.",
+              "steps": [
+                "Deselect the Flight product.",
+                "Submit the update and approve it.",
+                "Reopen the agency and confirm the deselection persisted.",
+                "Re-select Flight and attempt to save (the revert)."
+              ],
+              "expected": "The deselection persists after save and reopen.",
+              "priority": "P2"
+            }
+          },
+          {
+            "id": "TC-AGENCY-042",
+            "title": "Supplier Name and Product Name are read-only",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P3"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-042_readonly_columns.png"
+          }
+        ]
+      },
+      {
+        "key": "supplier-credentials",
+        "name": "AC-9 · Airline Supplier Credential (PCC)",
+        "icon": "🔑",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-043",
+            "title": "Airline Supplier Credential (PCC) section is available",
+            "status": "Excluded",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Scenario · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Rejected"
+              },
+              {
+                "label": "Reason",
+                "value": "Rejected at Review"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "import-pnr",
+        "name": "AC-10 · Import PNR Option",
+        "icon": "🔗",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-044",
+            "title": "Import PNR Option persists",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "39.7s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-044_rerun.png"
+          }
+        ]
+      },
+      {
+        "key": "workflow",
+        "name": "No acceptance criterion · Submit / approval workflow",
+        "icon": "🔁",
+        "open": false,
+        "cases": [
+          {
+            "id": "TC-AGENCY-045",
+            "title": "Submit an agency update for approval",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Scenario · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "47.8s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-045.png"
+          },
+          {
+            "id": "TC-AGENCY-046",
+            "title": "Remarks blocks submission when empty",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P2"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "14.0s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-046_rerun.png"
+          },
+          {
+            "id": "TC-AGENCY-047",
+            "title": "Cancel discards unsaved changes",
+            "status": "Passed",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Execution Time",
+                "value": "16.4s"
+              }
+            ],
+            "evidence": "artifacts/TC-AGENCY-047.png"
+          },
+          {
+            "id": "TC-AGENCY-048",
+            "title": "Approve a pending agency update",
+            "status": "Blocked",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Reason",
+                "value": "Only one credential exists on this install (odeysysadmin, Super Admin), so the submitter and the approver would be the same identity. The four-eyes separation this case exists to verify cannot be exercised, and approving one's own change under Super Admin would prove nothing about whether the platform permits it for anyone else (FINDING-007). The case's own Notes require Blocked here, never Passed or Failed."
+              }
+            ],
+            "evidence": "No evidence file captured for this case — its outcome is recorded from the execution log."
+          },
+          {
+            "id": "TC-AGENCY-049",
+            "title": "Reject a pending agency update with a reason",
+            "status": "Blocked",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "Atomic · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Reason",
+                "value": "Same single-credential limitation as TC-AGENCY-048: rejection by a different user cannot be exercised with one identity (FINDING-007)."
+              }
+            ],
+            "evidence": "No evidence file captured for this case — its outcome is recorded from the execution log."
+          },
+          {
+            "id": "TC-AGENCY-050",
+            "title": "Agency update end to end: edit, submit, approve",
+            "status": "Blocked",
+            "rows": [
+              {
+                "label": "Tier / Priority",
+                "value": "E2E · P1"
+              },
+              {
+                "label": "Review",
+                "value": "Approved"
+              },
+              {
+                "label": "Reason",
+                "value": "The end-to-end path includes an approval by a different user, which the single available credential cannot provide (FINDING-007). Its edit-and-submit portion was exercised by TC-AGENCY-045, but the case as written is not executable and is not reported as partially passed."
+              }
+            ],
+            "evidence": "No evidence file captured for this case — its outcome is recorded from the execution log."
+          }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "type": "notes",
+      "title": "1. Executive Summary",
+      "blocks": [
+        "US-4222 describes updating an agency. We tested it against the real staging system, on a real agency record (AGN2 — Test Egypt), and the feature works: of the 37 test cases you approved, 31 passed. Agency details, owner details, payment settings, documents, the logo, product selection and the submit-for-approval workflow all behave as the story describes.",
+        "Two things need your attention. A file that is not a PDF is accepted and stored as an agency contract document — the system checks neither the contents nor even the file name extension, although the logo upload beside it does check both. And deselecting a product cannot be undone: re-selecting it demands supplier-credential details the agency never had, so the form will not save. We found the second one by doing it, which means one change is still outstanding on the record — the Flight product remains deselected on AGN2, and putting it back needs a decision from you.",
+        "Three cases could not be run at all, for one reason: the installation has a single login, so an update cannot be submitted by one person and approved by another. That is the separation the approval workflow exists to enforce, and it is the one part of US-4222 we cannot tell you anything about.",
+        "16 of the 53 designed cases were not authorized to run — you rejected them at review — so this report covers 69.8% of the designed suite."
+      ]
+    },
+    {
+      "type": "notes",
+      "title": "2. Outcome figures — both denominators",
+      "blocks": [
+        {
+          "kind": "ul",
+          "items": [
+            "Executable scope (Review = Approved): 37 cases — Passed 31 (83.8%) · Failed 1 (2.7%) · Blocked 4 (10.8%) · Skipped 1 (2.7%) · Not Executed 0 · Inconclusive 0.",
+            "Not authorized to run this pass: 16 cases, all Rejected at Review (30.2% of the suite). Reported, not dropped.",
+            "Suite total: 53 designed cases. Authorized Coverage: 69.8% (37 of 53)."
+          ]
+        },
+        "The ring and the six status cards above are computed over the executable scope, which is the pass rate's denominator. The Suite Total card is the full designed suite. Both figures are shown because a pass rate quoted against the suite total understates the run, and quoted against the suite total without saying so it overstates coverage."
+      ]
+    },
+    {
+      "type": "findings",
+      "title": "3. Defect Register",
+      "badges": [
+        {
+          "value": 1,
+          "label": "High / P1",
+          "tone": "fail"
+        },
+        {
+          "value": 1,
+          "label": "Medium / P2",
+          "tone": "blocked"
+        }
+      ],
+      "items": [
+        {
+          "kind": "Defect · High · P1 · Workflow",
+          "tone": "fail",
+          "body": "Deselecting a product is irreversible through the UI, and it destroys the product's supplier-credential configuration. Re-selecting Flight renders a blank supplier-credential panel in which Manager Name and Supplier Credentials Description are mandatory, and the form refuses to save until both are filled — the agency has no values for either. The stored credential is still present in the grid and its selection checkbox is still ticked, so the association was never lost; the block is purely the empty panel.",
+          "refs": "(TC-AGENCY-041 — the case itself PASSED)",
+          "fields": [
+            {
+              "label": "Suspected Component",
+              "value": "Select Product / supplier-credential panel on the Update Agency form"
+            },
+            {
+              "label": "Layer",
+              "value": "Frontend — the block is client-side form validation on a panel the client itself renders empty",
+              "mono": false
+            },
+            {
+              "label": "Reproducibility",
+              "value": "Always — four independent attempts, each refused with the same two Required markers: plain re-select and save; re-select with a wait for the section to repopulate; re-select with the stored credential row explicitly ticked; and clicking the stored row to load it into the panel",
+              "mono": false
+            },
+            {
+              "label": "Regression",
+              "value": "Unknown — no earlier execution of this case exists to compare against",
+              "mono": false
+            },
+            {
+              "label": "Impact",
+              "value": "An administrator who deselects a product by mistake cannot undo it. Restoring the product requires inventing supplier-credential details the agency never had, which replaces one wrong state with another, or a direct database correction. On a live agency this silently changes what the agency is able to sell.",
+              "mono": false
+            },
+            {
+              "label": "Root cause (inferred, not established)",
+              "value": "The credential panel appears to be an \"add a credential\" form whose validators activate once the product group is marked dirty, rather than a view of the credential already attached. That would explain why the record saved normally for the whole run while the product selection was untouched, and refuses only after the selection is changed.",
+              "mono": false
+            },
+            {
+              "label": "Confidence",
+              "value": "High — reproduced four ways, with the refusal message located and attributed to two named fields each time",
+              "mono": false
+            }
+          ],
+          "evidence": "manual_execution/artifacts/TC-AGENCY-041.png (the product deselected and persisted) · ManualExecutionResults.md §5 (per-case record, including all four restoration attempts)"
+        },
+        {
+          "kind": "Defect · Medium · P2 · Validation",
+          "tone": "blocked",
+          "body": "Agency contract documents are subject to no format validation whatsoever: not by content, and not even by file extension, since the file dialog is unrestricted. A 297-byte plain-text file with no %PDF header, named .pdf, was accepted silently, submitted, approved, and listed as an attached contract document after the agency was reopened.",
+          "refs": "(TC-AGENCY-020 — Failed)",
+          "fields": [
+            {
+              "label": "Suspected Component",
+              "value": "Agency document upload (ndc-fg-file-input, input[name=docId])"
+            },
+            {
+              "label": "Layer",
+              "value": "Frontend and Backend — the browser accepted it with no filter and the server stored it, so neither layer validates",
+              "mono": false
+            },
+            {
+              "label": "Reproducibility",
+              "value": "Unable to confirm — observed once in this run. The single observation was clean and fully evidenced, but the standard for Always is at least two independent observations.",
+              "mono": false
+            },
+            {
+              "label": "Regression",
+              "value": "Unknown — no earlier execution of this case exists to compare against",
+              "mono": false
+            },
+            {
+              "label": "Impact",
+              "value": "Any file can be stored as an agency contract document provided it is named .pdf. A user who attaches the wrong file, or a corrupt one, receives no indication of the problem; the error surfaces later, when somebody opens the contract and finds it unreadable. Because the stored artefact is the evidence of the commercial agreement with the agency, the failure is discovered exactly when the document matters most.",
+              "mono": false
+            },
+            {
+              "label": "Root cause (inferred, not established)",
+              "value": "The logo control constrains its file dialog with accept=\"image/*\" and rejects a non-image at submit, while the document control declares no accept and produced no message. The most plausible explanation is that document format validation was simply never implemented, rather than implemented and bypassed.",
+              "mono": false
+            },
+            {
+              "label": "Confidence",
+              "value": "High that the behaviour is as described; the observation is direct and the stored result was re-read after reopening the record.",
+              "mono": false
+            }
+          ],
+          "evidence": "manual_execution/artifacts/TC-AGENCY-020.png — the accepted file listed after reopening"
+        }
+      ]
+    },
+    {
+      "type": "findings",
+      "title": "4. Requirement Coverage",
+      "badges": [
+        {
+          "value": "5 / 11",
+          "label": "Verified",
+          "tone": "pass"
+        },
+        {
+          "value": 2,
+          "label": "Not verified",
+          "tone": "blocked"
+        }
+      ],
+      "items": [
+        {
+          "kind": "Verified",
+          "tone": "pass",
+          "body": "AC-2 Agency Owner Details · AC-4 Agency Logo · AC-5 Wonder Travel Sales Contact · AC-8 Product Access / Agency Features · AC-10 Import PNR Option — all approved cases in these groups executed and passed.",
+          "refs": "(5 of 11 requirements, 45.5%)"
+        },
+        {
+          "kind": "Partially verified",
+          "tone": "warning",
+          "body": "AC-1 Agency Master fields (6 of 7 approved cases executed) · AC-7 Payment settings (5 of 6) · No-acceptance-criterion workflow group (3 of 6). The rest were Blocked or Deferred."
+        },
+        {
+          "kind": "Failed",
+          "tone": "fail",
+          "body": "AC-3 Upload Document Details — at least one approved case failed; see the Defect Register (TC-AGENCY-020)."
+        },
+        {
+          "kind": "Not verified",
+          "tone": "blocked",
+          "body": "AC-6 Bank Account Details — every case covering it was rejected at review, a decision recorded in the Coverage Report §11.2 and accepted there. AC-9 Airline Supplier Credential (PCC) — same. Both are listed rather than omitted because a missing row reads as \"nothing to say\", which is the opposite of the truth."
+        }
+      ]
+    },
+    {
+      "type": "findings",
+      "title": "5. Assumptions & Risks Resolved",
+      "badges": [
+        {
+          "value": 3,
+          "label": "Confirmed",
+          "tone": "pass"
+        },
+        {
+          "value": 1,
+          "label": "Refuted",
+          "tone": "accent"
+        },
+        {
+          "value": 1,
+          "label": "Unverified",
+          "tone": "warning"
+        }
+      ],
+      "items": [
+        {
+          "kind": "Confirmed",
+          "tone": "pass",
+          "body": "ASM-012 — the Mandatory marking on document and logo describes create-time only, not a re-upload on every update. An agency with an existing document and logo was updated without touching either section, and both remained attached.",
+          "refs": "(TC-AGENCY-051)",
+          "evidence": "manual_execution/artifacts/TC-AGENCY-051.png"
+        },
+        {
+          "kind": "Confirmed",
+          "tone": "pass",
+          "body": "FINDING-005 — Outstanding Threshold is a later enhancement, mandatory, with an unconfirmed valid range. The field accepted 10 against an observed 5; no constraint was encountered at that value.",
+          "refs": "(TC-AGENCY-033)",
+          "evidence": "manual_execution/artifacts/TC-AGENCY-033.png"
+        },
+        {
+          "kind": "Confirmed",
+          "tone": "pass",
+          "body": "FINDING-007 — a single credential prevents maker/checker separation from being tested. All three approval cases remain Blocked for exactly this reason.",
+          "refs": "(TC-AGENCY-048, 049, 050)"
+        },
+        {
+          "kind": "Refuted",
+          "tone": "accent",
+          "body": "Reviewer-reported rule: the agency name accepts letters, digits and underscore only. \"QA Test Agency\" was accepted and redisplayed with its space intact. The reported rule does not hold for the space character, which matters because the agency's own stored name contains one.",
+          "refs": "(TC-AGENCY-053)",
+          "evidence": "manual_execution/artifacts/TC-AGENCY-053.png"
+        },
+        {
+          "kind": "Unverified",
+          "tone": "warning",
+          "body": "ASM-016 — changing Branch may overwrite Product Access and Sales Contact. Deferred; requires a dedicated environment. TC-AGENCY-041 gave the deferral concrete support: a product change on this form could not be undone.",
+          "refs": "(TC-AGENCY-052)"
+        }
+      ]
+    },
+    {
+      "type": "findings",
+      "title": "6. Known Limitations",
+      "badges": [
+        {
+          "value": 6,
+          "label": "Limitations",
+          "tone": "warning"
+        }
+      ],
+      "items": [
+        {
+          "kind": "Limitation",
+          "tone": "warning",
+          "body": "Approval by a second user could not be tested. The installation has one credential (odeysysadmin, Super Admin), so submitter and approver are the same identity. The approval workflow's central control — that somebody else approves — is unverified. Everything upstream of it is verified.",
+          "refs": "(TC-AGENCY-048, 049, 050)"
+        },
+        {
+          "kind": "Limitation",
+          "tone": "warning",
+          "body": "One environment change remains outstanding. The application will not save a re-selected product without supplier-credential values the agency never held. The record is not identical to its pre-run state; AGN2 is currently missing the Flight product.",
+          "refs": "(TC-AGENCY-041)"
+        },
+        {
+          "kind": "Limitation",
+          "tone": "warning",
+          "body": "Branch re-inheritance not exercised — deferred by the case's own notes as potentially destructive on a shared environment. ASM-016 remains open.",
+          "refs": "(TC-AGENCY-052)"
+        },
+        {
+          "kind": "Limitation",
+          "tone": "accent",
+          "body": "One case is blocked for automation only. The payment-option checkboxes cannot be driven reliably through the public UI: the visible controls read unchecked while the underlying model still carried a selection, confirmed by network capture. No consequence for the application — the behaviour was verified manually and is correct. The limitation is the harness's.",
+          "refs": "(TC-AGENCY-037)"
+        },
+        {
+          "kind": "Limitation",
+          "tone": "warning",
+          "body": "16 designed cases were not authorized — Rejected at Review. 30.2% of the designed suite is unexamined this pass, by decision rather than by omission.",
+          "refs": "(see the tree above, Status = Excluded)"
+        },
+        {
+          "kind": "Limitation",
+          "tone": "accent",
+          "body": "Product Access supplier rows changed mid-run, not by this run. The read-only supplier list changed from SalamAir/FlyNas to Sabre between two clean verifications. Recorded, not corrected — overwriting it would have destroyed somebody else's configuration."
+        }
+      ]
+    },
+    {
+      "type": "cleanup",
+      "title": "7. Cleanup / follow-up",
+      "heading": "Outstanding change left on the environment (1):",
+      "items": [
+        {
+          "label": "Needs a data decision",
+          "ref": "AGN2 — Test Egypt",
+          "refIn": "TC-AGENCY-041",
+          "body": "The Flight product remains deselected. Restoring it means either supplying the two supplier-credential values through the UI — which adds data the agency did not previously hold — or restoring the product association directly in the database. This is a data decision, not a QA one."
+        }
+      ]
+    },
+    {
+      "type": "findings",
+      "title": "8. Recommendations",
+      "badges": [
+        {
+          "value": 6,
+          "label": "Actions",
+          "tone": "accent"
+        }
+      ],
+      "items": [
+        {
+          "kind": "Reviewer / DBA",
+          "tone": "fail",
+          "body": "Decide how to restore the Flight product on AGN2 — through the UI with invented credential values, or directly in the database.",
+          "refs": "(TC-AGENCY-041 — outstanding change)"
+        },
+        {
+          "kind": "Development",
+          "tone": "blocked",
+          "body": "Treat the irreversibility as a defect in its own right: re-selecting a product should restore it without demanding credential details that were never required to remove it.",
+          "refs": "(TC-AGENCY-041 — defect)"
+        },
+        {
+          "kind": "Development",
+          "tone": "blocked",
+          "body": "Validate document uploads at least as strictly as logo uploads already are — the logo control's accept attribute and its format check are the working model, on the same form.",
+          "refs": "(TC-AGENCY-020)"
+        },
+        {
+          "kind": "Environment owner",
+          "tone": "accent",
+          "body": "Provide a second, non-Super-Admin credential with approval rights so maker/checker separation can be tested. This is the single change that would unblock the most coverage.",
+          "refs": "(TC-AGENCY-048, 049, 050)"
+        },
+        {
+          "kind": "QA lead",
+          "tone": "accent",
+          "body": "Schedule on a dedicated environment where Branch re-inheritance can be exercised without risking live data.",
+          "refs": "(TC-AGENCY-052)"
+        },
+        {
+          "kind": "Environment owner",
+          "tone": "warning",
+          "body": "Rotate the odeysysadmin password now that the run is complete.",
+          "refs": "(Credential hygiene)"
+        }
+      ]
+    },
+    {
+      "type": "notes",
+      "title": "9. Delivery Completeness",
+      "blocks": [
+        {
+          "kind": "ul",
+          "items": [
+            "Every test case in scope has a recorded outcome — all 53 suite cases appear, 37 with an execution outcome and 16 as Excluded.",
+            "Every Failed/Inconclusive case meets the Defect Documentation Standard in full — TC-AGENCY-020, plus TC-AGENCY-041 documented to the same standard despite passing.",
+            "Every result's evidence captured, or its absence stated with a reason.",
+            "CSV has one row per test case in scope, statuses unabbreviated — 53 rows.",
+            "Coverage computed from the Traceability Matrix; uncovered requirements shown as not verified.",
+            "All four renderings — Results, Summary, CSV, and this report — agree on every test case's status: they are generated from one result set in a single pass, so they cannot diverge.",
+            "No script of any kind was produced as an artifact. The execution harness was scratchpad scaffolding and is deleted."
+          ]
+        },
+        "This page is the HTML companion of ManualQAReport.md (pipeline.md §17). The Markdown is the authoritative artifact — approved, diffed, and traced. This rendering is never approved and is never read as input by any stage."
+      ]
+    }
+  ]
+}

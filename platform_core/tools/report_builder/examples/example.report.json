@@ -1,0 +1,169 @@
+{
+  "title": "QA Execution Report",
+  "documentTitle": "Agency Module - QA Execution Report",
+  "statusPill": "COMPLETE",
+  "statusPillTone": "pass",
+
+  "meta": {
+    "fields": [
+      { "label": "Scope", "value": "Agency module - Update Agency (US-4222), 12 test cases" },
+      [
+        { "label": "Coverage", "value": "12 test cases executed (9 passed, 2 failed, 1 blocked) across Create, Update, and Search." },
+        { "label": "Description", "value": "Manual Execution of the approved Stage 3 suite against staging; surfaced 2 defects." }
+      ]
+    ],
+    "runFields": [
+      [
+        { "label": "Module", "value": "agency" },
+        { "label": "Environment", "value": "staging" },
+        { "label": "Execution Mode", "value": "Headed" }
+      ],
+      { "label": "Started", "value": "2026-09-06 09:15:00 UTC" },
+      { "label": "Ended", "value": "2026-09-06 11:02:00 UTC" },
+      { "label": "Status", "value": "COMPLETE" }
+    ]
+  },
+
+  "summary": {
+    "duration": "1h 47m 00s"
+  },
+
+  "testCases": {
+    "searchPlaceholder": "Search by ID, title, screen...",
+    "categories": [
+      {
+        "key": "positive",
+        "name": "Positive",
+        "cases": [
+          {
+            "id": "TC-AGENCY-POS-01",
+            "title": "Verify an authorised user can update an agency's commercial name",
+            "status": "PASS",
+            "rows": [
+              { "label": "Screen", "value": "Agency > Edit" },
+              { "label": "Expected", "value": "Success toast shown; the grid reflects the new name after refresh." },
+              { "label": "Actual", "value": "Success toast shown; grid reflected the new name." }
+            ],
+            "evidence": "Screenshot 01-update-success.png; audit row written at 09:22 UTC.",
+            "detail": {
+              "preconditions": "An active agency exists and the user holds the Agency.Update permission.",
+              "steps": [
+                "Open Agency > Search and select an active agency.",
+                "Change Commercial Name to a new unique value.",
+                "Save."
+              ],
+              "expected": "HTTP 200; success toast; the updated name persists after a grid refresh.",
+              "priority": "P1",
+              "tags": ["smoke", "regression"]
+            }
+          },
+          {
+            "id": "TC-AGENCY-POS-02",
+            "title": "Verify the Update API persists the change",
+            "status": "FAIL",
+            "rows": [
+              { "label": "Endpoint Name", "value": "UpdateAgency" },
+              { "label": "Expected", "value": "HTTP 200 and the response echoes the submitted commercialName." },
+              { "label": "Actual", "value": "HTTP 200 but commercialName is echoed unchanged." }
+            ],
+            "evidence": "Live response captured 2026-09-06 09:41 UTC.",
+            "exchanges": [
+              {
+                "label": "Attempt 1 of 1 - UpdateAgency",
+                "request": {
+                  "line": "PUT to https://staging.example.internal/api/v1/agencies/4821",
+                  "headers": [
+                    { "name": "Authorization", "redacted": true },
+                    { "name": "Content-Type", "value": "application/json" }
+                  ],
+                  "body": "{\n  \"agencyId\": 4821,\n  \"commercialName\": \"Nile Travel Updated\"\n}"
+                },
+                "response": {
+                  "line": "Status code 200",
+                  "body": "{\n  \"agencyId\": 4821,\n  \"commercialName\": \"Nile Travel\"\n}"
+                },
+                "notes": ["Response headers were not captured for this call."]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "validation",
+        "name": "Validation",
+        "cases": [
+          {
+            "id": "TC-AGENCY-VAL-01",
+            "title": "Verify a blank commercial name is rejected",
+            "status": "PASS",
+            "rows": [
+              { "label": "Expected", "value": "Inline validation message; Save stays disabled." },
+              { "label": "Actual", "value": "Inline validation message shown; Save disabled." }
+            ]
+          },
+          {
+            "id": "TC-AGENCY-VAL-02",
+            "title": "Verify a duplicate tax number is rejected",
+            "status": "BLOCKED",
+            "rows": [
+              { "label": "Blocker", "value": "No second agency with a known tax number exists on staging." }
+            ],
+            "evidence": "Test-data gap recorded in the run's blockers log."
+          }
+        ]
+      }
+    ]
+  },
+
+  "sections": [
+    {
+      "type": "findings",
+      "title": "Findings",
+      "badges": [
+        { "value": 1, "label": "Defects", "tone": "blocked" },
+        { "value": 1, "label": "Blockers", "tone": "accent" }
+      ],
+      "items": [
+        {
+          "kind": "Defect",
+          "tone": "blocked",
+          "body": "UpdateAgency returns HTTP 200 for a commercialName change but persists the previous value, so the caller cannot tell the write was dropped.",
+          "refs": "(TC-AGENCY-POS-02)",
+          "fields": [
+            { "label": "Field", "value": "commercialName" },
+            { "label": "Expected value", "value": "\"Nile Travel Updated\"" },
+            { "label": "Impact", "value": "Any client trusting the 200 will show a stale agency name until the next full reload.", "mono": false }
+          ],
+          "evidence": "Live UpdateAgency response, 2026-09-06 09:41 UTC."
+        },
+        {
+          "kind": "Blocker",
+          "tone": "accent",
+          "body": "TC-AGENCY-VAL-02 could not run: staging holds no second agency with a known tax number to duplicate.",
+          "refs": "(TC-AGENCY-VAL-02)"
+        }
+      ]
+    },
+    {
+      "type": "cleanup",
+      "title": "Cleanup / follow-up",
+      "heading": "Records left behind this run (1):",
+      "items": [
+        {
+          "label": "Needs revert",
+          "ref": "AGENCY-4821",
+          "refIn": "TC-AGENCY-POS-01",
+          "body": "Commercial name changed to \"Nile Travel Updated\" on staging and not reverted."
+        }
+      ]
+    },
+    {
+      "type": "notes",
+      "title": "Notes",
+      "blocks": [
+        "Negative lockout/brute-force cases were skipped by the shared-environment default and marked Deferred.",
+        { "kind": "ul", "items": ["Execution Mode: Headed", "Debug Mode: Off"] }
+      ]
+    }
+  ]
+}

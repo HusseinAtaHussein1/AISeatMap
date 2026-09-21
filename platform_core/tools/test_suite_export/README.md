@@ -324,6 +324,9 @@ of a timestamp diff on every Stage 3 re-run.
 | [`exportSuites.js`](exportSuites.js) | `exportSuite` / `exportSuiteDir` — file discovery and orchestration |
 | [`parseTestCases.js`](parseTestCases.js) | Markdown suite → structured records; owns the `FIELDS` contract |
 | [`xlsxWriter.js`](xlsxWriter.js) | Dependency-free single-sheet `.xlsx` writer |
+| [`readWorkbook.js`](readWorkbook.js) | `readWorkbook` / `WorkbookReadError` — the `.xlsx` reader the lifecycle import reads decisions with |
+| [`importLifecycle.js`](importLifecycle.js) | `--import-lifecycle`: `importLifecycle` / `readDecisions` / `ImportError` |
+| [`syncCaseIndex.js`](syncCaseIndex.js) | `--sync-index`: `syncCaseIndex` / `readCases` / `IndexSyncError` |
 | [`crc32.js`](crc32.js) | CRC-32, required by every ZIP entry header |
 | [`index.js`](index.js) | Programmatic surface |
 | [`__tests__/`](__tests__/) | `node --test` — parser shapes, writer/ZIP structure, export behaviour |

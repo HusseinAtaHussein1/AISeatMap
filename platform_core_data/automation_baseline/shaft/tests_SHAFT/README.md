@@ -1,4 +1,4 @@
-# Branch Automation — SHAFT Engine (Java)
+# NDC Admin Portal Automation — SHAFT Engine (Java)
 
 > **Artifact Type:** Execution Guide (for the executable project in this folder)
 > **Stage:** Stage 4A output — executed by Stage 5A, repaired by Stage 5H
@@ -6,18 +6,35 @@
 > **Primary Consumer:** Anyone running, debugging, or extending the suite
 > **Lifecycle:** Updated when the project's prerequisites, layout, or run commands change
 > **Required Gate:** None — read it before executing
-> **Status:** See [`../.module_automation_state.json`](../.module_automation_state.json) for the authoritative lifecycle state
+> **Status:** See each promoted module's own `.module_automation_state.json` for the authoritative
+> lifecycle state — this is now the shared **Workspace Automation Baseline**, not a single module's
+> working copy; see [`../../AutomationPackages.md`](../../AutomationPackages.md) §1 for the
+> `.baseline_ownership.json`-backed record of who owns what.
 
-**This folder is the executable project. The documentation and governance record live one level up
-— start at [⬅ automation/README.md](../README.md).**
+**This is the Workspace Automation Baseline — the shared, promoted Automation Package.** It is no
+longer one module's Stage 4A working copy: both **`branch`** (promoted 2026-08-17) and **`agency`**
+(promoted 2026-08-24) have had their module-project working copies verified byte-identical here and
+then permanently deleted, so this folder is the **single source of truth** for both modules'
+generated automation, execution, repair, and self-healing going forward
+([`../../AutomationPackages.md`](../../AutomationPackages.md)). Each module's own
+`automation/*.md` governance record (plans, decisions, verification, coverage) still lives under its
+module folder — [`branch`'s](../../../modules/branch/automation/README.md),
+`agency`'s — and is not restated here.
 
-Automates the test cases from [`TestCases_Branch.md`](../../test_design/TestCases_Branch.md) where
-both `Review = Approved` and `Automation = Approved` — **29 of those 32 cases are implemented here**;
-TC-BR-056 / 057 / 058 (Approve/Reject from the grid) are not, see below. For the full record — what was decided, what
-was verified, what is covered — see [AutomationPlan_SHAFT.md](../AutomationPlan_SHAFT.md),
-[AutomationDecisionReport_SHAFT.md](../AutomationDecisionReport_SHAFT.md),
-[AutomationSuiteManifest_SHAFT.md](../AutomationSuiteManifest_SHAFT.md), and
-[AutomationCoverageReport_SHAFT.md](../AutomationCoverageReport_SHAFT.md).
+Automates the dual-approved (`Review = Approved AND Automation = Approved`) test cases from
+[`TestCases_Branch.md`](../../../modules/branch/test_design/TestCases_Branch.md) and
+[`TestCases_Agency.md`](../../../modules/agency/test_design/TestCases_Agency.md):
+
+- **Branch** — **29 of 32** dual-approved cases are implemented; TC-BR-056 / 057 / 058
+  (Approve/Reject from the grid) are not, see below. Full record: the module's
+  [AutomationPlan_SHAFT.md](../../../modules/branch/automation/AutomationPlan_SHAFT.md),
+  [AutomationDecisionReport_SHAFT.md](../../../modules/branch/automation/AutomationDecisionReport_SHAFT.md),
+  [AutomationSuiteManifest_SHAFT.md](../../../modules/branch/automation/AutomationSuiteManifest_SHAFT.md),
+  and [AutomationCoverageReport_SHAFT.md](../../../modules/branch/automation/AutomationCoverageReport_SHAFT.md).
+- **Agency** — **17** dual-approved cases have a generated `@Test` method (15 enabled, 2 deliberately
+  disabled — see below); TC-AGENCY-055 was rejected in Stage 3 with no generated method. Full record
+  under `modules/agency/automation/` — `AutomationSummary_SHAFT.md`,
+  `AutomationCoverageReport_SHAFT.md`, and `automation_promotion.md` for the promotion itself.
 
 ## Prerequisites
 
@@ -26,7 +43,8 @@ was verified, what is covered — see [AutomationPlan_SHAFT.md](../AutomationPla
 - Maven 3.9+
 - Network access to Maven Central (to resolve `io.github.shafthq:SHAFT_ENGINE`, pinned in `pom.xml`
   to `7.4.20231015` — realigned 2026-08-05 from the originally generated `9.4.20251220` to match the
-  pre-existing NDC SHAFT project; see [AutomationSummary_SHAFT.md](../AutomationSummary_SHAFT.md) §3)
+  pre-existing NDC SHAFT project; see
+  [`branch`'s AutomationSummary_SHAFT.md](../../../modules/branch/automation/AutomationSummary_SHAFT.md) §3)
 
 ## Credentials
 
@@ -38,12 +56,19 @@ different environment, change those two constants alongside `environment.propert
 ## Running the suite
 
 ```bash
-mvn test
+mvn test                                    # whole-project regression — every promoted module
+mvn test -DsuiteXmlFile=testng-branch.xml   # branch only (module-scoped, Stage 5A/5H reruns)
+mvn test -DsuiteXmlFile=testng-agency.xml   # agency only (module-scoped, Stage 5A/5H reruns)
 ```
 
-This compiles the project and runs `testng.xml` via the Maven Surefire plugin. Under SHAFT 7.4,
-Allure results are written to **`allure-results/` at the project root** — not under `target/` — so
-view them with `allure serve allure-results`.
+Plain `mvn test` compiles the project and runs `testng.xml` — now suite name
+`NDCAdminPortalAutomationSuite` — via the Maven Surefire plugin. It declares every promoted module's
+suites: Branch's `CreateBranchSuite` / `SearchBranchSuite` / `BranchActionsSuite` /
+`UpdateBranchSuite`, and Agency's single `AgencyUpdateSuite` (added 2026-08-24). A module-scoped run
+uses that module's own `testng-{module}.xml` instead — each file's ownership is recorded in
+[`.baseline_ownership.json`](.baseline_ownership.json). Under SHAFT 7.4, Allure results are written
+to **`allure-results/` at the project root** — not under `target/` — so view them with
+`allure serve allure-results`.
 
 `run-tests.bat` is the same `mvn test` with ReportPortal disabled. `generate_allure_report.bat`
 serves an existing result set, but it is **machine-specific and regenerated by SHAFT on every
@@ -58,33 +83,42 @@ To compile only (no execution) — the check this project's own generation used 
 mvn test-compile
 ```
 
-### Before you run `testng.xml` as-is
+### Branch — Approve/Reject from the grid, still not covered
 
-`testng.xml` declares four suites, but `BranchActionsSuite` names
-`AdminPages.Admin.Branch.BranchActions_TC` — **a class that has never existed** in the working tree,
-in `target/`, or in any commit or branch of this repository, despite being approved as a `CREATE` in
-`TargetWritePlan_SHAFT.md` and inventoried as delivered in `AutomationManifest_SHAFT.md`.
-Declaring a missing class makes the whole suite fail to load, so executions have scoped themselves
-to the three classes that do exist (`CreateBranch_Admin_TC` 13 · `SearchBranch_TC` 11 ·
-`UpdateBranch_TC` 5 = 29 test methods) via `-Dsurefire.suiteXmlFiles=<a scoped copy>`. Approve/Reject
-coverage for US 8599 has therefore never executed. This is recorded as KL-02 in
+`testng-branch.xml` and `testng.xml` both declare a `BranchActionsSuite` naming
+`AdminPages.Admin.Branch.BranchActions_TC`, and that class **exists now** (it did not at the time
+Branch was promoted). Approve/Reject coverage for US 8599 (TC-BR-056/057/058) has historically never
+executed — this was recorded as KL-02 in
 [`ExecutionResults.rerun-5.md`](../../../../runs/run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch/execution/ExecutionResults.rerun-5.md).
+Confirm against a current run's results before assuming this gap is still open.
 
-## Known, expected failures
+## Known, expected failures and disabled cases
 
-These are regression assertions against **open, confirmed application defects**. A red result here is
-the test doing its job, not a broken script — do not soften the assertion.
+**Branch** — these are regression assertions against **open, confirmed application defects**. A red
+result here is the test doing its job, not a broken script — do not soften the assertion.
 
 - `tcBr026_warningPromptRejectsValueExceeding11Digits` — FINDING-004 (Warning Prompt (Days) has no
-  11-digit max-length enforcement). See [AutomationDecisionReport_SHAFT.md](../AutomationDecisionReport_SHAFT.md)
-  and [AutomationPlan_SHAFT.md](../AutomationPlan_SHAFT.md) RISK-AUTO-2.
+  11-digit max-length enforcement). See
+  [AutomationDecisionReport_SHAFT.md](../../../modules/branch/automation/AutomationDecisionReport_SHAFT.md)
+  and [AutomationPlan_SHAFT.md](../../../modules/branch/automation/AutomationPlan_SHAFT.md) RISK-AUTO-2.
 - **TC-BR-052** — FINDING-012 (the State column is absent from the search grid). See
-  [AutomationSuiteManifest_SHAFT.md](../AutomationSuiteManifest_SHAFT.md), "Expected outcome, stated
-  in advance".
+  [AutomationSuiteManifest_SHAFT.md](../../../modules/branch/automation/AutomationSuiteManifest_SHAFT.md),
+  "Expected outcome, stated in advance".
 
-[AutomationSuiteManifest_SHAFT.md](../AutomationSuiteManifest_SHAFT.md) also lists the cases that can
-fail on **environment data** rather than on defects (TC-BR-054 / 060 / 061) — check its data
-preconditions before filing anything.
+[AutomationSuiteManifest_SHAFT.md](../../../modules/branch/automation/AutomationSuiteManifest_SHAFT.md)
+also lists the cases that can fail on **environment data** rather than on defects (TC-BR-054 / 060 /
+061) — check its data preconditions before filing anything.
+
+**Agency** — two cases in `AgencyUpdateSuite` are `@Test(enabled = false)`, by explicit operator
+decision on 2026-08-20, not automation defects:
+
+- **TC-AGENCY-020** (`AgencyDocumentsAndLogo_TC`) — a file named `.pdf` with non-PDF content is
+  accepted, not rejected. Confirmed intended application behaviour; `TestCases_Agency.md`'s AC-3
+  still documents rejection as expected and has not yet been updated to match.
+- **TC-AGENCY-049** (`AgencyMakerChecker_TC`) — disabled together with its dependent resubmit/approve
+  flow for the same reason (see the class's own doc comment).
+
+TC-AGENCY-055 has no generated `@Test` at all — rejected in Stage 3 (2026-08-24), not implemented.
 
 ## Project layout
 
@@ -94,9 +128,12 @@ Follows the company's standard NDC automation layout (`AdminPages.<Module>.<SubM
 ```
 src/main/java/AdminPages/Login/LogIn_Page.java
 src/main/java/AdminPages/Admin/Branch/{AddBranch_Page,SearchBranch_Page,UpdateBranch_Page,Branch_Common,BranchTestData,ApprovalStatus}.java
-src/main/java/utilities/{EnvironmentConfig,BranchDataFactory}.java
+src/main/java/AdminPages/Admin/Agency/{AddAgency_Page,AddAgency_Locators,AgencyForm_Locators,SearchAgency_Page,SearchAgency_Locators,UpdateAgency_Page,UpdateAgency_Locators}.java
+src/main/java/utilities/{EnvironmentConfig,BranchDataFactory,AgencyDataFactory}.java
 src/test/java/AdminPages/Login/{TestBase,TestBase_TC}.java
-src/test/java/AdminPages/Admin/Branch/{CreateBranch_Admin_TC,SearchBranch_TC,UpdateBranch_TC,BranchProvisioner}.java
+src/test/java/AdminPages/Admin/Branch/{CreateBranch_Admin_TC,SearchBranch_TC,UpdateBranch_TC,BranchActions_TC,BranchProvisioner}.java
+src/test/java/AdminPages/Admin/Agency/{AgencyTestBase,AgencyInheritanceAndReadOnly_TC,AgencyUpdatePersistence_TC,AgencyUpdateValidation_TC,AgencyDocumentsAndLogo_TC,AgencyMakerChecker_TC}.java
+src/test/java/utilities/AgencyFixture.java
 ```
 
 ## Target environment
@@ -125,7 +162,15 @@ name two different branches, used by two different test cases. Do not reconcile 
 Approval-state labels (`Pending for approval`, `Approved`, `Rejected`) are defined once in
 `ApprovalStatus.java` and read from there by both the tests and `AddBranch_Page`.
 
+**Agency** test data lives separately: `src/test/java/utilities/AgencyFixture.java` builds the
+class-scoped Agency fixture each test class needs, `AgencyDataFactory` (in `src/main/java/utilities/`)
+generates unique field values, and `src/test/resources/testDataFiles/agency/` holds the fixed upload
+fixtures (`agency-data.json` plus the `uploads/` PDFs and logo images used by
+`AgencyDocumentsAndLogo_TC`).
+
 ---
 
-**Where to go next:** [automation/README.md](../README.md) — the Stage 4A entry point, artifact map,
-and reading paths.
+**Where to go next:** each promoted module's own Stage 4A governance record — currently
+[`branch`'s automation/README.md](../../../modules/branch/automation/README.md) — for the artifact
+map and reading paths; [`../../AutomationPackages.md`](../../AutomationPackages.md) for the baseline
+registry itself.

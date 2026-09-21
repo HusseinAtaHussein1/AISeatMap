@@ -238,9 +238,10 @@ node platform_core/tools/execution_safety/cli.js evaluate \
 node platform_core/tools/execution_safety/cli.js validate
 node platform_core/tools/execution_safety/cli.js summary
 node platform_core/tools/execution_safety/cli.js preflight --operations ops.json --run <folder> --out
-
-agentic-testing doctor        # includes an Execution Safety section
 ```
+
+Common flags on every subcommand: `--file <path>` for a policy other than the project's own,
+`--run <folder>` so that run's scoped authorizations are consulted, and `--json`.
 
 **Exit codes** — a caller branches on the decision without parsing prose:
 

@@ -1,6 +1,6 @@
 # Browser Driver Layer
 
-The platform's shared, standard mechanism for live browser access — used by **Browser Automation** Discovery Mode (`.claude/skills/explorer-skill/SKILL.md` §8.1 #1), the Manual Execution Skill's execution of manually-designed test cases (`.claude/skills/manual-execution-skill/SKILL.md` §11), and any other stage needing a live, logged-in browser session (e.g. the Automation Skill's selector-verification use of browser tools, `.claude/skills/automation-skill/SKILL.md` §17).
+The platform's shared, standard mechanism for live browser access — used by **Browser Automation** Discovery Mode (`.claude/skills/explorer-skill/SKILL.md` §8.1 #1) and any other stage needing a live, logged-in browser session (e.g. the Automation Skill's selector-verification use of browser tools, `.claude/skills/automation-skill/SKILL.md` §17).
 
 > **This layer is an actuator, not an authorizer** (added 2026-08-07, `pipeline.md` §14.7). Whether a
 > mutating action may execute at all is decided upstream by the Execution Safety policy
@@ -19,7 +19,7 @@ The platform's shared, standard mechanism for live browser access — used by **
 | **Screen / Component Knowledge** | WHERE things are on a given screen (locators) | `platform_core_data/knowledge_base/browser/screens/*.json`, `.../components/*.json` | No |
 | **Credentials** | WHO is logging in | `platform_core_data/knowledge_base/credentials/credentials.json` | **Yes — git-ignored, never committed** |
 
-`platform_core/tools/browser_driver/` itself contains **only** the reusable engine (`driver.js`, `api.js`, this README) — zero project-specific data. Everything project-specific lives under `platform_core_data/`, so retargeting the platform at a different application means editing that folder's contents and never touching the engine.
+`platform_core/tools/browser_driver/` itself contains **only** the reusable engine (`driver.js`, `api.js`, `annotate.js`, this README) — zero project-specific data. Everything project-specific lives under `platform_core_data/`, so retargeting the platform at a different application means editing that folder's contents and never touching the engine.
 
 **`platform_core_data/knowledge_base/browser/` is deliberately NOT named or nested under "automation".** `platform_core_data/automation_baseline/` is a completely different concept — the Automation Skill's Stage `4A` output (the generated automation package, per `.claude/skills/automation-skill/SKILL.md`). The Browser Driver is Stage 2 (Explorer) tooling, not automation-skill output; the repo must never have two unrelated folders both named "automation."
 
@@ -68,6 +68,9 @@ tools/
 └── browser_driver/
     ├── driver.js   # low-level: resolve project paths, load profile + credentials, launch, authenticate
     ├── api.js      # BrowserDriver — the ONLY surface agents/scripts use
+    ├── annotate.js # the annotation overlay behind annotatedScreenshot(): rect validation,
+    │               #   overlay/cleanup scripts, annotated file naming
+    ├── __tests__/  # annotate.test.js
     └── README.md   # this file
 ```
 
@@ -157,6 +160,7 @@ platform_core_data/knowledge_base/
 |---|---|
 | `BrowserDriver.authenticate({env, stage, headless, credentialsPath?})` | Static — loads the profile, loads credentials (both auto-resolved under `platform_core_data/`), launches, logs in, returns a session. Every argument is optional. `stage` (e.g. `'manual_execution'`) picks that stage's display mode from `browser.headlessByStage`; precedence is `headless` > `headlessByStage[stage]` > `browser.headless`. |
 | `useScreen(name)` / `useComponent(name)` | Loads that screen's/component's locators into the active set. |
+| `resolve(keyOrSelector)` | Returns the selector a dotted key resolves to in the active set — the same resolution `click`/`type`/`waitFor` perform internally. |
 | `navigate(pathOrUrl)` | Absolute URL or a path relative to the profile's `defaultBaseUrl`. |
 | `click(keyOrSelector)` | Dotted key (from loaded Screen/Component knowledge) or a literal selector. |
 | `type(keyOrSelector, text)` | Fills a field. |

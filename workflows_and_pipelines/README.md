@@ -14,6 +14,8 @@ This folder exists to define the **fixed, repeatable process** that wires the pl
 
 - **The pipeline specification** — the invariant execution model for **both** pipelines: the shared Stages 1–3, the two branches that diverge from them, stage order, artifact handoff contracts, checkpoint/approval gates, versioning conventions, the two end-to-end traceability chains, and the Knowledge Architecture governing `platform_core/knowledge/patterns/` (including the two shared knowledge bases both branches read, §10.8).
 - **Orchestration component specifications** — mechanical (non-judgment) components the pipeline specification delegates full detail to: run identity/workspace/status management, and the Run Scope concept (what a given run is allowed to validate).
+- **New User Story intake routing** (`pipeline/new_us_intake.md`) — the routing question, asked before Stage 1, that decides whether an incoming User Story is a standalone Feature or part of a module's CRUD scope. It is a precondition on Stage 1, not a pipeline stage of its own.
+- **Supplier Features execution/governance rules** (`pipeline/ndc_execution_rules.md`) — the tiered rule set (§A/§B/§C) that governs work under `platform_core_data/supplier-features/`, layered on top of the registry/structure `module_architecture.md` §11 defines and gated per `pipeline.md` §16.
 - **Named, reusable workflows** — specific, narrower-than-full-pipeline invocations layered on top of the pipeline specification (e.g. a three-stage smoke check), never modifying it.
 
 ## What Does NOT Belong Here
@@ -30,9 +32,15 @@ workflows_and_pipelines/
 ├── pipeline/
 │   ├── pipeline.md       # the canonical specification of both pipelines — the shared Stages 1–3,
 │   │                      #   the 4M / 4A branches, gates, versioning, traceability,
-│   │                      #   Knowledge Architecture (§10), Debug Mode (§11)
+│   │                      #   Knowledge Architecture (§10), Debug Mode (§11), Supplier Features
+│   │                      #   stage gates (§16), Report Presentation Standard (§17)
 │   ├── module_architecture.md  # the Module Workspace — registry, Active Module pointer, per-stage
-│   │                      #   status, drift, and the module automation lifecycle
+│   │                      #   status, drift, the module automation lifecycle, and the Supplier
+│   │                      #   Features registry/structure (§11)
+│   ├── new_us_intake.md  # New User Story intake routing — the Feature-vs-CRUD question asked
+│   │                      #   before anything is created, run before Stage 1 (not a pipeline stage)
+│   ├── ndc_execution_rules.md  # Supplier Features execution/governance rule set — tiered §A/§B/§C
+│   │                      #   rules layered on top of module_architecture.md §11's structure
 │   ├── run_manager.md    # the Run Manager — a mechanical orchestration component, not a Skill:
 │   │                      #   Run ID/workspace/metadata/status, never a judgment role
 │   └── run_scope.md      # the Run Scope concept — Types (Epic/Feature/Story/Bug/...) and

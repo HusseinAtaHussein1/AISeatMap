@@ -26,6 +26,14 @@ Everything here is one of exactly four things, and the distinction is what decid
 - **Evidence of what happened in *one* execution → `runs/{{RUN_FOLDER}}/`**
 - Assembled, whole-project automation source → `automation_baseline/`
 
+**A fifth root sits beside these four:** [`supplier-features/`](supplier-features/) is a
+**sibling of `modules/`, never a variant of it** — the home of every Supplier-driven Feature
+(`Supplier Features → Feature → Supplier or Shared scope`), with its own registry
+(`supplier-features/modules.json`) and its own active-pointer space, entirely separate from
+`modules/modules.json`. It exists because a Supplier is never a "module" or a "Feature" in the
+sense the four folders above use those words. Full specification:
+[`module_architecture.md` §11](../workflows_and_pipelines/pipeline/module_architecture.md).
+
 The clearest illustration is the stack: `knowledge_base/stack.md` records what the project's toolchain *is* (durable, whole-project), `modules/login/automation/StackDocumentationContext_{Framework}.md` records which documentation queries were made while automating Login (durable, per module), and `runs/{{RUN_FOLDER}}/execution/ExecutionResults.md` records what happened when that suite ran on a given day (per run, immutable).
 
 > **Changed 2026-07-29 (user-mandated).** `modules/` is new, and the Run Folder is narrowed to execution artifacts. Before this change every stage wrote into the Run Folder, which made a run the unit of everything — identity, scope, location, and lifetime. Working a project module by module across many sessions broke that: a module's design ended up scattered across the runs that touched it, and `runs/`' immutability (right for *what happened*) fought a module's design, which legitimately accumulates. [`module_architecture.md`](../workflows_and_pipelines/pipeline/module_architecture.md) specifies the split; `pipeline.md` §7 states the rule. **A pre-existing run folder holding `context/`, `discovery/`, or `test_design/` is never rewritten.**
@@ -92,13 +100,12 @@ platform_core_data/
     # Accumulated knowledge — the two categories a run folder cannot carry (pipeline.md §10.3)
     business_rules/                 # rules this application enforces — true between runs, never promoted
     lessons_learned/                # cross-run observations about working with this application
-    patterns/                       # PLATFORM Knowledge — application-agnostic, promotion-only.
-                                    #   Nested here structurally; still a SEPARATE layer, resolved
-                                    #   first (§10.2), never receiving app-specific content (§10.6)
-      repair_patterns/ · reasoning/    # the two populated categories (REPAIR-NNN, REASON-NNN)
-      automation_patterns/ · diagnosis_patterns/ · execution_patterns/    # empty until promoted
-      framework_patterns/ · reporting/ · pipeline_decision_patterns/      # empty until promoted
-      INDEX.md · README.md             # catalog of promoted documents + the layer's own spec
+    # patterns/ is NOT nested here. PLATFORM Knowledge — application-agnostic, promotion-only —
+    #   lives at ../../platform_core/knowledge/patterns/, the single explicitly-gated exception
+    #   noted in "Purpose" above: repair_patterns/ (REPAIR-NNN) and reasoning/ (REASON-NNN) are the
+    #   two populated categories today; automation_patterns/, diagnosis_patterns/,
+    #   execution_patterns/, framework_patterns/, reporting/, pipeline_decision_patterns/ are empty
+    #   until something is promoted into them. See that folder's own INDEX.md / README.md.
   modules/                        # ── PER MODULE — DURABLE, EVOLVES IN PLACE ────────────
     modules.json                    # the module registry AND the active-module pointer
                                     #   (module_architecture.md §6) — mutable, committed
@@ -144,6 +151,15 @@ platform_core_data/
                                     #   generated once, referenced by every module project
     {framework}/AutomationSummary_{Framework}.md
     TargetWriteLedger.md
+  supplier-features/              # ── SIBLING OF modules/ — SUPPLIER-DRIVEN FEATURES ────
+    modules.json                    # Feature registry + THIS layer's own active pointer —
+                                    #   entirely separate from modules/modules.json
+    {feature}/                      # e.g. import-booked-pnr — a registered Supplier Feature
+      module.json                     # the Feature's own state file (kind: "supplier_feature",
+                                      #   integrationLayer metadata, never a folder tier)
+      context/                        # Feature-level checklist profile + optional execution flow
+      shared/{scope}/                 # cross-supplier scope — context/, test_design/, ...
+      suppliers/{supplier}/           # per-supplier scope — independent per (feature, supplier)
 ```
 
 **Artifact filenames carry no project prefix:** `ProjectContext_Agency.md`, not `NDC_ProjectContext_Agency.md`. With one project, that prefix was a constant on every filename and distinguished nothing.
@@ -200,3 +216,4 @@ node platform_core/tools/module_manager/cli.js show login       # one module's f
 - [`../docs/USER_GUIDE.md`](../docs/USER_GUIDE.md) — how to populate this folder's inputs and where each generated artifact lands ([§3](../docs/USER_GUIDE.md#3-prepare-your-inputs), [§7](../docs/USER_GUIDE.md#7-where-your-artifacts-live)).
 - [`../.claude/`](../.claude/) — the Skills whose declared Inputs and Outputs resolve to paths in this folder.
 - [`../workflows_and_pipelines/`](../workflows_and_pipelines/) — where every path convention, versioning rule, and Run Workspace layout realized here is actually defined. `pipeline.md` §10.3–§10.4 is the canonical specification of this folder's shape.
+- [`supplier-features/`](supplier-features/) — the sibling Supplier Features hierarchy; [`module_architecture.md` §11](../workflows_and_pipelines/pipeline/module_architecture.md) is its canonical specification.

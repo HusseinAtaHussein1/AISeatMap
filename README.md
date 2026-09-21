@@ -168,6 +168,7 @@ This is why the platform reads as "a pipeline with agents inside it," not "an ag
 | **Reference Automation Project Support** | A project can register an external, human-owned automation codebase as a reference — read-only by default, with an explicit gate before any write to it | [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) |
 | **Browser Driver Layer** | A single shared engine (`platform_core/tools/browser_driver/`) drives every authenticated browser session, with credentials always outside the repo's tracked history | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) |
 | **Reporting** | A Final QA Report that computes Requirement Coverage and Automation Coverage by walking the full traceability chain, not by re-asserting the Automation Execution skill's raw output | [`.claude/skills/reporting-skill/SKILL.md`](.claude/skills/reporting-skill/SKILL.md) |
+| **One Shared HTML Report Design** | Every pipeline report — Discovery, Coverage, Automation Coverage/Decision, Manual QA, Execution Results, Repair Summary, Final QA Report — renders through one shared HTML design, generated alongside (never in place of) the authoritative Markdown | [`platform_core/tools/report_builder/README.md`](platform_core/tools/report_builder/README.md), [`workflows_and_pipelines/pipeline/pipeline.md` §17](workflows_and_pipelines/pipeline/pipeline.md) |
 | **Execution Analysis** | Application Health, Automation Health, and Environment Health are always reported as three separate figures — never one merged "Failed" count. This separation is what makes self-healing safe: only `Automation Failure` is ever eligible for repair | [`.claude/skills/automation-execution-skill/SKILL.md` §25.2](.claude/skills/automation-execution-skill/SKILL.md) |
 
 ---
@@ -231,6 +232,10 @@ A capability listed here as *Implemented* has a written agent/pipeline specifica
 | Reference Automation Project support | ✅ Implemented | [`.claude/skills/automation-skill/SKILL.md` §32](.claude/skills/automation-skill/SKILL.md) |
 | Browser Driver Layer | ✅ Implemented | [`platform_core/tools/browser_driver/README.md`](platform_core/tools/browser_driver/README.md) |
 | MCP Tools Layer (`playwright` 2nd browser mode, `context7` stack docs) | ✅ Implemented | [`platform_core/tools/mcp/README.md`](platform_core/tools/mcp/README.md) |
+| One Shared HTML Report Design | ✅ Implemented | [`platform_core/tools/report_builder/README.md`](platform_core/tools/report_builder/README.md) |
+| Execution Safety Policy Evaluation | ✅ Implemented | [§10A](#10a-execution-safety) |
+| Run Observability | ✅ Implemented | [§10B](#10b-run-observability) |
+| Supplier Features (Import Booked PNR — the only registered Feature today) | ✅ Implemented | [`workflows_and_pipelines/pipeline/module_architecture.md` §11](workflows_and_pipelines/pipeline/module_architecture.md), [`ndc_execution_rules.md`](workflows_and_pipelines/pipeline/ndc_execution_rules.md) |
 | Multi-Framework Support — SHAFT + Playwright, side by side | ✅ Implemented | [§12](#12-multi-framework-architecture) |
 | Additional Frameworks — Selenium / Cypress / Appium / REST Assured | 🚧 Designed | Already named as first-class options in the Framework Decision Gate; no project has selected one yet |
 | Non-Web Automation — API / Mobile / Desktop / Microservices / Batch / Cloud | 🚧 Designed | [`.claude/skills/automation-skill/SKILL.md` §29](.claude/skills/automation-skill/SKILL.md) — abstractions extend without redesign, not yet exercised for a real target |
@@ -546,7 +551,11 @@ agentic-ai-testing-platform/
 │   ├── pipeline/                       # How the eight Skills are wired into two governed pipelines
 │   │   ├── pipeline.md                   # Stage order, artifact contracts, gates, Knowledge Architecture (§10)
 │   │   ├── module_architecture.md        # The Module Workspace: registry, Active Module pointer, per-stage
-│   │   │                                 #   status, drift, and the module automation lifecycle
+│   │   │                                 #   status, drift, the module automation lifecycle, and the
+│   │   │                                 #   Supplier Features registry/structure (§11)
+│   │   ├── new_us_intake.md              # New User Story intake routing — Feature-vs-CRUD, asked before
+│   │   │                                 #   Stage 1 (a precondition, not a pipeline stage)
+│   │   ├── ndc_execution_rules.md        # Supplier Features execution/governance rules — tiered §A/§B/§C
 │   │   ├── run_manager.md                # Run identity: naming, Active Run pointer, anchor, lineage, Manifest
 │   │   └── run_scope.md                  # Run Scope Types/Sources — what a run is allowed to validate
 │   └── workflows/
@@ -577,15 +586,22 @@ agentic-ai-testing-platform/
 │       │   ├── driver.js              # Resolves platform_core_data/ paths, loads profile + credentials, logs in
 │       │   ├── api.js                 # BrowserDriver — the only surface agents/scripts use directly
 │       │   └── README.md
+│       ├── execution_safety/        # "may this action execute here, now?" — deterministic policy
+│       │   └── cli.js                 #   evaluator (Allowed/Approval Required/Forbidden), §10A
 │       ├── init/                    # `agentic-testing init/upgrade/uninstall` — plan-then-apply installer
 │       ├── mcp/                      # MCP servers layer — registration + usage contract, no server code
 │       │   ├── stack_docs/            # Extracts a project's stack + pinned versions; plans Context7 lookups
 │       │   └── README.md              # `playwright` (2nd selectable browser mode) + `context7` (stack docs)
 │       ├── module_manager/          # The Module Workspace's own CLI — the registry, the Active Module
 │       │   └── cli.js                 #   pointer, scaffolding, per-stage status, automation state, drift
+│       ├── observability/           # Deterministic run telemetry — recorder, aggregator, renderers, §10B
+│       │   └── cli.js
 │       ├── platform_paths/          # The two-root resolver (Tool Root / Target Root) + config schema
 │       ├── project_paths/           # Platform-independence layer: every path derives from ONE input,
 │       │                            #   the project root. Nothing may hardcode a project folder name
+│       ├── report_builder/          # One shared HTML report design for every stage that reports
+│       │   └── cli.js                 #   results — validates + renders a stage's report model (JSON)
+│       │                            #   to one self-contained HTML file, alongside the Markdown (§17)
 │       ├── run_manager/             # Run naming/indexing, Active Run pointer, Manifest, lineage, anchor
 │       └── test_suite_export/       # Stage 3's suite ⇄ Excel: renders TestCases_{Module}.md → .xlsx,
 │                                    #   and `--import-lifecycle` pulls Review/Automation back (§6)
@@ -628,7 +644,12 @@ agentic-ai-testing-platform/
 │   │       └── healing/                 #     Stage 5H — only if a human invoked self-healing
 │   ├── runs/                            # PER RUN, IMMUTABLE — the execution half (§10)
 │   │                                    #   manual_execution/ · execution/ · reporting/ · metadata/
-│   └── automation_baseline/             # Assembled whole-project automation + shared/ — §10, §12
+│   ├── automation_baseline/             # Assembled whole-project automation + shared/ — §10, §12
+│   └── supplier-features/               # SIBLING of modules/ — Supplier-driven Features, own registry
+│       ├── modules.json                   #   Feature registry + its own active pointer — separate
+│       │                                  #   from modules/modules.json
+│       └── {feature}/                     #   e.g. import-booked-pnr — context/, shared/{scope}/,
+│                                          #   suppliers/{supplier}/ (`module_architecture.md` §11)
 │
 ├── docs/                             # Supplementary and historical platform documentation — see §18
 │   ├── USER_GUIDE.md                   # The task-oriented guide — recommended entry point for operators
@@ -647,7 +668,7 @@ agentic-ai-testing-platform/
 
 There is deliberately no `credentials/` or `ui/` folder at the repository root — both live inside the project's shared knowledge layer (`platform_core_data/knowledge_base/credentials/`, `platform_core_data/knowledge_base/ui/`), and `credentials.json` is git-ignored, never committed.
 
-**`platform_core_data/` has exactly four top-level members**, and which one a file belongs to is decided by lifetime, not by kind:
+**`platform_core_data/` has four top-level members that follow the module/run lifetime rule**, plus one sibling root outside that rule for Supplier-driven Features:
 
 | Folder | Lifetime | Holds |
 |---|---|---|
@@ -656,7 +677,9 @@ There is deliberately no `credentials/` or `ui/` folder at the repository root �
 | `runs/` | per run, **immutable once written** | manual and automation execution results, the Final QA Report, run metadata |
 | `automation_baseline/` | long-lived source code | the assembled whole-project automation suite, plus its `shared/` assets |
 
-> **Residue on disk, not a fifth category.** A working tree may still carry pre-consolidation folders beside those four — `knowledge/` and `workspace/` (superseded by `knowledge_base/` on 2026-07-27 and by `automation_baseline/` on 2026-07-29 respectively), a local untracked `credentials/`, and project-specific hand-off folders left from a migration. **No stage reads any of them.** They are leftovers pending cleanup; the four-member rule above is the contract, and a new file never goes into one of them. Anything found there is either dead or belongs under `knowledge_base/`.
+**`supplier-features/` is a fifth root, a sibling of `modules/`, never a variant of it** — the home of every Supplier-driven Feature (`Supplier Features → Feature → Supplier or Shared scope`), with its own registry (`supplier-features/modules.json`) and its own active-pointer space, entirely separate from `modules/modules.json`. A Supplier is never registered as a "module" or a "Feature" in the sense the four folders above use those words. Full specification: [`module_architecture.md` §11](workflows_and_pipelines/pipeline/module_architecture.md).
+
+> **Residue on disk, not a further category.** A working tree may still carry pre-consolidation folders beside those five — `knowledge/` and `workspace/` (superseded by `knowledge_base/` on 2026-07-27 and by `automation_baseline/` on 2026-07-29 respectively), a local untracked `credentials/`, and project-specific hand-off folders left from a migration. **No stage reads any of them.** They are leftovers pending cleanup; the rule above is the contract, and a new file never goes into one of them. Anything found there is either dead or belongs under `knowledge_base/`.
 
 The rule in one line: **would the next run want to *start from* it (module), or is it *evidence of one execution* (run)?** Prior to 2026-07-29 every stage wrote into the run folder, which scattered a module's design across the runs that touched it; prior to 2026-07-27 the shared material was split across the folder root, `resources/`, `browser/`, `credentials/`, and `ui/`. Both consolidations removed the ambiguity of two plausible homes for one file.
 
@@ -1101,7 +1124,10 @@ Run [`workflows_and_pipelines/workflows/first_run.md`](workflows_and_pipelines/w
 | [`workflows_and_pipelines/pipeline/run_manager.md`](workflows_and_pipelines/pipeline/run_manager.md) | Run ID allocation, workspace structure, metadata, execution status, run summaries |
 | [`workflows_and_pipelines/pipeline/run_scope.md`](workflows_and_pipelines/pipeline/run_scope.md) | Run Scope Types and Sources — what a given run is allowed to validate |
 | [`.claude/skills/*/SKILL.md`](.claude/skills/) | Full specification of each of the eight Skills |
-| [`workflows_and_pipelines/pipeline/module_architecture.md`](workflows_and_pipelines/pipeline/module_architecture.md) | The Module Workspace: the module registry, the Active Module pointer, per-stage status, and the module automation lifecycle |
+| [`workflows_and_pipelines/pipeline/module_architecture.md`](workflows_and_pipelines/pipeline/module_architecture.md) | The Module Workspace: the module registry, the Active Module pointer, per-stage status, the module automation lifecycle, and the Supplier Features registry/structure (§11) |
+| [`workflows_and_pipelines/pipeline/new_us_intake.md`](workflows_and_pipelines/pipeline/new_us_intake.md) | New User Story intake routing — the Feature-vs-CRUD question asked before anything is created, and the scope sweep that precedes it |
+| [`workflows_and_pipelines/pipeline/ndc_execution_rules.md`](workflows_and_pipelines/pipeline/ndc_execution_rules.md) | Supplier Features execution/governance rule set — tiered §A (any Supplier Feature) / §B (`ndc-core-service` integration layer) / §C (Import Booked PNR only) |
+| [`platform_core/tools/report_builder/README.md`](platform_core/tools/report_builder/README.md) | The one shared HTML report design every pipeline stage's report renders through — model schema, `validate`/`build` CLI, rendering conventions |
 | [`platform_core/prerequisites/README.md`](platform_core/prerequisites/README.md) | The prerequisite registry — every `PREREQ-*` ID, its detection method and absence behavior, and which Skills require it ([§7.1](#71-prerequisites-and-providers--what-a-skill-may-depend-on)) |
 | [`platform_core/tools/browser_provider/interface.md`](platform_core/tools/browser_provider/interface.md) | The Browser Provider contract — the only browser surface a Skill may use, and how a concrete provider is resolved |
 | [`platform_core/tools/test_suite_export/README.md`](platform_core/tools/test_suite_export/README.md) | Stage 3's Markdown ⇄ Excel rendering, and `--import-lifecycle` — the one inverse pass, carrying `Review`/`Automation` decisions back |

@@ -30,7 +30,7 @@ A Skill's frontmatter lists the IDs it needs. That is the whole contract.
 | [`PREREQ-BROWSER-PROVIDER`](PREREQ-BROWSER-PROVIDER.md) | Browser Provider | capability | explorer, manual-execution, automation, automation-execution |
 | [`PREREQ-PLAYWRIGHT`](PREREQ-PLAYWRIGHT.md) | Playwright | tool | satisfies `PREREQ-BROWSER-PROVIDER` for the Playwright providers |
 | [`PREREQ-JAVA`](PREREQ-JAVA.md) | Java + Maven | toolchain | automation, automation-execution — only for JVM-framework packages |
-| [`PREREQ-CONTEXT7`](PREREQ-CONTEXT7.md) | Context7 documentation lookup | capability | automation (framework API accuracy) |
+| [`PREREQ-CONTEXT7`](PREREQ-CONTEXT7.md) | Context7 documentation lookup | capability | automation (framework API accuracy), automation-execution (repair-loop API confirmation) |
 | [`PREREQ-SPREADSHEET`](PREREQ-SPREADSHEET.md) | Spreadsheet writer | library | test-design (Excel rendering of the Manual Test Suite) |
 
 ## Prerequisite document contract
@@ -46,6 +46,7 @@ scope: platform            # platform (application-agnostic) — never project-s
 required_by: [skill-name, ...]
 optional_for: [skill-name, ...]
 satisfied_by: [PREREQ-OTHER, ...]   # for a capability, the concrete prerequisites that can fulfil it
+satisfies: [PREREQ-CAPABILITY, ...] # the mirror field on a concrete prerequisite (e.g. PREREQ-PLAYWRIGHT)
 detection: <the exact check performed>
 absence_behavior: halt | degrade | skip
 version: 1
@@ -108,6 +109,6 @@ the two drift apart.
 
 ## Related
 
-- [`../tools/browser_provider/README.md`](../tools/browser_provider/README.md) — the Browser Provider abstraction `PREREQ-BROWSER-PROVIDER` describes.
+- [`../tools/browser_provider/interface.md`](../tools/browser_provider/interface.md) — the Browser Provider abstraction `PREREQ-BROWSER-PROVIDER` describes.
 - [`../tools/project_paths/README.md`](../tools/project_paths/README.md) — path resolution; not itself a prerequisite, since it ships with the platform.
 - [`../../workflows_and_pipelines/pipeline/pipeline.md`](../../workflows_and_pipelines/pipeline/pipeline.md) §13 — where the prerequisites model is bound into the pipeline specification.

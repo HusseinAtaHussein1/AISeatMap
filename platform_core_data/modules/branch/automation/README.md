@@ -6,7 +6,8 @@
 > **Primary Consumer:** Anyone opening this folder — human or agent
 > **Lifecycle:** Update when an artifact is added, or when the module's automation state changes
 > **Required Gate:** None — orientation only
-> **Status:** Current as of 2026-08-07
+> **Status:** Current as of 2026-09-21 — updated for the 2026-08-17 promotion to the Workspace
+> Automation Baseline
 
 This folder is the **Stage 4A output for the `branch` module**: one standalone SHAFT Engine test
 project, plus the governance record explaining how it was decided, approved, verified, and reviewed.
@@ -16,13 +17,14 @@ the artifact that owns it; where this page and an artifact disagree, **the artif
 
 ## Documentation vs. executable code
 
-| | `automation/*.md` (this folder) | [`tests_SHAFT/`](tests_SHAFT/) |
+| | `automation/*.md` (this folder) | [`tests_SHAFT/`](../../../automation_baseline/shaft/tests_SHAFT/) |
 |---|---|---|
 | What it is | Governance, verification, and reporting record | The **runnable Maven/TestNG project** |
 | Runs? | No — nothing here executes | Yes — `mvn test` |
 | Written by | Stage 4A (`automation-skill`) | Stage 4A, repaired by Stage 5H |
 | Changed by | A new Stage 4A revision | Stage 4A regeneration or an approved Stage 5H repair |
 | Read it to | Understand *why* the suite looks the way it does | Run, debug, or extend the suite |
+| Where it lives now | Here, unchanged | **Promoted 2026-08-17 to the Workspace Automation Baseline** — this module's own `tests_SHAFT/` was verified byte-identical there and permanently deleted. `../../../automation_baseline/shaft/tests_SHAFT/` is now the single source of truth; see [its README](../../../automation_baseline/shaft/tests_SHAFT/README.md) and [`AutomationPackages.md`](../../../automation_baseline/AutomationPackages.md) |
 
 Execution **results** are deliberately not stored here — they belong to the run that produced them
 ([`module_architecture.md` §9](../../../../workflows_and_pipelines/pipeline/module_architecture.md)).
@@ -40,14 +42,14 @@ Update Branch) section; Revision 2 is the current state.
 | 1 · Planning | [StackDocumentationContext_SHAFT.md](StackDocumentationContext_SHAFT.md) | Detected stack, pinned dependency versions, and how each was confirmed | Automation agent, reviewer | Planning input (verification of stack facts) | Rev 2 · current |
 | 2 · Decisions | [AutomationDecisionReport_SHAFT.md](AutomationDecisionReport_SHAFT.md) | Per-test-case decision: Generate New / Reuse / Partial / Manual Only, with reasoning | Reviewer, Test Design owner | Governance record | Rev 2 · current |
 | 2 · Write approval | [TargetWritePlan_SHAFT.md](TargetWritePlan_SHAFT.md) | The exact `CREATE`/`MODIFY` list and destination, approved **before** any file was written; records the one deviation from it | Human approver | Approval gate record | Rev 2 · approved 2026-08-04 |
-| 3 · Code | [tests_SHAFT/](tests_SHAFT/) · [its README](tests_SHAFT/README.md) | The generated suite itself | Anyone executing or maintaining it | Executable project | See `.module_automation_state.json` |
+| 3 · Code | [tests_SHAFT/](../../../automation_baseline/shaft/tests_SHAFT/) · [its README](../../../automation_baseline/shaft/tests_SHAFT/README.md) | The generated suite itself — **now living in the Workspace Automation Baseline**, not here | Anyone executing or maintaining it | Executable project | `Promoted` — see `.module_automation_state.json` |
 | 4 · Verification | [SelectorVerificationReport_SHAFT.md](SelectorVerificationReport_SHAFT.md) | Every locator, verified live against the target build, with fallback chains, evidence, and the ones deliberately left unverified | Reviewer, Stage 5H repair agent | Verification record | Rev 2 · current |
 | 4 · Self-review | [SelfReviewReport_SHAFT.md](SelfReviewReport_SHAFT.md) | Each self-review iteration: what was checked, what was found, what was fixed, and what was left as follow-up | Reviewer | Verification record | Rev 2 · current |
 | 5 · Inventory | [AutomationManifest_SHAFT.md](AutomationManifest_SHAFT.md) | File-by-file inventory: type, origin, which test case each file serves, build verification | Reviewer, lifecycle/merge tooling | Generated report | Rev 2 · current |
 | 5 · Inventory | [AutomationSuiteManifest_SHAFT.md](AutomationSuiteManifest_SHAFT.md) | Suite-level view: business workflow per suite, execution order, data preconditions, expected outcomes | Stage 5A execution | Generated report | Rev 2 · current |
 | 5 · Coverage | [AutomationCoverageReport_SHAFT.md](AutomationCoverageReport_SHAFT.md) | Automation **decision** coverage against the gated scope, coverage by user story, finding coverage, and the denominator caveat. Not implementation or execution coverage — see [what 100% means](#what-100-coverage-does-and-does-not-mean) | QA lead, stakeholder | Generated report | Rev 2 · current |
 | 6 · Summary | [AutomationSummary_SHAFT.md](AutomationSummary_SHAFT.md) | The stakeholder-facing wrap-up: what was built, framework used, coverage, risks, records created | Approver, stakeholder | Final status report | Rev 2 · own header reads `Pending Review` |
-| — | `.module_automation_state.json` | Machine-readable lifecycle state and its full history — the authority on module automation state | `platform_core/tools/module_manager` | State record (not a document) | `Executed` |
+| — | `.module_automation_state.json` | Machine-readable lifecycle state and its full history — the authority on module automation state | `platform_core/tools/module_manager` | State record (not a document) | `Promoted` |
 
 ## Where should I start?
 
@@ -62,9 +64,11 @@ locators real and evidenced?) → [SelfReviewReport_SHAFT.md](SelfReviewReport_S
 generator catch itself, and what did it knowingly leave?) →
 [TargetWritePlan_SHAFT.md](TargetWritePlan_SHAFT.md) (did it write only what was approved?).
 
-**I want to execute the suite** → [tests_SHAFT/README.md](tests_SHAFT/README.md) for prerequisites
-and commands, then [AutomationSuiteManifest_SHAFT.md](AutomationSuiteManifest_SHAFT.md) for suite
-composition, data preconditions, and the failures that are **expected by design**.
+**I want to execute the suite** → the baseline's
+[tests_SHAFT/README.md](../../../automation_baseline/shaft/tests_SHAFT/README.md) (the project moved
+there on promotion) for prerequisites and commands, then
+[AutomationSuiteManifest_SHAFT.md](AutomationSuiteManifest_SHAFT.md) for suite composition, data
+preconditions, and the failures that are **expected by design**.
 
 **I'm an agent continuing or regenerating this automation** → read
 [AutomationPlan_SHAFT.md](AutomationPlan_SHAFT.md) and
@@ -106,70 +110,65 @@ stages and their outputs are not stored in this folder.
 
 ## Current status
 
+> **Updated below to reflect the 2026-08-17 promotion** — the sections above (Artifact map, reading
+> paths) describe the governance *record*, which is unchanged; what changed is where the *code* lives
+> and what it now covers. Earlier revisions of this status section described an unresolved
+> "Contested"/"never merged" state and three unimplemented test cases; both are now resolved, and the
+> history is kept below rather than deleted.
+
 | Fact | Value | Source |
 |---|---|---|
-| Module automation lifecycle state | `Executed` | `.module_automation_state.json` |
-| Stage 4A registry status | `Approved` — 2026-08-05, by ahmed.ayman@tildetech.ae | [`../module.json`](../module.json) |
-| Assembled into the baseline | **Contested — do not rely on either value alone.** `.module_automation_state.json` records `assembledAt: null`, `baselineRef: null`; git commit `eedfaa2` (2026-08-05 13:43) is an "Automation Merge … approved in run-003" that added 46 files to `automation_baseline/shaft/tests_SHAFT/`. The baseline copy exists and is **pre-realignment, pre-healing** (its `pom.xml` still pins `9.4.20251220` under the older `shaft.version` property, and it retains the four stale Allure listener service files the module project removed). `AutomationPackages.md` also still says "never merged". | `.module_automation_state.json`; `git log -- platform_core_data/automation_baseline/shaft/tests_SHAFT/pom.xml`; [`../../../automation_baseline/AutomationPackages.md`](../../../automation_baseline/AutomationPackages.md) |
-| Latest execution | `EXEC-BR-20260806-03`, 2026-08-06 | [`ExecutionResults.rerun-5.md`](../../../runs/run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch/execution/ExecutionResults.rerun-5.md) |
-| Suite code state at that execution | Post-healing, **`Pending Automation Approval`** — REPAIR-BR-001…008 applied but not approved, not merged | same |
-| Effective SHAFT version | `7.4.20231015` — resolved and executed | `pom.xml:26`; `mvn -o dependency:tree`; execution banner "Powered by SHAFT v.7.4.20231015" |
+| Module automation lifecycle state | `Promoted` | `.module_automation_state.json` |
+| Stage 4A registry status | `Approved` — 2026-08-05, re-granted 2026-08-17 for the post-healing code, by ahmed.ayman@tildetech.ae | [`../module.json`](../module.json); `.module_automation_state.json` history |
+| Assembled into the baseline | **Promoted 2026-08-17.** Verified 38 files byte-identical against `platform_core_data/automation_baseline/shaft/tests_SHAFT/`, proven by a 31/31 Headed acceptance run from the baseline, then this module's own `tests_SHAFT/` was **permanently deleted**. The baseline is now the single source of truth for `branch`'s automation — generation, execution, repair, and self-healing all happen there from now on. | `.module_automation_state.json` (`state: Promoted`, `baselinePath`, `promotionVerification`); [`automation_promotion.md`](automation_promotion.md); [`../../../automation_baseline/AutomationPackages.md`](../../../automation_baseline/AutomationPackages.md) §3.1 |
+| Latest known execution | `EXEC-BR-20260817-5H-01` (Rerun 30, post-promotion Stage 5H repair verification, 2026-08-17) — the most recent execution record on disk; a newer baseline-side run may exist and not be reflected here | [`ExecutionResults.rerun-30.md`](../../../runs/run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch/execution/ExecutionResults.rerun-30.md) |
+| Effective SHAFT version | `7.4.20231015` — resolved and executed, unchanged since realignment | `pom.xml:26` in the baseline project |
 
-Four facts a reader should not be surprised by, each recorded somewhere other than the artifact you
-might expect it in:
+Facts a reader should not be surprised by, each recorded somewhere other than the artifact you might
+expect it in:
 
-- **The pinned SHAFT version changed after Revision 2 was written.** `pom.xml:26` pins
-  `7.4.20231015`; [StackDocumentationContext_SHAFT.md](StackDocumentationContext_SHAFT.md) Revision 2
-  (2026-08-04) still records `9.4.20251220` as unchanged, as do
+- **The pinned SHAFT version changed after Revision 2 was written.**
+  [StackDocumentationContext_SHAFT.md](StackDocumentationContext_SHAFT.md) Revision 2 (2026-08-04)
+  still records `9.4.20251220`, as do
   [`../../../knowledge_base/stack.md`](../../../knowledge_base/stack.md) and
   [`../../../knowledge_base/automation_framework.md`](../../../knowledge_base/automation_framework.md).
-  The realignment happened 2026-08-05 and is documented in
-  [AutomationSummary_SHAFT.md](AutomationSummary_SHAFT.md) §3 "Version realignment". The Summary is
-  correct for the current project; every `9.4.20251220` reference is historical or belongs to the
-  separate baseline copy.
-- **`testng.xml`'s `BranchActionsSuite` names a class that has never existed.**
-  `AdminPages.Admin.Branch.BranchActions_TC` is absent from the working tree, from `target/`, and
-  from every branch and commit in this repository — yet
-  [AutomationManifest_SHAFT.md](AutomationManifest_SHAFT.md) line 103 inventories it as a delivered
-  file carrying "3 tests", and [TargetWritePlan_SHAFT.md](TargetWritePlan_SHAFT.md) line 73 approved
-  it as a `CREATE`. The file was approved and inventoried but never written — a Stage 4A generation
-  defect, logged as KL-02 and explicitly left out of scope by the Stage 5H pass
-  ([`../healing/RepairSummary.md`](../healing/RepairSummary.md)).
-- **Three test cases are therefore unimplemented:** TC-BR-056, TC-BR-057, TC-BR-058 (Approve/Reject
-  from the results grid, and their Remarks entry). All three are `Review = Approved` and
-  `Automation = Approved` in [`../test_design/TestCases_Branch.md`](../test_design/TestCases_Branch.md).
-  Approve/Reject has **never executed in any cycle** — it is Not Executed, not passing.
-- **`32/32` in the Coverage Report means automation *decision* coverage, not implementation and not
-  execution.** See below.
+  The realignment to `7.4.20231015` happened 2026-08-05 and is documented in
+  [AutomationSummary_SHAFT.md](AutomationSummary_SHAFT.md) §3 "Version realignment".
+- **`BranchActionsSuite`'s missing class was written during the 2026-08-17 promotion, not before.**
+  Earlier revisions of this file recorded `AdminPages.Admin.Branch.BranchActions_TC` as a
+  Stage 4A generation defect (logged as KL-02) that left TC-BR-056/057/058 unimplemented and
+  unexecuted. The file **was added** as part of the assembly merge into the baseline
+  (`automation_promotion.md`, "Files Added"), and
+  [`ExecutionResults.rerun-29.md`](../../../runs/run-003__2026-08-04_11-24-38__UserStory__US-8599-SearchActions_US-8606-UpdateBranch/execution/ExecutionResults.rerun-29.md)
+  records all three cases passing (TC-BR-056, TC-BR-057, TC-BR-058 — "3 of 3"). Approve/Reject
+  coverage for US 8599 is no longer a gap as of that run.
+- **Automation decision coverage, implementation coverage, and execution coverage can still diverge
+  in general** — see below for how to read the Coverage Report's numerator, even though the specific
+  29/32 gap documented in earlier revisions no longer applies.
 
 ## What "100% coverage" does and does not mean
 
-[AutomationCoverageReport_SHAFT.md](AutomationCoverageReport_SHAFT.md) reports **100% (32/32)**. Its
-own stated basis is the decision gate — cases that received a Generate New / Reuse decision, out of
-the cases where `Review = Approved AND Automation = Approved`. Measured against the executable
-project, the figures diverge:
-
-| Meaning of "coverage" | Value | Evidence |
-|---|---|---|
-| Automation **decision** coverage — a decision was recorded | 32 / 32 (100%) | `AutomationCoverageReport_SHAFT.md` rev 2 |
-| **Implementation** coverage — an executable `@Test` exists | 29 / 32 (91%) | 13 + 11 + 5 `@Test` methods in the three `_TC` classes; TC-BR-056/057/058 have none |
-| **Discovery** coverage — reachable by the executed suite file | 29 / 32 | `testng-fullcycle.xml`, which omits `BranchActionsSuite` by design |
-| **Execution** coverage — actually ran in the latest cycle | 29 / 32 | `ExecutionResults.rerun-5.md` §1: `Tests run: 29` |
-| **Passing** behavioural coverage | 15 / 32 (47%) | same: 15 Passed, 14 Failed, 0 skipped |
-
-The Coverage Report's own closing caveat already narrows the denominator (32 of 81 designed cases are
-automated at all). This table narrows the *numerator*: **`32/32` is not evidence that 32 tests exist,
-and it is not evidence that any of them ran.** The report's rev 2 sentence "Every one of the 32
-dual-approved cases has an Automation Script" is not true of TC-BR-056/057/058; it is left in place
-as the historical record of what that revision claimed, and corrected here rather than overwritten.
+[AutomationCoverageReport_SHAFT.md](AutomationCoverageReport_SHAFT.md) reports **100% (32/32)**, on
+its own stated basis: the decision gate — cases that received a Generate New / Reuse decision, out of
+the cases where `Review = Approved AND Automation = Approved`. That report's Revision 2 (2026-08-04)
+predates the 2026-08-17 promotion, so read it as the decision record it is, not as current
+implementation/execution coverage — those are only reliably read from the baseline's own suite files
+and execution results ([`../../../automation_baseline/shaft/tests_SHAFT/README.md`](../../../automation_baseline/shaft/tests_SHAFT/README.md),
+[`AutomationPackages.md`](../../../automation_baseline/AutomationPackages.md)), which record **31
+test cases** in the promoted package and a **31/31 passing** acceptance run on 2026-08-17. The
+Coverage Report's own closing caveat still applies regardless: 32 (or 31) of 81 designed cases are
+automated at all — the majority of `TestCases_Branch.md` remains manual-only or not yet
+decision-gated.
 
 **Read the status fields carefully — they are not all the same thing.** `AutomationPlan` and
 `AutomationSummary` still record `Status: Pending Review` in their Revision 2 headers, written
-2026-08-04. The module registry then recorded Stage 4A `Approved` on 2026-08-05. Stage 5H repairs
-landed on the code afterwards, so the *current* code state is pending approval again. Those
-statements are consistent, not contradictory: the artifacts describe the revision that was approved;
-the registry and the execution results describe what has happened to the code since. The artifact
-headers are left untouched deliberately — a revision's recorded status is part of its history.
+2026-08-04. The module registry recorded Stage 4A `Approved` on 2026-08-05, Stage 5H repairs landed
+afterward, and a fresh Automation Approval was re-granted 2026-08-17 for the post-healing code before
+promotion (`pipeline.md` §5.2 — a Stage 5H repair does not inherit Stage 4A's approval). Those
+statements are consistent, not contradictory: the artifacts describe the revision that was approved
+at the time; `.module_automation_state.json` describes what has happened to the code since. The
+artifact headers are left untouched deliberately — a revision's recorded status is part of its
+history.
 
 ## Why the files are not grouped into subfolders
 

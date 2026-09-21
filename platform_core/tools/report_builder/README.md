@@ -15,6 +15,7 @@ the shareable view for stakeholders.
 ```bash
 node platform_core/tools/report_builder/cli.js validate --model <model.json>
 node platform_core/tools/report_builder/cli.js build    --model <model.json> --out <report.html>
+node platform_core/tools/report_builder/cli.js schema
 ```
 
 `validate` first, then `build`. `validate` exits `2` on a bad model and names the
@@ -23,6 +24,15 @@ a usage or I/O failure, not a model failure.
 
 `--out` defaults to the model's own path with `.report.json` → `.html`, so
 `ManualQAReport.report.json` becomes `ManualQAReport.html` beside it.
+
+`--model -` reads the model from stdin. `--stdout` (on `build`) writes the HTML
+to stdout instead of a file. `--json` makes all three commands print a
+machine-readable result instead of the human line — `{ok, out, bytes}` for
+`build`, `{ok, title, statuses, categories, testCases, sections}` for
+`validate`, `{ok, reference}` for `schema`.
+
+`schema` emits no JSON Schema document despite the name: it prints this README,
+which is the model reference, or — with `--json` — the path to it.
 
 Programmatic use:
 
@@ -77,7 +87,8 @@ PASS/FAIL/BLOCKED — a Stage 5A run may use `PASSED`/`ERROR`/`SKIPPED`.
 ```
 
 `key` is what a test case sets and what the status filter offers. `label` is the
-human wording on the stat cards and legend. **A test case whose `status` is not
+human wording on the stat cards and legend; omit it and the `key` is used.
+`tone` defaults to `neutral`. **A test case whose `status` is not
 declared here is a validation error** — that is the point: a typo cannot
 silently produce an uncoloured, unfilterable card.
 
@@ -134,6 +145,8 @@ counted.
 {
   "title": "Test case results",
   "searchPlaceholder": "Search by ID, title, endpoint...",
+  "noResultsText": "No test cases match your search...",   // optional
+  "open": true,                                            // optional — block starts expanded
   "categories": [
     { "key": "positive", "name": "Positive", "icon": "✅", "open": true,
       "cases": [ /* case */ ] }
@@ -144,7 +157,8 @@ counted.
 `key` drives the category filter and must be unique. `icon` defaults from the
 key for the known categories — `positive`, `validation`, `boundary`,
 `business-rule`, `regression`, `negative`, `security`, `integration`, `flow`,
-`performance`, `usability`, `accessibility`.
+`performance`, `usability`, `accessibility`. At least one category is required
+once `testCases` is present.
 
 ### A test case
 
@@ -153,6 +167,7 @@ key for the known categories — `positive`, `validation`, `boundary`,
   "id": "TC-SEATMAP-POS-01",
   "title": "Verify a valid GetSeatMap call returns HTTP 200 ...",
   "status": "PASS",
+  "statusLabel": "Passed (retry)",   // optional — overrides the status' own label on this card
   "rows": [ { "label": "Expected", "value": "..." } ],
   "evidence": "Live GetSeatMap response for GulfAir/KSA ...",
   "exchanges": [ /* exchange */ ],
@@ -163,6 +178,9 @@ key for the known categories — `positive`, `validation`, `boundary`,
 `rows` are the always-visible lines inside the opened card — `Endpoint Name`,
 `Request`, `Response`, `Expected`, `Actual`, `Screen`, `Blocker`, whatever the
 stage reports. `Status:` is appended automatically.
+
+`evidence` may also be `{ "summary": "Evidence (screenshots)", "body": "..." }`
+when the default `Evidence` toggle wording is not the right one.
 
 ### `exchanges` — request/response capture
 
@@ -184,6 +202,10 @@ for `"Attempt 1 of 2 - GetSeatMap"` when a case made several.
   "notes": [ "Response headers were not captured for this call." ]
 }
 ```
+
+An exchange must carry a `request`, a `response`, or both. `requestTitle` /
+`responseTitle` override the `Request` / `Response` headings, and a message's
+`bodyLabel` overrides the `BODY` label above its body.
 
 **`"redacted": true` is how a secret is handled.** The value never reaches the
 document — the page prints `[REDACTED]`. A header with no `value` and no
@@ -208,11 +230,13 @@ report does — a 227KB body helps nobody.
 ```
 
 Rendered in that order regardless of key order in the JSON. Omit the panel and
-it does not appear.
+it does not appear — as it also does when every key is empty. `summary`
+overrides the toggle's own `View Test Case` wording.
 
 ### `sections`
 
-Three types, all collapsible, all optional, rendered in the order given.
+Three types, all collapsible, all optional, rendered in the order given. Every
+type accepts `badges`, `emptyText`, and `"open": false` to start collapsed.
 
 **`findings`** — defects and open questions.
 

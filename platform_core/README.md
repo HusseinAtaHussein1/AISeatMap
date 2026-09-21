@@ -17,6 +17,7 @@ It does not own agent behavior (`.claude/skills/`), stage sequencing (`workflows
 ## What Lives Here
 
 - **Shared Tools** (`tools/`) — reusable runtime engines callable identically for any project, with zero project-specific data baked in (the Platform Paths resolver, the Browser Driver, the MCP tools layer, the Run Manager, the Automation Lifecycle tools, the Test Suite Export renderer, and the `init` installer). `tools/mcp/` is the one member that holds no engine code of its own: it registers the `playwright` and `context7` MCP servers (repo-root `.mcp.json`) and specifies the contract under which Skills may drive them — plus `stack_docs/`, the extractor that reads a project's manifests/lockfiles so documentation is fetched for the versions the suite actually runs against.
+- **Platform Knowledge** (`knowledge/patterns/`) and **Prerequisites** (`prerequisites/`) — the reusable pattern library a Skill's `dependencies` line cites, and the `PREREQ-*` declarations its frontmatter references. Both are product that ships with the tool, which is why they live here rather than under `platform_core_data/`. See [`knowledge/patterns/README.md`](knowledge/patterns/README.md) and [`prerequisites/README.md`](prerequisites/README.md).
 - **Output Artifact Templates** (`templates/`) — the authoritative *structure* of every artifact the pipeline writes, one template per artifact per stage. Blank Markdown skeletons with `{{PLACEHOLDER}}` tokens and inline `<!-- -->` guidance; they hold no project content, which is exactly why they belong in this layer. Each `.claude/skills/*/SKILL.md` points at its templates rather than restating the structure inline, so an artifact's shape has one home. See [`templates/README.md`](templates/README.md).
 
 Population is deliberate: this layer does not grow by accretion during ordinary pipeline execution — see Rules below.
@@ -24,7 +25,7 @@ Population is deliberate: this layer does not grow by accretion during ordinary 
 ## What Does NOT Belong Here
 
 - **Project-specific business rules, findings, credentials, or screen locators.** All of that belongs under `platform_core_data/` — never here, no matter how "generic" it looks on first observation.
-- **Reusable engineering knowledge documents.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core/knowledge/patterns/`, cited from a Skill's `dependencies` line — not here.
+- **Reusable engineering knowledge documents, inside `tools/` or `templates/`.** A repair pattern, framework fact, or reasoning heuristic belongs in `platform_core/knowledge/patterns/`, cited from a Skill's `dependencies` line — never folded into an engine or a template.
 - **Generated artifacts, execution results, or reports.** Those are project outputs: per-module design under `platform_core_data/modules/`, per-run execution evidence under `platform_core_data/runs/`.
 - **Orchestration or sequencing logic.** Stage order, checkpoints, and run identity belong in `workflows_and_pipelines/`.
 - **Agent behavioral specifications.** What an agent *does* is `.claude/skills/`'s responsibility, not this folder's.
@@ -33,6 +34,10 @@ Population is deliberate: this layer does not grow by accretion during ordinary 
 
 ```
 platform_core/
+├── knowledge/patterns/       # the Platform Knowledge layer — reusable, application-agnostic
+│                             #   patterns, one ID per document, arriving only via Promotion
+├── prerequisites/            # PREREQ-*.md — what must be available for a Skill to work, declared
+│                             #   once and referenced by ID from a Skill's frontmatter
 ├── templates/                # output artifact templates — the structure of everything the
 │   ├── README.md             #   pipeline writes, one template per artifact per stage
 │   │                         #   → MODULE:  stage_1 · stage_2 · stage_3 · stage_4a · stage_5h
@@ -45,7 +50,9 @@ platform_core/
 │   ├── stage_4a_automation/   #   Plan, Manifests, Decision/Coverage Reports, Summary
 │   ├── stage_5a_execution/    #   ExecutionResults
 │   ├── stage_5h_self_healing/ #   RepairSummary, Confidence, Before/After, Quarantine
-│   └── stage_6a_reporting/    #   Final_QA_Report
+│   ├── stage_6a_reporting/    #   Final_QA_Report
+│   └── supplier_feature_intake/ # SupplierChecklist + FeatureChecklistProfile — intake artifacts
+│                              #   of the Supplier Features hierarchy, deliberately not a stage
 └── tools/
     ├── automation_lifecycle/ # seeds a module project from the baseline, merge plan/apply,
     │                         #   promotion record, scoped cleanup; and — once a module is
@@ -55,6 +62,10 @@ platform_core/
     │   ├── driver.js          # resolves project paths, loads profile + credentials, launches, logs in
     │   ├── api.js             # BrowserDriver — the only surface Skills/scripts use
     │   └── README.md
+    ├── browser_provider/     # Browser Provider interface (interface.md) — the contract every
+    │                         #   provider implements; a Skill never picks Playwright/Selenium
+    │                         #   directly, it calls this and the concrete provider is resolved
+    │                         #   from platform.config.json (providers/playwright_node, playwright_cli)
     ├── execution_safety/     # "may this action execute here, now?" — deterministic policy evaluator
     │                         #   Allowed / Approval Required / Forbidden, plus the run preflight and
     │                         #   run-scoped authorizations. Holds NO project rule: the policy itself
@@ -71,6 +82,12 @@ platform_core/
     │                         #   formatted), the registry, the Active Module pointer, per-module
     │                         #   stage/automation state, per-module drift, the module README
     ├── platform_paths/       # the two-root resolver (Tool Root / Target Root) every tool here uses
+    ├── project_paths/        # earlier, single-project-root resolver (platform-independence layer);
+    │                         #   still depended on directly by some tools — see its own README
+    ├── report_builder/       # one shared HTML report design for every stage that reports results;
+    │                         #   validates + renders a stage's report model (JSON) to a single
+    │                         #   self-contained HTML file, alongside — never instead of — the
+    │                         #   stage's authoritative Markdown report
     ├── run_manager/          # run identity — folder naming/indexing (the only place a run name is
     │                         #   formatted), the Active Run pointer, Run Manifest, lineage, targetRef
     └── test_suite_export/    # Stage 3's authored Markdown test suites -> the matching .xlsx;

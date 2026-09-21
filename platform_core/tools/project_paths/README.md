@@ -39,6 +39,10 @@ runPath('2026-07-29_10-00-00__Module__Login')   // {PROJECT_ROOT}/runs/<folder>
 assertProjectRoot();                            // fail fast with an actionable message
 ```
 
+`browserProviderConfig()` and `debugModeEnabled()` read the same `platform.config.json` for the
+configured Browser Provider id/settings and the `debugMode` flag, so callers never re-parse the
+config file themselves.
+
 Retargeting the platform at a different application is a **one-value change**:
 
 ```bash
@@ -80,6 +84,6 @@ what was true when written).
 
 ## Related
 
-- [`../browser_provider/README.md`](../browser_provider/README.md) — the Browser Provider abstraction, configured by the same file.
+- [`../browser_provider/interface.md`](../browser_provider/interface.md) — the Browser Provider abstraction, configured by the same file.
 - [`../../prerequisites/README.md`](../../prerequisites/README.md) — the reusable prerequisites Skills reference.
 - [`../../../workflows_and_pipelines/pipeline/pipeline.md`](../../../workflows_and_pipelines/pipeline/pipeline.md) §1 — the single-project-root architecture principle this implements.

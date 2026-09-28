@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "activeRun": {
-    "folderName": "run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract",
-    "index": 5,
-    "scope": "UserStory",
-    "target": "ImportBookedPNR-NewLayerContract",
+    "folderName": "run-007__2026-09-28_00-36-05__Targeted__Ancillaries-AirSMCairo",
+    "index": 7,
+    "scope": "Targeted",
+    "target": "Ancillaries-AirSMCairo",
     "status": "Preparing",
     "title": null,
-    "startedTime": "2026-09-01T08:41:40.582Z",
+    "startedTime": "2026-09-27T21:36:05.986Z",
     "stagesPresent": [],
-    "path": "platform_core_data/runs/run-005__2026-09-01_11-41-40__UserStory__ImportBookedPNR-NewLayerContract"
+    "path": "platform_core_data/runs/run-007__2026-09-28_00-36-05__Targeted__Ancillaries-AirSMCairo"
   },
-  "switchedAt": "2026-09-01T08:41:40.582Z",
+  "switchedAt": "2026-09-27T21:36:05.986Z",
   "setBy": "Run Manager",
-  "previousRun": "run-004__2026-08-17_14-35-25__UserStory__US-4222-UpdateAgency"
+  "previousRun": "run-006__2026-09-26_20-51-48__Targeted__Ancillaries-FlynasNDCSeatMap"
 }

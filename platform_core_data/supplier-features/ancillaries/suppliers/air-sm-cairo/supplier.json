@@ -5,7 +5,7 @@
   "feature": "ancillaries",
   "status": "Active",
   "createdAt": "2026-09-27T20:43:30.635Z",
-  "updatedAt": "2026-09-27T23:49:12.004Z",
+  "updatedAt": "2026-10-05T12:54:30.589Z",
   "supersededBy": null,
   "stages": {
     "context": {
@@ -81,9 +81,7 @@
       }
     }
   ],
-  "supplierRules": [
-    "document-number-format-a-prefix"
-  ],
-  "supplierRulesSetAt": "2026-09-27T23:49:12.004Z",
+  "supplierRules": [],
+  "supplierRulesSetAt": "2026-10-05T12:54:30.589Z",
   "supplierRulesSetBy": "Mohanad Dawood"
 }

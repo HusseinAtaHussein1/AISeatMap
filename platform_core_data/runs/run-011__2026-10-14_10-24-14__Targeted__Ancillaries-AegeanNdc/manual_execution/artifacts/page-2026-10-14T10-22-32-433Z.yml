@@ -1,0 +1,149 @@
+- generic [ref=f9e1]:
+  - generic [ref=f9e4]:
+    - generic [ref=f9e5]:
+      - generic [ref=f9e6]:
+        - button [ref=f9e7] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f9e8]: 
+        - list [ref=f9e11]:
+          - listitem [ref=f9e168]:
+            - banner [ref=f9e170]:
+              - generic [ref=f9e171] [cursor=pointer]:
+                - generic [ref=f9e172]: 
+                - generic [ref=f9e173]: Flight
+                - generic [ref=f9e174]: 
+          - listitem [ref=f9e175]:
+            - generic [ref=f9e176]:
+              - banner [ref=f9e177]:
+                - generic [ref=f9e178] [cursor=pointer]:
+                  - generic [ref=f9e179]: 
+                  - generic [ref=f9e180]: Supplier
+                  - generic [ref=f9e181]: 
+              - list [ref=f9e461]:
+                - listitem [ref=f9e462]:
+                  - link " Supplier" [ref=f9e463] [cursor=pointer]:
+                    - /url: /master/supplier/supplier
+                    - generic [ref=f9e464]: 
+                    - generic [ref=f9e465]: Supplier
+                - listitem [ref=f9e466]:
+                  - link " Credential Field" [ref=f9e467] [cursor=pointer]:
+                    - /url: /master/supplier/credentials
+                    - generic [ref=f9e468]: 
+                    - generic [ref=f9e469]: Credential Field
+                - listitem [ref=f9e470]:
+                  - link " Supplier Credentials" [ref=f9e471] [cursor=pointer]:
+                    - /url: /master/supplier/supplier-credentials
+                    - generic [ref=f9e472]: 
+                    - generic [ref=f9e473]: Supplier Credentials
+                - listitem [ref=f9e474]:
+                  - link " Flight Search Limitation" [ref=f9e475] [cursor=pointer]:
+                    - /url: /master/supplier/flight-search-limitation
+                    - generic [ref=f9e476]: 
+                    - generic [ref=f9e477]: Flight Search Limitation
+          - listitem [ref=f9e182]:
+            - banner [ref=f9e184]:
+              - generic [ref=f9e185] [cursor=pointer]:
+                - generic [ref=f9e186]: 
+                - generic [ref=f9e187]: Miscellaneous
+                - generic [ref=f9e188]: 
+          - listitem [ref=f9e189]:
+            - banner [ref=f9e191]:
+              - generic [ref=f9e192] [cursor=pointer]:
+                - generic [ref=f9e193]: 
+                - generic [ref=f9e194]: Payment Gateway
+                - generic [ref=f9e195]: 
+        - text: 
+      - generic [ref=f9e17]:
+        - banner [ref=f9e19]:
+          - generic [ref=f9e20]:
+            - img "Logo" [ref=f9e23] [cursor=pointer]
+            - generic [ref=f9e26]:
+              - button "Welcome E.Saady " [ref=f9e27] [cursor=pointer]:
+                - generic [ref=f9e28]:
+                  - generic [ref=f9e29]: Welcome
+                  - generic [ref=f9e30]:
+                    - text: E.Saady
+                    - generic [ref=f9e31]: 
+              - button "Profile menu" [ref=f9e32] [cursor=pointer]:
+                - img "E.Saady profile" [ref=f9e35]: E
+        - navigation "Main navigation" [ref=f9e38]:
+          - generic [ref=f9e41]:
+            - tablist [ref=f9e43]:
+              - tab "Dashboard" [ref=f9e44] [cursor=pointer]
+              - tab "Admin" [ref=f9e46] [cursor=pointer]
+              - tab "Master" [selected] [ref=f9e48] [cursor=pointer]
+              - tab "Rule Engine" [ref=f9e50] [cursor=pointer]
+              - tab "User Management" [ref=f9e52] [cursor=pointer]
+              - tab "Booking-Mid Office" [ref=f9e54] [cursor=pointer]
+              - tab "Profile" [ref=f9e56] [cursor=pointer]
+              - tab "Reports" [ref=f9e58] [cursor=pointer]
+              - tab "Import PNR" [ref=f9e60] [cursor=pointer]
+              - tab "Import Booked PNR" [ref=f9e62] [cursor=pointer]
+              - listitem [ref=f9e64]
+            - button "" [ref=f9e65] [cursor=pointer]
+        - generic [ref=f9e479]:
+          - generic [ref=f9e481]:
+            - generic [ref=f9e482]:
+              - generic [ref=f9e483]:
+                - paragraph [ref=f9e484]: Search supplier credential
+                - generic [ref=f9e485]: Search and manage supplier credentials.
+              - button "Add Supplier Credential" [ref=f9e487] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f9e489]: 
+            - generic [ref=f9e491]:
+              - generic [ref=f9e493]:
+                - generic [ref=f9e494]: Credential name
+                - textbox "Credential name" [ref=f9e497]:
+                  - /placeholder: Name
+                  - text: AegeanNDCProd
+              - generic [ref=f9e500]:
+                - generic [ref=f9e501]: Supplier
+                - generic [ref=f9e503] [cursor=pointer]:
+                  - generic [ref=f9e504]:
+                    - combobox "Supplier"
+                  - generic [ref=f9e505]: supplier
+                  - button "dropdown trigger" [ref=f9e506]:
+                    - generic [ref=f9e507]: 
+              - generic [ref=f9e513]:
+                - generic [ref=f9e514]: Status
+                - text: ":"
+                - generic [ref=f9e517] [cursor=pointer]:
+                  - radio "Inactive"
+                - generic [ref=f9e519] [cursor=pointer]: Inactive
+                - generic [ref=f9e522] [cursor=pointer]:
+                  - radio "Active" [checked]
+                - generic [ref=f9e525] [cursor=pointer]: Active
+                - generic [ref=f9e528] [cursor=pointer]:
+                  - radio "Both"
+                - generic [ref=f9e530] [cursor=pointer]: Both
+              - button "Search" [ref=f9e533] [cursor=pointer]
+          - generic [ref=f9e539]:
+            - table [ref=f9e544]:
+              - rowgroup [ref=f9e545]:
+                - row [ref=f9e546]:
+                  - columnheader "Credential name" [ref=f9e547]
+                  - columnheader "Supplier" [ref=f9e548]
+                  - columnheader "Status" [ref=f9e549]
+                  - columnheader "Actions" [ref=f9e550]
+              - rowgroup [ref=f9e551]:
+                - row [ref=f9e655]:
+                  - cell "AegeanNDCProd" [ref=f9e656]
+                  - cell "AegeanNdc" [ref=f9e657]
+                  - cell "Active" [ref=f9e658]
+                  - cell "" [ref=f9e659]
+              - rowgroup
+            - generic [ref=f9e633]:
+              - paragraph [ref=f9e634]: Showing 1 results of 1 results
+              - generic [ref=f9e635]:
+                - generic [ref=f9e636]: Show
+                - generic [ref=f9e638] [cursor=pointer]:
+                  - generic [ref=f9e639]:
+                    - combobox [active]
+                  - generic [ref=f9e640]: "10"
+                  - button "dropdown trigger" [expanded] [ref=f9e641]:
+                    - generic [ref=f9e642]: 
+                - generic [ref=f9e643]: results
+    - generic [ref=f9e163]: Copyright © Wonder Travel 2026. All Rights Reserved. RC1
+  - listbox [ref=f9e667]:
+    - option "10" [selected] [ref=f9e669] [cursor=pointer]
+    - option "20" [ref=f9e671] [cursor=pointer]
+    - option "50" [ref=f9e673] [cursor=pointer]
+    - option "100" [ref=f9e675] [cursor=pointer]

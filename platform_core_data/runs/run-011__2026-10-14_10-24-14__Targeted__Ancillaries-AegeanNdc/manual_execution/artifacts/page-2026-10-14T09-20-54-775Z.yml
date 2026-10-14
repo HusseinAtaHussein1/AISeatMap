@@ -1,0 +1,140 @@
+- generic [active] [ref=f22e1]:
+  - generic [ref=f22e97]:
+    - generic [ref=f22e98]:
+      - text:          
+      - generic [ref=f22e100]:
+        - text:  
+        - button [ref=f22e101] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f22e102]: 
+    - generic [ref=f22e103]:
+      - generic [ref=f22e104]:
+        - banner [ref=f22e106]:
+          - generic [ref=f22e107]:
+            - img "Logo" [ref=f22e110] [cursor=pointer]
+            - generic [ref=f22e111]:
+              - generic [ref=f22e112]:
+                - generic [ref=f22e113]:
+                  - generic [ref=f22e114]: 
+                  - generic [ref=f22e115]: Hussien.ata@tildetech.ae
+                - generic [ref=f22e116]: "|"
+                - generic [ref=f22e117]:
+                  - generic [ref=f22e118]: 
+                  - generic [ref=f22e119]: +20-1215484845
+              - generic [ref=f22e120]:
+                - button "Take a tour" [ref=f22e122] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f22e123]: 
+                - button "Top Up Wallet" [ref=f22e124] [cursor=pointer]:
+                  - generic [ref=f22e125]: 
+                - button "Settings" [ref=f22e126] [cursor=pointer]:
+                  - generic [ref=f22e127]: 
+              - generic [ref=f22e129]:
+                - button "Welcome Hussien " [ref=f22e130] [cursor=pointer]:
+                  - generic [ref=f22e131]:
+                    - generic [ref=f22e132]: Welcome
+                    - generic [ref=f22e133]:
+                      - text: Hussien
+                      - generic [ref=f22e134]: 
+                - button "Profile menu" [ref=f22e135] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f22e138]
+        - generic [ref=f22e278]:
+          - generic [ref=f22e279]:
+            - paragraph [ref=f22e280]: Search Booking
+            - generic [ref=f22e281]: Find a booking by reference, passenger, route or date.
+          - generic [ref=f22e287]:
+            - generic [ref=f22e289]:
+              - generic [ref=f22e290]: Order Id
+              - textbox "Order Id" [ref=f22e293]
+            - generic [ref=f22e296]:
+              - generic [ref=f22e297]: Booking Reference
+              - textbox "Booking Reference" [ref=f22e300]
+            - generic [ref=f22e303]:
+              - generic [ref=f22e304]: Airline PNR
+              - textbox "Airline PNR" [ref=f22e307]
+            - generic [ref=f22e310]:
+              - generic [ref=f22e311]: GDS PNR
+              - textbox "GDS PNR" [ref=f22e314]
+            - generic [ref=f22e317]:
+              - generic [ref=f22e318]: Invoice No.
+              - textbox "Invoice No." [ref=f22e321]
+            - generic [ref=f22e324]:
+              - generic [ref=f22e325]: Ticket No.
+              - textbox "Ticket No." [ref=f22e328]
+            - generic [ref=f22e331]:
+              - generic [ref=f22e332]: Booking Status
+              - generic [ref=f22e334] [cursor=pointer]:
+                - generic [ref=f22e335]:
+                  - combobox "Booking Status"
+                - generic [ref=f22e336]: Select
+                - button "dropdown trigger" [ref=f22e337]:
+                  - generic [ref=f22e338]: 
+            - generic [ref=f22e341]:
+              - generic [ref=f22e342]: Agency Booking Status
+              - generic [ref=f22e344] [cursor=pointer]:
+                - generic [ref=f22e345]:
+                  - combobox "Agency Booking Status"
+                - generic [ref=f22e346]: Select
+                - button "dropdown trigger" [ref=f22e347]:
+                  - generic [ref=f22e348]: 
+            - generic [ref=f22e351]:
+              - generic [ref=f22e352]: Booking Date From *
+              - generic [ref=f22e355]:
+                - textbox "Booking Date From *" [ref=f22e356]:
+                  - /placeholder: YYYY-MM-DD
+                  - text: 2026-09-14
+                - button [ref=f22e357] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f22e358]: 
+            - generic [ref=f22e361]:
+              - generic [ref=f22e362]: Booking Date To *
+              - generic [ref=f22e365]:
+                - textbox "Booking Date To *" [ref=f22e366]:
+                  - /placeholder: YYYY-MM-DD
+                  - text: 2026-10-14
+                - button [ref=f22e367] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f22e368]: 
+          - button " Passenger Details Advanced booking filters " [ref=f22e370] [cursor=pointer]:
+            - generic [ref=f22e371]:
+              - generic [ref=f22e372]: 
+              - generic [ref=f22e374]:
+                - generic [ref=f22e375]: Passenger Details
+                - generic [ref=f22e376]: Advanced booking filters
+            - generic [ref=f22e377]: 
+          - button "Search" [ref=f22e380] [cursor=pointer]
+          - table [ref=f22e392]:
+            - rowgroup [ref=f22e393]:
+              - row [ref=f22e394]:
+                - columnheader "Order Id" [ref=f22e395]
+                - columnheader "Client Name" [ref=f22e396]
+                - columnheader "Booking Reference" [ref=f22e397]
+                - columnheader "Booked By" [ref=f22e398]
+                - columnheader "Order Date" [ref=f22e399]
+                - columnheader "Product" [ref=f22e400]
+                - columnheader "Total" [ref=f22e401]
+                - columnheader "Book" [ref=f22e402]
+            - rowgroup
+            - rowgroup [ref=f22e403]:
+              - row [ref=f22e404]:
+                - cell [ref=f22e405]:
+                  - status [ref=f22e407]:
+                    - generic [ref=f22e409]: 
+                    - paragraph [ref=f22e410]: No data has been found!
+      - contentinfo [ref=f22e206]:
+        - contentinfo [ref=f22e208]:
+          - generic [ref=f22e209]:
+            - navigation "Footer navigation" [ref=f22e210]:
+              - link "About Us" [ref=f22e211] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f22e212] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f22e213] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f22e214] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f22e215] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f22e216]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f22e94] [cursor=pointer]:
+    - emphasis [ref=f22e95]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

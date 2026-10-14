@@ -1,0 +1,1089 @@
+- generic [ref=e45]:
+  - generic [ref=e46]:
+    - generic [ref=e47]:
+      - button [ref=e48] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e49]: 
+      - list [ref=e52]:
+        - listitem [ref=e209]:
+          - banner [ref=e211]:
+            - generic [ref=e212] [cursor=pointer]:
+              - generic [ref=e213]: 
+              - generic [ref=e214]: Company
+              - generic [ref=e215]: 
+        - listitem [ref=e216]:
+          - link " Branch" [ref=e217] [cursor=pointer]:
+            - /url: /admin/branch
+            - generic [ref=e218]: 
+            - generic [ref=e219]: Branch
+          - generic:
+            - banner
+        - listitem [ref=e220]:
+          - banner [ref=e222]:
+            - generic [ref=e223] [cursor=pointer]:
+              - generic [ref=e224]: 
+              - generic [ref=e225]: Agency
+              - generic [ref=e226]: 
+        - listitem [ref=e227]:
+          - link " Staff" [ref=e228] [cursor=pointer]:
+            - /url: /admin/staff
+            - generic [ref=e229]: 
+            - generic [ref=e230]: Staff
+          - generic:
+            - banner
+      - text: 
+    - generic [ref=e58]:
+      - banner [ref=e60]:
+        - generic [ref=e61]:
+          - img "Logo" [ref=e64] [cursor=pointer]
+          - generic [ref=e67]:
+            - button "Welcome E.Saady " [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]:
+                - generic [ref=e70]: Welcome
+                - generic [ref=e71]:
+                  - text: E.Saady
+                  - generic [ref=e72]: 
+            - button "Profile menu" [ref=e73] [cursor=pointer]:
+              - img "E.Saady profile" [ref=e76]: E
+      - navigation "Main navigation" [ref=e79]:
+        - generic [ref=e82]:
+          - tablist [ref=e84]:
+            - tab "Dashboard" [ref=e85] [cursor=pointer]
+            - tab "Admin" [selected] [ref=e87] [cursor=pointer]
+            - tab "Master" [ref=e89] [cursor=pointer]
+            - tab "Rule Engine" [ref=e91] [cursor=pointer]
+            - tab "User Management" [ref=e93] [cursor=pointer]
+            - tab "Booking-Mid Office" [ref=e95] [cursor=pointer]
+            - tab "Profile" [ref=e97] [cursor=pointer]
+            - tab "Reports" [ref=e99] [cursor=pointer]
+            - tab "Import PNR" [ref=e101] [cursor=pointer]
+            - tab "Import Booked PNR" [ref=e103] [cursor=pointer]
+            - listitem [ref=e105]
+          - button "" [ref=e106] [cursor=pointer]
+      - generic [ref=e686]:
+        - generic [ref=e688]:
+          - generic [ref=e690]:
+            - paragraph [ref=e691]: Branch Details (BRN223)
+            - generic [ref=e692]: Branch details, address and the agency it belongs to.
+          - generic [ref=e694]:
+            - generic [ref=e696]:
+              - generic [ref=e698]:
+                - generic [ref=e699]: Operating country
+                - generic [ref=e701]:
+                  - textbox "Operating country":
+                    - /placeholder: Select
+                    - text: EgyptLive
+              - generic [ref=e704]:
+                - generic [ref=e705]:
+                  - generic [ref=e706]: Name
+                  - generic [ref=e707]: "*"
+                - textbox "Name * Name *" [ref=e709]:
+                  - /placeholder: Name
+                  - text: NDC1_Hussein
+              - generic [ref=e712]:
+                - generic [ref=e713]:
+                  - generic [ref=e714]: Country
+                  - generic [ref=e715]: "*"
+                - generic [ref=e716]:
+                  - textbox "Country *":
+                    - /placeholder: ""
+                    - text: Egypt
+              - generic [ref=e719]:
+                - generic [ref=e720]: State *
+                - generic [ref=e722] [cursor=pointer]:
+                  - generic [ref=e723]:
+                    - combobox "State *"
+                  - generic [ref=e724]: Cairo
+                  - generic [ref=e725]: 
+                  - button "dropdown trigger" [ref=e726]:
+                    - generic [ref=e727]: 
+              - generic [ref=e730]:
+                - generic [ref=e731]: City *
+                - generic [ref=e733] [cursor=pointer]:
+                  - generic [ref=e734]:
+                    - combobox "City *"
+                  - generic [ref=e735]: Cairo
+                  - generic [ref=e736]: 
+                  - button "dropdown trigger" [ref=e737]:
+                    - generic [ref=e738]: 
+              - generic [ref=e741]:
+                - generic [ref=e742]: Address 1 *
+                - textbox [ref=e744]: Maadi
+              - generic [ref=e747]:
+                - generic [ref=e748]: Address 2
+                - textbox [ref=e750]
+              - generic [ref=e753]:
+                - generic [ref=e754]:
+                  - generic [ref=e755]: Post Office Box
+                  - generic [ref=e756]: "*"
+                - textbox "Post Office Box *" [ref=e758]:
+                  - /placeholder: ""
+                  - text: "003"
+              - generic [ref=e761]:
+                - generic [ref=e762]: Phone Number *
+                - textbox "+20 1001234567" [ref=e769]: "1215154451"
+              - generic [ref=e772]:
+                - generic [ref=e773]: Service Tax Number
+                - textbox "Service Tax Number" [ref=e776]:
+                  - /placeholder: ""
+              - generic [ref=e779]:
+                - generic [ref=e780]: ABTA Number
+                - textbox "ABTA Number" [ref=e783]:
+                  - /placeholder: ""
+            - generic [ref=e785]:
+              - paragraph [ref=e789]: Branch Email Config Info
+              - generic [ref=e790]:
+                - generic [ref=e792]:
+                  - generic [ref=e793]:
+                    - generic [ref=e794]: Email ID
+                    - generic [ref=e795]: "*"
+                  - textbox "Email ID * Email ID *" [ref=e797]:
+                    - /placeholder: Enter Your Email
+                    - text: Hussien.ata@tildetech.ae
+                - generic [ref=e800]:
+                  - generic [ref=e801]: Email Password *
+                  - generic [ref=e802]:
+                    - generic [ref=e803]: 
+                    - textbox "Email Password *" [ref=e804]:
+                      - /placeholder: "**********"
+                      - text: HusseinAta@1541
+            - generic [ref=e806]:
+              - paragraph [ref=e810]: Branch Contact Info
+              - generic [ref=e812]:
+                - generic [ref=e813]:
+                  - generic [ref=e815]:
+                    - generic [ref=e816]:
+                      - generic [ref=e817]: Name
+                      - generic [ref=e818]: "*"
+                    - textbox "Name" [ref=e820]: Hussein
+                  - generic [ref=e823]:
+                    - generic [ref=e824]:
+                      - generic [ref=e825]: Email ID
+                      - generic [ref=e826]: "*"
+                    - textbox "Enter Your Email" [ref=e828]: Hussien.ataa@tildetech.ae
+                  - generic [ref=e831]:
+                    - generic [ref=e832]: Phone Number *
+                    - textbox "+20 1001234567" [ref=e839]: "1215151515"
+                - button "Add row" [ref=e842] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=e843]: 
+            - generic [ref=e846]:
+              - generic [ref=e848]:
+                - generic [ref=e849]: Enter Target Amount
+                - textbox "Enter Target Amount" [ref=e852]:
+                  - /placeholder: ""
+              - generic [ref=e855]:
+                - generic [ref=e856]: Set Month
+                - generic [ref=e858] [cursor=pointer]:
+                  - generic [ref=e859]:
+                    - combobox "Set Month"
+                  - generic [ref=e860]: Select
+                  - button "dropdown trigger" [ref=e861]:
+                    - generic [ref=e862]: 
+              - generic [ref=e865]:
+                - generic [ref=e866]: Set Year
+                - generic [ref=e868] [cursor=pointer]:
+                  - generic [ref=e869]:
+                    - combobox "Set Year"
+                  - generic [ref=e870]: Select
+                  - button "dropdown trigger" [ref=e871]:
+                    - generic [ref=e872]: 
+              - button "Add " [disabled] [ref=e875]:
+                - generic [ref=e876]: Add
+                - generic [ref=e877]: 
+            - generic [ref=e881]:
+              - generic [ref=e883]:
+                - generic [ref=e884]:
+                  - generic [ref=e885]: Credit Limit
+                  - generic [ref=e886]: "*"
+                - textbox "Credit Limit *" [ref=e888]:
+                  - /placeholder: ""
+                  - text: "5000000"
+              - generic [ref=e891]:
+                - generic [ref=e892]:
+                  - generic [ref=e893]: Top Up Limit
+                  - generic [ref=e894]: "*"
+                - textbox "Top Up Limit *" [ref=e896]:
+                  - /placeholder: ""
+                  - text: "500000000"
+              - generic [ref=e899]:
+                - generic [ref=e900]:
+                  - generic [ref=e901]: Credit Terms(Days)
+                  - generic [ref=e902]: "*"
+                - textbox "Credit Terms(Days) *" [ref=e904]:
+                  - /placeholder: ""
+                  - text: "30"
+              - generic [ref=e907]:
+                - generic [ref=e908]: Reaching Percentage
+                - textbox "Reaching Percentage" [ref=e911]:
+                  - /placeholder: ""
+              - generic [ref=e914]:
+                - generic [ref=e915]: Warning Prompt(Days)
+                - textbox "Warning Prompt(Days)" [ref=e918]:
+                  - /placeholder: ""
+                  - text: "0"
+              - generic [ref=e922]:
+                - generic [ref=e923]: Payment Option *
+                - text: ":"
+                - generic [ref=e925] [cursor=pointer]:
+                  - generic [ref=e926]:
+                    - checkbox "Cash" [checked]
+                  - generic [ref=e927]: 
+                - generic [ref=e929]: Cash
+                - generic [ref=e931] [cursor=pointer]:
+                  - generic [ref=e932]:
+                    - checkbox "Wallet" [checked]
+                  - generic [ref=e933]: 
+                - generic [ref=e935]: Wallet
+                - generic [ref=e938] [cursor=pointer]:
+                  - checkbox "Credit Card"
+                - generic [ref=e940]: Credit Card
+                - generic [ref=e943] [cursor=pointer]:
+                  - checkbox "BANQUE MISR"
+                - generic [ref=e945]: BANQUE MISR
+                - generic [ref=e948] [cursor=pointer]:
+                  - checkbox "rKUWWBtwAn"
+                - generic [ref=e950]: rKUWWBtwAn
+                - generic [ref=e953] [cursor=pointer]:
+                  - checkbox "NFc*@#IeF"
+                - generic [ref=e955]: NFc*@#IeF
+                - generic [ref=e958] [cursor=pointer]:
+                  - checkbox "rpCzyVkmYV"
+                - generic [ref=e960]: rpCzyVkmYV
+                - generic [ref=e963] [cursor=pointer]:
+                  - checkbox "aUZAMopkAt"
+                - generic [ref=e965]: aUZAMopkAt
+                - generic [ref=e968] [cursor=pointer]:
+                  - checkbox "ddK*@#MfD"
+                - generic [ref=e970]: ddK*@#MfD
+                - generic [ref=e973] [cursor=pointer]:
+                  - checkbox "MxraMgwpPN"
+                - generic [ref=e975]: MxraMgwpPN
+                - generic [ref=e978] [cursor=pointer]:
+                  - checkbox "CbPIsYjSss"
+                - generic [ref=e980]: CbPIsYjSss
+                - generic [ref=e983] [cursor=pointer]:
+                  - checkbox "muK*@#aZF"
+                - generic [ref=e985]: muK*@#aZF
+                - generic [ref=e988] [cursor=pointer]:
+                  - checkbox "xPjhWMYGyH"
+                - generic [ref=e990]: xPjhWMYGyH
+                - generic [ref=e993] [cursor=pointer]:
+                  - checkbox "GDlqzeGyke"
+                - generic [ref=e995]: GDlqzeGyke
+                - generic [ref=e998] [cursor=pointer]:
+                  - checkbox "kLL*@#YyS"
+                - generic [ref=e1000]: kLL*@#YyS
+                - generic [ref=e1003] [cursor=pointer]:
+                  - checkbox "eyFbsyVSMz"
+                - generic [ref=e1005]: eyFbsyVSMz
+                - generic [ref=e1008] [cursor=pointer]:
+                  - checkbox "LsnxWgCOBw"
+                - generic [ref=e1010]: LsnxWgCOBw
+                - generic [ref=e1013] [cursor=pointer]:
+                  - checkbox "Yvg*@#HXv"
+                - generic [ref=e1015]: Yvg*@#HXv
+                - generic [ref=e1018] [cursor=pointer]:
+                  - checkbox "LWnzaFSqiK"
+                - generic [ref=e1020]: LWnzaFSqiK
+                - generic [ref=e1023] [cursor=pointer]:
+                  - checkbox "testttk"
+                - generic [ref=e1025]: testttk
+                - generic [ref=e1028] [cursor=pointer]:
+                  - checkbox "rrrrr"
+                - generic [ref=e1030]: rrrrr
+                - generic [ref=e1033] [cursor=pointer]:
+                  - checkbox "fdtgsdgt"
+                - generic [ref=e1035]: fdtgsdgt
+                - generic [ref=e1038] [cursor=pointer]:
+                  - checkbox "sdgsdgs"
+                - generic [ref=e1040]: sdgsdgs
+                - generic [ref=e1043] [cursor=pointer]:
+                  - checkbox "sdgsdgsd"
+                - generic [ref=e1045]: sdgsdgsd
+                - generic [ref=e1048] [cursor=pointer]:
+                  - checkbox "setgset"
+                - generic [ref=e1050]: setgset
+                - generic [ref=e1053] [cursor=pointer]:
+                  - checkbox "New Payment"
+                - generic [ref=e1055]: New Payment
+                - generic [ref=e1058] [cursor=pointer]:
+                  - checkbox "Fawry"
+                - generic [ref=e1060]: Fawry
+                - generic [ref=e1063] [cursor=pointer]:
+                  - checkbox "ZZZ"
+                - generic [ref=e1065]: ZZZ
+                - generic [ref=e1068] [cursor=pointer]:
+                  - checkbox "Mostaf"
+                - generic [ref=e1070]: Mostaf
+            - generic [ref=e1073]:
+              - generic [ref=e1075]:
+                - generic [ref=e1076]:
+                  - generic [ref=e1077]: Outstanding Threshold
+                  - generic [ref=e1078]: "*"
+                - generic [ref=e1081]:
+                  - textbox "Outstanding Threshold *":
+                    - /placeholder: ""
+                    - text: "50000000"
+              - button "Change Threshold " [ref=e1084] [cursor=pointer]:
+                - generic [ref=e1085]: Change Threshold
+                - generic [ref=e1086]: 
+            - generic [ref=e1088]:
+              - paragraph [ref=e1092]: Product Access Details
+              - generic [ref=e1096]:
+                - generic [ref=e1098] [cursor=pointer]:
+                  - generic [ref=e1099]:
+                    - checkbox "Flight" [checked]
+                  - generic [ref=e1100]: 
+                - generic [ref=e1102]: Flight
+                - generic [ref=e1105] [cursor=pointer]:
+                  - checkbox "Others"
+                - generic [ref=e1107]: Others
+        - table [ref=e1118]:
+          - rowgroup [ref=e1119]:
+            - row [ref=e1120]:
+              - columnheader "Status" [ref=e1121]
+              - columnheader "Supplier Name" [ref=e1122]
+              - columnheader "Credential Name" [ref=e1123]
+              - columnheader "Product Name" [ref=e1124]
+              - columnheader "Description" [ref=e1125]
+          - rowgroup [ref=e1126]:
+            - row [ref=e1127]:
+              - cell "" [ref=e1128]:
+                - generic [ref=e1130] [cursor=pointer]:
+                  - generic [ref=e1131]:
+                    - checkbox [checked]
+                  - generic [ref=e1132]: 
+              - cell "AegeanNdc" [ref=e1134]
+              - cell "AegeanNDCProd  dropdown trigger" [ref=e1135]:
+                - generic [ref=e1142] [cursor=pointer]:
+                  - generic [ref=e1143]:
+                    - combobox
+                  - generic [ref=e1144]: AegeanNDCProd
+                  - generic [ref=e1145]: 
+                  - button "dropdown trigger" [ref=e1146]:
+                    - generic [ref=e1147]: 
+              - cell "Flight" [ref=e1148]
+              - cell [ref=e1149]:
+                - textbox "Description" [ref=e1156]: DES
+            - row [ref=e1157]:
+              - cell [ref=e1158]:
+                - generic [ref=e1161] [cursor=pointer]:
+                  - checkbox
+              - cell "AirArabiaEgypt" [ref=e1163]
+              - cell "Select dropdown trigger" [ref=e1164]:
+                - generic [ref=e1170]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1171]
+              - cell [ref=e1172]:
+                - textbox "Description" [disabled] [ref=e1179]
+            - row [ref=e1180]:
+              - cell [ref=e1181]:
+                - generic [ref=e1184] [cursor=pointer]:
+                  - checkbox
+              - cell "AirArabiaKSA" [ref=e1186]
+              - cell "Select dropdown trigger" [ref=e1187]:
+                - generic [ref=e1193]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1194]
+              - cell [ref=e1195]:
+                - textbox "Description" [disabled] [ref=e1202]
+            - row [ref=e1203]:
+              - cell [ref=e1204]:
+                - generic [ref=e1207] [cursor=pointer]:
+                  - checkbox
+              - cell "AirArbia" [ref=e1209]
+              - cell "Select dropdown trigger" [ref=e1210]:
+                - generic [ref=e1216]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1217]
+              - cell [ref=e1218]:
+                - textbox "Description" [disabled] [ref=e1225]
+            - row [ref=e1226]:
+              - cell [ref=e1227]:
+                - generic [ref=e1230] [cursor=pointer]:
+                  - checkbox
+              - cell "AirArbiaUAE" [ref=e1232]
+              - cell "Select dropdown trigger" [ref=e1233]:
+                - generic [ref=e1239]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1240]
+              - cell [ref=e1241]:
+                - textbox "Description" [disabled] [ref=e1248]
+            - row [ref=e1249]:
+              - cell [ref=e1250]:
+                - generic [ref=e1253] [cursor=pointer]:
+                  - checkbox
+              - cell "AirBlue" [ref=e1255]
+              - cell "Select dropdown trigger" [ref=e1256]:
+                - generic [ref=e1262]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1263]
+              - cell [ref=e1264]:
+                - textbox "Description" [disabled] [ref=e1271]
+            - row [ref=e1272]:
+              - cell [ref=e1273]:
+                - generic [ref=e1276] [cursor=pointer]:
+                  - checkbox
+              - cell "AirBlueKSA" [ref=e1278]
+              - cell "Select dropdown trigger" [ref=e1279]:
+                - generic [ref=e1285]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1286]
+              - cell [ref=e1287]:
+                - textbox "Description" [disabled] [ref=e1294]
+            - row [ref=e1295]:
+              - cell [ref=e1296]:
+                - generic [ref=e1299] [cursor=pointer]:
+                  - checkbox
+              - cell "AirCairo" [ref=e1301]
+              - cell "Select dropdown trigger" [ref=e1302]:
+                - generic [ref=e1308]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1309]
+              - cell [ref=e1310]:
+                - textbox "Description" [disabled] [ref=e1317]
+            - row [ref=e1318]:
+              - cell [ref=e1319]:
+                - generic [ref=e1322] [cursor=pointer]:
+                  - checkbox
+              - cell "AirSial" [ref=e1324]
+              - cell "Select dropdown trigger" [ref=e1325]:
+                - generic [ref=e1331]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1332]
+              - cell [ref=e1333]:
+                - textbox "Description" [disabled] [ref=e1340]
+            - row [ref=e1341]:
+              - cell [ref=e1342]:
+                - generic [ref=e1345] [cursor=pointer]:
+                  - checkbox
+              - cell "AirSialNDC" [ref=e1347]
+              - cell "Select dropdown trigger" [ref=e1348]:
+                - generic [ref=e1354]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1355]
+              - cell [ref=e1356]:
+                - textbox "Description" [disabled] [ref=e1363]
+            - row [ref=e1364]:
+              - cell [ref=e1365]:
+                - generic [ref=e1368] [cursor=pointer]:
+                  - checkbox
+              - cell "AirSMCairo" [ref=e1370]
+              - cell "Select dropdown trigger" [ref=e1371]:
+                - generic [ref=e1377]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1378]
+              - cell [ref=e1379]:
+                - textbox "Description" [disabled] [ref=e1386]
+            - row [ref=e1387]:
+              - cell [ref=e1388]:
+                - generic [ref=e1391] [cursor=pointer]:
+                  - checkbox
+              - cell "AirSMCairoUSA" [ref=e1393]
+              - cell "Select dropdown trigger" [ref=e1394]:
+                - generic [ref=e1400]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1401]
+              - cell [ref=e1402]:
+                - textbox "Description" [disabled] [ref=e1409]
+            - row [ref=e1410]:
+              - cell [ref=e1411]:
+                - generic [ref=e1414] [cursor=pointer]:
+                  - checkbox
+              - cell "Amadeus" [ref=e1416]
+              - cell [ref=e1417]
+              - cell "Flight" [ref=e1418]
+              - cell [ref=e1419]:
+                - textbox "Description" [disabled] [ref=e1426]
+            - row [ref=e1427]:
+              - cell [ref=e1428]:
+                - generic [ref=e1431] [cursor=pointer]:
+                  - checkbox
+              - cell "AmadeusNDC" [ref=e1433]
+              - cell [ref=e1434]
+              - cell "Flight" [ref=e1435]
+              - cell [ref=e1436]:
+                - textbox "Description" [disabled] [ref=e1443]
+            - row [ref=e1444]:
+              - cell [ref=e1445]:
+                - generic [ref=e1448] [cursor=pointer]:
+                  - checkbox
+              - cell "AmdNDC" [ref=e1450]
+              - cell [ref=e1451]
+              - cell "Flight" [ref=e1452]
+              - cell [ref=e1453]:
+                - textbox "Description" [disabled] [ref=e1460]
+            - row [ref=e1461]:
+              - cell [ref=e1462]:
+                - generic [ref=e1465] [cursor=pointer]:
+                  - checkbox
+              - cell "BlueAirline" [ref=e1467]
+              - cell "Select dropdown trigger" [ref=e1468]:
+                - generic [ref=e1474]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1475]
+              - cell [ref=e1476]:
+                - textbox "Description" [disabled] [ref=e1483]
+            - row [ref=e1484]:
+              - cell [ref=e1485]:
+                - generic [ref=e1488] [cursor=pointer]:
+                  - checkbox
+              - cell "DOT" [ref=e1490]
+              - cell "Select dropdown trigger" [ref=e1491]:
+                - generic [ref=e1497]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1498]
+              - cell [ref=e1499]:
+                - textbox "Description" [disabled] [ref=e1506]
+            - row [ref=e1507]:
+              - cell [ref=e1508]:
+                - generic [ref=e1511] [cursor=pointer]:
+                  - checkbox
+              - cell "EgyptAirEgy" [ref=e1513]
+              - cell "Select dropdown trigger" [ref=e1514]:
+                - generic [ref=e1520]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1521]
+              - cell [ref=e1522]:
+                - textbox "Description" [disabled] [ref=e1529]
+            - row [ref=e1530]:
+              - cell [ref=e1531]:
+                - generic [ref=e1534] [cursor=pointer]:
+                  - checkbox
+              - cell "EgyptAirKSA" [ref=e1536]
+              - cell "Select dropdown trigger" [ref=e1537]:
+                - generic [ref=e1543]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1544]
+              - cell [ref=e1545]:
+                - textbox "Description" [disabled] [ref=e1552]
+            - row [ref=e1553]:
+              - cell [ref=e1554]:
+                - generic [ref=e1557] [cursor=pointer]:
+                  - checkbox
+              - cell "ElJazeeraV4" [ref=e1559]
+              - cell "Select dropdown trigger" [ref=e1560]:
+                - generic [ref=e1566]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1567]
+              - cell [ref=e1568]:
+                - textbox "Description" [disabled] [ref=e1575]
+            - row [ref=e1576]:
+              - cell [ref=e1577]:
+                - generic [ref=e1580] [cursor=pointer]:
+                  - checkbox
+              - cell "ElJaziraNdc" [ref=e1582]
+              - cell "Select dropdown trigger" [ref=e1583]:
+                - generic [ref=e1589]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1590]
+              - cell [ref=e1591]:
+                - textbox "Description" [disabled] [ref=e1598]
+            - row [ref=e1599]:
+              - cell [ref=e1600]:
+                - generic [ref=e1603] [cursor=pointer]:
+                  - checkbox
+              - cell "EmiratesNdc" [ref=e1605]
+              - cell "Select dropdown trigger" [ref=e1606]:
+                - generic [ref=e1612]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1613]
+              - cell [ref=e1614]:
+                - textbox "Description" [disabled] [ref=e1621]
+            - row [ref=e1622]:
+              - cell [ref=e1623]:
+                - generic [ref=e1626] [cursor=pointer]:
+                  - checkbox
+              - cell "Ethiopia" [ref=e1628]
+              - cell "Select dropdown trigger" [ref=e1629]:
+                - generic [ref=e1635]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1636]
+              - cell [ref=e1637]:
+                - textbox "Description" [disabled] [ref=e1644]
+            - row [ref=e1645]:
+              - cell [ref=e1646]:
+                - generic [ref=e1649] [cursor=pointer]:
+                  - checkbox
+              - cell "EthiopNdc" [ref=e1651]
+              - cell "Select dropdown trigger" [ref=e1652]:
+                - generic [ref=e1658]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1659]
+              - cell [ref=e1660]:
+                - textbox "Description" [disabled] [ref=e1667]
+            - row [ref=e1668]:
+              - cell [ref=e1669]:
+                - generic [ref=e1672] [cursor=pointer]:
+                  - checkbox
+              - cell "FlyAdealNDC" [ref=e1674]
+              - cell "Select dropdown trigger" [ref=e1675]:
+                - generic [ref=e1681]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1682]
+              - cell [ref=e1683]:
+                - textbox "Description" [disabled] [ref=e1690]
+            - row [ref=e1691]:
+              - cell [ref=e1692]:
+                - generic [ref=e1695] [cursor=pointer]:
+                  - checkbox
+              - cell "FlyDubaiUAE" [ref=e1697]
+              - cell "Select dropdown trigger" [ref=e1698]:
+                - generic [ref=e1704]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1705]
+              - cell [ref=e1706]:
+                - textbox "Description" [disabled] [ref=e1713]
+            - row [ref=e1714]:
+              - cell [ref=e1715]:
+                - generic [ref=e1718] [cursor=pointer]:
+                  - checkbox
+              - cell "FlyDubi" [ref=e1720]
+              - cell "Select dropdown trigger" [ref=e1721]:
+                - generic [ref=e1727]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1728]
+              - cell [ref=e1729]:
+                - textbox "Description" [disabled] [ref=e1736]
+            - row [ref=e1737]:
+              - cell [ref=e1738]:
+                - generic [ref=e1741] [cursor=pointer]:
+                  - checkbox
+              - cell "FlyDubiUAE" [ref=e1743]
+              - cell "Select dropdown trigger" [ref=e1744]:
+                - generic [ref=e1750]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1751]
+              - cell [ref=e1752]:
+                - textbox "Description" [disabled] [ref=e1759]
+            - row [ref=e1760]:
+              - cell [ref=e1761]:
+                - generic [ref=e1764] [cursor=pointer]:
+                  - checkbox
+              - cell "FlyNas" [ref=e1766]
+              - cell "Select dropdown trigger" [ref=e1767]:
+                - generic [ref=e1773]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1774]
+              - cell [ref=e1775]:
+                - textbox "Description" [disabled] [ref=e1782]
+            - row [ref=e1783]:
+              - cell [ref=e1784]:
+                - generic [ref=e1787] [cursor=pointer]:
+                  - checkbox
+              - cell "Galileo" [ref=e1789]
+              - cell [ref=e1790]
+              - cell "Flight" [ref=e1791]
+              - cell [ref=e1792]:
+                - textbox "Description" [disabled] [ref=e1799]
+            - row [ref=e1800]:
+              - cell [ref=e1801]:
+                - generic [ref=e1804] [cursor=pointer]:
+                  - checkbox
+              - cell "GDI" [ref=e1806]
+              - cell [ref=e1807]
+              - cell "Flight" [ref=e1808]
+              - cell [ref=e1809]:
+                - textbox "Description" [disabled] [ref=e1816]
+            - row [ref=e1817]:
+              - cell [ref=e1818]:
+                - generic [ref=e1821] [cursor=pointer]:
+                  - checkbox
+              - cell "IndgoNDC" [ref=e1823]
+              - cell "Select dropdown trigger" [ref=e1824]:
+                - generic [ref=e1830]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1831]
+              - cell [ref=e1832]:
+                - textbox "Description" [disabled] [ref=e1839]
+            - row [ref=e1840]:
+              - cell [ref=e1841]:
+                - generic [ref=e1844] [cursor=pointer]:
+                  - checkbox
+              - cell "IndiaAirLine" [ref=e1846]
+              - cell [ref=e1847]
+              - cell "Flight" [ref=e1848]
+              - cell [ref=e1849]:
+                - textbox "Description" [disabled] [ref=e1856]
+            - row [ref=e1857]:
+              - cell [ref=e1858]:
+                - generic [ref=e1861] [cursor=pointer]:
+                  - checkbox
+              - cell "Indigo" [ref=e1863]
+              - cell "Select dropdown trigger" [ref=e1864]:
+                - generic [ref=e1870]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1871]
+              - cell [ref=e1872]:
+                - textbox "Description" [disabled] [ref=e1879]
+            - row [ref=e1880]:
+              - cell [ref=e1881]:
+                - generic [ref=e1884] [cursor=pointer]:
+                  - checkbox
+              - cell "JazeeraAirways" [ref=e1886]
+              - cell "Select dropdown trigger" [ref=e1887]:
+                - generic [ref=e1893]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1894]
+              - cell [ref=e1895]:
+                - textbox "Description" [disabled] [ref=e1902]
+            - row [ref=e1903]:
+              - cell [ref=e1904]:
+                - generic [ref=e1907] [cursor=pointer]:
+                  - checkbox
+              - cell "MIK" [ref=e1909]
+              - cell [ref=e1910]
+              - cell "Flight" [ref=e1911]
+              - cell [ref=e1912]:
+                - textbox "Description" [disabled] [ref=e1919]
+            - row [ref=e1920]:
+              - cell [ref=e1921]:
+                - generic [ref=e1924] [cursor=pointer]:
+                  - checkbox
+              - cell "NDCGal" [ref=e1926]
+              - cell [ref=e1927]
+              - cell "Flight" [ref=e1928]
+              - cell [ref=e1929]:
+                - textbox "Description" [disabled] [ref=e1936]
+            - row [ref=e1937]:
+              - cell [ref=e1938]:
+                - generic [ref=e1941] [cursor=pointer]:
+                  - checkbox
+              - cell "NDCsbr" [ref=e1943]
+              - cell [ref=e1944]
+              - cell "Flight" [ref=e1945]
+              - cell [ref=e1946]:
+                - textbox "Description" [disabled] [ref=e1953]
+            - row [ref=e1954]:
+              - cell [ref=e1955]:
+                - generic [ref=e1958] [cursor=pointer]:
+                  - checkbox
+              - cell "NDCWT" [ref=e1960]
+              - cell "Select dropdown trigger" [ref=e1961]:
+                - generic [ref=e1967]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e1968]
+              - cell [ref=e1969]:
+                - textbox "Description" [disabled] [ref=e1976]
+            - row [ref=e1977]:
+              - cell [ref=e1978]:
+                - generic [ref=e1981] [cursor=pointer]:
+                  - checkbox
+              - cell "Sabre" [ref=e1983]
+              - cell [ref=e1984]
+              - cell "Flight" [ref=e1985]
+              - cell [ref=e1986]:
+                - textbox "Description" [disabled] [ref=e1993]
+            - row [ref=e1994]:
+              - cell [ref=e1995]:
+                - generic [ref=e1998] [cursor=pointer]:
+                  - checkbox
+              - cell "SalamAir" [ref=e2000]
+              - cell "Select dropdown trigger" [ref=e2001]:
+                - generic [ref=e2007]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2008]
+              - cell [ref=e2009]:
+                - textbox "Description" [disabled] [ref=e2016]
+            - row [ref=e2017]:
+              - cell [ref=e2018]:
+                - generic [ref=e2021] [cursor=pointer]:
+                  - checkbox
+              - cell "SereneAir" [ref=e2023]
+              - cell "Select dropdown trigger" [ref=e2024]:
+                - generic [ref=e2030]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2031]
+              - cell [ref=e2032]:
+                - textbox "Description" [disabled] [ref=e2039]
+            - row [ref=e2040]:
+              - cell [ref=e2041]:
+                - generic [ref=e2044] [cursor=pointer]:
+                  - checkbox
+              - cell "ShoraNDC" [ref=e2046]
+              - cell "Select dropdown trigger" [ref=e2047]:
+                - generic [ref=e2053]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2054]
+              - cell [ref=e2055]:
+                - textbox "Description" [disabled] [ref=e2062]
+            - row [ref=e2063]:
+              - cell [ref=e2064]:
+                - generic [ref=e2067] [cursor=pointer]:
+                  - checkbox
+              - cell "ShuraTech" [ref=e2069]
+              - cell "Select dropdown trigger" [ref=e2070]:
+                - generic [ref=e2076]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2077]
+              - cell [ref=e2078]:
+                - textbox "Description" [disabled] [ref=e2085]
+            - row [ref=e2086]:
+              - cell [ref=e2087]:
+                - generic [ref=e2090] [cursor=pointer]:
+                  - checkbox
+              - cell "ShuraTechGLC" [ref=e2092]
+              - cell "Select dropdown trigger" [ref=e2093]:
+                - generic [ref=e2099]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2100]
+              - cell [ref=e2101]:
+                - textbox "Description" [disabled] [ref=e2108]
+            - row [ref=e2109]:
+              - cell [ref=e2110]:
+                - generic [ref=e2113] [cursor=pointer]:
+                  - checkbox
+              - cell "Spicejet" [ref=e2115]
+              - cell "Select dropdown trigger" [ref=e2116]:
+                - generic [ref=e2122]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2123]
+              - cell [ref=e2124]:
+                - textbox "Description" [disabled] [ref=e2131]
+            - row [ref=e2132]:
+              - cell [ref=e2133]:
+                - generic [ref=e2136] [cursor=pointer]:
+                  - checkbox
+              - cell "TravelFusion" [ref=e2138]
+              - cell "Select dropdown trigger" [ref=e2139]:
+                - generic [ref=e2145]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2146]
+              - cell [ref=e2147]:
+                - textbox "Description" [disabled] [ref=e2154]
+            - row [ref=e2155]:
+              - cell [ref=e2156]:
+                - generic [ref=e2159] [cursor=pointer]:
+                  - checkbox
+              - cell "TravelFusionEGP" [ref=e2161]
+              - cell "Select dropdown trigger" [ref=e2162]:
+                - generic [ref=e2168]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2169]
+              - cell [ref=e2170]:
+                - textbox "Description" [disabled] [ref=e2177]
+            - row [ref=e2178]:
+              - cell [ref=e2179]:
+                - generic [ref=e2182] [cursor=pointer]:
+                  - checkbox
+              - cell "TravelportNdc" [ref=e2184]
+              - cell [ref=e2185]
+              - cell "Flight" [ref=e2186]
+              - cell [ref=e2187]:
+                - textbox "Description" [disabled] [ref=e2194]
+            - row [ref=e2195]:
+              - cell [ref=e2196]:
+                - generic [ref=e2199] [cursor=pointer]:
+                  - checkbox
+              - cell "TurkishAirlines" [ref=e2201]
+              - cell "Select dropdown trigger" [ref=e2202]:
+                - generic [ref=e2208]:
+                  - generic:
+                    - generic:
+                      - combobox [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - cell "Flight" [ref=e2209]
+              - cell [ref=e2210]:
+                - textbox "Description" [disabled] [ref=e2217]
+          - rowgroup
+        - generic [ref=e2225]:
+          - generic [ref=e2227] [cursor=pointer]:
+            - generic [ref=e2228]:
+              - checkbox "Import PNR" [checked]
+            - generic [ref=e2229]: 
+          - generic [ref=e2231]: Import PNR
+        - generic [ref=e2236]:
+          - generic [ref=e2237]: Remarks *
+          - textbox "remarks..." [ref=e2239]: Approved by H.
+        - generic [ref=e2241]:
+          - button "Cancel" [ref=e2242] [cursor=pointer]
+          - button "Reject" [ref=e2244] [cursor=pointer]
+          - button "Approve" [ref=e2246] [cursor=pointer]
+          - button "Send For Approval" [ref=e2248] [cursor=pointer]
+  - generic [ref=e204]: Copyright © Wonder Travel 2026. All Rights Reserved. RC1

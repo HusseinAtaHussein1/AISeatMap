@@ -1,0 +1,85 @@
+- generic [ref=f74e4]:
+  - generic [ref=f74e5]:
+    - text:          
+    - generic [ref=f74e7]:
+      - text:  
+      - button [ref=f74e8] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f74e9]: 
+  - generic [ref=f74e10]:
+    - generic [ref=f74e11]:
+      - banner [ref=f74e13]:
+        - generic [ref=f74e14]:
+          - img "Logo" [ref=f74e17] [cursor=pointer]
+          - generic [ref=f74e18]:
+            - generic [ref=f74e19]:
+              - generic [ref=f74e20]:
+                - generic [ref=f74e21]: 
+                - generic [ref=f74e22]: Hussien.ata@tildetech.ae
+              - generic [ref=f74e23]: "|"
+              - generic [ref=f74e24]:
+                - generic [ref=f74e25]: 
+                - generic [ref=f74e26]: +20-1215484845
+            - generic [ref=f74e27]:
+              - button "Take a tour" [ref=f74e29] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f74e30]: 
+              - button "Top Up Wallet" [ref=f74e31] [cursor=pointer]:
+                - generic [ref=f74e32]: 
+              - button "Settings" [ref=f74e33] [cursor=pointer]:
+                - generic [ref=f74e34]: 
+            - generic [ref=f74e36]:
+              - button "Welcome Hussien " [ref=f74e37] [cursor=pointer]:
+                - generic [ref=f74e38]:
+                  - generic [ref=f74e39]: Welcome
+                  - generic [ref=f74e40]:
+                    - text: Hussien
+                    - generic [ref=f74e41]: 
+              - button "Profile menu" [ref=f74e42] [cursor=pointer]:
+                - img "Hussien profile" [ref=f74e45]
+      - generic [ref=f74e51]:
+        - generic [ref=f74e52]:
+          - paragraph [ref=f74e53]: Reports
+          - generic [ref=f74e54]: Total Due, sales, booking, and statement reports
+        - generic [ref=f74e55]:
+          - generic [ref=f74e57] [cursor=pointer]:
+            - generic [ref=f74e59]: 
+            - heading "Total Due to NDC" [level=3] [ref=f74e63]
+            - paragraph [ref=f74e64]: In total due to NDC report, we review the pending due value of our product due to this report function
+            - button "Manage " [ref=f74e66]:
+              - generic [ref=f74e67]: Manage
+              - generic [ref=f74e68]: 
+          - generic [ref=f74e70] [cursor=pointer]:
+            - generic [ref=f74e72]: 
+            - heading "Sales" [level=3] [ref=f74e76]
+            - paragraph [ref=f74e77]: In Sales Report , the team will discuss your value proposition and content assets by persona along each stage of the buyer’s journey. This process often uncovers messaging gaps, or a need for content assets during particular stages. Develop your Sales plan and map it along the funnel.
+            - button "Manage " [ref=f74e79]:
+              - generic [ref=f74e80]: Manage
+              - generic [ref=f74e81]: 
+          - generic [ref=f74e83] [cursor=pointer]:
+            - generic [ref=f74e85]: 
+            - heading "Bookings" [level=3] [ref=f74e89]
+            - paragraph [ref=f74e90]: Booking report with respect to flight,Insurance, Hotel and others. In booking report we see report with compare date wise
+            - button "Manage " [ref=f74e92]:
+              - generic [ref=f74e93]: Manage
+              - generic [ref=f74e94]: 
+          - generic [ref=f74e96] [cursor=pointer]:
+            - generic [ref=f74e98]: 
+            - heading "Statement" [level=3] [ref=f74e102]
+            - paragraph [ref=f74e103]: Statement report with respect to flight, insurance, hotel & others. in statement report, we see report with compare date wise
+            - button "Manage " [ref=f74e105]:
+              - generic [ref=f74e106]: Manage
+              - generic [ref=f74e107]: 
+    - contentinfo [ref=f74e108]:
+      - contentinfo [ref=f74e110]:
+        - generic [ref=f74e111]:
+          - navigation "Footer navigation" [ref=f74e112]:
+            - link "About Us" [ref=f74e113] [cursor=pointer]:
+              - /url: /info/info-group/about
+            - link "Mission" [ref=f74e114] [cursor=pointer]:
+              - /url: /info/info-group/mission
+            - link "Vision" [ref=f74e115] [cursor=pointer]:
+              - /url: /info/info-group/vision
+            - link "Policy" [ref=f74e116] [cursor=pointer]:
+              - /url: /info/info-group/policy
+            - link "Contact Us" [ref=f74e117] [cursor=pointer]:
+              - /url: /info/info-group/contact
+          - generic [ref=f74e118]: Copyright © Wonder Travel 2026. All Rights Reserved.

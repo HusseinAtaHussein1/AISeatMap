@@ -1,0 +1,11 @@
+[  286530ms] [ERROR] ERROR TypeError: Cannot read properties of null (reading 'baggageMetaData')
+    at http://192.168.1.83:9500/367.ee1d904602d4da25.js:1:402967
+    at Array.find (<anonymous>)
+    at http://192.168.1.83:9500/367.ee1d904602d4da25.js:1:402940
+    at Array.forEach (<anonymous>)
+    at Pd (http://192.168.1.83:9500/367.ee1d904602d4da25.js:1:402873)
+    at i.calcBaggagePrice (http://192.168.1.83:9500/367.ee1d904602d4da25.js:1:403159)
+    at http://192.168.1.83:9500/367.ee1d904602d4da25.js:1:385837
+    at pg (http://192.168.1.83:9500/main.733d1477d614d87c.js:1:1167940)
+    at Object.y [as next] (http://192.168.1.83:9500/main.733d1477d614d87c.js:1:1168078)
+    at Se.next (http://192.168.1.83:9500/main.733d1477d614d87c.js:1:1009398) @ http://192.168.1.83:9500/main.733d1477d614d87c.js:0

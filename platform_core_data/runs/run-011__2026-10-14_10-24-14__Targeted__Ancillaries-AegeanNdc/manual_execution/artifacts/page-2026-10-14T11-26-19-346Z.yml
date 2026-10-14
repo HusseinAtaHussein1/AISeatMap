@@ -1,0 +1,168 @@
+- generic [ref=f70e1]:
+  - generic [ref=f70e4]:
+    - generic [ref=f70e5]:
+      - text:          
+      - generic [ref=f70e7]:
+        - text:  
+        - button [ref=f70e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f70e9]: 
+    - generic [ref=f70e10]:
+      - generic [ref=f70e11]:
+        - banner [ref=f70e13]:
+          - generic [ref=f70e14]:
+            - img "Logo" [ref=f70e17] [cursor=pointer]
+            - generic [ref=f70e18]:
+              - generic [ref=f70e19]:
+                - generic [ref=f70e20]:
+                  - generic [ref=f70e21]: 
+                  - generic [ref=f70e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f70e23]: "|"
+                - generic [ref=f70e24]:
+                  - generic [ref=f70e25]: 
+                  - generic [ref=f70e26]: +20-1215484845
+              - generic [ref=f70e27]:
+                - button "Take a tour" [ref=f70e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f70e30]: 
+                - button "Top Up Wallet" [ref=f70e31] [cursor=pointer]:
+                  - generic [ref=f70e32]: 
+                - button "Settings" [ref=f70e33] [cursor=pointer]:
+                  - generic [ref=f70e34]: 
+              - generic [ref=f70e36]:
+                - button "Welcome Hussien " [ref=f70e37] [cursor=pointer]:
+                  - generic [ref=f70e38]:
+                    - generic [ref=f70e39]: Welcome
+                    - generic [ref=f70e40]:
+                      - text: Hussien
+                      - generic [ref=f70e41]: 
+                - button "Profile menu" [ref=f70e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f70e45]
+        - generic [ref=f70e125]:
+          - generic [ref=f70e127]:
+            - generic [ref=f70e129]:
+              - paragraph [ref=f70e130]:
+                - link "Back to reports" [ref=f70e131] [cursor=pointer]:
+                  - /url: /reports
+                  - generic [ref=f70e132]: 
+                - text: Booking reports
+              - generic [ref=f70e133]: Your bookings by date, supplier and status.
+            - generic [ref=f70e137]:
+              - generic [ref=f70e138]:
+                - generic [ref=f70e139]:
+                  - generic [ref=f70e140]: From Booking Date *
+                  - generic [ref=f70e143]:
+                    - textbox "From Booking Date *" [ref=f70e144]:
+                      - /placeholder: DD/MM/YYYY
+                    - button [ref=f70e145] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f70e146]: 
+                - list [ref=f70e198]:
+                  - listitem [ref=f70e199]: Required
+              - generic [ref=f70e148]:
+                - generic [ref=f70e149]:
+                  - generic [ref=f70e150]: To Booking Date *
+                  - generic [ref=f70e153]:
+                    - textbox "To Booking Date *" [active] [ref=f70e154]:
+                      - /placeholder: DD/MM/YYYY
+                      - text: "20261014"
+                    - button [ref=f70e155] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f70e156]: 
+                - list [ref=f70e200]:
+                  - listitem [ref=f70e201]: Required
+              - generic [ref=f70e159]:
+                - generic [ref=f70e160]: Agent Name
+                - generic [ref=f70e162] [cursor=pointer]:
+                  - generic [ref=f70e163]:
+                    - combobox "Agent Name"
+                  - generic [ref=f70e164]: Agent Name
+                  - button "dropdown trigger" [ref=f70e165]:
+                    - generic [ref=f70e166]: 
+              - generic [ref=f70e169]:
+                - generic [ref=f70e170]: Email
+                - textbox "Email" [ref=f70e173]:
+                  - /placeholder: email@gmail.com
+              - generic [ref=f70e176]:
+                - generic [ref=f70e177]: Client Name
+                - textbox "Client Name" [ref=f70e180]
+              - generic [ref=f70e183]:
+                - generic [ref=f70e184]: Phone Number
+                - textbox "+20 1001234567" [ref=f70e191]
+          - generic [ref=f70e193] [cursor=pointer]: Show Advance Search
+          - button "Search" [ref=f70e196] [cursor=pointer]
+      - contentinfo [ref=f70e108]:
+        - contentinfo [ref=f70e110]:
+          - generic [ref=f70e111]:
+            - navigation "Footer navigation" [ref=f70e112]:
+              - link "About Us" [ref=f70e113] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f70e114] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f70e115] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f70e116] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f70e117] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f70e118]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f70e121] [cursor=pointer]:
+    - emphasis [ref=f70e122]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe
+  - generic [ref=f70e281]:
+    - generic [ref=f70e282]:
+      - button "" [ref=f70e283] [cursor=pointer]
+      - generic [ref=f70e285]:
+        - button "October" [ref=f70e286] [cursor=pointer]
+        - button "2026" [ref=f70e287] [cursor=pointer]
+      - button "" [ref=f70e288] [cursor=pointer]
+    - table [ref=f70e291]:
+      - rowgroup [ref=f70e292]:
+        - row [ref=f70e293]:
+          - columnheader "Su" [ref=f70e294]
+          - columnheader "Mo" [ref=f70e295]
+          - columnheader "Tu" [ref=f70e296]
+          - columnheader "We" [ref=f70e297]
+          - columnheader "Th" [ref=f70e298]
+          - columnheader "Fr" [ref=f70e299]
+          - columnheader "Sa" [ref=f70e300]
+      - rowgroup [ref=f70e301]:
+        - row [ref=f70e302]:
+          - cell "27" [ref=f70e303]
+          - cell "28" [ref=f70e304]
+          - cell "29" [ref=f70e305]
+          - cell "30" [ref=f70e306]
+          - cell "1" [ref=f70e307]
+          - cell "2" [ref=f70e309]
+          - cell "3" [ref=f70e311]
+        - row [ref=f70e313]:
+          - cell "4" [ref=f70e314]
+          - cell "5" [ref=f70e316]
+          - cell "6" [ref=f70e318]
+          - cell "7" [ref=f70e320]
+          - cell "8" [ref=f70e322]
+          - cell "9" [ref=f70e324]
+          - cell "10" [ref=f70e326]
+        - row [ref=f70e328]:
+          - cell "11" [ref=f70e329]
+          - cell "12" [ref=f70e331]
+          - cell "13" [ref=f70e333]
+          - cell "14" [ref=f70e335]
+          - cell "15" [ref=f70e337]
+          - cell "16" [ref=f70e338]
+          - cell "17" [ref=f70e339]
+        - row [ref=f70e340]:
+          - cell "18" [ref=f70e341]
+          - cell "19" [ref=f70e342]
+          - cell "20" [ref=f70e343]
+          - cell "21" [ref=f70e344]
+          - cell "22" [ref=f70e345]
+          - cell "23" [ref=f70e346]
+          - cell "24" [ref=f70e347]
+        - row [ref=f70e348]:
+          - cell "25" [ref=f70e349]
+          - cell "26" [ref=f70e350]
+          - cell "27" [ref=f70e351]
+          - cell "28" [ref=f70e352]
+          - cell "29" [ref=f70e353]
+          - cell "30" [ref=f70e354]
+          - cell "31" [ref=f70e355]

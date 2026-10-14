@@ -1,0 +1,5 @@
+[     648ms] [ERROR] Access to XMLHttpRequest at 'http://192.168.1.83:8080/odeysysportal/v2/dashboard/userDetails' from origin 'http://192.168.1.83:9500' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://192.168.1.83:9500/dashboard:0
+[     662ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://192.168.1.83:8080/odeysysportal/v2/dashboard/userDetails:0
+[     713ms] [ERROR] Access to XMLHttpRequest at 'http://192.168.1.83:8080/odeysysportal/v2/dashboard/userDetails' from origin 'http://192.168.1.83:9500' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://192.168.1.83:9500/dashboard:0
+[     780ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://192.168.1.83:8080/odeysysportal/v2/dashboard/userDetails:0
+[     853ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://192.168.1.83:9500/auth/login:0

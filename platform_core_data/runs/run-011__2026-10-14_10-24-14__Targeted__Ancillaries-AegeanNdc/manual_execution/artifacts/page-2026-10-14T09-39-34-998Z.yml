@@ -1,0 +1,928 @@
+- generic [ref=f38e1]:
+  - generic [ref=f38e4]:
+    - generic [ref=f38e5]:
+      - text:          
+      - generic [ref=f38e7]:
+        - text:  
+        - button [ref=f38e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f38e9]: 
+    - generic [ref=f38e10]:
+      - generic [ref=f38e11]:
+        - banner [ref=f38e13]:
+          - generic [ref=f38e14]:
+            - img "Logo" [ref=f38e17] [cursor=pointer]
+            - generic [ref=f38e18]:
+              - generic [ref=f38e19]:
+                - generic [ref=f38e20]:
+                  - generic [ref=f38e21]: 
+                  - generic [ref=f38e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f38e23]: "|"
+                - generic [ref=f38e24]:
+                  - generic [ref=f38e25]: 
+                  - generic [ref=f38e26]: +20-1215484845
+              - generic [ref=f38e27]:
+                - button "Take a tour" [ref=f38e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f38e30]: 
+                - button "Top Up Wallet" [ref=f38e31] [cursor=pointer]:
+                  - generic [ref=f38e32]: 
+                - button "Settings" [ref=f38e33] [cursor=pointer]:
+                  - generic [ref=f38e34]: 
+              - generic [ref=f38e36]:
+                - button "Welcome Hussien " [ref=f38e37] [cursor=pointer]:
+                  - generic [ref=f38e38]:
+                    - generic [ref=f38e39]: Welcome
+                    - generic [ref=f38e40]:
+                      - text: Hussien
+                      - generic [ref=f38e41]: 
+                - button "Profile menu" [ref=f38e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f38e45]
+        - generic [ref=f38e1702]:
+          - generic [ref=f38e1704]:
+            - generic [ref=f38e1705]: OneWay
+            - generic [ref=f38e1707]: "Stops: 1"
+            - generic [ref=f38e1709]: "Passengers: 4"
+            - generic [ref=f38e1711]: "Trip Departure: Fri, 16 Oct, 2026"
+            - generic [ref=f38e1713]: "Trip Arrival: Fri, 16 Oct, 2026"
+          - generic [ref=f38e1715]:
+            - generic [ref=f38e1717]:
+              - tablist [ref=f38e1721]:
+                - generic [ref=f38e1723]:
+                  - tab " Segments Details" [ref=f38e1725] [cursor=pointer]:
+                    - generic [ref=f38e1726]: 
+                    - generic [ref=f38e1727]: Segments Details
+                  - generic [ref=f38e1733]:
+                    - generic [ref=f38e1734]:
+                      - generic [ref=f38e1735]: CAI✈FCO
+                      - generic [ref=f38e1736]: "Total Journey Duration: 5h 35m"
+                    - generic [ref=f38e1739]:
+                      - generic [ref=f38e1740]:
+                        - generic [ref=f38e1743]: Economy
+                        - generic [ref=f38e1746]: 
+                      - generic [ref=f38e1748]:
+                        - generic [ref=f38e1749]:
+                          - generic [ref=f38e1750]: Departure
+                          - generic [ref=f38e1751]: CAI
+                          - generic [ref=f38e1752]: Cairo International Airport
+                          - generic [ref=f38e1753]: Cairo
+                          - generic [ref=f38e1754]: 04:00 Fri, 16 Oct, 2026
+                          - generic [ref=f38e1755]: "Terminal: 3"
+                        - generic [ref=f38e1756]:
+                          - generic [ref=f38e1757]: "Segment Duration: 2h"
+                          - generic [ref=f38e1765]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f38e1766]:
+                          - generic [ref=f38e1767]: Arrival
+                          - generic [ref=f38e1768]: ATH
+                          - generic [ref=f38e1769]: Athens International Airport
+                          - generic [ref=f38e1770]: Athens
+                          - generic [ref=f38e1771]: 06:00 Fri, 16 Oct, 2026
+                          - generic [ref=f38e1772]: "Terminal: Please check terminal information with airline"
+                        - paragraph [ref=f38e1774]: "Layover Duration: 1h 35m - Location: Athens"
+                    - generic [ref=f38e1777]:
+                      - generic [ref=f38e1778]:
+                        - generic [ref=f38e1781]: Economy
+                        - generic [ref=f38e1784]: 
+                      - generic [ref=f38e1786]:
+                        - generic [ref=f38e1787]:
+                          - generic [ref=f38e1788]: Departure
+                          - generic [ref=f38e1789]: ATH
+                          - generic [ref=f38e1790]: Athens International Airport
+                          - generic [ref=f38e1791]: Athens
+                          - generic [ref=f38e1792]: 07:35 Fri, 16 Oct, 2026
+                          - generic [ref=f38e1793]: "Terminal: Please check terminal information with airline"
+                        - generic [ref=f38e1794]:
+                          - generic [ref=f38e1795]: "Segment Duration: 2h"
+                          - generic [ref=f38e1803]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f38e1804]:
+                          - generic [ref=f38e1805]: Arrival
+                          - generic [ref=f38e1806]: FCO
+                          - generic [ref=f38e1807]: Leonardo Da Vinci (Fiumicino)
+                          - generic [ref=f38e1808]: Rome
+                          - generic [ref=f38e1809]: 08:35 Fri, 16 Oct, 2026
+                          - generic [ref=f38e1810]: "Terminal: 1"
+              - generic [ref=f38e1812]:
+                - generic [ref=f38e1813]:
+                  - generic [ref=f38e1814]: 
+                  - generic [ref=f38e1815]: Passenger Details
+                - generic [ref=f38e1816]:
+                  - generic [ref=f38e1818]:
+                    - generic [ref=f38e1819]:
+                      - generic [ref=f38e1820]:
+                        - generic [ref=f38e1821]: "01"
+                        - generic [ref=f38e1822]: 
+                      - generic [ref=f38e1824]:
+                        - generic [ref=f38e1825]: Passenger Info
+                        - generic [ref=f38e1826]: Traveler details
+                        - generic [ref=f38e1827]: In progress
+                    - generic [ref=f38e1830]:
+                      - generic [ref=f38e1831]:
+                        - generic [ref=f38e1832]: "02"
+                        - generic [ref=f38e1833]: 
+                      - generic [ref=f38e1835]:
+                        - generic [ref=f38e1836]: Ancillaries
+                        - generic [ref=f38e1837]: Meals, baggage and seats
+                        - generic [ref=f38e1838]: Upcoming
+                  - generic [ref=f38e1840]:
+                    - generic [ref=f38e1841]:
+                      - paragraph [ref=f38e1842]: Please Note, newly added details will be saved to customer profile.
+                      - button "Collapse All" [ref=f38e5889] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=f38e1846]: 
+                    - tablist [ref=f38e1849]:
+                      - generic [ref=f38e1851]:
+                        - tab " 1- Adult" [expanded] [ref=f38e1853] [cursor=pointer]:
+                          - generic [ref=f38e1854]: 
+                          - generic [ref=f38e1855]: 1- Adult
+                        - region " 1- Adult" [ref=f38e1857]:
+                          - generic [ref=f38e1858]:
+                            - button "Select passenger" [ref=f38e1861] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=f38e1862]: 
+                            - generic [ref=f38e1864]:
+                              - generic [ref=f38e1865]:
+                                - generic [ref=f38e1866]: Title *
+                                - generic [ref=f38e1868] [cursor=pointer]:
+                                  - generic [ref=f38e1869]:
+                                    - combobox "Title *"
+                                  - generic [ref=f38e2762]: Ms
+                                  - generic [ref=f38e2763]: 
+                                  - button "dropdown trigger" [ref=f38e1871]:
+                                    - generic [ref=f38e1872]: 
+                              - generic [ref=f38e1873]:
+                                - generic [ref=f38e1874]: First Name *
+                                - textbox "First Name *" [ref=f38e1875]:
+                                  - /placeholder: First Name
+                                  - text: Rana
+                              - generic [ref=f38e1876]:
+                                - generic [ref=f38e1877]: Last Name *
+                                - textbox "Last Name *" [ref=f38e1878]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanfour
+                              - generic [ref=f38e1879]:
+                                - generic [ref=f38e1880]: Date of Birth *
+                                - generic [ref=f38e1882]:
+                                  - textbox "Date of Birth *" [ref=f38e1883]:
+                                    - /placeholder: Date of Birth
+                                    - text: 04/04/1989
+                                  - button [ref=f38e1884] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e1885]: 
+                              - generic [ref=f38e1886]:
+                                - generic [ref=f38e1887]: Gender *
+                                - generic [ref=f38e1888]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Female
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=f38e1889]:
+                                - generic [ref=f38e1890]: Email *
+                                - generic [ref=f38e1891]:
+                                  - textbox "Email *" [ref=f38e1892]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=f38e1893]: 24/80
+                              - generic [ref=f38e1895]:
+                                - generic [ref=f38e1896]: Phone *
+                                - textbox "Phone *" [ref=f38e1903]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=f38e1904]:
+                                - generic [ref=f38e1905]: Document Number *
+                                - generic [ref=f38e1906]:
+                                  - textbox "Document Number *" [ref=f38e1907]:
+                                    - /placeholder: "**********"
+                                    - text: A11014031
+                                  - generic [ref=f38e2475]: 9/15
+                              - generic [ref=f38e1908]:
+                                - generic [ref=f38e1909]: Document Expiry *
+                                - generic [ref=f38e1911]:
+                                  - textbox "Document Expiry *" [ref=f38e1912]:
+                                    - /placeholder: Document Expiry
+                                    - text: 04/04/2031
+                                  - button [ref=f38e1913] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e1914]: 
+                              - generic [ref=f38e1915]:
+                                - generic [ref=f38e1916]: Nationality *
+                                - generic [ref=f38e1918] [cursor=pointer]:
+                                  - generic [ref=f38e1919]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=f38e3547]: Egypt
+                                  - generic [ref=f38e3548]: 
+                                  - button "dropdown trigger" [ref=f38e1921]:
+                                    - generic [ref=f38e1922]: 
+                              - generic [ref=f38e1923]:
+                                - generic [ref=f38e1924]: Frequent Flyer
+                                - generic [ref=f38e1926] [cursor=pointer]:
+                                  - generic [ref=f38e1927]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=f38e1928]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=f38e1929]:
+                                    - generic [ref=f38e1930]: 
+                              - generic [ref=f38e1931]:
+                                - generic [ref=f38e1932]: Flyer Number
+                                - textbox "Flyer Number" [ref=f38e1934]
+                      - generic [ref=f38e1936]:
+                        - tab " 2- Adult" [expanded] [ref=f38e3549] [cursor=pointer]:
+                          - generic [ref=f38e1939]: 
+                          - generic [ref=f38e1940]: 2- Adult
+                        - region " 2- Adult" [ref=f38e3550]:
+                          - generic [ref=f38e1942]:
+                            - button "Select passenger" [ref=f38e3551] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=f38e1946]: 
+                            - generic [ref=f38e1948]:
+                              - generic [ref=f38e1949]:
+                                - generic [ref=f38e1950]: Title *
+                                - generic [ref=f38e1952] [cursor=pointer]:
+                                  - generic [ref=f38e1953]:
+                                    - combobox "Title *"
+                                  - generic [ref=f38e3929]: Mr
+                                  - generic [ref=f38e3930]: 
+                                  - button "dropdown trigger" [ref=f38e3552]:
+                                    - generic [ref=f38e1956]: 
+                              - generic [ref=f38e1957]:
+                                - generic [ref=f38e1958]: First Name *
+                                - textbox "First Name *" [ref=f38e3553]:
+                                  - /placeholder: First Name
+                                  - text: Tarek
+                              - generic [ref=f38e1960]:
+                                - generic [ref=f38e1961]: Last Name *
+                                - textbox "Last Name *" [ref=f38e3554]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanfour
+                              - generic [ref=f38e1963]:
+                                - generic [ref=f38e1964]: Date of Birth *
+                                - generic [ref=f38e1966]:
+                                  - textbox "Date of Birth *" [ref=f38e3555]:
+                                    - /placeholder: Date of Birth
+                                    - text: 05/05/1987
+                                  - button [ref=f38e1968] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e1969]: 
+                              - generic [ref=f38e1970]:
+                                - generic [ref=f38e1971]: Gender *
+                                - generic [ref=f38e1972]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Male
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=f38e1973]:
+                                - generic [ref=f38e1974]: Email *
+                                - generic [ref=f38e1975]:
+                                  - textbox "Email *" [ref=f38e3556]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=f38e1977]: 24/80
+                              - generic [ref=f38e1979]:
+                                - generic [ref=f38e1980]: Phone *
+                                - textbox "Phone *" [ref=f38e3557]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=f38e1988]:
+                                - generic [ref=f38e1989]: Document Number *
+                                - generic [ref=f38e1990]:
+                                  - textbox "Document Number *" [ref=f38e3558]:
+                                    - /placeholder: "**********"
+                                    - text: A11014032
+                                  - generic [ref=f38e3640]: 9/15
+                              - generic [ref=f38e1992]:
+                                - generic [ref=f38e1993]: Document Expiry *
+                                - generic [ref=f38e1995]:
+                                  - textbox "Document Expiry *" [ref=f38e3559]:
+                                    - /placeholder: Document Expiry
+                                    - text: 05/05/2031
+                                  - button [ref=f38e1997] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e1998]: 
+                              - generic [ref=f38e1999]:
+                                - generic [ref=f38e2000]: Nationality *
+                                - generic [ref=f38e2002] [cursor=pointer]:
+                                  - generic [ref=f38e2003]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=f38e4714]: Egypt
+                                  - generic [ref=f38e4715]: 
+                                  - button "dropdown trigger" [ref=f38e3560]:
+                                    - generic [ref=f38e2006]: 
+                              - generic [ref=f38e2007]:
+                                - generic [ref=f38e2008]: Frequent Flyer
+                                - generic [ref=f38e2010] [cursor=pointer]:
+                                  - generic [ref=f38e2011]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=f38e2012]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=f38e3561]:
+                                    - generic [ref=f38e2014]: 
+                              - generic [ref=f38e2015]:
+                                - generic [ref=f38e2016]: Flyer Number
+                                - textbox "Flyer Number" [ref=f38e3562]
+                      - generic [ref=f38e2020]:
+                        - tab " 1- Infant" [expanded] [ref=f38e4716] [cursor=pointer]:
+                          - generic [ref=f38e2023]: 
+                          - generic [ref=f38e2024]: 1- Infant
+                        - region " 1- Infant" [ref=f38e4717]:
+                          - generic [ref=f38e2026]:
+                            - button "Select passenger" [ref=f38e4718] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=f38e2030]: 
+                            - generic [ref=f38e2032]:
+                              - generic [ref=f38e2033]:
+                                - generic [ref=f38e2034]: Title *
+                                - generic [ref=f38e2036] [cursor=pointer]:
+                                  - generic [ref=f38e2037]:
+                                    - combobox "Title *"
+                                  - generic [ref=f38e5089]: Ms
+                                  - generic [ref=f38e5090]: 
+                                  - button "dropdown trigger" [ref=f38e4719]:
+                                    - generic [ref=f38e2040]: 
+                              - generic [ref=f38e2041]:
+                                - generic [ref=f38e2042]: First Name *
+                                - textbox "First Name *" [ref=f38e4720]:
+                                  - /placeholder: First Name
+                                  - text: Nour
+                              - generic [ref=f38e2044]:
+                                - generic [ref=f38e2045]: Last Name *
+                                - textbox "Last Name *" [ref=f38e4721]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanfour
+                              - generic [ref=f38e2047]:
+                                - generic [ref=f38e2048]: Date of Birth *
+                                - generic [ref=f38e2050]:
+                                  - textbox "Date of Birth *" [ref=f38e4722]:
+                                    - /placeholder: Date of Birth
+                                    - text: 06/01/2026
+                                  - button [ref=f38e2052] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e2053]: 
+                              - generic [ref=f38e2054]:
+                                - generic [ref=f38e2055]: Gender *
+                                - generic [ref=f38e2056]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Female
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=f38e2057]:
+                                - generic [ref=f38e2058]: Email *
+                                - generic [ref=f38e2059]:
+                                  - textbox "Email *" [ref=f38e4723]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=f38e2061]: 24/80
+                              - generic [ref=f38e2063]:
+                                - generic [ref=f38e2064]: Phone *
+                                - textbox "Phone *" [ref=f38e4724]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=f38e2072]:
+                                - generic [ref=f38e2073]: Document Number *
+                                - generic [ref=f38e2074]:
+                                  - textbox "Document Number *" [ref=f38e4725]:
+                                    - /placeholder: "**********"
+                                    - text: I11014033
+                                  - generic [ref=f38e4808]: 9/15
+                              - generic [ref=f38e2076]:
+                                - generic [ref=f38e2077]: Document Expiry *
+                                - generic [ref=f38e2079]:
+                                  - textbox "Document Expiry *" [ref=f38e4726]:
+                                    - /placeholder: Document Expiry
+                                    - text: 06/01/2031
+                                  - button [ref=f38e2081] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e2082]: 
+                              - generic [ref=f38e2083]:
+                                - generic [ref=f38e2084]: Nationality *
+                                - generic [ref=f38e2086] [cursor=pointer]:
+                                  - generic [ref=f38e2087]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=f38e5874]: Egypt
+                                  - generic [ref=f38e5875]: 
+                                  - button "dropdown trigger" [ref=f38e4727]:
+                                    - generic [ref=f38e2090]: 
+                              - generic [ref=f38e2091]:
+                                - generic [ref=f38e2092]: Assigned to *
+                                - generic [ref=f38e2094] [cursor=pointer]:
+                                  - generic [ref=f38e2095]:
+                                    - combobox "Assigned to *"
+                                  - generic [ref=f38e5887]: Rana Aegeanfour
+                                  - generic [ref=f38e5888]: 
+                                  - button "dropdown trigger" [ref=f38e4728]:
+                                    - generic [ref=f38e2098]: 
+                              - generic [ref=f38e2099]:
+                                - generic [ref=f38e2100]: Frequent Flyer
+                                - generic [ref=f38e2102] [cursor=pointer]:
+                                  - generic [ref=f38e2103]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=f38e2104]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=f38e4729]:
+                                    - generic [ref=f38e2106]: 
+                              - generic [ref=f38e2107]:
+                                - generic [ref=f38e2108]: Flyer Number
+                                - textbox "Flyer Number" [ref=f38e4730]
+                      - generic [ref=f38e2112]:
+                        - tab " 2- Infant" [expanded] [ref=f38e5890] [cursor=pointer]:
+                          - generic [ref=f38e2115]: 
+                          - generic [ref=f38e2116]: 2- Infant
+                        - region " 2- Infant" [ref=f38e5891]:
+                          - generic [ref=f38e2118]:
+                            - button "Select passenger" [ref=f38e5892] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=f38e2122]: 
+                            - generic [ref=f38e2124]:
+                              - generic [ref=f38e2125]:
+                                - generic [ref=f38e2126]: Title *
+                                - generic [ref=f38e2128] [cursor=pointer]:
+                                  - generic [ref=f38e2129]:
+                                    - combobox "Title *"
+                                  - generic [ref=f38e6249]: Mr
+                                  - generic [ref=f38e6250]: 
+                                  - button "dropdown trigger" [ref=f38e5893]:
+                                    - generic [ref=f38e2132]: 
+                              - generic [ref=f38e2133]:
+                                - generic [ref=f38e2134]: First Name *
+                                - textbox "First Name *" [ref=f38e5894]:
+                                  - /placeholder: First Name
+                                  - text: Adam
+                              - generic [ref=f38e2136]:
+                                - generic [ref=f38e2137]: Last Name *
+                                - textbox "Last Name *" [ref=f38e5895]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanfour
+                              - generic [ref=f38e2139]:
+                                - generic [ref=f38e2140]: Date of Birth *
+                                - generic [ref=f38e2142]:
+                                  - textbox "Date of Birth *" [ref=f38e5896]:
+                                    - /placeholder: Date of Birth
+                                    - text: 07/02/2026
+                                  - button [ref=f38e2144] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e2145]: 
+                              - generic [ref=f38e2146]:
+                                - generic [ref=f38e2147]: Gender *
+                                - generic [ref=f38e2148]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Male
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=f38e2149]:
+                                - generic [ref=f38e2150]: Email *
+                                - generic [ref=f38e2151]:
+                                  - textbox "Email *" [ref=f38e5897]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=f38e2153]: 24/80
+                              - generic [ref=f38e2155]:
+                                - generic [ref=f38e2156]: Phone *
+                                - textbox "Phone *" [ref=f38e5898]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=f38e2164]:
+                                - generic [ref=f38e2165]: Document Number *
+                                - generic [ref=f38e2166]:
+                                  - textbox "Document Number *" [ref=f38e5899]:
+                                    - /placeholder: "**********"
+                                    - text: I11014034
+                                  - generic [ref=f38e5982]: 9/15
+                              - generic [ref=f38e2168]:
+                                - generic [ref=f38e2169]: Document Expiry *
+                                - generic [ref=f38e2171]:
+                                  - textbox "Document Expiry *" [ref=f38e5900]:
+                                    - /placeholder: Document Expiry
+                                    - text: 07/02/2031
+                                  - button [ref=f38e2173] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f38e2174]: 
+                              - generic [ref=f38e2175]:
+                                - generic [ref=f38e2176]: Nationality *
+                                - generic [ref=f38e2178] [cursor=pointer]:
+                                  - generic [ref=f38e2179]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=f38e2180]: Nationality
+                                  - button "dropdown trigger" [expanded] [ref=f38e5901]:
+                                    - generic [ref=f38e2182]: 
+                                  - generic [ref=f38e6253]:
+                                    - generic [ref=f38e6255]:
+                                      - textbox [active] [ref=f38e6256]
+                                      - generic [ref=f38e6257]: 
+                                    - listbox [ref=f38e6259]:
+                                      - option "Afghanistan" [ref=f38e6261]
+                                      - option "Aland Islands" [ref=f38e6264]
+                                      - option "Albania" [ref=f38e6267]
+                                      - option "Algeria" [ref=f38e6270]
+                                      - option "American Samoa" [ref=f38e6273]
+                                      - option "Angola" [ref=f38e6276]
+                                      - option "Anguilla" [ref=f38e6279]
+                                      - option "Antarctica" [ref=f38e6282]
+                                      - option "Antigua and Barbuda" [ref=f38e6285]
+                                      - option "Argentina" [ref=f38e6288]
+                                      - option "Armenia" [ref=f38e6291]
+                                      - option "Aruba" [ref=f38e6294]
+                                      - option "Australia" [ref=f38e6297]
+                                      - option "Austria" [ref=f38e6300]
+                                      - option "Azerbaijan" [ref=f38e6303]
+                                      - option "Bahamas" [ref=f38e6306]
+                                      - option "Bahrain" [ref=f38e6309]
+                                      - option "Bangladesh" [ref=f38e6312]
+                                      - option "Barbados" [ref=f38e6315]
+                                      - option "beirut" [ref=f38e6318]
+                                      - option "Belarus" [ref=f38e6321]
+                                      - option "Belgium" [ref=f38e6324]
+                                      - option "Belize" [ref=f38e6327]
+                                      - option "Benin" [ref=f38e6330]
+                                      - option "Bermuda" [ref=f38e6333]
+                                      - option "Bhutan" [ref=f38e6336]
+                                      - option "Bolivia" [ref=f38e6339]
+                                      - option "Bonaire, Saint Eustatius and Saba" [ref=f38e6342]
+                                      - option "Bosnia and Herzegovina" [ref=f38e6345]
+                                      - option "Botswana" [ref=f38e6348]
+                                      - option "Bouvet Island" [ref=f38e6351]
+                                      - option "Brazil" [ref=f38e6354]
+                                      - option "British Indian Ocean Territory" [ref=f38e6357]
+                                      - option "British Virgin Islands" [ref=f38e6360]
+                                      - option "Brunei" [ref=f38e6363]
+                                      - option "Bulgaria" [ref=f38e6366]
+                                      - option "Burkina Faso" [ref=f38e6369]
+                                      - option "Burundi" [ref=f38e6372]
+                                      - option "Cambodia" [ref=f38e6375]
+                                      - option "Cameroon" [ref=f38e6378]
+                                      - option "Canada" [ref=f38e6381]
+                                      - option "Cape Verde" [ref=f38e6384]
+                                      - option "Cayman Islands" [ref=f38e6387]
+                                      - option "Central African Republic" [ref=f38e6390]
+                                      - option "Chad" [ref=f38e6393]
+                                      - option "Chile" [ref=f38e6396]
+                                      - option "China" [ref=f38e6399]
+                                      - option "Christmas Island" [ref=f38e6402]
+                                      - option "Cocos Islands" [ref=f38e6405]
+                                      - option "Colombia" [ref=f38e6408]
+                                      - option "Comoros" [ref=f38e6411]
+                                      - option "Cook Islands" [ref=f38e6414]
+                                      - option "Costa Rica" [ref=f38e6417]
+                                      - option "Croatia" [ref=f38e6420]
+                                      - option "Cuba" [ref=f38e6423]
+                                      - option "Curaçao" [ref=f38e6426]
+                                      - option "Cyprus" [ref=f38e6429]
+                                      - option "Czech Republic" [ref=f38e6432]
+                                      - option "Democratic Republic of the Congo" [ref=f38e6435]
+                                      - option "Denmark" [ref=f38e6438]
+                                      - option "Djibouti" [ref=f38e6441]
+                                      - option "Dominica" [ref=f38e6444]
+                                      - option "Dominican Republic" [ref=f38e6447]
+                                      - option "East Timor" [ref=f38e6450]
+                                      - option "Ecuador" [ref=f38e6453]
+                                      - option "Egypt" [ref=f38e6456]
+                                      - option "El Salvador" [ref=f38e6459]
+                                      - option "Equatorial Guinea" [ref=f38e6462]
+                                      - option "Eritrea" [ref=f38e6465]
+                                      - option "Estonia" [ref=f38e6468]
+                                      - option "Ethiopia" [ref=f38e6471]
+                                      - option "FALASTINE" [ref=f38e6474]
+                                      - option "Falkland Islands" [ref=f38e6477]
+                                      - option "Faroe Islands" [ref=f38e6480]
+                                      - option "Fiji" [ref=f38e6483]
+                                      - option "Finland" [ref=f38e6486]
+                                      - option "France" [ref=f38e6489]
+                                      - option "French Guiana" [ref=f38e6492]
+                                      - option "French Polynesia" [ref=f38e6495]
+                                      - option "French Southern Territories" [ref=f38e6498]
+                                      - option "Gabon" [ref=f38e6501]
+                                      - option "Gambia" [ref=f38e6504]
+                                      - option "Georgia" [ref=f38e6507]
+                                      - option "Germany" [ref=f38e6510]
+                                      - option "Ghana" [ref=f38e6513]
+                                      - option "Gibraltar" [ref=f38e6516]
+                                      - option "Greece" [ref=f38e6519]
+                                      - option "Greenland" [ref=f38e6522]
+                                      - option "Grenada" [ref=f38e6525]
+                                      - option "Guadeloupe" [ref=f38e6528]
+                                      - option "Guam" [ref=f38e6531]
+                                      - option "Guatemala" [ref=f38e6534]
+                                      - option "Guernsey" [ref=f38e6537]
+                                      - option "Guinea" [ref=f38e6540]
+                                      - option "Guinea-Bissau" [ref=f38e6543]
+                                      - option "Guyana" [ref=f38e6546]
+                                      - option "Haiti" [ref=f38e6549]
+                                      - option "Heard Island and McDonald Islands" [ref=f38e6552]
+                                      - option "Honduras" [ref=f38e6555]
+                                      - option "Hong Kong" [ref=f38e6558]
+                                      - option "Hungary" [ref=f38e6561]
+                                      - option "Iceland" [ref=f38e6564]
+                                      - option "India" [ref=f38e6567]
+                                      - option "Indonesia" [ref=f38e6570]
+                                      - option "Iran" [ref=f38e6573]
+                                      - option "Iraq" [ref=f38e6576]
+                                      - option "Ireland" [ref=f38e6579]
+                                      - option "Isle of Man" [ref=f38e6582]
+                                      - option "Israel" [ref=f38e6585]
+                                      - option "Italy" [ref=f38e6588]
+                                      - option "Ivory Coast" [ref=f38e6591]
+                                      - option "Jamaica" [ref=f38e6594]
+                                      - option "Japan" [ref=f38e6597]
+                                      - option "Jersey" [ref=f38e6600]
+                                      - option "Jordan" [ref=f38e6603]
+                                      - option "Kazakhstan" [ref=f38e6606]
+                                      - option "Kenya" [ref=f38e6609]
+                                      - option "Kiribati" [ref=f38e6612]
+                                      - option "Kosovo" [ref=f38e6615]
+                                      - option "Kuwait" [ref=f38e6618]
+                                      - option "Kyrgyzstan" [ref=f38e6621]
+                                      - option "lala" [ref=f38e6624]
+                                      - option "Laos" [ref=f38e6627]
+                                      - option "Latvia" [ref=f38e6630]
+                                      - option "Lebanon" [ref=f38e6633]
+                                      - option "Lesotho" [ref=f38e6636]
+                                      - option "Liberia" [ref=f38e6639]
+                                      - option "Libya" [ref=f38e6642]
+                                      - option "Liechtenstein" [ref=f38e6645]
+                                      - option "Lithuania" [ref=f38e6648]
+                                      - option "Luxembourg" [ref=f38e6651]
+                                      - option "Macao" [ref=f38e6654]
+                                      - option "Macedonia" [ref=f38e6657]
+                                      - option "Madagascar" [ref=f38e6660]
+                                      - option "Malawi" [ref=f38e6663]
+                                      - option "Malaysia" [ref=f38e6666]
+                                      - option "Maldives" [ref=f38e6669]
+                                      - option "Mali" [ref=f38e6672]
+                                      - option "Malta" [ref=f38e6675]
+                                      - option "Marshall Islands" [ref=f38e6678]
+                                      - option "Martinique" [ref=f38e6681]
+                                      - option "MASCAT" [ref=f38e6684]
+                                      - option "Mauritania" [ref=f38e6687]
+                                      - option "Mauritius" [ref=f38e6690]
+                                      - option "Mayotte" [ref=f38e6693]
+                                      - option "Mexico" [ref=f38e6696]
+                                      - option "Micronesia" [ref=f38e6699]
+                                      - option "Moldova" [ref=f38e6702]
+                                      - option "Monaco" [ref=f38e6705]
+                                      - option "Mongolia" [ref=f38e6708]
+                                      - option "Montenegro" [ref=f38e6711]
+                                      - option "Montserrat" [ref=f38e6714]
+                                      - option "Morocco" [ref=f38e6717]
+                                      - option "Mozambique" [ref=f38e6720]
+                                      - option "Myanmar" [ref=f38e6723]
+                                      - option "Namibia" [ref=f38e6726]
+                                      - option "Nauru" [ref=f38e6729]
+                                      - option "Nepal" [ref=f38e6732]
+                                      - option "Netherlands" [ref=f38e6735]
+                                      - option "New Caledonia" [ref=f38e6738]
+                                      - option "New Zealand" [ref=f38e6741]
+                                      - option "Nicaragua" [ref=f38e6744]
+                                      - option "Niger" [ref=f38e6747]
+                                      - option "Nigeria" [ref=f38e6750]
+                                      - option "Niue" [ref=f38e6753]
+                                      - option "Norfolk Island" [ref=f38e6756]
+                                      - option "North Korea" [ref=f38e6759]
+                                      - option "Northern Mariana Islands" [ref=f38e6762]
+                                      - option "Norway" [ref=f38e6765]
+                                      - option "Oman" [ref=f38e6768]
+                                      - option "Pakistan" [ref=f38e6771]
+                                      - option "Palau" [ref=f38e6774]
+                                      - option "Palestinian Territory" [ref=f38e6777]
+                                      - option "Panama" [ref=f38e6780]
+                                      - option "Papua New Guinea" [ref=f38e6783]
+                                      - option "Paraguay" [ref=f38e6786]
+                                      - option "Peru" [ref=f38e6789]
+                                      - option "Philippines" [ref=f38e6792]
+                                      - option "Pitcairn" [ref=f38e6795]
+                                      - option "Poland" [ref=f38e6798]
+                                      - option "Portugal" [ref=f38e6801]
+                                      - option "Puerto Rico" [ref=f38e6804]
+                                      - option "Qatar" [ref=f38e6807]
+                                      - option "Republic of the Congo" [ref=f38e6810]
+                                      - option "Reunion" [ref=f38e6813]
+                                      - option "Romania" [ref=f38e6816]
+                                      - option "Russia" [ref=f38e6819]
+                                      - option "Rwanda" [ref=f38e6822]
+                                      - option "Saint Barthelemy" [ref=f38e6825]
+                                      - option "Saint Helena" [ref=f38e6828]
+                                      - option "Saint Kitts and Nevis" [ref=f38e6831]
+                                      - option "Saint Lucia" [ref=f38e6834]
+                                      - option "Saint Martin" [ref=f38e6837]
+                                      - option "Saint Pierre and Miquelon" [ref=f38e6840]
+                                      - option "Saint Vincent and the Grenadines" [ref=f38e6843]
+                                      - option "Samoa" [ref=f38e6846]
+                                      - option "San Marino" [ref=f38e6849]
+                                      - option "Sao Tome and Principe" [ref=f38e6852]
+                                      - option "Saudi Arabia" [ref=f38e6855]
+                                      - option "Senegal" [ref=f38e6858]
+                                      - option "Serbia" [ref=f38e6861]
+                                      - option "Serbia and Montenegro" [ref=f38e6864]
+                                      - option "Seychelles" [ref=f38e6867]
+                                      - option "Sierra Leone" [ref=f38e6870]
+                                      - option "Singapore" [ref=f38e6873]
+                                      - option "Sint Maarten" [ref=f38e6876]
+                                      - option "SLALAA" [ref=f38e6879]
+                                      - option "Slovakia" [ref=f38e6882]
+                                      - option "Slovenia" [ref=f38e6885]
+                                      - option "Solomon Islands" [ref=f38e6888]
+                                      - option "Somalia" [ref=f38e6891]
+                                      - option "South Africa" [ref=f38e6894]
+                                      - option "South Georgia and the South Sandwich Islands" [ref=f38e6897]
+                                      - option "South Korea" [ref=f38e6900]
+                                      - option "South Sudan" [ref=f38e6903]
+                                      - option "Spain" [ref=f38e6906]
+                                      - option "Sri Lanka" [ref=f38e6909]
+                                      - option "Sudan" [ref=f38e6912]
+                                      - option "Suriname" [ref=f38e6915]
+                                      - option "Svalbard and Jan Mayen" [ref=f38e6918]
+                                      - option "Swaziland" [ref=f38e6921]
+                                      - option "Sweden" [ref=f38e6924]
+                                      - option "Switzerland" [ref=f38e6927]
+                                      - option "Syria" [ref=f38e6930]
+                                      - option "Taiwan" [ref=f38e6933]
+                                      - option "Tajikistan" [ref=f38e6936]
+                                      - option "Tanzania" [ref=f38e6939]
+                                      - option "Test" [ref=f38e6942]
+                                      - option "TestNew" [ref=f38e6945]
+                                      - option "Thailand" [ref=f38e6948]
+                                      - option "Togo" [ref=f38e6951]
+                                      - option "Tokelau" [ref=f38e6954]
+                                      - option "Tonga" [ref=f38e6957]
+                                      - option "Trinidad and Tobago" [ref=f38e6960]
+                                      - option "Tunisia" [ref=f38e6963]
+                                      - option "Turkey" [ref=f38e6966]
+                                      - option "Turkmenistan" [ref=f38e6969]
+                                      - option "Turks and Caicos Islands" [ref=f38e6972]
+                                      - option "Tuvalu" [ref=f38e6975]
+                                      - option "U.S. Virgin Islands" [ref=f38e6978]
+                                      - option "Uganda" [ref=f38e6981]
+                                      - option "Ukraine" [ref=f38e6984]
+                                      - option "United Arab Emirates" [ref=f38e6987]
+                                      - option "United Kingdom" [ref=f38e6990]
+                                      - option "United States" [ref=f38e6993]
+                                      - option "United States Minor Outlying Islands" [ref=f38e6996]
+                                      - option "Uruguay" [ref=f38e6999]
+                                      - option "Uzbekistan" [ref=f38e7002]
+                                      - option "Vanuatu" [ref=f38e7005]
+                                      - option "Vatican" [ref=f38e7008]
+                                      - option "Venezuela" [ref=f38e7011]
+                                      - option "Vietnam" [ref=f38e7014]
+                                      - option "Wallis and Futuna" [ref=f38e7017]
+                                      - option "Western Sahara" [ref=f38e7020]
+                                      - option "Wonder Travel" [ref=f38e7023]
+                                      - option "Yemen" [ref=f38e7026]
+                                      - option "Zambia" [ref=f38e7029]
+                                      - option "Zimbabwe" [ref=f38e7032]
+                              - generic [ref=f38e2183]:
+                                - generic [ref=f38e2184]: Assigned to *
+                                - generic [ref=f38e2186] [cursor=pointer]:
+                                  - generic [ref=f38e2187]:
+                                    - combobox "Assigned to *"
+                                  - generic [ref=f38e2188]: Assigned to
+                                  - button "dropdown trigger" [ref=f38e5902]:
+                                    - generic [ref=f38e2190]: 
+                              - generic [ref=f38e2191]:
+                                - generic [ref=f38e2192]: Frequent Flyer
+                                - generic [ref=f38e2194] [cursor=pointer]:
+                                  - generic [ref=f38e2195]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=f38e2196]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=f38e5903]:
+                                    - generic [ref=f38e2198]: 
+                              - generic [ref=f38e2199]:
+                                - generic [ref=f38e2200]: Flyer Number
+                                - textbox "Flyer Number" [ref=f38e5904]
+                  - generic [ref=f38e2203]:
+                    - text: 
+                    - button "Next" [ref=f38e2205] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f38e2206]: 
+              - tablist [ref=f38e2211]:
+                - generic [ref=f38e2213]:
+                  - tab "  Payment Details" [expanded] [ref=f38e2215] [cursor=pointer]:
+                    - generic [ref=f38e2216]: 
+                    - generic [ref=f38e2217]:
+                      - generic [ref=f38e2218]: 
+                      - generic [ref=f38e2219]: Payment Details
+                  - region "  Payment Details" [ref=f38e2220]:
+                    - generic [ref=f38e2222]:
+                      - generic [ref=f38e2223]:
+                        - generic [ref=f38e2224]: "Net Payable Amount: 47,327.2 EGP"
+                        - paragraph [ref=f38e2226]: "Note: Your money is currently being deducted from your wallet balance."
+                      - generic [ref=f38e2228]:
+                        - tablist [ref=f38e2231]:
+                          - tab "Wallet" [selected] [ref=f38e2232] [cursor=pointer]
+                          - listitem [ref=f38e2234]
+                        - tabpanel "Wallet" [ref=f38e2237]:
+                          - generic [ref=f38e2238]:
+                            - heading "Wallet Payment" [level=3] [ref=f38e2239]
+                            - generic [ref=f38e2240]:
+                              - generic [ref=f38e2245]:
+                                - generic [ref=f38e2246]: Your Balance
+                                - generic [ref=f38e2247]: 5,000,000 EGP
+                              - generic [ref=f38e2252]:
+                                - generic [ref=f38e2253]: Top Up Balance
+                                - generic [ref=f38e2254]: 5,000,000 EGP
+                            - list
+                          - generic [ref=f38e2255]:
+                            - generic [ref=f38e2258] [cursor=pointer]:
+                              - checkbox "Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer."
+                            - generic [ref=f38e2260] [cursor=pointer]: Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer.
+              - generic [ref=f38e2266]:
+                - generic [ref=f38e2269] [cursor=pointer]:
+                  - checkbox "I have read and agree to the"
+                - generic [ref=f38e2271] [cursor=pointer]: I have read and agree to the
+                - generic [ref=f38e2272] [cursor=pointer]: Terms & Conditions
+              - button "Save Quote" [ref=f38e2280] [cursor=pointer]
+            - generic [ref=f38e2283]:
+              - generic [ref=f38e2284]: "Time left: 58:46"
+              - generic [ref=f38e2289]:
+                - generic [ref=f38e2290]: 47,328 EGP
+                - generic [ref=f38e2291]: Published Fare
+              - tablist [ref=f38e2295]:
+                - generic [ref=f38e2297]:
+                  - tab "  Fare Breakdown" [expanded] [ref=f38e2299] [cursor=pointer]:
+                    - generic [ref=f38e2300]: 
+                    - generic [ref=f38e2301]:
+                      - generic [ref=f38e2302]: 
+                      - generic [ref=f38e2303]: Fare Breakdown
+                  - region "  Fare Breakdown" [ref=f38e2304]:
+                    - generic [ref=f38e2305]:
+                      - generic [ref=f38e2306]:
+                        - generic [ref=f38e2307]:
+                          - generic [ref=f38e2308]: "Base fare: (2 Adult)"
+                          - generic [ref=f38e2309]: 32,704 EGP
+                        - generic [ref=f38e2310]:
+                          - generic [ref=f38e2311]: "Base fare: (2 Infant)"
+                          - generic [ref=f38e2312]: 3,270 EGP
+                        - generic [ref=f38e2313]:
+                          - generic [ref=f38e2314]: "Tax & Fees: (2 Adult)"
+                          - generic [ref=f38e2315]: 6,827.6 EGP
+                        - generic [ref=f38e2316]:
+                          - generic [ref=f38e2317]: "Tax & Fees: (2 Infant)"
+                          - generic [ref=f38e2318]: 4,525.6 EGP
+                      - generic [ref=f38e2319]:
+                        - generic [ref=f38e2320]: "Total Amount:"
+                        - generic [ref=f38e2321]: 47,328 EGP
+              - tablist [ref=f38e2325]:
+                - generic [ref=f38e2327]:
+                  - tab " baggage Included Baggage" [expanded] [ref=f38e2329] [cursor=pointer]:
+                    - generic [ref=f38e2330]: 
+                    - generic [ref=f38e2331]:
+                      - img "baggage" [ref=f38e2332]
+                      - generic [ref=f38e2333]: Included Baggage
+                  - region " baggage Included Baggage" [ref=f38e2334]:
+                    - tablist [ref=f38e2337]:
+                      - generic [ref=f38e2339]:
+                        - tab " Cairo → Athens" [ref=f38e2341] [cursor=pointer]:
+                          - generic [ref=f38e2342]: 
+                          - generic [ref=f38e2343]: Cairo → Athens
+                        - generic [ref=f38e2344]:
+                          - generic [ref=f38e2345]:
+                            - heading [level=4] [ref=f38e2346]: Adult
+                            - paragraph [ref=f38e2347]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                            - paragraph [ref=f38e2348]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=f38e2349]:
+                            - heading [level=4] [ref=f38e2350]: Infant
+                            - paragraph [ref=f38e2351]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                            - paragraph [ref=f38e2352]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=f38e2354]:
+                        - tab " Athens → Rome" [ref=f38e2356] [cursor=pointer]:
+                          - generic [ref=f38e2357]: 
+                          - generic [ref=f38e2358]: Athens → Rome
+                        - generic [ref=f38e2359]:
+                          - generic [ref=f38e2360]:
+                            - heading [level=4] [ref=f38e2361]: Adult
+                            - paragraph [ref=f38e2362]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                            - paragraph [ref=f38e2363]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=f38e2364]:
+                            - heading [level=4] [ref=f38e2365]: Infant
+                            - paragraph [ref=f38e2366]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                            - paragraph [ref=f38e2367]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+              - tablist [ref=f38e2371]:
+                - generic [ref=f38e2373]:
+                  - tab "  Penalties/Charges" [expanded] [ref=f38e2375] [cursor=pointer]:
+                    - generic [ref=f38e2376]: 
+                    - generic [ref=f38e2377]:
+                      - generic [ref=f38e2378]: 
+                      - generic [ref=f38e2379]: Penalties/Charges
+                  - region "  Penalties/Charges" [ref=f38e2380]:
+                    - tablist [ref=f38e2383]:
+                      - generic [ref=f38e2384]:
+                        - generic [ref=f38e2385]:
+                          - generic [ref=f38e2386]: ❌
+                          - generic [ref=f38e2387]:
+                            - generic [ref=f38e2388]: Cancel
+                            - generic [ref=f38e2389]: N/A
+                        - generic [ref=f38e2390]:
+                          - generic [ref=f38e2391]: 🔄
+                          - generic [ref=f38e2392]:
+                            - generic [ref=f38e2393]: Change
+                            - generic [ref=f38e2394]: N/A
+              - button "Full Fare Rules" [ref=f38e2396] [cursor=pointer]
+      - contentinfo [ref=f38e139]:
+        - contentinfo [ref=f38e141]:
+          - generic [ref=f38e142]:
+            - navigation "Footer navigation" [ref=f38e143]:
+              - link "About Us" [ref=f38e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f38e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f38e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f38e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f38e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f38e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f38e152] [cursor=pointer]:
+    - emphasis [ref=f38e153]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

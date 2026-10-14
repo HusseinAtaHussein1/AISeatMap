@@ -1,0 +1,155 @@
+- generic [ref=f78e1]:
+  - generic [ref=f78e4]:
+    - generic [ref=f78e5]:
+      - text:          
+      - generic [ref=f78e7]:
+        - text:  
+        - button [ref=f78e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f78e9]: 
+    - generic [ref=f78e10]:
+      - generic [ref=f78e11]:
+        - banner [ref=f78e13]:
+          - generic [ref=f78e14]:
+            - img "Logo" [ref=f78e17] [cursor=pointer]
+            - generic [ref=f78e18]:
+              - generic [ref=f78e19]:
+                - generic [ref=f78e20]:
+                  - generic [ref=f78e21]: 
+                  - generic [ref=f78e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f78e23]: "|"
+                - generic [ref=f78e24]:
+                  - generic [ref=f78e25]: 
+                  - generic [ref=f78e26]: +20-1215484845
+              - generic [ref=f78e27]:
+                - button "Take a tour" [ref=f78e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f78e30]: 
+                - button "Top Up Wallet" [ref=f78e31] [cursor=pointer]:
+                  - generic [ref=f78e32]: 
+                - button "Settings" [ref=f78e33] [cursor=pointer]:
+                  - generic [ref=f78e34]: 
+              - generic [ref=f78e36]:
+                - button "Welcome Hussien " [ref=f78e37] [cursor=pointer]:
+                  - generic [ref=f78e38]:
+                    - generic [ref=f78e39]: Welcome
+                    - generic [ref=f78e40]:
+                      - text: Hussien
+                      - generic [ref=f78e41]: 
+                - button "Profile menu" [ref=f78e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f78e45]
+        - generic [ref=f78e127]:
+          - generic [ref=f78e129]:
+            - paragraph [ref=f78e130]:
+              - link "Back to reports" [ref=f78e131] [cursor=pointer]:
+                - /url: /reports
+                - generic [ref=f78e132]: 
+              - text: Statement reports
+            - generic [ref=f78e133]: Your account statements per period.
+          - generic [ref=f78e135]:
+            - generic [ref=f78e137]:
+              - generic [ref=f78e138]: Invoice From Date *
+              - generic [ref=f78e141]:
+                - textbox "Invoice From Date *" [active] [ref=f78e142]:
+                  - /placeholder: DD/MM/YYYY
+                - button [ref=f78e143] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f78e144]: 
+            - generic [ref=f78e147]:
+              - generic [ref=f78e148]: Invoice To Date *
+              - generic [ref=f78e151]:
+                - textbox "Invoice To Date *" [ref=f78e152]:
+                  - /placeholder: DD/MM/YYYY
+                - button [ref=f78e153] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f78e154]: 
+            - generic [ref=f78e157]:
+              - generic [ref=f78e158]: Passenger Name
+              - textbox "Passenger Name" [ref=f78e161]
+            - generic [ref=f78e164]:
+              - generic [ref=f78e165]: Agent Name
+              - generic [ref=f78e167] [cursor=pointer]:
+                - generic [ref=f78e168]:
+                  - combobox "Agent Name"
+                - generic [ref=f78e169]: Agent Name
+                - button "dropdown trigger" [ref=f78e170]:
+                  - generic [ref=f78e171]: 
+            - generic [ref=f78e174]:
+              - generic [ref=f78e175]: Transaction ID
+              - textbox "Transaction ID" [ref=f78e178]
+            - button "Search" [ref=f78e182] [cursor=pointer]
+      - contentinfo [ref=f78e108]:
+        - contentinfo [ref=f78e110]:
+          - generic [ref=f78e111]:
+            - navigation "Footer navigation" [ref=f78e112]:
+              - link "About Us" [ref=f78e113] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f78e114] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f78e115] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f78e116] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f78e117] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f78e118]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f78e121] [cursor=pointer]:
+    - emphasis [ref=f78e122]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe
+  - generic [ref=f78e186]:
+    - generic [ref=f78e187]:
+      - button "" [ref=f78e188] [cursor=pointer]
+      - generic [ref=f78e190]:
+        - button "October" [ref=f78e191] [cursor=pointer]
+        - button "2026" [ref=f78e192] [cursor=pointer]
+      - button "" [ref=f78e193] [cursor=pointer]
+    - table [ref=f78e196]:
+      - rowgroup [ref=f78e197]:
+        - row [ref=f78e198]:
+          - columnheader "Su" [ref=f78e199]
+          - columnheader "Mo" [ref=f78e200]
+          - columnheader "Tu" [ref=f78e201]
+          - columnheader "We" [ref=f78e202]
+          - columnheader "Th" [ref=f78e203]
+          - columnheader "Fr" [ref=f78e204]
+          - columnheader "Sa" [ref=f78e205]
+      - rowgroup [ref=f78e206]:
+        - row [ref=f78e207]:
+          - cell "27" [ref=f78e208]
+          - cell "28" [ref=f78e209]
+          - cell "29" [ref=f78e210]
+          - cell "30" [ref=f78e211]
+          - cell "1" [ref=f78e212]
+          - cell "2" [ref=f78e214]
+          - cell "3" [ref=f78e216]
+        - row [ref=f78e218]:
+          - cell "4" [ref=f78e219]
+          - cell "5" [ref=f78e221]
+          - cell "6" [ref=f78e223]
+          - cell "7" [ref=f78e225]
+          - cell "8" [ref=f78e227]
+          - cell "9" [ref=f78e229]
+          - cell "10" [ref=f78e231]
+        - row [ref=f78e233]:
+          - cell "11" [ref=f78e234]
+          - cell "12" [ref=f78e236]
+          - cell "13" [ref=f78e238]
+          - cell "14" [ref=f78e240]
+          - cell "15" [ref=f78e242]
+          - cell "16" [ref=f78e243]
+          - cell "17" [ref=f78e244]
+        - row [ref=f78e245]:
+          - cell "18" [ref=f78e246]
+          - cell "19" [ref=f78e247]
+          - cell "20" [ref=f78e248]
+          - cell "21" [ref=f78e249]
+          - cell "22" [ref=f78e250]
+          - cell "23" [ref=f78e251]
+          - cell "24" [ref=f78e252]
+        - row [ref=f78e253]:
+          - cell "25" [ref=f78e254]
+          - cell "26" [ref=f78e255]
+          - cell "27" [ref=f78e256]
+          - cell "28" [ref=f78e257]
+          - cell "29" [ref=f78e258]
+          - cell "30" [ref=f78e259]
+          - cell "31" [ref=f78e260]

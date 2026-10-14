@@ -1,0 +1,146 @@
+- generic [active] [ref=f30e1]:
+  - generic [ref=f30e4]:
+    - generic [ref=f30e5]:
+      - text:          
+      - generic [ref=f30e7]:
+        - text:  
+        - button [ref=f30e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f30e9]: 
+    - generic [ref=f30e10]:
+      - generic [ref=f30e11]:
+        - banner [ref=f30e13]:
+          - generic [ref=f30e14]:
+            - img "Logo" [ref=f30e17] [cursor=pointer]
+            - generic [ref=f30e18]:
+              - generic [ref=f30e19]:
+                - generic [ref=f30e20]:
+                  - generic [ref=f30e21]: 
+                  - generic [ref=f30e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f30e23]: "|"
+                - generic [ref=f30e24]:
+                  - generic [ref=f30e25]: 
+                  - generic [ref=f30e26]: +20-1215484845
+              - generic [ref=f30e27]:
+                - button "Take a tour" [ref=f30e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f30e30]: 
+                - button "Top Up Wallet" [ref=f30e31] [cursor=pointer]:
+                  - generic [ref=f30e32]: 
+                - button "Settings" [ref=f30e33] [cursor=pointer]:
+                  - generic [ref=f30e34]: 
+              - generic [ref=f30e36]:
+                - button "Welcome Hussien " [ref=f30e37] [cursor=pointer]:
+                  - generic [ref=f30e38]:
+                    - generic [ref=f30e39]: Welcome
+                    - generic [ref=f30e40]:
+                      - text: Hussien
+                      - generic [ref=f30e41]: 
+                - button "Profile menu" [ref=f30e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f30e45]
+        - generic [ref=f30e50]:
+          - generic [ref=f30e55]:
+            - generic [ref=f30e56]:
+              - generic [ref=f30e64]:
+                - heading "Flight Search" [level=2] [ref=f30e65]
+                - paragraph [ref=f30e66]: Available flight options are listed below.
+              - paragraph [ref=f30e500]:
+                - generic [ref=f30e501]: CAI → FCO
+                - generic [ref=f30e502]: "|"
+                - generic [ref=f30e503]: 16 Oct, 2026
+                - generic [ref=f30e504]: "|"
+                - generic [ref=f30e505]:
+                  - generic [ref=f30e506]: 2 Adults
+                  - generic [ref=f30e507]: • 1 Infant
+                - generic [ref=f30e508]: "|"
+                - generic [ref=f30e509]: ECONOMY
+            - button "Modify Search" [ref=f30e511] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f30e512]: 
+          - generic [ref=f30e516]:
+            - generic [ref=f30e538]:
+              - generic [ref=f30e539]: 
+              - generic [ref=f30e551]:
+                - table [ref=f30e552]:
+                  - rowgroup [ref=f30e553]:
+                    - row [ref=f30e554]:
+                      - columnheader "Time / Airline" [ref=f30e555]
+                  - rowgroup [ref=f30e556]:
+                    - row [ref=f30e557]:
+                      - cell [ref=f30e558]
+                    - row [ref=f30e567]:
+                      - cell [ref=f30e568]
+                    - row [ref=f30e577]:
+                      - cell [ref=f30e578]
+                    - row [ref=f30e587]:
+                      - cell [ref=f30e588]
+                - table [ref=f30e598]:
+                  - rowgroup [ref=f30e599]:
+                    - row [ref=f30e600]:
+                      - columnheader [ref=f30e601]:
+                        - generic [ref=f30e602]: 
+                      - columnheader [ref=f30e607]:
+                        - generic [ref=f30e608]: 
+                      - columnheader [ref=f30e613]:
+                        - generic [ref=f30e614]: 
+                      - columnheader [ref=f30e619]:
+                        - generic [ref=f30e620]: 
+                      - columnheader [ref=f30e625]:
+                        - generic [ref=f30e626]: 
+                      - columnheader [ref=f30e631]:
+                        - generic [ref=f30e632]: 
+                  - rowgroup [ref=f30e637]:
+                    - row [ref=f30e638]:
+                      - cell [ref=f30e639]
+                      - cell [ref=f30e643]
+                      - cell [ref=f30e647]
+                      - cell [ref=f30e651]
+                      - cell [ref=f30e655]
+                      - cell [ref=f30e659]
+                    - row [ref=f30e663]:
+                      - cell [ref=f30e664]
+                      - cell [ref=f30e668]
+                      - cell [ref=f30e672]
+                      - cell [ref=f30e676]
+                      - cell [ref=f30e680]
+                      - cell [ref=f30e684]
+                    - row [ref=f30e688]:
+                      - cell [ref=f30e689]
+                      - cell [ref=f30e693]
+                      - cell [ref=f30e697]
+                      - cell [ref=f30e701]
+                      - cell [ref=f30e705]
+                      - cell [ref=f30e709]
+                    - row [ref=f30e713]:
+                      - cell [ref=f30e714]
+                      - cell [ref=f30e718]
+                      - cell [ref=f30e722]
+                      - cell [ref=f30e726]
+                      - cell [ref=f30e730]
+                      - cell [ref=f30e734]
+            - generic [ref=f30e765]:
+              - generic [aria-hidden] [ref=f30e769]: 
+              - generic [ref=f30e893]:
+                - generic [ref=f30e894]: 
+                - generic [ref=f30e934]: 
+                - generic [ref=f30e974]: 
+                - generic [ref=f30e1014]: 
+                - generic [ref=f30e1054]: 
+      - contentinfo [ref=f30e139]:
+        - contentinfo [ref=f30e141]:
+          - generic [ref=f30e142]:
+            - navigation "Footer navigation" [ref=f30e143]:
+              - link "About Us" [ref=f30e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f30e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f30e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f30e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f30e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f30e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f30e152] [cursor=pointer]:
+    - emphasis [ref=f30e153]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

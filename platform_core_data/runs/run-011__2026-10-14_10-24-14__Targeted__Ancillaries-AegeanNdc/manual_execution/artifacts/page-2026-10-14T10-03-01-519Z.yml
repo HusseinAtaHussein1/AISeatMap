@@ -1,0 +1,1124 @@
+- generic [ref=f46e1]:
+  - generic [ref=f46e4]:
+    - generic [ref=f46e5]:
+      - text:          
+      - generic [ref=f46e7]:
+        - text:  
+        - button [ref=f46e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f46e9]: 
+    - generic [ref=f46e10]:
+      - generic [ref=f46e11]:
+        - banner [ref=f46e13]:
+          - generic [ref=f46e14]:
+            - img "Logo" [ref=f46e17] [cursor=pointer]
+            - generic [ref=f46e18]:
+              - generic [ref=f46e19]:
+                - generic [ref=f46e20]:
+                  - generic [ref=f46e21]: 
+                  - generic [ref=f46e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f46e23]: "|"
+                - generic [ref=f46e24]:
+                  - generic [ref=f46e25]: 
+                  - generic [ref=f46e26]: +20-1215484845
+              - generic [ref=f46e27]:
+                - button "Take a tour" [ref=f46e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f46e30]: 
+                - button "Top Up Wallet" [ref=f46e31] [cursor=pointer]:
+                  - generic [ref=f46e32]: 
+                - button "Settings" [ref=f46e33] [cursor=pointer]:
+                  - generic [ref=f46e34]: 
+              - generic [ref=f46e36]:
+                - button "Welcome Hussien " [ref=f46e37] [cursor=pointer]:
+                  - generic [ref=f46e38]:
+                    - generic [ref=f46e39]: Welcome
+                    - generic [ref=f46e40]:
+                      - text: Hussien
+                      - generic [ref=f46e41]: 
+                - button "Profile menu" [ref=f46e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f46e45]
+        - generic [ref=f46e2646]:
+          - generic [ref=f46e2648]:
+            - generic [ref=f46e2649]: MultiCity
+            - generic [ref=f46e2651]: "Stops: 2"
+            - generic [ref=f46e2653]: "Passengers: 1"
+            - generic [ref=f46e2655]: "Trip Departure: Fri, 16 Oct, 2026"
+            - generic [ref=f46e2657]: "Trip Arrival: Wed, 21 Oct, 2026"
+          - generic [ref=f46e2659]:
+            - generic [ref=f46e2661]:
+              - tablist [ref=f46e2665]:
+                - generic [ref=f46e2667]:
+                  - tab " Segments Details" [ref=f46e2669] [cursor=pointer]:
+                    - generic [ref=f46e2670]: 
+                    - generic [ref=f46e2671]: Segments Details
+                  - generic [ref=f46e2677]:
+                    - generic [ref=f46e2678]:
+                      - generic [ref=f46e2679]: CAI✈FCO
+                      - generic [ref=f46e2680]: "Total Journey Duration: 5h 35m"
+                    - generic [ref=f46e2683]:
+                      - generic [ref=f46e2684]:
+                        - generic [ref=f46e2687]: Economy
+                        - generic [ref=f46e2690]: 
+                      - generic [ref=f46e2692]:
+                        - generic [ref=f46e2693]:
+                          - generic [ref=f46e2694]: Departure
+                          - generic [ref=f46e2695]: CAI
+                          - generic [ref=f46e2696]: Cairo International Airport
+                          - generic [ref=f46e2697]: Cairo
+                          - generic [ref=f46e2698]: 04:00 Fri, 16 Oct, 2026
+                          - generic [ref=f46e2699]: "Terminal: 3"
+                        - generic [ref=f46e2700]:
+                          - generic [ref=f46e2701]: "Segment Duration: 2h"
+                          - generic [ref=f46e2709]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f46e2710]:
+                          - generic [ref=f46e2711]: Arrival
+                          - generic [ref=f46e2712]: ATH
+                          - generic [ref=f46e2713]: Athens International Airport
+                          - generic [ref=f46e2714]: Athens
+                          - generic [ref=f46e2715]: 06:00 Fri, 16 Oct, 2026
+                          - generic [ref=f46e2716]: "Terminal: Please check terminal information with airline"
+                        - paragraph [ref=f46e2718]: "Layover Duration: 1h 35m - Location: Athens"
+                    - generic [ref=f46e2721]:
+                      - generic [ref=f46e2722]:
+                        - generic [ref=f46e2725]: Economy
+                        - generic [ref=f46e2728]: 
+                      - generic [ref=f46e2730]:
+                        - generic [ref=f46e2731]:
+                          - generic [ref=f46e2732]: Departure
+                          - generic [ref=f46e2733]: ATH
+                          - generic [ref=f46e2734]: Athens International Airport
+                          - generic [ref=f46e2735]: Athens
+                          - generic [ref=f46e2736]: 07:35 Fri, 16 Oct, 2026
+                          - generic [ref=f46e2737]: "Terminal: Please check terminal information with airline"
+                        - generic [ref=f46e2738]:
+                          - generic [ref=f46e2739]: "Segment Duration: 2h"
+                          - generic [ref=f46e2747]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f46e2748]:
+                          - generic [ref=f46e2749]: Arrival
+                          - generic [ref=f46e2750]: FCO
+                          - generic [ref=f46e2751]: Leonardo Da Vinci (Fiumicino)
+                          - generic [ref=f46e2752]: Rome
+                          - generic [ref=f46e2753]: 08:35 Fri, 16 Oct, 2026
+                          - generic [ref=f46e2754]: "Terminal: 1"
+                    - generic [ref=f46e2755]:
+                      - generic [ref=f46e2756]: FCO✈CAI
+                      - generic [ref=f46e2757]: "Total Journey Duration: 7h 25m"
+                    - generic [ref=f46e2760]:
+                      - generic [ref=f46e2761]:
+                        - generic [ref=f46e2764]: Economy
+                        - generic [ref=f46e2767]: 
+                      - generic [ref=f46e2769]:
+                        - generic [ref=f46e2770]:
+                          - generic [ref=f46e2771]: Departure
+                          - generic [ref=f46e2772]: FCO
+                          - generic [ref=f46e2773]: Leonardo Da Vinci (Fiumicino)
+                          - generic [ref=f46e2774]: Rome
+                          - generic [ref=f46e2775]: 18:25 Tue, 20 Oct, 2026
+                          - generic [ref=f46e2776]: "Terminal: 1"
+                        - generic [ref=f46e2777]:
+                          - generic [ref=f46e2778]: "Segment Duration: 1h 55m"
+                          - generic [ref=f46e2786]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f46e2787]:
+                          - generic [ref=f46e2788]: Arrival
+                          - generic [ref=f46e2789]: ATH
+                          - generic [ref=f46e2790]: Athens International Airport
+                          - generic [ref=f46e2791]: Athens
+                          - generic [ref=f46e2792]: 21:20 Tue, 20 Oct, 2026
+                          - generic [ref=f46e2793]: "Terminal: Please check terminal information with airline"
+                        - paragraph [ref=f46e2795]: "Layover Duration: 3h 35m - Location: Athens"
+                    - generic [ref=f46e2798]:
+                      - generic [ref=f46e2799]:
+                        - generic [ref=f46e2802]: Economy
+                        - generic [ref=f46e2805]: 
+                      - generic [ref=f46e2807]:
+                        - generic [ref=f46e2808]:
+                          - generic [ref=f46e2809]: Departure
+                          - generic [ref=f46e2810]: ATH
+                          - generic [ref=f46e2811]: Athens International Airport
+                          - generic [ref=f46e2812]: Athens
+                          - generic [ref=f46e2813]: 00:55 Wed, 21 Oct, 2026
+                          - generic [ref=f46e2814]: "Terminal: Please check terminal information with airline"
+                        - generic [ref=f46e2815]:
+                          - generic [ref=f46e2816]: "Segment Duration: 1h 55m"
+                          - generic [ref=f46e2824]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f46e2825]:
+                          - generic [ref=f46e2826]: Arrival
+                          - generic [ref=f46e2827]: CAI
+                          - generic [ref=f46e2828]: Cairo International Airport
+                          - generic [ref=f46e2829]: Cairo
+                          - generic [ref=f46e2830]: 02:50 Wed, 21 Oct, 2026
+                          - generic [ref=f46e2831]: "Terminal: 3"
+              - generic [ref=f46e2833]:
+                - generic [ref=f46e2834]:
+                  - generic [ref=f46e2835]: 
+                  - generic [ref=f46e2836]: Passenger Details
+                - generic [ref=f46e2837]:
+                  - generic [ref=f46e2839]:
+                    - generic [ref=f46e2840]:
+                      - generic [ref=f46e2841]:
+                        - generic [ref=f46e2842]: "01"
+                        - generic [ref=f46e2843]: 
+                      - generic [ref=f46e2845]:
+                        - generic [ref=f46e2846]: Passenger Info
+                        - generic [ref=f46e2847]: Traveler details
+                        - generic [ref=f46e2848]: Completed
+                    - generic [ref=f46e2851]:
+                      - generic [ref=f46e2852]:
+                        - generic [ref=f46e2853]: "02"
+                        - generic [ref=f46e2854]: 
+                      - generic [ref=f46e2856]:
+                        - generic [ref=f46e2857]: Ancillaries
+                        - generic [ref=f46e2858]: Meals, baggage and seats
+                        - generic [ref=f46e2859]: In progress
+                  - generic [ref=f46e4309]:
+                    - button "Collapse All" [ref=f46e4313] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f46e4314]: 
+                    - tablist [ref=f46e4317]:
+                      - generic [ref=f46e4321]:
+                        - tab " WA Wael Aegeansix Passenger 1" [expanded] [ref=f46e4323] [cursor=pointer]:
+                          - generic [ref=f46e4324]: 
+                          - generic [ref=f46e4325]:
+                            - generic [ref=f46e4326]: WA
+                            - generic [ref=f46e4327]:
+                              - generic [ref=f46e4328]: Wael Aegeansix
+                              - generic [ref=f46e4329]: Passenger 1
+                        - region " WA Wael Aegeansix Passenger 1" [ref=f46e4330]:
+                          - generic [ref=f46e4333]:
+                            - generic [ref=f46e4334]:
+                              - img "extra-baggage" [ref=f46e4336]
+                              - generic [ref=f46e4337]: Extra Baggage
+                            - generic [ref=f46e4340]:
+                              - generic [ref=f46e4342]:
+                                - generic [ref=f46e4343]:
+                                  - generic [ref=f46e4344]:
+                                    - generic [ref=f46e4345]: CAI
+                                    - generic [ref=f46e4346]: 
+                                    - generic [ref=f46e4347]: FCO
+                                  - generic [ref=f46e4348]: Trip 1
+                                - generic [ref=f46e4351] [cursor=pointer]:
+                                  - generic [ref=f46e4352]:
+                                    - combobox "Choose a baggage"
+                                  - generic [ref=f46e4353]: Choose a baggage
+                                  - button "dropdown trigger" [ref=f46e4354]:
+                                    - generic [ref=f46e4355]: 
+                              - generic [ref=f46e4357]:
+                                - generic [ref=f46e4358]:
+                                  - generic [ref=f46e4359]:
+                                    - generic [ref=f46e4360]: FCO
+                                    - generic [ref=f46e4361]: 
+                                    - generic [ref=f46e4362]: CAI
+                                  - generic [ref=f46e4363]: Trip 2
+                                - generic [ref=f46e4366] [cursor=pointer]:
+                                  - generic [ref=f46e4367]:
+                                    - combobox "Choose a baggage"
+                                  - generic [ref=f46e4368]: Choose a baggage
+                                  - button "dropdown trigger" [ref=f46e4369]:
+                                    - generic [ref=f46e4370]: 
+                    - generic [ref=f46e4372]:
+                      - generic [ref=f46e4373]:
+                        - generic [ref=f46e4375]: 
+                        - generic [ref=f46e4376]:
+                          - generic [ref=f46e4377]: Seat Selection
+                          - generic [ref=f46e4378]: Choose seats now or continue without them
+                      - generic [ref=f46e4379]:
+                        - generic [ref=f46e4382]:
+                          - generic [ref=f46e4383]:
+                            - generic [ref=f46e4384]:
+                              - generic [ref=f46e4385]: CAI
+                              - generic [ref=f46e4386]: 
+                              - generic [ref=f46e4387]: ATH
+                            - generic [ref=f46e4388]: Trip 1 · Leg 1
+                          - generic [ref=f46e4389]:
+                            - button "Change Seats" [ref=f46e6312] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=f46e4392]: 
+                            - region "Selected seats" [ref=f46e6314]:
+                              - generic [ref=f46e6316]:
+                                - generic [aria-hidden] [ref=f46e6317]: 
+                                - generic [ref=f46e6318]:
+                                  - strong [ref=f46e6319]: Selected seats
+                                  - generic [ref=f46e6320]: 1 traveller
+                              - article [ref=f46e6322]:
+                                - generic [ref=f46e6323]:
+                                  - generic [ref=f46e6325]: 
+                                  - generic [ref=f46e6326]:
+                                    - generic [ref=f46e6327]: Traveller
+                                    - strong [ref=f46e6328]: Wael Aegeansix
+                                - generic [ref=f46e6329]:
+                                  - generic [ref=f46e6330]:
+                                    - generic [ref=f46e6331]: Seat
+                                    - strong [ref=f46e6332]: 18D
+                                  - generic [ref=f46e6333]:
+                                    - generic [ref=f46e6334]: Price
+                                    - strong [ref=f46e6335]: EGP 886
+                        - generic [ref=f46e4396]:
+                          - generic [ref=f46e4397]:
+                            - generic [ref=f46e4398]:
+                              - generic [ref=f46e4399]: ATH
+                              - generic [ref=f46e4400]: 
+                              - generic [ref=f46e4401]: FCO
+                            - generic [ref=f46e4402]: Trip 1 · Leg 2
+                          - button "Select Seat" [ref=f46e4405] [cursor=pointer]:
+                            - generic [aria-hidden] [ref=f46e4406]: 
+                        - generic [ref=f46e4410]:
+                          - generic [ref=f46e4411]:
+                            - generic [ref=f46e4412]:
+                              - generic [ref=f46e4413]: FCO
+                              - generic [ref=f46e4414]: 
+                              - generic [ref=f46e4415]: ATH
+                            - generic [ref=f46e4416]: Trip 2 · Leg 1
+                          - button "Select Seat" [ref=f46e4419] [cursor=pointer]:
+                            - generic [aria-hidden] [ref=f46e4420]: 
+                        - generic [ref=f46e4424]:
+                          - generic [ref=f46e4425]:
+                            - generic [ref=f46e4426]:
+                              - generic [ref=f46e4427]: ATH
+                              - generic [ref=f46e4428]: 
+                              - generic [ref=f46e4429]: CAI
+                            - generic [ref=f46e4430]: Trip 2 · Leg 2
+                          - button "Select Seat" [ref=f46e4433] [cursor=pointer]:
+                            - generic [aria-hidden] [ref=f46e4434]: 
+                  - generic [ref=f46e2949]:
+                    - button "Prev" [ref=f46e4437] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f46e4438]: 
+                    - text: 
+              - tablist [ref=f46e2957]:
+                - generic [ref=f46e2959]:
+                  - tab "  Payment Details" [expanded] [ref=f46e2961] [cursor=pointer]:
+                    - generic [ref=f46e2962]: 
+                    - generic [ref=f46e2963]:
+                      - generic [ref=f46e2964]: 
+                      - generic [ref=f46e2965]: Payment Details
+                  - region "  Payment Details" [ref=f46e2966]:
+                    - generic [ref=f46e2968]:
+                      - generic [ref=f46e2969]:
+                        - generic [ref=f46e2970]: "Net Payable Amount: 32,659.8 EGP"
+                        - paragraph [ref=f46e2972]: "Note: Your money is currently being deducted from your wallet balance."
+                      - generic [ref=f46e2974]:
+                        - tablist [ref=f46e2977]:
+                          - tab "Wallet" [selected] [ref=f46e2978] [cursor=pointer]
+                          - listitem [ref=f46e2980]
+                        - tabpanel "Wallet" [ref=f46e2983]:
+                          - generic [ref=f46e2984]:
+                            - heading "Wallet Payment" [level=3] [ref=f46e2985]
+                            - generic [ref=f46e2986]:
+                              - generic [ref=f46e2991]:
+                                - generic [ref=f46e2992]: Your Balance
+                                - generic [ref=f46e2993]: 5,000,000 EGP
+                              - generic [ref=f46e2998]:
+                                - generic [ref=f46e2999]: Top Up Balance
+                                - generic [ref=f46e3000]: 5,000,000 EGP
+                            - list
+                          - generic [ref=f46e3001]:
+                            - generic [ref=f46e3004] [cursor=pointer]:
+                              - checkbox "Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer."
+                            - generic [ref=f46e3006] [cursor=pointer]: Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer.
+              - generic [ref=f46e3012]:
+                - generic [ref=f46e3015] [cursor=pointer]:
+                  - checkbox "I have read and agree to the"
+                - generic [ref=f46e3017] [cursor=pointer]: I have read and agree to the
+                - generic [ref=f46e3018] [cursor=pointer]: Terms & Conditions
+              - generic [ref=f46e3024]:
+                - button "Book" [ref=f46e4441] [cursor=pointer]
+                - button "Hold" [ref=f46e4444] [cursor=pointer]
+                - button "Save Quote" [ref=f46e3026] [cursor=pointer]
+            - generic [ref=f46e6189]:
+              - generic [ref=f46e6190]: "Time left: 57:32"
+              - generic [ref=f46e6195]:
+                - generic [ref=f46e6196]: 32,660 EGP
+                - generic [ref=f46e6197]: Published Fare
+              - tablist [ref=f46e6201]:
+                - generic [ref=f46e6203]:
+                  - tab "  Fare Breakdown" [expanded] [ref=f46e6205] [cursor=pointer]:
+                    - generic [ref=f46e6206]: 
+                    - generic [ref=f46e6207]:
+                      - generic [ref=f46e6208]: 
+                      - generic [ref=f46e6209]: Fare Breakdown
+                  - region "  Fare Breakdown" [ref=f46e6210]:
+                    - generic [ref=f46e6211]:
+                      - generic [ref=f46e6212]:
+                        - generic [ref=f46e6213]:
+                          - generic [ref=f46e6214]: "Base fare: (1 Adult)"
+                          - generic [ref=f46e6215]: 24,747 EGP
+                        - generic [ref=f46e6337]:
+                          - generic [ref=f46e6338]:
+                            - generic [ref=f46e6339]:
+                              - generic [ref=f46e6340]: 
+                              - generic [ref=f46e6341]: (+) Ancillaries & SSR
+                            - generic [ref=f46e6342]: 886 EGP
+                          - generic [ref=f46e6344]:
+                            - generic [ref=f46e6345]:
+                              - generic [ref=f46e6346]: 
+                              - text: Seat Selection
+                            - generic [ref=f46e6347]: + 886 EGP
+                        - generic [ref=f46e6216]:
+                          - generic [ref=f46e6217]: "Tax & Fees: (1 Adult)"
+                          - generic [ref=f46e6218]: 7,026.8 EGP
+                      - generic [ref=f46e6219]:
+                        - generic [ref=f46e6220]: "Total Amount:"
+                        - generic [ref=f46e6221]: 32,660 EGP
+              - tablist [ref=f46e6225]:
+                - generic [ref=f46e6227]:
+                  - tab " baggage Included Baggage" [expanded] [ref=f46e6229] [cursor=pointer]:
+                    - generic [ref=f46e6230]: 
+                    - generic [ref=f46e6231]:
+                      - img "baggage" [ref=f46e6232]
+                      - generic [ref=f46e6233]: Included Baggage
+                  - region " baggage Included Baggage" [ref=f46e6234]:
+                    - tablist [ref=f46e6237]:
+                      - generic [ref=f46e6239]:
+                        - tab " Cairo → Athens" [ref=f46e6241] [cursor=pointer]:
+                          - generic [ref=f46e6242]: 
+                          - generic [ref=f46e6243]: Cairo → Athens
+                        - generic [ref=f46e6245]:
+                          - heading [level=4] [ref=f46e6246]: Adult
+                          - paragraph [ref=f46e6247]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                          - paragraph [ref=f46e6248]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=f46e6250]:
+                        - tab " Athens → Rome" [ref=f46e6252] [cursor=pointer]:
+                          - generic [ref=f46e6253]: 
+                          - generic [ref=f46e6254]: Athens → Rome
+                        - generic [ref=f46e6256]:
+                          - heading [level=4] [ref=f46e6257]: Adult
+                          - paragraph [ref=f46e6258]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                          - paragraph [ref=f46e6259]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=f46e6261]:
+                        - tab " Rome → Athens" [ref=f46e6263] [cursor=pointer]:
+                          - generic [ref=f46e6264]: 
+                          - generic [ref=f46e6265]: Rome → Athens
+                        - generic [ref=f46e6267]:
+                          - heading [level=4] [ref=f46e6268]: Adult
+                          - paragraph [ref=f46e6269]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                          - paragraph [ref=f46e6270]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=f46e6272]:
+                        - tab " Athens → Cairo" [ref=f46e6274] [cursor=pointer]:
+                          - generic [ref=f46e6275]: 
+                          - generic [ref=f46e6276]: Athens → Cairo
+                        - generic [ref=f46e6278]:
+                          - heading [level=4] [ref=f46e6279]: Adult
+                          - paragraph [ref=f46e6280]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 1 Piece(s)"
+                          - paragraph [ref=f46e6281]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+              - tablist [ref=f46e6285]:
+                - generic [ref=f46e6287]:
+                  - tab "  Penalties/Charges" [expanded] [ref=f46e6289] [cursor=pointer]:
+                    - generic [ref=f46e6290]: 
+                    - generic [ref=f46e6291]:
+                      - generic [ref=f46e6292]: 
+                      - generic [ref=f46e6293]: Penalties/Charges
+                  - region "  Penalties/Charges" [ref=f46e6294]:
+                    - tablist [ref=f46e6297]:
+                      - generic [ref=f46e6298]:
+                        - generic [ref=f46e6299]:
+                          - generic [ref=f46e6300]: ❌
+                          - generic [ref=f46e6301]:
+                            - generic [ref=f46e6302]: Cancel
+                            - generic [ref=f46e6303]: N/A
+                        - generic [ref=f46e6304]:
+                          - generic [ref=f46e6305]: 🔄
+                          - generic [ref=f46e6306]:
+                            - generic [ref=f46e6307]: Change
+                            - generic [ref=f46e6308]: N/A
+              - button "Full Fare Rules" [ref=f46e6310] [cursor=pointer]
+      - contentinfo [ref=f46e139]:
+        - contentinfo [ref=f46e141]:
+          - generic [ref=f46e142]:
+            - navigation "Footer navigation" [ref=f46e143]:
+              - link "About Us" [ref=f46e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f46e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f46e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f46e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f46e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f46e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f46e152] [cursor=pointer]:
+    - emphasis [ref=f46e153]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe
+  - dialog [ref=f46e6348]:
+    - banner [ref=f46e6349]:
+      - generic [ref=f46e6350]:
+        - generic [ref=f46e6351]:
+          - generic [ref=f46e6353]: 
+          - heading "Seat Map ATH → FCO Trip 1 · Leg 2" [level=2] [ref=f46e6354]:
+            - text: Seat Map
+            - generic [aria-hidden] [ref=f46e6355]: ·
+            - generic [ref=f46e6356]: ATH → FCO
+            - generic [aria-hidden] [ref=f46e6357]: ·
+            - generic [ref=f46e6358]: Trip 1 · Leg 2
+        - button "Close seat map" [active] [ref=f46e6359] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f46e6360]: 
+    - generic [ref=f46e6363]:
+      - complementary "Travellers, cabin key and confirmation" [ref=f46e6364]:
+        - region [ref=f46e6366]:
+          - generic [ref=f46e6367]:
+            - heading "Choose a traveller" [level=2] [ref=f46e6369]
+            - generic [ref=f46e6370]:
+              - generic [ref=f46e6371]: 
+              - generic [ref=f46e6373]:
+                - strong [ref=f46e6374]: 0 / 1
+                - generic [ref=f46e6375]: Seats assigned
+          - radiogroup "Passengers" [ref=f46e6376]:
+            - radio "WA Wael Aegeansix Adult Choose a seat below Active" [checked] [ref=f46e6377] [cursor=pointer]:
+              - generic [ref=f46e6379]:
+                - text: WA
+                - generic [aria-hidden] [ref=f46e6380]: "1"
+              - generic [ref=f46e6381]:
+                - generic [ref=f46e6382]:
+                  - strong [ref=f46e6383]: Wael Aegeansix
+                  - generic [ref=f46e6384]: Adult
+                - generic [ref=f46e6385]:
+                  - generic [aria-hidden] [ref=f46e6386]: 
+                  - text: Choose a seat below
+              - generic [ref=f46e6387]: Active
+        - region "Cabin overview" [ref=f46e6390]:
+          - generic [ref=f46e6391]:
+            - generic [ref=f46e6393]: 
+            - generic [ref=f46e6394]:
+              - strong [ref=f46e6395]:
+                - text: ATH
+                - generic [aria-hidden] [ref=f46e6396]: 
+                - text: FCO
+              - generic [ref=f46e6397]: A3650 · 32Q, Airbus A321neo-LR-XLR Passenger
+          - generic [ref=f46e6398]:
+            - generic [ref=f46e6399]:
+              - generic [ref=f46e6400]: Departs
+              - time [ref=f46e6401]:
+                - generic [ref=f46e6402]: Fri, Oct 16, 2026
+                - strong [ref=f46e6403]: 07:35
+            - generic [ref=f46e6404]:
+              - generic [ref=f46e6405]: Arrives
+              - time [ref=f46e6406]:
+                - generic [ref=f46e6407]: Fri, Oct 16, 2026
+                - strong [ref=f46e6408]: 08:35
+          - generic [ref=f46e6409]:
+            - generic [ref=f46e6410]:
+              - term [ref=f46e6411]: Seats
+              - definition [ref=f46e6412]: "198"
+            - generic [ref=f46e6413]:
+              - term [ref=f46e6414]: Cabins
+              - definition [ref=f46e6415]: Economy
+            - generic [ref=f46e6416]:
+              - term [ref=f46e6417]: Deck
+              - definition [ref=f46e6418]: Main deck
+        - region [ref=f46e6420]:
+          - heading "What the plan shows" [level=3] [ref=f46e6421]:
+            - generic [aria-hidden] [ref=f46e6422]: 
+            - text: What the plan shows
+          - generic [ref=f46e6423]:
+            - generic [ref=f46e6424]: Cabins
+            - generic [ref=f46e6428]:
+              - strong [ref=f46e6429]: Economy
+              - generic [ref=f46e6430]: from EGP 414
+          - generic [ref=f46e6431]:
+            - generic [ref=f46e6432]: Seat status
+            - generic [ref=f46e6433]:
+              - generic [ref=f46e6434]: Available paid
+              - generic [ref=f46e6436]: Occupied
+              - generic [ref=f46e6438]: Blocked
+        - region "Confirm seats" [ref=f46e6441]:
+          - paragraph [ref=f46e6442]:
+            - generic [ref=f46e6443]: No seat charges
+            - strong [ref=f46e6444]: Free
+          - button "Continue without seats" [ref=f46e6445] [cursor=pointer]:
+            - text: Continue without seats
+            - generic [aria-hidden] [ref=f46e6446]: 
+          - button "Clear all seats" [disabled] [ref=f46e6447]:
+            - generic [aria-hidden] [ref=f46e6448]: 
+            - text: Clear all seats
+      - main [ref=f46e6452]:
+        - generic [ref=f46e6453]:
+          - paragraph [ref=f46e6454]:
+            - generic [aria-hidden] [ref=f46e6455]: 
+            - strong [ref=f46e6456]: Main deck
+            - generic [ref=f46e6457]: Forward · rows 5–38
+          - generic [ref=f46e6458]:
+            - generic [ref=f46e6511]:
+              - generic [aria-hidden] [ref=f46e6512]: 
+              - text: Front of aircraft · first mapped row
+              - strong [ref=f46e6513]: "5"
+            - generic [ref=f46e6514]:
+              - generic [aria-hidden]: Left side · seat A
+              - generic [aria-hidden]: Right side · seat F
+              - generic [ref=f46e6515]:
+                - generic [ref=f46e6516]:
+                  - generic [ref=f46e6517]:
+                    - generic "COMP0200900cf52e7 · Economy · 3-3 layout · rows 5–38 · from EGP 414" [ref=f46e6518]:
+                      - generic [ref=f46e6520]:
+                        - strong [ref=f46e6521]: COMP0200900cf52e7
+                        - generic [ref=f46e6522]: Economy
+                        - generic [ref=f46e6523]: 3-3
+                        - generic [ref=f46e6524]: rows 5–38
+                      - generic [ref=f46e6525]: from EGP 414
+                    - generic [ref=f46e6526]:
+                      - generic [ref=f46e6527]: Row
+                      - generic [ref=f46e6528]:
+                        - generic [ref=f46e6529]: A
+                        - generic [ref=f46e6530]: B
+                        - generic [ref=f46e6531]: C
+                        - generic [ref=f46e6533]: D
+                        - generic [ref=f46e6534]: E
+                        - generic [ref=f46e6535]: F
+                      - generic [ref=f46e6536]: Row
+                  - generic [ref=f46e6537]:
+                    - generic [ref=f46e6538]: "5"
+                    - generic [ref=f46e6539]:
+                      - button "Seat 5A, row 5, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6540] [cursor=pointer]:
+                        - generic [ref=f46e6544]: A
+                      - button "Seat 5B, row 5, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6545] [cursor=pointer]:
+                        - generic [ref=f46e6549]: B
+                      - button "Seat 5C, row 5, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Occupied" [ref=f46e6550] [cursor=pointer]:
+                        - generic [ref=f46e6554]: C
+                        - generic [ref=f46e6555]: 
+                      - button "Seat 5D, row 5, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Occupied" [ref=f46e6558] [cursor=pointer]:
+                        - generic [ref=f46e6562]: D
+                        - generic [ref=f46e6563]: 
+                      - button "Seat 5E, row 5, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6564] [cursor=pointer]:
+                        - generic [ref=f46e6568]: E
+                      - button "Seat 5F, row 5, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6569] [cursor=pointer]:
+                        - generic [ref=f46e6573]: F
+                    - generic [ref=f46e6574]: "5"
+                - generic [ref=f46e6576]:
+                  - generic [ref=f46e6577]: "6"
+                  - generic [ref=f46e6578]:
+                    - button "Seat 6A, row 6, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6579] [cursor=pointer]:
+                      - generic [ref=f46e6583]: A
+                    - button "Seat 6B, row 6, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6584] [cursor=pointer]:
+                      - generic [ref=f46e6588]: B
+                    - button "Seat 6C, row 6, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6589] [cursor=pointer]:
+                      - generic [ref=f46e6593]: C
+                    - button "Seat 6D, row 6, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6596] [cursor=pointer]:
+                      - generic [ref=f46e6600]: D
+                    - button "Seat 6E, row 6, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6601] [cursor=pointer]:
+                      - generic [ref=f46e6605]: E
+                    - button "Seat 6F, row 6, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6606] [cursor=pointer]:
+                      - generic [ref=f46e6610]: F
+                  - generic [ref=f46e6611]: "6"
+                - generic [ref=f46e6613]:
+                  - generic [ref=f46e6614]: "7"
+                  - generic [ref=f46e6615]:
+                    - button "Seat 7A, row 7, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6616] [cursor=pointer]:
+                      - generic [ref=f46e6620]: A
+                    - button "Seat 7B, row 7, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6621] [cursor=pointer]:
+                      - generic [ref=f46e6625]: B
+                    - button "Seat 7C, row 7, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6626] [cursor=pointer]:
+                      - generic [ref=f46e6630]: C
+                    - button "Seat 7D, row 7, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Occupied" [ref=f46e6633] [cursor=pointer]:
+                      - generic [ref=f46e6637]: D
+                      - generic [ref=f46e6638]: 
+                    - button "Seat 7E, row 7, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6639] [cursor=pointer]:
+                      - generic [ref=f46e6643]: E
+                    - button "Seat 7F, row 7, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6644] [cursor=pointer]:
+                      - generic [ref=f46e6648]: F
+                  - generic [ref=f46e6649]: "7"
+                - generic [ref=f46e6651]:
+                  - generic [ref=f46e6652]: "8"
+                  - generic [ref=f46e6653]:
+                    - button "Seat 8A, row 8, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6654] [cursor=pointer]:
+                      - generic [ref=f46e6658]: A
+                    - button "Seat 8B, row 8, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6659] [cursor=pointer]:
+                      - generic [ref=f46e6663]: B
+                    - button "Seat 8C, row 8, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6664] [cursor=pointer]:
+                      - generic [ref=f46e6668]: C
+                    - button "Seat 8D, row 8, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6671] [cursor=pointer]:
+                      - generic [ref=f46e6675]: D
+                    - button "Seat 8E, row 8, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6676] [cursor=pointer]:
+                      - generic [ref=f46e6680]: E
+                    - button "Seat 8F, row 8, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6681] [cursor=pointer]:
+                      - generic [ref=f46e6685]: F
+                  - generic [ref=f46e6686]: "8"
+                - generic [ref=f46e6688]:
+                  - generic [ref=f46e6689]: "9"
+                  - generic [ref=f46e6690]:
+                    - button "Seat 9A, row 9, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6691] [cursor=pointer]:
+                      - generic [ref=f46e6695]: A
+                    - button "Seat 9B, row 9, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6696] [cursor=pointer]:
+                      - generic [ref=f46e6700]: B
+                    - button "Seat 9C, row 9, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6701] [cursor=pointer]:
+                      - generic [ref=f46e6705]: C
+                    - button "Seat 9D, row 9, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6708] [cursor=pointer]:
+                      - generic [ref=f46e6712]: D
+                    - button "Seat 9E, row 9, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6713] [cursor=pointer]:
+                      - generic [ref=f46e6717]: E
+                    - button "Seat 9F, row 9, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6718] [cursor=pointer]:
+                      - generic [ref=f46e6722]: F
+                  - generic [ref=f46e6723]: "9"
+                - generic [ref=f46e6725]:
+                  - generic [ref=f46e6726]: "10"
+                  - generic [ref=f46e6727]:
+                    - button "Seat 10A, row 10, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6728] [cursor=pointer]:
+                      - generic [ref=f46e6732]: A
+                    - button "Seat 10B, row 10, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6733] [cursor=pointer]:
+                      - generic [ref=f46e6737]: B
+                    - button "Seat 10C, row 10, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6738] [cursor=pointer]:
+                      - generic [ref=f46e6742]: C
+                    - button "Seat 10D, row 10, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6745] [cursor=pointer]:
+                      - generic [ref=f46e6749]: D
+                    - button "Seat 10E, row 10, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6750] [cursor=pointer]:
+                      - generic [ref=f46e6754]: E
+                    - button "Seat 10F, row 10, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6755] [cursor=pointer]:
+                      - generic [ref=f46e6759]: F
+                  - generic [ref=f46e6760]: "10"
+                - generic [ref=f46e6762]:
+                  - generic [ref=f46e6763]: "11"
+                  - generic [ref=f46e6764]:
+                    - button "Seat 11A, row 11, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6765] [cursor=pointer]:
+                      - generic [ref=f46e6769]: A
+                    - button "Seat 11B, row 11, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6770] [cursor=pointer]:
+                      - generic [ref=f46e6774]: B
+                    - button "Seat 11C, row 11, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6775] [cursor=pointer]:
+                      - generic [ref=f46e6779]: C
+                    - button "Seat 11D, row 11, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6782] [cursor=pointer]:
+                      - generic [ref=f46e6786]: D
+                    - button "Seat 11E, row 11, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6787] [cursor=pointer]:
+                      - generic [ref=f46e6791]: E
+                    - button "Seat 11F, row 11, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6792] [cursor=pointer]:
+                      - generic [ref=f46e6796]: F
+                  - generic [ref=f46e6797]: "11"
+                - generic [ref=f46e6799]:
+                  - generic [ref=f46e6800]: "12"
+                  - generic [ref=f46e6801]:
+                    - button "Seat 12A, row 12, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6802] [cursor=pointer]:
+                      - generic [ref=f46e6806]: A
+                    - button "Seat 12B, row 12, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6807] [cursor=pointer]:
+                      - generic [ref=f46e6811]: B
+                    - button "Seat 12C, row 12, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6812] [cursor=pointer]:
+                      - generic [ref=f46e6816]: C
+                    - button "Seat 12D, row 12, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6819] [cursor=pointer]:
+                      - generic [ref=f46e6823]: D
+                    - button "Seat 12E, row 12, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6824] [cursor=pointer]:
+                      - generic [ref=f46e6828]: E
+                    - button "Seat 12F, row 12, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6829] [cursor=pointer]:
+                      - generic [ref=f46e6833]: F
+                  - generic [ref=f46e6834]: "12"
+                - generic [ref=f46e6836]:
+                  - generic [ref=f46e6837]: "14"
+                  - generic [ref=f46e6838]:
+                    - button "Seat 14A, row 14, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6839] [cursor=pointer]:
+                      - generic [ref=f46e6843]: A
+                    - button "Seat 14B, row 14, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6844] [cursor=pointer]:
+                      - generic [ref=f46e6848]: B
+                    - button "Seat 14C, row 14, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6849] [cursor=pointer]:
+                      - generic [ref=f46e6853]: C
+                    - button "Seat 14D, row 14, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6856] [cursor=pointer]:
+                      - generic [ref=f46e6860]: D
+                    - button "Seat 14E, row 14, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6861] [cursor=pointer]:
+                      - generic [ref=f46e6865]: E
+                    - button "Seat 14F, row 14, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6866] [cursor=pointer]:
+                      - generic [ref=f46e6870]: F
+                  - generic [ref=f46e6871]: "14"
+                - generic [ref=f46e6873]:
+                  - generic [ref=f46e6874]: "15"
+                  - generic [ref=f46e6875]:
+                    - button "Seat 15A, row 15, Left side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6876] [cursor=pointer]:
+                      - generic [ref=f46e6880]: A
+                    - button "Seat 15B, row 15, Left side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6881] [cursor=pointer]:
+                      - generic [ref=f46e6885]: B
+                    - button "Seat 15C, row 15, Left side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6886] [cursor=pointer]:
+                      - generic [ref=f46e6890]: C
+                    - button "Seat 15D, row 15, Right side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6893] [cursor=pointer]:
+                      - generic [ref=f46e6897]: D
+                    - button "Seat 15E, row 15, Right side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6898] [cursor=pointer]:
+                      - generic [ref=f46e6902]: E
+                    - button "Seat 15F, row 15, Right side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6903] [cursor=pointer]:
+                      - generic [ref=f46e6907]: F
+                  - generic [ref=f46e6908]: "15"
+                - generic [ref=f46e6910]:
+                  - generic [ref=f46e6911]: "16"
+                  - generic [ref=f46e6912]:
+                    - button "Seat 16A, row 16, Left side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6913] [cursor=pointer]:
+                      - generic [ref=f46e6917]: A
+                    - button "Seat 16B, row 16, Left side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Crew seat, Occupied" [ref=f46e6918] [cursor=pointer]:
+                      - generic [ref=f46e6922]: B
+                      - generic [ref=f46e6923]: 
+                    - button "Seat 16C, row 16, Left side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Preferential seat, Seat suitable for unaccompanied minors, Occupied" [ref=f46e6924] [cursor=pointer]:
+                      - generic [ref=f46e6928]: C
+                      - generic [ref=f46e6929]: 
+                    - button "Seat 16D, row 16, Right side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 827" [ref=f46e6932] [cursor=pointer]:
+                      - generic [ref=f46e6936]: D
+                    - button "Seat 16E, row 16, Right side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Preferential seat, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 827" [ref=f46e6937] [cursor=pointer]:
+                      - generic [ref=f46e6941]: E
+                    - button "Seat 16F, row 16, Right side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Preferential seat, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 827" [ref=f46e6942] [cursor=pointer]:
+                      - generic [ref=f46e6946]: F
+                  - generic [ref=f46e6947]: "16"
+                - generic [ref=f46e6949]:
+                  - generic [aria-hidden]:
+                    - generic: Exit
+                  - generic [aria-hidden]:
+                    - generic: Exit
+                  - generic [ref=f46e6950]: "17"
+                  - generic [ref=f46e6951]:
+                    - button "Seat 17A, row 17, Left side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, Window seat, Occupied" [ref=f46e6952] [cursor=pointer]:
+                      - generic [ref=f46e6956]: A
+                      - generic [ref=f46e6957]: 
+                    - button "Seat 17B, row 17, Left side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Center seat (not window, not aisle), Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, Crew seat, Occupied" [ref=f46e6958] [cursor=pointer]:
+                      - generic [ref=f46e6962]: B
+                      - generic [ref=f46e6963]: 
+                    - button "Seat 17C, row 17, Left side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Aisle seat, Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, available for EGP 1,004" [ref=f46e6964] [cursor=pointer]:
+                      - generic [ref=f46e6968]: C
+                    - button "Seat 17D, row 17, Right side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Aisle seat, Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, available for EGP 1,004" [ref=f46e6971] [cursor=pointer]:
+                      - generic [ref=f46e6975]: D
+                    - button "Seat 17E, row 17, Right side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Center seat (not window, not aisle), Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, Crew seat, available for EGP 1,004" [ref=f46e6976] [cursor=pointer]:
+                      - generic [ref=f46e6980]: E
+                    - button "Seat 17F, row 17, Right side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, Window seat, available for EGP 1,004" [ref=f46e6981] [cursor=pointer]:
+                      - generic [ref=f46e6985]: F
+                  - generic [ref=f46e6986]: "17"
+                - generic [ref=f46e6988]:
+                  - generic [aria-hidden]:
+                    - generic: Exit
+                  - generic [aria-hidden]:
+                    - generic: Exit
+                  - generic [ref=f46e6989]: "18"
+                  - generic [ref=f46e6990]:
+                    - button "Seat 18A, row 18, Left side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, Window seat, available for EGP 1,004" [ref=f46e6991] [cursor=pointer]:
+                      - generic [ref=f46e6995]: A
+                    - button "Seat 18B, row 18, Left side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Center seat (not window, not aisle), Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, Crew seat, available for EGP 1,004" [ref=f46e6996] [cursor=pointer]:
+                      - generic [ref=f46e7000]: B
+                    - button "Seat 18C, row 18, Left side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Aisle seat, Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, available for EGP 1,004" [ref=f46e7001] [cursor=pointer]:
+                      - generic [ref=f46e7005]: C
+                    - button "Seat 18D, row 18, Right side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Aisle seat, Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, Occupied" [ref=f46e7008] [cursor=pointer]:
+                      - generic [ref=f46e7012]: D
+                      - generic [ref=f46e7013]: 
+                    - button "Seat 18E, row 18, Right side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Center seat (not window, not aisle), Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, Crew seat, available for EGP 1,004" [ref=f46e7014] [cursor=pointer]:
+                      - generic [ref=f46e7018]: E
+                    - button "Seat 18F, row 18, Right side, COMP0200900cf52e7, Exit and emergency exit, Overwing seat(s), Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, Window seat, available for EGP 1,004" [ref=f46e7019] [cursor=pointer]:
+                      - generic [ref=f46e7023]: F
+                  - generic [ref=f46e7024]: "18"
+                - generic [ref=f46e7026]:
+                  - generic [ref=f46e7027]: "19"
+                  - generic [ref=f46e7028]:
+                    - button "Seat 19A, row 19, Left side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7029] [cursor=pointer]:
+                      - generic [ref=f46e7033]: A
+                    - button "Seat 19B, row 19, Left side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, Occupied" [ref=f46e7034] [cursor=pointer]:
+                      - generic [ref=f46e7038]: B
+                      - generic [ref=f46e7039]: 
+                    - button "Seat 19C, row 19, Left side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Occupied" [ref=f46e7040] [cursor=pointer]:
+                      - generic [ref=f46e7044]: C
+                      - generic [ref=f46e7045]: 
+                    - button "Seat 19D, row 19, Right side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7048] [cursor=pointer]:
+                      - generic [ref=f46e7052]: D
+                    - button "Seat 19E, row 19, Right side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7053] [cursor=pointer]:
+                      - generic [ref=f46e7057]: E
+                    - button "Seat 19F, row 19, Right side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7058] [cursor=pointer]:
+                      - generic [ref=f46e7062]: F
+                  - generic [ref=f46e7063]: "19"
+                - generic [ref=f46e7065]:
+                  - generic [ref=f46e7066]: "20"
+                  - generic [ref=f46e7067]:
+                    - button "Seat 20A, row 20, Left side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7068] [cursor=pointer]:
+                      - generic [ref=f46e7072]: A
+                    - button "Seat 20B, row 20, Left side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7073] [cursor=pointer]:
+                      - generic [ref=f46e7077]: B
+                    - button "Seat 20C, row 20, Left side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7078] [cursor=pointer]:
+                      - generic [ref=f46e7082]: C
+                    - button "Seat 20D, row 20, Right side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7085] [cursor=pointer]:
+                      - generic [ref=f46e7089]: D
+                    - button "Seat 20E, row 20, Right side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7090] [cursor=pointer]:
+                      - generic [ref=f46e7094]: E
+                    - button "Seat 20F, row 20, Right side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7095] [cursor=pointer]:
+                      - generic [ref=f46e7099]: F
+                  - generic [ref=f46e7100]: "20"
+                - generic [ref=f46e7102]:
+                  - generic [ref=f46e7103]: "21"
+                  - generic [ref=f46e7104]:
+                    - button "Seat 21A, row 21, Left side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7105] [cursor=pointer]:
+                      - generic [ref=f46e7109]: A
+                    - button "Seat 21B, row 21, Left side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7110] [cursor=pointer]:
+                      - generic [ref=f46e7114]: B
+                    - button "Seat 21C, row 21, Left side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7115] [cursor=pointer]:
+                      - generic [ref=f46e7119]: C
+                    - button "Seat 21D, row 21, Right side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7122] [cursor=pointer]:
+                      - generic [ref=f46e7126]: D
+                    - button "Seat 21E, row 21, Right side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7127] [cursor=pointer]:
+                      - generic [ref=f46e7131]: E
+                    - button "Seat 21F, row 21, Right side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7132] [cursor=pointer]:
+                      - generic [ref=f46e7136]: F
+                  - generic [ref=f46e7137]: "21"
+                - generic [ref=f46e7139]:
+                  - generic [ref=f46e7141]: "22"
+                  - generic [ref=f46e7142]:
+                    - button "Seat 22A, row 22, Left side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7143] [cursor=pointer]:
+                      - generic [ref=f46e7147]: A
+                    - button "Seat 22B, row 22, Left side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7148] [cursor=pointer]:
+                      - generic [ref=f46e7152]: B
+                    - button "Seat 22C, row 22, Left side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7153] [cursor=pointer]:
+                      - generic [ref=f46e7157]: C
+                    - button "Seat 22D, row 22, Right side, COMP0200900cf52e7, Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7160] [cursor=pointer]:
+                      - generic [ref=f46e7164]: D
+                    - button "Seat 22E, row 22, Right side, COMP0200900cf52e7, Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7165] [cursor=pointer]:
+                      - generic [ref=f46e7169]: E
+                    - button "Seat 22F, row 22, Right side, COMP0200900cf52e7, Overwing seat(s), Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7170] [cursor=pointer]:
+                      - generic [ref=f46e7174]: F
+                  - generic [ref=f46e7175]: "22"
+                - generic [ref=f46e7177]:
+                  - generic [ref=f46e7178]: "23"
+                  - generic [ref=f46e7179]:
+                    - button "Seat 23A, row 23, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, Occupied" [ref=f46e7180] [cursor=pointer]:
+                      - generic [ref=f46e7184]: A
+                      - generic [ref=f46e7185]: 
+                    - button "Seat 23B, row 23, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, Occupied" [ref=f46e7186] [cursor=pointer]:
+                      - generic [ref=f46e7190]: B
+                      - generic [ref=f46e7191]: 
+                    - button "Seat 23C, row 23, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7192] [cursor=pointer]:
+                      - generic [ref=f46e7196]: C
+                    - button "Seat 23D, row 23, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7199] [cursor=pointer]:
+                      - generic [ref=f46e7203]: D
+                    - button "Seat 23E, row 23, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7204] [cursor=pointer]:
+                      - generic [ref=f46e7208]: E
+                    - button "Seat 23F, row 23, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7209] [cursor=pointer]:
+                      - generic [ref=f46e7213]: F
+                  - generic [ref=f46e7214]: "23"
+                - generic [ref=f46e7216]:
+                  - generic [ref=f46e7217]: "24"
+                  - generic [ref=f46e7218]:
+                    - button "Seat 24A, row 24, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7219] [cursor=pointer]:
+                      - generic [ref=f46e7223]: A
+                    - button "Seat 24B, row 24, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7224] [cursor=pointer]:
+                      - generic [ref=f46e7228]: B
+                    - button "Seat 24C, row 24, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7229] [cursor=pointer]:
+                      - generic [ref=f46e7233]: C
+                    - button "Seat 24D, row 24, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7236] [cursor=pointer]:
+                      - generic [ref=f46e7240]: D
+                    - button "Seat 24E, row 24, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7241] [cursor=pointer]:
+                      - generic [ref=f46e7245]: E
+                    - button "Seat 24F, row 24, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7246] [cursor=pointer]:
+                      - generic [ref=f46e7250]: F
+                  - generic [ref=f46e7251]: "24"
+                - generic [ref=f46e7253]:
+                  - generic [ref=f46e7254]: "25"
+                  - generic [ref=f46e7255]:
+                    - button "Seat 25A, row 25, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7256] [cursor=pointer]:
+                      - generic [ref=f46e7260]: A
+                    - button "Seat 25B, row 25, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7261] [cursor=pointer]:
+                      - generic [ref=f46e7265]: B
+                    - button "Seat 25C, row 25, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7266] [cursor=pointer]:
+                      - generic [ref=f46e7270]: C
+                    - button "Seat 25D, row 25, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7273] [cursor=pointer]:
+                      - generic [ref=f46e7277]: D
+                    - button "Seat 25E, row 25, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7278] [cursor=pointer]:
+                      - generic [ref=f46e7282]: E
+                    - button "Seat 25F, row 25, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7283] [cursor=pointer]:
+                      - generic [ref=f46e7287]: F
+                  - generic [ref=f46e7288]: "25"
+                - generic [ref=f46e7290]:
+                  - generic [ref=f46e7291]: "26"
+                  - generic [ref=f46e7292]:
+                    - button "Seat 26A, row 26, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7293] [cursor=pointer]:
+                      - generic [ref=f46e7297]: A
+                    - button "Seat 26B, row 26, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7298] [cursor=pointer]:
+                      - generic [ref=f46e7302]: B
+                    - button "Seat 26C, row 26, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7303] [cursor=pointer]:
+                      - generic [ref=f46e7307]: C
+                    - button "Seat 26D, row 26, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7310] [cursor=pointer]:
+                      - generic [ref=f46e7314]: D
+                    - button "Seat 26E, row 26, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7315] [cursor=pointer]:
+                      - generic [ref=f46e7319]: E
+                    - button "Seat 26F, row 26, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7320] [cursor=pointer]:
+                      - generic [ref=f46e7324]: F
+                  - generic [ref=f46e7325]: "26"
+                - generic [ref=f46e7327]:
+                  - generic [ref=f46e7328]: "27"
+                  - generic [ref=f46e7329]:
+                    - button "Seat 27A, row 27, Left side, COMP0200900cf52e7, No seat at this location, Window seat, Blocked" [ref=f46e7330] [cursor=pointer]:
+                      - generic [ref=f46e7334]: A
+                      - generic [ref=f46e7335]: 
+                    - button "Seat 27B, row 27, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7336] [cursor=pointer]:
+                      - generic [ref=f46e7340]: B
+                    - button "Seat 27C, row 27, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7341] [cursor=pointer]:
+                      - generic [ref=f46e7345]: C
+                    - button "Seat 27D, row 27, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7348] [cursor=pointer]:
+                      - generic [ref=f46e7352]: D
+                    - button "Seat 27E, row 27, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, Occupied" [ref=f46e7353] [cursor=pointer]:
+                      - generic [ref=f46e7357]: E
+                      - generic [ref=f46e7358]: 
+                    - button "Seat 27F, row 27, Right side, COMP0200900cf52e7, No seat at this location, Window seat, Blocked" [ref=f46e7359] [cursor=pointer]:
+                      - generic [ref=f46e7363]: F
+                      - generic [ref=f46e7364]: 
+                  - generic [ref=f46e7365]: "27"
+                - generic [ref=f46e7367]:
+                  - generic [aria-hidden]:
+                    - generic: Exit
+                  - generic [aria-hidden]:
+                    - generic: Exit
+                  - generic [ref=f46e7368]: "28"
+                  - generic [ref=f46e7369]:
+                    - button "Seat 28A, row 28, Left side, COMP0200900cf52e7, Exit and emergency exit, Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, Window seat, available for EGP 1,004" [ref=f46e7370] [cursor=pointer]:
+                      - generic [ref=f46e7374]: A
+                    - button "Seat 28B, row 28, Left side, COMP0200900cf52e7, Exit and emergency exit, Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Center seat (not window, not aisle), Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, Crew seat, available for EGP 1,004" [ref=f46e7375] [cursor=pointer]:
+                      - generic [ref=f46e7379]: B
+                    - button "Seat 28C, row 28, Left side, COMP0200900cf52e7, Exit and emergency exit, Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Aisle seat, Chargeable seat, Seat not suitable for child, Leg space seat, Left side of aircraft, available for EGP 1,004" [ref=f46e7380] [cursor=pointer]:
+                      - generic [ref=f46e7384]: C
+                    - button "Seat 28D, row 28, Right side, COMP0200900cf52e7, Exit and emergency exit, Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Aisle seat, Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, available for EGP 1,004" [ref=f46e7387] [cursor=pointer]:
+                      - generic [ref=f46e7391]: D
+                    - button "Seat 28E, row 28, Right side, COMP0200900cf52e7, Exit and emergency exit, Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Center seat (not window, not aisle), Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, Crew seat, available for EGP 1,004" [ref=f46e7392] [cursor=pointer]:
+                      - generic [ref=f46e7396]: E
+                    - button "Seat 28F, row 28, Right side, COMP0200900cf52e7, Exit and emergency exit, Seat not allowed for infant, Seat not allowed for medical, Seat not allowed for unaccompanied minor, Restricted recline seat, Chargeable seat, Seat not suitable for child, Leg space seat, Right side of aircraft, Window seat, available for EGP 1,004" [ref=f46e7397] [cursor=pointer]:
+                      - generic [ref=f46e7401]: F
+                  - generic [ref=f46e7402]: "28"
+                - generic [ref=f46e7404]:
+                  - generic [ref=f46e7405]: "29"
+                  - generic [ref=f46e7406]:
+                    - button "Seat 29A, row 29, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7407] [cursor=pointer]:
+                      - generic [ref=f46e7411]: A
+                    - button "Seat 29B, row 29, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7412] [cursor=pointer]:
+                      - generic [ref=f46e7416]: B
+                    - button "Seat 29C, row 29, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7417] [cursor=pointer]:
+                      - generic [ref=f46e7421]: C
+                    - button "Seat 29D, row 29, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7424] [cursor=pointer]:
+                      - generic [ref=f46e7428]: D
+                    - button "Seat 29E, row 29, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7429] [cursor=pointer]:
+                      - generic [ref=f46e7433]: E
+                    - button "Seat 29F, row 29, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7434] [cursor=pointer]:
+                      - generic [ref=f46e7438]: F
+                  - generic [ref=f46e7439]: "29"
+                - generic [ref=f46e7441]:
+                  - generic [ref=f46e7442]: "30"
+                  - generic [ref=f46e7443]:
+                    - button "Seat 30A, row 30, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7444] [cursor=pointer]:
+                      - generic [ref=f46e7448]: A
+                    - button "Seat 30B, row 30, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7449] [cursor=pointer]:
+                      - generic [ref=f46e7453]: B
+                    - button "Seat 30C, row 30, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7454] [cursor=pointer]:
+                      - generic [ref=f46e7458]: C
+                    - button "Seat 30D, row 30, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7461] [cursor=pointer]:
+                      - generic [ref=f46e7465]: D
+                    - button "Seat 30E, row 30, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7466] [cursor=pointer]:
+                      - generic [ref=f46e7470]: E
+                    - button "Seat 30F, row 30, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7471] [cursor=pointer]:
+                      - generic [ref=f46e7475]: F
+                  - generic [ref=f46e7476]: "30"
+                - generic [ref=f46e7478]:
+                  - generic [ref=f46e7479]: "31"
+                  - generic [ref=f46e7480]:
+                    - button "Seat 31A, row 31, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7481] [cursor=pointer]:
+                      - generic [ref=f46e7485]: A
+                    - button "Seat 31B, row 31, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7486] [cursor=pointer]:
+                      - generic [ref=f46e7490]: B
+                    - button "Seat 31C, row 31, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7491] [cursor=pointer]:
+                      - generic [ref=f46e7495]: C
+                    - button "Seat 31D, row 31, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7498] [cursor=pointer]:
+                      - generic [ref=f46e7502]: D
+                    - button "Seat 31E, row 31, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7503] [cursor=pointer]:
+                      - generic [ref=f46e7507]: E
+                    - button "Seat 31F, row 31, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7508] [cursor=pointer]:
+                      - generic [ref=f46e7512]: F
+                  - generic [ref=f46e7513]: "31"
+                - generic [ref=f46e7515]:
+                  - generic [ref=f46e7516]: "32"
+                  - generic [ref=f46e7517]:
+                    - button "Seat 32A, row 32, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7518] [cursor=pointer]:
+                      - generic [ref=f46e7522]: A
+                    - button "Seat 32B, row 32, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7523] [cursor=pointer]:
+                      - generic [ref=f46e7527]: B
+                    - button "Seat 32C, row 32, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7528] [cursor=pointer]:
+                      - generic [ref=f46e7532]: C
+                    - button "Seat 32D, row 32, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7535] [cursor=pointer]:
+                      - generic [ref=f46e7539]: D
+                    - button "Seat 32E, row 32, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7540] [cursor=pointer]:
+                      - generic [ref=f46e7544]: E
+                    - button "Seat 32F, row 32, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7545] [cursor=pointer]:
+                      - generic [ref=f46e7549]: F
+                  - generic [ref=f46e7550]: "32"
+                - generic [ref=f46e7552]:
+                  - generic [ref=f46e7553]: "33"
+                  - generic [ref=f46e7554]:
+                    - button "Seat 33A, row 33, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7555] [cursor=pointer]:
+                      - generic [ref=f46e7559]: A
+                    - button "Seat 33B, row 33, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7560] [cursor=pointer]:
+                      - generic [ref=f46e7564]: B
+                    - button "Seat 33C, row 33, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7565] [cursor=pointer]:
+                      - generic [ref=f46e7569]: C
+                    - button "Seat 33D, row 33, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7572] [cursor=pointer]:
+                      - generic [ref=f46e7576]: D
+                    - button "Seat 33E, row 33, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7577] [cursor=pointer]:
+                      - generic [ref=f46e7581]: E
+                    - button "Seat 33F, row 33, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7582] [cursor=pointer]:
+                      - generic [ref=f46e7586]: F
+                  - generic [ref=f46e7587]: "33"
+                - generic [ref=f46e7589]:
+                  - generic [ref=f46e7590]: "34"
+                  - generic [ref=f46e7591]:
+                    - button "Seat 34A, row 34, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7592] [cursor=pointer]:
+                      - generic [ref=f46e7596]: A
+                    - button "Seat 34B, row 34, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7597] [cursor=pointer]:
+                      - generic [ref=f46e7601]: B
+                    - button "Seat 34C, row 34, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7602] [cursor=pointer]:
+                      - generic [ref=f46e7606]: C
+                    - button "Seat 34D, row 34, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7609] [cursor=pointer]:
+                      - generic [ref=f46e7613]: D
+                    - button "Seat 34E, row 34, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7614] [cursor=pointer]:
+                      - generic [ref=f46e7618]: E
+                    - button "Seat 34F, row 34, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7619] [cursor=pointer]:
+                      - generic [ref=f46e7623]: F
+                  - generic [ref=f46e7624]: "34"
+                - generic [ref=f46e7626]:
+                  - generic [ref=f46e7627]: "35"
+                  - generic [ref=f46e7628]:
+                    - button "Seat 35A, row 35, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7629] [cursor=pointer]:
+                      - generic [ref=f46e7633]: A
+                    - button "Seat 35B, row 35, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7634] [cursor=pointer]:
+                      - generic [ref=f46e7638]: B
+                    - button "Seat 35C, row 35, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7639] [cursor=pointer]:
+                      - generic [ref=f46e7643]: C
+                    - button "Seat 35D, row 35, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7646] [cursor=pointer]:
+                      - generic [ref=f46e7650]: D
+                    - button "Seat 35E, row 35, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7651] [cursor=pointer]:
+                      - generic [ref=f46e7655]: E
+                    - button "Seat 35F, row 35, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7656] [cursor=pointer]:
+                      - generic [ref=f46e7660]: F
+                  - generic [ref=f46e7661]: "35"
+                - generic [ref=f46e7663]:
+                  - generic [ref=f46e7664]: "36"
+                  - generic [ref=f46e7665]:
+                    - button "Seat 36A, row 36, Left side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7666] [cursor=pointer]:
+                      - generic [ref=f46e7670]: A
+                    - button "Seat 36B, row 36, Left side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7671] [cursor=pointer]:
+                      - generic [ref=f46e7675]: B
+                    - button "Seat 36C, row 36, Left side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7676] [cursor=pointer]:
+                      - generic [ref=f46e7680]: C
+                    - button "Seat 36D, row 36, Right side, COMP0200900cf52e7, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7683] [cursor=pointer]:
+                      - generic [ref=f46e7687]: D
+                    - button "Seat 36E, row 36, Right side, COMP0200900cf52e7, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7688] [cursor=pointer]:
+                      - generic [ref=f46e7692]: E
+                    - button "Seat 36F, row 36, Right side, COMP0200900cf52e7, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7693] [cursor=pointer]:
+                      - generic [ref=f46e7697]: F
+                  - generic [ref=f46e7698]: "36"
+                - generic [ref=f46e7700]:
+                  - generic [ref=f46e7701]: "37"
+                  - generic [ref=f46e7702]:
+                    - button "Seat 37A, row 37, Left side, COMP0200900cf52e7, In front of toilet seat, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7703] [cursor=pointer]:
+                      - generic [ref=f46e7707]: A
+                    - button "Seat 37B, row 37, Left side, COMP0200900cf52e7, In front of toilet seat, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7708] [cursor=pointer]:
+                      - generic [ref=f46e7712]: B
+                    - button "Seat 37C, row 37, Left side, COMP0200900cf52e7, In front of toilet seat, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7713] [cursor=pointer]:
+                      - generic [ref=f46e7717]: C
+                    - button "Seat 37D, row 37, Right side, COMP0200900cf52e7, In front of toilet seat, Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7720] [cursor=pointer]:
+                      - generic [ref=f46e7724]: D
+                    - button "Seat 37E, row 37, Right side, COMP0200900cf52e7, In front of toilet seat, Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7725] [cursor=pointer]:
+                      - generic [ref=f46e7729]: E
+                    - button "Seat 37F, row 37, Right side, COMP0200900cf52e7, In front of toilet seat, Chargeable seat, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7730] [cursor=pointer]:
+                      - generic [ref=f46e7734]: F
+                  - generic [ref=f46e7735]: "37"
+                - generic [ref=f46e7737]:
+                  - generic [ref=f46e7738]: "38"
+                  - generic [ref=f46e7739]:
+                    - button "Seat 38A, row 38, Left side, COMP0200900cf52e7, Restricted recline seat, In front of toilet seat, Chargeable seat, Deportee, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Left side of aircraft, Pet cabin, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7740] [cursor=pointer]:
+                      - generic [ref=f46e7744]: A
+                    - button "Seat 38B, row 38, Left side, COMP0200900cf52e7, Restricted recline seat, In front of toilet seat, Center seat (not window, not aisle), Chargeable seat, Deportee, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7745] [cursor=pointer]:
+                      - generic [ref=f46e7749]: B
+                    - button "Seat 38C, row 38, Left side, COMP0200900cf52e7, Restricted recline seat, In front of toilet seat, Aisle seat, Chargeable seat, Deportee, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7750] [cursor=pointer]:
+                      - generic [ref=f46e7754]: C
+                    - button "Seat 38D, row 38, Right side, COMP0200900cf52e7, In front of toilet seat, Aisle seat, Chargeable seat, Deportee, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, available for EGP 414" [ref=f46e7757] [cursor=pointer]:
+                      - generic [ref=f46e7761]: D
+                    - button "Seat 38E, row 38, Right side, COMP0200900cf52e7, In front of toilet seat, Center seat (not window, not aisle), Chargeable seat, Deportee, Seat suitable for adult with an infant, Right side of aircraft, Seat suitable for unaccompanied minors, Crew seat, available for EGP 414" [ref=f46e7762] [cursor=pointer]:
+                      - generic [ref=f46e7766]: E
+                    - button "Seat 38F, row 38, Right side, COMP0200900cf52e7, In front of toilet seat, Chargeable seat, Deportee, Seat with facilities for handicapped/incapacitated passenger, Seat suitable for adult with an infant, Pet cabin, Right side of aircraft, Seat suitable for unaccompanied minors, Window seat, available for EGP 414" [ref=f46e7767] [cursor=pointer]:
+                      - generic [ref=f46e7771]: F
+                  - generic [ref=f46e7772]: "38"
+            - generic [ref=f46e7774]:
+              - generic [ref=f46e7775]: 
+              - text: Aft · last mapped row
+              - strong [ref=f46e7776]: "38"

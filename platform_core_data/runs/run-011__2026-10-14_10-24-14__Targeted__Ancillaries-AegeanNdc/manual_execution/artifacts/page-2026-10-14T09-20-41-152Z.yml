@@ -1,0 +1,158 @@
+- generic [ref=f22e1]:
+  - generic [ref=f22e97]:
+    - generic [ref=f22e98]:
+      - text:          
+      - generic [ref=f22e100]:
+        - generic [ref=f22e219]:
+          - list [ref=f22e221]:
+            - listitem [ref=f22e222]:
+              - link " Dashboard" [ref=f22e223] [cursor=pointer]:
+                - /url: /dashboard
+                - generic [ref=f22e224]: 
+                - generic [ref=f22e225]: Dashboard
+            - listitem [ref=f22e226]:
+              - link "Book Flight" [ref=f22e227] [cursor=pointer]:
+                - /url: /booking
+            - listitem [ref=f22e230]:
+              - link " My Bookings" [ref=f22e231] [cursor=pointer]:
+                - /url: /myBooking
+                - generic [ref=f22e232]: 
+                - generic [ref=f22e233]: My Bookings
+            - listitem [ref=f22e234]:
+              - link " My Quotes" [ref=f22e235] [cursor=pointer]:
+                - /url: /myQuotes
+                - generic [ref=f22e236]: 
+                - generic [ref=f22e237]: My Quotes
+            - listitem [ref=f22e238]:
+              - link " Reports" [ref=f22e239] [cursor=pointer]:
+                - /url: /reports
+                - generic [ref=f22e240]: 
+                - generic [ref=f22e241]: Reports
+            - listitem [ref=f22e242]:
+              - link " Travellers Details" [ref=f22e243] [cursor=pointer]:
+                - /url: /travellers
+                - generic [ref=f22e244]: 
+                - generic [ref=f22e245]: Travellers Details
+            - listitem [ref=f22e246]:
+              - link " Import PNR" [ref=f22e247] [cursor=pointer]:
+                - /url: /importPnr
+                - generic [ref=f22e248]: 
+                - generic [ref=f22e249]: Import PNR
+            - listitem [ref=f22e250]:
+              - link " Transfer PNR" [ref=f22e251] [cursor=pointer]:
+                - /url: /transferPnr
+                - generic [ref=f22e252]: 
+                - generic [ref=f22e253]: Transfer PNR
+          - text: 
+        - generic [ref=f22e255]:
+          - link [ref=f22e256] [cursor=pointer]:
+            - /url: /settings
+            - img "Hussein_AGN profile" [ref=f22e259]
+            - generic [ref=f22e261]:
+              - heading "Hussein_AGN" [level=2] [ref=f22e262]
+              - paragraph [ref=f22e263]: AGN9748
+          - generic [ref=f22e264]:
+            - generic [ref=f22e265]:
+              - generic [ref=f22e266]: 
+              - generic [ref=f22e268]:
+                - paragraph [ref=f22e269]: "Wallet:"
+                - heading "5,000,000.000 EGP" [level=1] [ref=f22e270]
+                - paragraph [ref=f22e271]: "Current Outstanding:"
+                - heading "0.000 EGP" [level=3] [ref=f22e272]
+            - button "Top Up Wallet" [ref=f22e273] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f22e274]: 
+        - button [active] [ref=f22e101] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f22e102]: 
+    - generic [ref=f22e103]:
+      - generic [ref=f22e104]:
+        - banner [ref=f22e106]:
+          - generic [ref=f22e107]:
+            - img "Logo" [ref=f22e110] [cursor=pointer]
+            - generic [ref=f22e111]:
+              - generic [ref=f22e112]:
+                - generic [ref=f22e113]:
+                  - generic [ref=f22e114]: 
+                  - generic [ref=f22e115]: Hussien.ata@tildetech.ae
+                - generic [ref=f22e116]: "|"
+                - generic [ref=f22e117]:
+                  - generic [ref=f22e118]: 
+                  - generic [ref=f22e119]: +20-1215484845
+              - generic [ref=f22e120]:
+                - button "Take a tour" [ref=f22e122] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f22e123]: 
+                - button "Top Up Wallet" [ref=f22e124] [cursor=pointer]:
+                  - generic [ref=f22e125]: 
+                - button "Settings" [ref=f22e126] [cursor=pointer]:
+                  - generic [ref=f22e127]: 
+              - generic [ref=f22e129]:
+                - button "Welcome Hussien " [ref=f22e130] [cursor=pointer]:
+                  - generic [ref=f22e131]:
+                    - generic [ref=f22e132]: Welcome
+                    - generic [ref=f22e133]:
+                      - text: Hussien
+                      - generic [ref=f22e134]: 
+                - button "Profile menu" [ref=f22e135] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f22e138]
+        - generic [ref=f22e144]:
+          - generic [ref=f22e147]:
+            - link "Book Flight" [ref=f22e148] [cursor=pointer]:
+              - /url: /booking/flight-search
+            - generic [ref=f22e151]:
+              - generic [ref=f22e152]:
+                - generic [ref=f22e153]: 
+                - generic [ref=f22e155]:
+                  - generic [ref=f22e156]: "0"
+                  - generic [ref=f22e157]: Total Flights
+              - generic [ref=f22e159]:
+                - generic [ref=f22e160]: 
+                - generic [ref=f22e162]:
+                  - generic [ref=f22e163]: "0"
+                  - generic [ref=f22e164]: Pending
+              - generic [ref=f22e166]:
+                - generic [ref=f22e167]: 
+                - generic [ref=f22e169]:
+                  - generic [ref=f22e170]: "0"
+                  - generic [ref=f22e171]: Ticketed
+              - generic [ref=f22e175] [cursor=pointer]:
+                - generic [ref=f22e176]:
+                  - combobox
+                - generic [ref=f22e177]: Today
+                - button "dropdown trigger" [ref=f22e178]:
+                  - generic [ref=f22e179]: 
+          - generic [ref=f22e180]:
+            - generic [ref=f22e182]:
+              - generic [ref=f22e183]:
+                - heading "My To Do List" [level=5] [ref=f22e184]
+                - button "Add task" [ref=f22e189] [cursor=pointer]:
+                  - generic [ref=f22e190]: 
+              - generic [ref=f22e192]:
+                - generic [ref=f22e193]: 📝
+                - paragraph [ref=f22e194]: No tasks yet. Click + to add one.
+            - generic [ref=f22e196]:
+              - heading " Promotions" [level=5] [ref=f22e198]:
+                - generic [ref=f22e199]: 
+                - generic [ref=f22e201]: Promotions
+              - generic [ref=f22e203]:
+                - generic [ref=f22e204]: 
+                - generic [ref=f22e205]: No promotions available
+      - contentinfo [ref=f22e206]:
+        - contentinfo [ref=f22e208]:
+          - generic [ref=f22e209]:
+            - navigation "Footer navigation" [ref=f22e210]:
+              - link "About Us" [ref=f22e211] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f22e212] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f22e213] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f22e214] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f22e215] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f22e216]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f22e94] [cursor=pointer]:
+    - emphasis [ref=f22e95]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

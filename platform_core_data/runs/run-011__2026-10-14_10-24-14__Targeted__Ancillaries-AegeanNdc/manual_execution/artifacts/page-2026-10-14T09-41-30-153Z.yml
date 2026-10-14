@@ -1,0 +1,148 @@
+- generic [ref=f42e1]:
+  - generic [ref=f42e4]:
+    - generic [ref=f42e5]:
+      - text:          
+      - generic [ref=f42e7]:
+        - text:  
+        - button [ref=f42e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f42e9]: 
+    - generic [ref=f42e10]:
+      - generic [ref=f42e11]:
+        - banner [ref=f42e13]:
+          - generic [ref=f42e14]:
+            - img "Logo" [ref=f42e17] [cursor=pointer]
+            - generic [ref=f42e18]:
+              - generic [ref=f42e19]:
+                - generic [ref=f42e20]:
+                  - generic [ref=f42e21]: 
+                  - generic [ref=f42e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f42e23]: "|"
+                - generic [ref=f42e24]:
+                  - generic [ref=f42e25]: 
+                  - generic [ref=f42e26]: +20-1215484845
+              - generic [ref=f42e27]:
+                - button "Take a tour" [ref=f42e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f42e30]: 
+                - button "Top Up Wallet" [ref=f42e31] [cursor=pointer]:
+                  - generic [ref=f42e32]: 
+                - button "Settings" [ref=f42e33] [cursor=pointer]:
+                  - generic [ref=f42e34]: 
+              - generic [ref=f42e36]:
+                - button "Welcome Hussien " [ref=f42e37] [cursor=pointer]:
+                  - generic [ref=f42e38]:
+                    - generic [ref=f42e39]: Welcome
+                    - generic [ref=f42e40]:
+                      - text: Hussien
+                      - generic [ref=f42e41]: 
+                - button "Profile menu" [ref=f42e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f42e45]
+        - generic [ref=f42e54]:
+          - generic [ref=f42e64]:
+            - heading "Flight Search" [level=2] [ref=f42e65]
+            - paragraph [ref=f42e66]: Enter your flight details to begin.
+          - generic [ref=f42e70]:
+            - generic [ref=f42e71]:
+              - button "One-way" [ref=f42e72] [cursor=pointer]
+              - button "Round-trip" [active] [ref=f42e73] [cursor=pointer]
+              - button "Multi-city" [ref=f42e74] [cursor=pointer]
+            - generic [ref=f42e75]:
+              - generic [ref=f42e76]:
+                - generic [ref=f42e78] [cursor=pointer]:
+                  - generic [ref=f42e79]:
+                    - listbox
+                  - generic [ref=f42e80]: From *
+                  - generic [ref=f42e82]: 
+                - button "" [ref=f42e84] [cursor=pointer]
+                - generic [ref=f42e87] [cursor=pointer]:
+                  - generic [ref=f42e88]:
+                    - combobox "To *"
+                  - generic [ref=f42e89]: To *
+                  - button "dropdown trigger" [ref=f42e90]:
+                    - generic [ref=f42e91]: 
+                - generic [ref=f42e93]:
+                  - textbox "DD/MM/YYYY *" [ref=f42e94]
+                  - button [ref=f42e95] [cursor=pointer]:
+                    - generic [aria-hidden] [ref=f42e96]: 
+                - generic [ref=f42e98] [cursor=pointer]:
+                  - generic [ref=f42e99]:
+                    - combobox "Cabin"
+                  - generic [ref=f42e100]: Economy
+                  - button "dropdown trigger" [ref=f42e101]:
+                    - generic [ref=f42e102]: 
+                - generic [ref=f42e104] [cursor=pointer]:
+                  - generic [ref=f42e105]:
+                    - listbox
+                  - generic [ref=f42e106]: RBD
+                  - generic [ref=f42e108]: 
+              - generic [ref=f42e158]:
+                - generic [ref=f42e163]:
+                  - generic:
+                    - generic:
+                      - listbox [disabled]
+                    - generic: From *
+                    - generic: 
+                - button "" [disabled] [ref=f42e164]
+                - generic [ref=f42e166]:
+                  - generic:
+                    - generic:
+                      - combobox "To *" [disabled]
+                    - generic: To *
+                    - button "dropdown trigger":
+                      - generic: 
+                - generic [ref=f42e168]:
+                  - textbox "DD/MM/YYYY *" [ref=f42e169]
+                  - button [ref=f42e170] [cursor=pointer]:
+                    - generic [aria-hidden] [ref=f42e171]: 
+                - generic [ref=f42e173] [cursor=pointer]:
+                  - generic [ref=f42e174]:
+                    - combobox "Cabin"
+                  - generic [ref=f42e175]: Economy
+                  - button "dropdown trigger" [ref=f42e176]:
+                    - generic [ref=f42e177]: 
+                - generic [ref=f42e179] [cursor=pointer]:
+                  - generic [ref=f42e180]:
+                    - listbox
+                  - generic [ref=f42e181]: RBD
+                  - generic [ref=f42e183]: 
+            - generic [ref=f42e110]:
+              - button "1  " [ref=f42e111] [cursor=pointer]:
+                - generic [ref=f42e112]:
+                  - generic [ref=f42e113]: "1"
+                  - generic [ref=f42e114]: 
+                - generic [ref=f42e115]: 
+              - generic [ref=f42e116]:
+                - generic [ref=f42e118] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f42e120]: Nearby Airport
+              - generic [ref=f42e121]:
+                - generic [ref=f42e123] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f42e125]: Baggage Fare Only
+              - generic [ref=f42e126]:
+                - generic [ref=f42e128] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f42e130]: Up-selling
+            - generic [ref=f42e131]:
+              - button " Advanced " [ref=f42e133] [cursor=pointer]:
+                - generic [ref=f42e134]: 
+                - text: Advanced
+                - generic [ref=f42e135]: 
+              - button "Search" [ref=f42e137] [cursor=pointer]
+      - contentinfo [ref=f42e139]:
+        - contentinfo [ref=f42e141]:
+          - generic [ref=f42e142]:
+            - navigation "Footer navigation" [ref=f42e143]:
+              - link "About Us" [ref=f42e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f42e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f42e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f42e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f42e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f42e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f42e152] [cursor=pointer]:
+    - emphasis [ref=f42e153]: 
+    - text: 

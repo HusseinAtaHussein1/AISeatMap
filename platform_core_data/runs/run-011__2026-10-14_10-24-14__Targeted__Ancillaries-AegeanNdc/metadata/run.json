@@ -1,0 +1,70 @@
+{
+  "folderName": "run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc",
+  "index": 11,
+  "scope": "Targeted",
+  "target": "Ancillaries-AegeanNdc",
+  "workflow": "unversioned",
+  "targetRef": "6957d2817d05c2b7431483acc2e442eddda3f8be",
+  "targetRefScope": [],
+  "targetRefCapturedAt": "2026-10-14T07:24:14.399Z",
+  "targetRepoRoot": "C:/Users/SH/Downloads/WF/agentic-ai-testing-platform",
+  "targetRefReason": "git repository at C:/Users/SH/Downloads/WF/agentic-ai-testing-platform",
+  "createdBy": "Hussien Ata",
+  "startedTime": "2026-10-14T07:24:14.399Z",
+  "status": "Preparing",
+  "scopeFamily": "supplier-feature",
+  "feature": "ancillaries",
+  "supplier": "aegean-ndc",
+  "sharedScope": null,
+  "testingLayerScope": {
+    "UI": {
+      "status": "In Scope"
+    },
+    "E2E": {
+      "status": "In Scope"
+    },
+    "Regression": {
+      "status": "In Scope"
+    },
+    "API": {
+      "status": "Out of Scope",
+      "reason": "Human scope restriction 2026-10-14 (Hussien Ata): functional only"
+    },
+    "Contract": {
+      "status": "Out of Scope",
+      "reason": "Human scope restriction 2026-10-14 (Hussien Ata): functional only"
+    },
+    "Integration": {
+      "status": "Out of Scope",
+      "reason": "Human scope restriction 2026-10-14 (Hussien Ata): functional only"
+    },
+    "DB": {
+      "status": "Out of Scope",
+      "reason": "Human scope restriction 2026-10-14 (Hussien Ata): functional only"
+    },
+    "Security": {
+      "status": "Out of Scope",
+      "reason": "Human scope restriction 2026-10-14 (Hussien Ata): functional only"
+    },
+    "Performance": {
+      "status": "Out of Scope",
+      "reason": "Human scope restriction 2026-10-14 (Hussien Ata): functional only"
+    }
+  },
+  "scopeHistory": [],
+  "environment": {
+    "admin": "http://192.168.1.83",
+    "portal": "http://192.168.1.83:9500",
+    "applications": [
+      "Admin",
+      "Portal"
+    ],
+    "credentialName": "AegeanNDCProd",
+    "pcc": "EGY",
+    "market": "EGY",
+    "branch": "NDC1_Hussein",
+    "agency": "Hussein_AGN (AGN9748)",
+    "route": "CAI-FCO",
+    "travelDate": "2026-10-16"
+  }
+}

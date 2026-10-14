@@ -1,0 +1,79 @@
+{
+  "slug": "aegean-ndc",
+  "name": "AegeanNdc",
+  "description": null,
+  "feature": "ancillaries",
+  "status": "Active",
+  "createdAt": "2026-10-14T06:38:05.213Z",
+  "updatedAt": "2026-10-14T06:38:21.983Z",
+  "supersededBy": null,
+  "stages": {
+    "context": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    },
+    "discovery": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    },
+    "test_design": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    },
+    "automation": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    },
+    "healing": {
+      "status": "Not Started",
+      "artifactPath": null,
+      "lastRun": null,
+      "lastUpdated": null,
+      "revisionCount": 0,
+      "targetRefAtWrite": null
+    }
+  },
+  "approvedAt": "2026-10-14T06:38:13.282Z",
+  "approvedBy": "Hussien Ata",
+  "capabilities": {
+    "hold": "Supported",
+    "payAfterHold": "Supported",
+    "meal": "Not Supported",
+    "baggage": "Supported",
+    "seat": "Supported",
+    "bundle": "Not Supported"
+  },
+  "capabilityHistory": [
+    {
+      "at": "2026-10-14T06:38:21.852Z",
+      "by": "Hussien Ata",
+      "changes": {
+        "hold": "Supported",
+        "payAfterHold": "Supported",
+        "meal": "Not Supported",
+        "baggage": "Supported",
+        "seat": "Supported",
+        "bundle": "Not Supported"
+      }
+    }
+  ],
+  "supplierRules": [],
+  "supplierRulesSetAt": "2026-10-14T06:38:21.983Z",
+  "supplierRulesSetBy": "Hussien Ata"
+}

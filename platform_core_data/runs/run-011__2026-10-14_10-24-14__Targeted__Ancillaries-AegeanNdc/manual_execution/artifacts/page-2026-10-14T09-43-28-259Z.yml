@@ -1,0 +1,578 @@
+- generic [ref=f42e1]:
+  - generic [ref=f42e4]:
+    - generic [ref=f42e5]:
+      - text:          
+      - generic [ref=f42e7]:
+        - text:  
+        - button [ref=f42e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f42e9]: 
+    - generic [ref=f42e10]:
+      - generic [ref=f42e11]:
+        - banner [ref=f42e13]:
+          - generic [ref=f42e14]:
+            - img "Logo" [ref=f42e17] [cursor=pointer]
+            - generic [ref=f42e18]:
+              - generic [ref=f42e19]:
+                - generic [ref=f42e20]:
+                  - generic [ref=f42e21]: 
+                  - generic [ref=f42e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f42e23]: "|"
+                - generic [ref=f42e24]:
+                  - generic [ref=f42e25]: 
+                  - generic [ref=f42e26]: +20-1215484845
+              - generic [ref=f42e27]:
+                - button "Take a tour" [ref=f42e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f42e30]: 
+                - button "Top Up Wallet" [ref=f42e31] [cursor=pointer]:
+                  - generic [ref=f42e32]: 
+                - button "Settings" [ref=f42e33] [cursor=pointer]:
+                  - generic [ref=f42e34]: 
+              - generic [ref=f42e36]:
+                - button "Welcome Hussien " [ref=f42e37] [cursor=pointer]:
+                  - generic [ref=f42e38]:
+                    - generic [ref=f42e39]: Welcome
+                    - generic [ref=f42e40]:
+                      - text: Hussien
+                      - generic [ref=f42e41]: 
+                - button "Profile menu" [ref=f42e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f42e45]
+        - generic [ref=f42e2729]:
+          - generic [ref=f42e2731]:
+            - generic [ref=f42e2732]: RoundTrip
+            - generic [ref=f42e2734]: "Stops: 2"
+            - generic [ref=f42e2736]: "Passengers: 2"
+            - generic [ref=f42e2738]: "Trip Departure: Fri, 16 Oct, 2026"
+            - generic [ref=f42e2740]: "Trip Arrival: Wed, 21 Oct, 2026"
+          - generic [ref=f42e2742]:
+            - generic [ref=f42e2744]:
+              - tablist [ref=f42e2748]:
+                - generic [ref=f42e2750]:
+                  - tab " Segments Details" [ref=f42e2752] [cursor=pointer]:
+                    - generic [ref=f42e2753]: 
+                    - generic [ref=f42e2754]: Segments Details
+                  - generic [ref=f42e2760]:
+                    - generic [ref=f42e2761]:
+                      - generic [ref=f42e2762]: CAI✈FCO
+                      - generic [ref=f42e2763]: Onward Flights
+                      - generic [ref=f42e2764]: "Total Journey Duration: 5h 35m"
+                    - generic [ref=f42e2767]:
+                      - generic [ref=f42e2768]:
+                        - generic [ref=f42e2771]: Economy
+                        - generic [ref=f42e2774]: 
+                      - generic [ref=f42e2776]:
+                        - generic [ref=f42e2777]:
+                          - generic [ref=f42e2778]: Departure
+                          - generic [ref=f42e2779]: CAI
+                          - generic [ref=f42e2780]: Cairo International Airport
+                          - generic [ref=f42e2781]: Cairo
+                          - generic [ref=f42e2782]: 04:00 Fri, 16 Oct, 2026
+                          - generic [ref=f42e2783]: "Terminal: 3"
+                        - generic [ref=f42e2784]:
+                          - generic [ref=f42e2785]: "Segment Duration: 2h"
+                          - generic [ref=f42e2793]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f42e2794]:
+                          - generic [ref=f42e2795]: Arrival
+                          - generic [ref=f42e2796]: ATH
+                          - generic [ref=f42e2797]: Athens International Airport
+                          - generic [ref=f42e2798]: Athens
+                          - generic [ref=f42e2799]: 06:00 Fri, 16 Oct, 2026
+                          - generic [ref=f42e2800]: "Terminal: Please check terminal information with airline"
+                        - paragraph [ref=f42e2802]: "Layover Duration: 1h 35m - Location: Athens"
+                    - generic [ref=f42e2805]:
+                      - generic [ref=f42e2806]:
+                        - generic [ref=f42e2809]: Economy
+                        - generic [ref=f42e2812]: 
+                      - generic [ref=f42e2814]:
+                        - generic [ref=f42e2815]:
+                          - generic [ref=f42e2816]: Departure
+                          - generic [ref=f42e2817]: ATH
+                          - generic [ref=f42e2818]: Athens International Airport
+                          - generic [ref=f42e2819]: Athens
+                          - generic [ref=f42e2820]: 07:35 Fri, 16 Oct, 2026
+                          - generic [ref=f42e2821]: "Terminal: Please check terminal information with airline"
+                        - generic [ref=f42e2822]:
+                          - generic [ref=f42e2823]: "Segment Duration: 2h"
+                          - generic [ref=f42e2831]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f42e2832]:
+                          - generic [ref=f42e2833]: Arrival
+                          - generic [ref=f42e2834]: FCO
+                          - generic [ref=f42e2835]: Leonardo Da Vinci (Fiumicino)
+                          - generic [ref=f42e2836]: Rome
+                          - generic [ref=f42e2837]: 08:35 Fri, 16 Oct, 2026
+                          - generic [ref=f42e2838]: "Terminal: 1"
+                    - generic [ref=f42e2839]:
+                      - generic [ref=f42e2840]: FCO✈CAI
+                      - generic [ref=f42e2841]: Return Flights
+                      - generic [ref=f42e2842]: "Total Journey Duration: 7h 25m"
+                    - generic [ref=f42e2845]:
+                      - generic [ref=f42e2846]:
+                        - generic [ref=f42e2849]: Economy
+                        - generic [ref=f42e2852]: 
+                      - generic [ref=f42e2854]:
+                        - generic [ref=f42e2855]:
+                          - generic [ref=f42e2856]: Departure
+                          - generic [ref=f42e2857]: FCO
+                          - generic [ref=f42e2858]: Leonardo Da Vinci (Fiumicino)
+                          - generic [ref=f42e2859]: Rome
+                          - generic [ref=f42e2860]: 18:25 Tue, 20 Oct, 2026
+                          - generic [ref=f42e2861]: "Terminal: 1"
+                        - generic [ref=f42e2862]:
+                          - generic [ref=f42e2863]: "Segment Duration: 1h 55m"
+                          - generic [ref=f42e2871]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f42e2872]:
+                          - generic [ref=f42e2873]: Arrival
+                          - generic [ref=f42e2874]: ATH
+                          - generic [ref=f42e2875]: Athens International Airport
+                          - generic [ref=f42e2876]: Athens
+                          - generic [ref=f42e2877]: 21:20 Tue, 20 Oct, 2026
+                          - generic [ref=f42e2878]: "Terminal: Please check terminal information with airline"
+                        - paragraph [ref=f42e2880]: "Layover Duration: 3h 35m - Location: Athens"
+                    - generic [ref=f42e2883]:
+                      - generic [ref=f42e2884]:
+                        - generic [ref=f42e2887]: Economy
+                        - generic [ref=f42e2890]: 
+                      - generic [ref=f42e2892]:
+                        - generic [ref=f42e2893]:
+                          - generic [ref=f42e2894]: Departure
+                          - generic [ref=f42e2895]: ATH
+                          - generic [ref=f42e2896]: Athens International Airport
+                          - generic [ref=f42e2897]: Athens
+                          - generic [ref=f42e2898]: 00:55 Wed, 21 Oct, 2026
+                          - generic [ref=f42e2899]: "Terminal: Please check terminal information with airline"
+                        - generic [ref=f42e2900]:
+                          - generic [ref=f42e2901]: "Segment Duration: 1h 55m"
+                          - generic [ref=f42e2909]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=f42e2910]:
+                          - generic [ref=f42e2911]: Arrival
+                          - generic [ref=f42e2912]: CAI
+                          - generic [ref=f42e2913]: Cairo International Airport
+                          - generic [ref=f42e2914]: Cairo
+                          - generic [ref=f42e2915]: 02:50 Wed, 21 Oct, 2026
+                          - generic [ref=f42e2916]: "Terminal: 3"
+              - generic [ref=f42e2918]:
+                - generic [ref=f42e2919]:
+                  - generic [ref=f42e2920]: 
+                  - generic [ref=f42e2921]: Passenger Details
+                - generic [ref=f42e2922]:
+                  - generic [ref=f42e2924]:
+                    - generic [ref=f42e2925]:
+                      - generic [ref=f42e2926]:
+                        - generic [ref=f42e2927]: "01"
+                        - generic [ref=f42e2928]: 
+                      - generic [ref=f42e2930]:
+                        - generic [ref=f42e2931]: Passenger Info
+                        - generic [ref=f42e2932]: Traveler details
+                        - generic [ref=f42e2933]: In progress
+                    - generic [ref=f42e2936]:
+                      - generic [ref=f42e2937]:
+                        - generic [ref=f42e2938]: "02"
+                        - generic [ref=f42e2939]: 
+                      - generic [ref=f42e2941]:
+                        - generic [ref=f42e2942]: Ancillaries
+                        - generic [ref=f42e2943]: Meals, baggage and seats
+                        - generic [ref=f42e2944]: Upcoming
+                  - generic [ref=f42e2946]:
+                    - generic [ref=f42e2947]:
+                      - paragraph [ref=f42e2948]: Please Note, newly added details will be saved to customer profile.
+                      - button "Expand All" [ref=f42e2951] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=f42e2952]: 
+                    - tablist [ref=f42e2955]:
+                      - generic [ref=f42e2957]:
+                        - tab " 1- Adult" [expanded] [ref=f42e2959] [cursor=pointer]:
+                          - generic [ref=f42e2960]: 
+                          - generic [ref=f42e2961]: 1- Adult
+                        - region " 1- Adult" [ref=f42e2963]:
+                          - generic [ref=f42e2964]:
+                            - button "Select passenger" [ref=f42e2967] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=f42e2968]: 
+                            - generic [ref=f42e2970]:
+                              - generic [ref=f42e2971]:
+                                - generic [ref=f42e2972]: Title *
+                                - generic [ref=f42e2974] [cursor=pointer]:
+                                  - generic [ref=f42e2975]:
+                                    - combobox "Title *"
+                                  - generic [ref=f42e2976]: Title
+                                  - button "dropdown trigger" [ref=f42e2977]:
+                                    - generic [ref=f42e2978]: 
+                              - generic [ref=f42e2979]:
+                                - generic [ref=f42e2980]: First Name *
+                                - textbox "First Name *" [ref=f42e2981]:
+                                  - /placeholder: First Name
+                                  - text: Ziad
+                              - generic [ref=f42e2982]:
+                                - generic [ref=f42e2983]: Last Name *
+                                - textbox "Last Name *" [ref=f42e2984]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanfive
+                              - generic [ref=f42e2985]:
+                                - generic [ref=f42e2986]: Date of Birth *
+                                - generic [ref=f42e2988]:
+                                  - textbox "Date of Birth *" [active] [ref=f42e2989]:
+                                    - /placeholder: Date of Birth
+                                    - text: 08/08/1984
+                                  - button [ref=f42e2990] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f42e2991]: 
+                                  - generic [ref=f42e3429]:
+                                    - generic [ref=f42e3430]:
+                                      - button "" [ref=f42e3431] [cursor=pointer]
+                                      - generic [ref=f42e3433]:
+                                        - button "August" [ref=f42e3434] [cursor=pointer]
+                                        - button "1984" [ref=f42e3435] [cursor=pointer]
+                                      - button "" [ref=f42e3436] [cursor=pointer]
+                                    - table [ref=f42e3439]:
+                                      - rowgroup [ref=f42e3440]:
+                                        - row [ref=f42e3441]:
+                                          - columnheader "Su" [ref=f42e3442]
+                                          - columnheader "Mo" [ref=f42e3443]
+                                          - columnheader "Tu" [ref=f42e3444]
+                                          - columnheader "We" [ref=f42e3445]
+                                          - columnheader "Th" [ref=f42e3446]
+                                          - columnheader "Fr" [ref=f42e3447]
+                                          - columnheader "Sa" [ref=f42e3448]
+                                      - rowgroup [ref=f42e3449]:
+                                        - row [ref=f42e3450]:
+                                          - cell "29" [ref=f42e3451]
+                                          - cell "30" [ref=f42e3452]
+                                          - cell "31" [ref=f42e3453]
+                                          - cell "1" [ref=f42e3454]
+                                          - cell "2" [ref=f42e3456]
+                                          - cell "3" [ref=f42e3458]
+                                          - cell "4" [ref=f42e3460]
+                                        - row [ref=f42e3462]:
+                                          - cell "5" [ref=f42e3463]
+                                          - cell "6" [ref=f42e3465]
+                                          - cell "7" [ref=f42e3467]
+                                          - cell "8" [ref=f42e3469]
+                                          - cell "9" [ref=f42e3471]
+                                          - cell "10" [ref=f42e3473]
+                                          - cell "11" [ref=f42e3475]
+                                        - row [ref=f42e3477]:
+                                          - cell "12" [ref=f42e3478]
+                                          - cell "13" [ref=f42e3480]
+                                          - cell "14" [ref=f42e3482]
+                                          - cell "15" [ref=f42e3484]
+                                          - cell "16" [ref=f42e3486]
+                                          - cell "17" [ref=f42e3488]
+                                          - cell "18" [ref=f42e3490]
+                                        - row [ref=f42e3492]:
+                                          - cell "19" [ref=f42e3493]
+                                          - cell "20" [ref=f42e3495]
+                                          - cell "21" [ref=f42e3497]
+                                          - cell "22" [ref=f42e3499]
+                                          - cell "23" [ref=f42e3501]
+                                          - cell "24" [ref=f42e3503]
+                                          - cell "25" [ref=f42e3505]
+                                        - row [ref=f42e3507]:
+                                          - cell "26" [ref=f42e3508]
+                                          - cell "27" [ref=f42e3510]
+                                          - cell "28" [ref=f42e3512]
+                                          - cell "29" [ref=f42e3514]
+                                          - cell "30" [ref=f42e3516]
+                                          - cell "31" [ref=f42e3518]
+                                          - cell "1" [ref=f42e3520]
+                              - generic [ref=f42e2992]:
+                                - generic [ref=f42e2993]: Gender *
+                                - generic [ref=f42e2994]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Gender
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=f42e2995]:
+                                - generic [ref=f42e2996]: Email *
+                                - generic [ref=f42e2997]:
+                                  - textbox "Email *" [ref=f42e2998]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=f42e2999]: 24/80
+                              - generic [ref=f42e3001]:
+                                - generic [ref=f42e3002]: Phone *
+                                - textbox "Phone *" [ref=f42e3009]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=f42e3010]:
+                                - generic [ref=f42e3011]: Document Number *
+                                - generic [ref=f42e3012]:
+                                  - textbox "Document Number *" [ref=f42e3013]:
+                                    - /placeholder: "**********"
+                                    - text: A11014041
+                                  - generic [ref=f42e3427]: 9/15
+                              - generic [ref=f42e3014]:
+                                - generic [ref=f42e3015]: Document Expiry *
+                                - generic [ref=f42e3017]:
+                                  - textbox "Document Expiry *" [ref=f42e3018]:
+                                    - /placeholder: Document Expiry
+                                  - button [ref=f42e3019] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=f42e3020]: 
+                              - generic [ref=f42e3021]:
+                                - generic [ref=f42e3022]: Nationality *
+                                - generic [ref=f42e3024] [cursor=pointer]:
+                                  - generic [ref=f42e3025]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=f42e3026]: Nationality
+                                  - button "dropdown trigger" [ref=f42e3027]:
+                                    - generic [ref=f42e3028]: 
+                              - generic [ref=f42e3029]:
+                                - generic [ref=f42e3030]: Frequent Flyer
+                                - generic [ref=f42e3032] [cursor=pointer]:
+                                  - generic [ref=f42e3033]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=f42e3034]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=f42e3035]:
+                                    - generic [ref=f42e3036]: 
+                              - generic [ref=f42e3037]:
+                                - generic [ref=f42e3038]: Flyer Number
+                                - textbox "Flyer Number" [ref=f42e3040]
+                      - generic [ref=f42e3042]:
+                        - tab " 1- Child" [ref=f42e3044] [cursor=pointer]:
+                          - generic [ref=f42e3045]: 
+                          - generic [ref=f42e3046]: 1- Child
+                        - generic [ref=f42e3048]:
+                          - button [ref=f42e3051] [cursor=pointer]:
+                            - generic [aria-hidden] [ref=f42e3052]: 
+                            - generic [ref=f42e3053]: Select passenger
+                          - generic [ref=f42e3054]:
+                            - generic [ref=f42e3055]:
+                              - generic [ref=f42e3056]: Title *
+                              - generic [ref=f42e3058] [cursor=pointer]:
+                                - generic [ref=f42e3060]: Title
+                                - button [ref=f42e3061]:
+                                  - generic [ref=f42e3062]: 
+                            - generic [ref=f42e3063]:
+                              - generic [ref=f42e3064]: First Name *
+                              - textbox [ref=f42e3065]:
+                                - /placeholder: First Name
+                            - generic [ref=f42e3066]:
+                              - generic [ref=f42e3067]: Last Name *
+                              - textbox [ref=f42e3068]:
+                                - /placeholder: Last Name
+                            - generic [ref=f42e3069]:
+                              - generic [ref=f42e3070]: Date of Birth *
+                              - generic [ref=f42e3072]:
+                                - textbox [ref=f42e3073]:
+                                  - /placeholder: Date of Birth
+                                - button [ref=f42e3074] [cursor=pointer]:
+                                  - generic [aria-hidden] [ref=f42e3075]: 
+                            - generic [ref=f42e3076]:
+                              - generic [ref=f42e3077]: Gender *
+                              - generic [ref=f42e3078]:
+                                - generic:
+                                  - generic: Gender
+                                  - button:
+                                    - generic: 
+                            - generic [ref=f42e3079]:
+                              - generic [ref=f42e3080]: Email *
+                              - generic [ref=f42e3081]:
+                                - textbox [ref=f42e3082]:
+                                  - /placeholder: Please enter a valid email
+                                  - text: Hussien.ata@tildetech.ae
+                                - generic [ref=f42e3083]: 24/80
+                            - generic [ref=f42e3085]:
+                              - generic [ref=f42e3086]: Phone *
+                              - textbox [ref=f42e3093]:
+                                - /placeholder: Enter Your Phone
+                                - text: "1215484845"
+                            - text:  
+                            - generic [ref=f42e3094]:
+                              - generic [ref=f42e3095]: Document Number *
+                              - textbox [ref=f42e3097]:
+                                - /placeholder: "**********"
+                            - generic [ref=f42e3098]:
+                              - generic [ref=f42e3099]: Document Expiry *
+                              - generic [ref=f42e3101]:
+                                - textbox [ref=f42e3102]:
+                                  - /placeholder: Document Expiry
+                                - button [ref=f42e3103] [cursor=pointer]:
+                                  - generic [aria-hidden] [ref=f42e3104]: 
+                            - generic [ref=f42e3105]:
+                              - generic [ref=f42e3106]: Nationality *
+                              - generic [ref=f42e3108] [cursor=pointer]:
+                                - generic [ref=f42e3110]: Nationality
+                                - button [ref=f42e3111]:
+                                  - generic [ref=f42e3112]: 
+                            - generic [ref=f42e3113]:
+                              - generic [ref=f42e3114]: Frequent Flyer
+                              - generic [ref=f42e3116] [cursor=pointer]:
+                                - generic [ref=f42e3118]: Frequent Flyer
+                                - button [ref=f42e3119]:
+                                  - generic [ref=f42e3120]: 
+                            - generic [ref=f42e3121]:
+                              - generic [ref=f42e3122]: Flyer Number
+                              - textbox [ref=f42e3124]:
+                                - /placeholder: Flyer Number
+                  - generic [ref=f42e3125]:
+                    - text: 
+                    - button "Next" [ref=f42e3127] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f42e3128]: 
+              - tablist [ref=f42e3133]:
+                - generic [ref=f42e3135]:
+                  - tab "  Payment Details" [expanded] [ref=f42e3137] [cursor=pointer]:
+                    - generic [ref=f42e3138]: 
+                    - generic [ref=f42e3139]:
+                      - generic [ref=f42e3140]: 
+                      - generic [ref=f42e3141]: Payment Details
+                  - region "  Payment Details" [ref=f42e3142]:
+                    - generic [ref=f42e3144]:
+                      - generic [ref=f42e3145]:
+                        - generic [ref=f42e3146]: "Net Payable Amount: 61,113.6 EGP"
+                        - paragraph [ref=f42e3148]: "Note: Your money is currently being deducted from your wallet balance."
+                      - generic [ref=f42e3150]:
+                        - tablist [ref=f42e3153]:
+                          - tab "Wallet" [selected] [ref=f42e3154] [cursor=pointer]
+                          - listitem [ref=f42e3156]
+                        - tabpanel "Wallet" [ref=f42e3159]:
+                          - generic [ref=f42e3160]:
+                            - heading "Wallet Payment" [level=3] [ref=f42e3161]
+                            - generic [ref=f42e3162]:
+                              - generic [ref=f42e3167]:
+                                - generic [ref=f42e3168]: Your Balance
+                                - generic [ref=f42e3169]: 5,000,000 EGP
+                              - generic [ref=f42e3174]:
+                                - generic [ref=f42e3175]: Top Up Balance
+                                - generic [ref=f42e3176]: 5,000,000 EGP
+                            - list
+                          - generic [ref=f42e3177]:
+                            - generic [ref=f42e3180] [cursor=pointer]:
+                              - checkbox "Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer."
+                            - generic [ref=f42e3182] [cursor=pointer]: Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer.
+              - generic [ref=f42e3188]:
+                - generic [ref=f42e3191] [cursor=pointer]:
+                  - checkbox "I have read and agree to the"
+                - generic [ref=f42e3193] [cursor=pointer]: I have read and agree to the
+                - generic [ref=f42e3194] [cursor=pointer]: Terms & Conditions
+              - button "Save Quote" [ref=f42e3202] [cursor=pointer]
+            - generic [ref=f42e3205]:
+              - generic [ref=f42e3206]: "Time left: 59:46"
+              - generic [ref=f42e3211]:
+                - generic [ref=f42e3212]: 61,114 EGP
+                - generic [ref=f42e3213]: Published Fare
+              - tablist [ref=f42e3217]:
+                - generic [ref=f42e3219]:
+                  - tab "  Fare Breakdown" [expanded] [ref=f42e3221] [cursor=pointer]:
+                    - generic [ref=f42e3222]: 
+                    - generic [ref=f42e3223]:
+                      - generic [ref=f42e3224]: 
+                      - generic [ref=f42e3225]: Fare Breakdown
+                  - region "  Fare Breakdown" [ref=f42e3226]:
+                    - generic [ref=f42e3227]:
+                      - generic [ref=f42e3228]:
+                        - generic [ref=f42e3229]:
+                          - generic [ref=f42e3230]: "Base fare: (1 Adult)"
+                          - generic [ref=f42e3231]: 29,739 EGP
+                        - generic [ref=f42e3232]:
+                          - generic [ref=f42e3233]: "Base fare: (1 Child)"
+                          - generic [ref=f42e3234]: 17,843 EGP
+                        - generic [ref=f42e3235]:
+                          - generic [ref=f42e3236]: "Tax & Fees: (1 Adult)"
+                          - generic [ref=f42e3237]: 7,026.8 EGP
+                        - generic [ref=f42e3238]:
+                          - generic [ref=f42e3239]: "Tax & Fees: (1 Child)"
+                          - generic [ref=f42e3240]: 6,504.8 EGP
+                      - generic [ref=f42e3241]:
+                        - generic [ref=f42e3242]: "Total Amount:"
+                        - generic [ref=f42e3243]: 61,114 EGP
+              - tablist [ref=f42e3247]:
+                - generic [ref=f42e3249]:
+                  - tab " baggage Included Baggage" [expanded] [ref=f42e3251] [cursor=pointer]:
+                    - generic [ref=f42e3252]: 
+                    - generic [ref=f42e3253]:
+                      - img "baggage" [ref=f42e3254]
+                      - generic [ref=f42e3255]: Included Baggage
+                  - region " baggage Included Baggage" [ref=f42e3256]:
+                    - tablist [ref=f42e3259]:
+                      - generic [ref=f42e3261]:
+                        - tab " Cairo → Athens" [ref=f42e3263] [cursor=pointer]:
+                          - generic [ref=f42e3264]: 
+                          - generic [ref=f42e3265]: Cairo → Athens
+                        - generic [ref=f42e3266]:
+                          - generic [ref=f42e3267]:
+                            - heading [level=4] [ref=f42e3268]: Adult
+                            - paragraph [ref=f42e3269]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3270]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=f42e3271]:
+                            - heading [level=4] [ref=f42e3272]: Child
+                            - paragraph [ref=f42e3273]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3274]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=f42e3276]:
+                        - tab " Athens → Rome" [ref=f42e3278] [cursor=pointer]:
+                          - generic [ref=f42e3279]: 
+                          - generic [ref=f42e3280]: Athens → Rome
+                        - generic [ref=f42e3281]:
+                          - generic [ref=f42e3282]:
+                            - heading [level=4] [ref=f42e3283]: Adult
+                            - paragraph [ref=f42e3284]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3285]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=f42e3286]:
+                            - heading [level=4] [ref=f42e3287]: Child
+                            - paragraph [ref=f42e3288]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3289]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=f42e3291]:
+                        - tab " Rome → Athens" [ref=f42e3293] [cursor=pointer]:
+                          - generic [ref=f42e3294]: 
+                          - generic [ref=f42e3295]: Rome → Athens
+                        - generic [ref=f42e3296]:
+                          - generic [ref=f42e3297]:
+                            - heading [level=4] [ref=f42e3298]: Adult
+                            - paragraph [ref=f42e3299]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3300]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=f42e3301]:
+                            - heading [level=4] [ref=f42e3302]: Child
+                            - paragraph [ref=f42e3303]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3304]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=f42e3306]:
+                        - tab " Athens → Cairo" [ref=f42e3308] [cursor=pointer]:
+                          - generic [ref=f42e3309]: 
+                          - generic [ref=f42e3310]: Athens → Cairo
+                        - generic [ref=f42e3311]:
+                          - generic [ref=f42e3312]:
+                            - heading [level=4] [ref=f42e3313]: Adult
+                            - paragraph [ref=f42e3314]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3315]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=f42e3316]:
+                            - heading [level=4] [ref=f42e3317]: Child
+                            - paragraph [ref=f42e3318]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=f42e3319]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+              - tablist [ref=f42e3323]:
+                - generic [ref=f42e3325]:
+                  - tab "  Penalties/Charges" [expanded] [ref=f42e3327] [cursor=pointer]:
+                    - generic [ref=f42e3328]: 
+                    - generic [ref=f42e3329]:
+                      - generic [ref=f42e3330]: 
+                      - generic [ref=f42e3331]: Penalties/Charges
+                  - region "  Penalties/Charges" [ref=f42e3332]:
+                    - tablist [ref=f42e3335]:
+                      - generic [ref=f42e3336]:
+                        - generic [ref=f42e3337]:
+                          - generic [ref=f42e3338]: ❌
+                          - generic [ref=f42e3339]:
+                            - generic [ref=f42e3340]: Cancel
+                            - generic [ref=f42e3341]: N/A
+                        - generic [ref=f42e3342]:
+                          - generic [ref=f42e3343]: 🔄
+                          - generic [ref=f42e3344]:
+                            - generic [ref=f42e3345]: Change
+                            - generic [ref=f42e3346]: N/A
+              - button "Full Fare Rules" [ref=f42e3348] [cursor=pointer]
+      - contentinfo [ref=f42e139]:
+        - contentinfo [ref=f42e141]:
+          - generic [ref=f42e142]:
+            - navigation "Footer navigation" [ref=f42e143]:
+              - link "About Us" [ref=f42e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f42e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f42e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f42e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f42e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f42e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f42e152] [cursor=pointer]:
+    - emphasis [ref=f42e153]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

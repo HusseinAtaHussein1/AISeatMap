@@ -1,0 +1,580 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e99]:
+    - generic [ref=e100]:
+      - text:          
+      - generic [ref=e102]:
+        - text:  
+        - button [ref=e103] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e104]: 
+    - generic [ref=e105]:
+      - generic [ref=e106]:
+        - banner [ref=e108]:
+          - generic [ref=e109]:
+            - img "Logo" [ref=e112] [cursor=pointer]
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: 
+                  - generic [ref=e117]: Hussien.ata@tildetech.ae
+                - generic [ref=e118]: "|"
+                - generic [ref=e119]:
+                  - generic [ref=e120]: 
+                  - generic [ref=e121]: +20-1215484845
+              - generic [ref=e122]:
+                - button "Take a tour" [ref=e124] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=e125]: 
+                - button "Top Up Wallet" [ref=e126] [cursor=pointer]:
+                  - generic [ref=e127]: 
+                - button "Settings" [ref=e128] [cursor=pointer]:
+                  - generic [ref=e129]: 
+              - generic [ref=e131]:
+                - button "Welcome Hussien " [ref=e132] [cursor=pointer]:
+                  - generic [ref=e133]:
+                    - generic [ref=e134]: Welcome
+                    - generic [ref=e135]:
+                      - text: Hussien
+                      - generic [ref=e136]: 
+                - button "Profile menu" [ref=e137] [cursor=pointer]:
+                  - img "Hussien profile" [ref=e140]
+        - generic [ref=e2167]:
+          - generic [ref=e2169]:
+            - generic [ref=e2170]: OneWay
+            - generic [ref=e2172]: "Stops: 1"
+            - generic [ref=e2174]: "Passengers: 3"
+            - generic [ref=e2176]: "Trip Departure: Fri, 16 Oct, 2026"
+            - generic [ref=e2178]: "Trip Arrival: Fri, 16 Oct, 2026"
+          - generic [ref=e2180]:
+            - generic [ref=e2182]:
+              - tablist [ref=e2186]:
+                - generic [ref=e2188]:
+                  - tab " Segments Details" [ref=e2190] [cursor=pointer]:
+                    - generic [ref=e2191]: 
+                    - generic [ref=e2192]: Segments Details
+                  - generic [ref=e2198]:
+                    - generic [ref=e2199]:
+                      - generic [ref=e2200]: CAI✈FCO
+                      - generic [ref=e2201]: "Total Journey Duration: 5h 35m"
+                    - generic [ref=e2204]:
+                      - generic [ref=e2205]:
+                        - generic [ref=e2208]: Economy
+                        - generic [ref=e2211]: 
+                      - generic [ref=e2213]:
+                        - generic [ref=e2214]:
+                          - generic [ref=e2215]: Departure
+                          - generic [ref=e2216]: CAI
+                          - generic [ref=e2217]: Cairo International Airport
+                          - generic [ref=e2218]: Cairo
+                          - generic [ref=e2219]: 04:00 Fri, 16 Oct, 2026
+                          - generic [ref=e2220]: "Terminal: 3"
+                        - generic [ref=e2221]:
+                          - generic [ref=e2222]: "Segment Duration: 2h"
+                          - generic [ref=e2230]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=e2231]:
+                          - generic [ref=e2232]: Arrival
+                          - generic [ref=e2233]: ATH
+                          - generic [ref=e2234]: Athens International Airport
+                          - generic [ref=e2235]: Athens
+                          - generic [ref=e2236]: 06:00 Fri, 16 Oct, 2026
+                          - generic [ref=e2237]: "Terminal: Please check terminal information with airline"
+                        - paragraph [ref=e2239]: "Layover Duration: 1h 35m - Location: Athens"
+                    - generic [ref=e2242]:
+                      - generic [ref=e2243]:
+                        - generic [ref=e2246]: Economy
+                        - generic [ref=e2249]: 
+                      - generic [ref=e2251]:
+                        - generic [ref=e2252]:
+                          - generic [ref=e2253]: Departure
+                          - generic [ref=e2254]: ATH
+                          - generic [ref=e2255]: Athens International Airport
+                          - generic [ref=e2256]: Athens
+                          - generic [ref=e2257]: 07:35 Fri, 16 Oct, 2026
+                          - generic [ref=e2258]: "Terminal: Please check terminal information with airline"
+                        - generic [ref=e2259]:
+                          - generic [ref=e2260]: "Segment Duration: 2h"
+                          - generic [ref=e2268]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                        - generic [ref=e2269]:
+                          - generic [ref=e2270]: Arrival
+                          - generic [ref=e2271]: FCO
+                          - generic [ref=e2272]: Leonardo Da Vinci (Fiumicino)
+                          - generic [ref=e2273]: Rome
+                          - generic [ref=e2274]: 08:35 Fri, 16 Oct, 2026
+                          - generic [ref=e2275]: "Terminal: 1"
+              - generic [ref=e2277]:
+                - generic [ref=e2278]:
+                  - generic [ref=e2279]: 
+                  - generic [ref=e2280]: Passenger Details
+                - generic [ref=e2281]:
+                  - generic [ref=e2283]:
+                    - generic [ref=e2284]:
+                      - generic [ref=e2285]:
+                        - generic [ref=e2286]: "01"
+                        - generic [ref=e2287]: 
+                      - generic [ref=e2289]:
+                        - generic [ref=e2290]: Passenger Info
+                        - generic [ref=e2291]: Traveler details
+                        - generic [ref=e2292]: In progress
+                    - generic [ref=e2295]:
+                      - generic [ref=e2296]:
+                        - generic [ref=e2297]: "02"
+                        - generic [ref=e2298]: 
+                      - generic [ref=e2300]:
+                        - generic [ref=e2301]: Ancillaries
+                        - generic [ref=e2302]: Meals, baggage and seats
+                        - generic [ref=e2303]: Upcoming
+                  - generic [ref=e2305]:
+                    - generic [ref=e16072]:
+                      - paragraph [ref=e16073]: Please Note, newly added details will be saved to customer profile.
+                      - button "Collapse All" [ref=e16076] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e16077]: 
+                    - tablist [ref=e16080]:
+                      - generic [ref=e16082]:
+                        - tab " 1- Adult" [expanded] [ref=e16084] [cursor=pointer]:
+                          - generic [ref=e16085]: 
+                          - generic [ref=e16086]: 1- Adult
+                        - region " 1- Adult" [ref=e16088]:
+                          - generic [ref=e16089]:
+                            - button "Select passenger" [ref=e16092] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=e16093]: 
+                            - generic [ref=e16095]:
+                              - generic [ref=e16096]:
+                                - generic [ref=e16097]: Title *
+                                - generic [ref=e16099] [cursor=pointer]:
+                                  - generic [ref=e16100]:
+                                    - combobox "Title *"
+                                  - generic [ref=e16101]: Ms
+                                  - generic [ref=e16102]: 
+                                  - button "dropdown trigger" [ref=e16103]:
+                                    - generic [ref=e16104]: 
+                              - generic [ref=e16105]:
+                                - generic [ref=e16106]: First Name *
+                                - textbox "First Name *" [ref=e16107]:
+                                  - /placeholder: First Name
+                                  - text: Nadia
+                              - generic [ref=e16108]:
+                                - generic [ref=e16109]: Last Name *
+                                - textbox "Last Name *" [ref=e16110]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanrun
+                              - generic [ref=e16111]:
+                                - generic [ref=e16112]: Date of Birth *
+                                - generic [ref=e16114]:
+                                  - textbox "Date of Birth *" [ref=e16115]:
+                                    - /placeholder: Date of Birth
+                                    - text: 15/03/1990
+                                  - button [ref=e16116] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=e16117]: 
+                              - generic [ref=e16118]:
+                                - generic [ref=e16119]: Gender *
+                                - generic [ref=e16120]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Female
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=e16121]:
+                                - generic [ref=e16122]: Email *
+                                - generic [ref=e16123]:
+                                  - textbox "Email *" [ref=e16124]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=e16125]: 24/80
+                              - generic [ref=e16127]:
+                                - generic [ref=e16128]: Phone *
+                                - textbox "Phone *" [ref=e16135]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=e16136]:
+                                - generic [ref=e16137]: Document Number *
+                                - generic [ref=e16138]:
+                                  - textbox "Document Number *" [ref=e16139]:
+                                    - /placeholder: "**********"
+                                    - text: A11014001
+                                  - generic [ref=e16140]: 9/15
+                              - generic [ref=e16142]:
+                                - generic [ref=e16143]: Document Expiry *
+                                - generic [ref=e16145]:
+                                  - textbox "Document Expiry *" [ref=e16146]:
+                                    - /placeholder: Document Expiry
+                                    - text: 15/03/2031
+                                  - button [ref=e16147] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=e16148]: 
+                              - generic [ref=e16149]:
+                                - generic [ref=e16150]: Nationality *
+                                - generic [ref=e16152] [cursor=pointer]:
+                                  - generic [ref=e16153]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=e16154]: Egypt
+                                  - generic [ref=e16155]: 
+                                  - button "dropdown trigger" [ref=e16156]:
+                                    - generic [ref=e16157]: 
+                              - generic [ref=e16158]:
+                                - generic [ref=e16159]: Frequent Flyer
+                                - generic [ref=e16161] [cursor=pointer]:
+                                  - generic [ref=e16162]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=e16163]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=e16164]:
+                                    - generic [ref=e16165]: 
+                              - generic [ref=e16166]:
+                                - generic [ref=e16167]: Flyer Number
+                                - textbox "Flyer Number" [ref=e16169]
+                      - generic [ref=e16171]:
+                        - tab " 1- Child" [expanded] [ref=e16173] [cursor=pointer]:
+                          - generic [ref=e16174]: 
+                          - generic [ref=e16175]: 1- Child
+                        - region " 1- Child" [ref=e16177]:
+                          - generic [ref=e16178]:
+                            - button "Select passenger" [ref=e16181] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=e16182]: 
+                            - generic [ref=e16184]:
+                              - generic [ref=e16185]:
+                                - generic [ref=e16186]: Title *
+                                - generic [ref=e16188] [cursor=pointer]:
+                                  - generic [ref=e16189]:
+                                    - combobox "Title *"
+                                  - generic [ref=e16190]: Mr
+                                  - generic [ref=e16191]: 
+                                  - button "dropdown trigger" [ref=e16192]:
+                                    - generic [ref=e16193]: 
+                              - generic [ref=e16194]:
+                                - generic [ref=e16195]: First Name *
+                                - textbox "First Name *" [ref=e16196]:
+                                  - /placeholder: First Name
+                                  - text: Omar
+                              - generic [ref=e16197]:
+                                - generic [ref=e16198]: Last Name *
+                                - textbox "Last Name *" [ref=e16199]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanrun
+                              - generic [ref=e16200]:
+                                - generic [ref=e16201]: Date of Birth *
+                                - generic [ref=e16203]:
+                                  - textbox "Date of Birth *" [ref=e16204]:
+                                    - /placeholder: Date of Birth
+                                    - text: 10/05/2018
+                                  - button [ref=e16205] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=e16206]: 
+                              - generic [ref=e16207]:
+                                - generic [ref=e16208]: Gender *
+                                - generic [ref=e16209]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Male
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=e16210]:
+                                - generic [ref=e16211]: Email *
+                                - generic [ref=e16212]:
+                                  - textbox "Email *" [ref=e16213]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=e16214]: 24/80
+                              - generic [ref=e16216]:
+                                - generic [ref=e16217]: Phone *
+                                - textbox "Phone *" [ref=e16224]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=e16225]:
+                                - generic [ref=e16226]: Document Number *
+                                - generic [ref=e16227]:
+                                  - textbox "Document Number *" [ref=e16228]:
+                                    - /placeholder: "**********"
+                                    - text: C11014009
+                                  - generic [ref=e16229]: 9/15
+                              - generic [ref=e16231]:
+                                - generic [ref=e16232]: Document Expiry *
+                                - generic [ref=e16234]:
+                                  - textbox "Document Expiry *" [ref=e16235]:
+                                    - /placeholder: Document Expiry
+                                    - text: 10/05/2031
+                                  - button [ref=e16236] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=e16237]: 
+                              - generic [ref=e16238]:
+                                - generic [ref=e16239]: Nationality *
+                                - generic [ref=e16241] [cursor=pointer]:
+                                  - generic [ref=e16242]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=e16243]: Egypt
+                                  - generic [ref=e16244]: 
+                                  - button "dropdown trigger" [ref=e16245]:
+                                    - generic [ref=e16246]: 
+                              - generic [ref=e16247]:
+                                - generic [ref=e16248]: Frequent Flyer
+                                - generic [ref=e16250] [cursor=pointer]:
+                                  - generic [ref=e16251]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=e16252]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=e16253]:
+                                    - generic [ref=e16254]: 
+                              - generic [ref=e16255]:
+                                - generic [ref=e16256]: Flyer Number
+                                - textbox "Flyer Number" [ref=e16258]
+                      - generic [ref=e16260]:
+                        - tab " 1- Infant" [expanded] [ref=e16262] [cursor=pointer]:
+                          - generic [ref=e16263]: 
+                          - generic [ref=e16264]: 1- Infant
+                        - region " 1- Infant" [ref=e16266]:
+                          - generic [ref=e16267]:
+                            - button "Select passenger" [ref=e16270] [cursor=pointer]:
+                              - generic [aria-hidden] [ref=e16271]: 
+                            - generic [ref=e16273]:
+                              - generic [ref=e16274]:
+                                - generic [ref=e16275]: Title *
+                                - generic [ref=e16277] [cursor=pointer]:
+                                  - generic [ref=e16278]:
+                                    - combobox "Title *"
+                                  - generic [ref=e16279]: Ms
+                                  - generic [ref=e16280]: 
+                                  - button "dropdown trigger" [ref=e16281]:
+                                    - generic [ref=e16282]: 
+                              - generic [ref=e16283]:
+                                - generic [ref=e16284]: First Name *
+                                - textbox "First Name *" [ref=e16285]:
+                                  - /placeholder: First Name
+                                  - text: Lina
+                              - generic [ref=e16286]:
+                                - generic [ref=e16287]: Last Name *
+                                - textbox "Last Name *" [ref=e16288]:
+                                  - /placeholder: Last Name
+                                  - text: Aegeanrun
+                              - generic [ref=e16289]:
+                                - generic [ref=e16290]: Date of Birth *
+                                - generic [ref=e16292]:
+                                  - textbox "Date of Birth *" [ref=e16293]:
+                                    - /placeholder: Date of Birth
+                                    - text: 01/02/2026
+                                  - button [ref=e16294] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=e16295]: 
+                              - generic [ref=e16296]:
+                                - generic [ref=e16297]: Gender *
+                                - generic [ref=e16298]:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Gender" [disabled]
+                                    - generic: Female
+                                    - button "dropdown trigger":
+                                      - generic: 
+                              - generic [ref=e16299]:
+                                - generic [ref=e16300]: Email *
+                                - generic [ref=e16301]:
+                                  - textbox "Email *" [ref=e16302]:
+                                    - /placeholder: Please enter a valid email
+                                    - text: Hussien.ata@tildetech.ae
+                                  - generic [ref=e16303]: 24/80
+                              - generic [ref=e16305]:
+                                - generic [ref=e16306]: Phone *
+                                - textbox "Phone *" [ref=e16313]:
+                                  - /placeholder: Enter Your Phone
+                                  - text: "1215484845"
+                              - text:  
+                              - generic [ref=e16314]:
+                                - generic [ref=e16315]: Document Number *
+                                - generic [ref=e16316]:
+                                  - textbox "Document Number *" [ref=e16317]:
+                                    - /placeholder: "**********"
+                                    - text: I11014003
+                                  - generic [ref=e16318]: 9/15
+                              - generic [ref=e16320]:
+                                - generic [ref=e16321]: Document Expiry *
+                                - generic [ref=e16323]:
+                                  - textbox "Document Expiry *" [ref=e16324]:
+                                    - /placeholder: Document Expiry
+                                    - text: 01/02/2031
+                                  - button [ref=e16325] [cursor=pointer]:
+                                    - generic [aria-hidden] [ref=e16326]: 
+                              - generic [ref=e16327]:
+                                - generic [ref=e16328]: Nationality *
+                                - generic [ref=e16330] [cursor=pointer]:
+                                  - generic [ref=e16331]:
+                                    - combobox "Nationality *"
+                                  - generic [ref=e16332]: Egypt
+                                  - generic [ref=e16333]: 
+                                  - button "dropdown trigger" [ref=e16334]:
+                                    - generic [ref=e16335]: 
+                              - generic [ref=e16336]:
+                                - generic [ref=e16337]: Assigned to *
+                                - generic [ref=e16339] [cursor=pointer]:
+                                  - generic [ref=e16340]:
+                                    - combobox "Assigned to *"
+                                  - generic [ref=e16341]: Nadia Aegeanrun
+                                  - generic [ref=e16342]: 
+                                  - button "dropdown trigger" [ref=e16343]:
+                                    - generic [ref=e16344]: 
+                              - generic [ref=e16345]:
+                                - generic [ref=e16346]: Frequent Flyer
+                                - generic [ref=e16348] [cursor=pointer]:
+                                  - generic [ref=e16349]:
+                                    - combobox "Frequent Flyer"
+                                  - generic [ref=e16350]: Frequent Flyer
+                                  - button "dropdown trigger" [ref=e16351]:
+                                    - generic [ref=e16352]: 
+                              - generic [ref=e16353]:
+                                - generic [ref=e16354]: Flyer Number
+                                - textbox "Flyer Number" [ref=e16356]
+                  - generic [ref=e2576]:
+                    - text: 
+                    - button "Next" [ref=e2578] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=e2579]: 
+              - tablist [ref=e2584]:
+                - generic [ref=e2586]:
+                  - tab "  Payment Details" [expanded] [ref=e2588] [cursor=pointer]:
+                    - generic [ref=e2589]: 
+                    - generic [ref=e2590]:
+                      - generic [ref=e2591]: 
+                      - generic [ref=e2592]: Payment Details
+                  - region "  Payment Details" [ref=e2593]:
+                    - generic [ref=e2595]:
+                      - generic [ref=e2596]:
+                        - generic [ref=e2597]: "Net Payable Amount: 37,093.4 EGP"
+                        - paragraph [ref=e2599]: "Note: Your money is currently being deducted from your wallet balance."
+                      - generic [ref=e2601]:
+                        - tablist [ref=e2604]:
+                          - tab "Wallet" [selected] [ref=e2605] [cursor=pointer]
+                          - listitem [ref=e2607]
+                        - tabpanel "Wallet" [ref=e2610]:
+                          - generic [ref=e2611]:
+                            - heading "Wallet Payment" [level=3] [ref=e2612]
+                            - generic [ref=e2613]:
+                              - generic [ref=e2618]:
+                                - generic [ref=e2619]: Your Balance
+                                - generic [ref=e2620]: 5,000,000 EGP
+                              - generic [ref=e2625]:
+                                - generic [ref=e2626]: Top Up Balance
+                                - generic [ref=e2627]: 5,000,000 EGP
+                            - list
+                          - generic [ref=e2628]:
+                            - generic [ref=e2631] [cursor=pointer]:
+                              - checkbox "Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer."
+                            - generic [ref=e2633] [cursor=pointer]: Send booking confirmation email/e-ticket PDF attachments without price details + no invoice email to customer.
+              - generic [ref=e2639]:
+                - generic [ref=e2642] [cursor=pointer]:
+                  - checkbox "I have read and agree to the"
+                - generic [ref=e2644] [cursor=pointer]: I have read and agree to the
+                - generic [ref=e2645] [cursor=pointer]: Terms & Conditions
+              - button "Save Quote" [ref=e2653] [cursor=pointer]
+            - generic [ref=e13929]:
+              - generic [ref=e13930]: "Time left: 37:42"
+              - generic [ref=e13935]:
+                - generic [ref=e13936]: 37,094 EGP
+                - generic [ref=e13937]: Published Fare
+              - tablist [ref=e13941]:
+                - generic [ref=e13943]:
+                  - tab "  Fare Breakdown" [expanded] [ref=e13945] [cursor=pointer]:
+                    - generic [ref=e13946]: 
+                    - generic [ref=e13947]:
+                      - generic [ref=e13948]: 
+                      - generic [ref=e13949]: Fare Breakdown
+                  - region "  Fare Breakdown" [ref=e13950]:
+                    - generic [ref=e13951]:
+                      - generic [ref=e13952]:
+                        - generic [ref=e13953]:
+                          - generic [ref=e13954]: "Base fare: (1 Adult)"
+                          - generic [ref=e13955]: 16,472 EGP
+                        - generic [ref=e13956]:
+                          - generic [ref=e13957]: "Base fare: (1 Child)"
+                          - generic [ref=e13958]: 9,883 EGP
+                        - generic [ref=e13959]:
+                          - generic [ref=e13960]: "Base fare: (1 Infant)"
+                          - generic [ref=e13961]: 1,648 EGP
+                        - generic [ref=e13978]:
+                          - generic [ref=e13979]: "Tax & Fees: (1 Adult)"
+                          - generic [ref=e13980]: 3,413.8 EGP
+                        - generic [ref=e13981]:
+                          - generic [ref=e13982]: "Tax & Fees: (1 Child)"
+                          - generic [ref=e13983]: 3,413.8 EGP
+                        - generic [ref=e13984]:
+                          - generic [ref=e13985]: "Tax & Fees: (1 Infant)"
+                          - generic [ref=e13986]: 2,262.8 EGP
+                      - generic [ref=e13987]:
+                        - generic [ref=e13988]: "Total Amount:"
+                        - generic [ref=e13989]: 37,094 EGP
+              - tablist [ref=e13993]:
+                - generic [ref=e13995]:
+                  - tab " baggage Included Baggage" [expanded] [ref=e13997] [cursor=pointer]:
+                    - generic [ref=e13998]: 
+                    - generic [ref=e13999]:
+                      - img "baggage" [ref=e14000]
+                      - generic [ref=e14001]: Included Baggage
+                  - region " baggage Included Baggage" [ref=e14002]:
+                    - tablist [ref=e14005]:
+                      - generic [ref=e14007]:
+                        - tab " Cairo → Athens" [ref=e14009] [cursor=pointer]:
+                          - generic [ref=e14010]: 
+                          - generic [ref=e14011]: Cairo → Athens
+                        - generic [ref=e14012]:
+                          - generic [ref=e14013]:
+                            - heading [level=4] [ref=e14014]: Adult
+                            - paragraph [ref=e14015]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=e14016]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=e14017]:
+                            - heading [level=4] [ref=e14018]: Child
+                            - paragraph [ref=e14019]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=e14020]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=e14021]:
+                            - heading [level=4] [ref=e14022]: Infant
+                            - paragraph [ref=e14023]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=e14024]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                      - generic [ref=e14026]:
+                        - tab " Athens → Rome" [ref=e14028] [cursor=pointer]:
+                          - generic [ref=e14029]: 
+                          - generic [ref=e14030]: Athens → Rome
+                        - generic [ref=e14031]:
+                          - generic [ref=e14032]:
+                            - heading [level=4] [ref=e14033]: Adult
+                            - paragraph [ref=e14034]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=e14035]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=e14036]:
+                            - heading [level=4] [ref=e14037]: Child
+                            - paragraph [ref=e14038]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=e14039]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+                          - generic [ref=e14040]:
+                            - heading [level=4] [ref=e14041]: Infant
+                            - paragraph [ref=e14042]: "Carry on baggage: Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)"
+                            - paragraph [ref=e14043]: "Check in baggage: Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces"
+              - tablist [ref=e14047]:
+                - generic [ref=e14049]:
+                  - tab "  Penalties/Charges" [expanded] [ref=e14051] [cursor=pointer]:
+                    - generic [ref=e14052]: 
+                    - generic [ref=e14053]:
+                      - generic [ref=e14054]: 
+                      - generic [ref=e14055]: Penalties/Charges
+                  - region "  Penalties/Charges" [ref=e14056]:
+                    - tablist [ref=e14059]:
+                      - generic [ref=e14060]:
+                        - generic [ref=e14061]:
+                          - generic [ref=e14062]: ❌
+                          - generic [ref=e14063]:
+                            - generic [ref=e14064]: Cancel
+                            - generic [ref=e14065]: N/A
+                        - generic [ref=e14066]:
+                          - generic [ref=e14067]: 🔄
+                          - generic [ref=e14068]:
+                            - generic [ref=e14069]: Change
+                            - generic [ref=e14070]: N/A
+              - button "Full Fare Rules" [ref=e14072] [cursor=pointer]
+      - contentinfo [ref=e208]:
+        - contentinfo [ref=e210]:
+          - generic [ref=e211]:
+            - navigation "Footer navigation" [ref=e212]:
+              - link "About Us" [ref=e213] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=e214] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=e215] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=e216] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=e217] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=e218]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=e221] [cursor=pointer]:
+    - emphasis [ref=e222]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe
+  - alert "One or more parameters are invalid or missing." [ref=e16452]

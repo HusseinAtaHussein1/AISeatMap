@@ -1,0 +1,59 @@
+{
+  "runId": "run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc",
+  "authorizations": [
+    {
+      "authorizationId": "AUTH-ANCILLARIES-BOOK-SelfCreated",
+      "runId": "run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc",
+      "environment": "Staging",
+      "module": "ancillaries",
+      "action": "BOOK",
+      "ownership": "SelfCreated",
+      "targetScope": "all SelfCreated records in ancillaries for this run",
+      "decision": "Allowed",
+      "approvedAt": "2026-10-14T11:01:18.562Z",
+      "approvedBy": "Hussien Ata",
+      "policyId": "ndc-admin-portal-stg",
+      "policyVersion": 2,
+      "policyHash": "sha256:14b55a3e109d86cd5750551a1aa1e1d3",
+      "cleanupRequired": false,
+      "note": "Human authorization via AskUserQuestion 2026-10-14, run-011 only: real Staging bookings/holds/payments for the 20 previously Skipped cases. TICKET/CANCEL/VOID/REFUND remain Forbidden.",
+      "revoked": false
+    },
+    {
+      "authorizationId": "AUTH-ANCILLARIES-PAYMENT-SelfCreated",
+      "runId": "run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc",
+      "environment": "Staging",
+      "module": "ancillaries",
+      "action": "PAYMENT",
+      "ownership": "SelfCreated",
+      "targetScope": "all SelfCreated records in ancillaries for this run",
+      "decision": "Allowed",
+      "approvedAt": "2026-10-14T11:01:18.562Z",
+      "approvedBy": "Hussien Ata",
+      "policyId": "ndc-admin-portal-stg",
+      "policyVersion": 2,
+      "policyHash": "sha256:14b55a3e109d86cd5750551a1aa1e1d3",
+      "cleanupRequired": false,
+      "note": "Human authorization via AskUserQuestion 2026-10-14, run-011 only: real Staging bookings/holds/payments for the 20 previously Skipped cases. TICKET/CANCEL/VOID/REFUND remain Forbidden.",
+      "revoked": false
+    },
+    {
+      "authorizationId": "AUTH-ANCILLARIES-HOLD-SelfCreated",
+      "runId": "run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc",
+      "environment": "Staging",
+      "module": "ancillaries",
+      "action": "HOLD",
+      "ownership": "SelfCreated",
+      "targetScope": "all SelfCreated records in ancillaries for this run",
+      "decision": "Allowed",
+      "approvedAt": "2026-10-14T11:01:18.562Z",
+      "approvedBy": "Hussien Ata",
+      "policyId": "ndc-admin-portal-stg",
+      "policyVersion": 2,
+      "policyHash": "sha256:14b55a3e109d86cd5750551a1aa1e1d3",
+      "cleanupRequired": false,
+      "note": "Human authorization via AskUserQuestion 2026-10-14, run-011 only: real Staging bookings/holds/payments for the 20 previously Skipped cases. TICKET/CANCEL/VOID/REFUND remain Forbidden.",
+      "revoked": false
+    }
+  ]
+}

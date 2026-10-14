@@ -1,0 +1,191 @@
+- generic [ref=f54e1]:
+  - generic [ref=f54e4]:
+    - generic [ref=f54e5]:
+      - text:          
+      - generic [ref=f54e7]:
+        - text:  
+        - button [ref=f54e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f54e9]: 
+    - generic [ref=f54e10]:
+      - generic [ref=f54e11]:
+        - banner [ref=f54e13]:
+          - generic [ref=f54e14]:
+            - img "Logo" [ref=f54e17] [cursor=pointer]
+            - generic [ref=f54e18]:
+              - generic [ref=f54e19]:
+                - generic [ref=f54e20]:
+                  - generic [ref=f54e21]: 
+                  - generic [ref=f54e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f54e23]: "|"
+                - generic [ref=f54e24]:
+                  - generic [ref=f54e25]: 
+                  - generic [ref=f54e26]: +20-1215484845
+              - generic [ref=f54e27]:
+                - button "Take a tour" [ref=f54e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f54e30]: 
+                - button "Top Up Wallet" [ref=f54e31] [cursor=pointer]:
+                  - generic [ref=f54e32]: 
+                - button "Settings" [ref=f54e33] [cursor=pointer]:
+                  - generic [ref=f54e34]: 
+              - generic [ref=f54e36]:
+                - button "Welcome Hussien " [ref=f54e37] [cursor=pointer]:
+                  - generic [ref=f54e38]:
+                    - generic [ref=f54e39]: Welcome
+                    - generic [ref=f54e40]:
+                      - text: Hussien
+                      - generic [ref=f54e41]: 
+                - button "Profile menu" [ref=f54e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f54e45]
+        - generic [ref=f54e54]:
+          - generic [ref=f54e64]:
+            - heading "Flight Search" [level=2] [ref=f54e65]
+            - paragraph [ref=f54e66]: Enter your flight details to begin.
+          - generic [ref=f54e70]:
+            - generic [ref=f54e71]:
+              - button "One-way" [ref=f54e72] [cursor=pointer]
+              - button "Round-trip" [ref=f54e73] [cursor=pointer]
+              - button "Multi-city" [ref=f54e74] [cursor=pointer]
+            - generic [ref=f54e76]:
+              - generic [ref=f54e78] [cursor=pointer]:
+                - generic [ref=f54e79]:
+                  - listbox [expanded]
+                - generic [ref=f54e80]:
+                  - generic [ref=f54e81]: CAI
+                  - generic [ref=f54e276]: 
+                - generic [ref=f54e82]: 
+              - button "" [ref=f54e84] [cursor=pointer]
+              - generic [ref=f54e87] [cursor=pointer]:
+                - generic [ref=f54e88]:
+                  - combobox "To *"
+                - generic [ref=f54e89]: To *
+                - button "dropdown trigger" [ref=f54e90]:
+                  - generic [ref=f54e91]: 
+              - generic [ref=f54e93]:
+                - textbox "DD/MM/YYYY *" [ref=f54e94]
+                - button [ref=f54e95] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f54e96]: 
+              - generic [ref=f54e98] [cursor=pointer]:
+                - generic [ref=f54e99]:
+                  - combobox "Cabin"
+                - generic [ref=f54e100]: Economy
+                - button "dropdown trigger" [ref=f54e101]:
+                  - generic [ref=f54e102]: 
+              - generic [ref=f54e104] [cursor=pointer]:
+                - generic [ref=f54e105]:
+                  - listbox
+                - generic [ref=f54e106]: RBD
+                - generic [ref=f54e108]: 
+            - generic [ref=f54e110]:
+              - button "1  " [ref=f54e111] [cursor=pointer]:
+                - generic [ref=f54e112]:
+                  - generic [ref=f54e113]: "1"
+                  - generic [ref=f54e114]: 
+                - generic [ref=f54e115]: 
+              - generic [ref=f54e116]:
+                - generic [ref=f54e118] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f54e120]: Nearby Airport
+              - generic [ref=f54e121]:
+                - generic [ref=f54e123] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f54e125]: Baggage Fare Only
+              - generic [ref=f54e126]:
+                - generic [ref=f54e128] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f54e130]: Up-selling
+            - generic [ref=f54e131]:
+              - button " Advanced " [ref=f54e133] [cursor=pointer]:
+                - generic [ref=f54e134]: 
+                - text: Advanced
+                - generic [ref=f54e135]: 
+              - button "Search" [ref=f54e137] [cursor=pointer]
+      - contentinfo [ref=f54e139]:
+        - contentinfo [ref=f54e141]:
+          - generic [ref=f54e142]:
+            - navigation "Footer navigation" [ref=f54e143]:
+              - link "About Us" [ref=f54e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f54e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f54e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f54e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f54e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f54e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f54e152] [cursor=pointer]:
+    - emphasis [ref=f54e153]: 
+    - text: 
+  - generic [ref=f54e156]:
+    - generic [ref=f54e157]:
+      - generic [ref=f54e158]:
+        - textbox [ref=f54e159]
+        - generic [ref=f54e160]: 
+      - text: 
+    - listbox [ref=f54e162]:
+      - listitem "CAI" [active] [ref=f54e165] [cursor=pointer]:
+        - generic [ref=f54e166]: 
+        - generic [ref=f54e168]:
+          - generic [ref=f54e169]: CAI
+          - generic [ref=f54e170]: Cairo - Egypt - Cairo International Airport
+      - listitem "MAR" [ref=f54e172] [cursor=pointer]:
+        - generic [ref=f54e175]:
+          - generic [ref=f54e176]: MAR
+          - generic [ref=f54e177]: Maracaibo - Venezuela - La Chinita
+      - listitem "MDS" [ref=f54e179] [cursor=pointer]:
+        - generic [ref=f54e182]:
+          - generic [ref=f54e183]: MDS
+          - generic [ref=f54e184]: Middle Caicos - Turks and Caicos Islands - Middle Caicos
+      - listitem "NCA" [ref=f54e186] [cursor=pointer]:
+        - generic [ref=f54e189]:
+          - generic [ref=f54e190]: NCA
+          - generic [ref=f54e191]: North Caicos - Turks and Caicos Islands - North Caicos
+      - listitem "OZR" [ref=f54e193] [cursor=pointer]:
+        - generic [ref=f54e196]:
+          - generic [ref=f54e197]: OZR
+          - generic [ref=f54e198]: Ozark - United States - Cairns AAF
+      - listitem "PIC" [ref=f54e200] [cursor=pointer]:
+        - generic [ref=f54e203]:
+          - generic [ref=f54e204]: PIC
+          - generic [ref=f54e205]: Pine Cay - Turks and Caicos Islands - Pine Cay
+      - listitem "CXA" [ref=f54e207] [cursor=pointer]:
+        - generic [ref=f54e210]:
+          - generic [ref=f54e211]: CXA
+          - generic [ref=f54e212]: Caicara Del Orinoco - Venezuela - Caicara Del Orinoco
+      - listitem "PLS" [ref=f54e214] [cursor=pointer]:
+        - generic [ref=f54e217]:
+          - generic [ref=f54e218]: PLS
+          - generic [ref=f54e219]: Providenciales - Turks and Caicos Islands - International
+      - listitem "SLX" [ref=f54e221] [cursor=pointer]:
+        - generic [ref=f54e224]:
+          - generic [ref=f54e225]: SLX
+          - generic [ref=f54e226]: Salt Cay - Turks and Caicos Islands - Salt Cay
+      - listitem "CMZ" [ref=f54e228] [cursor=pointer]:
+        - generic [ref=f54e231]:
+          - generic [ref=f54e232]: CMZ
+          - generic [ref=f54e233]: Caia - Mozambique - Caia
+      - listitem "CNS" [ref=f54e235] [cursor=pointer]:
+        - generic [ref=f54e238]:
+          - generic [ref=f54e239]: CNS
+          - generic [ref=f54e240]: Cairns - Australia - Cairns
+      - listitem "CIR" [ref=f54e242] [cursor=pointer]:
+        - generic [ref=f54e245]:
+          - generic [ref=f54e246]: CIR
+          - generic [ref=f54e247]: Cairo - United States - Cairo
+      - listitem "CGV" [ref=f54e249] [cursor=pointer]:
+        - generic [ref=f54e252]:
+          - generic [ref=f54e253]: CGV
+          - generic [ref=f54e254]: Caiguna - Australia - Caiguna
+      - listitem "XSC" [ref=f54e256] [cursor=pointer]:
+        - generic [ref=f54e259]:
+          - generic [ref=f54e260]: XSC
+          - generic [ref=f54e261]: South Caicos - Turks and Caicos Islands - International
+      - listitem "GLK" [ref=f54e263] [cursor=pointer]:
+        - generic [ref=f54e266]:
+          - generic [ref=f54e267]: GLK
+          - generic [ref=f54e268]: Galcaio - Somalia - Galcaio
+      - listitem "GDT" [ref=f54e270] [cursor=pointer]:
+        - generic [ref=f54e273]:
+          - generic [ref=f54e274]: GDT
+          - generic [ref=f54e275]: Grand Turk Island - Turks and Caicos Islands - Grand Turk Island

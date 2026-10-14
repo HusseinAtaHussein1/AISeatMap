@@ -1,0 +1,207 @@
+- generic [ref=f86e1]:
+  - generic [ref=f86e4]:
+    - generic [ref=f86e5]:
+      - text:          
+      - generic [ref=f86e7]:
+        - text:  
+        - button [ref=f86e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f86e9]: 
+    - generic [ref=f86e10]:
+      - generic [ref=f86e11]:
+        - banner [ref=f86e13]:
+          - generic [ref=f86e14]:
+            - img "Logo" [ref=f86e17] [cursor=pointer]
+            - generic [ref=f86e18]:
+              - generic [ref=f86e19]:
+                - generic [ref=f86e20]:
+                  - generic [ref=f86e21]: 
+                  - generic [ref=f86e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f86e23]: "|"
+                - generic [ref=f86e24]:
+                  - generic [ref=f86e25]: 
+                  - generic [ref=f86e26]: +20-1215484845
+              - generic [ref=f86e27]:
+                - button "Take a tour" [ref=f86e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f86e30]: 
+                - button "Top Up Wallet" [ref=f86e31] [cursor=pointer]:
+                  - generic [ref=f86e32]: 
+                - button "Settings" [ref=f86e33] [cursor=pointer]:
+                  - generic [ref=f86e34]: 
+              - generic [ref=f86e36]:
+                - button "Welcome Hussien " [ref=f86e37] [cursor=pointer]:
+                  - generic [ref=f86e38]:
+                    - generic [ref=f86e39]: Welcome
+                    - generic [ref=f86e40]:
+                      - text: Hussien
+                      - generic [ref=f86e41]: 
+                - button "Profile menu" [ref=f86e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f86e45]
+        - generic [ref=f86e54]:
+          - generic [ref=f86e64]:
+            - heading "Flight Search" [level=2] [ref=f86e65]
+            - paragraph [ref=f86e66]: Enter your flight details to begin.
+          - generic [ref=f86e70]:
+            - generic [ref=f86e71]:
+              - button "One-way" [ref=f86e72] [cursor=pointer]
+              - button "Round-trip" [ref=f86e73] [cursor=pointer]
+              - button "Multi-city" [ref=f86e74] [cursor=pointer]
+            - generic [ref=f86e75]:
+              - generic [ref=f86e76]:
+                - generic [ref=f86e155] [cursor=pointer]:
+                  - generic [ref=f86e156]:
+                    - combobox "From *"
+                  - generic [ref=f86e285]: CAI
+                  - generic [ref=f86e286]: 
+                  - button "dropdown trigger" [ref=f86e158]:
+                    - generic [ref=f86e159]: 
+                - button "" [ref=f86e84] [cursor=pointer]
+                - generic [ref=f86e87] [cursor=pointer]:
+                  - generic [ref=f86e88]:
+                    - combobox "To *"
+                  - generic [ref=f86e307]: FCO
+                  - generic [ref=f86e308]: 
+                  - button "dropdown trigger" [ref=f86e90]:
+                    - generic [ref=f86e91]: 
+                - generic [ref=f86e93]:
+                  - textbox "DD/MM/YYYY *" [ref=f86e94]: 16/10/2026
+                  - button [ref=f86e95] [cursor=pointer]:
+                    - generic [aria-hidden] [ref=f86e96]: 
+                - generic [ref=f86e98] [cursor=pointer]:
+                  - generic [ref=f86e99]:
+                    - combobox "Cabin"
+                  - generic [ref=f86e100]: Economy
+                  - button "dropdown trigger" [ref=f86e101]:
+                    - generic [ref=f86e102]: 
+                - generic [ref=f86e104] [cursor=pointer]:
+                  - generic [ref=f86e105]:
+                    - listbox
+                  - generic [ref=f86e106]: RBD
+                  - generic [ref=f86e108]: 
+              - generic [ref=f86e160]:
+                - generic [ref=f86e162] [cursor=pointer]:
+                  - generic [ref=f86e163]:
+                    - combobox "From *"
+                  - generic [ref=f86e309]: FCO
+                  - generic [ref=f86e310]: 
+                  - button "dropdown trigger" [ref=f86e165]:
+                    - generic [ref=f86e166]: 
+                - button "" [ref=f86e167] [cursor=pointer]
+                - generic [ref=f86e170] [cursor=pointer]:
+                  - generic [ref=f86e171]:
+                    - combobox "To *"
+                  - generic [ref=f86e561]: CAI
+                  - generic [ref=f86e562]: 
+                  - button "dropdown trigger" [ref=f86e173]:
+                    - generic [ref=f86e174]: 
+                - generic [ref=f86e176]:
+                  - textbox "DD/MM/YYYY *" [active] [ref=f86e177]: 16/10/202620/10/2026
+                  - button [ref=f86e178] [cursor=pointer]:
+                    - generic [aria-hidden] [ref=f86e179]: 
+                - generic [ref=f86e181] [cursor=pointer]:
+                  - generic [ref=f86e182]:
+                    - combobox "Cabin"
+                  - generic [ref=f86e183]: Economy
+                  - button "dropdown trigger" [ref=f86e184]:
+                    - generic [ref=f86e185]: 
+                - generic [ref=f86e187] [cursor=pointer]:
+                  - generic [ref=f86e188]:
+                    - listbox
+                  - generic [ref=f86e189]: RBD
+                  - generic [ref=f86e191]: 
+              - button " Add flight" [ref=f86e193] [cursor=pointer]:
+                - generic [ref=f86e194]: 
+                - text: Add flight
+            - generic [ref=f86e110]:
+              - button "1  " [ref=f86e111] [cursor=pointer]:
+                - generic [ref=f86e112]:
+                  - generic [ref=f86e113]: "1"
+                  - generic [ref=f86e114]: 
+                - generic [ref=f86e115]: 
+              - generic [ref=f86e121]:
+                - generic [ref=f86e123] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f86e125]: Baggage Fare Only
+              - generic [ref=f86e126]:
+                - generic [ref=f86e128] [cursor=pointer]:
+                  - checkbox
+                - generic [ref=f86e130]: Up-selling
+            - button "Search" [ref=f86e137] [cursor=pointer]
+      - contentinfo [ref=f86e139]:
+        - contentinfo [ref=f86e141]:
+          - generic [ref=f86e142]:
+            - navigation "Footer navigation" [ref=f86e143]:
+              - link "About Us" [ref=f86e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f86e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f86e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f86e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f86e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f86e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f86e152] [cursor=pointer]:
+    - emphasis [ref=f86e153]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe
+  - generic [ref=f86e565]:
+    - generic [ref=f86e566]:
+      - button "" [ref=f86e567] [cursor=pointer]
+      - generic [ref=f86e569]:
+        - button "October" [ref=f86e570] [cursor=pointer]
+        - button "2026" [ref=f86e571] [cursor=pointer]
+      - button "" [ref=f86e572] [cursor=pointer]
+    - table [ref=f86e575]:
+      - rowgroup [ref=f86e576]:
+        - row [ref=f86e577]:
+          - columnheader "Su" [ref=f86e578]
+          - columnheader "Mo" [ref=f86e579]
+          - columnheader "Tu" [ref=f86e580]
+          - columnheader "We" [ref=f86e581]
+          - columnheader "Th" [ref=f86e582]
+          - columnheader "Fr" [ref=f86e583]
+          - columnheader "Sa" [ref=f86e584]
+      - rowgroup [ref=f86e585]:
+        - row [ref=f86e586]:
+          - cell "27" [ref=f86e587]
+          - cell "28" [ref=f86e588]
+          - cell "29" [ref=f86e589]
+          - cell "30" [ref=f86e590]
+          - cell "1" [ref=f86e591]
+          - cell "2" [ref=f86e592]
+          - cell "3" [ref=f86e593]
+        - row [ref=f86e594]:
+          - cell "4" [ref=f86e595]
+          - cell "5" [ref=f86e596]
+          - cell "6" [ref=f86e597]
+          - cell "7" [ref=f86e598]
+          - cell "8" [ref=f86e599]
+          - cell "9" [ref=f86e600]
+          - cell "10" [ref=f86e601]
+        - row [ref=f86e602]:
+          - cell "11" [ref=f86e603]
+          - cell "12" [ref=f86e604]
+          - cell "13" [ref=f86e605]
+          - cell "14" [ref=f86e606]
+          - cell "15" [ref=f86e607]
+          - cell "16" [ref=f86e608]
+          - cell "17" [ref=f86e610]
+        - row [ref=f86e612]:
+          - cell "18" [ref=f86e613]
+          - cell "19" [ref=f86e615]
+          - cell "20" [ref=f86e617]
+          - cell "21" [ref=f86e619]
+          - cell "22" [ref=f86e621]
+          - cell "23" [ref=f86e623]
+          - cell "24" [ref=f86e625]
+        - row [ref=f86e627]:
+          - cell "25" [ref=f86e628]
+          - cell "26" [ref=f86e630]
+          - cell "27" [ref=f86e632]
+          - cell "28" [ref=f86e634]
+          - cell "29" [ref=f86e636]
+          - cell "30" [ref=f86e638]
+          - cell "31" [ref=f86e640]

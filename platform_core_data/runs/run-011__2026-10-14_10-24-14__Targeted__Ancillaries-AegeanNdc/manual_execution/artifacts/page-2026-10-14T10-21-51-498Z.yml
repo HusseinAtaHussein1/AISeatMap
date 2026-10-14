@@ -1,0 +1,272 @@
+- generic [ref=f9e4]:
+  - generic [ref=f9e5]:
+    - generic [ref=f9e6]:
+      - button [ref=f9e7] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f9e8]: 
+      - list [ref=f9e11]:
+        - listitem [ref=f9e168]:
+          - banner [ref=f9e170]:
+            - generic [ref=f9e171] [cursor=pointer]:
+              - generic [ref=f9e172]: 
+              - generic [ref=f9e173]: Flight
+              - generic [ref=f9e174]: 
+        - listitem [ref=f9e175]:
+          - generic [ref=f9e176]:
+            - banner [ref=f9e177]:
+              - generic [ref=f9e178] [cursor=pointer]:
+                - generic [ref=f9e179]: 
+                - generic [ref=f9e180]: Supplier
+                - generic [ref=f9e181]: 
+            - list [ref=f9e444]:
+              - listitem [ref=f9e445]:
+                - link " Supplier" [ref=f9e446] [cursor=pointer]:
+                  - /url: /master/supplier/supplier
+                  - generic [ref=f9e447]: 
+                  - generic [ref=f9e448]: Supplier
+              - listitem [ref=f9e449]:
+                - link " Credential Field" [ref=f9e450] [cursor=pointer]:
+                  - /url: /master/supplier/credentials
+                  - generic [ref=f9e451]: 
+                  - generic [ref=f9e452]: Credential Field
+              - listitem [ref=f9e453]:
+                - link " Supplier Credentials" [ref=f9e454] [cursor=pointer]:
+                  - /url: /master/supplier/supplier-credentials
+                  - generic [ref=f9e455]: 
+                  - generic [ref=f9e456]: Supplier Credentials
+              - listitem [ref=f9e457]:
+                - link " Flight Search Limitation" [ref=f9e458] [cursor=pointer]:
+                  - /url: /master/supplier/flight-search-limitation
+                  - generic [ref=f9e459]: 
+                  - generic [ref=f9e460]: Flight Search Limitation
+        - listitem [ref=f9e182]:
+          - banner [ref=f9e184]:
+            - generic [ref=f9e185] [cursor=pointer]:
+              - generic [ref=f9e186]: 
+              - generic [ref=f9e187]: Miscellaneous
+              - generic [ref=f9e188]: 
+        - listitem [ref=f9e189]:
+          - banner [ref=f9e191]:
+            - generic [ref=f9e192] [cursor=pointer]:
+              - generic [ref=f9e193]: 
+              - generic [ref=f9e194]: Payment Gateway
+              - generic [ref=f9e195]: 
+      - text: 
+    - generic [ref=f9e17]:
+      - banner [ref=f9e19]:
+        - generic [ref=f9e20]:
+          - img "Logo" [ref=f9e23] [cursor=pointer]
+          - generic [ref=f9e26]:
+            - button "Welcome E.Saady " [ref=f9e27] [cursor=pointer]:
+              - generic [ref=f9e28]:
+                - generic [ref=f9e29]: Welcome
+                - generic [ref=f9e30]:
+                  - text: E.Saady
+                  - generic [ref=f9e31]: 
+            - button "Profile menu" [ref=f9e32] [cursor=pointer]:
+              - img "E.Saady profile" [ref=f9e35]: E
+      - navigation "Main navigation" [ref=f9e38]:
+        - generic [ref=f9e41]:
+          - tablist [ref=f9e43]:
+            - tab "Dashboard" [ref=f9e44] [cursor=pointer]
+            - tab "Admin" [ref=f9e46] [cursor=pointer]
+            - tab "Master" [selected] [ref=f9e48] [cursor=pointer]
+            - tab "Rule Engine" [ref=f9e50] [cursor=pointer]
+            - tab "User Management" [ref=f9e52] [cursor=pointer]
+            - tab "Booking-Mid Office" [ref=f9e54] [cursor=pointer]
+            - tab "Profile" [ref=f9e56] [cursor=pointer]
+            - tab "Reports" [ref=f9e58] [cursor=pointer]
+            - tab "Import PNR" [ref=f9e60] [cursor=pointer]
+            - tab "Import Booked PNR" [ref=f9e62] [cursor=pointer]
+            - listitem [ref=f9e64]
+          - button "" [ref=f9e65] [cursor=pointer]
+      - generic [ref=f9e197]:
+        - generic [ref=f9e199]:
+          - generic [ref=f9e200]:
+            - generic [ref=f9e201]:
+              - paragraph [ref=f9e202]: Airline
+              - generic [ref=f9e203]: Search and manage the airlines available for booking.
+            - button "Add Airline" [ref=f9e205] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f9e207]: 
+          - generic [ref=f9e209]:
+            - generic [ref=f9e211]:
+              - generic [ref=f9e212]: Airline Code
+              - textbox "Airline Code" [ref=f9e215]:
+                - /placeholder: Code
+            - generic [ref=f9e218]:
+              - generic [ref=f9e219]: Airline Name
+              - textbox "Airline Name" [ref=f9e222]:
+                - /placeholder: Name
+            - generic [ref=f9e225]:
+              - generic [ref=f9e226]: Airline Type
+              - generic [ref=f9e228] [cursor=pointer]:
+                - generic [ref=f9e229]:
+                  - combobox "Airline Type"
+                - generic [ref=f9e230]: ie. LCC
+                - button "dropdown trigger" [ref=f9e231]:
+                  - generic [ref=f9e232]: 
+            - generic [ref=f9e235]:
+              - generic [ref=f9e236]: Network Type
+              - generic [ref=f9e238] [cursor=pointer]:
+                - generic [ref=f9e239]:
+                  - combobox "Network Type"
+                - generic [ref=f9e240]: ie. Domestic
+                - button "dropdown trigger" [ref=f9e241]:
+                  - generic [ref=f9e242]: 
+            - generic [ref=f9e248]:
+              - generic [ref=f9e249]: Status
+              - text: ":"
+              - generic [ref=f9e252] [cursor=pointer]:
+                - radio "Inactive"
+              - generic [ref=f9e254] [cursor=pointer]: Inactive
+              - generic [ref=f9e257] [cursor=pointer]:
+                - radio "Active" [checked]
+              - generic [ref=f9e260] [cursor=pointer]: Active
+              - generic [ref=f9e263] [cursor=pointer]:
+                - radio "Both"
+              - generic [ref=f9e265] [cursor=pointer]: Both
+            - button "Search" [ref=f9e268] [cursor=pointer]
+        - generic [ref=f9e274]:
+          - table [ref=f9e279]:
+            - rowgroup [ref=f9e280]:
+              - row [ref=f9e281]:
+                - columnheader "Airline Code" [ref=f9e282]
+                - columnheader "Airline Name" [ref=f9e283]
+                - columnheader "Airline Type" [ref=f9e284]
+                - columnheader "Network Type" [ref=f9e285]
+                - columnheader "Status" [ref=f9e286]
+                - columnheader "Approval Status" [ref=f9e287]
+                - columnheader "Actions" [ref=f9e288]
+            - rowgroup [ref=f9e289]:
+              - row [ref=f9e290]:
+                - cell "DC" [ref=f9e291]
+                - cell "Dev Create" [ref=f9e292]
+                - cell "Both" [ref=f9e293]
+                - cell "Both" [ref=f9e294]
+                - cell "Active" [ref=f9e295]
+                - cell "Approved" [ref=f9e296]
+                - cell " " [ref=f9e297]:
+                  - generic [ref=f9e298]:
+                    - generic [ref=f9e299]: 
+                    - generic [ref=f9e301]: 
+              - row [ref=f9e303]:
+                - cell "Q5" [ref=f9e304]
+                - cell "40-Mile Air" [ref=f9e305]
+                - cell "Both" [ref=f9e306]
+                - cell "Both" [ref=f9e307]
+                - cell "Active" [ref=f9e308]
+                - cell "Approved" [ref=f9e309]
+                - cell " " [ref=f9e310]:
+                  - generic [ref=f9e311]:
+                    - generic [ref=f9e312]: 
+                    - generic [ref=f9e314]: 
+              - row [ref=f9e316]:
+                - cell "1B" [ref=f9e317]
+                - cell "Abacus International" [ref=f9e318]
+                - cell "LCC" [ref=f9e319]
+                - cell "Both" [ref=f9e320]
+                - cell "Active" [ref=f9e321]
+                - cell "Approved" [ref=f9e322]
+                - cell " " [ref=f9e323]:
+                  - generic [ref=f9e324]:
+                    - generic [ref=f9e325]: 
+                    - generic [ref=f9e327]: 
+              - row [ref=f9e329]:
+                - cell "M3" [ref=f9e330]
+                - cell "ABSA - Aerolinhas Brasileiras" [ref=f9e331]
+                - cell "LCC" [ref=f9e332]
+                - cell "Both" [ref=f9e333]
+                - cell "Active" [ref=f9e334]
+                - cell "Approved" [ref=f9e335]
+                - cell " " [ref=f9e336]:
+                  - generic [ref=f9e337]:
+                    - generic [ref=f9e338]: 
+                    - generic [ref=f9e340]: 
+              - row [ref=f9e342]:
+                - cell "JP" [ref=f9e343]
+                - cell "Adria Airways" [ref=f9e344]
+                - cell "GDS" [ref=f9e345]
+                - cell "Both" [ref=f9e346]
+                - cell "Active" [ref=f9e347]
+                - cell "Approved" [ref=f9e348]
+                - cell " " [ref=f9e349]:
+                  - generic [ref=f9e350]:
+                    - generic [ref=f9e351]: 
+                    - generic [ref=f9e353]: 
+              - row [ref=f9e355]:
+                - cell "A3" [ref=f9e356]
+                - cell "Aegean Airlines" [ref=f9e357]
+                - cell "Both" [ref=f9e358]
+                - cell "Both" [ref=f9e359]
+                - cell "Active" [ref=f9e360]
+                - cell "Approved" [ref=f9e361]
+                - cell " " [ref=f9e362]:
+                  - generic [ref=f9e363]:
+                    - generic [ref=f9e364]: 
+                    - generic [ref=f9e366]: 
+              - row [ref=f9e368]:
+                - cell "RE" [ref=f9e369]
+                - cell "Aer Arann" [ref=f9e370]
+                - cell "Both" [ref=f9e371]
+                - cell "Both" [ref=f9e372]
+                - cell "Active" [ref=f9e373]
+                - cell "Approved" [ref=f9e374]
+                - cell " " [ref=f9e375]:
+                  - generic [ref=f9e376]:
+                    - generic [ref=f9e377]: 
+                    - generic [ref=f9e379]: 
+              - row [ref=f9e381]:
+                - cell "JY" [ref=f9e382]
+                - cell "Aereonautica militare" [ref=f9e383]
+                - cell "Both" [ref=f9e384]
+                - cell "Both" [ref=f9e385]
+                - cell "Active" [ref=f9e386]
+                - cell "Approved" [ref=f9e387]
+                - cell " " [ref=f9e388]:
+                  - generic [ref=f9e389]:
+                    - generic [ref=f9e390]: 
+                    - generic [ref=f9e392]: 
+              - row [ref=f9e394]:
+                - cell "AJ" [ref=f9e395]
+                - cell "Aero Contractors" [ref=f9e396]
+                - cell "Both" [ref=f9e397]
+                - cell "Both" [ref=f9e398]
+                - cell "Active" [ref=f9e399]
+                - cell "Approved" [ref=f9e400]
+                - cell " " [ref=f9e401]:
+                  - generic [ref=f9e402]:
+                    - generic [ref=f9e403]: 
+                    - generic [ref=f9e405]: 
+              - row [ref=f9e407]:
+                - cell "QL" [ref=f9e408]
+                - cell "Aero Lanka" [ref=f9e409]
+                - cell "Both" [ref=f9e410]
+                - cell "Both" [ref=f9e411]
+                - cell "Active" [ref=f9e412]
+                - cell "Approved" [ref=f9e413]
+                - cell " " [ref=f9e414]:
+                  - generic [ref=f9e415]:
+                    - generic [ref=f9e416]: 
+                    - generic [ref=f9e418]: 
+            - rowgroup
+          - generic [ref=f9e420]:
+            - generic [ref=f9e421]:
+              - paragraph [ref=f9e422]: Showing 10 results of 772 results
+              - generic [ref=f9e423]:
+                - generic [ref=f9e424]: Show
+                - generic [ref=f9e426] [cursor=pointer]:
+                  - generic [ref=f9e427]:
+                    - combobox
+                  - generic [ref=f9e428]: "10"
+                  - button "dropdown trigger" [ref=f9e429]:
+                    - generic [ref=f9e430]: 
+                - generic [ref=f9e431]: results
+            - generic [ref=f9e432]:
+              - button "" [ref=f9e433] [cursor=pointer]
+              - generic [ref=f9e435] [cursor=pointer]: First
+              - button "1" [ref=f9e436] [cursor=pointer]
+              - button "2" [ref=f9e437] [cursor=pointer]
+              - generic [ref=f9e438]: .....
+              - button "78" [ref=f9e439] [cursor=pointer]
+              - generic [ref=f9e440] [cursor=pointer]: Last
+              - button "" [ref=f9e441] [cursor=pointer]
+  - generic [ref=f9e163]: Copyright © Wonder Travel 2026. All Rights Reserved. RC1

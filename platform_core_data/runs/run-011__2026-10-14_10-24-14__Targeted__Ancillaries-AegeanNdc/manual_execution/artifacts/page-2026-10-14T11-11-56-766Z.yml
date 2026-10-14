@@ -1,0 +1,58 @@
+- generic [active] [ref=f50e1]:
+  - generic [ref=f50e4]:
+    - img "NDC logo" [ref=f50e6]
+    - generic [ref=f50e7]:
+      - heading [level=2] [ref=f50e8]:
+        - generic [ref=f50e9]:
+          - text: Your gateway for
+          - strong [ref=f50e10]: seamless bookings
+      - generic [ref=f50e11]:
+        - main [ref=f50e15]:
+          - generic [ref=f50e16]:
+            - heading "Welcome Back To NDC" [level=2] [ref=f50e17]
+            - paragraph [ref=f50e18]: Please log in to check out the latest flights with the best prices.
+          - generic [ref=f50e22]:
+            - generic [ref=f50e24]:
+              - generic [ref=f50e25]:
+                - generic [ref=f50e26]: Agency Code
+                - generic [ref=f50e27]: "*"
+              - textbox "Agency Code *" [ref=f50e29]:
+                - /placeholder: agency code
+            - generic [ref=f50e31]:
+              - generic [ref=f50e32]:
+                - generic [ref=f50e33]: Email
+                - generic [ref=f50e34]: "*"
+              - textbox "Email *" [ref=f50e36]:
+                - /placeholder: Email
+            - generic [ref=f50e38]:
+              - generic [ref=f50e39]:
+                - text: Password *
+                - link "Forgot Password?" [ref=f50e40] [cursor=pointer]:
+                  - /url: /auth/forget
+              - generic [ref=f50e41]:
+                - generic [ref=f50e42] [cursor=pointer]: 
+                - textbox "Password * Forgot Password?" [ref=f50e43]:
+                  - /placeholder: "**********"
+            - generic [ref=f50e48]:
+              - generic [ref=f50e51] [cursor=pointer]:
+                - checkbox "Remember Me"
+              - generic [ref=f50e53] [cursor=pointer]: Remember Me
+            - button "Login" [ref=f50e56] [cursor=pointer]
+          - generic [ref=f50e58]:
+            - paragraph [ref=f50e59]: Not a member yet?
+            - button "Request Registration" [ref=f50e60] [cursor=pointer]
+        - region "Featured offers" [ref=f50e63]:
+          - generic [ref=f50e81]:
+            - strong [ref=f50e82]: Your next journey starts here
+            - generic [ref=f50e83]: New destinations and exclusive fares are on the way
+    - contentinfo [ref=f50e84]:
+      - generic [ref=f50e85]:
+        - button "About Us" [ref=f50e86] [cursor=pointer]
+        - button "Mission" [ref=f50e87] [cursor=pointer]
+        - button "Vision" [ref=f50e88] [cursor=pointer]
+        - button "Policy" [ref=f50e89] [cursor=pointer]
+        - button "Contact Us" [ref=f50e90] [cursor=pointer]
+      - paragraph [ref=f50e91]: Copyright © Wonder Travel, 2026. All Rights Reserved.
+  - generic [ref=f50e98] [cursor=pointer]:
+    - emphasis [ref=f50e99]: 
+    - text: 

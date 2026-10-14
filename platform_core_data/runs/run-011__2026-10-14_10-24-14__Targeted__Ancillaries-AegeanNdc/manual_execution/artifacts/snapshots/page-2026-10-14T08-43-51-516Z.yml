@@ -1,0 +1,252 @@
+- generic [ref=e1]:
+  - generic [ref=e45]:
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - button [ref=e48] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e49]: 
+        - list [ref=e52]:
+          - listitem [ref=e209]:
+            - banner [ref=e211]:
+              - generic [ref=e212] [cursor=pointer]:
+                - generic [ref=e213]: 
+                - generic [ref=e214]: Company
+                - generic [ref=e215]: 
+          - listitem [ref=e216]:
+            - link " Branch" [active] [ref=e217] [cursor=pointer]:
+              - /url: /admin/branch
+              - generic [ref=e218]: 
+              - generic [ref=e219]: Branch
+            - generic:
+              - banner
+          - listitem [ref=e220]:
+            - banner [ref=e222]:
+              - generic [ref=e223] [cursor=pointer]:
+                - generic [ref=e224]: 
+                - generic [ref=e225]: Agency
+                - generic [ref=e226]: 
+          - listitem [ref=e227]:
+            - link " Staff" [ref=e228] [cursor=pointer]:
+              - /url: /admin/staff
+              - generic [ref=e229]: 
+              - generic [ref=e230]: Staff
+            - generic:
+              - banner
+        - text: 
+      - generic [ref=e58]:
+        - banner [ref=e60]:
+          - generic [ref=e61]:
+            - img "Logo" [ref=e64] [cursor=pointer]
+            - generic [ref=e67]:
+              - button "Welcome E.Saady " [ref=e68] [cursor=pointer]:
+                - generic [ref=e69]:
+                  - generic [ref=e70]: Welcome
+                  - generic [ref=e71]:
+                    - text: E.Saady
+                    - generic [ref=e72]: 
+              - button "Profile menu" [ref=e73] [cursor=pointer]:
+                - img "E.Saady profile" [ref=e76]: E
+        - navigation "Main navigation" [ref=e79]:
+          - generic [ref=e82]:
+            - tablist [ref=e84]:
+              - tab "Dashboard" [ref=e85] [cursor=pointer]
+              - tab "Admin" [selected] [ref=e87] [cursor=pointer]
+              - tab "Master" [ref=e89] [cursor=pointer]
+              - tab "Rule Engine" [ref=e91] [cursor=pointer]
+              - tab "User Management" [ref=e93] [cursor=pointer]
+              - tab "Booking-Mid Office" [ref=e95] [cursor=pointer]
+              - tab "Profile" [ref=e97] [cursor=pointer]
+              - tab "Reports" [ref=e99] [cursor=pointer]
+              - tab "Import PNR" [ref=e101] [cursor=pointer]
+              - tab "Import Booked PNR" [ref=e103] [cursor=pointer]
+              - listitem [ref=e105]
+            - button "" [ref=e106] [cursor=pointer]
+        - generic [ref=e446]:
+          - generic [ref=e448]:
+            - generic [ref=e449]:
+              - generic [ref=e450]:
+                - paragraph [ref=e451]: Branch
+                - generic [ref=e452]: Search and manage branches.
+              - button "Add branch" [ref=e454] [cursor=pointer]:
+                - generic [aria-hidden] [ref=e456]: 
+            - generic [ref=e458]:
+              - generic [ref=e460]:
+                - generic [ref=e461]: Branch code
+                - textbox "Branch code" [ref=e464]:
+                  - /placeholder: Code
+              - generic [ref=e467]:
+                - generic [ref=e468]: Branch name
+                - textbox "Branch name" [ref=e471]:
+                  - /placeholder: Name
+              - generic [ref=e474]:
+                - generic [ref=e475]: Country
+                - generic [ref=e477] [cursor=pointer]:
+                  - generic [ref=e478]:
+                    - combobox "Country"
+                  - generic [ref=e479]: Select
+                  - button "dropdown trigger" [ref=e480]:
+                    - generic [ref=e481]: 
+              - generic [ref=e484]:
+                - generic [ref=e485]: State
+                - generic [ref=e486]:
+                  - generic:
+                    - generic:
+                      - combobox "State" [disabled]
+                    - generic: Select
+                    - button "dropdown trigger":
+                      - generic: 
+              - generic [ref=e489]:
+                - generic [ref=e490]: City
+                - generic [ref=e491]:
+                  - generic:
+                    - generic:
+                      - listbox "City" [disabled]
+                    - generic: Select
+                    - generic: 
+              - generic [ref=e497]:
+                - generic [ref=e498]: Status
+                - text: ":"
+                - generic [ref=e501] [cursor=pointer]:
+                  - radio "Inactive"
+                - generic [ref=e503] [cursor=pointer]: Inactive
+                - generic [ref=e506] [cursor=pointer]:
+                  - radio "Active" [checked]
+                - generic [ref=e509] [cursor=pointer]: Active
+                - generic [ref=e512] [cursor=pointer]:
+                  - radio "Both"
+                - generic [ref=e514] [cursor=pointer]: Both
+              - button "Search" [ref=e517] [cursor=pointer]
+          - generic [ref=e523]:
+            - table [ref=e528]:
+              - rowgroup [ref=e529]:
+                - row [ref=e530]:
+                  - columnheader "Code" [ref=e531]
+                  - columnheader "Branch Name" [ref=e532]
+                  - columnheader "Country Name" [ref=e533]
+                  - columnheader "City" [ref=e534]
+                  - columnheader "Approval Status" [ref=e535]
+                  - columnheader "Actions" [ref=e536]
+              - rowgroup [ref=e537]:
+                - row [ref=e538]:
+                  - cell "BRN2" [ref=e539]
+                  - cell "Test" [ref=e540]
+                  - cell "Egypt" [ref=e541]
+                  - cell "Dahab" [ref=e542]
+                  - cell "Approved" [ref=e543]
+                  - cell " " [ref=e544]:
+                    - generic [ref=e545]:
+                      - generic [ref=e546]: 
+                      - generic [ref=e548]: 
+                - row [ref=e550]:
+                  - cell "BRN145" [ref=e551]
+                  - cell "samir" [ref=e552]
+                  - cell "Egypt" [ref=e553]
+                  - cell "aswan" [ref=e554]
+                  - cell "Approved" [ref=e555]
+                  - cell " " [ref=e556]:
+                    - generic [ref=e557]:
+                      - generic [ref=e558]: 
+                      - generic [ref=e560]: 
+                - row [ref=e562]:
+                  - cell "BRN223" [ref=e563]
+                  - cell "NDC1_Hussein" [ref=e564]
+                  - cell "Egypt" [ref=e565]
+                  - cell "Cairo" [ref=e566]
+                  - cell "Approved" [ref=e567]
+                  - cell " " [ref=e568]:
+                    - generic [ref=e569]:
+                      - generic [ref=e570]: 
+                      - generic [ref=e572]: 
+                - row [ref=e574]:
+                  - cell "BRN273" [ref=e575]
+                  - cell "Walter" [ref=e576]
+                  - cell "Egypt" [ref=e577]
+                  - cell "Badr" [ref=e578]
+                  - cell "Approved" [ref=e579]
+                  - cell " " [ref=e580]:
+                    - generic [ref=e581]:
+                      - generic [ref=e582]: 
+                      - generic [ref=e584]: 
+                - row [ref=e586]:
+                  - cell "BRN272" [ref=e587]
+                  - cell "Tamesha" [ref=e588]
+                  - cell "Egypt" [ref=e589]
+                  - cell "Badr" [ref=e590]
+                  - cell "Approved" [ref=e591]
+                  - cell " " [ref=e592]:
+                    - generic [ref=e593]:
+                      - generic [ref=e594]: 
+                      - generic [ref=e596]: 
+                - row [ref=e598]:
+                  - cell "BRN271" [ref=e599]
+                  - cell "Rafael" [ref=e600]
+                  - cell "Egypt" [ref=e601]
+                  - cell "Badr" [ref=e602]
+                  - cell "Approved" [ref=e603]
+                  - cell " " [ref=e604]:
+                    - generic [ref=e605]:
+                      - generic [ref=e606]: 
+                      - generic [ref=e608]: 
+                - row [ref=e610]:
+                  - cell "BRN270" [ref=e611]
+                  - cell "Lien" [ref=e612]
+                  - cell "Egypt" [ref=e613]
+                  - cell "Badr" [ref=e614]
+                  - cell "Approved" [ref=e615]
+                  - cell " " [ref=e616]:
+                    - generic [ref=e617]:
+                      - generic [ref=e618]: 
+                      - generic [ref=e620]: 
+                - row [ref=e622]:
+                  - cell "BRN269" [ref=e623]
+                  - cell "Reyna" [ref=e624]
+                  - cell "Egypt" [ref=e625]
+                  - cell "Badr" [ref=e626]
+                  - cell "Approved" [ref=e627]
+                  - cell " " [ref=e628]:
+                    - generic [ref=e629]:
+                      - generic [ref=e630]: 
+                      - generic [ref=e632]: 
+                - row [ref=e634]:
+                  - cell "BRN268" [ref=e635]
+                  - cell "Len" [ref=e636]
+                  - cell "Egypt" [ref=e637]
+                  - cell "Badr" [ref=e638]
+                  - cell "Approved" [ref=e639]
+                  - cell " " [ref=e640]:
+                    - generic [ref=e641]:
+                      - generic [ref=e642]: 
+                      - generic [ref=e644]: 
+                - row [ref=e646]:
+                  - cell "BRN267" [ref=e647]
+                  - cell "Mee" [ref=e648]
+                  - cell "Egypt" [ref=e649]
+                  - cell "Badr" [ref=e650]
+                  - cell "Approved" [ref=e651]
+                  - cell " " [ref=e652]:
+                    - generic [ref=e653]:
+                      - generic [ref=e654]: 
+                      - generic [ref=e656]: 
+              - rowgroup
+            - generic [ref=e658]:
+              - generic [ref=e659]:
+                - paragraph [ref=e660]: Showing 10 results of 68 results
+                - generic [ref=e661]:
+                  - generic [ref=e662]: Show
+                  - generic [ref=e664] [cursor=pointer]:
+                    - generic [ref=e665]:
+                      - combobox
+                    - generic [ref=e666]: "10"
+                    - button "dropdown trigger" [ref=e667]:
+                      - generic [ref=e668]: 
+                  - generic [ref=e669]: results
+              - generic [ref=e670]:
+                - button "" [ref=e671] [cursor=pointer]
+                - generic [ref=e673] [cursor=pointer]: First
+                - button "1" [ref=e674] [cursor=pointer]
+                - button "2" [ref=e675] [cursor=pointer]
+                - generic [ref=e676]: .....
+                - button "7" [ref=e677] [cursor=pointer]
+                - generic [ref=e678] [cursor=pointer]: Last
+                - button "" [ref=e679] [cursor=pointer]
+    - generic [ref=e204]: Copyright © Wonder Travel 2026. All Rights Reserved. RC1
+  - generic [ref=e681]: Edit

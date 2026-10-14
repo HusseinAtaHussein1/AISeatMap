@@ -1,0 +1,187 @@
+- generic [ref=f62e1]:
+  - generic [ref=f62e4]:
+    - generic [ref=f62e5]:
+      - text:          
+      - generic [ref=f62e7]:
+        - text:  
+        - button [ref=f62e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f62e9]: 
+    - generic [ref=f62e10]:
+      - generic [ref=f62e11]:
+        - banner [ref=f62e13]:
+          - generic [ref=f62e14]:
+            - img "Logo" [ref=f62e17] [cursor=pointer]
+            - generic [ref=f62e18]:
+              - generic [ref=f62e19]:
+                - generic [ref=f62e20]:
+                  - generic [ref=f62e21]: 
+                  - generic [ref=f62e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f62e23]: "|"
+                - generic [ref=f62e24]:
+                  - generic [ref=f62e25]: 
+                  - generic [ref=f62e26]: +20-1215484845
+              - generic [ref=f62e27]:
+                - button "Take a tour" [ref=f62e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f62e30]: 
+                - button "Top Up Wallet" [ref=f62e31] [cursor=pointer]:
+                  - generic [ref=f62e32]: 
+                - button "Settings" [ref=f62e33] [cursor=pointer]:
+                  - generic [ref=f62e34]: 
+              - generic [ref=f62e36]:
+                - button "Welcome Hussien " [ref=f62e37] [cursor=pointer]:
+                  - generic [ref=f62e38]:
+                    - generic [ref=f62e39]: Welcome
+                    - generic [ref=f62e40]:
+                      - text: Hussien
+                      - generic [ref=f62e41]: 
+                - button "Profile menu" [ref=f62e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f62e45]
+        - generic [ref=f62e320]:
+          - generic [ref=f62e321]:
+            - generic [ref=f62e323]:
+              - text: 
+              - generic [ref=f62e324]:
+                - generic [ref=f62e326]:
+                  - generic [ref=f62e327]: Order Number
+                  - generic [ref=f62e328]: AGN9748HUSNDCORD261014LOSA1D
+                - generic [ref=f62e329]:
+                  - generic [ref=f62e330]: Passenger
+                  - generic [ref=f62e331]: Hosam Aegeanseven
+              - button "Time Limit" [ref=f62e334] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f62e335]: 
+            - tablist [ref=f62e339]:
+              - generic [ref=f62e341]:
+                - tab "  NDCEG-BR-F2610141NEaUz" [expanded] [ref=f62e343] [cursor=pointer]:
+                  - generic [ref=f62e344]: 
+                  - generic [ref=f62e345]: 
+                  - text: NDCEG-BR-F2610141NEaUz
+                - region "  NDCEG-BR-F2610141NEaUz" [ref=f62e346]:
+                  - generic [ref=f62e349]:
+                    - tablist [ref=f62e352]:
+                      - tab "Itinerary Details" [ref=f62e353] [cursor=pointer]
+                      - tab "Costing" [active] [selected] [ref=f62e355] [cursor=pointer]
+                      - tab "Documents & Queue Request" [ref=f62e357] [cursor=pointer]
+                    - generic [ref=f62e359]:
+                      - generic:                   
+                      - tabpanel "Costing" [ref=f62e718]:
+                        - generic [ref=f62e721]:
+                          - generic [ref=f62e723]:
+                            - generic [ref=f62e724]: 
+                            - heading "Costing Details :" [level=3] [ref=f62e725]
+                          - table [ref=f62e735]:
+                            - rowgroup [ref=f62e736]:
+                              - row [ref=f62e737]:
+                                - columnheader [ref=f62e738]
+                                - columnheader "Net" [ref=f62e739]
+                                - columnheader "Gross" [ref=f62e740]
+                                - columnheader "Net (Tax)" [ref=f62e741]
+                                - columnheader "Total (EGP)" [ref=f62e742]
+                            - rowgroup [ref=f62e743]:
+                              - row [ref=f62e744]:
+                                - cell "1ADT" [ref=f62e745]
+                                - cell "19,326.00" [ref=f62e746]
+                                - cell "19,326.00" [ref=f62e747]
+                                - cell "3,413.80" [ref=f62e748]
+                                - cell "22,739.80" [ref=f62e749]
+                              - row [ref=f62e750]:
+                                - cell "1CHD" [ref=f62e751]
+                                - cell "11,595.00" [ref=f62e752]
+                                - cell "11,595.00" [ref=f62e753]
+                                - cell "3,413.80" [ref=f62e754]
+                                - cell "15,008.80" [ref=f62e755]
+                              - row [ref=f62e756]:
+                                - cell "1INF" [ref=f62e757]
+                                - cell "1,933.00" [ref=f62e758]
+                                - cell "1,933.00" [ref=f62e759]
+                                - cell "2,262.80" [ref=f62e760]
+                                - cell "4,195.80" [ref=f62e761]
+                            - rowgroup
+                          - generic [ref=f62e762]:
+                            - generic [ref=f62e763]:
+                              - paragraph [ref=f62e764]: "Total SSR Amount:"
+                              - paragraph [ref=f62e765]: 1,950.00 EGP
+                            - generic [ref=f62e766]:
+                              - paragraph [ref=f62e767]: "• Baggage Amount:"
+                              - paragraph [ref=f62e768]: 1,240.00 EGP
+                            - generic [ref=f62e769]:
+                              - paragraph [ref=f62e770]: "• Seat Amount:"
+                              - paragraph [ref=f62e771]: 710.00 EGP
+                            - generic [ref=f62e772]:
+                              - paragraph [ref=f62e773]: "Total Booking Amount:"
+                              - paragraph [ref=f62e774]: 43,894.40 EGP
+                            - generic [ref=f62e775]:
+                              - paragraph [ref=f62e776]: "Total Sales Amount:"
+                              - paragraph [ref=f62e777]: 43,894.40 EGP
+                            - generic [ref=f62e778]:
+                              - paragraph [ref=f62e779]: "Total Net Amount:"
+                              - paragraph [ref=f62e780]: 43,894.40 EGP
+                      - generic:  
+          - generic [ref=f62e672]:
+            - generic [ref=f62e674]:
+              - generic [ref=f62e675]:
+                - text: "Created By:"
+                - strong [ref=f62e676]: Hussein_AGN
+              - generic [ref=f62e677]: "Date: 14-10-2026"
+            - generic [ref=f62e678]:
+              - heading "Booking Overview" [level=4] [ref=f62e679]
+              - text: 
+            - generic [ref=f62e681]:
+              - heading "Client" [level=3] [ref=f62e682]
+              - generic [ref=f62e683]:
+                - paragraph [ref=f62e684]: "Client Name: Hosam Aegeanseven"
+                - paragraph [ref=f62e685]: "Customer Type : Retail"
+                - paragraph [ref=f62e686]: "Customer Profile Id : 1570077"
+                - paragraph [ref=f62e687]: "Nationality : Egypt"
+                - paragraph [ref=f62e688]: "Mobile : 1215484845"
+                - paragraph [ref=f62e689]: "Email : Hussien.ata@tildetech.ae"
+                - paragraph [ref=f62e690]: "Identity No : A11014061"
+                - paragraph [ref=f62e691]: "Identity Type : Passport"
+            - generic [ref=f62e693]:
+              - heading " Passenger" [level=3] [ref=f62e694]:
+                - generic [ref=f62e695]: 
+                - text: Passenger
+              - generic [ref=f62e696]:
+                - paragraph [ref=f62e697]:
+                  - generic [ref=f62e698]: 
+                  - text: 3 Passenger
+                - paragraph [ref=f62e699]:
+                  - generic [ref=f62e700]: 
+                  - text: 3 Booked Seats
+                - paragraph [ref=f62e701]:
+                  - generic [ref=f62e702]: 
+                  - text: CAI - FCO
+            - generic [ref=f62e704]:
+              - heading " Costing" [level=3] [ref=f62e705]:
+                - generic [ref=f62e706]: 
+                - text: Costing
+              - generic [ref=f62e707]:
+                - generic [ref=f62e708]:
+                  - generic [ref=f62e709]: "Total Sales Amount:"
+                  - generic [ref=f62e710]: 43,894.40 EGP
+                - generic [ref=f62e711]:
+                  - generic [ref=f62e712]: "Total Net Amount:"
+                  - generic [ref=f62e713]: 43,894.40 EGP
+                - generic [ref=f62e714]:
+                  - generic [ref=f62e715]: "Total Booking Amount:"
+                  - generic [ref=f62e716]: 43,894.40 EGP
+      - contentinfo [ref=f62e277]:
+        - contentinfo [ref=f62e279]:
+          - generic [ref=f62e280]:
+            - navigation "Footer navigation" [ref=f62e281]:
+              - link "About Us" [ref=f62e282] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f62e283] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f62e284] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f62e285] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f62e286] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f62e287]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f62e314] [cursor=pointer]:
+    - emphasis [ref=f62e315]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

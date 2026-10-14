@@ -1,0 +1,201 @@
+- generic [ref=f9e4]:
+  - generic [ref=f9e5]:
+    - generic [ref=f9e6]:
+      - button [ref=f9e7] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f9e8]: 
+      - list [ref=f9e11]:
+        - listitem [ref=f9e168]:
+          - banner [ref=f9e170]:
+            - generic [ref=f9e171] [cursor=pointer]:
+              - generic [ref=f9e172]: 
+              - generic [ref=f9e173]: Flight
+              - generic [ref=f9e174]: 
+        - listitem [ref=f9e175]:
+          - banner [ref=f9e177]:
+            - generic [ref=f9e178] [cursor=pointer]:
+              - generic [ref=f9e179]: 
+              - generic [ref=f9e180]: Supplier
+              - generic [ref=f9e181]: 
+        - listitem [ref=f9e182]:
+          - banner [ref=f9e184]:
+            - generic [ref=f9e185] [cursor=pointer]:
+              - generic [ref=f9e186]: 
+              - generic [ref=f9e187]: Miscellaneous
+              - generic [ref=f9e188]: 
+        - listitem [ref=f9e189]:
+          - banner [ref=f9e191]:
+            - generic [ref=f9e192] [cursor=pointer]:
+              - generic [ref=f9e193]: 
+              - generic [ref=f9e194]: Payment Gateway
+              - generic [ref=f9e195]: 
+      - text: 
+    - generic [ref=f9e17]:
+      - banner [ref=f9e19]:
+        - generic [ref=f9e20]:
+          - img "Logo" [ref=f9e23] [cursor=pointer]
+          - generic [ref=f9e26]:
+            - button "Welcome E.Saady " [ref=f9e27] [cursor=pointer]:
+              - generic [ref=f9e28]:
+                - generic [ref=f9e29]: Welcome
+                - generic [ref=f9e30]:
+                  - text: E.Saady
+                  - generic [ref=f9e31]: 
+            - button "Profile menu" [ref=f9e32] [cursor=pointer]:
+              - img "E.Saady profile" [ref=f9e35]: E
+      - navigation "Main navigation" [ref=f9e38]:
+        - generic [ref=f9e41]:
+          - tablist [ref=f9e43]:
+            - tab "Dashboard" [ref=f9e44] [cursor=pointer]
+            - tab "Admin" [ref=f9e46] [cursor=pointer]
+            - tab "Master" [selected] [ref=f9e48] [cursor=pointer]
+            - tab "Rule Engine" [ref=f9e50] [cursor=pointer]
+            - tab "User Management" [ref=f9e52] [cursor=pointer]
+            - tab "Booking-Mid Office" [ref=f9e54] [cursor=pointer]
+            - tab "Profile" [ref=f9e56] [cursor=pointer]
+            - tab "Reports" [ref=f9e58] [cursor=pointer]
+            - tab "Import PNR" [ref=f9e60] [cursor=pointer]
+            - tab "Import Booked PNR" [ref=f9e62] [cursor=pointer]
+            - listitem [ref=f9e64]
+          - button "" [ref=f9e65] [cursor=pointer]
+      - generic [ref=f9e677]:
+        - generic [ref=f9e679]:
+          - generic [ref=f9e681]:
+            - paragraph [ref=f9e682]: Flight Credential Details
+            - generic [ref=f9e683]: Configure supplier credentials and access settings.
+          - generic [ref=f9e685]:
+            - generic [ref=f9e687]:
+              - generic [ref=f9e688]: Supplier *
+              - generic [ref=f9e690] [cursor=pointer]:
+                - generic [ref=f9e691]:
+                  - combobox "Supplier * Supplier"
+                - generic [ref=f9e692]: AegeanNdc
+                - generic [ref=f9e693]: 
+                - button "dropdown trigger" [ref=f9e694]:
+                  - generic [ref=f9e695]: 
+            - generic [ref=f9e698]:
+              - generic [ref=f9e699]:
+                - generic [ref=f9e700]: CredentialName
+                - generic [ref=f9e701]: "*"
+              - textbox "CredentialName * CredentialName" [ref=f9e703]:
+                - /placeholder: Name
+                - text: AegeanNDCProd
+            - generic [ref=f9e706]:
+              - generic [ref=f9e707]: Country POC *
+              - generic [ref=f9e709] [cursor=pointer]:
+                - generic [ref=f9e710]:
+                  - listbox "Country POC * CountryPOC"
+                - generic [ref=f9e711]:
+                  - generic [ref=f9e712]: All (258 selected)
+                  - generic [ref=f9e713]: 
+                - generic [ref=f9e714]: 
+            - generic [ref=f9e718]:
+              - generic [ref=f9e719]: Currency *
+              - generic [ref=f9e721] [cursor=pointer]:
+                - generic [ref=f9e722]:
+                  - combobox "Currency * Currency"
+                - generic [ref=f9e723]: Egyptian Pound
+                - generic [ref=f9e724]: 
+                - button "dropdown trigger" [ref=f9e725]:
+                  - generic [ref=f9e726]: 
+            - generic [ref=f9e729]:
+              - generic [ref=f9e730]: Credential Type *
+              - generic [ref=f9e732] [cursor=pointer]:
+                - generic [ref=f9e733]:
+                  - combobox "Credential Type * CredentialType"
+                - generic [ref=f9e734]: Live
+                - generic [ref=f9e735]: 
+                - button "dropdown trigger" [ref=f9e736]:
+                  - generic [ref=f9e737]: 
+            - generic [ref=f9e740]:
+              - generic [ref=f9e741]: PCC Classification *
+              - generic [ref=f9e743] [cursor=pointer]:
+                - generic [ref=f9e744]:
+                  - combobox "PCC Classification * PCCClassification"
+                - generic [ref=f9e745]: Flight Search Only
+                - generic [ref=f9e746]: 
+                - button "dropdown trigger" [ref=f9e747]:
+                  - generic [ref=f9e748]: 
+            - generic [ref=f9e751]:
+              - generic [ref=f9e752]: Flight Search Limit *
+              - generic [ref=f9e754] [cursor=pointer]:
+                - generic [ref=f9e755]:
+                  - combobox "Flight Search Limit *"
+                - generic [ref=f9e756]: "0"
+                - generic [ref=f9e757]: 
+                - button "dropdown trigger" [ref=f9e758]:
+                  - generic [ref=f9e759]: 
+            - generic [ref=f9e762]:
+              - generic [ref=f9e763]: Connection Timeout *
+              - generic [ref=f9e765] [cursor=pointer]:
+                - generic [ref=f9e766]:
+                  - combobox "Connection Timeout *"
+                - generic [ref=f9e767]: "50000"
+                - generic [ref=f9e768]: 
+                - button "dropdown trigger" [ref=f9e769]:
+                  - generic [ref=f9e770]: 
+            - generic [ref=f9e773]:
+              - generic [ref=f9e774]: Read Timeout *
+              - generic [ref=f9e776] [cursor=pointer]:
+                - generic [ref=f9e777]:
+                  - combobox "Read Timeout *"
+                - generic [ref=f9e778]: "50000"
+                - generic [ref=f9e779]: 
+                - button "dropdown trigger" [ref=f9e780]:
+                  - generic [ref=f9e781]: 
+            - generic [ref=f9e787]:
+              - generic [ref=f9e790] [cursor=pointer]:
+                - checkbox "Global Credential"
+              - generic [ref=f9e792]: Global Credential
+        - generic [ref=f9e796]:
+          - generic [ref=f9e798]:
+            - generic [ref=f9e799]: X_API_KEY
+            - textbox "X_API_KEY" [ref=f9e802]:
+              - /placeholder: ""
+              - text: ttdb2dc2-58c5-481c-84b5-95350a3a7978-f61360c2-f536-4b19-9a25-97b8f17ce4dc
+          - generic [ref=f9e805]:
+            - generic [ref=f9e806]: NDC_URL
+            - textbox "NDC_URL" [ref=f9e809]:
+              - /placeholder: ""
+              - text: https://ndc-integration-stg-ne-3.azurewebsites.net
+          - generic [ref=f9e812]:
+            - generic [ref=f9e813]: CLIENT_ID
+            - textbox "CLIENT_ID" [ref=f9e816]:
+              - /placeholder: ""
+              - text: NDC-Core
+          - generic [ref=f9e819]:
+            - generic [ref=f9e820]: display_name
+            - textbox "display_name" [ref=f9e823]:
+              - /placeholder: ""
+              - text: AegeanNDCProd
+          - generic [ref=f9e826]:
+            - generic [ref=f9e827]: Supplier
+            - textbox [ref=f9e830]
+          - generic [ref=f9e833]:
+            - generic [ref=f9e834]: CredentialName
+            - textbox [ref=f9e837]
+          - generic [ref=f9e840]:
+            - generic [ref=f9e841]: CountryPOC
+            - textbox [ref=f9e844]
+          - generic [ref=f9e847]:
+            - generic [ref=f9e848]: Currency
+            - textbox [ref=f9e851]
+          - generic [ref=f9e854]:
+            - generic [ref=f9e855]: CredentialType
+            - textbox [ref=f9e858]
+          - generic [ref=f9e861]:
+            - generic [ref=f9e862]: PCCClassification
+            - textbox [ref=f9e865]
+          - generic [ref=f9e868]:
+            - generic [ref=f9e869]: Flight_Search_Limit
+            - textbox "Flight_Search_Limit" [ref=f9e872]:
+              - /placeholder: ""
+          - generic [ref=f9e875]:
+            - generic [ref=f9e876]: Connection_Timeout
+            - textbox "Connection_Timeout" [ref=f9e879]:
+              - /placeholder: ""
+          - generic [ref=f9e882]:
+            - generic [ref=f9e883]: Read_Timeout
+            - textbox "Read_Timeout" [ref=f9e886]:
+              - /placeholder: ""
+        - button "Cancel" [ref=f9e890] [cursor=pointer]
+  - generic [ref=f9e163]: Copyright © Wonder Travel 2026. All Rights Reserved. RC1

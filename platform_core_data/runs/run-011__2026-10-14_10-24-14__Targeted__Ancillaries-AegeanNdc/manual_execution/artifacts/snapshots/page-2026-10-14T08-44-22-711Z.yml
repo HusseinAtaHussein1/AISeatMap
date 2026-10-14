@@ -1,0 +1,82 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - generic [aria-hidden]:
+      - generic: Search
+      - generic: Book
+      - generic: Manage
+    - generic [aria-hidden]:
+      - generic:
+        - img:
+          - generic: NDC
+    - main:
+      - paragraph: NDC agency portal
+      - heading "Welcome to NDC" [level=1]:
+        - generic: Welcome
+        - generic: to
+        - generic: NDC
+      - paragraph:
+        - generic:
+          - strong: "N"
+          - text: ational
+        - generic:
+          - strong: D
+          - text: istribution
+        - generic:
+          - strong: C
+          - text: hannel
+    - button "Skip welcome animation" [ref=e6] [cursor=pointer]:
+      - generic [ref=e7]: Skip intro
+  - generic [ref=e10]:
+    - img "NDC logo" [ref=e12]
+    - generic [ref=e13]:
+      - heading [level=2] [ref=e14]:
+        - generic [ref=e15]:
+          - text: Your gateway for
+          - strong [ref=e16]: seamless bookings
+      - generic [ref=e17]:
+        - main [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Welcome Back To NDC" [level=2] [ref=e23]
+            - paragraph [ref=e24]: Please log in to check out the latest flights with the best prices.
+          - generic [ref=e28]:
+            - generic [ref=e30]:
+              - generic [ref=e31]:
+                - generic [ref=e32]: Agency Code
+                - generic [ref=e33]: "*"
+              - textbox "Agency Code *" [ref=e35]:
+                - /placeholder: agency code
+            - generic [ref=e37]:
+              - generic [ref=e38]:
+                - generic [ref=e39]: Email
+                - generic [ref=e40]: "*"
+              - textbox "Email *" [ref=e42]:
+                - /placeholder: Email
+            - generic [ref=e44]:
+              - generic [ref=e45]:
+                - text: Password *
+                - link "Forgot Password?" [ref=e46] [cursor=pointer]:
+                  - /url: /auth/forget
+              - generic [ref=e47]:
+                - generic [ref=e48] [cursor=pointer]: 
+                - textbox "Password * Forgot Password?" [ref=e49]:
+                  - /placeholder: "**********"
+            - generic [ref=e54]:
+              - generic [ref=e57] [cursor=pointer]:
+                - checkbox "Remember Me"
+              - generic [ref=e59] [cursor=pointer]: Remember Me
+            - button "Login" [ref=e62] [cursor=pointer]
+          - generic [ref=e64]:
+            - paragraph [ref=e65]: Not a member yet?
+            - button "Request Registration" [ref=e66] [cursor=pointer]
+        - region "Featured offers" [ref=e69]:
+          - generic [ref=e87]:
+            - strong [ref=e88]: Your next journey starts here
+            - generic [ref=e89]: New destinations and exclusive fares are on the way
+    - contentinfo [ref=e90]:
+      - generic [ref=e91]:
+        - button "About Us" [ref=e92] [cursor=pointer]
+        - button "Mission" [ref=e93] [cursor=pointer]
+        - button "Vision" [ref=e94] [cursor=pointer]
+        - button "Policy" [ref=e95] [cursor=pointer]
+        - button "Contact Us" [ref=e96] [cursor=pointer]
+      - paragraph [ref=e97]: Copyright © Wonder Travel, 2026. All Rights Reserved.

@@ -1,0 +1,63 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e4]:
+    - generic [ref=f4e5]:
+      - text:          
+      - generic [ref=f4e7]:
+        - text:  
+        - button [ref=f4e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f4e9]: 
+    - generic [ref=f4e10]:
+      - generic [ref=f4e11]:
+        - banner [ref=f4e13]:
+          - generic [ref=f4e14]:
+            - img "Logo" [ref=f4e17] [cursor=pointer]
+            - generic [ref=f4e18]:
+              - generic [ref=f4e19]:
+                - generic [ref=f4e20]:
+                  - generic [ref=f4e21]: 
+                  - generic [ref=f4e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f4e23]: "|"
+                - generic [ref=f4e24]:
+                  - generic [ref=f4e25]: 
+                  - generic [ref=f4e26]: +20-1215484845
+              - generic [ref=f4e27]:
+                - button "Take a tour" [ref=f4e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f4e30]: 
+                - button "Top Up Wallet" [ref=f4e31] [cursor=pointer]:
+                  - generic [ref=f4e32]: 
+                - button "Settings" [ref=f4e33] [cursor=pointer]:
+                  - generic [ref=f4e34]: 
+              - generic [ref=f4e36]:
+                - button "Welcome Hussien " [ref=f4e37] [cursor=pointer]:
+                  - generic [ref=f4e38]:
+                    - generic [ref=f4e39]: Welcome
+                    - generic [ref=f4e40]:
+                      - text: Hussien
+                      - generic [ref=f4e41]: 
+                - button "Profile menu" [ref=f4e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f4e45]
+        - generic [ref=f4e53]:
+          - generic [ref=f4e58]:
+            - heading "No Data Found" [level=2] [ref=f4e59]
+            - paragraph [ref=f4e60]
+          - generic [ref=f4e61]:
+            - button "Go Back" [ref=f4e62] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e63]: 
+            - button "Go Home" [ref=f4e65] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f4e66]: 
+      - contentinfo [ref=f4e68]:
+        - contentinfo [ref=f4e70]:
+          - generic [ref=f4e71]:
+            - navigation "Footer navigation" [ref=f4e72]:
+              - link "About Us" [ref=f4e73] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f4e74] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f4e75] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f4e76] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f4e77] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f4e78]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - alert "One or more parameters are invalid or missing." [ref=f4e80]

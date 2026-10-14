@@ -1,0 +1,218 @@
+- generic [ref=e45]:
+  - generic [ref=e46]:
+    - generic [ref=e47]:
+      - button [ref=e48] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e49]: 
+      - list [ref=e52]:
+        - listitem [ref=e209]:
+          - banner [ref=e211]:
+            - generic [ref=e212] [cursor=pointer]:
+              - generic [ref=e213]: 
+              - generic [ref=e214]: Company
+              - generic [ref=e215]: 
+        - listitem [ref=e216]:
+          - link " Branch" [ref=e217] [cursor=pointer]:
+            - /url: /admin/branch
+            - generic [ref=e218]: 
+            - generic [ref=e219]: Branch
+          - generic:
+            - banner
+        - listitem [ref=e220]:
+          - banner [ref=e222]:
+            - generic [ref=e223] [cursor=pointer]:
+              - generic [ref=e224]: 
+              - generic [ref=e225]: Agency
+              - generic [ref=e226]: 
+        - listitem [ref=e227]:
+          - link " Staff" [ref=e228] [cursor=pointer]:
+            - /url: /admin/staff
+            - generic [ref=e229]: 
+            - generic [ref=e230]: Staff
+          - generic:
+            - banner
+      - text: 
+    - generic [ref=e58]:
+      - banner [ref=e60]:
+        - generic [ref=e61]:
+          - img "Logo" [ref=e64] [cursor=pointer]
+          - generic [ref=e67]:
+            - button "Welcome E.Saady " [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]:
+                - generic [ref=e70]: Welcome
+                - generic [ref=e71]:
+                  - text: E.Saady
+                  - generic [ref=e72]: 
+            - button "Profile menu" [ref=e73] [cursor=pointer]:
+              - img "E.Saady profile" [ref=e76]: E
+      - navigation "Main navigation" [ref=e79]:
+        - generic [ref=e82]:
+          - tablist [ref=e84]:
+            - tab "Dashboard" [ref=e85] [cursor=pointer]
+            - tab "Admin" [active] [selected] [ref=e87] [cursor=pointer]
+            - tab "Master" [ref=e89] [cursor=pointer]
+            - tab "Rule Engine" [ref=e91] [cursor=pointer]
+            - tab "User Management" [ref=e93] [cursor=pointer]
+            - tab "Booking-Mid Office" [ref=e95] [cursor=pointer]
+            - tab "Profile" [ref=e97] [cursor=pointer]
+            - tab "Reports" [ref=e99] [cursor=pointer]
+            - tab "Import PNR" [ref=e101] [cursor=pointer]
+            - tab "Import Booked PNR" [ref=e103] [cursor=pointer]
+            - listitem [ref=e105]
+          - button "" [ref=e106] [cursor=pointer]
+      - generic [ref=e232]:
+        - generic [ref=e234]:
+          - generic [ref=e235]:
+            - generic [ref=e236]:
+              - paragraph [ref=e237]: Operating Country
+              - generic [ref=e238]: Search and manage the countries the company operates in.
+            - button "Add Country" [ref=e240] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e242]: 
+          - generic [ref=e244]:
+            - generic [ref=e246]:
+              - generic [ref=e247]: Operating country name
+              - textbox "Operating country name" [ref=e250]:
+                - /placeholder: ie. Egypt
+            - generic [ref=e253]:
+              - generic [ref=e254]: Select Country
+              - generic [ref=e256] [cursor=pointer]:
+                - generic [ref=e257]:
+                  - combobox "Select Country"
+                - generic [ref=e258]: ie. Egypt
+                - button "dropdown trigger" [ref=e259]:
+                  - generic [ref=e260]: 
+            - generic [ref=e266]:
+              - generic [ref=e267]: Status
+              - text: ":"
+              - generic [ref=e270] [cursor=pointer]:
+                - radio "Inactive"
+              - generic [ref=e272] [cursor=pointer]: Inactive
+              - generic [ref=e275] [cursor=pointer]:
+                - radio "Active" [checked]
+              - generic [ref=e278] [cursor=pointer]: Active
+              - generic [ref=e281] [cursor=pointer]:
+                - radio "Both"
+              - generic [ref=e283] [cursor=pointer]: Both
+            - button "Search" [ref=e286] [cursor=pointer]
+        - generic [ref=e292]:
+          - table [ref=e297]:
+            - rowgroup [ref=e298]:
+              - row [ref=e299]:
+                - columnheader "Operating Country" [ref=e300]
+                - columnheader "Country Name" [ref=e301]
+                - columnheader "Currency" [ref=e302]
+                - columnheader "Status" [ref=e303]
+                - columnheader "Approval Status" [ref=e304]
+                - columnheader "Actions" [ref=e305]
+            - rowgroup [ref=e306]:
+              - row [ref=e307]:
+                - cell "Saudia" [ref=e308]
+                - cell "Saudi Arabia" [ref=e309]
+                - cell "Saudi Riyal" [ref=e310]
+                - cell "Active" [ref=e311]
+                - cell "Approved" [ref=e312]
+                - cell "  View All Branches" [ref=e313]:
+                  - generic [ref=e314]:
+                    - generic [ref=e315]: 
+                    - generic [ref=e317]: 
+                    - paragraph [ref=e320] [cursor=pointer]: View All Branches
+              - row [ref=e321]:
+                - cell "Z" [ref=e322]
+                - cell "United Arab Emirates" [ref=e323]
+                - cell "Egyptian Pound" [ref=e324]
+                - cell "Active" [ref=e325]
+                - cell "Approved" [ref=e326]
+                - cell "  View All Branches" [ref=e327]:
+                  - generic [ref=e328]:
+                    - generic [ref=e329]: 
+                    - generic [ref=e331]: 
+                    - paragraph [ref=e334] [cursor=pointer]: View All Branches
+              - row [ref=e335]:
+                - cell "ThreadTest" [ref=e336]
+                - cell "Libya" [ref=e337]
+                - cell "Euro" [ref=e338]
+                - cell "Active" [ref=e339]
+                - cell "Approved" [ref=e340]
+                - cell "  View All Branches" [ref=e341]:
+                  - generic [ref=e342]:
+                    - generic [ref=e343]: 
+                    - generic [ref=e345]: 
+                    - paragraph [ref=e348] [cursor=pointer]: View All Branches
+              - row [ref=e349]:
+                - cell "Emirates" [ref=e350]
+                - cell "United Arab Emirates" [ref=e351]
+                - cell "United Arab Emirates Dirham" [ref=e352]
+                - cell "Active" [ref=e353]
+                - cell "Approved" [ref=e354]
+                - cell "  View All Branches" [ref=e355]:
+                  - generic [ref=e356]:
+                    - generic [ref=e357]: 
+                    - generic [ref=e359]: 
+                    - paragraph [ref=e362] [cursor=pointer]: View All Branches
+              - row [ref=e363]:
+                - cell "EgyptLive" [ref=e364]
+                - cell "Egypt" [ref=e365]
+                - cell "Egyptian Pound" [ref=e366]
+                - cell "Active" [ref=e367]
+                - cell "Approved" [ref=e368]
+                - cell "  View All Branches" [ref=e369]:
+                  - generic [ref=e370]:
+                    - generic [ref=e371]: 
+                    - generic [ref=e373]: 
+                    - paragraph [ref=e376] [cursor=pointer]: View All Branches
+              - row [ref=e377]:
+                - cell "Hafez" [ref=e378]
+                - cell "Afghanistan" [ref=e379]
+                - cell "Afghani" [ref=e380]
+                - cell "Active" [ref=e381]
+                - cell "Approved" [ref=e382]
+                - cell "  View All Branches" [ref=e383]:
+                  - generic [ref=e384]:
+                    - generic [ref=e385]: 
+                    - generic [ref=e387]: 
+                    - paragraph [ref=e390] [cursor=pointer]: View All Branches
+              - row [ref=e391]:
+                - cell "dfhg" [ref=e392]
+                - cell "Aland Islands" [ref=e393]
+                - cell "Afghani" [ref=e394]
+                - cell "Active" [ref=e395]
+                - cell "Approved" [ref=e396]
+                - cell "  View All Branches" [ref=e397]:
+                  - generic [ref=e398]:
+                    - generic [ref=e399]: 
+                    - generic [ref=e401]: 
+                    - paragraph [ref=e404] [cursor=pointer]: View All Branches
+              - row [ref=e405]:
+                - cell "adfsfdsfdsfasfdsvvvvvv" [ref=e406]
+                - cell "Bhutan" [ref=e407]
+                - cell "Dalasi" [ref=e408]
+                - cell "Active" [ref=e409]
+                - cell "Approved" [ref=e410]
+                - cell "  View All Branches" [ref=e411]:
+                  - generic [ref=e412]:
+                    - generic [ref=e413]: 
+                    - generic [ref=e415]: 
+                    - paragraph [ref=e418] [cursor=pointer]: View All Branches
+              - row [ref=e419]:
+                - cell "Palestinee" [ref=e420]
+                - cell "Palestinian Territory" [ref=e421]
+                - cell "Egyptian Pound" [ref=e422]
+                - cell "Active" [ref=e423]
+                - cell "Approved" [ref=e424]
+                - cell "  View All Branches" [ref=e425]:
+                  - generic [ref=e426]:
+                    - generic [ref=e427]: 
+                    - generic [ref=e429]: 
+                    - paragraph [ref=e432] [cursor=pointer]: View All Branches
+            - rowgroup
+          - generic [ref=e434]:
+            - paragraph [ref=e435]: Showing 9 results of 9 results
+            - generic [ref=e436]:
+              - generic [ref=e437]: Show
+              - generic [ref=e439] [cursor=pointer]:
+                - generic [ref=e440]:
+                  - combobox
+                - generic [ref=e441]: "10"
+                - button "dropdown trigger" [ref=e442]:
+                  - generic [ref=e443]: 
+              - generic [ref=e444]: results
+  - generic [ref=e204]: Copyright © Wonder Travel 2026. All Rights Reserved. RC1

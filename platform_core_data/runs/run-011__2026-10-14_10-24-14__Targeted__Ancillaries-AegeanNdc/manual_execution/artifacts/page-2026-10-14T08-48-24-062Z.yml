@@ -1,0 +1,608 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e99]:
+    - generic [ref=e100]:
+      - text:          
+      - generic [ref=e102]:
+        - text:  
+        - button [ref=e103] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e104]: 
+    - generic [ref=e105]:
+      - generic [ref=e106]:
+        - banner [ref=e108]:
+          - generic [ref=e109]:
+            - img "Logo" [ref=e112] [cursor=pointer]
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: 
+                  - generic [ref=e117]: Hussien.ata@tildetech.ae
+                - generic [ref=e118]: "|"
+                - generic [ref=e119]:
+                  - generic [ref=e120]: 
+                  - generic [ref=e121]: +20-1215484845
+              - generic [ref=e122]:
+                - button "Take a tour" [ref=e124] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=e125]: 
+                - button "Top Up Wallet" [ref=e126] [cursor=pointer]:
+                  - generic [ref=e127]: 
+                - button "Settings" [ref=e128] [cursor=pointer]:
+                  - generic [ref=e129]: 
+              - generic [ref=e131]:
+                - button "Welcome Hussien " [ref=e132] [cursor=pointer]:
+                  - generic [ref=e133]:
+                    - generic [ref=e134]: Welcome
+                    - generic [ref=e135]:
+                      - text: Hussien
+                      - generic [ref=e136]: 
+                - button "Profile menu" [ref=e137] [cursor=pointer]:
+                  - img "Hussien profile" [ref=e140]
+        - generic [ref=e224]:
+          - generic [ref=e229]:
+            - generic [ref=e230]:
+              - generic [ref=e238]:
+                - heading "Flight Search" [level=2] [ref=e239]
+                - paragraph [ref=e240]: Available flight options are listed below.
+              - paragraph [ref=e577]:
+                - generic [ref=e578]: CAI → FCO
+                - generic [ref=e579]: "|"
+                - generic [ref=e580]: 16 Oct, 2026
+                - generic [ref=e581]: "|"
+                - generic [ref=e582]:
+                  - generic [ref=e583]: 1 Adult
+                  - generic [ref=e584]: • 1 Child
+                  - generic [ref=e585]: • 1 Infant
+                - generic [ref=e586]: "|"
+                - generic [ref=e587]: ECONOMY
+            - button "Modify Search" [ref=e589] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e590]: 
+          - generic [ref=e592]:
+            - generic [ref=e1172]:
+              - generic [ref=e1173]:
+                - generic [ref=e1174]:
+                  - generic [ref=e1175]: Available flights
+                  - generic [ref=e1176]: 18 options | 2 time slots
+                - group "Flight dates" [ref=e1178]:
+                  - generic [ref=e1180]:
+                    - button "Previous date" [ref=e1182] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=e1183]: 
+                    - generic [ref=e1184]:
+                      - generic [aria-hidden]: 
+                      - textbox [ref=e1187] [cursor=pointer]: 16 Oct 2026
+                    - button "Next date" [ref=e1189] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=e1190]: 
+              - generic [ref=e1192]:
+                - generic [ref=e1193]:
+                  - button " All Airlines 1" [ref=e1194] [cursor=pointer]:
+                    - generic [ref=e1195]: 
+                    - generic [ref=e1197]:
+                      - generic [ref=e1198]: All Airlines
+                      - generic [ref=e1199]: "1"
+                  - generic [ref=e1201]:
+                    - button "" [disabled] [ref=e1202]
+                    - button "" [disabled] [ref=e1204]
+                - generic [ref=e1206]:
+                  - table [ref=e1207]:
+                    - rowgroup [ref=e1208]:
+                      - row [ref=e1209]:
+                        - columnheader "Time / Airline" [ref=e1210]
+                    - rowgroup [ref=e1213]:
+                      - row [ref=e1214]:
+                        - cell [ref=e1215]:
+                          - button " 00:00 - 05:59 Night" [ref=e1216] [cursor=pointer]:
+                            - generic [ref=e1217]: 
+                            - generic [ref=e1218]:
+                              - generic [ref=e1219]: 00:00 - 05:59
+                              - generic [ref=e1220]: Night
+                      - row [ref=e1221]:
+                        - cell [ref=e1222]:
+                          - button " 06:00 - 11:59 Morning" [ref=e1223] [cursor=pointer]:
+                            - generic [ref=e1224]: 
+                            - generic [ref=e1225]:
+                              - generic [ref=e1226]: 06:00 - 11:59
+                              - generic [ref=e1227]: Morning
+                  - table [ref=e1229]:
+                    - rowgroup [ref=e1230]:
+                      - row [ref=e1231]:
+                        - columnheader [ref=e1232]:
+                          - button " Aegean Airlines Aegean Airlines" [ref=e1233] [cursor=pointer]:
+                            - generic: 
+                            - img "Aegean Airlines" [ref=e1234]
+                            - generic [ref=e1235]: Aegean Airlines
+                    - rowgroup [ref=e1236]:
+                      - row [ref=e1237]:
+                        - cell [ref=e1238]:
+                          - button "37,093.4 EGP" [ref=e1239] [cursor=pointer]:
+                            - generic [ref=e1240]: 37,093.4
+                            - generic [ref=e1241]: EGP
+                      - row [ref=e1242]:
+                        - cell [ref=e1243]:
+                          - button "41,944.4 EGP" [ref=e1244] [cursor=pointer]:
+                            - generic [ref=e1245]: 41,944.4
+                            - generic [ref=e1246]: EGP
+            - generic [ref=e1248]:
+              - generic [ref=e1250]:
+                - generic [ref=e1251]: "18"
+                - generic [ref=e1252]: Flights
+                - generic [ref=e1253]: CAI → FCO
+                - button "Search time logs" [ref=e1254] [cursor=pointer]:
+                  - generic [ref=e1255]: 
+              - generic [ref=e1256]:
+                - button "Apply markup" [ref=e1257] [cursor=pointer]:
+                  - generic [ref=e1258]: 
+                - button " Send Quotation" [ref=e1259] [cursor=pointer]:
+                  - generic [ref=e1260]: 
+                  - generic [ref=e1261]: Send Quotation
+                - button " Save Quote" [ref=e1262] [cursor=pointer]:
+                  - generic [ref=e1263]: 
+                  - generic [ref=e1264]: Save Quote
+            - generic [ref=e1265]:
+              - generic [ref=e1269]:
+                - generic [ref=e1270]:
+                  - heading "Filters" [level=3] [ref=e1271]
+                  - generic [ref=e1272] [cursor=pointer]: Clear all
+                - separator [ref=e1274]
+                - generic [ref=e1275]:
+                  - heading "FLIGHT SEARCH (Name/Code)" [level=4] [ref=e1276]
+                  - generic [ref=e1277]:
+                    - generic: 
+                    - textbox "Flight Name/Code" [ref=e1278]
+                - separator [ref=e1280]
+                - generic [ref=e1281]:
+                  - heading "STOPS" [level=4] [ref=e1282]
+                  - button "1" [ref=e1284] [cursor=pointer]
+                - separator [ref=e1286]
+                - generic [ref=e1287]:
+                  - heading "DEPARTURE TIME" [level=4] [ref=e1288]
+                  - generic [ref=e1289]:
+                    - generic [ref=e1290]: 12:00 AM
+                    - generic [ref=e1291]: 11:59 PM
+                - separator [ref=e1299]
+                - generic [ref=e1300]:
+                  - heading "FLIGHT DURATION" [level=4] [ref=e1301]
+                  - generic [ref=e1302]:
+                    - generic [ref=e1303]: 5h 35m
+                    - generic [ref=e1304]: 14h 30m
+                - separator [ref=e1312]
+                - generic [ref=e1313]:
+                  - heading "PRICE RANGE" [level=4] [ref=e1314]
+                  - generic [ref=e1315]:
+                    - generic [ref=e1316]: EGP 37,093.4
+                    - generic [ref=e1317]: EGP 83,722.4
+                - separator [ref=e1325]
+                - generic [ref=e1326]:
+                  - heading "FARE TYPE" [level=4] [ref=e1327]
+                  - generic [ref=e1328]:
+                    - generic [ref=e1329]:
+                      - generic [ref=e1332] [cursor=pointer]:
+                        - checkbox "Refundable"
+                      - generic [ref=e1334] [cursor=pointer]: Refundable
+                    - generic [ref=e1335]:
+                      - generic [ref=e1338] [cursor=pointer]:
+                        - checkbox "Without Baggage"
+                      - generic [ref=e1340] [cursor=pointer]: Without Baggage
+                    - generic [ref=e1341]:
+                      - generic [ref=e1344] [cursor=pointer]:
+                        - checkbox "With Baggage"
+                      - generic [ref=e1346] [cursor=pointer]: With Baggage
+                - separator [ref=e1348]
+                - generic [ref=e1349]:
+                  - heading "AIRLINES" [level=4] [ref=e1351]
+                  - generic [ref=e1352]:
+                    - generic: 
+                    - textbox "Search Airline" [ref=e1353]
+                  - generic [ref=e1354]: LOWEST
+                  - generic [ref=e1357]:
+                    - generic [ref=e1359] [cursor=pointer]:
+                      - generic [ref=e1360]:
+                        - checkbox "Aegean Airlines 18" [checked]
+                      - generic [ref=e1361]: 
+                    - generic [ref=e1363] [cursor=pointer]:
+                      - generic [ref=e1364]: Aegean Airlines
+                      - generic [ref=e1365]: "18"
+                    - generic [ref=e1366]: EGP 37,093.4
+              - generic [ref=e1367]:
+                - generic [ref=e1373]:
+                  - generic [ref=e1377] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1379]:
+                    - generic [ref=e1385]:
+                      - generic [ref=e1386]:
+                        - img "Aegean Airlines" [ref=e1387]
+                        - generic [ref=e1388]: Aegean Airlines
+                      - generic [ref=e1389]:
+                        - generic [ref=e1390]: 04:00
+                        - generic [ref=e1391]: CAI
+                        - generic [ref=e1393]: Economy
+                      - generic [ref=e1394]:
+                        - generic [ref=e1395]: 5h 35m
+                        - generic [ref=e1396]: ATH
+                        - generic [ref=e1398]:
+                          - generic [ref=e1403] [cursor=pointer]
+                          - generic [ref=e1407]:
+                            - generic [ref=e1408]:
+                              - generic [ref=e1409]: A3-931 (RBD - Q)
+                              - generic [ref=e1410]: FAMILY
+                            - generic [ref=e1411]:
+                              - generic [ref=e1412]: A3-650 (RBD - Q)
+                              - generic [ref=e1413]: FAMILY
+                      - generic [ref=e1414]:
+                        - generic [ref=e1415]: 08:35
+                        - generic [ref=e1416]: FCO
+                    - generic [ref=e1419]:
+                      - generic [ref=e1420]: AegeanNDCProd
+                      - generic [ref=e1423]:
+                        - generic [ref=e1424]: EGP
+                        - generic [ref=e1425]: 37,094
+                      - button "Book Flight " [ref=e1426] [cursor=pointer]:
+                        - generic [ref=e1427]: Book Flight
+                        - generic [ref=e1428]: 
+                  - button "Flight Details" [ref=e1430] [cursor=pointer]
+                - generic [ref=e1436]:
+                  - generic [ref=e1440] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1442]:
+                    - generic [ref=e1448]:
+                      - generic [ref=e1449]:
+                        - img "Aegean Airlines" [ref=e1450]
+                        - generic [ref=e1451]: Aegean Airlines
+                      - generic [ref=e1452]:
+                        - generic [ref=e1453]: 04:00
+                        - generic [ref=e1454]: CAI
+                        - generic [ref=e1456]: Economy
+                      - generic [ref=e1457]:
+                        - generic [ref=e1458]: 5h 35m
+                        - generic [ref=e1459]: ATH
+                        - generic [ref=e1461]:
+                          - generic [ref=e1466] [cursor=pointer]
+                          - generic [ref=e1470]:
+                            - generic [ref=e1471]:
+                              - generic [ref=e1472]: A3-931 (RBD - Q)
+                              - generic [ref=e1473]: LIGHT
+                            - generic [ref=e1474]:
+                              - generic [ref=e1475]: A3-650 (RBD - Q)
+                              - generic [ref=e1476]: LIGHT
+                      - generic [ref=e1477]:
+                        - generic [ref=e1478]: 08:35
+                        - generic [ref=e1479]: FCO
+                    - generic [ref=e1482]:
+                      - generic [ref=e1483]: AegeanNDCProd
+                      - generic [ref=e1486]:
+                        - generic [ref=e1487]: EGP
+                        - generic [ref=e1488]: 38,079
+                      - button "Book Flight " [ref=e1489] [cursor=pointer]:
+                        - generic [ref=e1490]: Book Flight
+                        - generic [ref=e1491]: 
+                  - button "Flight Details" [ref=e1493] [cursor=pointer]
+                - generic [ref=e1499]:
+                  - generic [ref=e1503] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1505]:
+                    - generic [ref=e1511]:
+                      - generic [ref=e1512]:
+                        - img "Aegean Airlines" [ref=e1513]
+                        - generic [ref=e1514]: Aegean Airlines
+                      - generic [ref=e1515]:
+                        - generic [ref=e1516]: 04:00
+                        - generic [ref=e1517]: CAI
+                        - generic [ref=e1519]: Economy
+                      - generic [ref=e1520]:
+                        - generic [ref=e1521]: 5h 35m
+                        - generic [ref=e1522]: ATH
+                        - generic [ref=e1524]:
+                          - generic [ref=e1529] [cursor=pointer]
+                          - generic [ref=e1533]:
+                            - generic [ref=e1534]:
+                              - generic [ref=e1535]: A3-931 (RBD - Q)
+                              - generic [ref=e1536]: FLEX
+                            - generic [ref=e1537]:
+                              - generic [ref=e1538]: A3-650 (RBD - Q)
+                              - generic [ref=e1539]: FLEX
+                      - generic [ref=e1540]:
+                        - generic [ref=e1541]: 08:35
+                        - generic [ref=e1542]: FCO
+                    - generic [ref=e1545]:
+                      - generic [ref=e1546]: AegeanNDCProd
+                      - generic [ref=e1549]:
+                        - generic [ref=e1550]: EGP
+                        - generic [ref=e1551]: 39,976
+                      - button "Book Flight " [ref=e1552] [cursor=pointer]:
+                        - generic [ref=e1553]: Book Flight
+                        - generic [ref=e1554]: 
+                  - button "Flight Details" [ref=e1556] [cursor=pointer]
+                - generic [ref=e1562]:
+                  - generic [ref=e1566] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1568]:
+                    - generic [ref=e1574]:
+                      - generic [ref=e1575]:
+                        - img "Aegean Airlines" [ref=e1576]
+                        - generic [ref=e1577]: Aegean Airlines
+                      - generic [ref=e1578]:
+                        - generic [ref=e1579]: 04:00
+                        - generic [ref=e1580]: CAI
+                        - generic [ref=e1582]: Economy
+                      - generic [ref=e1583]:
+                        - generic [ref=e1584]: 5h 35m
+                        - generic [ref=e1585]: ATH
+                        - generic [ref=e1587]:
+                          - generic [ref=e1592] [cursor=pointer]
+                          - generic [ref=e1596]:
+                            - generic [ref=e1597]:
+                              - generic [ref=e1598]: A3-931 (RBD - Q)
+                              - generic [ref=e1599]: COMFORTFLEX
+                            - generic [ref=e1600]:
+                              - generic [ref=e1601]: A3-650 (RBD - Q)
+                              - generic [ref=e1602]: COMFORTFLEX
+                      - generic [ref=e1603]:
+                        - generic [ref=e1604]: 08:35
+                        - generic [ref=e1605]: FCO
+                    - generic [ref=e1608]:
+                      - generic [ref=e1609]: AegeanNDCProd
+                      - generic [ref=e1612]:
+                        - generic [ref=e1613]: EGP
+                        - generic [ref=e1614]: 40,515
+                      - button "Book Flight " [ref=e1615] [cursor=pointer]:
+                        - generic [ref=e1616]: Book Flight
+                        - generic [ref=e1617]: 
+                  - button "Flight Details" [ref=e1619] [cursor=pointer]
+                - generic [ref=e1625]:
+                  - generic [ref=e1629] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1631]:
+                    - generic [ref=e1637]:
+                      - generic [ref=e1638]:
+                        - img "Aegean Airlines" [ref=e1639]
+                        - generic [ref=e1640]: Aegean Airlines
+                      - generic [ref=e1641]:
+                        - generic [ref=e1642]: 04:00
+                        - generic [ref=e1643]: CAI
+                        - generic [ref=e1645]: Economy
+                      - generic [ref=e1646]:
+                        - generic [ref=e1647]: 14h 30m
+                        - generic [ref=e1648]: ATH
+                        - generic [ref=e1650]:
+                          - generic [ref=e1655] [cursor=pointer]
+                          - generic [ref=e1659]:
+                            - generic [ref=e1660]:
+                              - generic [ref=e1661]: A3-931 (RBD - H)
+                              - generic [ref=e1662]: FAMILY
+                            - generic [ref=e1663]:
+                              - generic [ref=e1664]: A3-654 (RBD - H)
+                              - generic [ref=e1665]: FAMILY
+                      - generic [ref=e1666]:
+                        - generic [ref=e1667]: 17:30
+                        - generic [ref=e1668]: FCO
+                    - generic [ref=e1671]:
+                      - generic [ref=e1672]: AegeanNDCProd
+                      - generic [ref=e1675]:
+                        - generic [ref=e1676]: EGP
+                        - generic [ref=e1677]: 41,945
+                      - button "Book Flight " [ref=e1678] [cursor=pointer]:
+                        - generic [ref=e1679]: Book Flight
+                        - generic [ref=e1680]: 
+                  - generic [ref=e1681]:
+                    - button "More Options +1" [ref=e1682] [cursor=pointer]:
+                      - text: More Options
+                      - generic [ref=e1683]: "+1"
+                    - button "Flight Details" [ref=e1684] [cursor=pointer]
+                - generic [ref=e1690]:
+                  - generic [ref=e1694] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1696]:
+                    - generic [ref=e1702]:
+                      - generic [ref=e1703]:
+                        - img "Aegean Airlines" [ref=e1704]
+                        - generic [ref=e1705]: Aegean Airlines
+                      - generic [ref=e1706]:
+                        - generic [ref=e1707]: 04:00
+                        - generic [ref=e1708]: CAI
+                        - generic [ref=e1710]: Economy
+                      - generic [ref=e1711]:
+                        - generic [ref=e1712]: 14h 30m
+                        - generic [ref=e1713]: ATH
+                        - generic [ref=e1715]:
+                          - generic [ref=e1720] [cursor=pointer]
+                          - generic [ref=e1724]:
+                            - generic [ref=e1725]:
+                              - generic [ref=e1726]: A3-931 (RBD - H)
+                              - generic [ref=e1727]: LIGHT
+                            - generic [ref=e1728]:
+                              - generic [ref=e1729]: A3-654 (RBD - H)
+                              - generic [ref=e1730]: LIGHT
+                      - generic [ref=e1731]:
+                        - generic [ref=e1732]: 17:30
+                        - generic [ref=e1733]: FCO
+                    - generic [ref=e1736]:
+                      - generic [ref=e1737]: AegeanNDCProd
+                      - generic [ref=e1740]:
+                        - generic [ref=e1741]: EGP
+                        - generic [ref=e1742]: 43,430
+                      - button "Book Flight " [ref=e1743] [cursor=pointer]:
+                        - generic [ref=e1744]: Book Flight
+                        - generic [ref=e1745]: 
+                  - generic [ref=e1746]:
+                    - button "More Options +1" [ref=e1747] [cursor=pointer]:
+                      - text: More Options
+                      - generic [ref=e1748]: "+1"
+                    - button "Flight Details" [ref=e1749] [cursor=pointer]
+                - generic [ref=e1755]:
+                  - generic [ref=e1759] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1761]:
+                    - generic [ref=e1767]:
+                      - generic [ref=e1768]:
+                        - img "Aegean Airlines" [ref=e1769]
+                        - generic [ref=e1770]: Aegean Airlines
+                      - generic [ref=e1771]:
+                        - generic [ref=e1772]: 04:00
+                        - generic [ref=e1773]: CAI
+                        - generic [ref=e1775]: Economy
+                      - generic [ref=e1776]:
+                        - generic [ref=e1777]: 14h 30m
+                        - generic [ref=e1778]: ATH
+                        - generic [ref=e1780]:
+                          - generic [ref=e1785] [cursor=pointer]
+                          - generic [ref=e1789]:
+                            - generic [ref=e1790]:
+                              - generic [ref=e1791]: A3-931 (RBD - H)
+                              - generic [ref=e1792]: FLEX
+                            - generic [ref=e1793]:
+                              - generic [ref=e1794]: A3-654 (RBD - H)
+                              - generic [ref=e1795]: FLEX
+                      - generic [ref=e1796]:
+                        - generic [ref=e1797]: 17:30
+                        - generic [ref=e1798]: FCO
+                    - generic [ref=e1801]:
+                      - generic [ref=e1802]: AegeanNDCProd
+                      - generic [ref=e1805]:
+                        - generic [ref=e1806]: EGP
+                        - generic [ref=e1807]: 45,327
+                      - button "Book Flight " [ref=e1808] [cursor=pointer]:
+                        - generic [ref=e1809]: Book Flight
+                        - generic [ref=e1810]: 
+                  - generic [ref=e1811]:
+                    - button "More Options +1" [ref=e1812] [cursor=pointer]:
+                      - text: More Options
+                      - generic [ref=e1813]: "+1"
+                    - button "Flight Details" [ref=e1814] [cursor=pointer]
+                - generic [ref=e1820]:
+                  - generic [ref=e1824] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1826]:
+                    - generic [ref=e1832]:
+                      - generic [ref=e1833]:
+                        - img "Aegean Airlines" [ref=e1834]
+                        - generic [ref=e1835]: Aegean Airlines
+                      - generic [ref=e1836]:
+                        - generic [ref=e1837]: 04:00
+                        - generic [ref=e1838]: CAI
+                        - generic [ref=e1840]: Economy
+                      - generic [ref=e1841]:
+                        - generic [ref=e1842]: 14h 30m
+                        - generic [ref=e1843]: ATH
+                        - generic [ref=e1845]:
+                          - generic [ref=e1850] [cursor=pointer]
+                          - generic [ref=e1854]:
+                            - generic [ref=e1855]:
+                              - generic [ref=e1856]: A3-931 (RBD - H)
+                              - generic [ref=e1857]: COMFORTFLEX
+                            - generic [ref=e1858]:
+                              - generic [ref=e1859]: A3-654 (RBD - H)
+                              - generic [ref=e1860]: COMFORTFLEX
+                      - generic [ref=e1861]:
+                        - generic [ref=e1862]: 17:30
+                        - generic [ref=e1863]: FCO
+                    - generic [ref=e1866]:
+                      - generic [ref=e1867]: AegeanNDCProd
+                      - generic [ref=e1870]:
+                        - generic [ref=e1871]: EGP
+                        - generic [ref=e1872]: 45,357
+                      - button "Book Flight " [ref=e1873] [cursor=pointer]:
+                        - generic [ref=e1874]: Book Flight
+                        - generic [ref=e1875]: 
+                  - generic [ref=e1876]:
+                    - button "More Options +1" [ref=e1877] [cursor=pointer]:
+                      - text: More Options
+                      - generic [ref=e1878]: "+1"
+                    - button "Flight Details" [ref=e1879] [cursor=pointer]
+                - generic [ref=e1885]:
+                  - generic [ref=e1889] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1891]:
+                    - generic [ref=e1897]:
+                      - generic [ref=e1898]:
+                        - img "Aegean Airlines" [ref=e1899]
+                        - generic [ref=e1900]: Aegean Airlines
+                      - generic [ref=e1901]:
+                        - generic [ref=e1902]: 04:00
+                        - generic [ref=e1903]: CAI
+                        - generic [ref=e1905]: Business
+                      - generic [ref=e1906]:
+                        - generic [ref=e1907]: 5h 35m
+                        - generic [ref=e1908]: ATH
+                        - generic [ref=e1910]:
+                          - generic [ref=e1915] [cursor=pointer]
+                          - generic [ref=e1919]:
+                            - generic [ref=e1920]:
+                              - generic [ref=e1921]: A3-931 (RBD - C)
+                              - generic [ref=e1922]: BUSINESS BASIC
+                            - generic [ref=e1923]:
+                              - generic [ref=e1924]: A3-650 (RBD - C)
+                              - generic [ref=e1925]: BUSINESS BASIC
+                      - generic [ref=e1926]:
+                        - generic [ref=e1927]: 08:35
+                        - generic [ref=e1928]: FCO
+                    - generic [ref=e1931]:
+                      - generic [ref=e1932]: AegeanNDCProd
+                      - generic [ref=e1935]:
+                        - generic [ref=e1936]: EGP
+                        - generic [ref=e1937]: 79,122
+                      - button "Book Flight " [ref=e1938] [cursor=pointer]:
+                        - generic [ref=e1939]: Book Flight
+                        - generic [ref=e1940]: 
+                  - generic [ref=e1941]:
+                    - button "More Options +2" [ref=e1942] [cursor=pointer]:
+                      - text: More Options
+                      - generic [ref=e1943]: "+2"
+                    - button "Flight Details" [ref=e1944] [cursor=pointer]
+                - generic [ref=e1950]:
+                  - generic [ref=e1954] [cursor=pointer]:
+                    - checkbox
+                  - generic [ref=e1956]:
+                    - generic [ref=e1962]:
+                      - generic [ref=e1963]:
+                        - img "Aegean Airlines" [ref=e1964]
+                        - generic [ref=e1965]: Aegean Airlines
+                      - generic [ref=e1966]:
+                        - generic [ref=e1967]: 04:00
+                        - generic [ref=e1968]: CAI
+                        - generic [ref=e1970]: Business
+                      - generic [ref=e1971]:
+                        - generic [ref=e1972]: 5h 35m
+                        - generic [ref=e1973]: ATH
+                        - generic [ref=e1975]:
+                          - generic [ref=e1980] [cursor=pointer]
+                          - generic [ref=e1984]:
+                            - generic [ref=e1985]:
+                              - generic [ref=e1986]: A3-931 (RBD - C)
+                              - generic [ref=e1987]: BUSINESS
+                            - generic [ref=e1988]:
+                              - generic [ref=e1989]: A3-650 (RBD - C)
+                              - generic [ref=e1990]: BUSINESS
+                      - generic [ref=e1991]:
+                        - generic [ref=e1992]: 08:35
+                        - generic [ref=e1993]: FCO
+                    - generic [ref=e1996]:
+                      - generic [ref=e1997]: AegeanNDCProd
+                      - generic [ref=e2000]:
+                        - generic [ref=e2001]: EGP
+                        - generic [ref=e2002]: 83,723
+                      - button "Book Flight " [ref=e2003] [cursor=pointer]:
+                        - generic [ref=e2004]: Book Flight
+                        - generic [ref=e2005]: 
+                  - generic [ref=e2006]:
+                    - button "More Options +2" [ref=e2007] [cursor=pointer]:
+                      - text: More Options
+                      - generic [ref=e2008]: "+2"
+                    - button "Flight Details" [ref=e2009] [cursor=pointer]
+      - contentinfo [ref=e208]:
+        - contentinfo [ref=e210]:
+          - generic [ref=e211]:
+            - navigation "Footer navigation" [ref=e212]:
+              - link "About Us" [ref=e213] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=e214] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=e215] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=e216] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=e217] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=e218]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=e221] [cursor=pointer]:
+    - emphasis [ref=e222]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

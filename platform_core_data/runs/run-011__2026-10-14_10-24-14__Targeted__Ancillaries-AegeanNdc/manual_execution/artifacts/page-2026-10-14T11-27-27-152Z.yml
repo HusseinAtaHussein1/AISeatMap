@@ -1,0 +1,167 @@
+- generic [ref=f74e1]:
+  - generic [ref=f74e4]:
+    - generic [ref=f74e5]:
+      - text:          
+      - generic [ref=f74e7]:
+        - text:  
+        - button [ref=f74e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f74e9]: 
+    - generic [ref=f74e10]:
+      - generic [ref=f74e11]:
+        - banner [ref=f74e13]:
+          - generic [ref=f74e14]:
+            - img "Logo" [ref=f74e17] [cursor=pointer]
+            - generic [ref=f74e18]:
+              - generic [ref=f74e19]:
+                - generic [ref=f74e20]:
+                  - generic [ref=f74e21]: 
+                  - generic [ref=f74e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f74e23]: "|"
+                - generic [ref=f74e24]:
+                  - generic [ref=f74e25]: 
+                  - generic [ref=f74e26]: +20-1215484845
+              - generic [ref=f74e27]:
+                - button "Take a tour" [ref=f74e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f74e30]: 
+                - button "Top Up Wallet" [ref=f74e31] [cursor=pointer]:
+                  - generic [ref=f74e32]: 
+                - button "Settings" [ref=f74e33] [cursor=pointer]:
+                  - generic [ref=f74e34]: 
+              - generic [ref=f74e36]:
+                - button "Welcome Hussien " [ref=f74e37] [cursor=pointer]:
+                  - generic [ref=f74e38]:
+                    - generic [ref=f74e39]: Welcome
+                    - generic [ref=f74e40]:
+                      - text: Hussien
+                      - generic [ref=f74e41]: 
+                - button "Profile menu" [ref=f74e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f74e45]
+        - generic [ref=f74e127]:
+          - generic [ref=f74e129]:
+            - paragraph [ref=f74e130]:
+              - link "Back to reports" [ref=f74e131] [cursor=pointer]:
+                - /url: /reports
+                - generic [ref=f74e132]: 
+              - text: Sales
+            - generic [ref=f74e133]: Your sales totals by period.
+          - generic [ref=f74e135]:
+            - generic [ref=f74e137]:
+              - generic [ref=f74e138]: Invoice From Date *
+              - generic [ref=f74e141]:
+                - textbox "Invoice From Date *" [ref=f74e142]:
+                  - /placeholder: DD/MM/YYYY
+                  - text: 14/10/2026
+                - button [ref=f74e143] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f74e144]: 
+            - generic [ref=f74e147]:
+              - generic [ref=f74e148]: Invoice To Date *
+              - generic [ref=f74e151]:
+                - textbox "Invoice To Date *" [active] [ref=f74e152]:
+                  - /placeholder: DD/MM/YYYY
+                - button [ref=f74e153] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f74e154]: 
+            - generic [ref=f74e157]:
+              - generic [ref=f74e158]: Payment Date
+              - generic [ref=f74e161]:
+                - textbox "Payment Date" [ref=f74e162]:
+                  - /placeholder: DD/MM/YYYY
+                - button [ref=f74e163] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f74e164]: 
+            - generic [ref=f74e167]:
+              - generic [ref=f74e168]: Invoice Number
+              - textbox "Invoice Number" [ref=f74e171]:
+                - /placeholder: Invoice number
+            - generic [ref=f74e174]:
+              - generic [ref=f74e175]: Customer Name
+              - textbox "Customer Name" [ref=f74e178]
+            - generic [ref=f74e181]:
+              - generic [ref=f74e182]: Agent Name
+              - generic [ref=f74e184] [cursor=pointer]:
+                - generic [ref=f74e185]:
+                  - combobox "Agent Name"
+                - generic [ref=f74e186]: Agent Name
+                - button "dropdown trigger" [ref=f74e187]:
+                  - generic [ref=f74e188]: 
+            - generic [ref=f74e191]:
+              - generic [ref=f74e192]: Transaction ID
+              - textbox "Transaction ID" [ref=f74e195]
+            - button "Search" [ref=f74e199] [cursor=pointer]
+      - contentinfo [ref=f74e108]:
+        - contentinfo [ref=f74e110]:
+          - generic [ref=f74e111]:
+            - navigation "Footer navigation" [ref=f74e112]:
+              - link "About Us" [ref=f74e113] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f74e114] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f74e115] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f74e116] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f74e117] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f74e118]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f74e121] [cursor=pointer]:
+    - emphasis [ref=f74e122]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe
+  - generic [ref=f74e355]:
+    - generic [ref=f74e356]:
+      - button "" [ref=f74e357] [cursor=pointer]
+      - generic [ref=f74e359]:
+        - button "October" [ref=f74e360] [cursor=pointer]
+        - button "2026" [ref=f74e361] [cursor=pointer]
+      - button "" [ref=f74e362] [cursor=pointer]
+    - table [ref=f74e365]:
+      - rowgroup [ref=f74e366]:
+        - row [ref=f74e367]:
+          - columnheader "Su" [ref=f74e368]
+          - columnheader "Mo" [ref=f74e369]
+          - columnheader "Tu" [ref=f74e370]
+          - columnheader "We" [ref=f74e371]
+          - columnheader "Th" [ref=f74e372]
+          - columnheader "Fr" [ref=f74e373]
+          - columnheader "Sa" [ref=f74e374]
+      - rowgroup [ref=f74e375]:
+        - row [ref=f74e376]:
+          - cell "27" [ref=f74e377]
+          - cell "28" [ref=f74e378]
+          - cell "29" [ref=f74e379]
+          - cell "30" [ref=f74e380]
+          - cell "1" [ref=f74e381]
+          - cell "2" [ref=f74e383]
+          - cell "3" [ref=f74e385]
+        - row [ref=f74e387]:
+          - cell "4" [ref=f74e388]
+          - cell "5" [ref=f74e390]
+          - cell "6" [ref=f74e392]
+          - cell "7" [ref=f74e394]
+          - cell "8" [ref=f74e396]
+          - cell "9" [ref=f74e398]
+          - cell "10" [ref=f74e400]
+        - row [ref=f74e402]:
+          - cell "11" [ref=f74e403]
+          - cell "12" [ref=f74e405]
+          - cell "13" [ref=f74e407]
+          - cell "14" [ref=f74e409]
+          - cell "15" [ref=f74e411]
+          - cell "16" [ref=f74e412]
+          - cell "17" [ref=f74e413]
+        - row [ref=f74e414]:
+          - cell "18" [ref=f74e415]
+          - cell "19" [ref=f74e416]
+          - cell "20" [ref=f74e417]
+          - cell "21" [ref=f74e418]
+          - cell "22" [ref=f74e419]
+          - cell "23" [ref=f74e420]
+          - cell "24" [ref=f74e421]
+        - row [ref=f74e422]:
+          - cell "25" [ref=f74e423]
+          - cell "26" [ref=f74e424]
+          - cell "27" [ref=f74e425]
+          - cell "28" [ref=f74e426]
+          - cell "29" [ref=f74e427]
+          - cell "30" [ref=f74e428]
+          - cell "31" [ref=f74e429]

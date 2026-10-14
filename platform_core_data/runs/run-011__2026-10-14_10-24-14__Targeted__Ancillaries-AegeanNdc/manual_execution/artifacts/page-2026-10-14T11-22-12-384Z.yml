@@ -1,0 +1,297 @@
+- generic [ref=f54e1]:
+  - generic [ref=f54e4]:
+    - generic [ref=f54e5]:
+      - text:          
+      - generic [ref=f54e7]:
+        - text:  
+        - button [ref=f54e8] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f54e9]: 
+    - generic [ref=f54e10]:
+      - generic [ref=f54e11]:
+        - banner [ref=f54e13]:
+          - generic [ref=f54e14]:
+            - img "Logo" [ref=f54e17] [cursor=pointer]
+            - generic [ref=f54e18]:
+              - generic [ref=f54e19]:
+                - generic [ref=f54e20]:
+                  - generic [ref=f54e21]: 
+                  - generic [ref=f54e22]: Hussien.ata@tildetech.ae
+                - generic [ref=f54e23]: "|"
+                - generic [ref=f54e24]:
+                  - generic [ref=f54e25]: 
+                  - generic [ref=f54e26]: +20-1215484845
+              - generic [ref=f54e27]:
+                - button "Take a tour" [ref=f54e29] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f54e30]: 
+                - button "Top Up Wallet" [ref=f54e31] [cursor=pointer]:
+                  - generic [ref=f54e32]: 
+                - button "Settings" [ref=f54e33] [cursor=pointer]:
+                  - generic [ref=f54e34]: 
+              - generic [ref=f54e36]:
+                - button "Welcome Hussien " [ref=f54e37] [cursor=pointer]:
+                  - generic [ref=f54e38]:
+                    - generic [ref=f54e39]: Welcome
+                    - generic [ref=f54e40]:
+                      - text: Hussien
+                      - generic [ref=f54e41]: 
+                - button "Profile menu" [ref=f54e42] [cursor=pointer]:
+                  - img "Hussien profile" [ref=f54e45]
+        - generic [ref=f54e7772]:
+          - generic [ref=f54e7775]:
+            - generic [ref=f54e7776]:
+              - generic [ref=f54e7777]: 
+              - generic [ref=f54e7778]: Order Details
+            - generic [ref=f54e7779]:
+              - paragraph [ref=f54e7781]: "Your ticket has been successfully Confirmed. Thank you for choosing NDC, if you have any questions contact us via email: Info@NDCeg.com or via phone: 19359 & 01009294092"
+              - table [ref=f54e7782]:
+                - rowgroup [ref=f54e7783]:
+                  - row [ref=f54e7784]:
+                    - columnheader "GDS PNR Number" [ref=f54e7785]
+                    - columnheader "Airline PNR Number" [ref=f54e7786]
+                    - columnheader "Booking Date" [ref=f54e7787]
+                    - columnheader "Status" [ref=f54e7788]
+                    - columnheader "Note" [ref=f54e7789]
+                - rowgroup [ref=f54e7790]:
+                  - row [ref=f54e7791]:
+                    - cell "OUEG31" [ref=f54e7792]
+                    - cell "82Q8GW" [ref=f54e7793]
+                    - cell "14 Oct, 2026 11:19" [ref=f54e7794]
+                    - cell "Confirmed" [ref=f54e7795]
+                    - cell "Please use booking reference number for further details" [ref=f54e7796]
+              - separator [ref=f54e7798]
+              - generic [ref=f54e7799]:
+                - generic [ref=f54e7800]:
+                  - paragraph [ref=f54e7801]: "Ticket No:"
+                  - text: "39057639619703"
+                - generic [ref=f54e7802]:
+                  - paragraph [ref=f54e7803]: "Booking Reference:"
+                  - text: NDCEG-BR-F2610141NEaUz
+                - generic [ref=f54e7804]:
+                  - paragraph [ref=f54e7805]: "Trip ID:"
+                  - text: AGN9748HUSNDCORD261014LOSA1D
+                - generic [ref=f54e7806]:
+                  - button " E-Ticket" [active] [ref=f54e7807] [cursor=pointer]:
+                    - generic [ref=f54e7808]: 
+                    - generic [ref=f54e7809]: E-Ticket
+                  - generic [ref=f54e7810] [cursor=pointer]: 
+          - tablist [ref=f54e7814]:
+            - generic [ref=f54e7816]:
+              - tab " Segments Details" [expanded] [ref=f54e7818] [cursor=pointer]:
+                - generic [ref=f54e7819]: 
+                - generic [ref=f54e7820]: Segments Details
+              - region " Segments Details" [ref=f54e7825]:
+                - generic [ref=f54e7827]:
+                  - generic [ref=f54e7828]:
+                    - generic [ref=f54e7829]: CAI✈FCO
+                    - generic [ref=f54e7830]: "Total Journey Duration: 5h 35m"
+                  - generic [ref=f54e7833]:
+                    - generic [ref=f54e7834]:
+                      - img "airline-logo" [ref=f54e7836]
+                      - generic [ref=f54e7837]: Economy
+                      - generic [ref=f54e7840]: 
+                    - generic [ref=f54e7842]:
+                      - generic [ref=f54e7843]:
+                        - generic [ref=f54e7844]: Departure
+                        - generic [ref=f54e7845]: CAI
+                        - generic [ref=f54e7846]: Cairo International Airport
+                        - generic [ref=f54e7847]: Cairo
+                        - generic [ref=f54e7848]: 04:00 Fri, 16 Oct, 2026
+                        - generic [ref=f54e7849]: "Terminal: 3"
+                      - generic [ref=f54e7850]:
+                        - generic [ref=f54e7851]: "Segment Duration: 2h 0m"
+                        - generic [ref=f54e7859]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                      - generic [ref=f54e7860]:
+                        - generic [ref=f54e7861]: Arrival
+                        - generic [ref=f54e7862]: ATH
+                        - generic [ref=f54e7863]: Athens International Airport
+                        - generic [ref=f54e7864]: Athens
+                        - generic [ref=f54e7865]: 06:00 Fri, 16 Oct, 2026
+                        - generic [ref=f54e7866]: "Terminal: Please check terminal information with airline"
+                      - paragraph [ref=f54e7868]: "Layover Duration: 1h 35m - Location: Athens"
+                  - generic [ref=f54e7871]:
+                    - generic [ref=f54e7872]:
+                      - img "airline-logo" [ref=f54e7874]
+                      - generic [ref=f54e7875]: Economy
+                      - generic [ref=f54e7878]: 
+                    - generic [ref=f54e7880]:
+                      - generic [ref=f54e7881]:
+                        - generic [ref=f54e7882]: Departure
+                        - generic [ref=f54e7883]: ATH
+                        - generic [ref=f54e7884]: Athens International Airport
+                        - generic [ref=f54e7885]: Athens
+                        - generic [ref=f54e7886]: 07:35 Fri, 16 Oct, 2026
+                        - generic [ref=f54e7887]: "Terminal: Please check terminal information with airline"
+                      - generic [ref=f54e7888]:
+                        - generic [ref=f54e7889]: "Segment Duration: 2h 0m"
+                        - generic [ref=f54e7897]: "Aircraft: 32Q, Airbus A321neo-LR-XLR Passenger"
+                      - generic [ref=f54e7898]:
+                        - generic [ref=f54e7899]: Arrival
+                        - generic [ref=f54e7900]: FCO
+                        - generic [ref=f54e7901]: Leonardo Da Vinci (Fiumicino)
+                        - generic [ref=f54e7902]: Rome
+                        - generic [ref=f54e7903]: 08:35 Fri, 16 Oct, 2026
+                        - generic [ref=f54e7904]: "Terminal: 1"
+          - generic [ref=f54e7907]:
+            - generic [ref=f54e7908]:
+              - generic [ref=f54e7909]: 
+              - generic [ref=f54e7910]: Passenger Details
+            - table [ref=f54e7915]:
+              - rowgroup [ref=f54e7916]:
+                - row [ref=f54e7917]:
+                  - columnheader "Passenger Name" [ref=f54e7918]
+                  - columnheader "Flight" [ref=f54e7919]
+                  - columnheader "Ticket Number" [ref=f54e7920]
+                  - columnheader "Meal" [ref=f54e7921]
+                  - columnheader "Seat" [ref=f54e7922]
+                  - columnheader "Bundle" [ref=f54e7923]
+                  - columnheader "Baggage Allowance" [ref=f54e7924]
+                  - columnheader "Frequent Flyer No." [ref=f54e7925]
+              - rowgroup [ref=f54e7926]:
+                - row [ref=f54e7927]:
+                  - cell "Mr Hosam Aegeanseven - Adult" [ref=f54e7928]
+                  - cell [ref=f54e7929]:
+                    - paragraph [ref=f54e7930]: A3 931
+                    - paragraph [ref=f54e7931]: A3 650
+                  - cell [ref=f54e7932]:
+                    - paragraph [ref=f54e7933]: "39057639619703"
+                  - cell "-" [ref=f54e7934]
+                  - cell "A3 931 - AvailablePaid - (Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat) (20B)" [ref=f54e7935]:
+                    - generic [ref=f54e7936]:
+                      - generic [ref=f54e7937]: A3 931
+                      - text: "- AvailablePaid - (Overwing seat(s), Center seat (not window, not aisle), Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors, Crew seat) (20B)"
+                  - cell "-" [ref=f54e7938]
+                  - 'cell "Check In : Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces / Cabin : Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)" [ref=f54e7939]'
+                  - cell "-" [ref=f54e7942]
+                - row [ref=f54e7943]:
+                  - cell "Ms Laila Aegeanseven - Child" [ref=f54e7944]
+                  - cell [ref=f54e7945]:
+                    - paragraph [ref=f54e7946]: A3 931
+                    - paragraph [ref=f54e7947]: A3 650
+                  - cell [ref=f54e7948]:
+                    - paragraph [ref=f54e7949]: "39057639619725"
+                  - cell "-" [ref=f54e7950]
+                  - cell "A3 931 - AvailablePaid - (Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors) (20C)" [ref=f54e7951]:
+                    - generic [ref=f54e7952]:
+                      - generic [ref=f54e7953]: A3 931
+                      - text: "- AvailablePaid - (Overwing seat(s), Aisle seat, Chargeable seat, Seat suitable for adult with an infant, Left side of aircraft, Seat suitable for unaccompanied minors) (20C)"
+                  - cell "-" [ref=f54e7954]
+                  - 'cell "Check In : Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces / Cabin :Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)" [ref=f54e7955]'
+                  - cell "-" [ref=f54e7958]
+                - row [ref=f54e7959]:
+                  - cell "Mr Omar Aegeanseven - Infant" [ref=f54e7960]
+                  - cell [ref=f54e7961]:
+                    - paragraph [ref=f54e7962]: A3 931
+                    - paragraph [ref=f54e7963]: A3 650
+                  - cell [ref=f54e7964]:
+                    - paragraph [ref=f54e7965]: "39057639619714"
+                  - cell "-" [ref=f54e7966]
+                  - cell "-" [ref=f54e7967]
+                  - cell "-" [ref=f54e7968]
+                  - 'cell "Check In : Type: Checked | Weight: 23 KGM | Description: CHECKED ALLOWANCE | Pieces: 0 Pieces / Cabin :Type: CarryOn | Weight: 8 KGM | Description: CARRYON HAND BAGGAGE ALLOWANCE | Pieces: 2 Piece(s)" [ref=f54e7969]'
+                  - cell "-" [ref=f54e7972]
+          - generic [ref=f54e7974]:
+            - generic [ref=f54e7975]:
+              - generic [ref=f54e7976]: 
+              - generic [ref=f54e7977]: Extra Baggage
+            - generic [ref=f54e7979]:
+              - heading " Hosam Aegeanseven" [level=4] [ref=f54e7980]:
+                - generic [ref=f54e7981]: 
+                - text: Hosam Aegeanseven
+              - generic [ref=f54e7982]:
+                - generic [ref=f54e7983]: CAI-FCO
+                - paragraph [ref=f54e7985]: EXTRA BAGGAGE; Surcharge EGP 1240.0
+          - generic [ref=f54e7988]:
+            - generic [ref=f54e7989]:
+              - generic [ref=f54e7990]: 
+              - generic [ref=f54e7991]: Fare Details
+            - generic [ref=f54e7992]:
+              - generic [ref=f54e7993]:
+                - generic [ref=f54e7994]: 
+                - generic [ref=f54e7996]:
+                  - generic [ref=f54e7997]: 1 Adult
+                  - generic [ref=f54e7998]: ", 1 Child"
+                  - generic [ref=f54e7999]: ", 1 Infant"
+                - generic [ref=f54e8001]:
+                  - text: CAI
+                  - generic [ref=f54e8002]: 
+                  - text: FCO
+              - generic [ref=f54e8003]:
+                - generic [ref=f54e8004]:
+                  - generic [ref=f54e8005]:
+                    - generic [ref=f54e8006]: 
+                    - generic [ref=f54e8007]: Base fare
+                  - generic [ref=f54e8008]: 32,854 EGP
+                - generic [ref=f54e8009]:
+                  - generic [ref=f54e8010]:
+                    - generic [ref=f54e8011]: 
+                    - generic [ref=f54e8012]: Taxes (+)
+                  - generic [ref=f54e8013]: 9,090.4 EGP
+                - generic [ref=f54e8014]:
+                  - generic [ref=f54e8015]:
+                    - generic [ref=f54e8016]: 
+                    - generic [ref=f54e8017]: Seat (+)
+                  - generic [ref=f54e8018]: 710 EGP
+                - generic [ref=f54e8019]:
+                  - generic [ref=f54e8020]:
+                    - generic [ref=f54e8021]: 
+                    - generic [ref=f54e8022]: Baggage (+)
+                  - generic [ref=f54e8023]: 1,240 EGP
+              - generic [ref=f54e8024]:
+                - generic [ref=f54e8025]:
+                  - generic [ref=f54e8026]: 
+                  - generic [ref=f54e8027]: Total Amount
+                - generic [ref=f54e8028]: 43,894.398 EGP
+          - generic [ref=f54e8031]:
+            - generic [ref=f54e8032]:
+              - generic [ref=f54e8033]: 
+              - generic [ref=f54e8034]: Terms & Conditions
+            - generic [ref=f54e8036]:
+              - generic [ref=f54e8037]:
+                - paragraph
+                - list [ref=f54e8038]:
+                  - listitem [ref=f54e8039]: "تنبيه هام من ⁦NDC⁩: جميع التذاكر بداية من جمهورية مصر العربية الى المملكة العربية السعودية لا تصلح للعمرة الا فى حالة استيفاء شروط وزارة السياحة المصرية و الحصول على البار كود و في حالة اصدار التذاكر لغرض العمرة من سيستم ⁦NDC⁩ دون التقييد بشروط وزارة السياحة تقع المسئولية على الشركة المصدرة او العميل المصدر للتذكرة دون ادني مسئولية على شركة وندر للسياحة"
+              - generic [ref=f54e8040]:
+                - paragraph [ref=f54e8041]: Check-in Time
+                - list [ref=f54e8042]:
+                  - listitem [ref=f54e8043]: Check-in counters open 3 hours prior to departure of flight and close 1 hour prior to departure of flight, you may be denied boarding if you fail to report on time.
+              - generic [ref=f54e8044]:
+                - paragraph [ref=f54e8045]: Ticketing & Reservation
+                - list [ref=f54e8046]:
+                  - listitem [ref=f54e8047]: Please Re-check the passenger name(s) as per the passport/identity proof, departure & arrival date, time, flight number, terminal, baggage details etc.
+                - list [ref=f54e8048]:
+                  - listitem [ref=f54e8049]: The local authorities in certain countries may impose additional taxes (VAT, tourist tax etc.), which generally has to be paid locally.
+                - list [ref=f54e8050]:
+                  - listitem [ref=f54e8051]: In case of International travel, please check your requirements for travel documentation like valid Passport/visa/Ok to Board/travel and medical insurance with the airline and relevant Embassy or Consulate before commencing your journey.
+                - list [ref=f54e8052]:
+                  - listitem [ref=f54e8053]: We are not responsible for any schedule change/flight cancellation by the airline before and after issuance of the tickets.
+                - list [ref=f54e8054]:
+                  - listitem [ref=f54e8055]: Wonder Travel will not be held responsible for any loss or damage to travelers and his/her belongings due to any accident, theft or other Mishap / Unforeseen circumstances).
+              - generic [ref=f54e8056]:
+                - paragraph [ref=f54e8057]: Amendment & Cancellation
+                - list [ref=f54e8058]:
+                  - listitem [ref=f54e8059]: For any amendments, cancellation or ancillary services for flights, you may connect with our (24 X 7) reservation team on Tel +20-1215484845 or email to Hussien.ata@tildetech.ae with a copy to your respective Wonder Travel Key account manager.
+                - list [ref=f54e8060]:
+                  - listitem [ref=f54e8061]: Any amendments of the booking will be as per the airline terms and conditions comprising of penalties, fare difference which may change upon subject to availability by the airline.
+                - list [ref=f54e8062]:
+                  - listitem [ref=f54e8063]: Any Cancellation/Refund of booking will be handled from case to case basis depending on the airline and agency terms and conditions.
+      - contentinfo [ref=f54e139]:
+        - contentinfo [ref=f54e141]:
+          - generic [ref=f54e142]:
+            - navigation "Footer navigation" [ref=f54e143]:
+              - link "About Us" [ref=f54e144] [cursor=pointer]:
+                - /url: /info/info-group/about
+              - link "Mission" [ref=f54e145] [cursor=pointer]:
+                - /url: /info/info-group/mission
+              - link "Vision" [ref=f54e146] [cursor=pointer]:
+                - /url: /info/info-group/vision
+              - link "Policy" [ref=f54e147] [cursor=pointer]:
+                - /url: /info/info-group/policy
+              - link "Contact Us" [ref=f54e148] [cursor=pointer]:
+                - /url: /info/info-group/contact
+            - generic [ref=f54e149]: Copyright © Wonder Travel 2026. All Rights Reserved.
+  - generic [ref=f54e152] [cursor=pointer]:
+    - emphasis [ref=f54e153]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

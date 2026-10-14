@@ -1,19 +1,17 @@
 {
   "schemaVersion": 1,
   "activeRun": {
-    "folderName": "run-009__2026-10-04_18-30-46__Targeted__Ancillaries-OmanAir-Admin",
-    "index": 9,
+    "folderName": "run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc",
+    "index": 11,
     "scope": "Targeted",
-    "target": "Ancillaries-OmanAir-Admin",
+    "target": "Ancillaries-AegeanNdc",
     "status": "Preparing",
     "title": null,
-    "startedTime": "2026-10-04T15:30:46.831Z",
-    "stagesPresent": [
-      "manual_execution"
-    ],
-    "path": "platform_core_data/runs/run-009__2026-10-04_18-30-46__Targeted__Ancillaries-OmanAir-Admin"
+    "startedTime": "2026-10-14T07:24:14.399Z",
+    "stagesPresent": [],
+    "path": "platform_core_data/runs/run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc"
   },
-  "switchedAt": "2026-10-05T13:11:47.744Z",
-  "setBy": "Run Manager",
-  "previousRun": "run-011__2026-10-05_15-54-30__Targeted__Ancillaries-AirSMCairo-Admin"
+  "switchedAt": "2026-10-14T07:24:14.399Z",
+  "setBy": "Hussien Ata",
+  "previousRun": "run-009__2026-10-04_18-30-46__Targeted__Ancillaries-OmanAir-Admin"
 }

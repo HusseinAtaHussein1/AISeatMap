@@ -1,0 +1,33 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: 
+      - heading "Multiple Tabs Detected" [level=1] [ref=e8]
+      - paragraph [ref=e9]: This application is already open in another tab or window.
+      - generic [ref=e10]:
+        - generic [ref=e11]: 
+        - generic [ref=e12]: For security and data integrity, only one active session is allowed at a time.
+      - generic [ref=e13]:
+        - heading "What you can do:" [level=3] [ref=e14]
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - generic [ref=e17]: 
+            - text: Close this tab and return to your active session
+          - listitem [ref=e18]:
+            - generic [ref=e19]: 
+            - text: Close all other tabs and refresh this page
+          - listitem [ref=e20]:
+            - generic [ref=e21]: 
+            - text: Contact support if you continue experiencing issues
+      - button " Retry" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]: 
+        - generic [ref=e24]: Retry
+    - generic [ref=e25]:
+      - generic [ref=e26]: 
+      - generic [ref=e27]: Session Protection Enabled
+  - generic [ref=e30] [cursor=pointer]:
+    - emphasis [ref=e31]: 
+    - text:  
+  - generic:
+    - generic:
+      - iframe

@@ -1,0 +1,94 @@
+- generic [ref=f94e4]:
+  - generic [ref=f94e5]:
+    - text:          
+    - generic [ref=f94e7]:
+      - text:  
+      - button [ref=f94e8] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f94e9]: 
+  - generic [ref=f94e10]:
+    - generic [ref=f94e11]:
+      - banner [ref=f94e13]:
+        - generic [ref=f94e14]:
+          - img "Logo" [ref=f94e17] [cursor=pointer]
+          - generic [ref=f94e18]:
+            - generic [ref=f94e19]:
+              - generic [ref=f94e20]:
+                - generic [ref=f94e21]: 
+                - generic [ref=f94e22]: Hussien.ata@tildetech.ae
+              - generic [ref=f94e23]: "|"
+              - generic [ref=f94e24]:
+                - generic [ref=f94e25]: 
+                - generic [ref=f94e26]: +20-1215484845
+            - generic [ref=f94e27]:
+              - button "Take a tour" [ref=f94e29] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f94e30]: 
+              - button "Top Up Wallet" [ref=f94e31] [cursor=pointer]:
+                - generic [ref=f94e32]: 
+              - button "Settings" [ref=f94e33] [cursor=pointer]:
+                - generic [ref=f94e34]: 
+            - generic [ref=f94e36]:
+              - button "Welcome Hussien " [ref=f94e37] [cursor=pointer]:
+                - generic [ref=f94e38]:
+                  - generic [ref=f94e39]: Welcome
+                  - generic [ref=f94e40]:
+                    - text: Hussien
+                    - generic [ref=f94e41]: 
+              - button "Profile menu" [ref=f94e42] [cursor=pointer]:
+                - img "Hussien profile" [ref=f94e45]
+      - generic [ref=f94e51]:
+        - generic [ref=f94e54]:
+          - link "Book Flight" [ref=f94e55] [cursor=pointer]:
+            - /url: /booking/flight-search
+          - generic [ref=f94e58]:
+            - generic [ref=f94e59]:
+              - generic [ref=f94e60]: 
+              - generic [ref=f94e62]:
+                - generic [ref=f94e63]: "2"
+                - generic [ref=f94e64]: Total Flights
+            - generic [ref=f94e66]:
+              - generic [ref=f94e67]: 
+              - generic [ref=f94e69]:
+                - generic [ref=f94e70]: "0"
+                - generic [ref=f94e71]: Pending
+            - generic [ref=f94e73]:
+              - generic [ref=f94e74]: 
+              - generic [ref=f94e76]:
+                - generic [ref=f94e77]: "2"
+                - generic [ref=f94e78]: Ticketed
+            - generic [ref=f94e82] [cursor=pointer]:
+              - generic [ref=f94e83]:
+                - combobox
+              - generic [ref=f94e84]: Today
+              - button "dropdown trigger" [ref=f94e85]:
+                - generic [ref=f94e86]: 
+        - generic [ref=f94e87]:
+          - generic [ref=f94e89]:
+            - generic [ref=f94e90]:
+              - heading "My To Do List" [level=5] [ref=f94e91]
+              - button "Add task" [ref=f94e96] [cursor=pointer]:
+                - generic [ref=f94e97]: 
+            - generic [ref=f94e99]:
+              - generic [ref=f94e100]: 📝
+              - paragraph [ref=f94e101]: No tasks yet. Click + to add one.
+          - generic [ref=f94e103]:
+            - heading " Promotions" [level=5] [ref=f94e105]:
+              - generic [ref=f94e106]: 
+              - generic [ref=f94e108]: Promotions
+            - generic [ref=f94e110]:
+              - generic [ref=f94e111]: 
+              - generic [ref=f94e112]: No promotions available
+    - contentinfo [ref=f94e113]:
+      - contentinfo [ref=f94e115]:
+        - generic [ref=f94e116]:
+          - navigation "Footer navigation" [ref=f94e117]:
+            - link "About Us" [ref=f94e118] [cursor=pointer]:
+              - /url: /info/info-group/about
+            - link "Mission" [ref=f94e119] [cursor=pointer]:
+              - /url: /info/info-group/mission
+            - link "Vision" [ref=f94e120] [cursor=pointer]:
+              - /url: /info/info-group/vision
+            - link "Policy" [ref=f94e121] [cursor=pointer]:
+              - /url: /info/info-group/policy
+            - link "Contact Us" [ref=f94e122] [cursor=pointer]:
+              - /url: /info/info-group/contact
+          - generic [ref=f94e123]: Copyright © Wonder Travel 2026. All Rights Reserved.

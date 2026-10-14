@@ -1,0 +1,2187 @@
+{
+ "title": "Manual QA Report - Ancillaries / AegeanNdc (run-011)",
+ "documentTitle": "Manual QA Report run-011",
+ "statusPill": "PENDING REVIEW",
+ "statusPillTone": "warning",
+ "statuses": [
+  {
+   "key": "Passed",
+   "label": "Passed",
+   "tone": "pass"
+  },
+  {
+   "key": "Failed",
+   "label": "Failed",
+   "tone": "fail"
+  },
+  {
+   "key": "Blocked",
+   "label": "Blocked",
+   "tone": "blocked"
+  },
+  {
+   "key": "Skipped",
+   "label": "Skipped",
+   "tone": "warning"
+  },
+  {
+   "key": "Not Executed",
+   "label": "Not Executed",
+   "tone": "neutral"
+  },
+  {
+   "key": "Inconclusive",
+   "label": "Inconclusive",
+   "tone": "accent"
+  },
+  {
+   "key": "Excluded",
+   "label": "Excluded",
+   "tone": "neutral"
+  }
+ ],
+ "meta": {
+  "fields": [
+   [
+    {
+     "label": "Run",
+     "value": "run-011__2026-10-14_10-24-14__Targeted__Ancillaries-AegeanNdc",
+     "mono": true
+    },
+    {
+     "label": "Environment",
+     "value": "Staging (Admin + Portal)"
+    }
+   ],
+   [
+    {
+     "label": "Supplier",
+     "value": "AegeanNdc / AegeanNDCProd"
+    },
+    {
+     "label": "Browser",
+     "value": "Chrome, headed"
+    }
+   ]
+  ],
+  "runFields": [
+   [
+    {
+     "label": "Date",
+     "value": "2026-10-14"
+    },
+    {
+     "label": "Pass rate",
+     "value": "69 of 95 (executable scope)"
+    }
+   ]
+  ]
+ },
+ "summary": {
+  "title": "1. Outcome Figures",
+  "total": 124,
+  "totalLabel": "Suite Total",
+  "donut": {
+   "focus": "Passed",
+   "label": "pass rate (executable scope)"
+  }
+ },
+ "testCases": {
+  "title": "Test case results (all 124, including Skipped and Excluded)",
+  "searchPlaceholder": "Search by ID or title...",
+  "categories": [
+   {
+    "key": "g0",
+    "name": "A. Getting to the seat map",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-NAV-001",
+      "title": "You can only pick seats on step 2",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Step names are '01 Passenger Info' and '02 Ancillaries'. The first is not called '...and Bundles' because this supplier has no bundles. No Select Seat control before step 2."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/03-step1-empty-NAV-001-BND-006.png"
+      }
+     },
+     {
+      "id": "TC-SM-NAV-002",
+      "title": "You cannot reach the seats without choosing a fare package",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Precondition not met: AegeanNdc has no fare packages (Bundle = Not Supported), so there is no package to leave unchosen. Next moves on without any bundle message."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/03-step1-empty-NAV-001-BND-006.png"
+      }
+     },
+     {
+      "id": "TC-SM-NAV-002b",
+      "title": "Missing passenger details and a missing fare package are both reported",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Part 1 observed: empty step 1 shows 'Required' under 27 empty boxes and step 2 stays Upcoming. Part 2 (bundle message) does not apply to this supplier."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/04-NAV-002b-empty-next.png"
+      }
+     },
+     {
+      "id": "TC-SM-NAV-003",
+      "title": "'Select Seat' opens the seat map",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Map opens full screen titled 'Seat Map CAI -> ATH Onward - Leg 1'. Left panel, chart, colour key and bottom button are all there."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-NAV-005",
+      "title": "You can skip seats completely",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "'Continue without seats' closes the map, gives nobody a seat and leaves the price unchanged (38,634.6). Booking can still be finished."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/46-NAV-005-leg2-nothing-chosen.png\nmanual_execution/artifacts/portal/47-NAV-005-after-continue-without-seats.png"
+      }
+     },
+     {
+      "id": "TC-SM-NAV-006",
+      "title": "A supplier with no seat selection shows no seat option",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Only for suppliers without Seat — this supplier supports it"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g1",
+    "name": "B. How the map is drawn",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-RND-001",
+      "title": "The seat total matches the seats you can see",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Panel shows 198 seats and 198 seat buttons are drawn (both legs)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-RND-002",
+      "title": "Every seat has one clear state and one seat number",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "196 available + 2 Blocked = 198; no duplicate seat number; each label matches its row and letter. Seats 27A/27F read \"No seat at this location\" yet are drawn and counted."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-RND-003",
+      "title": "Every seat has a full description",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Every seat description holds seat, row, side, section, features and ends 'available for EGP x' / 'Blocked'. The section name is a raw code (COMP01001fecf449c)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-RND-005",
+      "title": "Cabin and section information agrees with the map",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Colour key names one cabin (Economy) and every seat is Economy. One section, one deck."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-RND-006",
+      "title": "The flight shown on the map is the flight you chose",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "A3931 / 32Q A321neo-LR-XLR, CAI 04:00 to ATH 06:00 on 16 Oct matches the selected flight."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-RND-007",
+      "title": "Two different flights give two different maps",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Precondition not met: every CAI-FCO offer uses the same aircraft type (32Q A321neo), so no second aircraft type exists."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-RND-010",
+      "title": "Each flight in a trip gets its own map",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Each flight (leg) has its own map with its own title and aircraft on round trip and multi-city."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/30-RND-010-MPX-006-leg2-map.png\nmanual_execution/artifacts/portal/58-RTP-001-map-1.png\nmanual_execution/artifacts/portal/58-RTP-001-map-2.png\nmanual_execution/artifacts/portal/58-RTP-001-map-3.png\nmanual_execution/artifacts/portal/58-RTP-001-map-4.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g2",
+    "name": "C. Seat colours and labels",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-STA-002",
+      "title": "A taken seat can be looked at but not booked",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Taken seat 16B (leg 2): box says 'Occupied' / 'Seat 16B is occupied.', button disabled 'Seat unavailable', no error, count unchanged. Wording differs from the suite ('Blocked') - flynas wording."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/34-STA-002-occupied-16B.png"
+      }
+     },
+     {
+      "id": "TC-SM-STA-004",
+      "title": "Seat features use known wording",
+      "status": "Inconclusive",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Suite lists six feature words. The map sends 19 more (for example Pet cabin, Crew seat, Deportee, Overwing seat(s), Seat not allowed for infant). The list in the suite was written from flynas, so this is a documentation gap, not an application defect."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-STA-005",
+      "title": "Window and aisle labels match where the seat really is",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "No window/aisle mismatch across 33 rows of a 3-3 layout (A/F window, C/D aisle, B/E middle)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-STA-006",
+      "title": "Emergency exit seats are marked",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Exit rows 17, 18 and 28: all six seats side by side, all 'Leg space seat'. Also marked 'Seat not allowed for infant/child/UMNR/medical'."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+      }
+     },
+     {
+      "id": "TC-SM-STA-007",
+      "title": "Women-only seats are marked clearly",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"ladies-only-seats\" does not apply to this supplier"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g3",
+    "name": "D. Choosing a seat",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-SEL-001",
+      "title": "One click only shows the seat - it does not book it",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Click on 10A opens the info box; count stays 0 / 2 and the bottom button stays Continue without seats."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/18-SEL-001-click-10A-info-box.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-002",
+      "title": "A seat is only taken when you press the button in the box",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Button reads 'Book 10A for Nadia'. After pressing: 1 / 2, card shows 10A Economy EGP 650, seat changes to 'selected for Nadia'."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/19-SEL-002-10A-booked-for-Nadia.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-003",
+      "title": "The seat information box is correct",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Box shows state, seat number, price, cabin, row position ('Row 10 - 6th of 33 rows') and features; all agree with the seat description."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/18-SEL-001-click-10A-info-box.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-006",
+      "title": "The bottom button changes as seats are chosen",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Button goes 'Continue without seats' -> 'Confirm 1 of 2 seats' -> 'Confirm 2 seats' with 'Clear all seats' next to it. Infant not counted. Cards show Active/Select/Selected/Assigned."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/19-SEL-002-10A-booked-for-Nadia.png\nmanual_execution/artifacts/portal/25-MPX-002-SEL-006-two-seats.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-007",
+      "title": "Moving a passenger to another seat frees the first seat",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Moving Nadia from 10A to 17A freed 10A; count stayed 1 / 2."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/23-EXR-002-17A-booked-for-adult-with-infant.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-008",
+      "title": "'Clear all seats' also removes the seat charge",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Clear all seats: 0 / 2, seats free, 'Continue without seats', 'No seat charges Free'. Price-breakdown part observed on step 2 after confirm (seat line gone when no paid seat)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/26-SEL-008-cleared.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-009",
+      "title": "Confirming saves the seat and closes the map",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Confirm closes the map. Step 2 shows 'Selected seats 2 travellers' with name / seat / price, the button reads 'Change Seats', and 'Seat Selection + 1,300 EGP' is in the breakdown."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/27-SEL-009-confirmed-step2.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-010",
+      "title": "'Change Seats' reopens the map with your choice still there",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "'Change Seats' reopens the map with 10A/10B still chosen and the count 2 / 2."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/28-SEL-010-change-seats-reopened.png"
+      }
+     },
+     {
+      "id": "TC-SM-SEL-012",
+      "title": "A seat held by another passenger in your booking is marked",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Seat held by another passenger shows 'Selected for Nadia', names the holder, button disabled 'Assigned to another passenger'."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/20-MPX-004-SEL-012-10A-as-child.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g4",
+    "name": "E. More than one passenger or flight",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-MPX-002",
+      "title": "The seat goes to the passenger who is selected",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Seat goes to the selected passenger ('Book 10B for Omar'); the first passenger keeps theirs; count 2 / 2."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/25-MPX-002-SEL-006-two-seats.png"
+      }
+     },
+     {
+      "id": "TC-SM-MPX-004",
+      "title": "Two passengers cannot have the same seat",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Second passenger cannot take a seat held by the first; the holder is named."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/20-MPX-004-SEL-012-10A-as-child.png"
+      }
+     },
+     {
+      "id": "TC-SM-MPX-006",
+      "title": "Seats on one flight do not affect the other flight",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Leg 2 map opens empty; choosing a leg-2 seat does not change leg 1; the summary lists each leg separately. Run on connecting legs and a round trip."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/30-RND-010-MPX-006-leg2-map.png\nmanual_execution/artifacts/portal/31-MPX-006-MPX-007-leg2-one-seat-confirmed.png\nmanual_execution/artifacts/portal/59-RTP-004-leg2-independent.png"
+      }
+     },
+     {
+      "id": "TC-SM-MPX-007",
+      "title": "Some passengers can have seats and others none",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Confirming 'Seat 1 more' with 1 of 2 chosen is allowed; summary lists the one seated passenger; booking could still be finished."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/31-MPX-006-MPX-007-leg2-one-seat-confirmed.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g5",
+    "name": "F. Prices",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-PRC-001",
+      "title": "A seat included in the fare package costs nothing",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-PRC-002",
+      "title": "A seat marked 'Chargeable seat' must always have a price",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "On leg 2 of A3650, all 107 seats marked Chargeable seat are offered Free. Seat 19A booked at EGP 0. Leg 1 is correct. No Plus/Value packages here."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/32-PRC-002-19A-chargeable-free.png\nmanual_execution/artifacts/portal/33-PRC-002-19A-free-confirmed-total-unchanged.png\nmanual_execution/artifacts/portal/33-PRC-002-19A-free-confirmed-total.png"
+      }
+     },
+     {
+      "id": "TC-SM-PRC-003",
+      "title": "A paid seat is added as its own line in the price",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "'Seat Selection' is its own line (+1,300). Net payable rose from 40,635.4 to 41,935.4, exactly the seat price."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/27-SEL-009-confirmed-step2.png"
+      }
+     },
+     {
+      "id": "TC-SM-PRC-003b",
+      "title": "One aircraft can have several seat prices at once",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "One aircraft carries Free, EGP 827 and EGP 1,004 (leg 2) and EGP 355/650/886 (leg 1). Section header 'Free - EGP 1,004' matches."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/30-RND-010-MPX-006-leg2-map.png"
+      }
+     },
+     {
+      "id": "TC-SM-PRC-004",
+      "title": "The price breakdown adds up",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Base 28,003 + tax 9,090.4 + extras 4,842 (seat 1,300 + bag 3,542) = 41,935.4 net payable. Sums agree."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/27-SEL-009-confirmed-step2.png"
+      }
+     },
+     {
+      "id": "TC-SM-PRC-005",
+      "title": "Seat map and ancillary prices use the right exchange rate",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Precondition not met: credential AegeanNDCProd has currency Egyptian Pound, so there is no exchange rate to check. Case needs a non-EGP credential."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/admin/PRC-005-credential-AegeanNDCProd.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g6",
+    "name": "G. Fare packages",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-BND-002",
+      "title": "Changing the fare package recalculates the seats",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-BND-003",
+      "title": "Each flight uses its own fare package",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-BND-004",
+      "title": "Fare package names are never blank or repeated",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-BND-005",
+      "title": "What the package promises about seats is what you get",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-BND-006",
+      "title": "A supplier with no fare packages shows no package step",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "No 'Select Bundle' choice and no bundle line in the price; step 2 can be reached without one."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/03-step1-empty-NAV-001-BND-006.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g7",
+    "name": "H. Women-only seats",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-GEN-001",
+      "title": "A women-only seat is refused to a male passenger",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"ladies-only-seats\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-GEN-002",
+      "title": "A women-only seat is offered to a female passenger",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"ladies-only-seats\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-GEN-002b",
+      "title": "The hidden seat data matches what is shown on screen",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"ladies-only-seats\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-GEN-003",
+      "title": "Gender comes from the title and cannot be edited",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Gender is disabled; Mr gives Male, Ms gives Female."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/05-GEN-003-Ms-Female-disabled.png"
+      }
+     },
+     {
+      "id": "TC-SM-GEN-004",
+      "title": "Each passenger sees their own seats in a mixed group",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"ladies-only-seats\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-GEN-005",
+      "title": "Female titles are 'Ms' and 'Mrs', for children as well as adults",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"ladies-only-seats\" does not apply to this supplier"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g8",
+    "name": "I. Keeping the choice",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-PER-001",
+      "title": "Seats survive going back a step",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "After Prev then Next, both legs' seats, Change Seats buttons, the bag and the total (41,935.4) were all still there."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/36-PER-001-CNF-018-after-prev-next.png"
+      }
+     },
+     {
+      "id": "TC-SM-PER-002",
+      "title": "Seats, meals and bags all work together",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Meal — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-PER-004",
+      "title": "What happens when the time limit runs out",
+      "status": "Not Executed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Skipped by operator instruction (needs about 20 minutes of waiting). Related finding: the booking link expires after 20 minutes while the screen shows 60 (see TC-SM-NEG-006)."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-PER-007",
+      "title": "The seat appears on the payment summary",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Net payable and breakdown include the seat and the bag. 'Book' was not pressed."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/35-PER-007-payment-summary-before-prev.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g9",
+    "name": "J. Errors and clashes",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-NEG-003",
+      "title": "Clicking quickly does not book two seats",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Five quick presses of Book 11A moved the passenger once; count stayed 2 / 2; total 1,300."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/29-NEG-003-rapid-book-11A.png"
+      }
+     },
+     {
+      "id": "TC-SM-NEG-004",
+      "title": "Two agents choosing the same seat at the same time",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Rejected at Review"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-NEG-006",
+      "title": "Opening the booking page with a broken or missing link",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Expired link: page 'No Data Found' (HTTP 400), not the flight search. Altered link: same. Missing link: sent to login and the session was ended. No map or prices shown, no technical error page."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/38-CNF-018-next-silent-400-stuck-step1.png\nmanual_execution/artifacts/portal/40-NEG-006-expired-token-reload.png\nmanual_execution/artifacts/portal/41-NEG-006-missing-token.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g10",
+    "name": "K. Small screens and screen readers",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-A11Y-001",
+      "title": "The seat map works on a smaller screen",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "At 420 px wide the page does not slide sideways, the chart scrolls on its own, and last-row seat 38F was booked. Note: the chat bubble covers the bottom buttons."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/48-A11Y-001-narrow-map-open.png\nmanual_execution/artifacts/portal/49-A11Y-001-narrow-38F-details.png\nmanual_execution/artifacts/portal/50-A11Y-001-narrow-38F-booked.png"
+      }
+     },
+     {
+      "id": "TC-SM-A11Y-002",
+      "title": "Seat states can be read by screen readers",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Every seat is a button with a label saying available / Blocked / Occupied / selected for <name>; the book button names seat and passenger."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/18-SEL-001-click-10A-info-box.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g11",
+    "name": "L. Economy and Business",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-CAB-001",
+      "title": "The same flight gives a different map in each cabin",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"business-cabin\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-CAB-002",
+      "title": "The fare package decides WHICH seats are offered, not only their price",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier; Supplier rule \"business-cabin\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-CAB-003",
+      "title": "'Not offered' sections can be told apart from single taken seats",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"business-cabin\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-CAB-004",
+      "title": "The Business row has its middle seats blocked",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"business-cabin\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-CAB-005",
+      "title": "Packages, meals and bags change with the cabin",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier; Needs Meal — Not Supported by this supplier; Supplier rule \"business-cabin\" does not apply to this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-CAB-007",
+      "title": "A two-cabin aircraft shows both cabins properly",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Supplier rule \"business-cabin\" does not apply to this supplier"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g12",
+    "name": "M. Adults, children and infants",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-PAX-001",
+      "title": "Infants get no seat and no extras; children get both",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "With 1 adult + 1 child + 1 infant: extras for adult and child only, infant has no panel, count 0 / 2, summary 2 travellers."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/12-step2-ancillaries.png\nmanual_execution/artifacts/portal/27-SEL-009-confirmed-step2.png"
+      }
+     },
+     {
+      "id": "TC-SM-PAX-003",
+      "title": "An infant must be linked to an adult",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "'Assigned to' appears only on the infant and lists only adults."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/07-PAX-003-assigned-to-options.png"
+      }
+     },
+     {
+      "id": "TC-SM-PAX-004",
+      "title": "The map moves on to the next passenger automatically",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "After the adult booked, the child became Active automatically; adult card shows Assigned when not active."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/19-SEL-002-10A-booked-for-Nadia.png"
+      }
+     },
+     {
+      "id": "TC-SM-PAX-006",
+      "title": "Each passenger type is priced separately",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Fare and tax listed per type (adult 16,472 + 3,413.8; child 9,883 + 3,413.8; infant 1,648 + 2,262.8). Infant baggage text is not \"Check with Airline\" (flynas wording)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/03-step1-empty-NAV-001-BND-006.png"
+      }
+     },
+     {
+      "id": "TC-SM-PAX-007",
+      "title": "Closed passenger sections still report missing information",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Closed section hides its boxes, and Expand All / Collapse All work. But several sections can be open at once, and Next with a closed incomplete passenger shows no message."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/08-PAX-007-adult-collapsed-after-typing.png\nmanual_execution/artifacts/portal/09-PAX-007-adult-section-state.png\nmanual_execution/artifacts/portal/10-PAX-007-adult-and-child-open.png\nmanual_execution/artifacts/portal/11-PAX-007-next-with-closed-incomplete-infant.png"
+      }
+     },
+     {
+      "id": "TC-SM-PAX-008",
+      "title": "Two infant-holding adults cannot sit in the same set of seats",
+      "status": "Inconclusive",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Two infant-holding adults: 12A (Rana) then 12B (Tarek) in the same ABC set were both offered, booked and confirmed with no warning. The suite records this as 'Pass by decision' because the airline enforces it at booking. Cannot be checked without a real booking."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/55-PAX-008-12B-offered-to-2nd-infant-holder.png\nmanual_execution/artifacts/portal/56-PAX-008-12A-12B-both-infant-holders-confirmed.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g13",
+    "name": "N. Price change before booking",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-FRC-001",
+      "title": "A changed price is shown before the booking screen",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Precondition not met: no 'Price Update' pop-up appeared in five searches, including two with an infant. Tester note says it only happens with flynas."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-FRC-002",
+      "title": "Accepting the new price carries it forward",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Needs the Price Update pop-up (not seen). See TC-SM-FRC-001."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-FRC-003",
+      "title": "Cancelling leaves nothing behind",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Needs the Price Update pop-up (not seen). See TC-SM-FRC-001."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-FRC-005",
+      "title": "Every later total uses the accepted price",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Needs a price change to have been accepted (none happened). See TC-SM-FRC-001."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g14",
+    "name": "O. System problems",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-ERR-001",
+      "title": "A server failure must not look like 'No Flights Found'",
+      "status": "Not Executed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Needs a server failure on demand. None happened in eight searches. Not forced."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-ERR-002",
+      "title": "The session ending in the middle of a booking",
+      "status": "Not Executed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Skipped by operator instruction (needs 10-12 minutes idle)."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-ERR-004",
+      "title": "Typing in one dropdown must not affect another",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Child Nationality list opened unfiltered (258 options) after the adult list was filtered with \"egy\"."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/06-ERR-004-child-nationality-opened.png"
+      }
+     },
+     {
+      "id": "TC-SM-ERR-005",
+      "title": "Each offer says which airline connection it came from",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Every result card names its connection: 'AegeanNDCProd'."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/02-results-CAI-FCO-16Oct.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g15",
+    "name": "P. Emergency exit seats",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-EXR-001",
+      "title": "An adult travelling alone CAN take an exit seat",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Adult with no infant booked exit seat 18C ('Book 18C for Karim')."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/45-EXR-001-EXR-003-adult-books-exit-18C.png"
+      }
+     },
+     {
+      "id": "TC-SM-EXR-002",
+      "title": "An adult with an infant CANNOT take an exit seat",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Adult linked to an infant was offered exit seats 17A and 28A and could book 17A. The seat description itself says Seat not allowed for infant."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/22-EXR-002-adult-with-infant-exit-17A.png\nmanual_execution/artifacts/portal/23-EXR-002-17A-booked-for-adult-with-infant.png\nmanual_execution/artifacts/portal/24-EXR-002-repeat-28A-offered-to-adult-with-infant.png"
+      }
+     },
+     {
+      "id": "TC-SM-EXR-003",
+      "title": "A child CANNOT take an exit seat",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Child is refused exit seats (17A, 18C). The adult can book the same seat."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/21-EXR-003-child-exit-17A.png\nmanual_execution/artifacts/portal/44-EXR-004-child-exit-18C.png\nmanual_execution/artifacts/portal/45-EXR-001-EXR-003-adult-books-exit-18C.png"
+      }
+     },
+     {
+      "id": "TC-SM-EXR-004",
+      "title": "The rule is rechecked when you switch passenger",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Same seat 18C: bookable for the adult, 'Not offered' and disabled for the child."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/43-EXR-004-adult-exit-18C.png\nmanual_execution/artifacts/portal/44-EXR-004-child-exit-18C.png"
+      }
+     },
+     {
+      "id": "TC-SM-EXR-005",
+      "title": "The rule follows the infant's linked adult",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "With the infant linked to adult A, 18C was bookable for A and B. After relinking to B it was still bookable for both. The refusal does not follow the Assigned-to link."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/51-EXR-005-A-with-infant-18C.png\nmanual_execution/artifacts/portal/52-EXR-005-B-no-infant-18C.png\nmanual_execution/artifacts/portal/53-EXR-005-after-relink-A-18C.png\nmanual_execution/artifacts/portal/54-EXR-005-after-relink-B-18C.png"
+      }
+     },
+     {
+      "id": "TC-SM-EXR-007",
+      "title": "An exit seat already taken is dealt with when an infant is added later",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Rejected at Review"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g16",
+    "name": "S. Seat map on return and multi-city trips",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-RTP-001",
+      "title": "A return trip gives one seat map per journey",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Round trip gives four maps (Onward Leg 1/2, Return Leg 1/2), each with its own title and aircraft."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/57-RTP-001-roundtrip-step2-select-seat-disabled.png\nmanual_execution/artifacts/portal/58-RTP-001-map-1.png\nmanual_execution/artifacts/portal/58-RTP-001-map-2.png\nmanual_execution/artifacts/portal/58-RTP-001-map-3.png\nmanual_execution/artifacts/portal/58-RTP-001-map-4.png"
+      }
+     },
+     {
+      "id": "TC-SM-RTP-003",
+      "title": "Each journey's fare package sets that journey's seat prices",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Bundle — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-RTP-004",
+      "title": "Seat maps are completely separate per journey",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Seat 20A on Onward Leg 1; Leg 2 opened empty on its own aircraft and 20A was still offered. Only leg 1 changed button."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/59-RTP-004-leg2-independent.png"
+      }
+     },
+     {
+      "id": "TC-SM-MCT-003",
+      "title": "Three journeys give three seat maps and three sets of ancillaries",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Multi-city (2 trips, 4 flights): four seat maps titled Trip 1/2 Leg 1/2 and two baggage selectors. No meals."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/60-MCT-003-multicity-step2.png"
+      }
+     },
+     {
+      "id": "TC-SM-MCT-004",
+      "title": "A seat booked on one flight never appears against another",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Seats 886 / 827 / 768 / 886 EGP appear each against its own flight in the step-2 summary. Confirmation page (Booking 2) shows the four seats each against its own flight, total 41,548.801."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/61-MCT-004-RTP-005-four-seats-summary.png\nmanual_execution/artifacts/portal/83-BOOKING2-confirmation.png"
+      }
+     },
+     {
+      "id": "TC-SM-MCT-007",
+      "title": "Seat maps follow FLIGHTS, fare packages follow JOURNEYS",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Seat maps follow flights (4), baggage selectors follow journeys (2). No fare packages or meals for this supplier."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/60-MCT-003-multicity-step2.png"
+      }
+     },
+     {
+      "id": "TC-SM-MCT-005",
+      "title": "Seats and ancillaries survive to the confirmation page per flight",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Real multi-city booking (1 adult, CAI-FCO + FCO-CAI), Trip AGN9748HUSNDCORD26101433BRIN. Confirmation lists the four seats (21A/21B/22A/22B) each against its own flight (A3 931/650/655/930) and one extra bag per journey (2 x 2,480)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/83-BOOKING2-confirmation.png\nmanual_execution/artifacts/portal/84-BOOKING2-my-bookings-list.png"
+      }
+     },
+     {
+      "id": "TC-SM-MCT-006",
+      "title": "Extra baggage should say which flight it belongs to",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "One baggage selector per journey, each labelled with its Trip and route."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/60-MCT-003-multicity-step2.png"
+      }
+     },
+     {
+      "id": "TC-SM-RTP-005",
+      "title": "Seat and ancillary charges should be identifiable per journey",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "One base-fare line, one seat line (+3,367) and one tax line cover both journeys. The total is right but charges cannot be told apart per journey."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/61-MCT-004-RTP-005-four-seats-summary.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g17",
+    "name": "Q. Completing the booking (SPENDS REAL MONEY)",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-SM-CNF-001",
+      "title": "The confirmation total equals what was quoted",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Quote 43,894.4 equals confirmation 43,894.398 (both round to 43,895). Multi-city booking too: quote 41,548.8 = confirmation 41,548.801."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/70-BOOKING1-before-book-quote.png\nmanual_execution/artifacts/portal/71-BOOKING1-confirmation.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-002",
+      "title": "Every price line survives the booking unchanged",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Base 32,854, taxes 9,090.4, seats 710 and bag 1,240 are identical on the confirmation, e-ticket and order page."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/71-BOOKING1-confirmation.png\nmanual_execution/artifacts/portal/72-BOOKING1-eticket.png\nmanual_execution/artifacts/portal/75-CNF-012-order-details.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-003",
+      "title": "Every ancillary reaches the confirmation with its own price",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Bag 1,240 and seats 710 appear as their own lines (no meal or bundle exists for this supplier)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/71-BOOKING1-confirmation.png\nmanual_execution/artifacts/portal/72-BOOKING1-eticket.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-004",
+      "title": "Seats carry through to the right passenger with the right price",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Seats 20B (adult) and 20C (child) on A3 931 shown on the confirmation and e-ticket."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/71-BOOKING1-confirmation.png\nmanual_execution/artifacts/portal/72-BOOKING1-eticket.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-007",
+      "title": "Infants appear as passengers but carry no seat or ancillaries",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Infant shows '-' for seat and meal and has its own ticket number (...714). No booked-seat counter was seen for the infant."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/71-BOOKING1-confirmation.png\nmanual_execution/artifacts/portal/72-BOOKING1-eticket.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-008",
+      "title": "The e-ticket and the confirmation page agree exactly",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "E-ticket content equals the confirmation page."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/71-BOOKING1-confirmation.png\nmanual_execution/artifacts/portal/72-BOOKING1-eticket.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-010",
+      "title": "The wallet is reduced by exactly the booking amount",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Wallet 5,000,000 -> 4,956,105.6: debit exactly 43,894.4. Booking 2: 4,956,105.6 -> 4,914,556.7 (debit 41,548.9 vs total 41,548.801; 0.1 rounding, observation only)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/73-CNF-010-wallet-after.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-011",
+      "title": "The Costing tab adds up and is the figure to trust",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Costing tab: 22,739.80 + 15,008.80 + 4,195.80 + SSR 1,950 = 43,894.40; booking = sales = net."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/76-CNF-011-costing-tab.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-012",
+      "title": "The order page itemises every ancillary and reconciles",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Order page Fare and Costing itemise bag and seats. List total 41,944.40 is the fare only (base + tax), by design."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/74-CNF-012-my-bookings-list.png\nmanual_execution/artifacts/portal/75-CNF-012-order-details.png\nmanual_execution/artifacts/portal/84-BOOKING2-my-bookings-list.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-015",
+      "title": "Walking away before 'Book' creates nothing - THE SAFE TEST",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "No 'Book' was pressed. My Bookings (14 Sep to 14 Oct 2026) shows 'No data has been found!' and the wallet is unchanged at 5,000,000 EGP."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/42-CNF-015-my-bookings.png"
+      }
+     },
+     {
+      "id": "TC-SM-CNF-016",
+      "title": "Extra baggage must not clash with the baggage already in the fare package",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Baggage options show no weight, so a baggage-and-seat clash cannot be built to test this rule. No further booking was made."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-CNF-017",
+      "title": "A failed booking must be reported as failed everywhere",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Baggage options show no weight, so a clash cannot be built. No further booking was made."
+       }
+      ]
+     },
+     {
+      "id": "TC-SM-CNF-018",
+      "title": "Going back a step must not silently throw away seats and ancillaries",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Editing a passenger's document number on step 1, then Next: Net Payable fell from 41,935.4 to 37,093.4 - all seats and the bag were dropped with no warning. Known fault reproduced."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/37-CNF-018-after-editing-child-doc.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g18",
+    "name": "T. Meals",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-ML-001",
+      "title": "Meals are offered per passenger and per flight",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Meal — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-ML-002",
+      "title": "An infant is not offered a meal",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Meal — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-ML-003",
+      "title": "Choosing and removing a meal changes the price correctly",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Meal — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-ML-004",
+      "title": "The meal list is separate from what the bundle includes",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Meal — Not Supported by this supplier; Needs Bundle — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-ML-005",
+      "title": "The chosen meal reaches the confirmation (SPENDS REAL MONEY)",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Meal — Not Supported by this supplier"
+       }
+      ]
+     },
+     {
+      "id": "TC-ML-006",
+      "title": "A supplier with no meals shows no meal choice",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "No meal choice on step 2 and no meal line in the price."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/12-step2-ancillaries.png"
+      }
+     }
+    ]
+   },
+   {
+    "key": "g19",
+    "name": "U. Extra baggage",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-BG-001",
+      "title": "Extra baggage is offered per passenger and per journey",
+      "status": "Inconclusive",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Adult and child each have a list of 32 options with prices, but no option shows a weight. Options are Aegean special-item descriptions plus three free-text request items at 0 EGP. Suite wording expects weights, so this may be a documentation gap."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/13-BG-001-adult-baggage-options.png\nmanual_execution/artifacts/portal/16-BG-001-child-baggage-options.png"
+      }
+     },
+     {
+      "id": "TC-BG-002",
+      "title": "An infant is not offered extra baggage",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "The infant has no baggage choice."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/12-step2-ancillaries.png"
+      }
+     },
+     {
+      "id": "TC-BG-003",
+      "title": "Changing the bag weight replaces the bag, it does not add a second one",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "EXTRA BAGGAGE (1,240) replaced by 'A BOARD UP TO 2M' (3,542): only 3,542 is charged; net payable 40,635.4."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/14-BG-003-extra-baggage-1240-selected.png\nmanual_execution/artifacts/portal/15-BG-003-changed-to-board-3542.png"
+      }
+     },
+     {
+      "id": "TC-BG-005",
+      "title": "The extra bag reaches the confirmation (SPENDS REAL MONEY)",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "Extra bag 1,240 appears on the confirmation, e-ticket and order, and in the total."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/71-BOOKING1-confirmation.png\nmanual_execution/artifacts/portal/72-BOOKING1-eticket.png\nmanual_execution/artifacts/portal/75-CNF-012-order-details.png"
+      }
+     },
+     {
+      "id": "TC-BG-006",
+      "title": "A supplier with no extra baggage shows no baggage choice",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Only for suppliers without Baggage — this supplier supports it"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g20",
+    "name": "V. Holding a booking (CREATES A REAL HELD BOOKING)",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-HLD-005",
+      "title": "Seats, meals and bags chosen before holding are kept on the held booking",
+      "status": "Excluded",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Not supported by supplier: Needs Meal — Not Supported by this supplier"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g21",
+    "name": "W. Paying for a held booking (SPENDS REAL MONEY)",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-PAH-002",
+      "title": "Paying takes exactly the booking amount from the wallet",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "No Hold option in the Portal (step 2 offers only Book and Save Quote), so no held booking can be created or paid."
+       }
+      ]
+     },
+     {
+      "id": "TC-PAH-003",
+      "title": "A price change between hold and payment is shown before paying",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "No Hold option in the Portal (step 2 offers only Book and Save Quote), so no held booking can be created or paid."
+       }
+      ]
+     },
+     {
+      "id": "TC-PAH-004",
+      "title": "After payment the e-ticket is issued and matches the booking",
+      "status": "Blocked",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "No Hold option in the Portal (step 2 offers only Book and Save Quote), so no held booking can be created or paid."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "key": "g22",
+    "name": "X. Reports",
+    "icon": "📋",
+    "cases": [
+     {
+      "id": "TC-RPT-001",
+      "title": "A booking you just made appears in the reports",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "The booking appears in the Bookings report with the right order, passengers and amount."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/77-RPT-001-bookings-report.png"
+      }
+     },
+     {
+      "id": "TC-RPT-002",
+      "title": "A payment appears in the account statement with the right amount",
+      "status": "Failed",
+      "rows": [
+       {
+        "label": "Reason",
+        "value": "Statement report has no debit row for the booking payment, and a search by its transaction ID finds nothing (same as run-007)."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/79-RPT-002-statement-report.png\nmanual_execution/artifacts/portal/80-RPT-002-statement-by-transaction-id.png"
+      }
+     },
+     {
+      "id": "TC-RPT-003",
+      "title": "The reports agree with the booking and with each other",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "The booking appears in the Sales report with matching amounts."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/78-RPT-003-sales-report.png"
+      }
+     },
+     {
+      "id": "TC-RPT-004",
+      "title": "Extras bought with a booking are visible in the reports",
+      "status": "Passed",
+      "rows": [
+       {
+        "label": "Observed",
+        "value": "The booking appears in the Total Due report; extras are included in the amounts."
+       }
+      ],
+      "evidence": {
+       "summary": "Evidence (screenshots)",
+       "body": "manual_execution/artifacts/portal/81-RPT-003-total-due-report.png"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "sections": [
+  {
+   "type": "findings",
+   "title": "Defect Register",
+   "badges": [
+    {
+     "value": 8,
+     "label": "Defects",
+     "tone": "blocked"
+    }
+   ],
+   "items": [
+    {
+     "kind": "Inconclusive",
+     "tone": "accent",
+     "body": "Seat features use known wording. Suite lists six feature words. The map sends 19 more (for example Pet cabin, Crew seat, Deportee, Overwing seat(s), Seat not allowed for infant). The list in the suite was written from flynas, so this is a documentation gap, not an application defect.",
+     "refs": "(TC-SM-STA-004)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "- / -",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "-",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/17-seatmap-leg1-open.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "blocked",
+     "body": "A seat marked 'Chargeable seat' must always have a price. On leg 2 of A3650, all 107 seats marked Chargeable seat are offered Free. Seat 19A booked at EGP 0. Leg 1 is correct. No Plus/Value packages here.",
+     "refs": "(TC-SM-PRC-002)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "High / P1",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "Business Rule",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/32-PRC-002-19A-chargeable-free.png, manual_execution/artifacts/portal/33-PRC-002-19A-free-confirmed-total-unchanged.png, manual_execution/artifacts/portal/33-PRC-002-19A-free-confirmed-total.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "warning",
+     "body": "Opening the booking page with a broken or missing link. Expired link: page 'No Data Found' (HTTP 400), not the flight search. Altered link: same. Missing link: sent to login and the session was ended. No map or prices shown, no technical error page.",
+     "refs": "(TC-SM-NEG-006)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "Medium / P2",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "Workflow",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/38-CNF-018-next-silent-400-stuck-step1.png, manual_execution/artifacts/portal/40-NEG-006-expired-token-reload.png, manual_execution/artifacts/portal/41-NEG-006-missing-token.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "accent",
+     "body": "Closed passenger sections still report missing information. Closed section hides its boxes, and Expand All / Collapse All work. But several sections can be open at once, and Next with a closed incomplete passenger shows no message.",
+     "refs": "(TC-SM-PAX-007)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "Low / P3",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "UI",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/08-PAX-007-adult-collapsed-after-typing.png, manual_execution/artifacts/portal/09-PAX-007-adult-section-state.png, manual_execution/artifacts/portal/10-PAX-007-adult-and-child-open.png, manual_execution/artifacts/portal/11-PAX-007-next-with-closed-incomplete-infant.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "blocked",
+     "body": "An adult with an infant CANNOT take an exit seat. Adult linked to an infant was offered exit seats 17A and 28A and could book 17A. The seat description itself says Seat not allowed for infant.",
+     "refs": "(TC-SM-EXR-002)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "Critical / P0",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "Business Rule",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/22-EXR-002-adult-with-infant-exit-17A.png, manual_execution/artifacts/portal/23-EXR-002-17A-booked-for-adult-with-infant.png, manual_execution/artifacts/portal/24-EXR-002-repeat-28A-offered-to-adult-with-infant.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "blocked",
+     "body": "The rule follows the infant's linked adult. With the infant linked to adult A, 18C was bookable for A and B. After relinking to B it was still bookable for both. The refusal does not follow the Assigned-to link.",
+     "refs": "(TC-SM-EXR-005)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "Critical / P0",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "Business Rule",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/51-EXR-005-A-with-infant-18C.png, manual_execution/artifacts/portal/52-EXR-005-B-no-infant-18C.png, manual_execution/artifacts/portal/53-EXR-005-after-relink-A-18C.png, manual_execution/artifacts/portal/54-EXR-005-after-relink-B-18C.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "accent",
+     "body": "Seat and ancillary charges should be identifiable per journey. One base-fare line, one seat line (+3,367) and one tax line cover both journeys. The total is right but charges cannot be told apart per journey.",
+     "refs": "(TC-SM-RTP-005)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "Low / P3",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "UI",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/61-MCT-004-RTP-005-four-seats-summary.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "blocked",
+     "body": "Going back a step must not silently throw away seats and ancillaries. Editing a passenger's document number on step 1, then Next: Net Payable fell from 41,935.4 to 37,093.4 - all seats and the bag were dropped with no warning. Known fault reproduced.",
+     "refs": "(TC-SM-CNF-018)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "High / P1",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "Workflow",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/37-CNF-018-after-editing-child-doc.png"
+    },
+    {
+     "kind": "Inconclusive",
+     "tone": "accent",
+     "body": "Two infant-holding adults cannot sit in the same set of seats. Two infant-holding adults: 12A (Rana) then 12B (Tarek) in the same ABC set were both offered, booked and confirmed with no warning. The suite records this as 'Pass by decision' because the airline enforces it at booking. Cannot be checked without a real booking.",
+     "refs": "(TC-SM-PAX-008)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "- / -",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "-",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/55-PAX-008-12B-offered-to-2nd-infant-holder.png, manual_execution/artifacts/portal/56-PAX-008-12A-12B-both-infant-holders-confirmed.png"
+    },
+    {
+     "kind": "Inconclusive",
+     "tone": "accent",
+     "body": "Extra baggage is offered per passenger and per journey. Adult and child each have a list of 32 options with prices, but no option shows a weight. Options are Aegean special-item descriptions plus three free-text request items at 0 EGP. Suite wording expects weights, so this may be a documentation gap.",
+     "refs": "(TC-BG-001)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "Low / P3",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "UI",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/13-BG-001-adult-baggage-options.png, manual_execution/artifacts/portal/16-BG-001-child-baggage-options.png"
+    },
+    {
+     "kind": "Defect",
+     "tone": "blocked",
+     "body": "A payment appears in the account statement with the right amount. Statement report has no debit row for the booking payment, and a search by its transaction ID finds nothing (same as run-007).",
+     "refs": "(TC-RPT-002)",
+     "fields": [
+      {
+       "label": "Severity / Priority",
+       "value": "High / P1",
+       "mono": false
+      },
+      {
+       "label": "Category",
+       "value": "Reports",
+       "mono": false
+      }
+     ],
+     "evidence": "manual_execution/artifacts/portal/79-RPT-002-statement-report.png, manual_execution/artifacts/portal/80-RPT-002-statement-by-transaction-id.png"
+    }
+   ]
+  },
+  {
+   "type": "notes",
+   "title": "Known Limitations",
+   "blocks": [
+    "No booking, hold or payment was run (Execution Safety Policy). No Traceability Matrix exists, so requirement coverage is not computed.",
+    {
+     "kind": "ul",
+     "items": [
+      "20 cases Skipped for safety; 7 Blocked; 3 Not Executed; 29 Excluded.",
+      "Excluded and Skipped cases are not in the pass rate.",
+      "See ManualExecutionSummary.md for the full list and recommendations."
+     ]
+    }
+   ]
+  }
+ ]
+}
